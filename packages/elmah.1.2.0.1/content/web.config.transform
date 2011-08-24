@@ -1,8 +1,3 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<!--
-  For more information on how to configure your ASP.NET application, please visit
-  http://go.microsoft.com/fwlink/?LinkId=169433
-  -->
 <configuration>
   <configSections>
     <sectionGroup name="elmah">
@@ -12,35 +7,23 @@
       <section name="errorFilter" requirePermission="false" type="Elmah.ErrorFilterSectionHandler, Elmah" />
     </sectionGroup>
   </configSections>
-    <elmah>
-        <security allowRemoteAccess="true" />
-        <errorFilter>
-            <test>
-                <equal binding="HttpStatusCode" value="404" type="Int32" />
-            </test>
-        </errorFilter>
-    </elmah>
   <system.web>
-    <pages validateRequest="false" />
-    <customErrors mode="Off" />
-    <compilation debug="true" targetFramework="4.0" />
-    <httpRuntime requestValidationMode="2.0" />
     <httpModules>
       <add name="ErrorLog" type="Elmah.ErrorLogModule, Elmah" />
       <add name="ErrorMail" type="Elmah.ErrorMailModule, Elmah" />
-      <add name="ErrorFilter" type="Elmah.ErrorFilterModule, Elmah" />
+      <add name="ErrorFilter" type="Elmah.ErrorFilterModule, Elmah"/>
     </httpModules>
     <httpHandlers>
       <add verb="POST,GET,HEAD" path="elmah.axd" type="Elmah.ErrorLogPageFactory, Elmah" />
     </httpHandlers>
   </system.web>
   <system.webServer>
-    <modules runAllManagedModulesForAllRequests="true">
+    <validation validateIntegratedModeConfiguration="false" />
+    <modules>
       <add name="ErrorLog" type="Elmah.ErrorLogModule, Elmah" preCondition="managedHandler" />
       <add name="ErrorMail" type="Elmah.ErrorMailModule, Elmah" preCondition="managedHandler" />
       <add name="ErrorFilter" type="Elmah.ErrorFilterModule, Elmah" preCondition="managedHandler" />
     </modules>
-    <validation validateIntegratedModeConfiguration="false" />
     <handlers>
       <add name="Elmah" path="elmah.axd" verb="POST,GET,HEAD" type="Elmah.ErrorLogPageFactory, Elmah" preCondition="integratedMode" />
     </handlers>
