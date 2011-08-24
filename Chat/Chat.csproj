@@ -65,6 +65,7 @@
   <ItemGroup>
     <Content Include="Chat.css" />
     <Content Include="Chat.js" />
+    <Content Include="Global.asax" />
     <Content Include="index.htm" />
     <Content Include="Scripts\jquery-1.6.2-vsdoc.js" />
     <Content Include="Scripts\jquery-1.6.2.js" />
@@ -91,6 +92,9 @@
     <Compile Include="ContentProviders\IContentProvider.cs" />
     <Compile Include="ContentProviders\ImageContentProvider.cs" />
     <Compile Include="ContentProviders\YoutubeContentProvider.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
