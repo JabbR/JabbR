@@ -166,7 +166,8 @@ namespace SignalR.Samples.Hubs.Chat {
                             var newUser = new ChatUser {
                                 Name = newUserName,
                                 Hash = GetMD5Hash(newUserName),
-                                Id = oldUser.Id
+                                Id = oldUser.Id,
+                                ClientId = oldUser.ClientId
                             };
 
                             _users[newUserName] = newUser;
