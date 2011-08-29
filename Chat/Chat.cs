@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
@@ -84,6 +85,11 @@ namespace SignalR.Samples.Hubs.Chat {
                     var contentTasks = links.Select(ExtractContent).ToArray();
                     Task.Factory.ContinueWhenAll(contentTasks, tasks => {
                         foreach (var task in tasks) {
+                            if (task.IsFaulted) {
+                                Trace.TraceError(task.Exception.GetBaseException().Message);
+                                continue;
+                            }
+
                             if (String.IsNullOrEmpty(task.Result)) {
                                 continue;
                             }

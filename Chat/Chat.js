@@ -70,14 +70,15 @@ $(function () {
     };
 
     chat.addUser = function (user, exists) {
-        var id = 'u-' + user.Name;
+        var id = 'u-' + user.Id;
         if (document.getElementById(id)) {
             return;
         }
 
         var data = {
             name: user.Name,
-            hash: user.Hash
+            hash: user.Hash,
+            id : user.Id
         };
 
         var e = $('#new-user-template').tmpl(data)
@@ -92,10 +93,11 @@ $(function () {
     };
 
     chat.changeUserName = function (oldUser, newUser) {
-        $('#u-' + oldUser.Name).replaceWith(
+        $('#u-' + oldUser.Id).replaceWith(
                 $('#new-user-template').tmpl({
                     name: newUser.Name,
-                    hash: newUser.Hash
+                    hash: newUser.Hash,
+                    id: newUser.Id
                 })
         );
 
@@ -118,7 +120,7 @@ $(function () {
 
     chat.leave = function (user) {
         if (this.id != user.Id) {
-            $('#u-' + user.Name).fadeOut('slow', function () {
+            $('#u-' + user.Id).fadeOut('slow', function () {
                 $(this).remove();
             });
 
