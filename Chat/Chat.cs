@@ -75,7 +75,7 @@ namespace SignalR.Samples.Hubs.Chat {
 
         public void Send(string content) {
             if (OldVersion) {
-                Clients.addMessage(Guid.NewGuid().ToString(), "SERVER", "Chat was just updated, please refresh you browser and rejoin " + Caller.room);
+                Caller.addMessage(Guid.NewGuid().ToString(), "SERVER", "Chat was just updated, please refresh you browser and rejoin " + Caller.room);
                 return;
             }
 
