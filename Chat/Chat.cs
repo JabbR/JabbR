@@ -75,10 +75,9 @@ namespace SignalR.Samples.Hubs.Chat {
 
         public void Send(string content) {
             if (OldVersion) {
-                Caller.addMessage(Guid.NewGuid().ToString(), "SERVER", "Chat was just updated, please refresh you browser and rejoin " + Caller.room);
-                return;
+                throw new InvalidOperationException("Chat was just updated, please refresh you browser and rejoin " + Caller.room);
             }
-
+            
             content = Sanitizer.GetSafeHtmlFragment(content);
 
             if (!TryHandleCommand(content)) {
