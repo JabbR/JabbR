@@ -24,7 +24,18 @@ namespace SignalR.Samples.Hubs.Chat {
             new CollegeHumorContentProvider()
         };
 
-        public bool Join() {
+
+        public bool OldVersion {
+            get {
+                string version = Caller.version;
+                return String.IsNullOrEmpty(version) ||
+                        new Version(version) < typeof(Chat).Assembly.GetName().Version;
+            }
+        }
+
+        public bool Join() {            
+            Caller.version = typeof(Chat).Assembly.GetName().Version.ToString();
+
             // Check the user id cookie
             var cookie = Context.Cookies["userid"];
             if (cookie == null) {
@@ -63,6 +74,11 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         public void Send(string content) {
+            if (OldVersion) {
+                Clients.addMessage(Guid.NewGuid().ToString(), "SERVER", "Chat was just updated, please refresh you browser and rejoin " + Caller.room);
+                return;
+            }
+
             content = Sanitizer.GetSafeHtmlFragment(content);
 
             if (!TryHandleCommand(content)) {
