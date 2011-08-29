@@ -195,7 +195,9 @@ namespace SignalR.Samples.Hubs.Chat {
                             _users[newUserName] = newUser;
                             _userRooms[newUserName] = new HashSet<string>(_userRooms[name]);
 
-                            if (_userRooms[name].Any()) {
+                            bool inRooms = _userRooms[name].Any();
+
+                            if (inRooms) {
                                 foreach (var r in _userRooms[name]) {
                                     _rooms[r].Users.Remove(name);
                                     _rooms[r].Users.Add(newUserName);
@@ -209,7 +211,9 @@ namespace SignalR.Samples.Hubs.Chat {
                             Caller.hash = newUser.Hash;
                             Caller.name = newUser.Name;
 
-                            Caller.changeUserName(oldUser, newUser);
+                            if (!inRooms) {
+                                Caller.changeUserName(oldUser, newUser);
+                            }
                         }
                     }
                     else {
@@ -370,7 +374,7 @@ namespace SignalR.Samples.Hubs.Chat {
         private void EnsureUser() {
             string name = Caller.name;
             if (String.IsNullOrEmpty(name) || !_users.ContainsKey(name)) {
-                throw new InvalidOperationException("No name choson. Pick a name using '/nick nickname'.");
+                throw new InvalidOperationException("You don't have a name. Pick a name using '/nick nickname'.");
             }
         }
 

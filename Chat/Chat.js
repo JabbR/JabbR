@@ -18,6 +18,7 @@ $(function () {
         if (type) {
             e.addClass(type);
         }
+
         updateUnread();
         e[0].scrollIntoView();
         return e;
@@ -78,7 +79,7 @@ $(function () {
         var data = {
             name: user.Name,
             hash: user.Hash,
-            id : user.Id
+            id: user.Id
         };
 
         var e = $('#new-user-template').tmpl(data)
@@ -131,13 +132,15 @@ $(function () {
     $('#send-message').submit(function () {
         var command = $('#new-message').val();
 
-        chat.send(command)
+        if (command) {
+            chat.send(command)
             .fail(function (e) {
                 addMessage(e, 'error');
             });
 
-        $('#new-message').val('');
-        $('#new-message').focus();
+            $('#new-message').val('');
+            $('#new-message').focus();
+        }
 
         return false;
     });
