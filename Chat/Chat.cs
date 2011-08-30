@@ -92,7 +92,7 @@ namespace SignalR.Samples.Hubs.Chat {
 
                 _rooms[roomName].Messages.Add(chatMessage);
 
-                Clients[roomName].addMessage(chatMessage.Id, chatMessage.User, chatMessage.Text);
+                Clients[roomName].addMessage(chatMessage.Id, chatMessage.User, chatMessage.Content);
 
                 if (links.Any()) {
                     // REVIEW: is this safe to do? We're holding on to this instance 
@@ -113,7 +113,7 @@ namespace SignalR.Samples.Hubs.Chat {
                             string extractedContent = "<p>" + task.Result + "</p>";
 
                             // If we did get something, update the message and notify all clients
-                            chatMessage.Text += extractedContent;
+                            chatMessage.Content += extractedContent;
 
                             Clients[roomName].addMessageContent(chatMessage.Id, extractedContent);
                         }
@@ -150,6 +150,18 @@ namespace SignalR.Samples.Hubs.Chat {
 
             return from name in _rooms[room].Users
                    select _users[name];
+        }
+
+        public IEnumerable<ChatMessage> GetRecentMessages() {
+            string room = Caller.room;
+
+            if (String.IsNullOrEmpty(room)) {
+                return Enumerable.Empty<ChatMessage>();
+            }
+
+            return (from m in _rooms[room].Messages
+                    orderby m.When descending
+                    select m).Take(10).Reverse();
         }
 
         private string GetMD5Hash(string name) {
@@ -356,7 +368,6 @@ namespace SignalR.Samples.Hubs.Chat {
         private void EnsureUserAndRoom() {
             EnsureUser();
 
-            // TODO: Restore when groups work
             string room = Caller.room;
             string name = Caller.name;
 
@@ -415,11 +426,14 @@ namespace SignalR.Samples.Hubs.Chat {
         public class ChatMessage {
             public string Id { get; private set; }
             public string User { get; set; }
-            public string Text { get; set; }
-            public ChatMessage(string user, string text) {
+            public string Content { get; set; }
+            public DateTime When { get; set; }
+
+            public ChatMessage(string user, string content) {
                 User = user;
-                Text = text;
+                Content = content;
                 Id = Guid.NewGuid().ToString("d");
+                When = DateTime.UtcNow;
             }
         }
 

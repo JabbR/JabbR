@@ -37,6 +37,13 @@ $(function () {
                 $('#new-message').focus();
             });
 
+        chat.getRecentMessages()
+            .done(function (messages) {
+                $.each(messages, function () {
+                    chat.addMessage(this.Id, this.User, this.Content);
+                });
+            });
+
         addMessage('Entered ' + room, 'notification');
     };
 
