@@ -47,6 +47,17 @@ $(function () {
         addMessage('Entered ' + room, 'notification');
     };
 
+
+    chat.markInactive = function (user) {
+        var id = 'u-' + user.Id;
+        $('#' + id).fadeTo('slow', 0.5);
+    };
+
+    chat.updateActivity = function (user) {
+        var id = 'u-' + user.Id;
+        $('#' + id).fadeTo('slow', 1);
+    };
+
     chat.showRooms = function (rooms) {
         if (!rooms.length) {
             addMessage('No rooms available', 'notification')

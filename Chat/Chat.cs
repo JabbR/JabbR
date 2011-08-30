@@ -7,6 +7,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Security.Application;
 using SignalR.Hubs;
@@ -14,9 +15,39 @@ using SignalR.Samples.Hubs.Chat.ContentProviders;
 
 namespace SignalR.Samples.Hubs.Chat {
     public class Chat : Hub, IDisconnect {
+        private static readonly Dictionary<string, DateTime> _userActivity = new Dictionary<string, DateTime>(StringComparer.OrdinalIgnoreCase);
         private static readonly Dictionary<string, ChatUser> _users = new Dictionary<string, ChatUser>(StringComparer.OrdinalIgnoreCase);
         private static readonly Dictionary<string, HashSet<string>> _userRooms = new Dictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase);
         private static readonly Dictionary<string, ChatRoom> _rooms = new Dictionary<string, ChatRoom>(StringComparer.OrdinalIgnoreCase);
+
+        // REVIEW: This is bad (need to add an api to signalr for this)
+        private static readonly object _lockObj = new object();
+        private static Timer _timer;
+
+        public Chat() {
+            // HACK: This will keep the hub alive bad bad :)
+            if (_timer == null) {
+                lock (_lockObj) {
+                    if (_timer == null) {
+                        _timer = new Timer(_ => {
+                            var users = _userActivity.ToList();
+
+                            foreach (var uid in users) {
+                                var elapsed = DateTime.UtcNow - uid.Value;
+                                if (elapsed.TotalSeconds > 30) {
+                                    var user = GetUserByClientId(uid.Key);
+                                    if (user != null) {
+                                        Clients.markInactive(user);
+                                    }
+                                }
+                            }
+                        }, null, 
+                        TimeSpan.FromMinutes(5),
+                        TimeSpan.FromMinutes(5));
+                    }
+                }
+            }
+        }
 
         private static readonly List<IContentProvider> _contentProviders = new List<IContentProvider>() {
             new ImageContentProvider(),
@@ -47,6 +78,7 @@ namespace SignalR.Samples.Hubs.Chat {
             if (user != null) {
                 // Update the users's client id mapping
                 user.ClientId = Context.ClientId;
+                UpdateActivity();
 
                 // Set some client state
                 Caller.id = user.Id;
@@ -73,11 +105,21 @@ namespace SignalR.Samples.Hubs.Chat {
             return false;
         }
 
+        private void UpdateActivity() {
+            _userActivity[Context.ClientId] = DateTime.UtcNow;
+            var user = GetUserByClientId(Context.ClientId);
+            if (user != null) {
+                Clients.updateActivity(user);
+            }
+        }
+
         public void Send(string content) {
             if (OldVersion) {
                 throw new InvalidOperationException("Chat was just updated, please refresh you browser and rejoin " + Caller.room);
             }
-            
+
+            UpdateActivity();
+
             content = Sanitizer.GetSafeHtmlFragment(content);
 
             if (!TryHandleCommand(content)) {
@@ -139,6 +181,10 @@ namespace SignalR.Samples.Hubs.Chat {
 
                 _userRooms.Remove(user.Name);
             }
+        }
+
+        private ChatUser GetUserByClientId(string clientId) {
+            return _users.Values.FirstOrDefault(u => u.ClientId == clientId);
         }
 
         public IEnumerable<ChatUser> GetUsers() {
