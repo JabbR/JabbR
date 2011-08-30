@@ -75,9 +75,10 @@ $(function () {
         e[0].scrollIntoView();
     };
 
-    chat.addMessage = function (id, name, message) {
+    chat.addMessage = function (id, user, message) {
         var data = {
-            name: name,
+            name: user.Name,
+            hash : user.Hash,
             message: message,
             id: id
         };

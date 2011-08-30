@@ -129,7 +129,7 @@ namespace SignalR.Samples.Hubs.Chat {
 
                 HashSet<string> links;
                 var messageText = Transform(content, out links);
-                var chatMessage = new ChatMessage(name, messageText);
+                var chatMessage = new ChatMessage(GetUserByClientId(Context.ClientId), messageText);
 
                 _rooms[roomName].Messages.Add(chatMessage);
 
@@ -494,11 +494,11 @@ namespace SignalR.Samples.Hubs.Chat {
         [Serializable]
         public class ChatMessage {
             public string Id { get; private set; }
-            public string User { get; set; }
+            public ChatUser User { get; set; }
             public string Content { get; set; }
             public DateTime When { get; set; }
 
-            public ChatMessage(string user, string content) {
+            public ChatMessage(ChatUser user, string content) {
                 User = user;
                 Content = content;
                 Id = Guid.NewGuid().ToString("d");
