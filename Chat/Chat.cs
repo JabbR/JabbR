@@ -273,7 +273,7 @@ namespace SignalR.Samples.Hubs.Chat {
 
         private void HandleMe(string room, string name, string[] parts) {
             if (parts.Length < 2) {
-                throw new InvalidProgramException("You what?");
+                throw new InvalidOperationException("You what?");
             }
 
             var content = String.Join(" ", parts.Skip(1));
