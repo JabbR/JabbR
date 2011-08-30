@@ -20,35 +20,9 @@ namespace SignalR.Samples.Hubs.Chat {
         private static readonly Dictionary<string, HashSet<string>> _userRooms = new Dictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase);
         private static readonly Dictionary<string, ChatRoom> _rooms = new Dictionary<string, ChatRoom>(StringComparer.OrdinalIgnoreCase);
 
-        // REVIEW: This is bad (need to add an api to signalr for this)
-        private static readonly object _lockObj = new object();
-        private static Timer _timer;
+        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(2);
 
-        public Chat() {
-            // HACK: This will keep the hub alive bad bad :)
-            if (_timer == null) {
-                lock (_lockObj) {
-                    if (_timer == null) {
-                        _timer = new Timer(_ => {
-                            var users = _userActivity.ToList();
-
-                            foreach (var uid in users) {
-                                var elapsed = DateTime.UtcNow - uid.Value;
-                                if (elapsed.TotalMinutes > 5) {
-                                    var user = GetUserByClientId(uid.Key);
-                                    if (user != null) {
-                                        // TODO: Skip the user if
-                                        Clients.markInactive(user);
-                                    }
-                                }
-                            }
-                        }, null,
-                        TimeSpan.FromMinutes(2),
-                        TimeSpan.FromMinutes(2));
-                    }
-                }
-            }
-        }
+        private static Timer _timer = new Timer(_ => Sweep(), null, _sweepInterval, _sweepInterval);
 
         private static readonly List<IContentProvider> _contentProviders = new List<IContentProvider>() {
             new ImageContentProvider(),
@@ -216,7 +190,7 @@ namespace SignalR.Samples.Hubs.Chat {
                          .Select(b => b.ToString("x2")));
         }
 
-        private ChatUser GetUserByClientId(string clientId) {
+        private static ChatUser GetUserByClientId(string clientId) {
             return _users.Values.FirstOrDefault(u => u.ClientId == clientId);
         }
 
@@ -438,6 +412,21 @@ namespace SignalR.Samples.Hubs.Chat {
             }
             else {
                 throw new InvalidOperationException(String.Format("Username '{0}' is already taken!", newUserName));
+            }
+        }
+
+        private static void Sweep() {
+            var users = _userActivity.ToList();
+            var clients = GetClients<Chat>();
+
+            foreach (var uid in users) {
+                var elapsed = DateTime.UtcNow - uid.Value;
+                if (elapsed.TotalMinutes > 5) {
+                    var user = GetUserByClientId(uid.Key);
+                    if (user != null) {
+                        clients.markInactive(user);
+                    }
+                }
             }
         }
 
