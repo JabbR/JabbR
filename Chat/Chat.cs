@@ -4,11 +4,11 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net;
-using System.Security.Cryptography;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Chat.Infrastructure;
+using Chat.Models;
 using Microsoft.Security.Application;
 using SignalR.Hubs;
 using SignalR.Samples.Hubs.Chat.ContentProviders;
@@ -96,45 +96,47 @@ namespace SignalR.Samples.Hubs.Chat {
 
             content = Sanitizer.GetSafeHtmlFragment(content);
 
-            if (!TryHandleCommand(content)) {
-                string roomName = Caller.room;
-                string name = Caller.name;
+            if (TryHandleCommand(content)) {
+                return;
+            }
 
-                EnsureUserAndRoom();
+            string roomName = Caller.room;
+            string name = Caller.name;
 
-                HashSet<string> links;
-                var messageText = Transform(content, out links);
-                var chatMessage = new ChatMessage(GetUserByClientId(Context.ClientId), messageText);
+            EnsureUserAndRoom();
 
-                _rooms[roomName].Messages.Add(chatMessage);
+            HashSet<string> links;
+            var messageText = Transform(content, out links);
+            var chatMessage = new ChatMessage(GetUserByClientId(Context.ClientId), messageText);
 
-                Clients[roomName].addMessage(chatMessage.Id, chatMessage.User, chatMessage.Content);
+            _rooms[roomName].Messages.Add(chatMessage);
 
-                if (links.Any()) {
-                    // REVIEW: is this safe to do? We're holding on to this instance 
-                    // when this should really be a fire and forget.
-                    var contentTasks = links.Select(ExtractContent).ToArray();
-                    Task.Factory.ContinueWhenAll(contentTasks, tasks => {
-                        foreach (var task in tasks) {
-                            if (task.IsFaulted) {
-                                Trace.TraceError(task.Exception.GetBaseException().Message);
-                                continue;
-                            }
+            Clients[roomName].addMessage(chatMessage.Id, chatMessage.User, chatMessage.Content);
 
-                            if (String.IsNullOrEmpty(task.Result)) {
-                                continue;
-                            }
-
-                            // Try to get content from each url we're resolved in the query
-                            string extractedContent = "<p>" + task.Result + "</p>";
-
-                            // If we did get something, update the message and notify all clients
-                            chatMessage.Content += extractedContent;
-
-                            Clients[roomName].addMessageContent(chatMessage.Id, extractedContent);
+            if (links.Any()) {
+                // REVIEW: is this safe to do? We're holding on to this instance 
+                // when this should really be a fire and forget.
+                var contentTasks = links.Select(ExtractContent).ToArray();
+                Task.Factory.ContinueWhenAll(contentTasks, tasks => {
+                    foreach (var task in tasks) {
+                        if (task.IsFaulted) {
+                            Trace.TraceError(task.Exception.GetBaseException().Message);
+                            continue;
                         }
-                    });
-                }
+
+                        if (String.IsNullOrEmpty(task.Result)) {
+                            continue;
+                        }
+
+                        // Try to get content from each url we're resolved in the query
+                        string extractedContent = "<p>" + task.Result + "</p>";
+
+                        // If we did get something, update the message and notify all clients
+                        chatMessage.Content += extractedContent;
+
+                        Clients[roomName].addMessageContent(chatMessage.Id, extractedContent);
+                    }
+                });
             }
         }
 
@@ -184,23 +186,17 @@ namespace SignalR.Samples.Hubs.Chat {
                     select m).Take(20).Reverse();
         }
 
-        private string GetMD5Hash(string name) {
-            return String.Join("", MD5.Create()
-                         .ComputeHash(Encoding.Default.GetBytes(name))
-                         .Select(b => b.ToString("x2")));
-        }
-
         private static ChatUser GetUserByClientId(string clientId) {
             return _users.Values.FirstOrDefault(u => u.ClientId == clientId);
         }
 
-        private bool TryHandleCommand(string message) {
+        private bool TryHandleCommand(string command) {
             string room = Caller.room;
             string name = Caller.name;
 
-            message = message.Trim();
-            if (message.StartsWith("/")) {
-                string[] parts = message.Substring(1).Split(' ');
+            command = command.Trim();
+            if (command.StartsWith("/")) {
+                string[] parts = command.Substring(1).Split(' ');
                 string commandName = parts[0];
 
                 if (commandName.Equals("help", StringComparison.OrdinalIgnoreCase)) {
@@ -276,9 +272,10 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         private void HandleMe(string room, string name, string[] parts) {
-            if (parts.Length == 1) {
+            if (parts.Length < 2) {
                 throw new InvalidProgramException("You what?");
             }
+
             var content = String.Join(" ", parts.Skip(1));
 
             Clients[room].sendMeMessage(name, content);
@@ -315,11 +312,9 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         private void HandleJoin(string room, string name, string[] parts) {
-            if (parts.Length == 1) {
+            if (parts.Length < 2) {
                 throw new InvalidOperationException("Join which room?");
             }
-
-            // Only support one room at a time for now
 
             string newRoom = parts[1];
             ChatRoom chatRoom;
@@ -329,13 +324,13 @@ namespace SignalR.Samples.Hubs.Chat {
                 _rooms.Add(newRoom, chatRoom);
             }
 
+            // Only support one room at a time for now (until we support tabs)
             // Remove the old room
             if (!String.IsNullOrEmpty(room)) {
                 _userRooms[name].Remove(room);
                 _rooms[room].Users.Remove(name);
-
-                Clients[room].leave(_users[name]);
                 RemoveFromGroup(room);
+                Clients[room].leave(_users[name]);
             }
 
             _userRooms[name].Add(newRoom);
@@ -381,7 +376,7 @@ namespace SignalR.Samples.Hubs.Chat {
                     var oldUser = _users[name];
                     var newUser = new ChatUser {
                         Name = newUserName,
-                        Hash = GetMD5Hash(newUserName),
+                        Hash = newUserName.ToMD5(),
                         Id = oldUser.Id,
                         ClientId = oldUser.ClientId
                     };
@@ -392,10 +387,10 @@ namespace SignalR.Samples.Hubs.Chat {
                     bool inRooms = _userRooms[name].Any();
 
                     if (inRooms) {
-                        foreach (var r in _userRooms[name]) {
-                            _rooms[r].Users.Remove(name);
-                            _rooms[r].Users.Add(newUserName);
-                            Clients[r].changeUserName(oldUser, newUser);
+                        foreach (var room in _userRooms[name]) {
+                            _rooms[room].Users.Remove(name);
+                            _rooms[room].Users.Add(newUserName);
+                            Clients[room].changeUserName(oldUser, newUser);
                         }
                     }
 
@@ -431,8 +426,10 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         private ChatUser AddUser(string newUserName) {
-            var user = new ChatUser(newUserName, GetMD5Hash(newUserName));
-            user.ClientId = Context.ClientId;
+            var user = new ChatUser(newUserName) {
+                ClientId = Context.ClientId
+            };
+
             _users[newUserName] = user;
             _userRooms[newUserName] = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -500,48 +497,6 @@ namespace SignalR.Samples.Hubs.Chat {
         private string ExtractContent(HttpWebResponse response) {
             return _contentProviders.Select(c => c.GetContent(response))
                                     .FirstOrDefault(content => content != null);
-        }
-
-        [Serializable]
-        public class ChatMessage {
-            public string Id { get; private set; }
-            public ChatUser User { get; set; }
-            public string Content { get; set; }
-            public DateTime When { get; set; }
-
-            public ChatMessage(ChatUser user, string content) {
-                User = user;
-                Content = content;
-                Id = Guid.NewGuid().ToString("d");
-                When = DateTime.UtcNow;
-            }
-        }
-
-        [Serializable]
-        public class ChatUser {
-            public string ClientId { get; set; }
-            public string Id { get; set; }
-            public string Name { get; set; }
-            public string Hash { get; set; }
-
-            public ChatUser() {
-            }
-
-            public ChatUser(string name, string hash) {
-                Name = name;
-                Hash = hash;
-                Id = Guid.NewGuid().ToString("d");
-            }
-        }
-
-        public class ChatRoom {
-            public List<ChatMessage> Messages { get; set; }
-            public HashSet<string> Users { get; set; }
-
-            public ChatRoom() {
-                Messages = new List<ChatMessage>();
-                Users = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            }
         }
     }
 }
