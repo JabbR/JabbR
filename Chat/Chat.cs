@@ -37,6 +37,7 @@ namespace SignalR.Samples.Hubs.Chat {
                                 if (elapsed.TotalMinutes > 5) {
                                     var user = GetUserByClientId(uid.Key);
                                     if (user != null) {
+                                        // TODO: Skip the user if
                                         Clients.markInactive(user);
                                     }
                                 }
@@ -164,11 +165,15 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         public void Disconnect() {
-            ChatUser user = GetUserByClientId(Context.ClientId);
+            Disconnect(Context.ClientId);
+        }
+
+        private void Disconnect(string clientId) {
+            ChatUser user = GetUserByClientId(clientId);
             if (user == null) {
                 return;
             }
-            
+
             // Leave all rooms
             HashSet<string> rooms;
             if (_userRooms.TryGetValue(user.Name, out rooms)) {
@@ -202,7 +207,7 @@ namespace SignalR.Samples.Hubs.Chat {
 
             return (from m in _rooms[room].Messages
                     orderby m.When descending
-                    select m).Take(10).Reverse();
+                    select m).Take(20).Reverse();
         }
 
         private string GetMD5Hash(string name) {
@@ -224,7 +229,12 @@ namespace SignalR.Samples.Hubs.Chat {
                 string[] parts = message.Substring(1).Split(' ');
                 string commandName = parts[0];
 
-                if (commandName.Equals("nick", StringComparison.OrdinalIgnoreCase)) {
+                if (commandName.Equals("help", StringComparison.OrdinalIgnoreCase)) {
+                    HandleHelp();
+
+                    return true;
+                }
+                else if (commandName.Equals("nick", StringComparison.OrdinalIgnoreCase)) {
                     HandleNick(name, parts);
 
                     return true;
@@ -263,6 +273,18 @@ namespace SignalR.Samples.Hubs.Chat {
                 }
             }
             return false;
+        }
+
+        private void HandleHelp() {
+            Caller.showCommands(new[] { 
+                new { Name = "help", Description = "Shows the list of commands" },
+                new { Name = "nick", Description = "/nick changes your nickname" },
+                new { Name = "join", Description = "Type /join room -- to join a channel of your choice" },
+                new { Name = "me", Description = "Type /me 'does anything'" },
+                new { Name = "msg", Description = "Type /msg nickname (message) to send a private message to nickname." },
+                new { Name = "leave", Description = "Type /leave to leave the current room." },
+                new { Name = "rooms", Description = "Type /rooms to show the list of rooms" }
+            });
         }
 
         private void HandleLeave(string room, string name) {

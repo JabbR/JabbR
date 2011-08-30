@@ -59,6 +59,7 @@ $(function () {
     };
 
     chat.showRooms = function (rooms) {
+        addMessage('<h3>Rooms</h3>');
         if (!rooms.length) {
             addMessage('No rooms available', 'notification')
         }
@@ -67,6 +68,7 @@ $(function () {
                 addMessage(this.Name + ' (' + this.Count + ')');
             });
         }
+        addMessage('<br/>');
     };
 
     chat.addMessageContent = function (id, content) {
@@ -78,7 +80,7 @@ $(function () {
     chat.addMessage = function (id, user, message) {
         var data = {
             name: user.Name,
-            hash : user.Hash,
+            hash: user.Hash,
             message: message,
             id: id
         };
@@ -130,8 +132,16 @@ $(function () {
         }
     };
 
+    chat.showCommands = function (commands) {
+        addMessage('<h3>Help</h3>');
+        $.each(commands, function () {
+            addMessage(this.Name + ' - ' + this.Description);
+        });
+        addMessage('<br />');
+    };
+
     chat.sendMeMessage = function (name, message) {
-        addMessage('*' + name + '* ' + message, 'notification');
+        addMessage('*' + name + ' ' + message, 'notification');
     };
 
     chat.sendPrivateMessage = function (from, to, message) {
@@ -198,6 +208,7 @@ $(function () {
     }
 
     addMessage('Welcome to the SignalR IRC clone', 'notification');
+    addMessage('Type /help to see the list of commands', 'notification');
 
     $('#new-message').val('');
     $('#new-message').focus();
@@ -209,7 +220,6 @@ $(function () {
                     $.cookie('userid', '')
                     addMessage('Choose a name using "/nick nickname".', 'notification');
                 }
-                addMessage('After that, you can view rooms using "/rooms" and join a room using "/join roomname".', 'notification');
             });
     });
 });
