@@ -5,6 +5,10 @@
 $(function () {
     var chat = $.connection.chat;
 
+    $.fn.isNearTheEnd = function () {
+        return this[0].scrollTop + this.height() >= this[0].scrollHeight;
+    }
+
     function clearMessages() {
         $('#messages').html('');
     }
@@ -14,14 +18,21 @@ $(function () {
     }
 
     function addMessage(content, type) {
+        var nearEnd = $('#messages').isNearTheEnd();
         var e = $('<li/>').html(content).appendTo($('#messages'));
         if (type) {
             e.addClass(type);
         }
 
         updateUnread();
-        e[0].scrollIntoView();
+        if (nearEnd) {
+            scrollTo(e[0]);
+        }
         return e;
+    }
+
+    function scrollTo(e) {
+        e.scrollIntoView();
     }
 
     chat.refreshRoom = function (room) {
@@ -72,9 +83,12 @@ $(function () {
     };
 
     chat.addMessageContent = function (id, content) {
+        var nearEnd = $('#messages').isNearTheEnd();
         var e = $('#m-' + id).append(content);
         updateUnread();
-        e[0].scrollIntoView();
+        if (nearEnd) {
+            scrollTo(e[0]);
+        }
     };
 
     chat.addMessage = function (id, user, message) {
@@ -85,10 +99,14 @@ $(function () {
             id: id
         };
 
+        var nearEnd = $('#messages').isNearTheEnd();
         var e = $('#new-message-template').tmpl(data)
                                           .appendTo($('#messages'));
         updateUnread();
-        e[0].scrollIntoView();
+
+        if (nearEnd) {
+            scrollTo(e[0]);
+        }
     };
 
     chat.addUser = function (user, exists) {
