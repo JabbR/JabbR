@@ -35,7 +35,7 @@ $(function () {
         e.scrollIntoView();
     }
 
-    chat.refreshRoom = function (room) {
+    chat.joinRoom = function (room) {
         clearMessages();
         clearUsers();
 

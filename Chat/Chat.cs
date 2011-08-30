@@ -376,7 +376,7 @@ namespace SignalR.Samples.Hubs.Chat {
 
             AddToGroup(newRoom);
 
-            Caller.refreshRoom(newRoom);
+            Caller.joinRoom(newRoom);
         }
 
         private void HandleRooms() {
