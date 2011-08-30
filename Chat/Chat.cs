@@ -42,8 +42,8 @@ namespace SignalR.Samples.Hubs.Chat {
                                 }
                             }
                         }, null,
-                        TimeSpan.FromMinutes(5),
-                        TimeSpan.FromMinutes(5));
+                        TimeSpan.FromMinutes(2),
+                        TimeSpan.FromMinutes(2));
                     }
                 }
             }
