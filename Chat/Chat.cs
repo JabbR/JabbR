@@ -34,14 +34,14 @@ namespace SignalR.Samples.Hubs.Chat {
 
                             foreach (var uid in users) {
                                 var elapsed = DateTime.UtcNow - uid.Value;
-                                if (elapsed.TotalSeconds > 30) {
+                                if (elapsed.TotalMinutes > 5) {
                                     var user = GetUserByClientId(uid.Key);
                                     if (user != null) {
                                         Clients.markInactive(user);
                                     }
                                 }
                             }
-                        }, null, 
+                        }, null,
                         TimeSpan.FromMinutes(5),
                         TimeSpan.FromMinutes(5));
                     }
@@ -55,7 +55,6 @@ namespace SignalR.Samples.Hubs.Chat {
             new CollegeHumorContentProvider()
         };
 
-
         public bool OldVersion {
             get {
                 string version = Caller.version;
@@ -64,7 +63,7 @@ namespace SignalR.Samples.Hubs.Chat {
             }
         }
 
-        public bool Join() {            
+        public bool Join() {
             Caller.version = typeof(Chat).Assembly.GetName().Version.ToString();
 
             // Check the user id cookie
@@ -165,26 +164,22 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         public void Disconnect() {
-            ChatUser user = _users.Values.FirstOrDefault(u => u.ClientId == Context.ClientId);
-            if (user != null) {
-                _users.Remove(user.Name);
-
-                // Leave all rooms
-                HashSet<string> rooms;
-                if (_userRooms.TryGetValue(user.Name, out rooms)) {
-                    foreach (var room in rooms) {
-                        Clients[room].leave(user);
-                        ChatRoom chatRoom = _rooms[room];
-                        chatRoom.Users.Remove(user.Name);
-                    }
-                }
-
-                _userRooms.Remove(user.Name);
+            ChatUser user = GetUserByClientId(Context.ClientId);
+            if (user == null) {
+                return;
             }
-        }
+            
+            // Leave all rooms
+            HashSet<string> rooms;
+            if (_userRooms.TryGetValue(user.Name, out rooms)) {
+                foreach (var room in rooms) {
+                    Clients[room].leave(user);
+                    ChatRoom chatRoom = _rooms[room];
+                    chatRoom.Users.Remove(user.Name);
+                }
+            }
 
-        private ChatUser GetUserByClientId(string clientId) {
-            return _users.Values.FirstOrDefault(u => u.ClientId == clientId);
+            _userRooms.Remove(user.Name);
         }
 
         public IEnumerable<ChatUser> GetUsers() {
@@ -216,6 +211,10 @@ namespace SignalR.Samples.Hubs.Chat {
                          .Select(b => b.ToString("x2")));
         }
 
+        private ChatUser GetUserByClientId(string clientId) {
+            return _users.Values.FirstOrDefault(u => u.ClientId == clientId);
+        }
+
         private bool TryHandleCommand(string message) {
             string room = Caller.room;
             string name = Caller.name;
@@ -226,165 +225,35 @@ namespace SignalR.Samples.Hubs.Chat {
                 string commandName = parts[0];
 
                 if (commandName.Equals("nick", StringComparison.OrdinalIgnoreCase)) {
-                    string newUserName = String.Join(" ", parts.Skip(1));
-
-                    if (String.IsNullOrEmpty(newUserName)) {
-                        throw new InvalidOperationException("No username specified!");
-                    }
-
-                    if (newUserName.Equals(name, StringComparison.OrdinalIgnoreCase)) {
-                        throw new InvalidOperationException("That's already your username...");
-                    }
-
-                    if (!_users.ContainsKey(newUserName)) {
-                        if (String.IsNullOrEmpty(name) || !_users.ContainsKey(name)) {
-                            var user = AddUser(newUserName);
-                        }
-                        else {
-                            var oldUser = _users[name];
-                            var newUser = new ChatUser {
-                                Name = newUserName,
-                                Hash = GetMD5Hash(newUserName),
-                                Id = oldUser.Id,
-                                ClientId = oldUser.ClientId
-                            };
-
-                            _users[newUserName] = newUser;
-                            _userRooms[newUserName] = new HashSet<string>(_userRooms[name]);
-
-                            bool inRooms = _userRooms[name].Any();
-
-                            if (inRooms) {
-                                foreach (var r in _userRooms[name]) {
-                                    _rooms[r].Users.Remove(name);
-                                    _rooms[r].Users.Add(newUserName);
-                                    Clients[r].changeUserName(oldUser, newUser);
-                                }
-                            }
-
-                            _userRooms.Remove(name);
-                            _users.Remove(name);
-
-                            Caller.hash = newUser.Hash;
-                            Caller.name = newUser.Name;
-
-                            if (!inRooms) {
-                                Caller.changeUserName(oldUser, newUser);
-                            }
-                        }
-                    }
-                    else {
-                        throw new InvalidOperationException(String.Format("Username '{0}' is already taken!", newUserName));
-                    }
+                    HandleNick(name, parts);
 
                     return true;
                 }
                 else {
                     EnsureUser();
                     if (commandName.Equals("rooms", StringComparison.OrdinalIgnoreCase)) {
-                        var rooms = _rooms.Select(r => new {
-                            Name = r.Key,
-                            Count = r.Value.Users.Count
-                        });
-
-                        Caller.showRooms(rooms);
+                        HandleRooms();
 
                         return true;
                     }
                     else if (commandName.Equals("join", StringComparison.OrdinalIgnoreCase)) {
-                        if (parts.Length == 1) {
-                            throw new InvalidOperationException("Join which room?");
-                        }
-
-                        // Only support one room at a time for now
-
-                        string newRoom = parts[1];
-                        ChatRoom chatRoom;
-                        // Create the room if it doesn't exist
-                        if (!_rooms.TryGetValue(newRoom, out chatRoom)) {
-                            chatRoom = new ChatRoom();
-                            _rooms.Add(newRoom, chatRoom);
-                        }
-
-                        // Remove the old room
-                        if (!String.IsNullOrEmpty(room)) {
-                            _userRooms[name].Remove(room);
-                            _rooms[room].Users.Remove(name);
-
-                            Clients[room].leave(_users[name]);
-                            RemoveFromGroup(room);
-                        }
-
-                        _userRooms[name].Add(newRoom);
-                        if (!chatRoom.Users.Add(name)) {
-                            throw new InvalidOperationException("You're already in that room!");
-                        }
-
-                        Clients[newRoom].addUser(_users[name]);
-
-                        // Set the room on the caller
-                        Caller.room = newRoom;
-
-                        AddToGroup(newRoom);
-
-                        Caller.refreshRoom(newRoom);
+                        HandleJoin(room, name, parts);
 
                         return true;
                     }
                     else if (commandName.Equals("msg", StringComparison.OrdinalIgnoreCase)) {
-                        if (_users.Count == 1) {
-                            throw new InvalidOperationException("You're the only person in here...");
-                        }
-
-                        if (parts.Length < 2) {
-                            throw new InvalidOperationException("Who are you trying send a private message to?");
-                        }
-
-                        string to = parts[1];
-                        if (to.Equals(name, StringComparison.OrdinalIgnoreCase)) {
-                            throw new InvalidOperationException("You can't private message yourself!");
-                        }
-
-                        if (!_users.ContainsKey(to)) {
-                            throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", to));
-                        }
-
-                        string messageText = String.Join(" ", parts.Skip(2)).Trim();
-
-                        if (String.IsNullOrEmpty(messageText)) {
-                            throw new InvalidOperationException(String.Format("What did you want to say to '{0}'.", to));
-                        }
-
-                        string recipientId = _users[to].ClientId;
-                        // Send a message to the sender and the sendee                        
-                        Clients[recipientId].sendPrivateMessage(name, to, messageText);
-                        Caller.sendPrivateMessage(name, to, messageText);
+                        HandleMsg(name, parts);
 
                         return true;
                     }
                     else {
                         EnsureUserAndRoom();
                         if (commandName.Equals("me", StringComparison.OrdinalIgnoreCase)) {
-                            if (parts.Length == 1) {
-                                throw new InvalidProgramException("You what?");
-                            }
-                            var content = String.Join(" ", parts.Skip(1));
-
-                            Clients[room].sendMeMessage(name, content);
+                            HandleMe(room, name, parts);
                             return true;
                         }
                         else if (commandName.Equals("leave", StringComparison.OrdinalIgnoreCase)) {
-                            ChatRoom chatRoom;
-                            if (_rooms.TryGetValue(room, out chatRoom)) {
-                                chatRoom.Users.Remove(name);
-                                _userRooms[name].Remove(room);
-
-                                Clients[room].leave(_users[name]);
-                            }
-
-                            RemoveFromGroup(room);
-
-                            Caller.room = null;
+                            HandleLeave(room, name);
 
                             return true;
                         }
@@ -394,6 +263,160 @@ namespace SignalR.Samples.Hubs.Chat {
                 }
             }
             return false;
+        }
+
+        private void HandleLeave(string room, string name) {
+            ChatRoom chatRoom;
+            if (_rooms.TryGetValue(room, out chatRoom)) {
+                chatRoom.Users.Remove(name);
+                _userRooms[name].Remove(room);
+
+                Clients[room].leave(_users[name]);
+            }
+
+            RemoveFromGroup(room);
+
+            Caller.room = null;
+        }
+
+        private void HandleMe(string room, string name, string[] parts) {
+            if (parts.Length == 1) {
+                throw new InvalidProgramException("You what?");
+            }
+            var content = String.Join(" ", parts.Skip(1));
+
+            Clients[room].sendMeMessage(name, content);
+        }
+
+        private void HandleMsg(string name, string[] parts) {
+            if (_users.Count == 1) {
+                throw new InvalidOperationException("You're the only person in here...");
+            }
+
+            if (parts.Length < 2) {
+                throw new InvalidOperationException("Who are you trying send a private message to?");
+            }
+
+            string to = parts[1];
+            if (to.Equals(name, StringComparison.OrdinalIgnoreCase)) {
+                throw new InvalidOperationException("You can't private message yourself!");
+            }
+
+            if (!_users.ContainsKey(to)) {
+                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", to));
+            }
+
+            string messageText = String.Join(" ", parts.Skip(2)).Trim();
+
+            if (String.IsNullOrEmpty(messageText)) {
+                throw new InvalidOperationException(String.Format("What did you want to say to '{0}'.", to));
+            }
+
+            string recipientId = _users[to].ClientId;
+            // Send a message to the sender and the sendee                        
+            Clients[recipientId].sendPrivateMessage(name, to, messageText);
+            Caller.sendPrivateMessage(name, to, messageText);
+        }
+
+        private void HandleJoin(string room, string name, string[] parts) {
+            if (parts.Length == 1) {
+                throw new InvalidOperationException("Join which room?");
+            }
+
+            // Only support one room at a time for now
+
+            string newRoom = parts[1];
+            ChatRoom chatRoom;
+            // Create the room if it doesn't exist
+            if (!_rooms.TryGetValue(newRoom, out chatRoom)) {
+                chatRoom = new ChatRoom();
+                _rooms.Add(newRoom, chatRoom);
+            }
+
+            // Remove the old room
+            if (!String.IsNullOrEmpty(room)) {
+                _userRooms[name].Remove(room);
+                _rooms[room].Users.Remove(name);
+
+                Clients[room].leave(_users[name]);
+                RemoveFromGroup(room);
+            }
+
+            _userRooms[name].Add(newRoom);
+            if (!chatRoom.Users.Add(name)) {
+                throw new InvalidOperationException("You're already in that room!");
+            }
+
+            Clients[newRoom].addUser(_users[name]);
+
+            // Set the room on the caller
+            Caller.room = newRoom;
+
+            AddToGroup(newRoom);
+
+            Caller.refreshRoom(newRoom);
+        }
+
+        private void HandleRooms() {
+            var rooms = _rooms.Select(r => new {
+                Name = r.Key,
+                Count = r.Value.Users.Count
+            });
+
+            Caller.showRooms(rooms);
+        }
+
+        private void HandleNick(string name, string[] parts) {
+            string newUserName = String.Join(" ", parts.Skip(1));
+
+            if (String.IsNullOrEmpty(newUserName)) {
+                throw new InvalidOperationException("No username specified!");
+            }
+
+            if (newUserName.Equals(name, StringComparison.OrdinalIgnoreCase)) {
+                throw new InvalidOperationException("That's already your username...");
+            }
+
+            if (!_users.ContainsKey(newUserName)) {
+                if (String.IsNullOrEmpty(name) || !_users.ContainsKey(name)) {
+                    var user = AddUser(newUserName);
+                }
+                else {
+                    var oldUser = _users[name];
+                    var newUser = new ChatUser {
+                        Name = newUserName,
+                        Hash = GetMD5Hash(newUserName),
+                        Id = oldUser.Id,
+                        ClientId = oldUser.ClientId
+                    };
+
+                    _users[newUserName] = newUser;
+                    _userRooms[newUserName] = new HashSet<string>(_userRooms[name]);
+
+                    bool inRooms = _userRooms[name].Any();
+
+                    if (inRooms) {
+                        foreach (var r in _userRooms[name]) {
+                            _rooms[r].Users.Remove(name);
+                            _rooms[r].Users.Add(newUserName);
+                            Clients[r].changeUserName(oldUser, newUser);
+                        }
+                    }
+
+                    _userRooms.Remove(name);
+                    _users.Remove(name);
+
+                    Caller.hash = newUser.Hash;
+                    Caller.name = newUser.Name;
+
+                    if (!inRooms) {
+                        Caller.changeUserName(oldUser, newUser);
+                    }
+                }
+            }
+            else {
+                throw new InvalidOperationException(String.Format("Username '{0}' is already taken!", newUserName));
+            }
         }
 
         private ChatUser AddUser(string newUserName) {
