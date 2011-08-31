@@ -100,6 +100,9 @@ $(function () {
     chat.addMessageContent = function (id, content) {
         var nearEnd = $('#messages').isNearTheEnd();
         var e = $('#m-' + id).append(content);
+
+        refreshMessages();
+
         updateUnread();
         if (nearEnd) {
             scrollTo(e[0]);
@@ -145,7 +148,7 @@ $(function () {
 
         refreshUsers();
 
-        if (!exists && this.name != user.Name) {
+        if (!exists && this.name !== user.Name) {
             addMessage(user.Name + ' just entered ' + this.room, 'notification');
             e.hide().fadeIn('slow');
         }

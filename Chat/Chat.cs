@@ -107,7 +107,7 @@ namespace SignalR.Samples.Hubs.Chat {
 
             HashSet<string> links;
             var messageText = Transform(content, out links);
-            var chatMessage = new ChatMessage(GetUserByClientId(Context.ClientId), messageText);
+            var chatMessage = new ChatMessage(_users[name], messageText);
 
             _rooms[roomName].Messages.Add(chatMessage);
 
@@ -333,7 +333,7 @@ namespace SignalR.Samples.Hubs.Chat {
                 _userRooms[name].Remove(room);
                 _rooms[room].Users.Remove(name);
                 RemoveFromGroup(room);
-                Clients[room].leave(_users[name]);
+                Clients[room].leave(_users[name]).Wait();
             }
 
             _userRooms[name].Add(newRoom);
@@ -341,12 +341,13 @@ namespace SignalR.Samples.Hubs.Chat {
                 throw new InvalidOperationException("You're already in that room!");
             }
 
+            // Tell the people in this room that you're joining
             Clients[newRoom].addUser(_users[name]);
 
             // Set the room on the caller
             Caller.room = newRoom;
 
-            AddToGroup(newRoom);
+            AddToGroup(newRoom).Wait();
 
             Caller.joinRoom(newRoom);
         }
@@ -463,12 +464,17 @@ namespace SignalR.Samples.Hubs.Chat {
 
         private void EnsureUser() {
             string name = Caller.name;
-            if (String.IsNullOrEmpty(name) || !_users.ContainsKey(name)) {
+            ChatUser user;
+            if (String.IsNullOrEmpty(name) || !_users.TryGetValue(name, out user)) {
                 throw new InvalidOperationException("You don't have a name. Pick a name using '/nick nickname'.");
             }
 
             if (!_userRooms.ContainsKey(name)) {
                 _userRooms[name] = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            }
+
+            if (String.IsNullOrEmpty(user.ClientId)) {
+                user.ClientId = Context.ClientId;
             }
         }
 
