@@ -9,6 +9,15 @@ $(function () {
         return this[0].scrollTop + this.height() >= this[0].scrollHeight;
     };
 
+    $.fn.resizeMobileContent = function () {
+        if ($.mobile) {
+            this.find('embed')
+                .attr('width', 250)
+                .attr('height', 202);
+        }
+        return this;
+    };
+
     function clearMessages() {
         $('#messages').html('');
     }
@@ -87,7 +96,7 @@ $(function () {
     chat.showRooms = function (rooms) {
         addMessage('<h3>Rooms</h3>');
         if (!rooms.length) {
-            addMessage('No rooms available', 'notification')
+            addMessage('No rooms available', 'notification');
         }
         else {
             $.each(rooms, function () {
@@ -99,7 +108,8 @@ $(function () {
 
     chat.addMessageContent = function (id, content) {
         var nearEnd = $('#messages').isNearTheEnd();
-        var e = $('#m-' + id).append(content);
+        var e = $('#m-' + id).append(content)
+                             .resizeMobileContent();
         updateUnread();
         if (nearEnd) {
             scrollTo(e[0]);
@@ -117,8 +127,8 @@ $(function () {
 
         var nearEnd = $('#messages').isNearTheEnd();
         var e = $('#new-message-template').tmpl(data)
-                                          .appendTo($('#messages'));
-
+                                          .appendTo($('#messages'))
+                                          .resizeMobileContent();
         refreshMessages();
 
         updateUnread();
