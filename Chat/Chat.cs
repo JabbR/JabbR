@@ -111,7 +111,10 @@ namespace SignalR.Samples.Hubs.Chat {
 
             _rooms[roomName].Messages.Add(chatMessage);
 
-            Clients[roomName].addMessage(chatMessage.Id, chatMessage.User, chatMessage.Content);
+            Clients[roomName].addMessage(chatMessage.Id, 
+                                         chatMessage.User, 
+                                         chatMessage.Content, 
+                                         chatMessage.WhenFormatted);
 
             if (links.Any()) {
                 // REVIEW: is this safe to do? We're holding on to this instance 

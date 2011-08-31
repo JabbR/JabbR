@@ -51,7 +51,7 @@ $(function () {
         chat.getRecentMessages()
             .done(function (messages) {
                 $.each(messages, function () {
-                    chat.addMessage(this.Id, this.User, this.Content);
+                    chat.addMessage(this.Id, this.User, this.Content, this.WhenFormatted);
                 });
             });
 
@@ -91,12 +91,13 @@ $(function () {
         }
     };
 
-    chat.addMessage = function (id, user, message) {
+    chat.addMessage = function (id, user, message, when) {
         var data = {
             name: user.Name,
             hash: user.Hash,
             message: message,
-            id: id
+            id: id,
+            when: when
         };
 
         var nearEnd = $('#messages').isNearTheEnd();

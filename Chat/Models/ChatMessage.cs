@@ -9,6 +9,11 @@ namespace Chat.Models {
         public ChatUser User { get; set; }
         public string Content { get; set; }
         public DateTime When { get; set; }
+        public string WhenFormatted {
+            get {
+                return When.ToString("hh:mm:ss");
+            }
+        }
 
         public ChatMessage(ChatUser user, string content) {
             User = user;
