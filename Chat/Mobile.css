@@ -4,7 +4,11 @@
 
 #messages .ui-li, #users .ui-li {
     font-weight: normal;
+    padding-right: 10px;
 }
+    #messages .ui-li .ui-li-aside {
+        margin: 0;
+    }
 
 #users .ui-li-icon {
     -webkit-background-clip: border-box;
