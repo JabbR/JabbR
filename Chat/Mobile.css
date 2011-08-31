@@ -25,3 +25,15 @@
     -webkit-border-bottom-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+
+#send-message input[type="text"] { width: 95%; }
+@media (min-width: 450px){
+    #send-message input[type="text"] { 
+        width: 60%;
+    }
+    #send-message div.ui-btn {
+        display: inline-block;
+        margin: 0;
+        width: 35%;
+    }
+}
