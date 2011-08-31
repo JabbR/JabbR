@@ -36,6 +36,7 @@ $(function () {
     }
 
     chat.joinRoom = function (room) {
+        console.log('joinRoom(' + room + ')');
         clearMessages();
         clearUsers();
 
@@ -70,6 +71,7 @@ $(function () {
     };
 
     chat.showRooms = function (rooms) {
+        console.log('showRooms(' + rooms.length + ')');
         addMessage('<h3>Rooms</h3>');
         if (!rooms.length) {
             addMessage('No rooms available', 'notification')
@@ -83,6 +85,7 @@ $(function () {
     };
 
     chat.addMessageContent = function (id, content) {
+        console.log('addMessageContent(' + id + ', ' + content + ')');
         var nearEnd = $('#messages').isNearTheEnd();
         var e = $('#m-' + id).append(content);
         updateUnread();
@@ -92,6 +95,7 @@ $(function () {
     };
 
     chat.addMessage = function (id, user, message) {
+        console.log('addMessage()');
         var data = {
             name: user.Name,
             hash: user.Hash,
@@ -110,6 +114,7 @@ $(function () {
     };
 
     chat.addUser = function (user, exists) {
+        console.log('addUser()');
         var id = 'u-' + user.Id;
         if (document.getElementById(id)) {
             return;
@@ -133,6 +138,7 @@ $(function () {
     };
 
     chat.changeUserName = function (oldUser, newUser) {
+        console.log('changeUserName()');
         $('#u-' + oldUser.Id).replaceWith(
                 $('#new-user-template').tmpl({
                     name: newUser.Name,
@@ -151,6 +157,7 @@ $(function () {
     };
 
     chat.showCommands = function (commands) {
+        console.log('showCommands()');
         addMessage('<h3>Help</h3>');
         $.each(commands, function () {
             addMessage(this.Name + ' - ' + this.Description);
@@ -167,6 +174,7 @@ $(function () {
     };
 
     chat.leave = function (user) {
+        console.log('leave()');
         if (this.id != user.Id) {
             $('#u-' + user.Id).fadeOut('slow', function () {
                 $(this).remove();
