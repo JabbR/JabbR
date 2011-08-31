@@ -13,13 +13,26 @@ $(function () {
         $('#messages').html('');
     }
 
+    function refreshMessages() { refreshList($('#messages')); }
+
     function clearUsers() {
         $('#users').html('');
+    }
+
+    function refreshUsers() { refreshList($('#users')); }
+
+    function refreshList(list) {
+        if (list.is('.ui-listview')) {
+            list.listview('refresh');
+        }
     }
 
     function addMessage(content, type) {
         var nearEnd = $('#messages').isNearTheEnd();
         var e = $('<li/>').html(content).appendTo($('#messages'));
+
+        refreshMessages();
+
         if (type) {
             e.addClass(type);
         }
@@ -44,6 +57,8 @@ $(function () {
                 $.each(users, function () {
                     chat.addUser(this, true);
                 });
+
+                refreshUsers();
 
                 $('#new-message').focus();
             });
@@ -103,6 +118,9 @@ $(function () {
         var nearEnd = $('#messages').isNearTheEnd();
         var e = $('#new-message-template').tmpl(data)
                                           .appendTo($('#messages'));
+
+        refreshMessages();
+
         updateUnread();
 
         if (nearEnd) {
@@ -125,6 +143,8 @@ $(function () {
         var e = $('#new-user-template').tmpl(data)
                                        .appendTo($('#users'));
 
+        refreshUsers();
+
         if (!exists && this.name != user.Name) {
             addMessage(user.Name + ' just entered ' + this.room, 'notification');
             e.hide().fadeIn('slow');
@@ -141,6 +161,8 @@ $(function () {
                     id: newUser.Id
                 })
         );
+
+        refreshUsers();
 
         if (oldUser.Name === this.name) {
             addMessage('Your name is now ' + newUser.Name, 'notification');
@@ -172,6 +194,8 @@ $(function () {
             $('#u-' + user.Id).fadeOut('slow', function () {
                 $(this).remove();
             });
+
+            refreshUsers();
 
             addMessage(user.Name + ' left ' + this.room, 'notification');
         }
@@ -236,7 +260,7 @@ $(function () {
         chat.join()
             .done(function (success) {
                 if (success === false) {
-                    $.cookie('userid', '')
+                    $.cookie('userid', '');
                     addMessage('Choose a name using "/nick nickname".', 'notification');
                 }
             });
