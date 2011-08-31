@@ -75,7 +75,7 @@ $(function () {
         chat.getRecentMessages()
             .done(function (messages) {
                 $.each(messages, function () {
-                    chat.addMessage(this.Id, this.User, this.Content, this.WhenFormatted);
+                    chat.addMessage(this.Id, this.User, this.Content, this.WhenFormatted, true);
                 });
             });
 
@@ -116,7 +116,7 @@ $(function () {
         }
     };
 
-    chat.addMessage = function (id, user, message, when) {
+    chat.addMessage = function (id, user, message, when, noScroll) {
         var data = {
             name: user.Name,
             hash: user.Hash,
@@ -133,7 +133,7 @@ $(function () {
 
         updateUnread();
 
-        if (nearEnd) {
+        if (!noScroll && nearEnd) {
             scrollTo(e[0]);
         }
     };
