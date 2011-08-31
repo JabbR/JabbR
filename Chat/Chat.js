@@ -5,6 +5,13 @@
 $(function () {
     var chat = $.connection.chat;
 
+    if (Modernizr.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            chat.latitude = position.coords.latitude;
+            chat.longitude = position.coords.longitude;
+        });
+    }
+
     $.fn.isNearTheEnd = function () {
         return this[0].scrollTop + this.height() >= this[0].scrollHeight;
     }

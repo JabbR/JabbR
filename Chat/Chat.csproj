@@ -123,6 +123,7 @@
     <Content Include="Scripts\jQuery.tmpl.min.js" />
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\json2.min.js" />
+    <Content Include="Scripts\modernizr-2.0.6-development-only.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

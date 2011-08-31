@@ -8,10 +8,17 @@ namespace Chat.Models {
         public string Id { get; private set; }
         public ChatUser User { get; set; }
         public string Content { get; set; }
-        public DateTime When { get; set; }
+        public DateTimeOffset When { get; set; }
         public string WhenFormatted {
             get {
-                return When.ToString("hh:mm:ss");
+                DateTimeOffset when = When;
+                if (User.Timezone != null) {
+                    when = TimeZoneInfo.ConvertTime(When, User.Timezone);
+                }
+                else {
+                    when = When.ToOffset(User.Offset);
+                }
+                return when.ToString("hh:mm:ss");
             }
         }
 
@@ -19,7 +26,7 @@ namespace Chat.Models {
             User = user;
             Content = content;
             Id = Guid.NewGuid().ToString("d");
-            When = DateTime.UtcNow;
+            When = DateTimeOffset.UtcNow;
         }
     }
 }

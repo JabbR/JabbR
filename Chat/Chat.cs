@@ -12,6 +12,8 @@ using Chat.Models;
 using Microsoft.Security.Application;
 using SignalR.Hubs;
 using SignalR.Samples.Hubs.Chat.ContentProviders;
+using System.IO;
+using System.Xml.Linq;
 
 namespace SignalR.Samples.Hubs.Chat {
     public class Chat : Hub, IDisconnect {
@@ -111,9 +113,9 @@ namespace SignalR.Samples.Hubs.Chat {
 
             _rooms[roomName].Messages.Add(chatMessage);
 
-            Clients[roomName].addMessage(chatMessage.Id, 
-                                         chatMessage.User, 
-                                         chatMessage.Content, 
+            Clients[roomName].addMessage(chatMessage.Id,
+                                         chatMessage.User,
+                                         chatMessage.Content,
                                          chatMessage.WhenFormatted);
 
             if (links.Any()) {
@@ -382,7 +384,9 @@ namespace SignalR.Samples.Hubs.Chat {
                         Name = newUserName,
                         Hash = newUserName.ToMD5(),
                         Id = oldUser.Id,
-                        ClientId = oldUser.ClientId
+                        ClientId = oldUser.ClientId,
+                        Offset = oldUser.Offset,
+                        Timezone = oldUser.Timezone
                     };
 
                     _users[newUserName] = newUser;
@@ -430,8 +434,11 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         private ChatUser AddUser(string newUserName) {
+            var offset = TimeSpan.FromHours(ResolveOffset());
             var user = new ChatUser(newUserName) {
-                ClientId = Context.ClientId
+                ClientId = Context.ClientId,
+                Offset = offset,
+                Timezone = TimeZoneInfo.GetSystemTimeZones().FirstOrDefault(tz => tz.BaseUtcOffset == offset)
             };
 
             _users[newUserName] = user;
@@ -444,6 +451,26 @@ namespace SignalR.Samples.Hubs.Chat {
             Caller.addUser(user);
 
             return user;
+        }
+
+        private double ResolveOffset() {            
+            string url = String.Format("http://www.earthtools.org/timezone/{0}/{1}", Caller.latitude, Caller.longitude);
+            var request = (HttpWebRequest)HttpWebRequest.Create(url);
+            try {
+                using (var response = (HttpWebResponse)request.GetResponse()) {
+                    using (var sr = new StreamReader(response.GetResponseStream())) {
+                        var document = XDocument.Parse(sr.ReadToEnd());
+                        var offsetElement = document.Descendants().FirstOrDefault(e => e.Name.LocalName.Equals("offset", StringComparison.OrdinalIgnoreCase));
+                        if (offsetElement != null) {
+                            return Double.Parse(offsetElement.Value);
+                        }
+                    }
+                }
+            }
+            catch {
+            }
+
+            return 0;
         }
 
         private void EnsureUserAndRoom() {
