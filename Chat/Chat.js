@@ -7,7 +7,7 @@ $(function () {
 
     $.fn.isNearTheEnd = function () {
         return this[0].scrollTop + this.height() >= this[0].scrollHeight;
-    }
+    };
 
     function clearMessages() {
         $('#messages').html('');
