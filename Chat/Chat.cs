@@ -463,6 +463,10 @@ namespace SignalR.Samples.Hubs.Chat {
             if (String.IsNullOrEmpty(name) || !_users.ContainsKey(name)) {
                 throw new InvalidOperationException("You don't have a name. Pick a name using '/nick nickname'.");
             }
+
+            if (!_userRooms.ContainsKey(name)) {
+                _userRooms[name] = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            }
         }
 
         private string Transform(string message, out HashSet<string> extractedUrls) {
