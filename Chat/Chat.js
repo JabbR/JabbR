@@ -250,6 +250,12 @@ $(function () {
 
             addMessage(user.Name + ' left ' + this.room, 'notification');
         }
+        else {
+            clearMessages();
+            $('#users li').not('#u-' + user.Id).remove();
+
+            addMessage('You have left ' + this.room, 'notification');
+        }
     };
 
     $('#send-message').submit(function () {
