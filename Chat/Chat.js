@@ -5,13 +5,6 @@
 $(function () {
     var chat = $.connection.chat;
 
-    if (Modernizr.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            chat.latitude = position.coords.latitude;
-            chat.longitude = position.coords.longitude;
-        });
-    }
-
     $.fn.isNearTheEnd = function () {
         return this[0].scrollTop + this.height() >= this[0].scrollHeight;
     };
@@ -24,6 +17,45 @@ $(function () {
         }
         return this;
     };
+
+    function formatTime(dt) {
+        var ap = "";
+        var hr = dt.getHours();
+
+        if (hr < 12) {
+            ap = "AM";
+        }
+        else {
+            ap = "PM";
+        }
+
+        if (hr == 0) {
+            hr = 12;
+        }
+
+        if (hr > 12) {
+            hr = hr - 12;
+        }
+
+        var mins = padZero(dt.getMinutes());
+        var seconds = padZero(dt.getSeconds());
+        return hr + ":" + mins + ":" + seconds + " " + ap;
+    }
+
+    function padZero(s) {
+        s = s.toString();
+        if (s.length == 1) {
+            return "0" + s;
+        }
+        return s;
+    }
+
+    function toLocal(dts) {
+        var s = dts.substr('/Date('.length);
+        var ticks = parseInt(s.substr(0, s.length - 2));
+        var dt = new Date(ticks);
+        return formatTime(dt);
+    }
 
     function clearMessages() {
         $('#messages').html('');
@@ -82,7 +114,7 @@ $(function () {
         chat.getRecentMessages()
             .done(function (messages) {
                 $.each(messages, function () {
-                    chat.addMessage(this.Id, this.User, this.Content, this.WhenFormatted, true);
+                    chat.addMessage(this.Id, this.User, this.Content, this.When, true);
                 });
             });
 
@@ -118,7 +150,7 @@ $(function () {
 
         var e = $('#m-' + id).append(content)
                              .resizeMobileContent();
-                             
+
         updateUnread();
         if (nearEnd) {
             scrollTo(e[0]);
@@ -131,7 +163,7 @@ $(function () {
             hash: user.Hash,
             message: message,
             id: id,
-            when: when
+            when: toLocal(when)
         };
 
         var nearEnd = $('#messages').isNearTheEnd();

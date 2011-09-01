@@ -116,7 +116,7 @@ namespace SignalR.Samples.Hubs.Chat {
             Clients[roomName].addMessage(chatMessage.Id,
                                          chatMessage.User,
                                          chatMessage.Content,
-                                         chatMessage.WhenFormatted);
+                                         chatMessage.When);
 
             if (links.Any()) {
                 // REVIEW: is this safe to do? We're holding on to this instance 
@@ -434,19 +434,26 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         private ChatUser AddUser(string newUserName) {
-            var offset = TimeSpan.FromHours(ResolveOffset());
             var user = new ChatUser(newUserName) {
-                ClientId = Context.ClientId,
-                Offset = offset,
-                Timezone = TimeZoneInfo.GetSystemTimeZones().FirstOrDefault(tz => tz.BaseUtcOffset == offset)
+                ClientId = Context.ClientId
             };
 
             _users[newUserName] = user;
             _userRooms[newUserName] = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
+            // Get the offset
+            var offset = TimeSpan.FromHours(ResolveOffset());
+
+            // Try to resolve the timezone
+            var zone = TimeZoneInfo.GetSystemTimeZones().FirstOrDefault(tz => tz.BaseUtcOffset == offset);
+            if (zone != null) {
+                offset = zone.GetUtcOffset(DateTimeOffset.UtcNow);
+            }
+
             Caller.name = user.Name;
             Caller.hash = user.Hash;
-            Caller.id = user.Id;
+            Caller.id = user.Id;            
+            Caller.offset = offset.TotalHours;
 
             Caller.addUser(user);
 
