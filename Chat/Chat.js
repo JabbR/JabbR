@@ -224,6 +224,20 @@ $(function () {
         }
     };
 
+    chat.changeGravatar = function (currentUser) {
+        $('#u-' + currentUser.Id).replaceWith(
+                $('#new-user-template').tmpl({
+                    name: currentUser.Name,
+                    hash: currentUser.Hash,
+                    id: currentUser.Id
+                })
+        );
+
+        refreshUsers();
+
+        addMessage('Your gravatar has been set.', 'notification');
+    }
+
     chat.showCommands = function (commands) {
         addMessage('<h3>Help</h3>');
         $.each(commands, function () {

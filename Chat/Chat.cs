@@ -233,6 +233,11 @@ namespace SignalR.Samples.Hubs.Chat {
 
                         return true;
                     }
+                    else if (commandName.Equals("gravatar", StringComparison.OrdinalIgnoreCase)) {
+                        HandleGravatar(name, parts);
+
+                        return true;
+                    }
                     else {
                         EnsureUserAndRoom();
                         if (commandName.Equals("me", StringComparison.OrdinalIgnoreCase)) {
@@ -260,7 +265,8 @@ namespace SignalR.Samples.Hubs.Chat {
                 new { Name = "me", Description = "Type /me 'does anything'" },
                 new { Name = "msg", Description = "Type /msg nickname (message) to send a private message to nickname." },
                 new { Name = "leave", Description = "Type /leave to leave the current room." },
-                new { Name = "rooms", Description = "Type /rooms to show the list of rooms" }
+                new { Name = "rooms", Description = "Type /rooms to show the list of rooms" },
+                new { Name = "gravatar", Description = "Type \"/gravatar email\" to set your gravatar." }
             });
         }
 
@@ -354,6 +360,36 @@ namespace SignalR.Samples.Hubs.Chat {
             AddToGroup(newRoom).Wait();
 
             Caller.joinRoom(newRoom);
+        }
+
+        private void HandleGravatar(string name, string[] parts)
+        {
+            string email = string.Join(" ", parts.Skip(1));
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                throw new InvalidOperationException("Email was not specified!");
+            }
+
+            var user = _users[name];
+            user.Hash = email.ToMD5();
+
+            bool inRooms = _userRooms[name].Any();
+
+            if (inRooms)
+            {
+                foreach (var room in _userRooms[name])
+                {
+                    Clients[room].changeGravatar(user);
+                }
+            }
+
+
+            if (!inRooms)
+            {
+                Caller.changeGravatar(user);
+            }
+
         }
 
         private void HandleRooms() {
