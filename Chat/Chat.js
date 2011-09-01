@@ -235,7 +235,12 @@ $(function () {
 
         refreshUsers();
 
-        addMessage('Your gravatar has been set.', 'notification');
+        if (currentUser.Id === this.id) {
+            addMessage('Your gravatar has been set.', 'notification');
+        }
+        else {
+            addMessage(currentUser.Name + "'s gravatar changed.", 'notification');
+        }
     }
 
     chat.showCommands = function (commands) {

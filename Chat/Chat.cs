@@ -362,34 +362,26 @@ namespace SignalR.Samples.Hubs.Chat {
             Caller.joinRoom(newRoom);
         }
 
-        private void HandleGravatar(string name, string[] parts)
-        {
-            string email = string.Join(" ", parts.Skip(1));
+        private void HandleGravatar(string name, string[] parts) {
+            string email = String.Join(" ", parts.Skip(1));
 
-            if (string.IsNullOrWhiteSpace(email))
-            {
+            if (String.IsNullOrWhiteSpace(email)) {
                 throw new InvalidOperationException("Email was not specified!");
             }
 
-            var user = _users[name];
+            ChatUser user = _users[name];
             user.Hash = email.ToMD5();
 
             bool inRooms = _userRooms[name].Any();
 
-            if (inRooms)
-            {
-                foreach (var room in _userRooms[name])
-                {
+            if (inRooms) {
+                foreach (var room in _userRooms[name]) {
                     Clients[room].changeGravatar(user);
                 }
             }
-
-
-            if (!inRooms)
-            {
+            else {
                 Caller.changeGravatar(user);
             }
-
         }
 
         private void HandleRooms() {
