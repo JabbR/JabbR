@@ -176,7 +176,9 @@ namespace SignalR.Samples.Hubs.Chat {
             }
 
             return from name in _rooms[room].Users
-                   select _users[name];
+                   let user = _users[name]
+                   orderby user.Name
+                   select user;
         }
 
         public IEnumerable<ChatMessage> GetRecentMessages() {
@@ -441,43 +443,13 @@ namespace SignalR.Samples.Hubs.Chat {
             _users[newUserName] = user;
             _userRooms[newUserName] = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            // Get the offset
-            var offset = TimeSpan.FromHours(ResolveOffset());
-
-            // Try to resolve the timezone
-            var zone = TimeZoneInfo.GetSystemTimeZones().FirstOrDefault(tz => tz.BaseUtcOffset == offset);
-            if (zone != null) {
-                offset = zone.GetUtcOffset(DateTimeOffset.UtcNow);
-            }
-
             Caller.name = user.Name;
             Caller.hash = user.Hash;
-            Caller.id = user.Id;            
-            Caller.offset = offset.TotalHours;
+            Caller.id = user.Id;
 
             Caller.addUser(user);
 
             return user;
-        }
-
-        private double ResolveOffset() {            
-            string url = String.Format("http://www.earthtools.org/timezone/{0}/{1}", Caller.latitude, Caller.longitude);
-            var request = (HttpWebRequest)HttpWebRequest.Create(url);
-            try {
-                using (var response = (HttpWebResponse)request.GetResponse()) {
-                    using (var sr = new StreamReader(response.GetResponseStream())) {
-                        var document = XDocument.Parse(sr.ReadToEnd());
-                        var offsetElement = document.Descendants().FirstOrDefault(e => e.Name.LocalName.Equals("offset", StringComparison.OrdinalIgnoreCase));
-                        if (offsetElement != null) {
-                            return Double.Parse(offsetElement.Value);
-                        }
-                    }
-                }
-            }
-            catch {
-            }
-
-            return 0;
         }
 
         private void EnsureUserAndRoom() {
