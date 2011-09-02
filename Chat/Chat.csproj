@@ -38,6 +38,9 @@
     <Reference Include="AntiXSSLibrary">
       <HintPath>..\packages\AntiXSS.4.0.1\lib\net35\AntiXSSLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="DynamicLINQ">
+      <HintPath>..\packages\DynamicLINQ.1.0\lib\net40\DynamicLINQ.dll</HintPath>
+    </Reference>
     <Reference Include="Elmah">
       <HintPath>..\packages\elmah.corelibrary.1.2\lib\Elmah.dll</HintPath>
     </Reference>
@@ -46,7 +49,6 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="SignalR, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\SignalR.Server.0.3\lib\net40\SignalR.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.DynamicData" />
@@ -103,8 +105,8 @@
     <Content Include="Content\themes\base\jquery.ui.slider.css" />
     <Content Include="Content\themes\base\jquery.ui.tabs.css" />
     <Content Include="Content\themes\base\jquery.ui.theme.css" />
-    <Content Include="Global.asax" />
     <Content Include="index.htm" />
+    <Content Include="Global.asax" />
     <Content Include="Mobile.css" />
     <Content Include="mobile.htm" />
     <Content Include="Scripts\jquery-1.6.2-vsdoc.js" />
@@ -132,6 +134,7 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <Content Include="_SignalTrace.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Chat.cs" />
@@ -148,6 +151,16 @@
     <Compile Include="Models\ChatRoom.cs" />
     <Compile Include="Models\ChatUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Profiling\TracedMessageStore.cs" />
+    <Compile Include="Profiling\TracedSignalBus.cs" />
+    <Compile Include="Profiling\TraceHelper.cs" />
+    <Compile Include="_SignalTrace.aspx.cs">
+      <DependentUpon>_SignalTrace.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="_SignalTrace.aspx.designer.cs">
+      <DependentUpon>_SignalTrace.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
