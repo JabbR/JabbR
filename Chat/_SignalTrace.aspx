@@ -4,7 +4,12 @@
 <%@ Import Namespace="DynamicLINQ" %>
 <script runat="server">
     protected void Page_Load(object sender, EventArgs e) {
-        Logs.DataSource = Filter(TraceHelper.Logs.Keys.OrderBy(p => p.When).AsQueryable());
+        Logs.DataSource = Filter(TraceHelper.Logs
+                                            .Keys
+                                            .OrderByDescending(p => p.When)
+                                            .Take(100)
+                                            .OrderBy(p => p.When)
+                                            .AsQueryable());
         Logs.DataBind();
     }
 
