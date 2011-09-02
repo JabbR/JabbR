@@ -17,30 +17,16 @@ namespace Chat {
     }
 
     public static class TraceHelper {
-        public static readonly ConcurrentBag<LogInfo> Logs = new ConcurrentBag<LogInfo>();
+        public static readonly ConcurrentDictionary<LogInfo, bool> Logs = new ConcurrentDictionary<LogInfo, bool>();
 
-        public static IDisposable BeginTrace(string cateogry, string signal, string message, params object[] args) {
-            var context = HttpContext.Current;
-            return new DisposableAction(() => {
-                WriteMessage(cateogry, signal, String.Format(message, args), context);
-            });
+        public static void WriteTrace(string cateogry, string signal, string message, params object[] args) {
+            WriteMessage(cateogry, signal, String.Format(message, args));
         }
 
-        private class DisposableAction : IDisposable {
-            private readonly Action _action;
-            public DisposableAction(Action action) {
-                _action = action;
-            }
-
-            public void Dispose() {
-                _action();
-            }
-        }
-
-        private static void WriteMessage(string cateogry, string eventName, string message, HttpContext context) {
+        private static void WriteMessage(string cateogry, string eventName, string message, HttpContext context = null) {
             context = context ?? HttpContext.Current;
 
-            Logs.Add(new LogInfo {
+            Logs.TryAdd(new LogInfo {
                 Signal = eventName,
                 Category = cateogry,
                 Message = message,
@@ -49,7 +35,7 @@ namespace Chat {
                 When = DateTime.Now,
                 Path = context == null ? "No idea" : context.Request.Path,
                 ClientId = context == null ? "No idea" : context.Request.Form["clientId"]
-            });
+            }, true);
         }
     }
 }

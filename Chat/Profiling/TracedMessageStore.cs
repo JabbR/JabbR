@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using SignalR;
+using System.Linq;
 using System.Web.Script.Serialization;
 
 namespace Chat {
@@ -16,33 +17,24 @@ namespace Chat {
         }
 
         public Task<IEnumerable<Message>> GetAllSince(string key, long id) {
-            var d = TraceHelper.BeginTrace("Store", key, "GetAllSince({0})", id);
             return _store.GetAllSince(key, id).ContinueWith(t => {
-                if (d != null) {
-                    d.Dispose();
-                }
+                TraceHelper.WriteTrace("Store", key, "GetAllSince({0}) => {1}", id, Serialize(t.Result.Select(m => new { m.Id, m.Value })));
                 return t;
-            }, TaskContinuationOptions.ExecuteSynchronously).Unwrap();
+            }).Unwrap();
         }
 
         public Task<long?> GetLastId() {
-            var d = TraceHelper.BeginTrace("Store", null, "GetLastId()");
-            return _store.GetLastId().ContinueWith(t => {
-                if (d != null) {
-                    d.Dispose();
-                }
-                return t;
-            }, TaskContinuationOptions.ExecuteSynchronously).Unwrap();
+            TraceHelper.WriteTrace("Store", null, "GetLastId()");
+            return _store.GetLastId();
         }
 
         public Task Save(string key, object value) {
-            var d = TraceHelper.BeginTrace("Store", key, "Save({0})", new JavaScriptSerializer().Serialize(value));
-            return _store.Save(key, value).ContinueWith(t => {
-                if (d != null) {
-                    d.Dispose();
-                }
-                return t;
-            }, TaskContinuationOptions.ExecuteSynchronously).Unwrap();
+            TraceHelper.WriteTrace("Store", key, "Save({0})", Serialize(value));
+            return _store.Save(key, value);
+        }
+
+        private string Serialize(object value) {
+            return new JavaScriptSerializer().Serialize(value);
         }
     }
 }
