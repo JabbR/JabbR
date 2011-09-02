@@ -226,11 +226,11 @@ $(function () {
 
     chat.changeGravatar = function (currentUser) {
         $('#u-' + currentUser.Id).replaceWith(
-                $('#new-user-template').tmpl({
-                    name: currentUser.Name,
-                    hash: currentUser.Hash,
-                    id: currentUser.Id
-                })
+            $('#new-user-template').tmpl({
+                name: currentUser.Name,
+                hash: currentUser.Hash,
+                id: currentUser.Id
+            })
         );
 
         refreshUsers();
@@ -241,7 +241,7 @@ $(function () {
         else {
             addMessage(currentUser.Name + "'s gravatar changed.", 'notification');
         }
-    }
+    };
 
     chat.showCommands = function (commands) {
         addMessage('<h3>Help</h3>');
@@ -301,6 +301,12 @@ $(function () {
         chat.focus = true;
         chat.unread = 0;
         document.title = 'SignalR Chat';
+    });
+
+    $(window).unload(function () {
+        if (chat.room)
+            chat.send("/leave");
+        //ignore errors
     });
 
     function updateUnread() {
