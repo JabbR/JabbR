@@ -448,32 +448,48 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         private static void Sweep() {
-            var users = _userActivity.ToList();
-            var clients = GetClients<Chat>();
+            try {
+                var users = _userActivity.ToList();
+                var clients = GetClients<Chat>();
 
-            foreach (var uid in users) {
-                var elapsed = DateTime.UtcNow - uid.Value;
-                var user = GetUserByClientId(uid.Key);
-                if (elapsed.TotalMinutes > 5) {
-                    if (user != null) {
-                        user.IsInactive = true;
+                foreach (var uid in users) {
+                    var elapsed = DateTime.UtcNow - uid.Value;
+                    var user = GetUserByClientId(uid.Key);
+                    if (elapsed.TotalMinutes > 5) {
+                        if (user != null) {
+                            user.IsInactive = true;
+                        }
+                    }
+                }
+
+                var inactiveUsers = _users.Values.Where(u => u.IsInactive);
+                var rooms = inactiveUsers.SelectMany(u => _userRooms[u.Name]).Distinct();
+                var roomGroups = from u in inactiveUsers
+                                 from r in _userRooms[u.Name]
+                                 select new { User = u, Room = r } into tuple
+                                 group tuple by tuple.Room into g
+                                 select new {
+                                     Room = g.Key,
+                                     Users = g.Select(t => t.User)
+                                 };
+
+                foreach (var roomGroup in roomGroups) {
+                    try {
+                        clients[roomGroup.Room].markInactive(roomGroup.Users).Wait();
+                    }
+                    catch(Exception e) {
+                        var signal = Elmah.ErrorSignal.FromCurrentContext();
+                        if (signal != null) {
+                            signal.Raise(e);
+                        }
                     }
                 }
             }
-
-            var inactiveUsers = _users.Values.Where(u => u.IsInactive);
-            var rooms = inactiveUsers.SelectMany(u => _userRooms[u.Name]).Distinct();
-            var roomGroups = from u in inactiveUsers
-                             from r in _userRooms[u.Name]
-                             select new { User = u, Room = r } into tuple
-                             group tuple by tuple.Room into g
-                             select new {
-                                 Room = g.Key,
-                                 Users = g.Select(t => t.User)
-                             };
-
-            foreach (var roomGroup in roomGroups) {
-                clients[roomGroup.Room].markInactive(roomGroup.Users);
+            catch(Exception e) {
+                var signal = Elmah.ErrorSignal.FromCurrentContext();
+                if (signal != null) {
+                    signal.Raise(e);
+                }
             }
         }
 
