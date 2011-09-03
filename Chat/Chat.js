@@ -106,6 +106,8 @@ $(function () {
                     chat.addUser(this, true);
                 });
 
+                chat.markInactive(users);
+
                 refreshUsers();
 
                 $('#new-message').focus();
@@ -122,9 +124,14 @@ $(function () {
     };
 
 
-    chat.markInactive = function (user) {
-        var id = 'u-' + user.Id;
-        $('#' + id).fadeTo('slow', 0.5);
+    chat.markInactive = function (users) {
+        $.each(users, function () {
+            var user = this,
+                id = 'u-' + user.Id;
+            if (user.IsInactive) {
+                $('#' + id).fadeTo('slow', 0.5);
+            }
+        });
     };
 
     chat.updateActivity = function (user) {
@@ -331,6 +338,7 @@ $(function () {
 
     $('#new-message').val('');
     $('#new-message').focus();
+
 
     $.connection.hub.start(function () {
         chat.join()

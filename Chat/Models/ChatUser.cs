@@ -7,6 +7,7 @@ namespace Chat.Models {
         public string Id { get; set; }
         public string Name { get; set; }
         public string Hash { get; set; }
+        public bool IsInactive { get; set; }
         internal TimeSpan Offset { get; set; }
         internal TimeZoneInfo Timezone { get; set; }
 

@@ -40,7 +40,7 @@ namespace SignalR.Samples.Hubs.Chat {
 
         public bool Join() {
             Caller.version = typeof(Chat).Assembly.GetName().Version.ToString();
-            
+
             // Check the user id cookie
             var cookie = Context.Cookies["userid"];
             if (cookie == null) {
@@ -83,6 +83,7 @@ namespace SignalR.Samples.Hubs.Chat {
             _userActivity[Context.ClientId] = DateTime.UtcNow;
             var user = GetUserByClientId(Context.ClientId);
             if (user != null) {
+                user.IsInactive = false;
                 Clients.updateActivity(user);
             }
         }
@@ -452,12 +453,27 @@ namespace SignalR.Samples.Hubs.Chat {
 
             foreach (var uid in users) {
                 var elapsed = DateTime.UtcNow - uid.Value;
+                var user = GetUserByClientId(uid.Key);
                 if (elapsed.TotalMinutes > 5) {
-                    var user = GetUserByClientId(uid.Key);
                     if (user != null) {
-                        clients.markInactive(user);
+                        user.IsInactive = true;
                     }
                 }
+            }
+
+            var inactiveUsers = _users.Values.Where(u => u.IsInactive);
+            var rooms = inactiveUsers.SelectMany(u => _userRooms[u.Name]).Distinct();
+            var roomGroups = from u in inactiveUsers
+                             from r in _userRooms[u.Name]
+                             select new { User = u, Room = r } into tuple
+                             group tuple by tuple.Room into g
+                             select new {
+                                 Room = g.Key,
+                                 Users = g.Select(t => t.User)
+                             };
+
+            foreach (var roomGroup in roomGroups) {
+                clients[roomGroup.Room].markInactive(roomGroup.Users);
             }
         }
 
