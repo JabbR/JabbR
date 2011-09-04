@@ -75,6 +75,13 @@ $(function () {
         }
     }
 
+    function markUserInactive(user) {
+        id = 'u-' + user.Id;
+        if (user.Active === false) {
+            $('#' + id).fadeTo('slow', 0.5);
+        }
+    }
+
     function addMessage(content, type) {
         var nearEnd = $('#messages').isNearTheEnd();
         var e = $('<li/>').html(content).appendTo($('#messages'));
@@ -104,9 +111,8 @@ $(function () {
             .done(function (users) {
                 $.each(users, function () {
                     chat.addUser(this, true);
+                    markUserInactive(this);
                 });
-
-                chat.markInactive(users);
 
                 refreshUsers();
 
@@ -116,7 +122,7 @@ $(function () {
         chat.getRecentMessages()
             .done(function (messages) {
                 $.each(messages, function () {
-                    chat.addMessage(this.Id, this.User, this.Content, this.When, true);
+                    chat.addMessage(this, true);
                 });
             });
 
@@ -126,11 +132,7 @@ $(function () {
 
     chat.markInactive = function (users) {
         $.each(users, function () {
-            var user = this,
-                id = 'u-' + user.Id;
-            if (user.IsInactive) {
-                $('#' + id).fadeTo('slow', 0.5);
-            }
+            markUserInactive(this);
         });
     };
 
@@ -164,13 +166,13 @@ $(function () {
         }
     };
 
-    chat.addMessage = function (id, user, message, when, noScroll) {
+    chat.addMessage = function (message, noScroll) {
         var data = {
-            name: user.Name,
-            hash: user.Hash,
-            message: message,
-            id: id,
-            when: toLocal(when)
+            name: message.User.Name,
+            hash: message.User.Hash,
+            message: message.Content,
+            id: message.Id,
+            when: toLocal(message.When)
         };
 
         var nearEnd = $('#messages').isNearTheEnd();
@@ -211,23 +213,23 @@ $(function () {
         updateCookie();
     };
 
-    chat.changeUserName = function (oldUser, newUser) {
-        $('#u-' + oldUser.Id).replaceWith(
+    chat.changeUserName = function (user, oldName, newName) {
+        $('#u-' + user.Id).replaceWith(
                 $('#new-user-template').tmpl({
-                    name: newUser.Name,
-                    hash: newUser.Hash,
-                    id: newUser.Id
+                    name: user.Name,
+                    hash: user.Hash,
+                    id: user.Id
                 })
         );
 
         refreshUsers();
 
-        if (newUser.Name === this.name) {
-            addMessage('Your name is now ' + newUser.Name, 'notification');
+        if (user.Id === this.id) {
+            addMessage('Your name is now ' + newName, 'notification');
             updateCookie();
         }
         else {
-            addMessage(oldUser.Name + '\'s nick has changed to ' + newUser.Name, 'notification');
+            addMessage(oldName + '\'s nick has changed to ' + newName, 'notification');
         }
     };
 

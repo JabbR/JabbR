@@ -1,32 +1,19 @@
-﻿using System;
-using Chat.Infrastructure;
+﻿using System.Collections.Generic;
+using System;
 
 namespace Chat.Models {
     public class ChatUser {
-        public string ClientId { get; set; }
         public string Id { get; set; }
         public string Name { get; set; }
         public string Hash { get; set; }
-        public bool IsInactive { get; set; }
-        internal TimeSpan Offset { get; set; }
-        internal TimeZoneInfo Timezone { get; set; }
+        public bool Active { get; set; }
+        public DateTime LastActivity { get; set; }
+        public string ClientId { get; set; }
+
+        public virtual ICollection<ChatRoom> Rooms { get; set; }
 
         public ChatUser() {
-        }
-
-        public ChatUser(string name) {
-            Name = name;
-            Hash = name.ToMD5();
-            Id = Guid.NewGuid().ToString("d");
-        }
-
-        public override bool Equals(object obj) {
-            var other = obj as ChatUser;
-            return other != null && Id.Equals(other.Id, StringComparison.OrdinalIgnoreCase);
-        }
-
-        public override int GetHashCode() {
-            return Id.GetHashCode();
+            Rooms = new HashSet<ChatRoom>();
         }
     }
 }

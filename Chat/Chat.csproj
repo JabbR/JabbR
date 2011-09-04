@@ -148,6 +148,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\StringExtensions.cs" />
+    <Compile Include="Models\ChatRepository.cs" />
     <Compile Include="Models\ChatMessage.cs" />
     <Compile Include="Models\ChatRoom.cs" />
     <Compile Include="Models\ChatUser.cs" />
@@ -155,6 +156,8 @@
     <Compile Include="Profiling\TracedMessageStore.cs" />
     <Compile Include="Profiling\TracedSignalBus.cs" />
     <Compile Include="Profiling\TraceHelper.cs" />
+    <Compile Include="ViewModels\MessageViewModel.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="_SignalTrace.aspx.cs">
       <DependentUpon>_SignalTrace.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

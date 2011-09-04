@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace Chat.Models {
     public class ChatRoom {
-        public List<ChatMessage> Messages { get; set; }
-        public HashSet<string> Users { get; set; }
+        public string Name { get; set; }
+        public virtual ICollection<ChatMessage> Messages { get; set; }
+        public virtual ICollection<ChatUser> Users { get; set; }
 
         public ChatRoom() {
-            Messages = new List<ChatMessage>();
-            Users = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            Messages = new HashSet<ChatMessage>();
+            Users = new HashSet<ChatUser>();
         }
     }
 }
