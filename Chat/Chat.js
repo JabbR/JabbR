@@ -277,14 +277,14 @@ $(function () {
             refreshUsers();
 
             addMessage(user.Name + ' left ' + this.room, 'notification');
-
-            this.room = null;
         }
         else {
             clearMessages();
             $('#users li').not('#u-' + user.Id).remove();
 
             addMessage('You have left ' + this.room, 'notification');
+
+            this.room = null;
         }
     };
 
