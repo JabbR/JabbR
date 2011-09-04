@@ -205,7 +205,7 @@ $(function () {
 
         refreshUsers();
 
-        if (!exists && this.name !== user.Name) {
+        if (!exists && this.id !== user.Id) {
             addMessage(user.Name + ' just entered ' + this.room, 'notification');
             e.hide().fadeIn('slow');
         }
