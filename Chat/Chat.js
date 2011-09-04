@@ -277,6 +277,8 @@ $(function () {
             refreshUsers();
 
             addMessage(user.Name + ' left ' + this.room, 'notification');
+
+            this.room = null;
         }
         else {
             clearMessages();
@@ -344,6 +346,9 @@ $(function () {
 
     $.connection.hub.start(function () {
         chat.join()
+            .fail(function (e) {
+                addMessage(e, 'error');
+            })
             .done(function (success) {
                 if (success === false) {
                     $.cookie('userid', '');

@@ -47,12 +47,12 @@ namespace SignalR.Samples.Hubs.Chat {
             }
 
             ChatUser user = _db.Users.FirstOrDefault(u => u.Id == cookie.Value);
-
+            
             // If there's no registered user, return false
             if (user == null) {
                 return false;
             }
-            
+
             // Update the users's client id mapping
             user.ClientId = Context.ClientId;
             user.Active = true;
@@ -61,6 +61,7 @@ namespace SignalR.Samples.Hubs.Chat {
             var userViewModel = new UserViewModel(user);
 
             LeaveAllRooms(user);
+            Caller.room = null;
 
             // Set some client state
             Caller.id = user.Id;
@@ -69,7 +70,6 @@ namespace SignalR.Samples.Hubs.Chat {
 
             // Add this user to the list of users
             Caller.addUser(userViewModel);
-            Clients.updateActivity(userViewModel);
             return true;
         }
 
@@ -190,64 +190,64 @@ namespace SignalR.Samples.Hubs.Chat {
             });
         }
 
-        private bool TryHandleCommand(string command) {
+        private bool TryHandleCommand(string command) {            
+            command = command.Trim();
+            if (!command.StartsWith("/")) {
+                return false;
+            }
+
             string room = Caller.room;
             string name = Caller.name;
+            string[] parts = command.Substring(1).Split(' ');
+            string commandName = parts[0];
 
-            command = command.Trim();
-            if (command.StartsWith("/")) {
-                string[] parts = command.Substring(1).Split(' ');
-                string commandName = parts[0];
+            if (commandName.Equals("help", StringComparison.OrdinalIgnoreCase)) {
+                HandleHelp();
 
-                if (commandName.Equals("help", StringComparison.OrdinalIgnoreCase)) {
-                    HandleHelp();
+                return true;
+            }
+            else if (commandName.Equals("nick", StringComparison.OrdinalIgnoreCase)) {
+                HandleNick(name, parts);
+
+                return true;
+            }
+            else {
+                ChatUser user = EnsureUser();
+                if (commandName.Equals("rooms", StringComparison.OrdinalIgnoreCase)) {
+                    HandleRooms();
 
                     return true;
                 }
-                else if (commandName.Equals("nick", StringComparison.OrdinalIgnoreCase)) {
-                    HandleNick(name, parts);
+                else if (commandName.Equals("join", StringComparison.OrdinalIgnoreCase)) {
+                    HandleJoin(room, user, parts);
+
+                    return true;
+                }
+                else if (commandName.Equals("msg", StringComparison.OrdinalIgnoreCase)) {
+                    HandleMsg(user, parts);
+
+                    return true;
+                }
+                else if (commandName.Equals("gravatar", StringComparison.OrdinalIgnoreCase)) {
+                    HandleGravatar(user, parts);
 
                     return true;
                 }
                 else {
-                    ChatUser user = EnsureUser();
-                    if (commandName.Equals("rooms", StringComparison.OrdinalIgnoreCase)) {
-                        HandleRooms();
+                    Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
+                    if (commandName.Equals("me", StringComparison.OrdinalIgnoreCase)) {
+                        HandleMe(tuple.Item2, tuple.Item1, parts);
+                        return true;
+                    }
+                    else if (commandName.Equals("leave", StringComparison.OrdinalIgnoreCase)) {
+                        HandleLeave(tuple.Item2, tuple.Item1);
 
                         return true;
                     }
-                    else if (commandName.Equals("join", StringComparison.OrdinalIgnoreCase)) {
-                        HandleJoin(room, user, parts);
 
-                        return true;
-                    }
-                    else if (commandName.Equals("msg", StringComparison.OrdinalIgnoreCase)) {
-                        HandleMsg(user, parts);
-
-                        return true;
-                    }
-                    else if (commandName.Equals("gravatar", StringComparison.OrdinalIgnoreCase)) {
-                        HandleGravatar(user, parts);
-
-                        return true;
-                    }
-                    else {
-                        Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
-                        if (commandName.Equals("me", StringComparison.OrdinalIgnoreCase)) {
-                            HandleMe(tuple.Item2, tuple.Item1, parts);
-                            return true;
-                        }
-                        else if (commandName.Equals("leave", StringComparison.OrdinalIgnoreCase)) {
-                            HandleLeave(tuple.Item2, tuple.Item1);
-
-                            return true;
-                        }
-
-                        throw new InvalidOperationException(String.Format("'{0}' is not a valid command.", parts[0]));
-                    }
+                    throw new InvalidOperationException(String.Format("'{0}' is not a valid command.", parts[0]));
                 }
             }
-            return false;
         }
 
         private void HandleHelp() {
@@ -267,11 +267,10 @@ namespace SignalR.Samples.Hubs.Chat {
             room.Users.Remove(user);
             user.Rooms.Remove(room);
 
-            Clients[room.Name].leave(new UserViewModel(user)).Wait();
+            var userViewModel = new UserViewModel(user);
+            Clients[room.Name].leave(userViewModel).Wait();
 
             RemoveFromGroup(room.Name).Wait();
-
-            Caller.room = null;
         }
 
         private void HandleMe(ChatRoom room, ChatUser user, string[] parts) {
@@ -324,13 +323,7 @@ namespace SignalR.Samples.Hubs.Chat {
             // Only support joining one room at a time for now (until we support tabs)
             ChatRoom oldRoom = _db.Rooms.FirstOrDefault(r => r.Name.Equals(oldRoomName, StringComparison.OrdinalIgnoreCase));
             if (oldRoom != null) {
-                user.Rooms.Remove(oldRoom);
-                foreach (var room in _db.Rooms) {
-                    room.Users.Remove(user);
-                }
-
-                RemoveFromGroup(oldRoom.Name).Wait();
-                Clients[oldRoom.Name].leave(userViewModel).Wait();
+                HandleLeave(oldRoom, user);
             }
 
             // Create the room if it doesn't exist
@@ -355,11 +348,12 @@ namespace SignalR.Samples.Hubs.Chat {
             newRoom.Users.Add(user);
 
             // Tell the people in this room that you're joining
-            Clients[newRoom.Name].addUser(userViewModel);
+            Clients[newRoom.Name].addUser(userViewModel).Wait();
 
             // Set the room on the caller
             Caller.room = newRoom.Name;
 
+            // Add the caller to the group so they receive messages
             AddToGroup(newRoomName).Wait();
 
             Caller.joinRoom(newRoomName);
@@ -480,20 +474,15 @@ namespace SignalR.Samples.Hubs.Chat {
             Caller.name = user.Name;
             Caller.hash = user.Hash;
             Caller.id = user.Id;
-            Caller.addUser(new UserViewModel(user));
+
+            var userViewModel = new UserViewModel(user);
+            Caller.addUser(userViewModel);
         }
 
         private void LeaveAllRooms(ChatUser user) {
-            var userViewModel = new UserViewModel(user);
-
             // Leave all rooms
-            foreach (var room in user.Rooms) {
-                Clients[room.Name].leave(userViewModel);
-            }
-
-            user.Rooms.Clear();
-            foreach (var room in _db.Rooms) {
-                room.Users.Remove(user);
+            foreach (var room in user.Rooms.ToList()) {
+                HandleLeave(room, user);
             }
         }
 
@@ -533,8 +522,6 @@ namespace SignalR.Samples.Hubs.Chat {
                 throw new InvalidOperationException(String.Format("You go by the name '{0}' but the server has no idea who you are. Maybe it got reset :(.", name));
             }
 
-            var userViewModel = new UserViewModel(user);
-
             // Keep the client id up to date
             if (String.IsNullOrEmpty(user.ClientId)) {
                 user.ClientId = Context.ClientId;
@@ -542,7 +529,6 @@ namespace SignalR.Samples.Hubs.Chat {
 
             user.Active = true;
             user.LastActivity = DateTime.UtcNow;
-            Clients.updateActivity(userViewModel);
 
             return user;
         }
