@@ -20,6 +20,7 @@ namespace SignalR.Samples.Hubs.Chat {
         private static ChatRepository _db = new ChatRepository();
 
         private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(2);
+        private static bool _sweeping;
 
         private static Timer _timer = new Timer(_ => Sweep(), null, _sweepInterval, _sweepInterval);
 
@@ -47,7 +48,7 @@ namespace SignalR.Samples.Hubs.Chat {
             }
 
             ChatUser user = _db.Users.FirstOrDefault(u => u.Id == cookie.Value);
-            
+
             // If there's no registered user, return false
             if (user == null) {
                 return false;
@@ -77,6 +78,8 @@ namespace SignalR.Samples.Hubs.Chat {
             if (OutOfSync) {
                 throw new InvalidOperationException("Chat was just updated, please refresh you browser and rejoin " + Caller.room);
             }
+
+            UpdateActivity();
 
             content = Sanitizer.GetSafeHtmlFragment(content);
 
@@ -169,6 +172,20 @@ namespace SignalR.Samples.Hubs.Chat {
             LeaveAllRooms(user);
         }
 
+        private void UpdateActivity() {
+            ChatUser user = _db.Users.FirstOrDefault(u => u.ClientId == Context.ClientId);            
+            if (user == null) {
+                return;
+            }
+
+            string room = Caller.room;
+            if (String.IsNullOrEmpty(room)) {
+                return;
+            }
+
+            Clients[room].updateActivity(new UserViewModel(user));
+        }
+
         private void ProcessUrls(IEnumerable<string> links, ChatRoom chatRoom, ChatMessage chatMessage) {
             // REVIEW: is this safe to do? We're holding on to this instance 
             // when this should really be a fire and forget.
@@ -195,7 +212,7 @@ namespace SignalR.Samples.Hubs.Chat {
             });
         }
 
-        private bool TryHandleCommand(string command) {            
+        private bool TryHandleCommand(string command) {
             command = command.Trim();
             if (!command.StartsWith("/")) {
                 return false;
@@ -438,12 +455,17 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         private static void Sweep() {
-            var db = new ChatRepository();
+            if (_sweeping) {
+                return;
+            }
+
+            _sweeping = true;
+
             var clients = GetClients<Chat>();
 
             var inactiveUsers = new List<ChatUser>();
 
-            foreach (var user in db.Users) {
+            foreach (var user in _db.Users) {
                 var elapsed = DateTime.UtcNow - user.LastActivity;
                 if (elapsed.TotalMinutes > 5) {
                     user.Active = false;
@@ -463,6 +485,8 @@ namespace SignalR.Samples.Hubs.Chat {
             foreach (var roomGroup in roomGroups) {
                 clients[roomGroup.Room.Name].markInactive(roomGroup.Users).Wait();
             }
+
+            _sweeping = false;
         }
 
         private void AddUser(string name) {
