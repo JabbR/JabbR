@@ -315,9 +315,9 @@ $(function () {
     });
 
     $(window).unload(function () {
-        if (chat.room)
-            chat.send("/leave");
-        //ignore errors
+        if (chat.room) {
+            chat.leaveRoom();
+        }
     });
 
     function updateUnread() {

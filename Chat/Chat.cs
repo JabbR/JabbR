@@ -116,6 +116,11 @@ namespace SignalR.Samples.Hubs.Chat {
             ProcessUrls(links, chatRoom, chatMessage);
         }
 
+        public void LeaveRoom() {
+            Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
+            HandleLeave(tuple.Item2, tuple.Item1);
+        }
+
         public void Disconnect() {
             Disconnect(Context.ClientId);
         }
