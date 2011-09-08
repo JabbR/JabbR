@@ -250,6 +250,11 @@ namespace SignalR.Samples.Hubs.Chat {
 
                     return true;
                 }
+                else if (commandName.Equals("leave", StringComparison.OrdinalIgnoreCase) && parts.Length == 2) {
+                    HandleLeave(user, parts);
+
+                    return true;
+                }
                 else {
                     Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
                     if (commandName.Equals("me", StringComparison.OrdinalIgnoreCase)) {
@@ -274,10 +279,23 @@ namespace SignalR.Samples.Hubs.Chat {
                 new { Name = "join", Description = "Type /join room -- to join a channel of your choice" },
                 new { Name = "me", Description = "Type /me 'does anything'" },
                 new { Name = "msg", Description = "Type /msg nickname (message) to send a private message to nickname." },
-                new { Name = "leave", Description = "Type /leave to leave the current room." },
+                new { Name = "leave", Description = "Type /leave to leave the current room. Type /leave [room name] to leave a specific room." },
                 new { Name = "rooms", Description = "Type /rooms to show the list of rooms" },
                 new { Name = "gravatar", Description = "Type \"/gravatar email\" to set your gravatar." }
             });
+        }
+
+        private void HandleLeave(ChatUser user, string[] parts) {
+            if (string.IsNullOrWhiteSpace(parts[1])) {
+                throw new InvalidOperationException("Room name cannot be blank!");
+            }
+
+            var room = _db.Rooms.FirstOrDefault(r => r.Name.Equals(parts[1], StringComparison.OrdinalIgnoreCase));
+            if (room == null) {
+                throw new InvalidOperationException("No room with that name!");
+            }
+
+            HandleLeave(room, user);
         }
 
         private void HandleLeave(ChatRoom room, ChatUser user) {
