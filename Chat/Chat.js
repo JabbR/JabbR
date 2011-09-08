@@ -314,12 +314,6 @@ $(function () {
         document.title = 'SignalR Chat';
     });
 
-    $(window).unload(function () {
-        if (chat.room) {
-            chat.leaveRoom();
-        }
-    });
-
     function updateUnread() {
         if (!chat.focus) {
             if (!chat.unread) {
