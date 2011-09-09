@@ -19,7 +19,7 @@ namespace SignalR.Samples.Hubs.Chat {
     public class Chat : Hub, IDisconnect {
         private static ChatRepository _db = new ChatRepository();
 
-        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(2);
+        private static readonly TimeSpan _sweepInterval = TimeSpan.FromSeconds(10);
         private static bool _sweeping;
         private static Timer _timer = new Timer(_ => Sweep(), null, _sweepInterval, _sweepInterval);
 
@@ -78,8 +78,6 @@ namespace SignalR.Samples.Hubs.Chat {
                 throw new InvalidOperationException("Chat was just updated, please refresh you browser and rejoin " + Caller.room);
             }
 
-            UpdateActivity();
-
             content = Sanitizer.GetSafeHtmlFragment(content);
 
             // See if this is a valid command (starts with /)
@@ -94,6 +92,9 @@ namespace SignalR.Samples.Hubs.Chat {
 
             ChatUser user = tuple.Item1;
             ChatRoom chatRoom = tuple.Item2;
+
+            // Update activity *after* ensuring the user, this forces them to be active
+            UpdateActivity();
 
             HashSet<string> links;
             var messageText = Transform(content, out links);
@@ -167,17 +168,15 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         private void UpdateActivity() {
-            ChatUser user = _db.Users.FirstOrDefault(u => u.ClientId == Context.ClientId);            
-            if (user == null) {
+            Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
+            ChatUser user = tuple.Item1;
+            ChatRoom room = tuple.Item2;
+            
+            if (user == null || room == null) {
                 return;
             }
 
-            string room = Caller.room;
-            if (String.IsNullOrEmpty(room)) {
-                return;
-            }
-
-            Clients[room].updateActivity(new UserViewModel(user));
+            Clients[room.Name].updateActivity(new UserViewModel(user));
         }
 
         private void ProcessUrls(IEnumerable<string> links, ChatRoom chatRoom, ChatMessage chatMessage) {
@@ -530,7 +529,7 @@ namespace SignalR.Samples.Hubs.Chat {
 
             foreach (var user in _db.Users) {
                 var elapsed = DateTime.UtcNow - user.LastActivity;
-                if (elapsed.TotalMinutes > 5) {
+                if (elapsed.TotalSeconds > 5) {
                     user.Active = false;
                     inactiveUsers.Add(user);
                 }
