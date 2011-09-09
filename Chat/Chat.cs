@@ -458,7 +458,7 @@ namespace SignalR.Samples.Hubs.Chat {
             ChatUser toUser = _db.Users.FirstOrDefault(u => u.Name.Equals(parts[1], StringComparison.OrdinalIgnoreCase));
 
             if (toUser == null) {
-                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", toUser.Name));
+                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", parts[1]));
             }
 
             if (toUser == user) {
