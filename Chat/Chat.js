@@ -345,7 +345,7 @@ $(function () {
     });
 
     function updateUnread() {
-        if (!chat.focus) {
+        if (chat.focus === false) {
             if (!chat.unread) {
                 chat.unread = 0;
             }
