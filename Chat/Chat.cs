@@ -19,7 +19,7 @@ namespace SignalR.Samples.Hubs.Chat {
     public class Chat : Hub, IDisconnect {
         private static ChatRepository _db = new ChatRepository();
 
-        private static readonly TimeSpan _sweepInterval = TimeSpan.FromSeconds(10);
+        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(5);
         private static bool _sweeping;
         private static Timer _timer = new Timer(_ => Sweep(), null, _sweepInterval, _sweepInterval);
 
@@ -529,7 +529,7 @@ namespace SignalR.Samples.Hubs.Chat {
 
             foreach (var user in _db.Users) {
                 var elapsed = DateTime.UtcNow - user.LastActivity;
-                if (elapsed.TotalSeconds > 5) {
+                if (elapsed.TotalMinutes > 5) {
                     user.Active = false;
                     inactiveUsers.Add(user);
                 }
