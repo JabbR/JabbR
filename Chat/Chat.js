@@ -1,6 +1,6 @@
-﻿/// <reference path="../../Scripts/jquery-1.6.2.js" />
-/// <reference path="../../Scripts/jQuery.tmpl.js" />
-/// <reference path="../../Scripts/jquery.cookie.js" />
+﻿/// <reference path="Scripts/jquery-1.6.3.js" />
+/// <reference path="Scripts/jQuery.tmpl.js" />
+/// <reference path="Scripts/jquery.cookie.js" />
 
 $(function () {
     var chat = $.connection.chat;
@@ -266,6 +266,36 @@ $(function () {
 
     chat.sendPrivateMessage = function (from, to, message) {
         addMessage('<emp>*' + from + '*</emp> ' + message, 'pm');
+    };
+
+    chat.nudge = function (from, to) {
+        function shake(n) {
+            var move = function (x, y) {
+                parent.moveBy(x, y);
+            };
+            for (var i = n; i > 0; i--) {
+                for (var j = 1; j > 0; j--) {
+                    move(i, 0);
+                    move(0, -i);
+                    move(-i, 0);
+                    move(0, i);
+                    move(i, 0);
+                    move(0, -i);
+                    move(-i, 0);
+                    move(0, i);
+                    move(i, 0);
+                    move(0, -i);
+                    move(-i, 0);
+                    move(0, i);
+                }
+            }
+            return this;
+        };
+        $("body").effect("pulsate", { times: 3 }, 300);
+        window.setTimeout(function () {
+            shake(20);
+        }, 300);
+        addMessage('*' + from + ' nudged ' + (to ? 'you' : 'the room'), to ? 'pm' : 'notification');
     };
 
     chat.leave = function (user) {

@@ -21,7 +21,6 @@ namespace SignalR.Samples.Hubs.Chat {
 
         private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(2);
         private static bool _sweeping;
-
         private static Timer _timer = new Timer(_ => Sweep(), null, _sweepInterval, _sweepInterval);
 
         private static readonly List<IContentProvider> _contentProviders = new List<IContentProvider>() {
@@ -255,6 +254,11 @@ namespace SignalR.Samples.Hubs.Chat {
 
                     return true;
                 }
+                else if (commandName.Equals("nudge", StringComparison.OrdinalIgnoreCase) && parts.Length == 2) {
+                    HandleNudge(user, parts);
+
+                    return true;
+                }
                 else {
                     Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
                     if (commandName.Equals("me", StringComparison.OrdinalIgnoreCase)) {
@@ -263,6 +267,11 @@ namespace SignalR.Samples.Hubs.Chat {
                     }
                     else if (commandName.Equals("leave", StringComparison.OrdinalIgnoreCase)) {
                         HandleLeave(tuple.Item2, tuple.Item1);
+
+                        return true;
+                    }
+                    else if (commandName.Equals("nudge", StringComparison.OrdinalIgnoreCase)) {
+                        HandleNudge(tuple.Item2, tuple.Item1, parts);
 
                         return true;
                     }
@@ -281,7 +290,8 @@ namespace SignalR.Samples.Hubs.Chat {
                 new { Name = "msg", Description = "Type /msg nickname (message) to send a private message to nickname." },
                 new { Name = "leave", Description = "Type /leave to leave the current room. Type /leave [room name] to leave a specific room." },
                 new { Name = "rooms", Description = "Type /rooms to show the list of rooms" },
-                new { Name = "gravatar", Description = "Type \"/gravatar email\" to set your gravatar." }
+                new { Name = "gravatar", Description = "Type \"/gravatar email\" to set your gravatar." },
+                new { Name = "nudge", Description = "Type \"/nudge\" to send a nudge to the whole room, or \"/nudge nickname\" to nudge a particular user." }
             });
         }
 
@@ -438,6 +448,45 @@ namespace SignalR.Samples.Hubs.Chat {
             }
             else {
                 ChangeUserName(user, newUserName);
+            }
+        }
+
+        private void HandleNudge(ChatUser user, string[] parts) {
+            if (_db.Users.Count == 1) {
+                throw new InvalidOperationException("You're the only person in here...");
+            }
+
+            ChatUser toUser = _db.Users.FirstOrDefault(u => u.Name.Equals(parts[1], StringComparison.OrdinalIgnoreCase));
+
+            if (toUser == null) {
+                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", toUser.Name));
+            }
+
+            if (toUser == user) {
+                throw new InvalidOperationException("You can't nudge yourself!");
+            }
+
+            string messageText = String.Format("{0} nudged you", user);
+
+            var betweenNudges = TimeSpan.FromSeconds(60);
+            if (toUser.LastNudged.HasValue && toUser.LastNudged > DateTime.Now.Subtract(betweenNudges)) {
+                throw new InvalidOperationException(String.Format("User can only be nudged once every {0} seconds", betweenNudges.TotalSeconds));
+            }
+
+            toUser.LastNudged = DateTime.Now;
+            // Send a nudge message to the sender and the sendee                        
+            Clients[toUser.ClientId].nudge(user.Name, toUser.Name);
+            Caller.sendPrivateMessage(user.Name, toUser.Name, "nudged " + toUser.Name);
+        }
+
+        private void HandleNudge(ChatRoom room, ChatUser user, string[] parts) {
+            var betweenNudges = TimeSpan.FromMinutes(1);
+            if (room.LastNudged == null || room.LastNudged < DateTime.Now.Subtract(betweenNudges)) {
+                room.LastNudged = DateTime.Now;
+                Clients[room.Name].nudge(user.Name);
+            }
+            else {
+                throw new InvalidOperationException(String.Format("Room can only be nudged once every {0} seconds", betweenNudges.TotalSeconds));
             }
         }
 

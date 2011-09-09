@@ -8,6 +8,7 @@ namespace Chat.Models {
         public string Hash { get; set; }
         public bool Active { get; set; }
         public DateTime LastActivity { get; set; }
+        public DateTime? LastNudged { get; set; }
         public string ClientId { get; set; }
 
         public virtual ICollection<ChatRoom> Rooms { get; set; }
