@@ -368,7 +368,7 @@ namespace SignalR.Samples.Hubs.Chat {
             }
 
             ChatUser user = _users[name];
-            user.Hash = email.ToMD5();
+            user.Hash = email.ToLowerInvariant().ToMD5();
 
             bool inRooms = _userRooms[name].Any();
 
