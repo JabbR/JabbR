@@ -7,5 +7,4 @@
  *
  * http://docs.jquery.com/UI/Theming
  */
-@import "jquery.ui.base.css";
-@import "jquery.ui.theme.css";
+@import "jquery.ui.base.min.css";@import "jquery.ui.theme.min.css";

@@ -12,10 +12,6 @@ namespace Chat {
             _store = store;
         }
 
-        public Task<IEnumerable<Message>> GetAll(string key) {
-            return _store.GetAll(key);
-        }
-
         public Task<IEnumerable<Message>> GetAllSince(string key, long id) {
             return _store.GetAllSince(key, id).ContinueWith(t => {
                 TraceHelper.WriteTrace("Store", key, "GetAllSince({0}) => {1}", id, Serialize(t.Result.Select(m => new { m.Id, m.Value })));
