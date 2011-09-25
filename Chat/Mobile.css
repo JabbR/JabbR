@@ -37,3 +37,33 @@
         width: 35%;
     }
 }
+
+/* This stuff is to support TweetContentProvider, but should be extracted out if other content providers need custom CSS */
+
+.tweet
+{
+	margin-left: 30px;
+	margin-right: 10px;
+	border: 1px solid #ccc;
+	padding: 6px;
+	min-height: 48px;
+}
+
+.tweet img
+{
+	float: left;
+	margin-right: 5px;
+}
+
+.tweet .user
+{	
+	margin-bottom: 5px;
+}
+
+.tweet .name
+{
+	font-weight: bold;
+	font-size: 15px;
+}
+
+/* End TweetContentProvider CSS */

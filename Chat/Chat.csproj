@@ -173,6 +173,7 @@
   <ItemGroup>
     <Compile Include="Chat.cs" />
     <Compile Include="ContentProviders\CollegeHumorContentProvider.cs" />
+    <Compile Include="ContentProviders\TweetContentProvider.cs" />
     <Compile Include="ContentProviders\EmbedContentProvider.cs" />
     <Compile Include="ContentProviders\IContentProvider.cs" />
     <Compile Include="ContentProviders\ImageContentProvider.cs" />

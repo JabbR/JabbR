@@ -26,7 +26,8 @@ namespace SignalR.Samples.Hubs.Chat {
         private static readonly List<IContentProvider> _contentProviders = new List<IContentProvider>() {
             new ImageContentProvider(),
             new YouTubeContentProvider(),
-            new CollegeHumorContentProvider()
+            new CollegeHumorContentProvider(),
+			new TweetContentProvider()
         };
 
         public bool OutOfSync {
