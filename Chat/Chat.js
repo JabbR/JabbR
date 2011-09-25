@@ -94,14 +94,17 @@ $(function () {
 
         updateUnread();
         if (nearEnd) {
-            scrollTo(e[0]);
+            scrollToBottom();
         }
         return e;
     }
 
-    function scrollTo(e) {
-        e.scrollIntoView();
+    function scrollToBottom() {
+        var messages = $('#messages');
+        messages.scrollTop(messages[0].scrollHeight);
     }
+
+    window.scrollToBottom = scrollToBottom;
 
     chat.joinRoom = function (room) {
         clearMessages();
@@ -162,7 +165,7 @@ $(function () {
 
         updateUnread();
         if (nearEnd) {
-            scrollTo(e[0]);
+            scrollToBottom();
         }
     };
 
@@ -184,7 +187,7 @@ $(function () {
         updateUnread();
 
         if (!noScroll && nearEnd) {
-            scrollTo(e[0]);
+            scrollToBottom();
         }
     };
 
@@ -391,23 +394,24 @@ $(function () {
 // This stuff is to support TweetContentProvider, but should be extracted out if other content providers need custom CSS
 
 function addTweet(tweet) {
-	// Keep track of whether we're need the end, so we can auto-scroll once the tweet is added.
-	var nearEnd = $('#messages').isNearTheEnd();
+    // Keep track of whether we're need the end, so we can auto-scroll once the tweet is added.
+    var nearEnd = $('#messages').isNearTheEnd();
 
-	// Grab any elements we need to process.
-	var elements = $('div.tweet_' + tweet.id_str)
-		// Strip the classname off, so we don't process this again if someone posts the same tweet.
-		.removeClass('tweet_' + tweet.id_str)
-		// Add the CSS class for formatting (this is so we don't get height/border while loading).
-		.addClass('tweet');
+    // Grab any elements we need to process.
+    var elements = $('div.tweet_' + tweet.id_str)
+        // Strip the classname off, so we don't process this again if someone posts the same tweet.
+        .removeClass('tweet_' + tweet.id_str)
+        // Add the CSS class for formatting (this is so we don't get height/border while loading).
+        .addClass('tweet');
 
-	// Process the template, and add it in to the div.
-	$('#tweet-template').tmpl(tweet)
-		.appendTo(elements);
+    // Process the template, and add it in to the div.
+    $('#tweet-template').tmpl(tweet)
+        .appendTo(elements);
 
-	// If near the end, scroll.
-	if (nearEnd)
-		scrollTo(elements[0]);
+    // If near the end, scroll.
+    if (nearEnd) {
+        scrollToBottom();
+    }
 }
 
 // End of Tweet Content Provider JS
