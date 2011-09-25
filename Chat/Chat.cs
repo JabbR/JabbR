@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -27,7 +27,7 @@ namespace SignalR.Samples.Hubs.Chat {
             new ImageContentProvider(),
             new YouTubeContentProvider(),
             new CollegeHumorContentProvider(),
-			new TweetContentProvider()
+            new TweetContentProvider()
         };
 
         public bool OutOfSync {
