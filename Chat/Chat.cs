@@ -626,7 +626,7 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         private string Transform(string message, out HashSet<string> extractedUrls) {
-            const string urlPattern = @"((https?|ftp)://|www\.)[\w]+(.[\w]+)([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])";
+            const string urlPattern = @"((https?|ftp)://|www\.)[\w]+(.[\w]+)([\w\-\.,@?^=%&amp;:/~\+#!]*[\w\-\@?^=%&amp;/~\+#])";
 
             var urls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             message = Regex.Replace(message, urlPattern, m => {
