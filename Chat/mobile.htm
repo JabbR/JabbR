@@ -27,6 +27,15 @@
             <img src="http://www.gravatar.com/avatar/${hash}?s=16&d=mm" class="gravatar ui-li-icon" /> ${name}
         </li>
     </script>
+	<!-- TweetContentProvider: Should be extracted out if other content providers need templates -->
+	<script id="tweet-template" type="text/x-jquery-tmpl">
+		<div class="user">
+			<img src="${user.profile_image_url}" />
+			<span class="name">${user.screen_name}</span> (${user.name})
+		</div>
+        ${text}
+    </script>
+	<!-- /TweetContentProvider -->
 </head>
 <body>
     <div id="chat-area" data-role="page">
