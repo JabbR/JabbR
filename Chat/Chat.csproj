@@ -157,8 +157,10 @@
     <Content Include="Scripts\jquery.signalR.min.js" />
     <Content Include="Scripts\jQuery.tmpl.js" />
     <Content Include="Scripts\jQuery.tmpl.min.js" />
+    <Content Include="Scripts\jquery.writeCapture.js" />
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\json2.min.js" />
+    <Content Include="Scripts\writeCapture.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -173,6 +175,7 @@
   <ItemGroup>
     <Compile Include="Chat.cs" />
     <Compile Include="ContentProviders\CollegeHumorContentProvider.cs" />
+    <Compile Include="ContentProviders\PastieContentProvider.cs" />
     <Compile Include="ContentProviders\TweetContentProvider.cs" />
     <Compile Include="ContentProviders\EmbedContentProvider.cs" />
     <Compile Include="ContentProviders\IContentProvider.cs" />

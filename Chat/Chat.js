@@ -160,10 +160,12 @@ $(function () {
     chat.addMessageContent = function (id, content) {
         var nearEnd = $('#messages').isNearTheEnd();
 
-        var e = $('#m-' + id).append(content)
+        var e = $('#m-' + id).writeCapture()
+                             .append(content)
                              .resizeMobileContent();
 
         updateUnread();
+
         if (nearEnd) {
             scrollToBottom();
         }
@@ -173,7 +175,7 @@ $(function () {
         var data = {
             name: message.User.Name,
             hash: message.User.Hash,
-            message: message.Content,
+            message: $.writeCapture.sanitize(message.Content),
             id: message.Id,
             when: toLocal(message.When)
         };
@@ -399,9 +401,9 @@ function addTweet(tweet) {
 
     // Grab any elements we need to process.
     var elements = $('div.tweet_' + tweet.id_str)
-        // Strip the classname off, so we don't process this again if someone posts the same tweet.
+    // Strip the classname off, so we don't process this again if someone posts the same tweet.
         .removeClass('tweet_' + tweet.id_str)
-        // Add the CSS class for formatting (this is so we don't get height/border while loading).
+    // Add the CSS class for formatting (this is so we don't get height/border while loading).
         .addClass('tweet');
 
     // Process the template, and add it in to the div.

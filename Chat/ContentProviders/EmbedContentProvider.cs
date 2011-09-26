@@ -12,7 +12,7 @@ namespace SignalR.Samples.Hubs.Chat.ContentProviders {
             }
         }
         public abstract IEnumerable<string> Domains { get; }
-        public abstract string MediaFormatSting { get; }
+        public abstract string MediaFormatString { get; }
 
         protected virtual IEnumerable<object> ExtractParameters(Uri responseUri) {
             if (MediaUrlRegex != null) {
@@ -33,7 +33,7 @@ namespace SignalR.Samples.Hubs.Chat.ContentProviders {
                     return null;
                 }
 
-                return String.Format(MediaFormatSting, args.ToArray());
+                return String.Format(MediaFormatString, args.ToArray());
             }
             return null;
         }
