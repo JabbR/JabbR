@@ -167,7 +167,9 @@ $(function () {
         updateUnread();
 
         if (nearEnd) {
-            scrollToBottom();
+            setTimeout(function () {
+                scrollToBottom();
+            }, 150);
         }
     };
 
