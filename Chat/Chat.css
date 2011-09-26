@@ -18,6 +18,11 @@
     padding: 3px;
 }
 
+#messages li img{
+   height : 16px;
+   width : 16px;
+}
+
 #users {
     width: 17%;
     height: 500px;
