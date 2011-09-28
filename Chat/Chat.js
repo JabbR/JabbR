@@ -259,6 +259,14 @@ $(function () {
         }
     };
 
+    
+    chat.setTyping = function (currentUser, isTyping) {
+        if (isTyping)
+            $('li#u-' + currentUser.Id).addClass('typing');
+        else
+            $('li#u-' + currentUser.Id).removeClass('typing');
+    };
+
     chat.showCommands = function (commands) {
         addMessage('<h3>Help</h3>');
         $.each(commands, function () {
@@ -334,12 +342,36 @@ $(function () {
                 addMessage(e, 'error');
             });
 
+			// Immediately mark as not-typing when sending
+            chat.typingTimeoutId = 0;
+            chat.typing(false);
+
             $('#new-message').val('');
             $('#new-message').focus();
         }
 
         return false;
     });
+    
+    var typingTimeoutId = 0;
+    $('#new-message').keypress(function () {
+        // If not in a room, don't try to send typing notifications
+        if (chat.room == null)
+            return;
+
+        // Clear any previous timeout
+        if (chat.typingTimeoutId > 0)
+            clearTimeout(chat.typingTimeoutId);
+        // Otherwise, mark as typing
+        else
+            chat.typing(true);
+
+        // Set timeout to turn off
+        chat.typingTimeoutId = setTimeout(function () {
+            chat.typingTimeoutId = 0;
+            chat.typing(false);
+        }, 3000);
+    })
 
     $(window).blur(function () {
         chat.focus = false;

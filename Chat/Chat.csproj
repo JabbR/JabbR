@@ -81,6 +81,7 @@
     <Content Include="Content\images\icons-18-white.png" />
     <Content Include="Content\images\icons-36-black.png" />
     <Content Include="Content\images\icons-36-white.png" />
+    <Content Include="Content\images\keyboard.png" />
     <Content Include="Content\jquery.mobile-1.0b3.css" />
     <Content Include="Content\jquery.mobile-1.0b3.min.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />

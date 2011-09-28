@@ -41,6 +41,12 @@
     padding: 4px;
 }
 
+#users li.typing {
+    background-image: url('Content/images/keyboard.png');
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+
 .clear {
     clear: both;
 }
