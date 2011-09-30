@@ -59,12 +59,8 @@ namespace SignalR.Samples.Hubs.Chat {
             if (user == null && userNameCookie != null && !string.IsNullOrWhiteSpace(userNameCookie.Value))
             {
                 var userName = userNameCookie.Value;
-
-                var userExists = _db.Users.Where(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase)).Any();
-
-                if (userExists) {
-                    throw new InvalidOperationException(string.Format("Username {0} already taken, please choose a new one", userName));
-                }
+               
+                EnsureUserNameIsAvailable(userName);
 
                 user = AddUser(userName);
             }
@@ -91,8 +87,6 @@ namespace SignalR.Samples.Hubs.Chat {
                 // Join channel 
                 HandleJoin(null, user, new[] { room.Name, room.Name });
             }
-
-            
 
             // Update the users's client id mapping
             user.ClientId = Context.ClientId;
@@ -223,7 +217,7 @@ namespace SignalR.Samples.Hubs.Chat {
 
             LeaveAllRooms(user);
         }
-
+        
         private void UpdateActivity() {
             Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
             ChatUser user = tuple.Item1;
@@ -431,12 +425,9 @@ namespace SignalR.Samples.Hubs.Chat {
             // Create the room if it doesn't exist
             string newRoomName = parts[1];
             ChatRoom newRoom = _db.Rooms.FirstOrDefault(r => r.Name.Equals(newRoomName, StringComparison.OrdinalIgnoreCase));
-            if (newRoom == null) {
-                newRoom = new ChatRoom {
-                    Name = newRoomName
-                };
-
-                _db.Rooms.Add(newRoom);
+            if (newRoom == null)
+            {
+                AddRoom(newRoomName);
             }
 
             // Add this room to the user's list of rooms
@@ -548,11 +539,7 @@ namespace SignalR.Samples.Hubs.Chat {
                 throw new InvalidOperationException("That's already your username...");
             }
 
-            ChatUser newUser = _db.Users.FirstOrDefault(u => u.Name.Equals(newUserName, StringComparison.OrdinalIgnoreCase));
-
-            if (newUser != null) {
-                throw new InvalidOperationException(String.Format("Username '{0}' is already taken!", newUserName));
-            }
+            EnsureUserNameIsAvailable(newUserName);
 
             string oldUserName = user.Name;
             user.Name = newUserName;
@@ -688,6 +675,16 @@ namespace SignalR.Samples.Hubs.Chat {
             user.LastActivity = DateTime.UtcNow;
 
             return user;
+        }
+
+        private void EnsureUserNameIsAvailable(string userName)
+        {
+            var userExists = _db.Users.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
+
+            if (userExists)
+            {
+                throw new InvalidOperationException(string.Format("Username {0} already taken, please pick a new one using '/nick nickname'.", userName));
+            }
         }
 
         private string Transform(string message, out HashSet<string> extractedUrls) {
