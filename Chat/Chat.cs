@@ -43,17 +43,56 @@ namespace SignalR.Samples.Hubs.Chat {
             Caller.version = typeof(Chat).Assembly.GetName().Version.ToString();
 
             // Check the user id cookie
-            HttpCookie cookie = Context.Cookies["userid"];
-            if (cookie == null) {
+            HttpCookie userIdCookie = Context.Cookies["userid"];
+            HttpCookie userNameCookie = Context.Cookies["username"];
+            HttpCookie userRoomCookie = Context.Cookies["userroom"];
+            
+            // setup user 
+            ChatUser user = null;
+
+            // first try to frerieve user by id if exists
+            if (userIdCookie != null && !string.IsNullOrWhiteSpace(userIdCookie.Value)) {
+                user = _db.Users.FirstOrDefault(u => u.Id == userIdCookie.Value);
+            }
+
+            // if we could get user by id try it by name server could be resetted
+            if (user == null && userNameCookie != null && !string.IsNullOrWhiteSpace(userNameCookie.Value))
+            {
+                var userName = userNameCookie.Value;
+
+                var userExists = _db.Users.Where(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase)).Any();
+
+                if (userExists) {
+                    throw new InvalidOperationException(string.Format("Username {0} already taken, please choose a new one", userName));
+                }
+
+                user = AddUser(userName);
+            }
+
+            // if we have no user return false will force user to set new nick
+            if (user == null)
+            {
                 return false;
             }
 
-            ChatUser user = _db.Users.FirstOrDefault(u => u.Id == cookie.Value);
+            // if we have room add user to room
+            if (userRoomCookie != null && !string.IsNullOrWhiteSpace(userRoomCookie.Value))
+            {
+                var userRoom = userRoomCookie.Value;
 
-            // If there's no registered user, return false
-            if (user == null) {
-                return false;
+                var room = _db.Rooms.Where(x => x.Name == userRoom).FirstOrDefault();
+
+                // if user has room in cookie but it doesn't exists create it!
+                if (room == null)
+                {
+                    room = AddRoom(userRoom);
+                }
+
+                // Join channel 
+                HandleJoin(null, user, new[] { room.Name, room.Name });
             }
+
+            
 
             // Update the users's client id mapping
             user.ClientId = Context.ClientId;
@@ -62,7 +101,6 @@ namespace SignalR.Samples.Hubs.Chat {
 
             var userViewModel = new UserViewModel(user);
 
-            LeaveAllRooms(user);
             Caller.room = null;
 
             // Set some client state
@@ -401,10 +439,6 @@ namespace SignalR.Samples.Hubs.Chat {
                 _db.Rooms.Add(newRoom);
             }
 
-            if (user.Rooms.Contains(newRoom)) {
-                throw new InvalidOperationException("You're already in that room!");
-            }
-
             // Add this room to the user's list of rooms
             user.Rooms.Add(newRoom);
 
@@ -571,7 +605,8 @@ namespace SignalR.Samples.Hubs.Chat {
             _sweeping = false;
         }
 
-        private void AddUser(string name) {
+        private ChatUser AddUser(string name) {
+
             var user = new ChatUser {
                 Name = name,
                 Active = true,
@@ -588,6 +623,17 @@ namespace SignalR.Samples.Hubs.Chat {
 
             var userViewModel = new UserViewModel(user);
             Caller.addUser(userViewModel);
+
+            return user;
+        }
+
+        private ChatRoom AddRoom(string name)
+        {
+            var chatRoom = new ChatRoom {Name = name};
+
+            _db.Rooms.Add(chatRoom);
+
+            return chatRoom;
         }
 
         private void LeaveAllRooms(ChatUser user) {

@@ -130,6 +130,7 @@ $(function () {
             });
 
         addMessage('Entered ' + room, 'notification');
+        updateCookie();
     };
 
 
@@ -259,7 +260,6 @@ $(function () {
         }
     };
 
-    
     chat.setTyping = function (currentUser, isTyping) {
         if (isTyping)
             $('li#u-' + currentUser.Id).addClass('typing');
@@ -342,7 +342,7 @@ $(function () {
                 addMessage(e, 'error');
             });
 
-			// Immediately mark as not-typing when sending
+            // Immediately mark as not-typing when sending
             chat.typingTimeoutId = 0;
             chat.typing(false);
 
@@ -352,7 +352,7 @@ $(function () {
 
         return false;
     });
-    
+
     var typingTimeoutId = 0;
     $('#new-message').keypress(function () {
         // If not in a room, don't try to send typing notifications
@@ -404,6 +404,11 @@ $(function () {
 
     function updateCookie() {
         $.cookie('userid', chat.id, { path: '/', expires: 30 });
+        $.cookie('username', chat.name, { path: '/', expires: 30 });
+
+        if (chat.room) {
+            $.cookie('userroom', chat.room, { path: '/', expires: 30 });
+        }
     }
 
     addMessage('Welcome to the SignalR IRC clone', 'notification');
