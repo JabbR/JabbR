@@ -280,7 +280,7 @@ $(function () {
     };
 
     chat.sendPrivateMessage = function (from, to, message) {
-        addMessage('<emp>*' + from + '*</emp> ' + message, 'pm');
+        addMessage('<emp>*' + from + '* &raquo; *' + to + '*</emp> ' + message, 'pm');
     };
 
     chat.nudge = function (from, to) {
