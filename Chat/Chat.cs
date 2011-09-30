@@ -78,14 +78,22 @@ namespace SignalR.Samples.Hubs.Chat {
 
                 var room = _db.Rooms.Where(x => x.Name == userRoom).FirstOrDefault();
 
-                // if user has room in cookie but it doesn't exists create it!
+                // if user has room name in the cookie but it doesn't exists create it!
                 if (room == null)
                 {
                     room = AddRoom(userRoom);
                 }
 
-                // Join channel 
-                HandleJoin(null, user, new[] { room.Name, room.Name });
+                // check if the user is already in the room if so let him rejoin
+                if (IsUserInRoom(room, user))
+                {
+                    HandleRejoin(room, user);
+                }
+                // if the user is not in the room join the room
+                else
+                {
+                    HandleJoin(null, user, new[] { room.Name, room.Name });   
+                }
             }
 
             // Update the users's client id mapping
@@ -409,6 +417,38 @@ namespace SignalR.Samples.Hubs.Chat {
             Caller.sendPrivateMessage(user.Name, toUser.Name, messageText);
         }
 
+        private bool IsUserInRoom(ChatRoom room, ChatUser user)
+        {
+            return room.Users.Any(x => x.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase));
+        }
+        
+        private void HandleRejoin(ChatRoom room, ChatUser user)
+        {
+            var userViewModel = new UserViewModel(user);
+
+            if (IsUserInRoom(room, user)) {
+                // Only support joining one room at a time for now (until we support tabs)
+                HandleLeave(room, user);   
+            }
+         
+            // Add this room to the user's list of rooms
+            user.Rooms.Add(room);
+
+            // Add this user to the list of room's users
+            room.Users.Add(user);
+
+            // Tell the people in this room that you're joining
+            Clients[room.Name].addUser(userViewModel).Wait();
+
+            // Set the room on the caller
+            Caller.room = room.Name;
+
+            // Add the caller to the group so they receive messages
+            AddToGroup(room.Name).Wait();
+
+            Caller.joinRoom(room.Name);
+        }
+
         private void HandleJoin(string oldRoomName, ChatUser user, string[] parts) {
             if (parts.Length < 2) {
                 throw new InvalidOperationException("Join which room?");
@@ -420,7 +460,7 @@ namespace SignalR.Samples.Hubs.Chat {
             ChatRoom oldRoom = _db.Rooms.FirstOrDefault(r => r.Name.Equals(oldRoomName, StringComparison.OrdinalIgnoreCase));
             if (oldRoom != null) {
                 HandleLeave(oldRoom, user);
-            }
+            }   
 
             // Create the room if it doesn't exist
             string newRoomName = parts[1];
@@ -428,6 +468,11 @@ namespace SignalR.Samples.Hubs.Chat {
             if (newRoom == null)
             {
                 AddRoom(newRoomName);
+            }
+
+            if (user.Rooms.Contains(newRoom))
+            {
+                throw new InvalidOperationException("You're already in that room!");
             }
 
             // Add this room to the user's list of rooms
