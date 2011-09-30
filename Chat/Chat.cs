@@ -158,9 +158,8 @@ namespace SignalR.Samples.Hubs.Chat {
                     orderby m.When descending
                     select new MessageViewModel(m)).Take(20).Reverse();
         }
-		
-        public void Typing(bool isTyping)
-        {
+
+        public void Typing(bool isTyping) {
             Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
 
             ChatUser user = tuple.Item1;
@@ -168,8 +167,9 @@ namespace SignalR.Samples.Hubs.Chat {
             var userViewModel = new UserViewModel(user);
 
             if (user.Rooms.Any()) {
-                foreach (var room in user.Rooms)
+                foreach (var room in user.Rooms) {
                     Clients[room.Name].setTyping(userViewModel, isTyping);
+                }
             }
             else {
                 Caller.setTyping(userViewModel, isTyping);
@@ -190,7 +190,7 @@ namespace SignalR.Samples.Hubs.Chat {
             Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
             ChatUser user = tuple.Item1;
             ChatRoom room = tuple.Item2;
-            
+
             if (user == null || room == null) {
                 return;
             }
