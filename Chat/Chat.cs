@@ -71,6 +71,20 @@ namespace SignalR.Samples.Hubs.Chat {
                 return false;
             }
 
+            // Update the users's client id mapping
+            user.ClientId = Context.ClientId;
+            user.Active = true;
+            user.LastActivity = DateTime.UtcNow;
+
+            var userViewModel = new UserViewModel(user);
+
+            Caller.room = null;
+
+            // Set some client state
+            Caller.id = user.Id;
+            Caller.name = user.Name;
+            Caller.hash = user.Hash;
+
             // if we have room add user to room
             if (userRoomCookie != null && !string.IsNullOrWhiteSpace(userRoomCookie.Value))
             {
@@ -95,20 +109,15 @@ namespace SignalR.Samples.Hubs.Chat {
                     HandleJoin(null, user, new[] { room.Name, room.Name });   
                 }
             }
+            // if user is in a room rejoin it
+            else if (IsUserInARoom(user)) {
 
-            // Update the users's client id mapping
-            user.ClientId = Context.ClientId;
-            user.Active = true;
-            user.LastActivity = DateTime.UtcNow;
-
-            var userViewModel = new UserViewModel(user);
-
-            Caller.room = null;
-
-            // Set some client state
-            Caller.id = user.Id;
-            Caller.name = user.Name;
-            Caller.hash = user.Hash;
+                // retrieve user room
+                var room = GetUserRoom(user);
+                
+                // handle the join of the room
+                HandleRejoin(room, user);
+            }
 
             // Add this user to the list of users
             Caller.addUser(userViewModel);
@@ -197,6 +206,37 @@ namespace SignalR.Samples.Hubs.Chat {
             return (from m in chatRoom.Messages
                     orderby m.When descending
                     select new MessageViewModel(m)).Take(20).Reverse();
+        }
+
+        public ChatRoom GetUserRoom(ChatUser user) {
+
+            ChatRoom room = null;
+
+            // check if the user has an room
+            if (user.Rooms.Any()) {
+
+                // retrieve room
+                var tempRoom = user.Rooms.FirstOrDefault();
+
+                // ensure room is valid
+                if (tempRoom != null) {
+                    room = tempRoom;
+                }
+            }
+            
+            // check if rooms has the user
+            if (room == null)
+            {
+                //retrieve room
+                var tempRoom = _db.Rooms.First(x => x.Users.Any(u => u.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase)));
+
+                // ensure room is valid
+                if (tempRoom != null) {
+                    room = tempRoom;
+                }
+            }
+
+            return room;
         }
 		
         public void Typing(bool isTyping)
@@ -417,20 +457,37 @@ namespace SignalR.Samples.Hubs.Chat {
             Caller.sendPrivateMessage(user.Name, toUser.Name, messageText);
         }
 
-        private bool IsUserInRoom(ChatRoom room, ChatUser user)
-        {
-            return room.Users.Any(x => x.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase));
+        private bool IsUserInRoom(ChatRoom room, ChatUser user) {
+            return room.Users.Any(x => x.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase)) || user.Rooms.Any(x => x.Name.Equals(room.Name, StringComparison.OrdinalIgnoreCase));
         }
-        
+
+        private bool IsUserInRoom(string roomName, ChatUser user) {
+
+            var room = _db.Rooms.FirstOrDefault(x => x.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
+
+            if (room == null) {
+                return false;
+            }
+
+            return IsUserInRoom(room, user);
+        }
+
+        private bool IsUserInARoom(ChatUser user) {
+            return _db.Rooms.Any(room => room.Users.Any(chatUser => chatUser.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase))) || user.Rooms.Any();
+        }
+
         private void HandleRejoin(ChatRoom room, ChatUser user)
         {
+            // setup viewmodel
             var userViewModel = new UserViewModel(user);
 
+            // check if the user is in a room
             if (IsUserInRoom(room, user)) {
+
                 // Only support joining one room at a time for now (until we support tabs)
                 HandleLeave(room, user);   
             }
-         
+
             // Add this room to the user's list of rooms
             user.Rooms.Add(room);
 
@@ -454,6 +511,13 @@ namespace SignalR.Samples.Hubs.Chat {
                 throw new InvalidOperationException("Join which room?");
             }
 
+            string newRoomName = parts[1];
+            
+            if (IsUserInRoom(newRoomName, user))
+            {
+                throw new InvalidOperationException("You're already in that room!");
+            }
+
             var userViewModel = new UserViewModel(user);
 
             // Only support joining one room at a time for now (until we support tabs)
@@ -463,18 +527,12 @@ namespace SignalR.Samples.Hubs.Chat {
             }   
 
             // Create the room if it doesn't exist
-            string newRoomName = parts[1];
             ChatRoom newRoom = _db.Rooms.FirstOrDefault(r => r.Name.Equals(newRoomName, StringComparison.OrdinalIgnoreCase));
             if (newRoom == null)
             {
-                AddRoom(newRoomName);
+                newRoom = AddRoom(newRoomName);
             }
-
-            if (user.Rooms.Contains(newRoom))
-            {
-                throw new InvalidOperationException("You're already in that room!");
-            }
-
+            
             // Add this room to the user's list of rooms
             user.Rooms.Add(newRoom);
 

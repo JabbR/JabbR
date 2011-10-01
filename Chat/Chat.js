@@ -197,8 +197,14 @@ $(function () {
     };
 
     chat.addUser = function (user, exists) {
+
+        // remove all users that are leaving
+        $('#users .removing').remove();
+
         var id = 'u-' + user.Id;
-        if (document.getElementById(id)) {
+        var element = document.getElementById(id)
+
+        if (element) {
             return;
         }
 
@@ -314,8 +320,11 @@ $(function () {
     };
 
     chat.leave = function (user) {
+
         if (this.id != user.Id) {
-            $('#u-' + user.Id).fadeOut('slow', function () {
+
+            // remove identifier attribute so no one can use the element
+            $('#u-' + user.Id).removeAttr('id').addClass('removing').fadeOut('slow', function () {
                 $(this).remove();
             });
 
@@ -331,6 +340,7 @@ $(function () {
 
             this.room = null;
         }
+
     };
 
     $('#send-message').submit(function () {
