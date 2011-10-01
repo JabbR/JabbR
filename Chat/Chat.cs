@@ -58,11 +58,7 @@ namespace SignalR.Samples.Hubs.Chat {
             // if we could get user by id try it by name server could be resetted
             if (user == null && userNameCookie != null && !string.IsNullOrWhiteSpace(userNameCookie.Value))
             {
-                var userName = userNameCookie.Value;
-               
-                EnsureUserNameIsAvailable(userName);
-
-                user = AddUser(userName);
+                user = AddUser(userNameCookie.Value);
             }
 
             // if we have no user return false will force user to set new nick
@@ -696,6 +692,8 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         private ChatUser AddUser(string name) {
+
+            EnsureUserNameIsAvailable(name);
 
             var user = new ChatUser {
                 Name = name,
