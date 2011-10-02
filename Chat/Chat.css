@@ -47,6 +47,7 @@
     left: 70%;
     width: 25%;
     bottom: 70px;
+    margin-left: 2px; /* for #messages border */
 }
 
 #users li {
@@ -61,25 +62,20 @@
 }
 
 #send-message {
-   position: absolute;
+    position: absolute;
     bottom: 20px;
     height: 50px;
-    width: 70%;
+    width: 100%;
 }
 
 #new-message {
     font-family: Trebuchet MS;
-    position: absolute;
-    left: 0;
-    right: 105px;
     padding: 5px;
     border: 1px solid #ccc;
+    width: 70%;
 }
 
 #send {
-   position: absolute;
-   right: 0;
-   width: 100px;
    padding: 5px;
 }
 
