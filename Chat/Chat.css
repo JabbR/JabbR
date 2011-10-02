@@ -47,6 +47,7 @@
     left: 70%;
     width: 25%;
     bottom: 70px;
+    margin-left: 2px; /* for #messages border */
 }
 
 #users li {
