@@ -45,6 +45,7 @@
     background-image: url('Content/images/keyboard.png');
     background-repeat: no-repeat;
     background-position: right center;
+    background-color: #f9f9f9;
 }
 
 .clear {
