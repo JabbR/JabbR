@@ -3,14 +3,24 @@
     font-size: 13px;
 }
 
+#chat-area {
+   position: absolute;
+   top: 100px;
+   bottom: 10px;
+   left: 10px;
+   right: 10px;
+   min-height: 200px;
+}
+
 #messages {
     width: 70%;
     border: 1px solid #ccc;
-    height: 500px;
-    float: left;
     overflow: auto;
     margin-left: 0px;
     padding-left: 0px;
+    position: absolute;
+    top: 0;
+    bottom: 70px;
 }
 
 #messages li {
@@ -24,17 +34,19 @@
 }
 
 #users {
-    width: 17%;
-    height: 500px;
     border-right: 1px solid #ccc;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
-    float: left;
     margin-left: 0px;
     padding-left: 0px;
     overflow: auto;
     font-size: small;
     white-space: nowrap;
+    position: absolute;
+    top: 0;
+    left: 70%;
+    width: 25%;
+    bottom: 70px;
 }
 
 #users li {
@@ -48,15 +60,27 @@
     background-color: #f9f9f9;
 }
 
-.clear {
-    clear: both;
+#send-message {
+   position: absolute;
+    bottom: 20px;
+    height: 50px;
+    width: 70%;
 }
 
 #new-message {
     font-family: Trebuchet MS;
-    width: 70%;
+    position: absolute;
+    left: 0;
+    right: 105px;
     padding: 5px;
     border: 1px solid #ccc;
+}
+
+#send {
+   position: absolute;
+   right: 0;
+   width: 100px;
+   padding: 5px;
 }
 
 .error {
