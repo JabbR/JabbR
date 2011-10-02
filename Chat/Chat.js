@@ -267,10 +267,12 @@ $(function () {
     };
 
     chat.setTyping = function (currentUser, isTyping) {
-        if (isTyping)
+        if (isTyping) {
             $('li#u-' + currentUser.Id).addClass('typing');
-        else
+        }
+        else {
             $('li#u-' + currentUser.Id).removeClass('typing');
+        }
     };
 
     chat.showCommands = function (commands) {
@@ -286,7 +288,7 @@ $(function () {
     };
 
     chat.sendPrivateMessage = function (from, to, message) {
-        addMessage('<emp>*' + from + '*</emp> ' + message, 'pm');
+        addMessage('<emp>*' + from + '* &raquo; *' + to + '*</emp> ' + message, 'pm');
     };
 
     chat.nudge = function (from, to) {
@@ -366,15 +368,18 @@ $(function () {
     var typingTimeoutId = 0;
     $('#new-message').keypress(function () {
         // If not in a room, don't try to send typing notifications
-        if (chat.room == null)
+        if (chat.room == null) {
             return;
+        }
 
         // Clear any previous timeout
-        if (chat.typingTimeoutId > 0)
+        if (chat.typingTimeoutId > 0) {
             clearTimeout(chat.typingTimeoutId);
+        }
         // Otherwise, mark as typing
-        else
+        else {
             chat.typing(true);
+        }
 
         // Set timeout to turn off
         chat.typingTimeoutId = setTimeout(function () {
