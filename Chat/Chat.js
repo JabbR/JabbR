@@ -355,6 +355,7 @@ $(function () {
             });
 
             // Immediately mark as not-typing when sending
+            clearTimeout(chat.typingTimeoutId);
             chat.typingTimeoutId = 0;
             chat.typing(false);
 
