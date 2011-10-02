@@ -488,22 +488,7 @@ namespace SignalR.Samples.Hubs.Chat {
                 HandleLeave(room, user);   
             }
 
-            // Add this room to the user's list of rooms
-            user.Rooms.Add(room);
-
-            // Add this user to the list of room's users
-            room.Users.Add(user);
-
-            // Tell the people in this room that you're joining
-            Clients[room.Name].addUser(userViewModel).Wait();
-
-            // Set the room on the caller
-            Caller.room = room.Name;
-
-            // Add the caller to the group so they receive messages
-            AddToGroup(room.Name).Wait();
-
-            Caller.joinRoom(room.Name);
+            HandleJoin(null, user, new[] { "/join", room.Name });
         }
 
         private void HandleJoin(string oldRoomName, ChatUser user, string[] parts) {
