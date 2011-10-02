@@ -130,6 +130,7 @@ $(function () {
             });
 
         addMessage('Entered ' + room, 'notification');
+        updateCookie();
     };
 
 
@@ -196,8 +197,14 @@ $(function () {
     };
 
     chat.addUser = function (user, exists) {
+
+        // remove all users that are leaving
+        $('#users .removing').remove();
+
         var id = 'u-' + user.Id;
-        if (document.getElementById(id)) {
+        var element = document.getElementById(id)
+
+        if (element) {
             return;
         }
 
@@ -259,12 +266,13 @@ $(function () {
         }
     };
 
-
     chat.setTyping = function (currentUser, isTyping) {
-        if (isTyping)
+        if (isTyping) {
             $('li#u-' + currentUser.Id).addClass('typing');
-        else
+        }
+        else {
             $('li#u-' + currentUser.Id).removeClass('typing');
+        }
     };
 
     chat.showCommands = function (commands) {
@@ -314,8 +322,11 @@ $(function () {
     };
 
     chat.leave = function (user) {
+
         if (this.id != user.Id) {
-            $('#u-' + user.Id).fadeOut('slow', function () {
+
+            // remove identifier attribute so no one can use the element
+            $('#u-' + user.Id).removeAttr('id').addClass('removing').fadeOut('slow', function () {
                 $(this).remove();
             });
 
@@ -331,6 +342,7 @@ $(function () {
 
             this.room = null;
         }
+
     };
 
     $('#send-message').submit(function () {
@@ -407,6 +419,11 @@ $(function () {
 
     function updateCookie() {
         $.cookie('userid', chat.id, { path: '/', expires: 30 });
+        $.cookie('username', chat.name, { path: '/', expires: 30 });
+
+        if (chat.room) {
+            $.cookie('userroom', chat.room, { path: '/', expires: 30 });
+        }
     }
 
     addMessage('Welcome to the SignalR IRC clone', 'notification');
