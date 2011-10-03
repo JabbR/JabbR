@@ -543,6 +543,7 @@ namespace SignalR.Samples.Hubs.Chat {
 
         private void SetGravatar(ChatUser user, string hash)
         {
+            user.Hash = hash;
             var userViewModel = new UserViewModel(user);
 
             if (user.Rooms.Any()) {

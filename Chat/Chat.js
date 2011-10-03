@@ -248,6 +248,7 @@ $(function () {
     };
 
     chat.changeGravatar = function (currentUser) {
+
         $('#u-' + currentUser.Id).replaceWith(
             $('#new-user-template').tmpl({
                 name: currentUser.Name,
