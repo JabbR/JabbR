@@ -14,7 +14,7 @@ namespace SignalR.Samples.Hubs.Chat.ContentProviders {
         /// <summary>
         /// Regex for parsing the tweet ID out of the link.
         /// </summary>
-        private static readonly Regex tweetRegex = new Regex(@".*http://twitter.com/(?:#!/)*[^/]+/status/(\d+).*");
+        private static readonly Regex tweetRegex = new Regex(@".*https?://twitter.com/(?:#!/)*[^/]+/status/(\d+).*");
 
         /// <summary>
         /// The block of HTML/Script that is sent to the client to render the tweet text. The tweet ID will be passed
@@ -27,7 +27,8 @@ namespace SignalR.Samples.Hubs.Chat.ContentProviders {
 
         public string GetContent(HttpWebResponse response) {
             // Only process Twitter links (returning null means we didn't process the link).
-            if (response.ResponseUri.AbsoluteUri.StartsWith("http://twitter.com/", StringComparison.OrdinalIgnoreCase)) {
+            if (response.ResponseUri.AbsoluteUri.StartsWith("http://twitter.com/", StringComparison.OrdinalIgnoreCase)
+                || response.ResponseUri.AbsoluteUri.StartsWith("https://twitter.com/", StringComparison.OrdinalIgnoreCase)) {
 
                 // Extract the status id from the URL.
                 var status = tweetRegex.Match(response.ResponseUri.AbsoluteUri)
