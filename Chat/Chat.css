@@ -65,18 +65,29 @@
     position: absolute;
     bottom: 20px;
     height: 50px;
-    width: 100%;
+    width: 70%;
+}
+
+#message-box {
+    position: absolute;
+    left: 0;
+    right: 115px;
+    padding: 0;
+    margin: 0;
 }
 
 #new-message {
     font-family: Trebuchet MS;
     padding: 5px;
     border: 1px solid #ccc;
-    width: 70%;
+    width: 100%;
 }
 
 #send {
    padding: 5px;
+   position: absolute;
+   right: 0;
+   width: 100px;
 }
 
 .error {
