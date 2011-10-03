@@ -111,8 +111,7 @@ namespace SignalR.Samples.Hubs.Chat {
             }
 
             // If we have user hash cookie set gravatar
-            if (userHashCookie != null)
-            {
+            if (userHashCookie != null) {
                 SetGravatar(user, userHashCookie.Value);
             }
 
@@ -541,9 +540,11 @@ namespace SignalR.Samples.Hubs.Chat {
             SetGravatar(user, hash);
         }
 
-        private void SetGravatar(ChatUser user, string hash)
-        {
+        private void SetGravatar(ChatUser user, string hash) {
+            
+            // set user hash
             user.Hash = hash;
+
             var userViewModel = new UserViewModel(user);
 
             if (user.Rooms.Any()) {
@@ -556,8 +557,7 @@ namespace SignalR.Samples.Hubs.Chat {
             }        
         }
 
-        private string CreateGravatarHash(string email)
-        {
+        private string CreateGravatarHash(string email) {
             return email.ToLowerInvariant().ToMD5();
         }
 
