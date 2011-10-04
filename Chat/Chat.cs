@@ -46,6 +46,7 @@ namespace SignalR.Samples.Hubs.Chat {
             HttpCookie userIdCookie = Context.Cookies["userid"];
             HttpCookie userNameCookie = Context.Cookies["username"];
             HttpCookie userRoomCookie = Context.Cookies["userroom"];
+            HttpCookie userHashCookie = Context.Cookies["userhash"];
 
             // setup user 
             ChatUser user = null;
@@ -107,6 +108,11 @@ namespace SignalR.Samples.Hubs.Chat {
 
                 // handle the join of the room
                 HandleRejoin(room, user);
+            }
+
+            // If we have user hash cookie set gravatar
+            if (userHashCookie != null) {
+                SetGravatar(user, userHashCookie.Value);
             }
 
             // Add this user to the list of users
@@ -522,14 +528,23 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         private void HandleGravatar(ChatUser user, string[] parts) {
+            
             string email = String.Join(" ", parts.Skip(1));
 
             if (String.IsNullOrWhiteSpace(email)) {
                 throw new InvalidOperationException("Email was not specified!");
             }
 
+            string hash = CreateGravatarHash(email);
 
-            user.Hash = email.ToLowerInvariant().ToMD5();
+            SetGravatar(user, hash);
+        }
+
+        private void SetGravatar(ChatUser user, string hash) {
+            
+            // set user hash
+            user.Hash = hash;
+
             var userViewModel = new UserViewModel(user);
 
             if (user.Rooms.Any()) {
@@ -539,7 +554,11 @@ namespace SignalR.Samples.Hubs.Chat {
             }
             else {
                 Caller.changeGravatar(userViewModel);
-            }
+            }        
+        }
+
+        private string CreateGravatarHash(string email) {
+            return email.ToLowerInvariant().ToMD5();
         }
 
         private void HandleRooms() {

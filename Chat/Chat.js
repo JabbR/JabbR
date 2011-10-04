@@ -248,6 +248,7 @@ $(function () {
     };
 
     chat.changeGravatar = function (currentUser) {
+
         $('#u-' + currentUser.Id).replaceWith(
             $('#new-user-template').tmpl({
                 name: currentUser.Name,
@@ -259,6 +260,10 @@ $(function () {
         refreshUsers();
 
         if (currentUser.Id === this.id) {
+
+            chat.hash = currentUser.hash;
+            updateCookie();
+
             addMessage('Your gravatar has been set.', 'notification');
         }
         else {
@@ -424,6 +429,10 @@ $(function () {
 
         if (chat.room) {
             $.cookie('userroom', chat.room, { path: '/', expires: 30 });
+        }
+
+        if (chat.hash) {
+            $.cookie('userhash', chat.hash, { path: '/', expires: 30 });
         }
     }
 
