@@ -144,9 +144,6 @@
     <Content Include="Global.asax" />
     <Content Include="Mobile.css" />
     <Content Include="mobile.htm" />
-    <Content Include="Scripts\jquery-1.6.3-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.6.3.js" />
-    <Content Include="Scripts\jquery-1.6.3.min.js" />
     <Content Include="Scripts\jquery-1.6.4-vsdoc.js" />
     <Content Include="Scripts\jquery-1.6.4.js" />
     <Content Include="Scripts\jquery-1.6.4.min.js" />

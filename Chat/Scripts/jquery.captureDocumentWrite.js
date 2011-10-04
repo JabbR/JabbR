@@ -1,6 +1,6 @@
 (function ($) {
     var defaultOptions = {};
-    var _loadScript = function (url, options) {
+    var _loadScript = function (url, options) {    
         ///<summary>
         /// Hijacking the document.write method and retrieves the script
         /// on the target location. If the options parameter contains a 
@@ -21,7 +21,7 @@
             function () {
                 document.write = oldWriter;
                 var joinedContent = content.join('');
-                if (options.targetElement && $.isFunction(options.targetElement.html)) {
+                if (options.targetElement && $.isFunction(options.targetElement.html)){
                     options.targetElement.append(joinedContent);
                     //Internet explorer doesn't load the css links when just added to the
                     //target element, therefore we move those to the header.
@@ -30,10 +30,10 @@
                     $('head').append(links);
                 }
                 if (options.callback !== null && $.isFunction(options.callback))
-                //Do the callback with a timeout to allow the browser to enforce css
-                //rules on potential new html before calling the callback. Firefox
-                //would not enforce the stylesheets in advance otherwise.
-                    setTimeout(function () { options.callback(joinedContent); }, 1);
+                    //Do the callback with a timeout to allow the browser to enforce css
+                    //rules on potential new html before calling the callback. Firefox
+                    //would not enforce the stylesheets in advance otherwise.
+                    setTimeout(function(){options.callback(joinedContent);},1);
             }
         );
     };
@@ -45,10 +45,10 @@
         ///</summary>
         if (lastScriptLoader == null)
             lastScriptLoader = _loadScript(url, options);
-        else
-            lastScriptLoader = lastScriptLoader.pipe(function () { return _loadScript(url, options); });
+        else 
+            lastScriptLoader = lastScriptLoader.pipe(function(){return _loadScript(url, options);});
     };
-    var _getSettings = function (options) {
+    var _getSettings = function(options){
         ///<summary>
         /// Loads the default settings and extends them with the user-provided
         /// settings or the user-provided function object. 
@@ -70,13 +70,13 @@
         /// options as an object with a callback property, the callback will be
         /// called once the script loading is completed.
         ///</summary>
-        if (this && this.length > 0) {
-            return $(this).each(function () {
+        if (this && this.length > 0){
+            return $(this).each(function(){
                 var settings = _getSettings(options);
                 settings.targetElement = $(this);
                 _deferringScriptLoader(url, settings);
             });
-        }
+        } 
         else {
             _deferringScriptLoader(url, _getSettings(options));
         }
