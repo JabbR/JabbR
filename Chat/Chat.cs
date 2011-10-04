@@ -46,6 +46,7 @@ namespace SignalR.Samples.Hubs.Chat {
             HttpCookie userIdCookie = Context.Cookies["userid"];
             HttpCookie userNameCookie = Context.Cookies["username"];
             HttpCookie userRoomCookie = Context.Cookies["userroom"];
+            HttpCookie userHashCookie = Context.Cookies["userhash"];
 
             // setup user 
             ChatUser user = null;
@@ -63,6 +64,11 @@ namespace SignalR.Samples.Hubs.Chat {
             // If we have no user return false will force user to set new nick
             if (user == null) {
                 return false;
+            }
+
+            // If we have user hash cookie set gravatar
+            if (userHashCookie != null) {
+                SetGravatar(user, userHashCookie.Value);
             }
 
             // Update the users's client id mapping
@@ -528,8 +534,15 @@ namespace SignalR.Samples.Hubs.Chat {
                 throw new InvalidOperationException("Email was not specified!");
             }
 
+            string hash = CreateGravatarHash(email);
 
-            user.Hash = email.ToLowerInvariant().ToMD5();
+            SetGravatar(user, hash);
+        }
+
+        private void SetGravatar(ChatUser user, string hash) {
+            // Set user hash
+            user.Hash = hash;
+
             var userViewModel = new UserViewModel(user);
 
             if (user.Rooms.Any()) {
@@ -540,6 +553,10 @@ namespace SignalR.Samples.Hubs.Chat {
             else {
                 Caller.changeGravatar(userViewModel);
             }
+        }
+
+        private string CreateGravatarHash(string email) {
+            return email.ToLowerInvariant().ToMD5();
         }
 
         private void HandleRooms() {
