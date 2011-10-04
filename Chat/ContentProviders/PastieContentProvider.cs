@@ -21,10 +21,9 @@ namespace SignalR.Samples.Hubs.Chat.ContentProviders {
         }
 
         public override string MediaFormatString {
-            get
-            {
+            get {
                 var scriptTagId = Guid.NewGuid().ToString();
-                return string.Format(ScriptTagFormat, scriptTagId);
+                return String.Format(ScriptTagFormat, scriptTagId);
             }
         }
 

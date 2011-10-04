@@ -492,7 +492,7 @@ function captureDocumentWrite(documentWritePath, headerText, elementToAppendTo) 
         //When the header of captured content is clicked, we want to show or hide the content.
         $('h3', collapsible).click(function () {
             var nearEndOnToggle = $('#messages').isNearTheEnd();
-            $(this).next().toggle(0,function () {
+            $(this).next().toggle(0, function () {
                 if (nearEndOnToggle) {
                     scrollToBottom();
                 }
