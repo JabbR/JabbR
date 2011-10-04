@@ -17,11 +17,22 @@ using SignalR.Samples.Hubs.Chat.ContentProviders;
 
 namespace SignalR.Samples.Hubs.Chat {
     public class Chat : Hub, IDisconnect {
-        private static ChatRepository _db = new ChatRepository();
+        private static readonly ChatRepository _repository = new ChatRepository();
+
+        // For testability
+        private readonly ChatRepository _db;
+
+        public Chat()
+            : this(_repository) {
+        }
+
+        public Chat(ChatRepository db) {
+            _db = db;
+        }
 
         private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(5);
         private static bool _sweeping;
-        private static Timer _timer = new Timer(_ => Sweep(), null, _sweepInterval, _sweepInterval);
+        private static Timer _timer = new Timer(_ => Sweep(_repository), null, _sweepInterval, _sweepInterval);
 
         private static readonly List<IContentProvider> _contentProviders = new List<IContentProvider>() {
             new ImageContentProvider(),
@@ -647,7 +658,7 @@ namespace SignalR.Samples.Hubs.Chat {
             }
         }
 
-        private static void Sweep() {
+        private static void Sweep(ChatRepository db) {
             if (_sweeping) {
                 return;
             }
@@ -658,7 +669,7 @@ namespace SignalR.Samples.Hubs.Chat {
 
             var inactiveUsers = new List<ChatUser>();
 
-            foreach (var user in _db.Users) {
+            foreach (var user in db.Users) {
                 var elapsed = DateTime.UtcNow - user.LastActivity;
                 if (elapsed.TotalMinutes > 5) {
                     user.Active = false;
