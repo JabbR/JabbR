@@ -130,3 +130,18 @@
 }
 
 /* End TweetContentProvider CSS */
+
+.captureDocumentWrite_collapsible h3 
+{
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    color: #1c94c4;
+    font-size:smaller;
+    padding:5px;
+    margin-bottom:0px;
+    border: 1px solid #CCCCCC;
+    background-color: rgb(238,238,238);
+    cursor:pointer;
+}

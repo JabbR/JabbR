@@ -161,8 +161,7 @@ $(function () {
     chat.addMessageContent = function (id, content) {
         var nearEnd = $('#messages').isNearTheEnd();
 
-        var e = $('#m-' + id).writeCapture()
-                             .append(content)
+        var e = $('#m-' + id).append(content)
                              .resizeMobileContent();
 
         updateUnread();
@@ -178,7 +177,7 @@ $(function () {
         var data = {
             name: message.User.Name,
             hash: message.User.Hash,
-            message: $.writeCapture.sanitize(message.Content),
+            message: message.Content,
             id: message.Id,
             when: toLocal(message.When)
         };
@@ -481,3 +480,35 @@ function addTweet(tweet) {
 }
 
 // End of Tweet Content Provider JS
+
+function captureDocumentWrite(documentWritePath, headerText, elementToAppendTo) {
+    $.fn.captureDocumentWrite(documentWritePath, function (content) {
+        var nearEnd = $('#messages').isNearTheEnd();
+
+        //Add headers so we can collapse the captured data
+        var collapsible = $('<div class="captureDocumentWrite_collapsible"><h3>' + headerText + ' (click to show/hide)</h3><div class="captureDocumentWrite_content"></div></div>');
+        $('.captureDocumentWrite_content', collapsible).append(content);
+
+        //When the header of captured content is clicked, we want to show or hide the content.
+        $('h3', collapsible).click(function () {
+            var nearEndOnToggle = $('#messages').isNearTheEnd();
+            $(this).next().toggle(0,function () {
+                if (nearEndOnToggle) {
+                    scrollToBottom();
+                }
+            });
+            return false;
+        });
+
+        //Since IE doesn't render the css if the links are not in the head element, we move those to the head element
+        var links = $('link', collapsible);
+        links.remove();
+        $('head').append(links);
+
+        elementToAppendTo.append(collapsible);
+
+        if (nearEnd) {
+            scrollToBottom();
+        }
+    });
+}
