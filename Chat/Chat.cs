@@ -66,6 +66,11 @@ namespace SignalR.Samples.Hubs.Chat {
                 return false;
             }
 
+            // If we have user hash cookie set gravatar
+            if (userHashCookie != null) {
+                SetGravatar(user, userHashCookie.Value);
+            }
+
             // Update the users's client id mapping
             user.ClientId = Context.ClientId;
             user.Active = true;
@@ -108,11 +113,6 @@ namespace SignalR.Samples.Hubs.Chat {
 
                 // handle the join of the room
                 HandleRejoin(room, user);
-            }
-
-            // If we have user hash cookie set gravatar
-            if (userHashCookie != null) {
-                SetGravatar(user, userHashCookie.Value);
             }
 
             // Add this user to the list of users
@@ -528,7 +528,6 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         private void HandleGravatar(ChatUser user, string[] parts) {
-
             string email = String.Join(" ", parts.Skip(1));
 
             if (String.IsNullOrWhiteSpace(email)) {
@@ -541,8 +540,7 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         private void SetGravatar(ChatUser user, string hash) {
-
-            // set user hash
+            // Set user hash
             user.Hash = hash;
 
             var userViewModel = new UserViewModel(user);
