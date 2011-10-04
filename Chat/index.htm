@@ -27,15 +27,15 @@
             <img src="http://www.gravatar.com/avatar/${hash}?s=16&d=mm" class="gravatar" /> ${name}
         </li>
     </script>
-	<!-- TweetContentProvider: Should be extracted out if other content providers need templates -->
-	<script id="tweet-template" type="text/x-jquery-tmpl">
-		<div class="user">
-			<img src="${user.profile_image_url}" />
-			<span class="name">${user.screen_name}</span> (${user.name})
-		</div>
+    <!-- TweetContentProvider: Should be extracted out if other content providers need templates -->
+    <script id="tweet-template" type="text/x-jquery-tmpl">
+        <div class="user">
+            <img src="${user.profile_image_url}" />
+            <span class="name">${user.screen_name}</span> (${user.name})
+        </div>
         ${text}
     </script>
-	<!-- /TweetContentProvider -->
+    <!-- /TweetContentProvider -->
 </head>
 <body>
     <h2>
@@ -51,7 +51,7 @@
         <ul id="users">
         </ul>
         <form id="send-message" action="#">
-            <input type="text" id="new-message" autocomplete="off" />
+            <div id="message-box"><input type="text" id="new-message" autocomplete="off" /></div>
             <input type="submit" id="send" value="Send" class="send" />
         </form>
     </div>
