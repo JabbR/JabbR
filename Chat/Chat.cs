@@ -528,7 +528,7 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         private void HandleGravatar(ChatUser user, string[] parts) {
-            
+
             string email = String.Join(" ", parts.Skip(1));
 
             if (String.IsNullOrWhiteSpace(email)) {
@@ -541,7 +541,7 @@ namespace SignalR.Samples.Hubs.Chat {
         }
 
         private void SetGravatar(ChatUser user, string hash) {
-            
+
             // set user hash
             user.Hash = hash;
 
@@ -554,7 +554,7 @@ namespace SignalR.Samples.Hubs.Chat {
             }
             else {
                 Caller.changeGravatar(userViewModel);
-            }        
+            }
         }
 
         private string CreateGravatarHash(string email) {
