@@ -37,6 +37,8 @@ namespace Chat {
                 Elmah.ErrorSignal.Get(this).Raise(e.Exception.GetBaseException());
                 e.SetObserved();
             };
+
+            Signaler.Instance.DefaultTimeout = TimeSpan.FromSeconds(25);
         }
     }
 }
