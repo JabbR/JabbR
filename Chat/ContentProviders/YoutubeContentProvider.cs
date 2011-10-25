@@ -6,7 +6,7 @@ namespace SignalR.Samples.Hubs.Chat.ContentProviders {
     public class YouTubeContentProvider : EmbedContentProvider {
         public override string MediaFormatString {
             get {
-                return @"<object width=""425"" height=""344""><param name=""movie"" value=""http://www.youtube.com/v/{0}?fs=1""</param><param name=""allowFullScreen"" value=""true""></param><param name=""allowScriptAccess"" value=""always""></param><embed src=""http://www.youtube.com/v/{0}?fs=1"" type=""application/x-shockwave-flash"" allowfullscreen=""true"" allowscriptaccess=""always"" width=""425"" height=""344""></embed></object>";
+                return @"<object width=""425"" height=""344""><param name=""movie"" value=""http://www.youtube.com/v/{0}?fs=1""></param><param name=""allowFullScreen"" value=""true""></param><param name=""allowScriptAccess"" value=""always""></param><embed src=""http://www.youtube.com/v/{0}?fs=1"" type=""application/x-shockwave-flash"" allowfullscreen=""true"" allowscriptaccess=""always"" width=""425"" height=""344""></embed></object>";
             }
         }
 
