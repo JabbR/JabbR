@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
+using System.Collections.Generic;
 
-namespace Chat.Models {
-    public class ChatUser {
+namespace Chat.Models
+{
+    public class ChatUser
+    {
         public string Id { get; set; }
         public string Name { get; set; }
         public string Hash { get; set; }
@@ -13,7 +15,8 @@ namespace Chat.Models {
 
         public virtual ICollection<ChatRoom> Rooms { get; set; }
 
-        public ChatUser() {
+        public ChatUser()
+        {
             Rooms = new HashSet<ChatRoom>();
         }
     }

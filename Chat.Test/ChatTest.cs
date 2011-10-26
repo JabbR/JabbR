@@ -7,10 +7,13 @@ using SignalR.Hubs;
 using Xunit;
 using ChatHub = SignalR.Samples.Hubs.Chat.Chat;
 
-namespace Chat.Test {
-    public class ChatTest {
+namespace Chat.Test
+{
+    public class ChatTest
+    {
         [Fact]
-        public void JoinReturnsFalseIfNoCookies() {
+        public void JoinReturnsFalseIfNoCookies()
+        {
             var repository = new ChatRepository();
             var chat = new ChatHub(repository);
             var connection = new Mock<IConnection>();
@@ -29,9 +32,11 @@ namespace Chat.Test {
         }
 
         [Fact]
-        public void JoinCallsAddUserIfValidUserIdInCookieAndUserList() {
+        public void JoinCallsAddUserIfValidUserIdInCookieAndUserList()
+        {
             var repository = new ChatRepository();
-            var user = new ChatUser {
+            var user = new ChatUser
+            {
                 Id = "1234",
                 Name = "John",
                 Hash = "Hash"

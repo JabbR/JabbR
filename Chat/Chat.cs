@@ -15,18 +15,22 @@ using Microsoft.Security.Application;
 using SignalR.Hubs;
 using SignalR.Samples.Hubs.Chat.ContentProviders;
 
-namespace SignalR.Samples.Hubs.Chat {
-    public class Chat : Hub, IDisconnect {
+namespace SignalR.Samples.Hubs.Chat
+{
+    public class Chat : Hub, IDisconnect
+    {
         private static readonly ChatRepository _repository = new ChatRepository();
 
         // For testability
         private readonly ChatRepository _db;
 
         public Chat()
-            : this(_repository) {
+            : this(_repository)
+        {
         }
 
-        public Chat(ChatRepository db) {
+        public Chat(ChatRepository db)
+        {
             _db = db;
         }
 
@@ -42,15 +46,18 @@ namespace SignalR.Samples.Hubs.Chat {
             new PastieContentProvider()
         };
 
-        public bool OutOfSync {
-            get {
+        public bool OutOfSync
+        {
+            get
+            {
                 string version = Caller.version;
                 return String.IsNullOrEmpty(version) ||
                         new Version(version) != typeof(Chat).Assembly.GetName().Version;
             }
         }
 
-        public bool Join() {
+        public bool Join()
+        {
             Caller.version = typeof(Chat).Assembly.GetName().Version.ToString();
 
             // Check the user id cookie
@@ -63,22 +70,26 @@ namespace SignalR.Samples.Hubs.Chat {
             ChatUser user = null;
 
             // First try to retrieve user by id if exists
-            if (userIdCookie != null && !String.IsNullOrWhiteSpace(userIdCookie.Value)) {
+            if (userIdCookie != null && !String.IsNullOrWhiteSpace(userIdCookie.Value))
+            {
                 user = _db.Users.FirstOrDefault(u => u.Id == userIdCookie.Value);
             }
 
             // If we couldn't get user by id try it by name server could be reset
-            if (user == null && userNameCookie != null && !String.IsNullOrWhiteSpace(userNameCookie.Value)) {
+            if (user == null && userNameCookie != null && !String.IsNullOrWhiteSpace(userNameCookie.Value))
+            {
                 user = AddUser(userNameCookie.Value);
             }
 
             // If we have no user return false will force user to set new nick
-            if (user == null) {
+            if (user == null)
+            {
                 return false;
             }
 
             // If we have user hash cookie set gravatar
-            if (userHashCookie != null) {
+            if (userHashCookie != null)
+            {
                 SetGravatar(user, userHashCookie.Value);
             }
 
@@ -97,27 +108,32 @@ namespace SignalR.Samples.Hubs.Chat {
             Caller.hash = user.Hash;
 
             // If we have room add user to room
-            if (userRoomCookie != null && !String.IsNullOrWhiteSpace(userRoomCookie.Value)) {
+            if (userRoomCookie != null && !String.IsNullOrWhiteSpace(userRoomCookie.Value))
+            {
                 var userRoom = userRoomCookie.Value;
 
                 var room = _db.Rooms.Where(x => x.Name == userRoom).FirstOrDefault();
 
                 // If user has room name in the cookie but it doesn't exists create it!
-                if (room == null) {
+                if (room == null)
+                {
                     room = AddRoom(userRoom);
                 }
 
                 // Check if the user is already in the room if so let him rejoin
-                if (IsUserInRoom(room, user)) {
+                if (IsUserInRoom(room, user))
+                {
                     HandleRejoin(room, user);
                 }
                 // if the user is not in the room join the room
-                else {
+                else
+                {
                     HandleJoin(null, user, new[] { room.Name, room.Name });
                 }
             }
             // if user is in a room rejoin it
-            else if (IsUserInARoom(user)) {
+            else if (IsUserInARoom(user))
+            {
 
                 // retrieve user room
                 var room = GetUserRoom(user);
@@ -131,15 +147,18 @@ namespace SignalR.Samples.Hubs.Chat {
             return true;
         }
 
-        public void Send(string content) {
-            if (OutOfSync) {
+        public void Send(string content)
+        {
+            if (OutOfSync)
+            {
                 throw new InvalidOperationException("Chat was just updated, please refresh you browser and rejoin " + Caller.room);
             }
 
             content = Sanitizer.GetSafeHtmlFragment(content);
 
             // See if this is a valid command (starts with /)
-            if (TryHandleCommand(content)) {
+            if (TryHandleCommand(content))
+            {
                 return;
             }
 
@@ -157,7 +176,8 @@ namespace SignalR.Samples.Hubs.Chat {
             HashSet<string> links;
             var messageText = Transform(content, out links);
 
-            var chatMessage = new ChatMessage {
+            var chatMessage = new ChatMessage
+            {
                 Id = Guid.NewGuid().ToString("d"),
                 User = user,
                 Content = messageText,
@@ -170,43 +190,51 @@ namespace SignalR.Samples.Hubs.Chat {
 
             Clients[chatRoom.Name].addMessage(messageViewModel);
 
-            if (!links.Any()) {
+            if (!links.Any())
+            {
                 return;
             }
 
             ProcessUrls(links, chatRoom, chatMessage);
         }
 
-        public void Disconnect() {
+        public void Disconnect()
+        {
             Disconnect(Context.ClientId);
         }
 
-        public IEnumerable<UserViewModel> GetUsers() {
+        public IEnumerable<UserViewModel> GetUsers()
+        {
             string room = Caller.room;
 
-            if (String.IsNullOrEmpty(room)) {
+            if (String.IsNullOrEmpty(room))
+            {
                 return Enumerable.Empty<UserViewModel>();
             }
 
             ChatRoom chatRoom = _db.Rooms.FirstOrDefault(r => r.Name.Equals(room, StringComparison.OrdinalIgnoreCase));
 
-            if (chatRoom == null) {
+            if (chatRoom == null)
+            {
                 return Enumerable.Empty<UserViewModel>();
             }
 
             return chatRoom.Users.Select(u => new UserViewModel(u));
         }
 
-        public IEnumerable<MessageViewModel> GetRecentMessages() {
+        public IEnumerable<MessageViewModel> GetRecentMessages()
+        {
             string room = Caller.room;
 
-            if (String.IsNullOrEmpty(room)) {
+            if (String.IsNullOrEmpty(room))
+            {
                 return Enumerable.Empty<MessageViewModel>();
             }
 
             ChatRoom chatRoom = _db.Rooms.FirstOrDefault(r => r.Name.Equals(room, StringComparison.OrdinalIgnoreCase));
 
-            if (chatRoom == null) {
+            if (chatRoom == null)
+            {
                 return Enumerable.Empty<MessageViewModel>();
             }
 
@@ -215,28 +243,33 @@ namespace SignalR.Samples.Hubs.Chat {
                     select new MessageViewModel(m)).Take(20).Reverse();
         }
 
-        public ChatRoom GetUserRoom(ChatUser user) {
+        public ChatRoom GetUserRoom(ChatUser user)
+        {
             ChatRoom room = null;
 
             // check if the user has an room
-            if (user.Rooms.Any()) {
+            if (user.Rooms.Any())
+            {
 
                 // retrieve room
                 var tempRoom = user.Rooms.FirstOrDefault();
 
                 // ensure room is valid
-                if (tempRoom != null) {
+                if (tempRoom != null)
+                {
                     room = tempRoom;
                 }
             }
 
             // check if rooms has the user
-            if (room == null) {
+            if (room == null)
+            {
                 //retrieve room
                 var tempRoom = _db.Rooms.First(x => x.Users.Any(u => u.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase)));
 
                 // ensure room is valid
-                if (tempRoom != null) {
+                if (tempRoom != null)
+                {
                     room = tempRoom;
                 }
             }
@@ -244,57 +277,70 @@ namespace SignalR.Samples.Hubs.Chat {
             return room;
         }
 
-        public void Typing(bool isTyping) {
+        public void Typing(bool isTyping)
+        {
             Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
 
             ChatUser user = tuple.Item1;
             ChatRoom chatRoom = tuple.Item2;
             var userViewModel = new UserViewModel(user);
 
-            if (user.Rooms.Any()) {
-                foreach (var room in user.Rooms) {
+            if (user.Rooms.Any())
+            {
+                foreach (var room in user.Rooms)
+                {
                     Clients[room.Name].setTyping(userViewModel, isTyping);
                 }
             }
-            else {
+            else
+            {
                 Caller.setTyping(userViewModel, isTyping);
             }
         }
 
-        private void Disconnect(string clientId) {
+        private void Disconnect(string clientId)
+        {
             ChatUser user = _db.Users.FirstOrDefault(u => u.ClientId == clientId);
 
-            if (user == null) {
+            if (user == null)
+            {
                 return;
             }
 
             LeaveAllRooms(user);
         }
 
-        private void UpdateActivity() {
+        private void UpdateActivity()
+        {
             Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
             ChatUser user = tuple.Item1;
             ChatRoom room = tuple.Item2;
 
-            if (user == null || room == null) {
+            if (user == null || room == null)
+            {
                 return;
             }
 
             Clients[room.Name].updateActivity(new UserViewModel(user));
         }
 
-        private void ProcessUrls(IEnumerable<string> links, ChatRoom chatRoom, ChatMessage chatMessage) {
+        private void ProcessUrls(IEnumerable<string> links, ChatRoom chatRoom, ChatMessage chatMessage)
+        {
             // REVIEW: is this safe to do? We're holding on to this instance 
             // when this should really be a fire and forget.
             var contentTasks = links.Select(ExtractContent).ToArray();
-            Task.Factory.ContinueWhenAll(contentTasks, tasks => {
-                foreach (var task in tasks) {
-                    if (task.IsFaulted) {
+            Task.Factory.ContinueWhenAll(contentTasks, tasks =>
+            {
+                foreach (var task in tasks)
+                {
+                    if (task.IsFaulted)
+                    {
                         Trace.TraceError(task.Exception.GetBaseException().Message);
                         continue;
                     }
 
-                    if (String.IsNullOrEmpty(task.Result)) {
+                    if (String.IsNullOrEmpty(task.Result))
+                    {
                         continue;
                     }
 
@@ -309,9 +355,11 @@ namespace SignalR.Samples.Hubs.Chat {
             });
         }
 
-        private bool TryHandleCommand(string command) {
+        private bool TryHandleCommand(string command)
+        {
             command = command.Trim();
-            if (!command.StartsWith("/")) {
+            if (!command.StartsWith("/"))
+            {
                 return false;
             }
 
@@ -320,60 +368,73 @@ namespace SignalR.Samples.Hubs.Chat {
             string[] parts = command.Substring(1).Split(' ');
             string commandName = parts[0];
 
-            if (commandName.Equals("help", StringComparison.OrdinalIgnoreCase)) {
+            if (commandName.Equals("help", StringComparison.OrdinalIgnoreCase))
+            {
                 HandleHelp();
 
                 return true;
             }
-            else if (commandName.Equals("nick", StringComparison.OrdinalIgnoreCase)) {
+            else if (commandName.Equals("nick", StringComparison.OrdinalIgnoreCase))
+            {
                 HandleNick(name, parts);
 
                 return true;
             }
-            else {
+            else
+            {
                 ChatUser user = EnsureUser();
-                if (commandName.Equals("rooms", StringComparison.OrdinalIgnoreCase)) {
+                if (commandName.Equals("rooms", StringComparison.OrdinalIgnoreCase))
+                {
                     HandleRooms();
 
                     return true;
                 }
-                else if (commandName.Equals("join", StringComparison.OrdinalIgnoreCase)) {
+                else if (commandName.Equals("join", StringComparison.OrdinalIgnoreCase))
+                {
                     HandleJoin(room, user, parts);
 
                     return true;
                 }
-                else if (commandName.Equals("msg", StringComparison.OrdinalIgnoreCase)) {
+                else if (commandName.Equals("msg", StringComparison.OrdinalIgnoreCase))
+                {
                     HandleMsg(user, parts);
 
                     return true;
                 }
-                else if (commandName.Equals("gravatar", StringComparison.OrdinalIgnoreCase)) {
+                else if (commandName.Equals("gravatar", StringComparison.OrdinalIgnoreCase))
+                {
                     HandleGravatar(user, parts);
 
                     return true;
                 }
-                else if (commandName.Equals("leave", StringComparison.OrdinalIgnoreCase) && parts.Length == 2) {
+                else if (commandName.Equals("leave", StringComparison.OrdinalIgnoreCase) && parts.Length == 2)
+                {
                     HandleLeave(user, parts);
 
                     return true;
                 }
-                else if (commandName.Equals("nudge", StringComparison.OrdinalIgnoreCase) && parts.Length == 2) {
+                else if (commandName.Equals("nudge", StringComparison.OrdinalIgnoreCase) && parts.Length == 2)
+                {
                     HandleNudge(user, parts);
 
                     return true;
                 }
-                else {
+                else
+                {
                     Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
-                    if (commandName.Equals("me", StringComparison.OrdinalIgnoreCase)) {
+                    if (commandName.Equals("me", StringComparison.OrdinalIgnoreCase))
+                    {
                         HandleMe(tuple.Item2, tuple.Item1, parts);
                         return true;
                     }
-                    else if (commandName.Equals("leave", StringComparison.OrdinalIgnoreCase)) {
+                    else if (commandName.Equals("leave", StringComparison.OrdinalIgnoreCase))
+                    {
                         HandleLeave(tuple.Item2, tuple.Item1);
 
                         return true;
                     }
-                    else if (commandName.Equals("nudge", StringComparison.OrdinalIgnoreCase)) {
+                    else if (commandName.Equals("nudge", StringComparison.OrdinalIgnoreCase))
+                    {
                         HandleNudge(tuple.Item2, tuple.Item1, parts);
 
                         return true;
@@ -384,7 +445,8 @@ namespace SignalR.Samples.Hubs.Chat {
             }
         }
 
-        private void HandleHelp() {
+        private void HandleHelp()
+        {
             Caller.showCommands(new[] { 
                 new { Name = "help", Description = "Shows the list of commands" },
                 new { Name = "nick", Description = "/nick changes your nickname" },
@@ -398,21 +460,25 @@ namespace SignalR.Samples.Hubs.Chat {
             });
         }
 
-        private void HandleLeave(ChatUser user, string[] parts) {
-            if (String.IsNullOrWhiteSpace(parts[1])) {
+        private void HandleLeave(ChatUser user, string[] parts)
+        {
+            if (String.IsNullOrWhiteSpace(parts[1]))
+            {
                 throw new InvalidOperationException("Room name cannot be blank!");
             }
 
             var room = _db.Rooms.FirstOrDefault(r => r.Name.Equals(parts[1], StringComparison.OrdinalIgnoreCase));
 
-            if (room == null) {
+            if (room == null)
+            {
                 throw new InvalidOperationException("No room with that name!");
             }
 
             HandleLeave(room, user);
         }
 
-        private void HandleLeave(ChatRoom room, ChatUser user) {
+        private void HandleLeave(ChatRoom room, ChatUser user)
+        {
             room.Users.Remove(user);
             user.Rooms.Remove(room);
 
@@ -422,8 +488,10 @@ namespace SignalR.Samples.Hubs.Chat {
             RemoveFromGroup(room.Name).Wait();
         }
 
-        private void HandleMe(ChatRoom room, ChatUser user, string[] parts) {
-            if (parts.Length < 2) {
+        private void HandleMe(ChatRoom room, ChatUser user, string[] parts)
+        {
+            if (parts.Length < 2)
+            {
                 throw new InvalidOperationException("You what?");
             }
 
@@ -432,28 +500,34 @@ namespace SignalR.Samples.Hubs.Chat {
             Clients[room.Name].sendMeMessage(user.Name, content);
         }
 
-        private void HandleMsg(ChatUser user, string[] parts) {
-            if (_db.Users.Count == 1) {
+        private void HandleMsg(ChatUser user, string[] parts)
+        {
+            if (_db.Users.Count == 1)
+            {
                 throw new InvalidOperationException("You're the only person in here...");
             }
 
-            if (parts.Length < 2 || String.IsNullOrWhiteSpace(parts[1])) {
+            if (parts.Length < 2 || String.IsNullOrWhiteSpace(parts[1]))
+            {
                 throw new InvalidOperationException("Who are you trying send a private message to?");
             }
 
             ChatUser toUser = _db.Users.FirstOrDefault(u => u.Name.Equals(parts[1], StringComparison.OrdinalIgnoreCase));
 
-            if (toUser == null) {
+            if (toUser == null)
+            {
                 throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", toUser.Name));
             }
 
-            if (toUser == user) {
+            if (toUser == user)
+            {
                 throw new InvalidOperationException("You can't private message yourself!");
             }
 
             string messageText = String.Join(" ", parts.Skip(2)).Trim();
 
-            if (String.IsNullOrEmpty(messageText)) {
+            if (String.IsNullOrEmpty(messageText))
+            {
                 throw new InvalidOperationException(String.Format("What did you want to say to '{0}'.", toUser.Name));
             }
 
@@ -462,27 +536,33 @@ namespace SignalR.Samples.Hubs.Chat {
             Caller.sendPrivateMessage(user.Name, toUser.Name, messageText);
         }
 
-        private bool IsUserInRoom(ChatRoom room, ChatUser user) {
+        private bool IsUserInRoom(ChatRoom room, ChatUser user)
+        {
             return room.Users.Any(x => x.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase)) || user.Rooms.Any(x => x.Name.Equals(room.Name, StringComparison.OrdinalIgnoreCase));
         }
 
-        private bool IsUserInRoom(string roomName, ChatUser user) {
+        private bool IsUserInRoom(string roomName, ChatUser user)
+        {
             var room = _db.Rooms.FirstOrDefault(x => x.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
 
-            if (room == null) {
+            if (room == null)
+            {
                 return false;
             }
 
             return IsUserInRoom(room, user);
         }
 
-        private bool IsUserInARoom(ChatUser user) {
+        private bool IsUserInARoom(ChatUser user)
+        {
             return _db.Rooms.Any(room => room.Users.Any(chatUser => chatUser.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase))) || user.Rooms.Any();
         }
 
-        private void HandleRejoin(ChatRoom room, ChatUser user) {
+        private void HandleRejoin(ChatRoom room, ChatUser user)
+        {
             // check if the user is in a room
-            if (IsUserInRoom(room, user)) {
+            if (IsUserInRoom(room, user))
+            {
 
                 // Only support joining one room at a time for now (until we support tabs)
                 HandleLeave(room, user);
@@ -491,33 +571,39 @@ namespace SignalR.Samples.Hubs.Chat {
             JoinRoom(user, room);
         }
 
-        private void HandleJoin(string oldRoomName, ChatUser user, string[] parts) {
-            if (parts.Length < 2) {
+        private void HandleJoin(string oldRoomName, ChatUser user, string[] parts)
+        {
+            if (parts.Length < 2)
+            {
                 throw new InvalidOperationException("Join which room?");
             }
 
             string newRoomName = parts[1];
 
-            if (IsUserInRoom(newRoomName, user)) {
+            if (IsUserInRoom(newRoomName, user))
+            {
                 throw new InvalidOperationException("You're already in that room!");
             }
 
             // Only support joining one room at a time for now (until we support tabs)
             ChatRoom oldRoom = _db.Rooms.FirstOrDefault(r => r.Name.Equals(oldRoomName, StringComparison.OrdinalIgnoreCase));
-            if (oldRoom != null) {
+            if (oldRoom != null)
+            {
                 HandleLeave(oldRoom, user);
             }
 
             // Create the room if it doesn't exist
             ChatRoom newRoom = _db.Rooms.FirstOrDefault(r => r.Name.Equals(newRoomName, StringComparison.OrdinalIgnoreCase));
-            if (newRoom == null) {
+            if (newRoom == null)
+            {
                 newRoom = AddRoom(newRoomName);
             }
 
             JoinRoom(user, newRoom);
         }
 
-        private void JoinRoom(ChatUser user, ChatRoom newRoom) {
+        private void JoinRoom(ChatUser user, ChatRoom newRoom)
+        {
             var userViewModel = new UserViewModel(user);
 
             // Add this room to the user's list of rooms
@@ -538,10 +624,12 @@ namespace SignalR.Samples.Hubs.Chat {
             Caller.joinRoom(newRoom.Name);
         }
 
-        private void HandleGravatar(ChatUser user, string[] parts) {
+        private void HandleGravatar(ChatUser user, string[] parts)
+        {
             string email = String.Join(" ", parts.Skip(1));
 
-            if (String.IsNullOrWhiteSpace(email)) {
+            if (String.IsNullOrWhiteSpace(email))
+            {
                 throw new InvalidOperationException("Email was not specified!");
             }
 
@@ -550,28 +638,35 @@ namespace SignalR.Samples.Hubs.Chat {
             SetGravatar(user, hash);
         }
 
-        private void SetGravatar(ChatUser user, string hash) {
+        private void SetGravatar(ChatUser user, string hash)
+        {
             // Set user hash
             user.Hash = hash;
 
             var userViewModel = new UserViewModel(user);
 
-            if (user.Rooms.Any()) {
-                foreach (var room in user.Rooms) {
+            if (user.Rooms.Any())
+            {
+                foreach (var room in user.Rooms)
+                {
                     Clients[room.Name].changeGravatar(userViewModel);
                 }
             }
-            else {
+            else
+            {
                 Caller.changeGravatar(userViewModel);
             }
         }
 
-        private string CreateGravatarHash(string email) {
+        private string CreateGravatarHash(string email)
+        {
             return email.ToLowerInvariant().ToMD5();
         }
 
-        private void HandleRooms() {
-            var rooms = _db.Rooms.Select(r => new {
+        private void HandleRooms()
+        {
+            var rooms = _db.Rooms.Select(r => new
+            {
                 Name = r.Name,
                 Count = r.Users.Count
             });
@@ -579,42 +674,51 @@ namespace SignalR.Samples.Hubs.Chat {
             Caller.showRooms(rooms);
         }
 
-        private void HandleNick(string name, string[] parts) {
+        private void HandleNick(string name, string[] parts)
+        {
             string newUserName = String.Join(" ", parts.Skip(1));
 
-            if (String.IsNullOrWhiteSpace(newUserName)) {
+            if (String.IsNullOrWhiteSpace(newUserName))
+            {
                 throw new InvalidOperationException("No username specified!");
             }
 
             ChatUser user = _db.Users.FirstOrDefault(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
-            if (user == null) {
+            if (user == null)
+            {
                 AddUser(newUserName);
             }
-            else {
+            else
+            {
                 ChangeUserName(user, newUserName);
             }
         }
 
-        private void HandleNudge(ChatUser user, string[] parts) {
-            if (_db.Users.Count == 1) {
+        private void HandleNudge(ChatUser user, string[] parts)
+        {
+            if (_db.Users.Count == 1)
+            {
                 throw new InvalidOperationException("You're the only person in here...");
             }
 
             ChatUser toUser = _db.Users.FirstOrDefault(u => u.Name.Equals(parts[1], StringComparison.OrdinalIgnoreCase));
 
-            if (toUser == null) {
+            if (toUser == null)
+            {
                 throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", parts[1]));
             }
 
-            if (toUser == user) {
+            if (toUser == user)
+            {
                 throw new InvalidOperationException("You can't nudge yourself!");
             }
 
             string messageText = String.Format("{0} nudged you", user);
 
             var betweenNudges = TimeSpan.FromSeconds(60);
-            if (toUser.LastNudged.HasValue && toUser.LastNudged > DateTime.Now.Subtract(betweenNudges)) {
+            if (toUser.LastNudged.HasValue && toUser.LastNudged > DateTime.Now.Subtract(betweenNudges))
+            {
                 throw new InvalidOperationException(String.Format("User can only be nudged once every {0} seconds", betweenNudges.TotalSeconds));
             }
 
@@ -624,19 +728,24 @@ namespace SignalR.Samples.Hubs.Chat {
             Caller.sendPrivateMessage(user.Name, toUser.Name, "nudged " + toUser.Name);
         }
 
-        private void HandleNudge(ChatRoom room, ChatUser user, string[] parts) {
+        private void HandleNudge(ChatRoom room, ChatUser user, string[] parts)
+        {
             var betweenNudges = TimeSpan.FromMinutes(1);
-            if (room.LastNudged == null || room.LastNudged < DateTime.Now.Subtract(betweenNudges)) {
+            if (room.LastNudged == null || room.LastNudged < DateTime.Now.Subtract(betweenNudges))
+            {
                 room.LastNudged = DateTime.Now;
                 Clients[room.Name].nudge(user.Name);
             }
-            else {
+            else
+            {
                 throw new InvalidOperationException(String.Format("Room can only be nudged once every {0} seconds", betweenNudges.TotalSeconds));
             }
         }
 
-        private void ChangeUserName(ChatUser user, string newUserName) {
-            if (user.Name.Equals(newUserName, StringComparison.OrdinalIgnoreCase)) {
+        private void ChangeUserName(ChatUser user, string newUserName)
+        {
+            if (user.Name.Equals(newUserName, StringComparison.OrdinalIgnoreCase))
+            {
                 throw new InvalidOperationException("That's already your username...");
             }
 
@@ -648,18 +757,23 @@ namespace SignalR.Samples.Hubs.Chat {
 
             var userViewModel = new UserViewModel(user);
 
-            if (user.Rooms.Any()) {
-                foreach (var room in user.Rooms) {
+            if (user.Rooms.Any())
+            {
+                foreach (var room in user.Rooms)
+                {
                     Clients[room.Name].changeUserName(userViewModel, oldUserName, newUserName);
                 }
             }
-            else {
+            else
+            {
                 Caller.changeUserName(userViewModel, oldUserName, newUserName);
             }
         }
 
-        private static void Sweep(ChatRepository db) {
-            if (_sweeping) {
+        private static void Sweep(ChatRepository db)
+        {
+            if (_sweeping)
+            {
                 return;
             }
 
@@ -669,9 +783,11 @@ namespace SignalR.Samples.Hubs.Chat {
 
             var inactiveUsers = new List<ChatUser>();
 
-            foreach (var user in db.Users) {
+            foreach (var user in db.Users)
+            {
                 var elapsed = DateTime.UtcNow - user.LastActivity;
-                if (elapsed.TotalMinutes > 5) {
+                if (elapsed.TotalMinutes > 5)
+                {
                     user.Active = false;
                     inactiveUsers.Add(user);
                 }
@@ -681,23 +797,27 @@ namespace SignalR.Samples.Hubs.Chat {
                              from r in u.Rooms
                              select new { User = u, Room = r } into tuple
                              group tuple by tuple.Room into g
-                             select new {
+                             select new
+                             {
                                  Room = g.Key,
                                  Users = g.Select(t => new UserViewModel(t.User))
                              };
 
-            foreach (var roomGroup in roomGroups) {
+            foreach (var roomGroup in roomGroups)
+            {
                 clients[roomGroup.Room.Name].markInactive(roomGroup.Users).Wait();
             }
 
             _sweeping = false;
         }
 
-        private ChatUser AddUser(string name) {
+        private ChatUser AddUser(string name)
+        {
 
             EnsureUserNameIsAvailable(name);
 
-            var user = new ChatUser {
+            var user = new ChatUser
+            {
                 Name = name,
                 Active = true,
                 Id = Guid.NewGuid().ToString("d"),
@@ -717,7 +837,8 @@ namespace SignalR.Samples.Hubs.Chat {
             return user;
         }
 
-        private ChatRoom AddRoom(string name) {
+        private ChatRoom AddRoom(string name)
+        {
             var chatRoom = new ChatRoom { Name = name };
 
             _db.Rooms.Add(chatRoom);
@@ -725,51 +846,61 @@ namespace SignalR.Samples.Hubs.Chat {
             return chatRoom;
         }
 
-        private void LeaveAllRooms(ChatUser user) {
+        private void LeaveAllRooms(ChatUser user)
+        {
             // Leave all rooms
-            foreach (var room in user.Rooms.ToList()) {
+            foreach (var room in user.Rooms.ToList())
+            {
                 HandleLeave(room, user);
             }
         }
 
-        private Tuple<ChatUser, ChatRoom> EnsureUserAndRoom() {
+        private Tuple<ChatUser, ChatRoom> EnsureUserAndRoom()
+        {
             ChatUser user = EnsureUser();
 
             string room = Caller.room;
             string name = Caller.name;
 
-            if (String.IsNullOrEmpty(room)) {
+            if (String.IsNullOrEmpty(room))
+            {
                 throw new InvalidOperationException("Use '/join room' to join a room.");
             }
 
             ChatRoom chatRoom = _db.Rooms.FirstOrDefault(r => r.Name.Equals(room, StringComparison.OrdinalIgnoreCase));
 
-            if (chatRoom == null) {
+            if (chatRoom == null)
+            {
                 throw new InvalidOperationException(String.Format("You're in '{0}' but it doesn't exist. Use /join '{1}' to create this room."));
             }
 
-            if (!chatRoom.Users.Any(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase))) {
+            if (!chatRoom.Users.Any(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+            {
                 throw new InvalidOperationException(String.Format("You're not in '{0}'. Use '/join {0}' to join it.", room));
             }
 
             return Tuple.Create(user, chatRoom);
         }
 
-        private ChatUser EnsureUser() {
+        private ChatUser EnsureUser()
+        {
             string name = Caller.name;
 
-            if (String.IsNullOrEmpty(name)) {
+            if (String.IsNullOrEmpty(name))
+            {
                 throw new InvalidOperationException("You don't have a name. Pick a name using '/nick nickname'.");
             }
 
             ChatUser user = _db.Users.FirstOrDefault(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
-            if (user == null) {
+            if (user == null)
+            {
                 throw new InvalidOperationException(String.Format("You go by the name '{0}' but the server has no idea who you are. Maybe it got reset :(.", name));
             }
 
             // Keep the client id up to date
-            if (String.IsNullOrEmpty(user.ClientId)) {
+            if (String.IsNullOrEmpty(user.ClientId))
+            {
                 user.ClientId = Context.ClientId;
             }
 
@@ -779,21 +910,26 @@ namespace SignalR.Samples.Hubs.Chat {
             return user;
         }
 
-        private void EnsureUserNameIsAvailable(string userName) {
+        private void EnsureUserNameIsAvailable(string userName)
+        {
             var userExists = _db.Users.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
 
-            if (userExists) {
+            if (userExists)
+            {
                 throw new InvalidOperationException(string.Format("Username {0} already taken, please pick a new one using '/nick nickname'.", userName));
             }
         }
 
-        private string Transform(string message, out HashSet<string> extractedUrls) {
+        private string Transform(string message, out HashSet<string> extractedUrls)
+        {
             const string urlPattern = @"((https?|ftp)://|www\.)[\w]+(.[\w]+)([\w\-\.,@?^=%&amp;:/~\+#!]*[\w\-\@?^=%&amp;/~\+#])";
 
             var urls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            message = Regex.Replace(message, urlPattern, m => {
+            message = Regex.Replace(message, urlPattern, m =>
+            {
                 string httpPortion = String.Empty;
-                if (!m.Value.Contains("://")) {
+                if (!m.Value.Contains("://"))
+                {
                     httpPortion = "http://";
                 }
 
@@ -810,13 +946,15 @@ namespace SignalR.Samples.Hubs.Chat {
             return message;
         }
 
-        private Task<string> ExtractContent(string url) {
+        private Task<string> ExtractContent(string url)
+        {
             var request = (HttpWebRequest)HttpWebRequest.Create(url);
             var requestTask = Task.Factory.FromAsync((cb, state) => request.BeginGetResponse(cb, state), ar => request.EndGetResponse(ar), null);
             return requestTask.ContinueWith(task => ExtractContent((HttpWebResponse)task.Result));
         }
 
-        private string ExtractContent(HttpWebResponse response) {
+        private string ExtractContent(HttpWebResponse response)
+        {
             return _contentProviders.Select(c => c.GetContent(response))
                                     .FirstOrDefault(content => content != null);
         }

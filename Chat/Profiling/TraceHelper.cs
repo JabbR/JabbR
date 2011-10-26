@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading;
-using System.Web;
 using System.Threading.Tasks;
+using System.Web;
 
-namespace Chat {
-    public class LogInfo {
+namespace Chat
+{
+    public class LogInfo
+    {
         public string Category { get; set; }
         public string Signal { get; set; }
         public int? TaskId { get; set; }
@@ -16,17 +18,21 @@ namespace Chat {
         public string ClientId { get; set; }
     }
 
-    public static class TraceHelper {
+    public static class TraceHelper
+    {
         public static readonly ConcurrentDictionary<LogInfo, bool> Logs = new ConcurrentDictionary<LogInfo, bool>();
 
-        public static void WriteTrace(string cateogry, string signal, string message, params object[] args) {
+        public static void WriteTrace(string cateogry, string signal, string message, params object[] args)
+        {
             WriteMessage(cateogry, signal, String.Format(message, args));
         }
 
-        private static void WriteMessage(string cateogry, string eventName, string message, HttpContext context = null) {
+        private static void WriteMessage(string cateogry, string eventName, string message, HttpContext context = null)
+        {
             context = context ?? HttpContext.Current;
 
-            Logs.TryAdd(new LogInfo {
+            Logs.TryAdd(new LogInfo
+            {
                 Signal = eventName,
                 Category = cateogry,
                 Message = message,

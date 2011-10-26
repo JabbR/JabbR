@@ -1,9 +1,12 @@
 ﻿using System;
 using Chat.Models;
 
-namespace Chat.ViewModels {
-    public class MessageViewModel {
-        public MessageViewModel(ChatMessage message) {
+namespace Chat.ViewModels
+{
+    public class MessageViewModel
+    {
+        public MessageViewModel(ChatMessage message)
+        {
             Id = message.Id;
             Content = message.Content;
             User = new UserViewModel(message.User);
