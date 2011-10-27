@@ -516,7 +516,7 @@ namespace SignalR.Samples.Hubs.Chat
 
             if (toUser == null)
             {
-                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", toUser.Name));
+                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", parts[1]));
             }
 
             if (toUser == user)
