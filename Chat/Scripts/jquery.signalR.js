@@ -340,8 +340,8 @@
                     } (connection));
 
                     // Now connected
-                    // There's no good way know when the long poll has actually started so 
-                    // we and assume it only takes around 150ms (max) to start connection 
+                    // There's no good way know when the long poll has actually started so
+                    // we and assume it only takes around 150ms (max) to start connection
                     // to start.
                     setTimeout(onSuccess, 150);
 

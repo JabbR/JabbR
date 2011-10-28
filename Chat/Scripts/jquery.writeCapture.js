@@ -1,12 +1,12 @@
 ﻿/**
-* jquery.writeCapture.js 
-* 
+* jquery.writeCapture.js
+*
 * Note that this file only provides the jQuery plugin functionality, you still
 * need writeCapture.js. The compressed version will contain both as as single
 * file.
 *
 * @author noah <noah.sloan@gmail.com>
-* 
+*
 */
 (function ($, wc, noop) {
     // methods that take HTML content (according to API)

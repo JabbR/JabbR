@@ -16,9 +16,9 @@ namespace SignalR.Samples.Hubs.Chat.ContentProviders
 
         public override IEnumerable<string> Domains
         {
-            get 
-            { 
-                yield return "http://www.youtube.com"; 
+            get
+            {
+                yield return "http://www.youtube.com";
             }
         }
 

@@ -29,10 +29,10 @@
 	background-image:      -o-linear-gradient(top, #3c3c3c, #111); /* Opera 11.10+ */
 	background-image:         linear-gradient(top, #3c3c3c, #111);
 }
-.ui-bar-a, 
-.ui-bar-a input, 
-.ui-bar-a select, 
-.ui-bar-a textarea, 
+.ui-bar-a,
+.ui-bar-a input,
+.ui-bar-a select,
+.ui-bar-a textarea,
 .ui-bar-a button {
 	font-family: Helvetica, Arial, sans-serif;
 }
@@ -54,7 +54,7 @@
 	background-image:    -moz-linear-gradient(top, #666, #222); /* FF3.6 */
 	background-image:     -ms-linear-gradient(top, #666, #222); /* IE10 */
 	background-image:      -o-linear-gradient(top, #666, #222); /* Opera 11.10+ */
-	background-image:         linear-gradient(top, #666, #222);	
+	background-image:         linear-gradient(top, #666, #222);
 }
 .ui-body-a,
 .ui-body-a input,
@@ -565,7 +565,7 @@
 }
 
 
-/* links within "buttons" 
+/* links within "buttons"
 -----------------------------------------------------------------------------------------------------------*/
 
 a.ui-link-inherit {
@@ -712,11 +712,11 @@ a.ui-link-inherit {
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
        only screen and (min--moz-device-pixel-ratio: 1.5),
        only screen and (min-resolution: 240dpi) {
-	
+
 	.ui-icon-plus, .ui-icon-minus, .ui-icon-delete, .ui-icon-arrow-r,
 	.ui-icon-arrow-l, .ui-icon-arrow-u, .ui-icon-arrow-d, .ui-icon-check,
 	.ui-icon-gear, .ui-icon-refresh, .ui-icon-forward, .ui-icon-back,
-	.ui-icon-grid, .ui-icon-star, .ui-icon-alert, .ui-icon-info, .ui-icon-home, .ui-icon-search, 
+	.ui-icon-grid, .ui-icon-star, .ui-icon-alert, .ui-icon-info, .ui-icon-home, .ui-icon-search,
 	.ui-icon-checkbox-off, .ui-icon-checkbox-on, .ui-icon-radio-off, .ui-icon-radio-on {
 		background-image: url(images/icons-36-white.png);
 		-moz-background-size: 776px 18px;
@@ -812,7 +812,7 @@ a.ui-link-inherit {
 }
 .ui-icon-checkbox-off,
 .ui-icon-radio-off {
-	background-color: transparent;	
+	background-color: transparent;
 }
 .ui-icon-checkbox-on,
 .ui-checkbox-on .ui-icon,
@@ -900,19 +900,19 @@ a.ui-link-inherit {
 /* radius clip workaround for cleaning up corner trapping */
 .ui-corner-tl,
 .ui-corner-tr,
-.ui-corner-bl, 
+.ui-corner-bl,
 .ui-corner-br,
 .ui-corner-top,
-.ui-corner-bottom, 
+.ui-corner-bottom,
 .ui-corner-right,
 .ui-corner-left,
 .ui-corner-all,
 .ui-btn-corner-tl,
 .ui-btn-corner-tr,
-.ui-btn-corner-bl, 
+.ui-btn-corner-bl,
 .ui-btn-corner-br,
 .ui-btn-corner-top,
-.ui-btn-corner-bottom, 
+.ui-btn-corner-bottom,
 .ui-btn-corner-right,
 .ui-btn-corner-left,
 .ui-btn-corner-all {
@@ -997,7 +997,7 @@ a.ui-link-inherit {
 .ui-mobile-viewport {  margin: 0; overflow-x: hidden; -webkit-text-size-adjust: none; -ms-text-size-adjust:none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 
 /* "page" containers - full-screen views, one should always be in view post-pageload */
-.ui-mobile [data-role=page], .ui-mobile [data-role=dialog], .ui-page { top: 0; left: 0; width: 100%; min-height: 100%; position: absolute; display: none; border: 0; } 
+.ui-mobile [data-role=page], .ui-mobile [data-role=dialog], .ui-page { top: 0; left: 0; width: 100%; min-height: 100%; position: absolute; display: none; border: 0; }
 .ui-mobile .ui-page-active { display: block; overflow: visible; }
 
 /*orientations from js are available */
@@ -1524,7 +1524,7 @@ Built by David Kaneda and maintained by Jonathan Stark.
 
 @media all and (min-width: 450px){
 	.ui-controlgroup-label { vertical-align: top; display: inline-block;  width: 20%;  margin: 0 2% 0 0;  }
-	.ui-controlgroup-controls { width: 60%; display: inline-block; } 
+	.ui-controlgroup-controls { width: 60%; display: inline-block; }
 }	/*
 * jQuery Mobile Framework
 * Copyright (c) jQuery Project
@@ -1568,7 +1568,7 @@ Built by David Kaneda and maintained by Jonathan Stark.
 @-moz-document url-prefix() {.ui-select .ui-btn select { opacity: 0.0001; }}
 .ui-select .ui-btn select.ui-select-nativeonly { opacity: 1; text-indent: 0; }
 
-.ui-select .ui-btn-icon-right .ui-btn-inner { padding-right: 45px; } 
+.ui-select .ui-btn-icon-right .ui-btn-inner { padding-right: 45px; }
 .ui-select .ui-btn-icon-right .ui-icon { right: 15px;  }
 
 /* labels */
@@ -1591,7 +1591,7 @@ label.ui-select { font-size: 16px; line-height: 1.4;  font-weight: normal; margi
 @media all and (min-width: 450px){
 	label.ui-select { display: inline-block;  width: 20%;  margin: 0 2% 0 0; }
 	.ui-select { width: 60%; display: inline-block; }
-}	
+}
 
 /* when no placeholder is defined in a multiple select, the header height doesn't even extend past the close button.  this shim's content in there */
 .ui-selectmenu .ui-header h1:after { content: '.'; visibility: hidden; }/*
@@ -1611,9 +1611,9 @@ textarea.ui-input-text { height: 50px; -webkit-transition: height 200ms linear; 
 /* orientation adjustments - incomplete!*/
 @media all and (min-width: 450px){
 	label.ui-input-text  { vertical-align: top; display: inline-block;  width: 20%;  margin: 0 2% 0 0 }
-	input.ui-input-text, 
-	textarea.ui-input-text, 
-	.ui-input-search { width: 60%; display: inline-block; } 
+	input.ui-input-text,
+	textarea.ui-input-text,
+	.ui-input-search { width: 60%; display: inline-block; }
 	.ui-input-search { width: 50%; }
 	.ui-input-search input.ui-input-text { width: 98%; /*echos rule from above*/ }
 }/*
@@ -1649,7 +1649,7 @@ ol.ui-listview .ui-li-jsnumbering:before { content: "" !important; } /* to avoid
 .ui-li-aside { float: right; width: 50%; text-align: right; margin: .3em 0; }
 @media all and (min-width: 480px){
 	 .ui-li-aside { width: 45%; }
-}	 
+}
 .ui-li-divider { cursor: default; }
 .ui-li-has-alt .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li-has-alt { padding-right: 95px; }
 .ui-li-count { position: absolute; font-size: 11px; font-weight: bold; padding: .2em .5em; top: 50%; margin-top: -.9em; right: 38px; }
@@ -1682,7 +1682,7 @@ a.ui-slider-handle .ui-btn-inner { padding-left: 0; padding-right: 0; }
 @media all and (min-width: 480px){
 	label.ui-slider { display: inline-block;  width: 20%;  margin: 0 2% 0 0; }
 	div.ui-slider { width: 45%; }
-}	
+}
 
 div.ui-slider-switch { height: 32px;  overflow: hidden; margin-left: 0; }
 div.ui-slider-inneroffset { margin-left: 50%; position: absolute; top: 1px; height: 100%; width: 50%; }
