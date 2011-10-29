@@ -27,7 +27,7 @@
                    TaskId = i.TaskId
                };
     }
-    
+
     private IQueryable<LogInfo> Filter(IQueryable<LogInfo> logs) {
         string[] filterProps = new[] { "Signal", "TaskId", "ThreadId", "Category", "ClientId" };
 
@@ -45,7 +45,7 @@
         TraceHelper.Logs.Clear();
         Response.Redirect(Request.RawUrl);
     }
-    
+
 </script>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

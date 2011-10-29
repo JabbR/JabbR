@@ -28,7 +28,7 @@
 
 #send-message input[type="text"] { width: 95%; }
 @media (min-width: 450px){
-    #send-message input[type="text"] { 
+    #send-message input[type="text"] {
         width: 60%;
     }
     #send-message div.ui-btn {
@@ -56,7 +56,7 @@
 }
 
 .tweet .user
-{	
+{
 	margin-bottom: 5px;
 }
 

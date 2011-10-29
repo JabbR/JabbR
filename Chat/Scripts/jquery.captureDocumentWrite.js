@@ -1,15 +1,15 @@
 (function ($) {
     var defaultOptions = {};
-    var _loadScript = function (url, options) {    
+    var _loadScript = function (url, options) {
         ///<summary>
         /// Hijacking the document.write method and retrieves the script
-        /// on the target location. If the options parameter contains a 
-        /// target element, the elements html will be replaced by the 
+        /// on the target location. If the options parameter contains a
+        /// target element, the elements html will be replaced by the
         /// content written into the document.write method. If the options
         /// parameter contains a callback, the callback will be called once
         /// everything is done.
         ///
-        /// Restores the original document.write once completed. Returns 
+        /// Restores the original document.write once completed. Returns
         /// the jQuery ajax request object to allow deferring other pasties.
         ///</summary>
         var content = [];
@@ -40,18 +40,18 @@
     var lastScriptLoader = null;
     var _deferringScriptLoader = function (url, options) {
         ///<summary>
-        /// Makes sure that we do not load multiple scripts at the same this. This 
-        /// is important since we hijack the document.write method. 
+        /// Makes sure that we do not load multiple scripts at the same this. This
+        /// is important since we hijack the document.write method.
         ///</summary>
         if (lastScriptLoader == null)
             lastScriptLoader = _loadScript(url, options);
-        else 
+        else
             lastScriptLoader = lastScriptLoader.pipe(function(){return _loadScript(url, options);});
     };
     var _getSettings = function(options){
         ///<summary>
         /// Loads the default settings and extends them with the user-provided
-        /// settings or the user-provided function object. 
+        /// settings or the user-provided function object.
         ///</summary>
         var settings = null;
         if (options && !$.isFunction(options))
@@ -64,7 +64,7 @@
     };
     var _captureWriteExternal = function (url, options) {
         ///<summary>
-        /// Loads the script and enters any content written to the document.write 
+        /// Loads the script and enters any content written to the document.write
         /// method as the HTML of the elements this methods is called on (if any).
         /// If a callback is supplied, either as a function for options or given
         /// options as an object with a callback property, the callback will be
@@ -76,7 +76,7 @@
                 settings.targetElement = $(this);
                 _deferringScriptLoader(url, settings);
             });
-        } 
+        }
         else {
             _deferringScriptLoader(url, _getSettings(options));
         }

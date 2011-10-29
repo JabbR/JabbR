@@ -2,7 +2,7 @@
 * writeCapture.js v1.0.5
 *
 * @author noah <noah.sloan@gmail.com>
-* 
+*
 */
 (function ($, global) {
     var doc = global.document;
@@ -39,8 +39,8 @@
             /**
             * @param {String jQuery Element} selector the element to replace.
             * writeCapture only needs the first matched element to be replaced.
-            * @param {String} content the content to replace 
-            * the matched element with. script tags must be evaluated/loaded 
+            * @param {String} content the content to replace
+            * the matched element with. script tags must be evaluated/loaded
             * and executed if present.
             */
             replaceWith: function (selector, content) {
@@ -168,7 +168,7 @@
         if (!this.running) {
             this.running = true;
             try {
-                // just in case there is a bug, always resume 
+                // just in case there is a bug, always resume
                 // if paused is less than 1
                 while (this.paused < 1 && this._next()) { }
             } finally {
@@ -436,13 +436,13 @@
         return options;
     }
 
-    // The global Q synchronizes all sanitize operations. 
-    // The only time this synchronization is really necessary is when two or 
+    // The global Q synchronizes all sanitize operations.
+    // The only time this synchronization is really necessary is when two or
     // more consecutive sanitize operations make async requests. e.g.,
-    // sanitize call A requests foo, then sanitize B is called and bar is 
-    // requested. document.write was replaced by B, so if A returns first, the 
+    // sanitize call A requests foo, then sanitize B is called and bar is
+    // requested. document.write was replaced by B, so if A returns first, the
     // content will be captured by B, then when B returns, document.write will
-    // be the original document.write, probably messing up the page. At the 
+    // be the original document.write, probably messing up the page. At the
     // very least, A will get nothing and B will get the wrong content.
     var GLOBAL_Q = new Q();
 
@@ -472,15 +472,15 @@
 
     /**
     * Sanitize the given HTML so that the scripts will execute with a modified
-    * document.write that will capture the output and append it in the 
-    * appropriate location.  
-    * 
+    * document.write that will capture the output and append it in the
+    * appropriate location.
+    *
     * @param {String} html
     * @param {Object Function} [options]
-    * @param {Function} [options.done] Called when all the scripts in the 
+    * @param {Function} [options.done] Called when all the scripts in the
     * sanitized HTML have run.
     * @param {boolean} [options.asyncAll] If true, scripts loaded from the
-    * same domain will be loaded asynchronously. This can improve UI 
+    * same domain will be loaded asynchronously. This can improve UI
     * responsiveness, but will delay completion of the scripts and may
     * cause problems with some scripts, so it defaults to false.
     */
@@ -498,7 +498,7 @@
 
         // if a done callback is passed, append a script to call it
         if (isFunction(done)) {
-            // no need to proxy the call to done, so we can append this to the 
+            // no need to proxy the call to done, so we can append this to the
             // filtered HTML
             doneHtml = newCallbackTag(function () {
                 queue.push(done);
@@ -533,7 +533,7 @@
             }
 
             if (src) {
-                // fix for the inline script that writes a script tag with encoded 
+                // fix for the inline script that writes a script tag with encoded
                 // ampersands hack (more comon than you'd think)
                 src = fixUrls(src);
 
@@ -677,7 +677,7 @@
     * Sanitizes all the given fragments and calls action with the HTML.
     * The next fragment is not started until the previous fragment
     * has executed completely.
-    * 
+    *
     * @param {Array} fragments array of objects like this:
     * {
     *   html: '<p>My html with a <script...',
@@ -685,11 +685,11 @@
     *   options: {} // optional, see #sanitize
     * }
     * Where frag is the object.
-    * 
+    *
     * @param {Function} [done] Optional. Called when all fragments are done.
     */
     function sanitizeSerial(fragments, done) {
-        // create a queue for these fragments and make it the parent of each 
+        // create a queue for these fragments and make it the parent of each
         // sanitize call
         var queue = GLOBAL_Q;
         each(fragments, function (f) {
@@ -717,9 +717,9 @@
     }
 
     /**
-    * Experimental - automatically captures document.write calls and 
+    * Experimental - automatically captures document.write calls and
     * defers them untill after page load.
-    * @param {Function} [done] optional callback for when all the 
+    * @param {Function} [done] optional callback for when all the
     * captured content has been loaded.
     */
     function autoCapture(done) {
@@ -743,7 +743,7 @@
             state.out.push(s);
         };
         $.onLoad(function () {
-            // for each script, append a div immediately after it, 
+            // for each script, append a div immediately after it,
             // then replace the div with the sanitized output
             var el, div, out, safe, doneFn;
             done = normalizeOptions(done);
