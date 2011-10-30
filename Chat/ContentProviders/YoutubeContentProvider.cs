@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web;
+using System.Net;
 
 namespace SignalR.Samples.Hubs.Chat.ContentProviders
 {
@@ -30,6 +31,11 @@ namespace SignalR.Samples.Hubs.Chat.ContentProviders
             {
                 yield return videoId;
             }
+        }
+
+        protected override string GetTitle(HttpWebResponse response)
+        {
+            return response.ResponseUri.ToString();
         }
     }
 }

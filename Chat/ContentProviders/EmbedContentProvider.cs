@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace SignalR.Samples.Hubs.Chat.ContentProviders
 {
-    public abstract class EmbedContentProvider : IContentProvider
+    public abstract class EmbedContentProvider : CollapsibleContentProvider
     {
         public virtual Regex MediaUrlRegex
         {
@@ -32,19 +32,22 @@ namespace SignalR.Samples.Hubs.Chat.ContentProviders
             return null;
         }
 
-        public string GetContent(HttpWebResponse response)
-        {
-            if (Domains.Any(d => response.ResponseUri.AbsoluteUri.StartsWith(d, StringComparison.OrdinalIgnoreCase)))
-            {
-                var args = ExtractParameters(response.ResponseUri);
-                if (args == null || !args.Any())
-                {
-                    return null;
-                }
+        protected override abstract string GetTitle(HttpWebResponse response);
 
-                return String.Format(MediaFormatString, args.ToArray());
+        protected override string GetCollapsibleContent(HttpWebResponse response)
+        {
+            var args = ExtractParameters(response.ResponseUri);
+            if (args == null || !args.Any())
+            {
+                return null;
             }
-            return null;
+
+            return String.Format(MediaFormatString, args.ToArray());
+        }
+
+        protected override bool IsValidContent(HttpWebResponse response)
+        {
+            return Domains.Any(d => response.ResponseUri.AbsoluteUri.StartsWith(d, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Net;
 
 namespace SignalR.Samples.Hubs.Chat.ContentProviders
 {
-    public class ImageContentProvider : IContentProvider
+    public class ImageContentProvider : CollapsibleContentProvider
     {
         private static readonly HashSet<string> _imageMimeTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
             "image/png",
@@ -13,15 +13,22 @@ namespace SignalR.Samples.Hubs.Chat.ContentProviders
             "image/bmp",
             "image/gif",
         };
-
-        public string GetContent(HttpWebResponse response)
+               
+        protected override string GetTitle(HttpWebResponse response)
         {
-            if (!String.IsNullOrEmpty(response.ContentType) &&
-                _imageMimeTypes.Contains(response.ContentType))
-            {
-                return String.Format(@"<img src=""{0}"" />", response.ResponseUri);
-            }
-            return null;
+            return response.ResponseUri.ToString();
+        }
+
+        protected override string GetCollapsibleContent(HttpWebResponse response)
+        {
+           return String.Format(@"<img src=""{0}"" />", response.ResponseUri);
+        }
+
+        protected override bool IsValidContent(HttpWebResponse response)
+        {
+            return !String.IsNullOrEmpty(response.ContentType) &&
+                    _imageMimeTypes.Contains(response.ContentType);
+            
         }
     }
 }

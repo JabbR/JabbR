@@ -1,4 +1,4 @@
-﻿/// <reference path="Scripts/jquery-1.6.3.js" />
+﻿/// <reference path="Scripts/jquery-1.6.4.js" />
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 
@@ -453,6 +453,16 @@ $(function () {
                     addMessage('Choose a name using "/nick nickname".', 'notification');
                 }
             });
+    });
+
+    $('h3.collapsible_title').live('click', function () {
+        var nearEnd = $('#messages').isNearTheEnd();
+        
+        $(this).next().toggle(function () {
+            if (nearEnd) {
+                scrollToBottom();
+            }
+        });
     });
 });
 

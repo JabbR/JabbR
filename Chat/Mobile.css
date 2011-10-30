@@ -67,3 +67,8 @@
 }
 
 /* End TweetContentProvider CSS */
+
+.collapsible_title
+{
+    display: none;
+}
