@@ -888,7 +888,7 @@ namespace SignalR.Samples.Hubs.Chat
         private ChatUser EnsureUser()
         {
             string name = Caller.name;
-
+            
             if (String.IsNullOrEmpty(name))
             {
                 throw new InvalidOperationException("You don't have a name. Pick a name using '/nick nickname'.");
@@ -899,6 +899,11 @@ namespace SignalR.Samples.Hubs.Chat
             if (user == null)
             {
                 throw new InvalidOperationException(String.Format("You go by the name '{0}' but the server has no idea who you are. Maybe it got reset :(.", name));
+            }
+
+            if (user.ClientId != Context.ClientId)
+            {
+                throw new InvalidOperationException("Nice try...");
             }
 
             // Keep the client id up to date
