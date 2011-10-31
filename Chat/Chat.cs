@@ -308,6 +308,9 @@ namespace SignalR.Samples.Hubs.Chat
             }
 
             LeaveAllRooms(user);
+
+            // Remove the user
+            _db.Users.Remove(user);
         }
 
         private void UpdateActivity()
