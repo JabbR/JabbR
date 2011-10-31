@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text.RegularExpressions;
 
 namespace SignalR.Samples.Hubs.Chat.ContentProviders
@@ -33,6 +34,13 @@ namespace SignalR.Samples.Hubs.Chat.ContentProviders
                 return String.Format(ScriptTagFormat, scriptTagId);
             }
         }
+
+        protected override string GetTitle(HttpWebResponse response)
+        {
+            return response.ResponseUri.ToString();
+        }
+
+        protected override bool IsCollapsible { get { return false; } }
 
         private const string ScriptTagFormat = @"
 <div id='{0}'></div>
