@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web;
 using System.Net;
+using System.Web;
 
 namespace SignalR.Samples.Hubs.Chat.ContentProviders
 {
