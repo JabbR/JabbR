@@ -179,6 +179,7 @@
     <Compile Include="Chat.cs" />
     <Compile Include="ContentProviders\CollapsibleContentProvider.cs" />
     <Compile Include="ContentProviders\CollegeHumorContentProvider.cs" />
+    <Compile Include="ContentProviders\ImgurContentProvider.cs" />
     <Compile Include="ContentProviders\PastieContentProvider.cs" />
     <Compile Include="ContentProviders\TweetContentProvider.cs" />
     <Compile Include="ContentProviders\EmbedContentProvider.cs" />

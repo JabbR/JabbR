@@ -43,7 +43,8 @@ namespace SignalR.Samples.Hubs.Chat
             new YouTubeContentProvider(),
             new CollegeHumorContentProvider(),
             new TweetContentProvider(),
-            new PastieContentProvider()
+            new PastieContentProvider(),
+            new ImgurContentProvider()
         };
 
         public bool OutOfSync
