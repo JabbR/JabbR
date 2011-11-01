@@ -223,7 +223,7 @@
 
                     $(connection).trigger("onSending");
                     if (connection.data) {
-                        url += "?data=" + connection.data + "&transport=webSockets&clientId=" + connection.clientId;
+                        url += "?connectionData=" + connection.data + "&transport=webSockets&clientId=" + connection.clientId;
                     } else {
                         url += "?transport=webSockets&clientId=" + connection.clientId;
                     }
@@ -291,7 +291,7 @@
                             data: {
                                 clientId: instance.clientId,
                                 messageId: messageId,
-                                data: instance.data,
+                                connectionData: instance.data,
                                 transport: "longPolling",
                                 groups: (instance.groups || []).toString()
                             },
@@ -340,8 +340,8 @@
                     } (connection));
 
                     // Now connected
-                    // There's no good way know when the long poll has actually started so
-                    // we and assume it only takes around 150ms (max) to start connection
+                    // There's no good way know when the long poll has actually started so 
+                    // we and assume it only takes around 150ms (max) to start connection 
                     // to start.
                     setTimeout(onSuccess, 150);
 
