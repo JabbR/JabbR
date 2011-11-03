@@ -875,7 +875,7 @@ namespace SignalR.Samples.Hubs.Chat
 
             if (chatRoom == null)
             {
-                throw new InvalidOperationException(String.Format("You're in '{0}' but it doesn't exist. Use /join '{1}' to create this room."));
+                throw new InvalidOperationException(String.Format("You're in '{0}' but it doesn't exist. Use /join '{0}' to create this room.", room));
             }
 
             if (!chatRoom.Users.Any(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
@@ -925,7 +925,7 @@ namespace SignalR.Samples.Hubs.Chat
 
             if (userExists)
             {
-                throw new InvalidOperationException(string.Format("Username {0} already taken, please pick a new one using '/nick nickname'.", userName));
+                throw new InvalidOperationException(String.Format("Username {0} already taken, please pick a new one using '/nick nickname'.", userName));
             }
         }
 
