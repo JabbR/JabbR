@@ -286,6 +286,11 @@ namespace SignalR.Samples.Hubs.Chat
             ChatRoom chatRoom = tuple.Item2;
             var userViewModel = new UserViewModel(user);
 
+            if (isTyping)
+            {
+                UpdateActivity();
+            }
+
             if (user.Rooms.Any())
             {
                 foreach (var room in user.Rooms)
