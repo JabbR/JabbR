@@ -949,7 +949,7 @@ namespace SignalR.Samples.Hubs.Chat
 
                 string url = httpPortion + m.Value;
 
-                urls.Add(url);
+                urls.Add(HttpUtility.HtmlDecode(url));
 
                 return String.Format(CultureInfo.InvariantCulture,
                                      "<a rel=\"nofollow external\" target=\"_blank\" href=\"{0}\" title=\"{1}\">{1}</a>",
