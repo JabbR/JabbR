@@ -435,6 +435,8 @@ $(function () {
         }
     }
 
+    $(window).focus();
+
     addMessage('Welcome to the SignalR IRC clone', 'notification');
     addMessage('Type /help to see the list of commands', 'notification');
 
@@ -457,7 +459,7 @@ $(function () {
 
     $('h3.collapsible_title').live('click', function () {
         var nearEnd = $('#messages').isNearTheEnd();
-        
+
         $(this).next().toggle(function () {
             if (nearEnd) {
                 scrollToBottom();
