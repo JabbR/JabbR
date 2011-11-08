@@ -35,7 +35,7 @@
                     _text = $(this).val();
 
                     // find prefix (starts with @)
-                    var match = _text.match(/@\S+$/i);
+                    var match = _text.match(/@\S*$/i);
                     if (!match) return;
 
                     _prefix = match.toString().substr(1).toLowerCase();
