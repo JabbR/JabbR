@@ -32,14 +32,18 @@
                 }
 
                 if (!_inAutoComplete) {
-                    _inAutoComplete = true;
                     _text = $(this).val();
 
-                    // find prefix
-                    var match = _text.match(/\S+$/i);
-                    if (!match) match = '';
-                    _prefix = match.toString().toLowerCase();
+                    // find prefix (starts with @)
+                    var match = _text.match(/@\S+$/i);
+                    if (!match) return;
+
+                    _prefix = match.toString().substr(1).toLowerCase();
+
+                    _inAutoComplete = true;
                     _index = 0;
+
+
                 }
 
                 var prefixLen = _prefix.length;
