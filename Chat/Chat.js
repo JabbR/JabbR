@@ -440,9 +440,6 @@ $(function () {
     addMessage('Welcome to the SignalR IRC clone', 'notification');
     addMessage('Type /help to see the list of commands', 'notification');
 
-    function sortInsensitive(a, b) {
-        return a.toLowerCase() > b.toLowerCase() ? 1 : -1;
-    }
     function ltrim(s) {
         return s.replace(/^\s+/g, "")
     }
@@ -455,12 +452,11 @@ $(function () {
 
     $('#new-message').val('');
     $('#new-message').focus();
-    $('#new-message').autoTabComplete({ 
+    $('#new-message').autoTabComplete({
         get: function () {
             return $('#users li')
                 .map(function () { return trim($(this).text()); })
-                .get()
-                .sort(sortInsensitive);
+                .get();
         }
     });
 
