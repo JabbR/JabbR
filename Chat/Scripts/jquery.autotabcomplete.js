@@ -20,9 +20,9 @@
         var _index;
 
         var KEY = {
-		    TAB: 9,
-		    SHIFT: 16
-	    };
+            TAB: 9,
+            SHIFT: 16
+        };
 
         reset();
 
@@ -50,12 +50,11 @@
 
                     _inAutoComplete = true;
                 }
-                _index = (_index + offset) % values.length;
-                if (_index < 0) _index = values.length - 1;
+                _index = getNextIndex(_index, offset, values.length);
 
                 var prefixLen = _prefix.length;
                 // sort values if there's a prefix
-                if (_prefix.length > 0) {
+                if (prefixLen > 0) {
                     values = values.sort(sortInsensitive);
                 }
 
@@ -68,7 +67,7 @@
                         $(this).val(newText);
                         break;
                     }
-                    i = (i + offset) % values.length;
+                    i = getNextIndex(i , offset, values.length);
                     if (i == _index) break;
                 }
                 _index = i;
@@ -91,6 +90,11 @@
             _prefix = '';
         }
 
+        function getNextIndex(index, offset, length) {
+            var i = (index + offset) % length;
+            if (i < 0) i = length - 1;
+            return i;
+        }
 
     }
 
