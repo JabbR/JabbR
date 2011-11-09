@@ -15,7 +15,7 @@
     <script src="Scripts/jquery.captureDocumentWrite.min.js" type="text/javascript"></script>
     <script src="Chat.js" type="text/javascript"></script>
     <script id="new-message-template" type="text/x-jquery-tmpl">
-        <li class="message" id="m-${id}">
+        <li class="message ${highlight}" id="m-${id}">
             &lt;<span id="t-${id}">${when}</span>&gt;
             <img src="http://www.gravatar.com/avatar/${hash}?s=16&d=mm" class="gravatar" />
             <strong>${name}:</strong>
@@ -53,6 +53,7 @@
         <form id="send-message" action="#">
             <div id="message-box"><input type="text" id="new-message" autocomplete="off" /></div>
             <input type="submit" id="send" value="Send" class="send" />
+            <div id="message-instruction">Type @ followed by 0 or more characters then press TAB to auto-complete nicknames</div>
         </form>
     </div>
 </body>

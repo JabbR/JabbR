@@ -90,6 +90,14 @@
     width: 100px;
 }
 
+#message-instruction {
+    color: #999;
+    font-style: italic;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
+
 .error {
     color: Red;
 }
@@ -104,6 +112,11 @@
 
 .message {
 }
+
+.highlight {
+    background-color: #fffddb;
+}
+
 
 /* This stuff is to support TweetContentProvider, but should be extracted out if other content providers need custom CSS */
 
