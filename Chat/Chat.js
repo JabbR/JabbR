@@ -174,12 +174,15 @@ $(function () {
     };
 
     chat.addMessage = function (message, noScroll) {
+        var currentUserName = $.cookie('username');
+        var re = new RegExp(currentUserName, "i");
         var data = {
             name: message.User.Name,
             hash: message.User.Hash,
             message: message.Content,
             id: message.Id,
-            when: toLocal(message.When)
+            when: toLocal(message.When),
+            highlight: re.test(message.Content) ? 'highlight' : ''
         };
 
         var nearEnd = $('#messages').isNearTheEnd();
