@@ -6,6 +6,7 @@
                 return this.values;
             }
         };
+    var UNDEF = undefined;
 
     function AutoTabComplete(element, options) {
         var element = element;
@@ -18,6 +19,7 @@
         var _text;
         var _prefix;
         var _index;
+        var _caret;
 
         var KEY = {
             TAB: 9,
@@ -41,9 +43,11 @@
 
                 if (!_inAutoComplete) {
                     _text = $(this).val();
+                    var sel = getSelection(this);
+                    _caret = sel.end;
 
                     // find prefix (starts with @)
-                    var match = _text.match(/@\S*$/i);
+                    var match = _text.substr(0, _caret).match(/@\S*$/i);
                     if (!match) return;
 
                     _prefix = match.toString().substr(1).toLowerCase();
@@ -63,8 +67,12 @@
                 while (true) {
                     var value = values[i];
                     if (value.substr(0, prefixLen).toLowerCase() == _prefix) {
-                        var newText = _text.substr(0, _text.length - prefixLen) + value;
+                        var newText = _text.substr(0, _caret - prefixLen) + value + _text.substr(_caret);
                         $(this).val(newText);
+
+                        if (_caret < _text.length) {
+                            setSelection(this, _caret, _caret);
+                        }
                         break;
                     }
                     i = getNextIndex(i , offset, values.length);
@@ -79,6 +87,27 @@
             }
         });
 
+        // create helper to get current caret position
+        // only works if support selectionStart/End properties
+        if (typeof(element["selectionStart"]) != UNDEF) {
+            getSelection = function (el) {
+                return { start: el.selectionStart, end: el.selectionEnd };
+            };
+
+            setSelection = function(el, start, end) {
+                el.selectionStart = start;
+                el.selectionEnd = end;
+            };
+        }
+        else {
+            getSelection = function (el) {
+                var len = $(el).val().length;
+                return { start: len, end: len };
+            };
+            setSelection = function(el, start, end) {
+            };
+        }
+
         function sortInsensitive(a, b) {
             return a.toLowerCase() > b.toLowerCase() ? 1 : -1;
         }
@@ -88,6 +117,7 @@
             _index = -1;
             _text = '';
             _prefix = '';
+            _caret = 0;
         }
 
         function getNextIndex(index, offset, length) {
