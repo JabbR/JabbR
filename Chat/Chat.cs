@@ -461,11 +461,11 @@ namespace SignalR.Samples.Hubs.Chat
                 new { Name = "nick", Description = "/nick changes your nickname" },
                 new { Name = "join", Description = "Type /join room -- to join a channel of your choice" },
                 new { Name = "me", Description = "Type /me 'does anything'" },
-                new { Name = "msg", Description = "Type /msg nickname (message) to send a private message to nickname." },
+                new { Name = "msg", Description = "Type /msg @nickname (message) to send a private message to nickname. @ is optional." },
                 new { Name = "leave", Description = "Type /leave to leave the current room. Type /leave [room name] to leave a specific room." },
                 new { Name = "rooms", Description = "Type /rooms to show the list of rooms" },
                 new { Name = "gravatar", Description = "Type \"/gravatar email\" to set your gravatar." },
-                new { Name = "nudge", Description = "Type \"/nudge\" to send a nudge to the whole room, or \"/nudge nickname\" to nudge a particular user." }
+                new { Name = "nudge", Description = "Type \"/nudge\" to send a nudge to the whole room, or \"/nudge @nickname\" to nudge a particular user. @ is optional." }
             });
         }
 
@@ -520,12 +520,12 @@ namespace SignalR.Samples.Hubs.Chat
             {
                 throw new InvalidOperationException("Who are you trying send a private message to?");
             }
-
-            ChatUser toUser = _db.Users.FirstOrDefault(u => u.Name.Equals(parts[1], StringComparison.OrdinalIgnoreCase));
+            var toUserName = NormalizeUserName(parts[1]);
+            ChatUser toUser = _db.Users.FirstOrDefault(u => u.Name.Equals(toUserName, StringComparison.OrdinalIgnoreCase));
 
             if (toUser == null)
             {
-                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", parts[1]));
+                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", toUserName));
             }
 
             if (toUser == user)
@@ -543,6 +543,11 @@ namespace SignalR.Samples.Hubs.Chat
             // Send a message to the sender and the sendee                        
             Clients[toUser.ClientId].sendPrivateMessage(user.Name, toUser.Name, messageText);
             Caller.sendPrivateMessage(user.Name, toUser.Name, messageText);
+        }
+
+        private string NormalizeUserName(string userName)
+        {
+            return userName.StartsWith("@") ? userName.Substring(1) : userName;
         }
 
         private bool IsUserInRoom(ChatRoom room, ChatUser user)
@@ -711,11 +716,12 @@ namespace SignalR.Samples.Hubs.Chat
                 throw new InvalidOperationException("You're the only person in here...");
             }
 
-            ChatUser toUser = _db.Users.FirstOrDefault(u => u.Name.Equals(parts[1], StringComparison.OrdinalIgnoreCase));
+            var toUserName = NormalizeUserName(parts[1]);
+            ChatUser toUser = _db.Users.FirstOrDefault(u => u.Name.Equals(toUserName, StringComparison.OrdinalIgnoreCase));
 
             if (toUser == null)
             {
-                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", parts[1]));
+                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", toUserName));
             }
 
             if (toUser == user)
