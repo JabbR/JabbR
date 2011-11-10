@@ -421,7 +421,7 @@ $(function () {
             document.title = 'SignalR Chat';
         }
         else {
-            document.title = 'SignalR Chat (' + chat.unread + ')';
+            document.title = '(' + chat.unread + ') SignalR Chat ';
         }
     }
 
