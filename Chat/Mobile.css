@@ -38,6 +38,10 @@
     }
 }
 
+.highlight {
+    background-color: #fff6bd;
+}
+
 /* This stuff is to support TweetContentProvider, but should be extracted out if other content providers need custom CSS */
 
 .tweet

@@ -175,7 +175,7 @@ $(function () {
 
     chat.addMessage = function (message, noScroll) {
         var currentUserName = $.cookie('username');
-        var re = new RegExp(currentUserName, "i");
+        var re = new RegExp("\\b@?" + currentUserName + "\\b", "i");
         var data = {
             name: message.User.Name,
             hash: message.User.Hash,
