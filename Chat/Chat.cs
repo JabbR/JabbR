@@ -389,11 +389,6 @@ namespace SignalR.Samples.Hubs.Chat
 
                 return true;
             }
-            else if (commandName.Equals("list", StringComparison.OrdinalIgnoreCase))
-            {
-                HandleList(parts);
-                return true;
-            }
             else
             {
                 ChatUser user = EnsureUser();
@@ -401,6 +396,11 @@ namespace SignalR.Samples.Hubs.Chat
                 {
                     HandleRooms();
 
+                    return true;
+                }
+                else if (commandName.Equals("list", StringComparison.OrdinalIgnoreCase))
+                {
+                    HandleList(parts);
                     return true;
                 }
                 else if (commandName.Equals("join", StringComparison.OrdinalIgnoreCase))
