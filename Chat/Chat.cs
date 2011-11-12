@@ -474,7 +474,7 @@ namespace SignalR.Samples.Hubs.Chat
             }
 
             var names = room.Users.Select(s => s.Name);
-            Caller.showUsersInRoom(room.Name, names.ToArray());
+            Caller.showUsersInRoom(room.Name, names);
         }
 
         private void HandleHelp()
