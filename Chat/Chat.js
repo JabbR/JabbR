@@ -1,4 +1,4 @@
-﻿/// <reference path="Scripts/jquery-1.6.4.js" />
+﻿/// <reference path="Scripts/jquery-1.7.js" />
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 
@@ -289,6 +289,14 @@ $(function () {
         });
         addMessage('<br />');
     };
+
+    chat.showUsersInRoom = function (room, names) {
+        addMessage("<h3> Users in " + room + "</h3>");
+
+        $.each(names, function () {
+            addMessage("- " + this);
+        });
+    }
 
     chat.sendMeMessage = function (name, message) {
         addMessage('*' + name + ' ' + message, 'notification');
