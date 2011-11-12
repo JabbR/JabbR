@@ -398,6 +398,11 @@ namespace SignalR.Samples.Hubs.Chat
 
                     return true;
                 }
+                else if (commandName.Equals("list", StringComparison.OrdinalIgnoreCase))
+                {
+                    HandleList(parts);
+                    return true;
+                }
                 else if (commandName.Equals("join", StringComparison.OrdinalIgnoreCase))
                 {
                     HandleJoin(room, user, parts);
@@ -454,6 +459,24 @@ namespace SignalR.Samples.Hubs.Chat
             }
         }
 
+        private void HandleList(string[] parts)
+        {
+            if (String.IsNullOrWhiteSpace(parts[1]))
+            {
+                throw new InvalidOperationException("Room name cannot be blank!");
+            }
+
+            var room = _db.Rooms.FirstOrDefault(r => r.Name.Equals(parts[1], StringComparison.OrdinalIgnoreCase));
+
+            if (room == null)
+            {
+                throw new InvalidOperationException("No room with that name!");
+            }
+
+            var names = room.Users.Select(s => s.Name);
+            Caller.showUsersInRoom(room.Name, names);
+        }
+
         private void HandleHelp()
         {
             Caller.showCommands(new[] { 
@@ -464,6 +487,7 @@ namespace SignalR.Samples.Hubs.Chat
                 new { Name = "msg", Description = "Type /msg @nickname (message) to send a private message to nickname. @ is optional." },
                 new { Name = "leave", Description = "Type /leave to leave the current room. Type /leave [room name] to leave a specific room." },
                 new { Name = "rooms", Description = "Type /rooms to show the list of rooms" },
+                new { Name = "list", Description = "Type /list (room) to show a list of users in the room" },
                 new { Name = "gravatar", Description = "Type \"/gravatar email\" to set your gravatar." },
                 new { Name = "nudge", Description = "Type \"/nudge\" to send a nudge to the whole room, or \"/nudge @nickname\" to nudge a particular user. @ is optional." }
             });
