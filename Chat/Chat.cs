@@ -461,6 +461,11 @@ namespace SignalR.Samples.Hubs.Chat
 
         private void HandleList(string[] parts)
         {
+            if (parts.Length < 2)
+            {
+                throw new InvalidOperationException("List users in which room?");
+            }
+
             if (String.IsNullOrWhiteSpace(parts[1]))
             {
                 throw new InvalidOperationException("Room name cannot be blank!");
