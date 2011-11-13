@@ -292,10 +292,14 @@ $(function () {
 
     chat.showUsersInRoom = function (room, names) {
         addMessage("<h3> Users in " + room + "</h3>");
-
-        $.each(names, function () {
-            addMessage("- " + this);
-        });
+        if (names.length === 0) {
+            addMessage("Room is empty");
+        }
+        else {
+            $.each(names, function () {
+                addMessage("- " + this);
+            });
+        }
     }
 
     chat.sendMeMessage = function (name, message) {
