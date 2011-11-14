@@ -365,6 +365,7 @@ $(function () {
             clearTimeout(chat.typingTimeoutId);
             chat.typingTimeoutId = 0;
             chat.typing(false);
+            updateChatHistory(command);
 
             $('#new-message').val('');
             $('#new-message').focus();
@@ -374,7 +375,7 @@ $(function () {
     });
 
     var typingTimeoutId = 0;
-    $('#new-message').keypress(function () {
+    $('#new-message').keypress(function (e) {
         // If not in a room, don't try to send typing notifications
         if (chat.room == null) {
             return;
@@ -389,12 +390,24 @@ $(function () {
             chat.typing(true);
         }
 
+        // cycle through the history 
+        var key = (e.keyCode ? e.keyCode : e.which);
+        if (key == 38) {
+            historyLocation -= 1;
+            if (historyLocation < 0) historyLocation = 0;
+            $(this).val(chatHistory[historyLocation]);
+        } else if (key == 40) {
+            historyLocation += 1;
+            if (historyLocation > history.length) historyLocation = chatHistory.length;
+            $(this).val(chatHistory[historyLocation]);
+        }
+        
         // Set timeout to turn off
         chat.typingTimeoutId = setTimeout(function () {
             chat.typingTimeoutId = 0;
             chat.typing(false);
         }, 3000);
-    })
+    });
 
     $(window).blur(function () {
         chat.focus = false;
@@ -444,10 +457,10 @@ $(function () {
     addMessage('Type /help to see the list of commands', 'notification');
 
     function ltrim(s) {
-        return s.replace(/^\s+/g, "")
+        return s.replace(/^\s+/g, "");
     }
     function rtrim(s) {
-        return s.replace(/\s+$/g, "")
+        return s.replace(/\s+$/g, "");
     }
     function trim(s) {
         return ltrim(rtrim(s));
@@ -486,6 +499,17 @@ $(function () {
             }
         });
     });
+
+    //Chat history setup
+    var chatHistory = new Array();
+    var historyLocation = history.length;
+
+    function updateChatHistory(message) {
+        chatHistory.push(message);
+        //should this pop items off the top after a certain length?
+        historyLocation = chatHistory.length;
+    }
+    
 });
 
 // This stuff is to support TweetContentProvider, but should be extracted out if other content providers need custom CSS
