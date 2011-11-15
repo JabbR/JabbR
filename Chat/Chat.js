@@ -4,6 +4,7 @@
 
 $(function () {
     var chat = $.connection.chat;
+    var Keys = { Up: 38, Down: 40 };
 
     $.fn.isNearTheEnd = function () {
         return this[0].scrollTop + this.height() >= this[0].scrollHeight;
@@ -392,17 +393,17 @@ $(function () {
 
         // cycle through the history 
         var key = (e.keyCode ? e.keyCode : e.which);
-        if (key === 38) {
+        if (key === Keys.Up) {
             historyLocation -= 1;
             if (historyLocation < 0) {
-				historyLocation = 0;
-			}
+                historyLocation = 0;
+            }
             $(this).val(chatHistory[historyLocation]);
-        } else if (key === 40) {
+        } else if (key === Keys.Down) {
             historyLocation += 1;
             if (historyLocation > history.length) {
-				historyLocation = chatHistory.length;
-			}
+                historyLocation = chatHistory.length;
+            }
             $(this).val(chatHistory[historyLocation]);
         }
         
