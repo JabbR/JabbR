@@ -340,7 +340,25 @@ $(function () {
                 addMessage("- " + this);
             });
         }
-    }
+    };
+
+    chat.listUsers = function (users) {
+        if (users.length === 0) {
+            addMessage("<h3>No users matched your search</h3>");
+        } else {
+            addMessage("<h3> The following users match your search </h3>");
+            addMessage(users.join(", "));
+        }
+    };
+
+    chat.showUsersRoomList = function (user, rooms) {
+        if (rooms.length == 0) {
+            addMessage("<h3>" + user + " is not in any rooms</h3>");
+        } else {
+            addMessage("<h3>" + user + " is in the following rooms</h3>");
+            addMessage(rooms.join(", "));
+        }
+    };
 
     chat.sendMeMessage = function (name, message) {
         addMessage('*' + name + ' ' + message, 'notification');
