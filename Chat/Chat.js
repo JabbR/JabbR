@@ -340,7 +340,25 @@ $(function () {
                 addMessage("- " + this);
             });
         }
-    }
+    };
+
+    chat.listUsers = function (users) {
+        if (users.length === 0) {
+            addMessage("<h3>No users matched your search</h3>");
+        } else {
+            addMessage("<h3> The following users match your search </h3>");
+            addMessage(users.join(", "));
+        }
+    };
+
+    chat.showUsersRoomList = function (user, rooms) {
+        if (rooms.length == 0) {
+            addMessage("<h3>" + user + " is not in any rooms</h3>");
+        } else {
+            addMessage("<h3>" + user + " is in the following rooms</h3>");
+            addMessage(rooms.join(", "));
+        }
+    };
 
     chat.sendMeMessage = function (name, message) {
         addMessage('*' + name + ' ' + message, 'notification');
@@ -640,7 +658,7 @@ $(function () {
     });
 
     $(document).on('click', 'h3.collapsible_title', function () {
-        var nearEnd = $('#messages').isNearTheEnd();
+        var nearEnd = $('.messages.current').isNearTheEnd();
 
         $(this).next().toggle(function () {
             if (nearEnd) {
@@ -696,7 +714,7 @@ function captureDocumentWrite(documentWritePath, headerText, elementToAppendTo) 
 
         //When the header of captured content is clicked, we want to show or hide the content.
         $('h3', collapsible).click(function () {
-            var nearEndOnToggle = $('#messages').isNearTheEnd();
+            var nearEndOnToggle = $('.messages.current').isNearTheEnd();
             $(this).next().toggle(0, function () {
                 if (nearEndOnToggle) {
                     scrollToBottom();

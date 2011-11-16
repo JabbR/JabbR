@@ -382,6 +382,11 @@ namespace SignalR.Samples.Hubs.Chat
                     HandleList(parts);
                     return true;
                 }
+                else if (commandName.Equals("who", StringComparison.OrdinalIgnoreCase))
+                {
+                    HandleWho(parts);
+                    return true;
+                }
                 else if (commandName.Equals("join", StringComparison.OrdinalIgnoreCase))
                 {
                     HandleJoin(room, user, parts);
@@ -438,6 +443,37 @@ namespace SignalR.Samples.Hubs.Chat
             }
         }
 
+        private void HandleWho(string[] parts)
+        {
+            if (parts.Length == 1)
+            {
+                Caller.listUsers(_db.Users.Select(s => s.Name));
+                return;
+            }
+
+            var name = NormalizeUserName(parts[1]);
+
+            var exactUserMatch = _db.Users.FirstOrDefault(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+            if (exactUserMatch != null)
+            {
+                Caller.showUsersRoomList(exactUserMatch.Name, exactUserMatch.Rooms.Select(r => r.Name));
+                return;
+            }
+
+            var users = _db.Users.Where(s => s.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) != -1);
+
+            if (users.Count() == 1)
+            {
+                var user = users.First();
+                Caller.showUsersRoomList(user.Name, user.Rooms.Select(r => r.Name));
+            }
+            else
+            {
+                Caller.listUsers(users.Select(s => s.Name));
+            }
+        }
+
         private void HandleList(string[] parts)
         {
             if (parts.Length < 2)
@@ -471,6 +507,7 @@ namespace SignalR.Samples.Hubs.Chat
                 new { Name = "msg", Description = "Type /msg @nickname (message) to send a private message to nickname. @ is optional." },
                 new { Name = "leave", Description = "Type /leave to leave the current room. Type /leave [room name] to leave a specific room." },
                 new { Name = "rooms", Description = "Type /rooms to show the list of rooms" },
+                new { Name = "who", Description = "Type /who to show a list of all users, /who [name] to the rooms that user is in" },
                 new { Name = "list", Description = "Type /list (room) to show a list of users in the room" },
                 new { Name = "gravatar", Description = "Type \"/gravatar email\" to set your gravatar." },
                 new { Name = "nudge", Description = "Type \"/nudge\" to send a nudge to the whole room, or \"/nudge @nickname\" to nudge a particular user. @ is optional." }
