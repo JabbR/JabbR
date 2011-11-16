@@ -75,6 +75,8 @@
     <Content Include="Chat.css" />
     <Content Include="Chat.js" />
     <Content Include="Content\images\ajax-loader.png" />
+    <Content Include="Content\images\close-icon-hover.png" />
+    <Content Include="Content\images\close-icon.png" />
     <Content Include="Content\images\icons-18-black.png" />
     <Content Include="Content\images\icons-18-white.png" />
     <Content Include="Content\images\icons-36-black.png" />
@@ -164,6 +166,7 @@
     <Content Include="Scripts\jquery.writeCapture.js" />
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\json2.min.js" />
+    <Content Include="Scripts\simplemarkdown.js" />
     <Content Include="Scripts\writeCapture.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -200,6 +203,7 @@
     <Compile Include="Profiling\TracedSignalBus.cs" />
     <Compile Include="Profiling\TraceHelper.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
+    <Compile Include="ViewModels\RoomViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="_SignalTrace.aspx.cs">
       <DependentUpon>_SignalTrace.aspx</DependentUpon>

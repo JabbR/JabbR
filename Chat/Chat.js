@@ -58,17 +58,17 @@ $(function () {
         return formatTime(dt);
     }
 
-    function clearMessages() {
-        $('#messages').html('');
+    function clearMessages(roomId) {
+        $('#messages-' + roomId).html('');
     }
 
-    function refreshMessages() { refreshList($('#messages')); }
+    function refreshMessages(roomId) { refreshList($('#messages-' + roomId)); }
 
-    function clearUsers() {
-        $('#users').html('');
+    function clearUsers(roomId) {
+        $('#users-' + roomId).html('');
     }
 
-    function refreshUsers() { refreshList($('#users')); }
+    function refreshUsers(roomId) { refreshList($('#users-' + roomId)); }
 
     function refreshList(list) {
         if (list.is('.ui-listview')) {
@@ -79,13 +79,21 @@ $(function () {
     function markUserInactive(user) {
         id = 'u-' + user.Id;
         if (user.Active === false) {
-            $('#' + id).fadeTo('slow', 0.5);
+            $('.' + id).fadeTo('slow', 0.5);
         }
     }
 
-    function addMessage(content, type) {
-        var nearEnd = $('#messages').isNearTheEnd();
-        var e = $('<li/>').html(content).appendTo($('#messages'));
+    function addMessage(content, type, room) {
+        var m = $('.messages.current');
+        if (room) {
+            var roomId = getRoomId(room);
+            m = $('#messages-' + roomId);
+        }
+        var nearEnd = m.isNearTheEnd();
+
+        var converter = new Showdown.converter();
+        var html = converter.makeHtml(content);
+        var e = $('<li/>').html(html).appendTo(m);
 
         refreshMessages();
 
@@ -101,17 +109,25 @@ $(function () {
     }
 
     function scrollToBottom() {
-        var messages = $('#messages');
+        var messages = $('.messages.current');
         messages.scrollTop(messages[0].scrollHeight);
+    }
+
+    function getRoomId(room) {
+        return escape(room.toLowerCase()).replace(/[^a-z0-9]/, '_');
     }
 
     window.scrollToBottom = scrollToBottom;
 
     chat.joinRoom = function (room) {
-        clearMessages();
-        clearUsers();
 
-        chat.getUsers()
+        var roomId = getRoomId(room);
+        addRoom(roomId, room);
+        showRoom(roomId);
+
+        clearUsers(roomId);
+
+        chat.getUsers(room)
             .done(function (users) {
                 $.each(users, function () {
                     chat.addUser(this, true);
@@ -123,7 +139,7 @@ $(function () {
                 $('#new-message').focus();
             });
 
-        chat.getRecentMessages()
+        chat.getRecentMessages(room)
             .done(function (messages) {
                 $.each(messages, function () {
                     chat.addMessage(this, true);
@@ -143,7 +159,7 @@ $(function () {
 
     chat.updateActivity = function (user) {
         var id = 'u-' + user.Id;
-        $('#' + id).fadeTo('slow', 1);
+        $('.' + id).fadeTo('slow', 1);
     };
 
     chat.showRooms = function (rooms) {
@@ -160,7 +176,7 @@ $(function () {
     };
 
     chat.addMessageContent = function (id, content) {
-        var nearEnd = $('#messages').isNearTheEnd();
+        var nearEnd = $('.messages.current').isNearTheEnd();
 
         var e = $('#m-' + id).append(content)
                              .resizeMobileContent();
@@ -177,22 +193,27 @@ $(function () {
     chat.addMessage = function (message, noScroll) {
         var currentUserName = $.cookie('username');
         var re = new RegExp("\\b@?" + currentUserName + "\\b", "i");
+
+        var converter = new Showdown.converter();
+        var html = converter.makeHtml(message.Content);
+
         var data = {
             name: message.User.Name,
             hash: message.User.Hash,
-            message: message.Content,
+            message: html,
             id: message.Id,
             when: toLocal(message.When),
             highlight: re.test(message.Content) ? 'highlight' : ''
         };
 
-        var nearEnd = $('#messages').isNearTheEnd();
+        var roomId = getRoomId(message.Room);
+        var nearEnd = $('#messages-' + roomId).isNearTheEnd();
         var e = $('#new-message-template').tmpl(data)
-                                          .appendTo($('#messages'))
+                                          .appendTo($('#messages-' + roomId))
                                           .resizeMobileContent();
-        refreshMessages();
+        refreshMessages(roomId);
 
-        updateUnread();
+        updateUnread(roomId);
 
         if (!noScroll && nearEnd) {
             scrollToBottom();
@@ -200,16 +221,8 @@ $(function () {
     };
 
     chat.addUser = function (user, exists) {
-
         // remove all users that are leaving
-        $('#users .removing').remove();
-
-        var id = 'u-' + user.Id;
-        var element = document.getElementById(id)
-
-        if (element) {
-            return;
-        }
+        $('.user.removing').remove();
 
         var data = {
             name: user.Name,
@@ -217,21 +230,38 @@ $(function () {
             id: user.Id
         };
 
-        var e = $('#new-user-template').tmpl(data)
-                                       .appendTo($('#users'));
+        if (user.Id === this.id) {
+            addMessage('Your name is now ' + user.Name, 'notification', user.Room);
+            updateCookie();
+        };
 
-        refreshUsers();
+        var room = user.Room;
+        if (!room) {
+            return;
+        }
+
+        var roomId = getRoomId(room);
+
+        // if user already listed in room
+        if ($('#users-' + roomId + ' li.u-' + user.Id).length > 0) {
+            return;
+        }
+
+        var e = $('#new-user-template').tmpl(data)
+                                       .appendTo($('#users-' + roomId));
+
+        refreshUsers(roomId);
 
         if (!exists && this.id !== user.Id) {
-            addMessage(user.Name + ' just entered ' + this.room, 'notification');
-            e.hide().fadeIn('slow');
+            addMessage(user.Name + ' just entered ' + room, 'notification', room);
         }
 
         updateCookie();
     };
 
     chat.changeUserName = function (user, oldName, newName) {
-        $('#u-' + user.Id).replaceWith(
+        var roomId = getRoomId(user.Room);
+        $('#users-' + roomId + ' .u-' + user.Id).replaceWith(
                 $('#new-user-template').tmpl({
                     name: user.Name,
                     hash: user.Hash,
@@ -242,44 +272,53 @@ $(function () {
         refreshUsers();
 
         if (user.Id === this.id) {
-            addMessage('Your name is now ' + newName, 'notification');
-            updateCookie();
+            return;
         }
         else {
-            addMessage(oldName + '\'s nick has changed to ' + newName, 'notification');
+            addMessage(oldName + '\'s nick has changed to ' + newName, 'notification', user.Room);
         }
+    };
+
+    chat.userNameChanged = function (newName) {
+        addMessage('Your name is now ' + newName, 'notification');
+        updateCookie();
     };
 
     chat.changeGravatar = function (currentUser) {
 
-        $('#u-' + currentUser.Id).replaceWith(
-            $('#new-user-template').tmpl({
-                name: currentUser.Name,
-                hash: currentUser.Hash,
-                id: currentUser.Id
-            })
-        );
-
+        if (currentUser.Room) {
+            var roomId = getRoomId(currentUser.Room);
+            $('#users-' + roomId + ' .u-' + currentUser.Id).replaceWith(
+                $('#new-user-template').tmpl({
+                    name: currentUser.Name,
+                    hash: currentUser.Hash,
+                    id: currentUser.Id
+                })
+            );
+        }
         refreshUsers();
 
         if (currentUser.Id === this.id) {
-
-            chat.hash = currentUser.hash;
-            updateCookie();
-
-            addMessage('Your gravatar has been set.', 'notification');
+            return;
         }
         else {
-            addMessage(currentUser.Name + "'s gravatar changed.", 'notification');
+            addMessage(currentUser.Name + "'s gravatar changed.", 'notification', currentUser.Room);
         }
     };
 
+    chat.gravatarChanged = function (currentUser) {
+        addMessage('Your gravatar has been set.', 'notification');
+        chat.hash = currentUser.hash;
+        updateCookie();
+    };
+
     chat.setTyping = function (currentUser, isTyping) {
+        var roomId = getRoomId(currentUser.Room);
         if (isTyping) {
-            $('li#u-' + currentUser.Id).addClass('typing');
+            $('#users-' + roomId + ' li.u-' + currentUser.Id).addClass('typing');
         }
         else {
-            $('li#u-' + currentUser.Id).removeClass('typing');
+            $('#users-' + roomId + ' li.u-' + currentUser.Id).removeClass('typing');
         }
     };
 
@@ -342,32 +381,34 @@ $(function () {
     };
 
     chat.leave = function (user) {
+        var room = user.Room;
+        var roomId = getRoomId(room);
 
-        if (this.id != user.Id) {
+        if (this.id !== user.Id) {
 
-            // remove identifier attribute so no one can use the element
-            $('#u-' + user.Id).removeAttr('id').addClass('removing').fadeOut('slow', function () {
+            // remove user from specified room
+            $('#users-' + roomId + ' li.u-' + user.Id).addClass('removing').fadeOut('slow', function () {
                 $(this).remove();
             });
 
             refreshUsers();
 
-            addMessage(user.Name + ' left ' + this.room, 'notification');
+            addMessage(user.Name + ' left ' + room, 'notification');
         }
         else {
-            clearMessages();
-            $('#users li').not('#u-' + user.Id).remove();
+            removeRoom(roomId);
+            showRoom('lobby');
+            updateCookie();
 
-            addMessage('You have left ' + this.room, 'notification');
+            addMessage('You have left ' + room, 'notification');
 
             this.room = null;
         }
-
     };
 
     $('#send-message').submit(function () {
         var command = $('#new-message').val();
-
+        chat.room = getCurrentRoom();
         if (command) {
             chat.send(command)
             .fail(function (e) {
@@ -389,8 +430,9 @@ $(function () {
 
     var typingTimeoutId = 0;
     $('#new-message').keypress(function (e) {
+        chat.room = getCurrentRoom();
         // If not in a room, don't try to send typing notifications
-        if (chat.room == null) {
+        if (chat.room === null) {
             return;
         }
 
@@ -403,27 +445,27 @@ $(function () {
             chat.typing(true);
         }
 
-        // cycle through the history 
-        var key = (e.keyCode ? e.keyCode : e.which);
-        if (key === Keys.Up) {
-            historyLocation -= 1;
-            if (historyLocation < 0) {
-                historyLocation = 0;
-            }
-            $(this).val(chatHistory[historyLocation]);
-        } else if (key === Keys.Down) {
-            historyLocation += 1;
-            if (historyLocation > history.length) {
-                historyLocation = chatHistory.length;
-            }
-            $(this).val(chatHistory[historyLocation]);
-        }
-        
         // Set timeout to turn off
         chat.typingTimeoutId = setTimeout(function () {
             chat.typingTimeoutId = 0;
             chat.typing(false);
         }, 3000);
+    });
+
+    $('#new-message').keydown(function (e) {
+        // cycle through the history 
+        var key = (e.keyCode ? e.keyCode : e.which);
+        if (key === Keys.Up) {
+            historyLocation -= 1;
+            if (historyLocation < 0) {
+                historyLocation = chatHistory.length - 1;
+            }
+            $(this).val(chatHistory[historyLocation]);
+        }
+        else if (key === Keys.Down) {
+            historyLocation = (historyLocation + 1) % chatHistory.length;
+            $(this).val(chatHistory[historyLocation]);
+        }
     });
 
     $(window).blur(function () {
@@ -436,18 +478,31 @@ $(function () {
         document.title = 'SignalR Chat';
     });
 
-    function updateUnread() {
+    function updateUnread(roomId) {
         if (chat.focus === false) {
             if (!chat.unread) {
                 chat.unread = 0;
             }
             chat.unread++;
         }
+        var currentId = getCurrentRoomId();
+        if (roomId && currentId !== roomId) {
+            var $tab = $('#tabs-' + roomId);
+            $tab.addClass('unread');
+            var room = $tab.data('name');
+            var unread = $tab.data('unread');
+            if (!unread) {
+                unread = 0;
+            }
+            unread++;
+            $tab.text('(' + unread + ') ' + room).data('unread', unread);
+        }
+
         updateTitle();
     }
 
     function updateTitle() {
-        if (chat.unread == 0) {
+        if (chat.unread === 0) {
             document.title = 'SignalR Chat';
         }
         else {
@@ -459,9 +514,12 @@ $(function () {
         $.cookie('userid', chat.id, { path: '/', expires: 30 });
         $.cookie('username', chat.name, { path: '/', expires: 30 });
 
-        if (chat.room) {
-            $.cookie('userroom', chat.room, { path: '/', expires: 30 });
-        }
+        var rooms = $('#tabs li')
+                    .filter(function (index) { return index > 0; })    // skip 1st tab (Lobby)
+                    .map(function () { return $(this).data('name'); })
+                    .get()
+                    .join(';');
+        $.cookie('userroom', rooms, { path: '/', expires: 30 });
 
         if (chat.hash) {
             $.cookie('userhash', chat.hash, { path: '/', expires: 30 });
@@ -487,12 +545,78 @@ $(function () {
     $('#new-message').focus();
     $('#new-message').autoTabComplete({
         get: function () {
-            return $('#users li')
+            return $('.users.current li')
                 .map(function () { return trim($(this).text()); })
                 .get();
         }
     });
 
+    $(document).on('click', '#tabs li', function () {
+        var roomId = $(this).attr('id').substr(5);  // id = tabs-roomId
+        showRoom(roomId);
+    });
+
+    $(document).on('click', 'li.room', function () {
+        var room = $(this).data('name');
+        var roomId = getRoomId(room);
+        if ($('#messages-' + roomId).length > 0) {
+            showRoom(roomId);
+        }
+        else {
+            chat.room = "Lobby";
+            chat.send("/join " + room)
+                .fail(function (e) {
+                    addMessage(e, 'error');
+                });
+        }
+    });
+
+
+    function getCurrentRoomId() {
+        return $('#tabs li.current').attr('id').substr(5);
+    }
+
+    function getCurrentRoom() {
+        var room = $('#tabs li.current').data('name');
+        return room === 'Lobby' ? null : room;
+    }
+
+    function addRoom(roomId, room) {
+        $('<li/>').attr('id', 'tabs-' + roomId).html(room).appendTo($('#tabs')).addClass('current').data('name', room);
+        $('<ul/>').attr('id', 'messages-' + roomId).addClass('messages').appendTo($('#chat-area')).addClass('current');
+        $('<ul/>').attr('id', 'users-' + roomId).addClass('users').appendTo($('#chat-area')).addClass('current');
+    }
+
+    function removeRoom(roomId) {
+        $('#messages-' + roomId).remove();
+        $('#users-' + roomId).remove();
+        $('#tabs-' + roomId).remove();
+    }
+
+    function showRoom(roomId) {
+        $('#tabs li.current').removeClass('current');
+        $('.messages.current').removeClass('current').hide();
+        $('.users.current').removeClass('current').hide();
+        var room = $('#tabs-' + roomId).data('name');
+        $('#tabs-' + roomId).addClass('current').removeClass('unread').text(room).data('unread', 0);
+        $('#messages-' + roomId).addClass('current').show();
+        $('#users-' + roomId).addClass('current').show();
+
+        if (roomId === "lobby") {
+            $('#users-lobby').html('');
+            chat.getRooms()
+                .done(function (rooms) {
+                    $.each(rooms, function () {
+                        $('<li/>').addClass('room').data('name', this.Name).html(this.Name + ' (' + this.Count + ')').appendTo('#users-lobby');
+                    });
+                });
+
+        }
+
+        scrollToBottom();
+        $('#new-message').focus();
+
+    }
 
     $.connection.hub.start(function () {
         chat.join()
@@ -500,6 +624,7 @@ $(function () {
                 addMessage(e, 'error');
             })
             .done(function (success) {
+                showRoom('lobby');
                 if (success === false) {
                     $.cookie('userid', '');
                     addMessage('Choose a name using "/nick nickname".', 'notification');
@@ -507,7 +632,7 @@ $(function () {
             });
     });
 
-    $('h3.collapsible_title').live('click', function () {
+    $(document).on('click', 'h3.collapsible_title', function () {
         var nearEnd = $('#messages').isNearTheEnd();
 
         $(this).next().toggle(function () {
@@ -526,14 +651,14 @@ $(function () {
         //should this pop items off the top after a certain length?
         historyLocation = chatHistory.length;
     }
-    
+
 });
 
 // This stuff is to support TweetContentProvider, but should be extracted out if other content providers need custom CSS
 
 function addTweet(tweet) {
     // Keep track of whether we're need the end, so we can auto-scroll once the tweet is added.
-    var nearEnd = $('#messages').isNearTheEnd();
+    var nearEnd = $('.messages.current').isNearTheEnd();
 
     // Grab any elements we need to process.
     var elements = $('div.tweet_' + tweet.id_str)
@@ -556,7 +681,7 @@ function addTweet(tweet) {
 
 function captureDocumentWrite(documentWritePath, headerText, elementToAppendTo) {
     $.fn.captureDocumentWrite(documentWritePath, function (content) {
-        var nearEnd = $('#messages').isNearTheEnd();
+        var nearEnd = $('.messages.current').isNearTheEnd();
 
         //Add headers so we can collapse the captured data
         var collapsible = $('<div class="captureDocumentWrite_collapsible"><h3>' + headerText + ' (click to show/hide)</h3><div class="captureDocumentWrite_content"></div></div>');

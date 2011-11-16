@@ -111,40 +111,44 @@ namespace SignalR.Samples.Hubs.Chat
             // If we have room add user to room
             if (userRoomCookie != null && !String.IsNullOrWhiteSpace(userRoomCookie.Value))
             {
-                var userRoom = userRoomCookie.Value;
-
-                var room = _db.Rooms.Where(x => x.Name == userRoom).FirstOrDefault();
-
-                // If user has room name in the cookie but it doesn't exists create it!
-                if (room == null)
+                foreach (var item in HttpUtility.UrlDecode(userRoomCookie.Value).Split(';'))
                 {
-                    room = AddRoom(userRoom);
-                }
+                    var userRoom = item;
+                    var room = _db.Rooms.Where(x => x.Name == userRoom).FirstOrDefault();
 
-                // Check if the user is already in the room if so let him rejoin
-                if (IsUserInRoom(room, user))
-                {
-                    HandleRejoin(room, user);
-                }
-                // if the user is not in the room join the room
-                else
-                {
-                    HandleJoin(null, user, new[] { room.Name, room.Name });
+                    // If user has room name in the cookie but it doesn't exists create it!
+                    if (room == null)
+                    {
+                        room = AddRoom(userRoom);
+                    }
+
+                    // Check if the user is already in the room if so let him rejoin
+                    if (IsUserInRoom(room, user))
+                    {
+                        HandleRejoin(room, user);
+                    }
+                    // if the user is not in the room join the room
+                    else
+                    {
+                        HandleJoin(null, user, new[] {room.Name, room.Name});
+                    }
                 }
             }
             // if user is in a room rejoin it
             else if (IsUserInARoom(user))
             {
-
-                // retrieve user room
-                var room = GetUserRoom(user);
-
-                // handle the join of the room
-                HandleRejoin(room, user);
+                // retrieve user rooms
+                foreach (var room in GetUserRooms(user))
+                {
+                    // handle the join of the room
+                    HandleRejoin(room, user);
+                }
             }
-
-            // Add this user to the list of users
-            Caller.addUser(userViewModel);
+            else
+            {
+                // Add this user to the list of users
+                Caller.addUser(userViewModel);
+            }
             return true;
         }
 
@@ -187,7 +191,7 @@ namespace SignalR.Samples.Hubs.Chat
 
             chatRoom.Messages.Add(chatMessage);
 
-            var messageViewModel = new MessageViewModel(chatMessage);
+            var messageViewModel = new MessageViewModel(chatMessage, chatRoom);
 
             Clients[chatRoom.Name].addMessage(messageViewModel);
 
@@ -204,10 +208,19 @@ namespace SignalR.Samples.Hubs.Chat
             Disconnect(Context.ClientId);
         }
 
-        public IEnumerable<UserViewModel> GetUsers()
+        public IEnumerable<RoomViewModel> GetRooms()
         {
-            string room = Caller.room;
+            var rooms = _db.Rooms.Select(r => new RoomViewModel
+            {
+                Name = r.Name,
+                Count = r.Users.Count
+            });
 
+            return rooms;
+        }
+
+        public IEnumerable<UserViewModel> GetUsers(string room)
+        {
             if (String.IsNullOrEmpty(room))
             {
                 return Enumerable.Empty<UserViewModel>();
@@ -220,13 +233,11 @@ namespace SignalR.Samples.Hubs.Chat
                 return Enumerable.Empty<UserViewModel>();
             }
 
-            return chatRoom.Users.Select(u => new UserViewModel(u));
+            return chatRoom.Users.Select(u => new UserViewModel(u, chatRoom));
         }
 
-        public IEnumerable<MessageViewModel> GetRecentMessages()
+        public IEnumerable<MessageViewModel> GetRecentMessages(string room)
         {
-            string room = Caller.room;
-
             if (String.IsNullOrEmpty(room))
             {
                 return Enumerable.Empty<MessageViewModel>();
@@ -241,41 +252,12 @@ namespace SignalR.Samples.Hubs.Chat
 
             return (from m in chatRoom.Messages
                     orderby m.When descending
-                    select new MessageViewModel(m)).Take(20).Reverse();
+                    select new MessageViewModel(m, chatRoom)).Take(20).Reverse();
         }
 
-        public ChatRoom GetUserRoom(ChatUser user)
+        public ChatRoom[] GetUserRooms(ChatUser user)
         {
-            ChatRoom room = null;
-
-            // check if the user has an room
-            if (user.Rooms.Any())
-            {
-
-                // retrieve room
-                var tempRoom = user.Rooms.FirstOrDefault();
-
-                // ensure room is valid
-                if (tempRoom != null)
-                {
-                    room = tempRoom;
-                }
-            }
-
-            // check if rooms has the user
-            if (room == null)
-            {
-                //retrieve room
-                var tempRoom = _db.Rooms.First(x => x.Users.Any(u => u.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase)));
-
-                // ensure room is valid
-                if (tempRoom != null)
-                {
-                    room = tempRoom;
-                }
-            }
-
-            return room;
+            return user.Rooms.ToArray();
         }
 
         public void Typing(bool isTyping)
@@ -284,19 +266,16 @@ namespace SignalR.Samples.Hubs.Chat
 
             ChatUser user = tuple.Item1;
             ChatRoom chatRoom = tuple.Item2;
-            var userViewModel = new UserViewModel(user);
+            var userViewModel = new UserViewModel(user, chatRoom);
 
             if (isTyping)
             {
                 UpdateActivity();
             }
 
-            if (user.Rooms.Any())
+            if (chatRoom != null)
             {
-                foreach (var room in user.Rooms)
-                {
-                    Clients[room.Name].setTyping(userViewModel, isTyping);
-                }
+                Clients[chatRoom.Name].setTyping(userViewModel, isTyping);
             }
             else
             {
@@ -330,7 +309,7 @@ namespace SignalR.Samples.Hubs.Chat
                 return;
             }
 
-            Clients[room.Name].updateActivity(new UserViewModel(user));
+            Clients[room.Name].updateActivity(new UserViewModel(user, room));
         }
 
         private void ProcessUrls(IEnumerable<string> links, ChatRoom chatRoom, ChatMessage chatMessage)
@@ -520,7 +499,7 @@ namespace SignalR.Samples.Hubs.Chat
             room.Users.Remove(user);
             user.Rooms.Remove(room);
 
-            var userViewModel = new UserViewModel(user);
+            var userViewModel = new UserViewModel(user, room);
             Clients[room.Name].leave(userViewModel).Wait();
 
             RemoveFromGroup(room.Name).Wait();
@@ -603,14 +582,6 @@ namespace SignalR.Samples.Hubs.Chat
 
         private void HandleRejoin(ChatRoom room, ChatUser user)
         {
-            // check if the user is in a room
-            if (IsUserInRoom(room, user))
-            {
-
-                // Only support joining one room at a time for now (until we support tabs)
-                HandleLeave(room, user);
-            }
-
             JoinRoom(user, room);
         }
 
@@ -628,13 +599,6 @@ namespace SignalR.Samples.Hubs.Chat
                 throw new InvalidOperationException("You're already in that room!");
             }
 
-            // Only support joining one room at a time for now (until we support tabs)
-            ChatRoom oldRoom = _db.Rooms.FirstOrDefault(r => r.Name.Equals(oldRoomName, StringComparison.OrdinalIgnoreCase));
-            if (oldRoom != null)
-            {
-                HandleLeave(oldRoom, user);
-            }
-
             // Create the room if it doesn't exist
             ChatRoom newRoom = _db.Rooms.FirstOrDefault(r => r.Name.Equals(newRoomName, StringComparison.OrdinalIgnoreCase));
             if (newRoom == null)
@@ -647,7 +611,7 @@ namespace SignalR.Samples.Hubs.Chat
 
         private void JoinRoom(ChatUser user, ChatRoom newRoom)
         {
-            var userViewModel = new UserViewModel(user);
+            var userViewModel = new UserViewModel(user, newRoom);
 
             // Add this room to the user's list of rooms
             user.Rooms.Add(newRoom);
@@ -655,16 +619,16 @@ namespace SignalR.Samples.Hubs.Chat
             // Add this user to the list of room's users
             newRoom.Users.Add(user);
 
-            // Tell the people in this room that you're joining
-            Clients[newRoom.Name].addUser(userViewModel).Wait();
-
             // Set the room on the caller
             Caller.room = newRoom.Name;
+            Caller.joinRoom(newRoom.Name);
+
+            // Tell the people in this room that you've joined
+            userViewModel.Room = newRoom.Name;
+            Clients[newRoom.Name].addUser(userViewModel).Wait();
 
             // Add the caller to the group so they receive messages
             AddToGroup(newRoom.Name).Wait();
-
-            Caller.joinRoom(newRoom.Name);
         }
 
         private void HandleGravatar(ChatUser user, string[] parts)
@@ -692,6 +656,7 @@ namespace SignalR.Samples.Hubs.Chat
             {
                 foreach (var room in user.Rooms)
                 {
+                    userViewModel = new UserViewModel(user, room);
                     Clients[room.Name].changeGravatar(userViewModel);
                 }
             }
@@ -699,6 +664,7 @@ namespace SignalR.Samples.Hubs.Chat
             {
                 Caller.changeGravatar(userViewModel);
             }
+            Caller.gravatarChanged(userViewModel);
         }
 
         private string CreateGravatarHash(string email)
@@ -805,6 +771,7 @@ namespace SignalR.Samples.Hubs.Chat
             {
                 foreach (var room in user.Rooms)
                 {
+                    userViewModel = new UserViewModel(user, room);
                     Clients[room.Name].changeUserName(userViewModel, oldUserName, newUserName);
                 }
             }
@@ -812,6 +779,7 @@ namespace SignalR.Samples.Hubs.Chat
             {
                 Caller.changeUserName(userViewModel, oldUserName, newUserName);
             }
+            Caller.userNameChanged(newUserName);
         }
 
         private static void Sweep(ChatRepository db)
@@ -883,6 +851,10 @@ namespace SignalR.Samples.Hubs.Chat
 
         private ChatRoom AddRoom(string name)
         {
+            if (name.Equals("Lobby", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException("Lobby is not a valid chat room.");
+            }
             var chatRoom = new ChatRoom { Name = name };
 
             _db.Rooms.Add(chatRoom);
