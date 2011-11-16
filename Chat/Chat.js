@@ -236,12 +236,16 @@ $(function () {
         };
 
         var room = user.Room;
-        if (!room) return;
+        if (!room) {
+            return;
+        }
 
         var roomId = getRoomId(room);
 
         // if user already listed in room
-        if ($('#users-' + roomId + ' li.u-' + user.Id).length > 0) return;
+        if ($('#users-' + roomId + ' li.u-' + user.Id).length > 0) {
+            return;
+        }
 
         var e = $('#new-user-template').tmpl(data)
                                        .appendTo($('#users-' + roomId));
@@ -380,7 +384,7 @@ $(function () {
         var room = user.Room;
         var roomId = getRoomId(room);
 
-        if (this.id != user.Id) {
+        if (this.id !== user.Id) {
 
             // remove user from specified room
             $('#users-' + roomId + ' li.u-' + user.Id).addClass('removing').fadeOut('slow', function () {
@@ -428,7 +432,7 @@ $(function () {
     $('#new-message').keypress(function (e) {
         chat.room = getCurrentRoom();
         // If not in a room, don't try to send typing notifications
-        if (chat.room == null) {
+        if (chat.room === null) {
             return;
         }
 
@@ -482,12 +486,14 @@ $(function () {
             chat.unread++;
         }
         var currentId = getCurrentRoomId();
-        if (roomId && currentId != roomId) {
+        if (roomId && currentId !== roomId) {
             var $tab = $('#tabs-' + roomId);
             $tab.addClass('unread');
             var room = $tab.data('name');
             var unread = $tab.data('unread');
-            if (!unread) unread = 0;
+            if (!unread) {
+                unread = 0;
+            }
             unread++;
             $tab.text('(' + unread + ') ' + room).data('unread', unread);
         }
@@ -496,7 +502,7 @@ $(function () {
     }
 
     function updateTitle() {
-        if (chat.unread == 0) {
+        if (chat.unread === 0) {
             document.title = 'SignalR Chat';
         }
         else {
@@ -572,7 +578,7 @@ $(function () {
 
     function getCurrentRoom() {
         var room = $('#tabs li.current').data('name');
-        return room == 'Lobby' ? null : room;
+        return room === 'Lobby' ? null : room;
     }
 
     function addRoom(roomId, room) {
@@ -596,7 +602,7 @@ $(function () {
         $('#messages-' + roomId).addClass('current').show();
         $('#users-' + roomId).addClass('current').show();
 
-        if (roomId == "lobby") {
+        if (roomId === "lobby") {
             $('#users-lobby').html('');
             chat.getRooms()
                 .done(function (rooms) {

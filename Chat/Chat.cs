@@ -159,7 +159,7 @@ namespace SignalR.Samples.Hubs.Chat
                 throw new InvalidOperationException("Chat was just updated, please refresh you browser and rejoin " + Caller.room);
             }
 
-            content = HttpUtility.HtmlEncode(content); //Sanitizer.GetSafeHtmlFragment(content);
+            content = Sanitizer.GetSafeHtmlFragment(content);
 
             // See if this is a valid command (starts with /)
             if (TryHandleCommand(content))
