@@ -79,7 +79,7 @@ namespace SignalR.Samples.Hubs.Chat
             // If we couldn't get user by id try it by name server could be reset
             if (user == null && userNameCookie != null && !String.IsNullOrWhiteSpace(userNameCookie.Value))
             {
-                user = AddUser(userNameCookie.Value);
+                user = AddUser(HttpUtility.UrlDecode(userNameCookie.Value));
             }
 
             // If we have no user return false will force user to set new nick
@@ -91,7 +91,7 @@ namespace SignalR.Samples.Hubs.Chat
             // If we have user hash cookie set gravatar
             if (userHashCookie != null)
             {
-                SetGravatar(user, userHashCookie.Value);
+                SetGravatar(user, HttpUtility.UrlDecode(userHashCookie.Value));
             }
 
             // Update the users's client id mapping
@@ -130,7 +130,7 @@ namespace SignalR.Samples.Hubs.Chat
                     // if the user is not in the room join the room
                     else
                     {
-                        HandleJoin(null, user, new[] {room.Name, room.Name});
+                        HandleJoin(null, user, new[] { room.Name, room.Name });
                     }
                 }
             }
@@ -825,7 +825,6 @@ namespace SignalR.Samples.Hubs.Chat
 
         private ChatUser AddUser(string name)
         {
-
             EnsureUserNameIsAvailable(name);
 
             var user = new ChatUser
@@ -901,7 +900,7 @@ namespace SignalR.Samples.Hubs.Chat
         private ChatUser EnsureUser()
         {
             string name = Caller.name;
-            
+
             if (String.IsNullOrEmpty(name))
             {
                 throw new InvalidOperationException("You don't have a name. Pick a name using '/nick nickname'.");
