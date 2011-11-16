@@ -192,7 +192,7 @@ $(function () {
 
     chat.addMessage = function (message, noScroll) {
         var currentUserName = $.cookie('username');
-        var re = new RegExp("\\b@?" + currentUserName + "\\b", "i");
+        var re = new RegExp("\\b@?" + currentUserName.replace(/\./, '\\.') + "\\b", "i");
 
         var converter = new Showdown.converter();
         var html = converter.makeHtml(message.Content);

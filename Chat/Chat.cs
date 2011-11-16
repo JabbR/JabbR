@@ -791,6 +791,11 @@ namespace SignalR.Samples.Hubs.Chat
 
         private void ChangeUserName(ChatUser user, string newUserName)
         {
+            if (!IsValidUserName(newUserName))
+            {
+                throw new InvalidOperationException(String.Format("'{0}' is not a valid user name.", newUserName));
+            }
+
             if (user.Name.Equals(newUserName, StringComparison.OrdinalIgnoreCase))
             {
                 throw new InvalidOperationException("That's already your username...");
@@ -862,6 +867,11 @@ namespace SignalR.Samples.Hubs.Chat
 
         private ChatUser AddUser(string name)
         {
+            if (!IsValidUserName(name))
+            {
+                throw new InvalidOperationException(String.Format("'{0}' is not a valid user name.", name));
+            }
+
             EnsureUserNameIsAvailable(name);
 
             var user = new ChatUser
@@ -891,11 +901,25 @@ namespace SignalR.Samples.Hubs.Chat
             {
                 throw new InvalidOperationException("Lobby is not a valid chat room.");
             }
+            if (!IsValidRoomName(name))
+            {
+                throw new InvalidOperationException(String.Format("'{0}' is not a valid room name.", name));
+            }
             var chatRoom = new ChatRoom { Name = name };
 
             _db.Rooms.Add(chatRoom);
 
             return chatRoom;
+        }
+
+        private bool IsValidUserName(string name)
+        {
+            return Regex.IsMatch(name, "^[A-Za-z0-9-_.]+$");
+        }
+
+        private bool IsValidRoomName(string name)
+        {
+            return Regex.IsMatch(name, "^[A-Za-z0-9-_.]+$");
         }
 
         private void LeaveAllRooms(ChatUser user)
