@@ -658,7 +658,7 @@ $(function () {
     });
 
     $(document).on('click', 'h3.collapsible_title', function () {
-        var nearEnd = $('#messages').isNearTheEnd();
+        var nearEnd = $('.messages.current').isNearTheEnd();
 
         $(this).next().toggle(function () {
             if (nearEnd) {
@@ -714,7 +714,7 @@ function captureDocumentWrite(documentWritePath, headerText, elementToAppendTo) 
 
         //When the header of captured content is clicked, we want to show or hide the content.
         $('h3', collapsible).click(function () {
-            var nearEndOnToggle = $('#messages').isNearTheEnd();
+            var nearEndOnToggle = $('.messages.current').isNearTheEnd();
             $(this).next().toggle(0, function () {
                 if (nearEndOnToggle) {
                     scrollToBottom();
