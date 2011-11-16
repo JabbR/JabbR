@@ -465,7 +465,8 @@ namespace SignalR.Samples.Hubs.Chat
 
             if (users.Count() == 1)
             {
-                Caller.showUsersRoomList(users.First().Name, users.First().Rooms.Select(r => r.Name));
+                var user = users.First();
+                Caller.showUsersRoomList(user.Name, user.Rooms.Select(r => r.Name));
             }
             else
             {
