@@ -4,7 +4,7 @@
 
 $(function () {
     var chat = $.connection.chat;
-    var Keys = { Up: 38, Down: 40 };
+    var Keys = { Up: 38, Down: 40, Esc: 27 };
 
     $.fn.isNearTheEnd = function () {
         return this[0].scrollTop + this.height() >= this[0].scrollHeight;
@@ -393,7 +393,7 @@ $(function () {
 
             refreshUsers();
 
-            addMessage(user.Name + ' left ' + room, 'notification');
+            addMessage(user.Name + ' left ' + room, 'notification', room);
         }
         else {
             removeRoom(roomId);
@@ -455,16 +455,23 @@ $(function () {
     $('#new-message').keydown(function (e) {
         // cycle through the history 
         var key = (e.keyCode ? e.keyCode : e.which);
-        if (key === Keys.Up) {
-            historyLocation -= 1;
-            if (historyLocation < 0) {
-                historyLocation = chatHistory.length - 1;
-            }
-            $(this).val(chatHistory[historyLocation]);
-        }
-        else if (key === Keys.Down) {
-            historyLocation = (historyLocation + 1) % chatHistory.length;
-            $(this).val(chatHistory[historyLocation]);
+        switch (key) {
+            case Keys.Up:
+                historyLocation -= 1;
+                if (historyLocation < 0) {
+                    historyLocation = chatHistory.length - 1;
+                }
+                $(this).val(chatHistory[historyLocation]);
+                break;
+
+            case Keys.Down:
+                historyLocation = (historyLocation + 1) % chatHistory.length;
+                $(this).val(chatHistory[historyLocation]);
+                break;
+
+            case Keys.Esc:
+                $(this).val('');
+                break;
         }
     });
 
