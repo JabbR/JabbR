@@ -101,7 +101,11 @@ $(function () {
             e.addClass(type);
         }
 
-        updateUnread();
+        // notifications are not that important (issue #79)
+        if (type !== 'notification') {
+            updateUnread();
+        }
+
         if (nearEnd) {
             scrollToBottom();
         }
