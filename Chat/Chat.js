@@ -308,7 +308,7 @@ $(function () {
 
     chat.gravatarChanged = function (currentUser) {
         addMessage('Your gravatar has been set.', 'notification');
-        chat.hash = currentUser.hash;
+        chat.hash = currentUser.Hash;
         updateCookie();
     };
 
