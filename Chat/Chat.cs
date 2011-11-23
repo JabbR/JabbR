@@ -971,7 +971,13 @@ namespace SignalR.Samples.Hubs.Chat
 
             if (user == null)
             {
-                throw new InvalidOperationException(String.Format("You go by the name '{0}' but the server has no idea who you are. Maybe it got reset :(.", name));
+                // Attempt to re-join the chat if the server forgot the user for some reason.
+                if (!Join())
+                {
+                    throw new InvalidOperationException(String.Format("You go by the name '{0}' but the server has no idea who you are.", name));
+                }
+
+                user = _db.Users.FirstOrDefault(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
             }
 
             if (user.ClientId != Context.ClientId)
