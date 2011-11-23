@@ -262,6 +262,11 @@ namespace SignalR.Samples.Hubs.Chat
 
         public void Typing(bool isTyping)
         {
+            if (OutOfSync)
+            {
+                return;
+            }
+
             Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
 
             ChatUser user = tuple.Item1;

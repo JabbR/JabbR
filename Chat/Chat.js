@@ -612,6 +612,10 @@ $(function () {
     }
 
     function addRoom(roomId, room) {
+        if ($('#tabs-' + roomId).length) {
+            return;
+        }
+
         $('<li/>').attr('id', 'tabs-' + roomId).html(room).appendTo($('#tabs')).addClass('current').data('name', room);
         $('<ul/>').attr('id', 'messages-' + roomId).addClass('messages').appendTo($('#chat-area')).addClass('current');
         $('<ul/>').attr('id', 'users-' + roomId).addClass('users').appendTo($('#chat-area')).addClass('current');
