@@ -91,9 +91,10 @@ $(function () {
         }
         var nearEnd = m.isNearTheEnd();
 
-        var converter = new Showdown.converter();
-        var html = converter.makeHtml(content);
-        var e = $('<li/>').html(html).appendTo(m);
+        // var converter = new Showdown.converter();
+        // var html = converter.makeHtml(content);
+
+        var e = $('<li/>').html(content).appendTo(m);
 
         refreshMessages();
 
@@ -198,13 +199,13 @@ $(function () {
         var currentUserName = $.cookie('username');
         var re = new RegExp("\\b@?" + currentUserName.replace(/\./, '\\.') + "\\b", "i");
 
-        var converter = new Showdown.converter();
-        var html = converter.makeHtml(message.Content);
+        // var converter = new Showdown.converter();
+        // var html = converter.makeHtml(message.Content);
 
         var data = {
             name: message.User.Name,
             hash: message.User.Hash,
-            message: html,
+            message: message.Content,
             id: message.Id,
             when: toLocal(message.When),
             highlight: re.test(message.Content) ? 'highlight' : ''
