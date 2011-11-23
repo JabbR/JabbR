@@ -7,6 +7,7 @@ namespace Chat.Models
     {
         public string Name { get; set; }
         public DateTime? LastNudged { get; set; }
+        public DateTime LastActivity { get; set; }
         public virtual ICollection<ChatMessage> Messages { get; set; }
         public virtual ICollection<ChatUser> Users { get; set; }
 
@@ -14,6 +15,7 @@ namespace Chat.Models
         {
             Messages = new HashSet<ChatMessage>();
             Users = new HashSet<ChatUser>();
+            LastActivity = DateTime.UtcNow;
         }
     }
 }
