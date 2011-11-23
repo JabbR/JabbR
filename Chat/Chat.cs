@@ -941,7 +941,6 @@ namespace SignalR.Samples.Hubs.Chat
             ChatUser user = EnsureUser();
 
             string room = Caller.room;
-            string name = Caller.name;
 
             if (String.IsNullOrEmpty(room))
             {
@@ -955,7 +954,7 @@ namespace SignalR.Samples.Hubs.Chat
                 throw new InvalidOperationException(String.Format("You're in '{0}' but it doesn't exist. Use /join '{0}' to create this room.", room));
             }
 
-            if (!chatRoom.Users.Any(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+            if (!chatRoom.Users.Any(u => u.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase)))
             {
                 throw new InvalidOperationException(String.Format("You're not in '{0}'. Use '/join {0}' to join it.", room));
             }
@@ -976,7 +975,7 @@ namespace SignalR.Samples.Hubs.Chat
 
             if (user == null)
             {
-                throw new InvalidOperationException(String.Format("You go by the name '{0}' but the server has no idea who you are.", name));                
+                throw new InvalidOperationException(String.Format("You go by the name '{0}' but the server has no idea who you are.", name));
             }
 
             // Make sure the calling user is who they should be
