@@ -504,7 +504,7 @@ $(function () {
     $(window).focus(function () {
         chat.focus = true;
         chat.unread = 0;
-        document.title = 'SignalR Chat';
+        document.title = 'JabbR';
     });
 
     function updateUnread(roomId) {
@@ -532,10 +532,10 @@ $(function () {
 
     function updateTitle() {
         if (chat.unread === 0) {
-            document.title = 'SignalR Chat';
+            document.title = 'JabbR';
         }
         else {
-            document.title = '(' + chat.unread + ') SignalR Chat ';
+            document.title = '(' + chat.unread + ') JabbR ';
         }
     }
 
