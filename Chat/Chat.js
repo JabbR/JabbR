@@ -226,7 +226,7 @@ $(function () {
         updateMessageHeight($('#m-' + id));
     };
 
-    chat.addMessage = function (message, noScroll) {
+    chat.addMessage = function (message, restore) {
         var currentUserName = $.cookie('username');
         var re = new RegExp("\\b@?" + currentUserName.replace(/\./, '\\.') + "\\b", "i");
 
@@ -250,14 +250,16 @@ $(function () {
                                           .resizeMobileContent();
         refreshMessages(roomId);
 
-        updateUnread(roomId);
+        if (!restore) {
+            updateUnread(roomId);
+        }
 
         var $message = $('#m-' + message.Id);
         if ($message.is(':visible')) {
             updateMessageHeight($message);
         }
 
-        if (!noScroll && nearEnd) {
+        if (!restore && nearEnd) {
             scrollToBottom();
         }
     };
