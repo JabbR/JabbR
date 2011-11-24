@@ -131,6 +131,7 @@ $(function () {
 
     function updateMessageHeight($message) {
         $message.css('height', '');
+        $message.find('.left').css('height', '');
 
         var $left = $message.find('.left'),
             height = $message.height(),
