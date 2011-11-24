@@ -181,6 +181,10 @@ li.room {
     border-bottom: 1px solid #eee;
 }
 
+.message.continue {
+    border-bottom: 1px solid #f1f1f1;
+}
+
 .message .left {
     width: 175px;
     margin-right: 10px;

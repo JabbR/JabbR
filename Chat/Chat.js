@@ -227,15 +227,30 @@ $(function () {
     };
 
     chat.addMessage = function (message, restore) {
-        var currentUserName = $.cookie('username');
-        var re = new RegExp("\\b@?" + currentUserName.replace(/\./, '\\.') + "\\b", "i");
+        var roomId = getRoomId(message.Room),
+            $messages = $('#messages-' + roomId),
+            $lastMessage = $messages.find('.message').last(),
+            currentUserName = $.cookie('username'),
+            re = new RegExp("\\b@?" + currentUserName.replace(/\./, '\\.') + "\\b", "i"),
+            previousUser = null,
+            showUser = null,
+            data = null,
+            nearEnd = null;
+
 
         // var converter = new Showdown.converter();
         // var html = converter.makeHtml(message.Content);
 
-        var data = {
+        if ($lastMessage) {
+            previousUser = $lastMessage.data('user');
+        }
+
+        showUser = previousUser !== message.User.Name;
+
+        data = {
             trimmedName: trimUserName(message.User.Name),
             name: message.User.Name,
+            showUser: showUser,
             hash: message.User.Hash,
             message: message.Content,
             id: message.Id,
@@ -243,11 +258,14 @@ $(function () {
             highlight: re.test(message.Content) ? 'highlight' : ''
         };
 
-        var roomId = getRoomId(message.Room);
-        var nearEnd = $('#messages-' + roomId).isNearTheEnd();
-        var e = $('#new-message-template').tmpl(data)
-                                          .appendTo($('#messages-' + roomId))
-                                          .resizeMobileContent();
+        if (showUser === false) {
+            $lastMessage.addClass('continue');
+        }
+
+        nearEnd = $messages.isNearTheEnd();
+        $('#new-message-template').tmpl(data)
+                                  .appendTo($messages)
+                                  .resizeMobileContent();
         refreshMessages(roomId);
 
         if (!restore) {
