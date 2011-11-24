@@ -244,7 +244,6 @@ $(function () {
         };
 
         if (user.Id === this.id) {
-            addMessage('Your name is now ' + user.Name, 'notification', user.Room);
             updateCookie();
         };
 
@@ -566,7 +565,7 @@ $(function () {
 
     $(window).focus();
 
-    addMessage('Welcome to the SignalR IRC clone', 'notification');
+    addMessage('Welcome to the JabbR', 'notification');
     addMessage('Type /help to see the list of commands', 'notification');
 
     function ltrim(s) {

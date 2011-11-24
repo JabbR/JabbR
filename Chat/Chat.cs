@@ -144,7 +144,7 @@ namespace SignalR.Samples.Hubs.Chat
         {
             if (OutOfSync)
             {
-                throw new InvalidOperationException("Chat was just updated, please refresh you browser and rejoin " + Caller.room);
+                throw new InvalidOperationException("Chat was just updated, please refresh you browser");
             }
 
             content = Sanitizer.GetSafeHtmlFragment(content);
