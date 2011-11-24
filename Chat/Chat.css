@@ -163,10 +163,12 @@ li.room {
 
 .error {
     color: Red;
+    padding: 5px;
 }
 
 .pm {
     color: Red;
+    padding: 5px;
 }
 
 .notification {
