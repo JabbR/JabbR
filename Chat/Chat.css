@@ -167,12 +167,12 @@ li.room {
 
 .notification {
     color: #bbb;
-    border-bottom: 1px solid #f1f1f1;
+    border-bottom: 1px solid #eee;
     padding: 5px;
 }
 
 .message {
-    border-bottom: 1px solid #f1e1f1;
+    border-bottom: 1px solid #eee;
 }
 
 .message .left {
@@ -193,6 +193,7 @@ li.room {
     width: 60%;
     margin-right: 15px;
     margin-top: 3px;
+    word-wrap: break-word;
 }
 
 .message .right {

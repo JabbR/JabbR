@@ -129,6 +129,24 @@ $(function () {
         return escape(room.toLowerCase()).replace(/[^a-z0-9]/, '_');
     }
 
+    function updateMessageHeight($message) {
+        $message.css('height', '');
+
+        var $left = $message.find('.left'),
+            height = $message.height(),
+            extra = $left.outerHeight() - $left.height(),
+            calculated = height - extra;
+        $message.css('height', height + 'px');
+        $left.css('height', calculated + 'px');
+    }
+
+    function updateRoomMessageHeights(roomId) {
+        var $messages = $('#messages-' + roomId + ' .message');
+        $.each($messages, function () {
+            updateMessageHeight($(this));
+        });
+    }
+
     window.scrollToBottom = scrollToBottom;
 
     chat.joinRoom = function (room) {
@@ -200,6 +218,8 @@ $(function () {
                 scrollToBottom();
             }, 150);
         }
+
+        updateMessageHeight($('#m-' + id));
     };
 
     chat.addMessage = function (message, noScroll) {
@@ -210,7 +230,7 @@ $(function () {
         // var html = converter.makeHtml(message.Content);
 
         var data = {
-            trimmedName : trimUserName(message.User.Name),
+            trimmedName: trimUserName(message.User.Name),
             name: message.User.Name,
             hash: message.User.Hash,
             message: message.Content,
@@ -227,6 +247,11 @@ $(function () {
         refreshMessages(roomId);
 
         updateUnread(roomId);
+
+        var $message = $('#m-' + message.Id);
+        if ($message.is(':visible')) {
+            updateMessageHeight($message);
+        }
 
         if (!noScroll && nearEnd) {
             scrollToBottom();
@@ -513,6 +538,8 @@ $(function () {
         chat.focus = true;
         chat.unread = 0;
         document.title = 'JabbR';
+
+        updateTitle();
     });
 
     function updateUnread(roomId) {
@@ -657,6 +684,7 @@ $(function () {
         scrollToBottom();
         $('#new-message').focus();
 
+        updateRoomMessageHeights(roomId);
     }
 
     $.connection.hub.start(function () {
