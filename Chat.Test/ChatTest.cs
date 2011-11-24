@@ -14,7 +14,7 @@ namespace Chat.Test
         [Fact]
         public void JoinReturnsFalseIfNoCookies()
         {
-            var repository = new ChatRepository();
+            var repository = new InMemoryRepository();
             var chat = new ChatHub(repository);
             var connection = new Mock<IConnection>();
             var prinicipal = new Mock<IPrincipal>();
@@ -34,14 +34,14 @@ namespace Chat.Test
         [Fact]
         public void JoinCallsAddUserIfValidUserIdInCookieAndUserList()
         {
-            var repository = new ChatRepository();
+            var repository = new InMemoryRepository();
             var user = new ChatUser
             {
                 Id = "1234",
                 Name = "John",
                 Hash = "Hash"
             };
-            repository.Users.Add(user);
+            repository.Add(user);
 
             var chat = new ChatHub(repository);
             var connection = new Mock<IConnection>();
