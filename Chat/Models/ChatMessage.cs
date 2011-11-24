@@ -1,13 +1,17 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Chat.Models
 {
     public class ChatMessage
     {
-        public string Id { get; set; }
-        public string Content { get; set; }
-        public DateTimeOffset When { get; set; }
+        [Key]
+        public int Key { get; set; }
 
+        public string Content { get; set; }
+        public string Id { get; set; }        
+        public virtual ChatRoom Room { get; set; }
         public virtual ChatUser User { get; set; }
+        public DateTimeOffset When { get; set; }
     }
 }

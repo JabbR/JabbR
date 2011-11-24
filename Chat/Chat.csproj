@@ -44,6 +44,12 @@
     <Reference Include="Elmah">
       <HintPath>..\packages\elmah.corelibrary.1.2\lib\Elmah.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.4.2.0.0\lib\net40\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.Migrations">
+      <HintPath>..\packages\EntityFramework.Migrations.0.7.0.1\lib\net40\EntityFramework.Migrations.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlSanitizationLibrary">
       <HintPath>..\packages\AntiXSS.4.0.1\lib\net35\HtmlSanitizationLibrary.dll</HintPath>
     </Reference>
@@ -52,9 +58,17 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.2.2.1.4\lib\net40-Full\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="SignalR">
       <HintPath>..\lib\SignalR.dll</HintPath>
     </Reference>
+    <Reference Include="SignalR.Ninject">
+      <HintPath>..\packages\SignalR.Ninject.0.3.3\lib\net40\SignalR.Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -70,6 +84,9 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WebActivator">
+      <HintPath>..\packages\WebActivator.1.4.4\lib\net40\WebActivator.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Chat.css" />
@@ -181,6 +198,7 @@
     <Content Include="_SignalTrace.aspx" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="Chat.cs" />
     <Compile Include="ContentProviders\CollapsibleContentProvider.cs" />
     <Compile Include="ContentProviders\CollegeHumorContentProvider.cs" />
@@ -195,10 +213,18 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\StringExtensions.cs" />
-    <Compile Include="Models\ChatRepository.cs" />
+    <Compile Include="Migrations\201111240945284_Initial.cs" />
+    <Compile Include="Migrations\201111240945284_Initial.Designer.cs">
+      <DependentUpon>201111240945284_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Settings.cs" />
     <Compile Include="Models\ChatMessage.cs" />
     <Compile Include="Models\ChatRoom.cs" />
     <Compile Include="Models\ChatUser.cs" />
+    <Compile Include="Models\IJabbrRepository.cs" />
+    <Compile Include="Models\InMemoryRepository.cs" />
+    <Compile Include="Models\JabbrContext.cs" />
+    <Compile Include="Models\PersistedRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Profiling\TracedMessageStore.cs" />
     <Compile Include="Profiling\TracedSignalBus.cs" />

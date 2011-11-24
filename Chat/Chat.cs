@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using Chat.Infrastructure;
@@ -19,24 +18,12 @@ namespace SignalR.Samples.Hubs.Chat
 {
     public class Chat : Hub, IDisconnect
     {
-        private static readonly ChatRepository _repository = new ChatRepository();
+        private readonly IJabbrRepository _repo;
 
-        // For testability
-        private readonly ChatRepository _db;
-
-        public Chat()
-            : this(_repository)
+        public Chat(IJabbrRepository repo)
         {
+            _repo = repo;
         }
-
-        public Chat(ChatRepository db)
-        {
-            _db = db;
-        }
-
-        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(5);
-        private static bool _sweeping;
-        private static Timer _timer = new Timer(_ => Sweep(_repository), null, _sweepInterval, _sweepInterval);
 
         private static readonly List<IContentProvider> _contentProviders = new List<IContentProvider>() {
             new ImageContentProvider(),
@@ -73,7 +60,7 @@ namespace SignalR.Samples.Hubs.Chat
             // First try to retrieve user by id if exists
             if (userIdCookie != null && !String.IsNullOrWhiteSpace(userIdCookie.Value))
             {
-                user = _db.Users.FirstOrDefault(u => u.Id == userIdCookie.Value);
+                user = _repo.Users.FirstOrDefault(u => u.Id == userIdCookie.Value);
             }
 
             // If we couldn't get user by id try it by name server could be reset
@@ -98,6 +85,7 @@ namespace SignalR.Samples.Hubs.Chat
             user.ClientId = Context.ClientId;
             user.Active = true;
             user.LastActivity = DateTime.UtcNow;
+            _repo.Update();
 
             var userViewModel = new UserViewModel(user);
 
@@ -114,7 +102,7 @@ namespace SignalR.Samples.Hubs.Chat
                 foreach (var item in HttpUtility.UrlDecode(userRoomCookie.Value).Split(';'))
                 {
                     var userRoom = item;
-                    var room = _db.Rooms.Where(x => x.Name == userRoom).FirstOrDefault();
+                    var room = _repo.Rooms.Where(x => x.Name == userRoom).FirstOrDefault();
 
                     // If user has room name in the cookie but it doesn't exists create it!
                     if (room == null)
@@ -191,6 +179,7 @@ namespace SignalR.Samples.Hubs.Chat
 
             chatRoom.Messages.Add(chatMessage);
             chatRoom.LastActivity = DateTime.UtcNow;
+            _repo.Update();
 
             var messageViewModel = new MessageViewModel(chatMessage, chatRoom);
 
@@ -211,7 +200,7 @@ namespace SignalR.Samples.Hubs.Chat
 
         public IEnumerable<RoomViewModel> GetRooms()
         {
-            var rooms = _db.Rooms.Select(r => new RoomViewModel
+            var rooms = _repo.Rooms.Select(r => new RoomViewModel
             {
                 Name = r.Name,
                 Count = r.Users.Count
@@ -227,7 +216,7 @@ namespace SignalR.Samples.Hubs.Chat
                 return Enumerable.Empty<UserViewModel>();
             }
 
-            ChatRoom chatRoom = _db.Rooms.FirstOrDefault(r => r.Name.Equals(room, StringComparison.OrdinalIgnoreCase));
+            ChatRoom chatRoom = _repo.Rooms.FirstOrDefault(r => r.Name.Equals(room, StringComparison.OrdinalIgnoreCase));
 
             if (chatRoom == null)
             {
@@ -244,7 +233,7 @@ namespace SignalR.Samples.Hubs.Chat
                 return Enumerable.Empty<MessageViewModel>();
             }
 
-            ChatRoom chatRoom = _db.Rooms.FirstOrDefault(r => r.Name.Equals(room, StringComparison.OrdinalIgnoreCase));
+            ChatRoom chatRoom = _repo.Rooms.FirstOrDefault(r => r.Name.Equals(room, StringComparison.OrdinalIgnoreCase));
 
             if (chatRoom == null)
             {
@@ -291,7 +280,7 @@ namespace SignalR.Samples.Hubs.Chat
 
         private void Disconnect(string clientId)
         {
-            ChatUser user = _db.Users.FirstOrDefault(u => u.ClientId == clientId);
+            ChatUser user = _repo.Users.FirstOrDefault(u => u.ClientId == clientId);
 
             if (user == null)
             {
@@ -301,7 +290,7 @@ namespace SignalR.Samples.Hubs.Chat
             LeaveAllRooms(user);
 
             // Remove the user
-            _db.Users.Remove(user);
+            _repo.Remove(user);
         }
 
         private void UpdateActivity()
@@ -343,6 +332,7 @@ namespace SignalR.Samples.Hubs.Chat
 
                     // If we did get something, update the message and notify all clients
                     chatMessage.Content += extractedContent;
+                    _repo.Update();
 
                     Clients[chatRoom.Name].addMessageContent(chatMessage.Id, extractedContent);
                 }
@@ -453,13 +443,13 @@ namespace SignalR.Samples.Hubs.Chat
         {
             if (parts.Length == 1)
             {
-                Caller.listUsers(_db.Users.Select(s => s.Name));
+                Caller.listUsers(_repo.Users.Select(s => s.Name));
                 return;
             }
 
             var name = NormalizeUserName(parts[1]);
 
-            var exactUserMatch = _db.Users.FirstOrDefault(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            var exactUserMatch = _repo.Users.FirstOrDefault(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
             if (exactUserMatch != null)
             {
@@ -467,7 +457,7 @@ namespace SignalR.Samples.Hubs.Chat
                 return;
             }
 
-            var users = _db.Users.Where(s => s.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) != -1);
+            var users = _repo.Users.Where(s => s.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) != -1);
 
             if (users.Count() == 1)
             {
@@ -492,7 +482,7 @@ namespace SignalR.Samples.Hubs.Chat
                 throw new InvalidOperationException("Room name cannot be blank!");
             }
 
-            var room = _db.Rooms.FirstOrDefault(r => r.Name.Equals(parts[1], StringComparison.OrdinalIgnoreCase));
+            var room = _repo.Rooms.FirstOrDefault(r => r.Name.Equals(parts[1], StringComparison.OrdinalIgnoreCase));
 
             if (room == null)
             {
@@ -527,7 +517,7 @@ namespace SignalR.Samples.Hubs.Chat
                 throw new InvalidOperationException("Room name cannot be blank!");
             }
 
-            var room = _db.Rooms.FirstOrDefault(r => r.Name.Equals(parts[1], StringComparison.OrdinalIgnoreCase));
+            var room = _repo.Rooms.FirstOrDefault(r => r.Name.Equals(parts[1], StringComparison.OrdinalIgnoreCase));
 
             if (room == null)
             {
@@ -543,6 +533,8 @@ namespace SignalR.Samples.Hubs.Chat
             room.LastActivity = DateTime.UtcNow;
 
             user.Rooms.Remove(room);
+
+            _repo.Update();
 
             var userViewModel = new UserViewModel(user, room);
             Clients[room.Name].leave(userViewModel).Wait();
@@ -564,7 +556,7 @@ namespace SignalR.Samples.Hubs.Chat
 
         private void HandleMsg(ChatUser user, string[] parts)
         {
-            if (_db.Users.Count == 1)
+            if (_repo.Users.Count() == 1)
             {
                 throw new InvalidOperationException("You're the only person in here...");
             }
@@ -574,7 +566,7 @@ namespace SignalR.Samples.Hubs.Chat
                 throw new InvalidOperationException("Who are you trying send a private message to?");
             }
             var toUserName = NormalizeUserName(parts[1]);
-            ChatUser toUser = _db.Users.FirstOrDefault(u => u.Name.Equals(toUserName, StringComparison.OrdinalIgnoreCase));
+            ChatUser toUser = _repo.Users.FirstOrDefault(u => u.Name.Equals(toUserName, StringComparison.OrdinalIgnoreCase));
 
             if (toUser == null)
             {
@@ -610,7 +602,7 @@ namespace SignalR.Samples.Hubs.Chat
 
         private bool IsUserInRoom(string roomName, ChatUser user)
         {
-            var room = _db.Rooms.FirstOrDefault(x => x.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
+            var room = _repo.Rooms.FirstOrDefault(x => x.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
 
             if (room == null)
             {
@@ -622,7 +614,7 @@ namespace SignalR.Samples.Hubs.Chat
 
         private bool IsUserInARoom(ChatUser user)
         {
-            return _db.Rooms.Any(room => room.Users.Any(chatUser => chatUser.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase))) || user.Rooms.Any();
+            return _repo.Rooms.Any(room => room.Users.Any(chatUser => chatUser.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase))) || user.Rooms.Any();
         }
 
         private void HandleRejoin(ChatRoom room, ChatUser user)
@@ -645,7 +637,7 @@ namespace SignalR.Samples.Hubs.Chat
             }
 
             // Create the room if it doesn't exist
-            ChatRoom newRoom = _db.Rooms.FirstOrDefault(r => r.Name.Equals(newRoomName, StringComparison.OrdinalIgnoreCase));
+            ChatRoom newRoom = _repo.Rooms.FirstOrDefault(r => r.Name.Equals(newRoomName, StringComparison.OrdinalIgnoreCase));
             if (newRoom == null)
             {
                 newRoom = AddRoom(newRoomName);
@@ -664,6 +656,8 @@ namespace SignalR.Samples.Hubs.Chat
             // Add this user to the list of room's users
             newRoom.Users.Add(user);
             newRoom.LastActivity = DateTime.UtcNow;
+
+            _repo.Update();
 
             // Set the room on the caller
             Caller.room = newRoom.Name;
@@ -695,6 +689,7 @@ namespace SignalR.Samples.Hubs.Chat
         {
             // Set user hash
             user.Hash = hash;
+            _repo.Update();
 
             var userViewModel = new UserViewModel(user);
 
@@ -720,7 +715,7 @@ namespace SignalR.Samples.Hubs.Chat
 
         private void HandleRooms()
         {
-            var rooms = _db.Rooms.Select(r => new
+            var rooms = _repo.Rooms.Select(r => new
             {
                 Name = r.Name,
                 Count = r.Users.Count
@@ -738,7 +733,7 @@ namespace SignalR.Samples.Hubs.Chat
                 throw new InvalidOperationException("No username specified!");
             }
 
-            ChatUser user = _db.Users.FirstOrDefault(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            ChatUser user = _repo.Users.FirstOrDefault(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
             if (user == null)
             {
@@ -752,13 +747,13 @@ namespace SignalR.Samples.Hubs.Chat
 
         private void HandleNudge(ChatUser user, string[] parts)
         {
-            if (_db.Users.Count == 1)
+            if (_repo.Users.Count() == 1)
             {
                 throw new InvalidOperationException("You're the only person in here...");
             }
 
             var toUserName = NormalizeUserName(parts[1]);
-            ChatUser toUser = _db.Users.FirstOrDefault(u => u.Name.Equals(toUserName, StringComparison.OrdinalIgnoreCase));
+            ChatUser toUser = _repo.Users.FirstOrDefault(u => u.Name.Equals(toUserName, StringComparison.OrdinalIgnoreCase));
 
             if (toUser == null)
             {
@@ -779,6 +774,7 @@ namespace SignalR.Samples.Hubs.Chat
             }
 
             toUser.LastNudged = DateTime.Now;
+            _repo.Update();
             // Send a nudge message to the sender and the sendee                        
             Clients[toUser.ClientId].nudge(user.Name, toUser.Name);
             Caller.sendPrivateMessage(user.Name, toUser.Name, "nudged " + toUser.Name);
@@ -790,6 +786,7 @@ namespace SignalR.Samples.Hubs.Chat
             if (room.LastNudged == null || room.LastNudged < DateTime.Now.Subtract(betweenNudges))
             {
                 room.LastNudged = DateTime.Now;
+                _repo.Update();
                 Clients[room.Name].nudge(user.Name);
             }
             else
@@ -814,6 +811,7 @@ namespace SignalR.Samples.Hubs.Chat
 
             string oldUserName = user.Name;
             user.Name = newUserName;
+            _repo.Update();
             Caller.name = newUserName;
 
             var userViewModel = new UserViewModel(user);
@@ -831,72 +829,6 @@ namespace SignalR.Samples.Hubs.Chat
                 Caller.changeUserName(userViewModel, oldUserName, newUserName);
             }
             Caller.userNameChanged(newUserName);
-        }
-
-        private static void Sweep(ChatRepository db)
-        {
-            if (_sweeping)
-            {
-                return;
-            }
-
-            _sweeping = true;
-
-            MarkInactiveUsers(db);
-
-            RemoveInactiveRooms(db);
-
-            _sweeping = false;
-        }
-
-        private static void MarkInactiveUsers(ChatRepository db)
-        {
-            var clients = GetClients<Chat>();
-
-            var inactiveUsers = new List<ChatUser>();
-
-            foreach (var user in db.Users)
-            {
-                var elapsed = DateTime.UtcNow - user.LastActivity;
-                if (elapsed.TotalMinutes > 5)
-                {
-                    user.Active = false;
-                    inactiveUsers.Add(user);
-                }
-            }
-
-
-            var roomGroups = from u in inactiveUsers
-                             from r in u.Rooms
-                             select new { User = u, Room = r } into tuple
-                             group tuple by tuple.Room into g
-                             select new
-                                        {
-                                            Room = g.Key,
-                                            Users = g.Select(t => new UserViewModel(t.User))
-                                        };
-
-            foreach (var roomGroup in roomGroups)
-            {
-                clients[roomGroup.Room.Name].markInactive(roomGroup.Users).Wait();
-            }
-        }
-
-        private static void RemoveInactiveRooms(ChatRepository db)
-        {
-            var inactiveRooms = new List<ChatRoom>();
-            foreach (var room in db.Rooms)
-            {
-                var elapsed = DateTime.UtcNow - room.LastActivity;
-                if (room.Users.Count == 0 && elapsed.TotalMinutes > 30)
-                {
-                    inactiveRooms.Add(room);
-                }
-            }
-            foreach (var room in inactiveRooms)
-            {
-                db.Rooms.Remove(room);
-            }
         }
 
         private ChatUser AddUser(string name)
@@ -917,7 +849,7 @@ namespace SignalR.Samples.Hubs.Chat
                 ClientId = Context.ClientId
             };
 
-            _db.Users.Add(user);
+            _repo.Add(user);
 
             Caller.name = user.Name;
             Caller.hash = user.Hash;
@@ -941,7 +873,7 @@ namespace SignalR.Samples.Hubs.Chat
             }
             var chatRoom = new ChatRoom { Name = name };
 
-            _db.Rooms.Add(chatRoom);
+            _repo.Add(chatRoom);
 
             return chatRoom;
         }
@@ -976,7 +908,7 @@ namespace SignalR.Samples.Hubs.Chat
                 throw new InvalidOperationException("Use '/join room' to join a room.");
             }
 
-            ChatRoom chatRoom = _db.Rooms.FirstOrDefault(r => r.Name.Equals(room, StringComparison.OrdinalIgnoreCase));
+            ChatRoom chatRoom = _repo.Rooms.FirstOrDefault(r => r.Name.Equals(room, StringComparison.OrdinalIgnoreCase));
 
             if (chatRoom == null)
             {
@@ -1000,7 +932,7 @@ namespace SignalR.Samples.Hubs.Chat
                 throw new InvalidOperationException("You don't have a name. Pick a name using '/nick nickname'.");
             }
 
-            ChatUser user = _db.Users.FirstOrDefault(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            ChatUser user = _repo.Users.FirstOrDefault(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
             if (user == null)
             {
@@ -1015,13 +947,14 @@ namespace SignalR.Samples.Hubs.Chat
 
             user.Active = true;
             user.LastActivity = DateTime.UtcNow;
+            _repo.Update();
 
             return user;
         }
 
         private void EnsureUserNameIsAvailable(string userName)
         {
-            var userExists = _db.Users.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
+            var userExists = _repo.Users.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
 
             if (userExists)
             {
