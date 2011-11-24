@@ -26,7 +26,6 @@
 
 .messages li {
     list-style-type: none;
-    padding: 3px;
 }
 
 .messages li img.gravatar {
@@ -82,6 +81,12 @@
     border-bottom: 0px;
     color: #000;
     height: 15px;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-top-right-radius: 3px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-topright: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
 }
 
 #tabs li.current {
@@ -158,9 +163,31 @@ li.room {
 
 .notification {
     color: #bbb;
+    border-bottom: 1px solid #f1f1f1;
+    padding: 5px;
 }
 
 .message {
+    border-bottom: 1px solid #f1f1f1;
+    padding: 5px;
+}
+
+.message .left {
+    width: 100px;
+    margin-right: 10px;
+}
+
+.message .middle {
+    width: 69%;
+    margin-right: 15px;
+}
+
+.message .right {
+    float: right;
+}
+
+.message > div {
+    float: left;
 }
 
 .highlight {
@@ -211,3 +238,29 @@ li.room {
 .collapsible_box {
     border: 1px solid #DDD;
 }
+
+/* CLEAR FIX */
+.clearfix:after {
+    clear: both;
+    display: block;
+    content: " ";
+    height: 0px;
+    visibility: hidden;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
+/* Hide these rules from IE-mac \*/
+* html .clearfix {
+    height: 1%;
+}
+.clearfix {
+    display: block;
+}
+li.clearfix {
+    display: list-item;
+}
+
+/* CLEAR FIX */

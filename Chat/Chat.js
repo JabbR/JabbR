@@ -183,7 +183,7 @@ $(function () {
     chat.addMessageContent = function (id, content) {
         var nearEnd = $('.messages.current').isNearTheEnd();
 
-        var e = $('#m-' + id).append(content)
+        var e = $('#m-' + id + ' .middle').append(content)
                              .resizeMobileContent();
 
         updateUnread();
