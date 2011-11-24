@@ -740,7 +740,7 @@ $(function () {
         var $message = $(this).closest('.message');
         var nearEnd = $('.messages.current').isNearTheEnd();
 
-        $(this).next().toggle(function () {
+        $(this).next().toggle(0, function () {
             if (nearEnd) {
                 scrollToBottom();
             }
@@ -789,7 +789,8 @@ $(function () {
 
     window.captureDocumentWrite = function (documentWritePath, headerText, elementToAppendTo) {
         $.fn.captureDocumentWrite(documentWritePath, function (content) {
-            var nearEnd = $('.messages.current').isNearTheEnd();
+            var nearEnd = $('.messages.current').isNearTheEnd(),
+                $message = elementToAppendTo.closest('.message');
 
             //Add headers so we can collapse the captured data
             var collapsible = $('<div class="captureDocumentWrite_collapsible"><h3>' + headerText + ' (click to show/hide)</h3><div class="captureDocumentWrite_content"></div></div>');
@@ -802,6 +803,7 @@ $(function () {
                     if (nearEndOnToggle) {
                         scrollToBottom();
                     }
+                    updateMessageHeight($message);
                 });
                 return false;
             });
@@ -813,7 +815,7 @@ $(function () {
 
             elementToAppendTo.append(collapsible);
 
-            updateMessageHeight(elementToAppendTo.closest('.message'));
+            updateMessageHeight($message);
 
             if (nearEnd) {
                 scrollToBottom();
