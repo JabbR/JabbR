@@ -110,6 +110,10 @@ h2 {
     background-color: #eee;
 }
 
+#tabs li.current:hover {
+    background-color: #fff;
+}
+
 .close-icon {
     width: 16px;
     height: 16px;
