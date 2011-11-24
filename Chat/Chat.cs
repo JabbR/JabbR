@@ -190,6 +190,7 @@ namespace SignalR.Samples.Hubs.Chat
             };
 
             chatRoom.Messages.Add(chatMessage);
+            chatRoom.LastActivity = DateTime.UtcNow;
 
             var messageViewModel = new MessageViewModel(chatMessage, chatRoom);
 
@@ -539,6 +540,8 @@ namespace SignalR.Samples.Hubs.Chat
         private void HandleLeave(ChatRoom room, ChatUser user)
         {
             room.Users.Remove(user);
+            room.LastActivity = DateTime.UtcNow;
+
             user.Rooms.Remove(room);
 
             var userViewModel = new UserViewModel(user, room);
@@ -660,6 +663,7 @@ namespace SignalR.Samples.Hubs.Chat
 
             // Add this user to the list of room's users
             newRoom.Users.Add(user);
+            newRoom.LastActivity = DateTime.UtcNow;
 
             // Set the room on the caller
             Caller.room = newRoom.Name;
@@ -838,6 +842,15 @@ namespace SignalR.Samples.Hubs.Chat
 
             _sweeping = true;
 
+            MarkInactiveUsers(db);
+
+            RemoveInactiveRooms(db);
+
+            _sweeping = false;
+        }
+
+        private static void MarkInactiveUsers(ChatRepository db)
+        {
             var clients = GetClients<Chat>();
 
             var inactiveUsers = new List<ChatUser>();
@@ -852,22 +865,38 @@ namespace SignalR.Samples.Hubs.Chat
                 }
             }
 
+
             var roomGroups = from u in inactiveUsers
                              from r in u.Rooms
                              select new { User = u, Room = r } into tuple
                              group tuple by tuple.Room into g
                              select new
-                             {
-                                 Room = g.Key,
-                                 Users = g.Select(t => new UserViewModel(t.User))
-                             };
+                                        {
+                                            Room = g.Key,
+                                            Users = g.Select(t => new UserViewModel(t.User))
+                                        };
 
             foreach (var roomGroup in roomGroups)
             {
                 clients[roomGroup.Room.Name].markInactive(roomGroup.Users).Wait();
             }
+        }
 
-            _sweeping = false;
+        private static void RemoveInactiveRooms(ChatRepository db)
+        {
+            var inactiveRooms = new List<ChatRoom>();
+            foreach (var room in db.Rooms)
+            {
+                var elapsed = DateTime.UtcNow - room.LastActivity;
+                if (room.Users.Count == 0 && elapsed.TotalMinutes > 30)
+                {
+                    inactiveRooms.Add(room);
+                }
+            }
+            foreach (var room in inactiveRooms)
+            {
+                db.Rooms.Remove(room);
+            }
         }
 
         private ChatUser AddUser(string name)
