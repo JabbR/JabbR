@@ -43,6 +43,13 @@ $(function () {
         return hr + ":" + mins + ":" + seconds + " " + ap;
     }
 
+    function trimUserName(name) {
+        if (name.length > 21) {
+            return name.substr(0, 18) + '...';
+        }
+        return name;
+    }
+
     function padZero(s) {
         s = s.toString();
         if (s.length == 1) {
@@ -203,6 +210,7 @@ $(function () {
         // var html = converter.makeHtml(message.Content);
 
         var data = {
+            trimmedName : trimUserName(message.User.Name),
             name: message.User.Name,
             hash: message.User.Hash,
             message: message.Content,

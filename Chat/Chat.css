@@ -173,13 +173,18 @@ li.room {
 }
 
 .message .left {
-    width: 100px;
+    width: 175px;
     margin-right: 10px;
 }
 
+.message .left strong {
+    vertical-align: middle;
+}
+
 .message .middle {
-    width: 69%;
+    width: 60%;
     margin-right: 15px;
+    margin-top: 3px;
 }
 
 .message .right {
