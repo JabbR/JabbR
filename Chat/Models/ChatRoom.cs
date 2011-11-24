@@ -12,6 +12,8 @@ namespace Chat.Models
         public DateTime LastActivity { get; set; }
         public DateTime? LastNudged { get; set; }
         public string Name { get; set; }
+
+        public virtual ChatUser Owner { get; set; }
         
         public virtual ICollection<ChatMessage> Messages { get; set; }
         public virtual ICollection<ChatUser> Users { get; set; }

@@ -110,11 +110,13 @@ namespace SignalR.Samples.Hubs.Chat
                     var userRoom = item;
                     var room = _repo.Rooms.Where(x => x.Name == userRoom).FirstOrDefault();
 
-                    // If user has room name in the cookie but it doesn't exists create it!
+                    // If user has room name in the cookie but it doesn't exists skip it!
                     if (room == null)
                     {
-                        room = AddRoom(userRoom);
+                        room = AddRoom(user, userRoom);
                     }
+
+                    FixOwner(user, room);
 
                     // Check if the user is already in the room if so let him rejoin
                     if (IsUserInRoom(room, user))
@@ -134,6 +136,7 @@ namespace SignalR.Samples.Hubs.Chat
                 // retrieve user rooms
                 foreach (var room in GetUserRooms(user))
                 {
+                    FixOwner(user, room);
                     // handle the join of the room
                     HandleRejoin(room, user);
                 }
@@ -144,6 +147,15 @@ namespace SignalR.Samples.Hubs.Chat
                 Caller.addUser(userViewModel);
             }
             return true;
+        }
+
+        private static void FixOwner(ChatUser user, ChatRoom room)
+        {
+            if (room.Owner != null &&
+                room.Owner.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                room.Owner = user;
+            }
         }
 
         public void Send(string content)
@@ -439,10 +451,53 @@ namespace SignalR.Samples.Hubs.Chat
 
                         return true;
                     }
+                    else if (commandName.Equals("kick", StringComparison.OrdinalIgnoreCase))
+                    {
+                        HandleKick(tuple.Item1, tuple.Item2, parts);
+
+                        return true;
+                    }
 
                     throw new InvalidOperationException(String.Format("'{0}' is not a valid command.", parts[0]));
                 }
             }
+        }
+
+        private void HandleKick(ChatUser chatUser, ChatRoom chatRoom, string[] parts)
+        {
+            if (chatRoom.Owner != chatUser)
+            {
+                throw new InvalidOperationException("You are not the owner of " + chatRoom.Name);
+            }
+
+            if (parts.Length == 1)
+            {
+                throw new InvalidOperationException("Who are you trying to kick?");
+            }
+
+            if (chatRoom.Users.Count == 1)
+            {
+                throw new InvalidOperationException("You're the only person in here...");
+            }
+
+            string targetUserName = parts[1];
+            var targetUser = _repo.Users.FirstOrDefault(s => s.Name.Equals(targetUserName, StringComparison.OrdinalIgnoreCase));
+
+            if (targetUser == null)
+            {
+                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", targetUserName));
+            }
+
+            if (targetUser == chatUser)
+            {
+                throw new InvalidOperationException("Why would you want to kick yourself?");
+            }
+
+            // Kick the user
+            HandleLeave(chatRoom, targetUser);
+
+            // Tell the user that they were kicked
+            Clients[targetUser.ClientId].kick(chatRoom.Name);
         }
 
         private void HandleWho(string[] parts)
@@ -545,7 +600,7 @@ namespace SignalR.Samples.Hubs.Chat
             var userViewModel = new UserViewModel(user, room);
             Clients[room.Name].leave(userViewModel).Wait();
 
-            RemoveFromGroup(room.Name).Wait();
+            GroupManager.RemoveFromGroup(user.ClientId, room.Name).Wait();
         }
 
         private void HandleMe(ChatRoom room, ChatUser user, string[] parts)
@@ -646,7 +701,7 @@ namespace SignalR.Samples.Hubs.Chat
             ChatRoom newRoom = _repo.Rooms.FirstOrDefault(r => r.Name.Equals(newRoomName, StringComparison.OrdinalIgnoreCase));
             if (newRoom == null)
             {
-                newRoom = AddRoom(newRoomName);
+                newRoom = AddRoom(user, newRoomName);
             }
 
             JoinRoom(user, newRoom, isActive: true);
@@ -867,7 +922,7 @@ namespace SignalR.Samples.Hubs.Chat
             return user;
         }
 
-        private ChatRoom AddRoom(string name)
+        private ChatRoom AddRoom(ChatUser owner, string name)
         {
             if (name.Equals("Lobby", StringComparison.OrdinalIgnoreCase))
             {
@@ -877,7 +932,8 @@ namespace SignalR.Samples.Hubs.Chat
             {
                 throw new InvalidOperationException(String.Format("'{0}' is not a valid room name.", name));
             }
-            var chatRoom = new ChatRoom { Name = name };
+
+            var chatRoom = new ChatRoom { Name = name, Owner = owner };
 
             _repo.Add(chatRoom);
 

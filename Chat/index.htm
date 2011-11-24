@@ -33,7 +33,8 @@
     </script>
     <script id="new-user-template" type="text/x-jquery-tmpl">
         <li class="user u-${id}">
-            <img src="http://www.gravatar.com/avatar/${hash}?s=16&d=mm" class="gravatar" /> ${name}
+            <img src="http://www.gravatar.com/avatar/${hash}?s=16&d=mm" class="gravatar" /> 
+            <span>{{if owner}}@&nbsp;{{/if}}${name}</span>
         </li>
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">

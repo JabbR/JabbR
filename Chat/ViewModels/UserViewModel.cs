@@ -15,12 +15,16 @@ namespace Chat.ViewModels
             Id = user.Id;
             Active = user.Active;
             Room = room == null ? null : room.Name;
+            IsOwner = room == null ? false : room.Owner == user;
         }
 
         public string Name { get; set; }
         public string Hash { get; set; }
         public string Id { get; set; }
         public bool Active { get; set; }
+
+        // REVIEW: These don't belong in this view model
         public string Room { get; set; }
+        public bool IsOwner { get; set; }
     }
 }

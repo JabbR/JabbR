@@ -290,7 +290,8 @@ $(function () {
         var data = {
             name: user.Name,
             hash: user.Hash,
-            id: user.Id
+            id: user.Id,
+            owner: user.IsOwner
         };
 
         if (user.Id === this.id) {
@@ -483,6 +484,10 @@ $(function () {
 
             this.room = null;
         }
+    };
+
+    chat.kick = function (room) {
+        addMessage('You were kicked from ' + room, 'notification');
     };
 
     $('#send-message').submit(function () {
