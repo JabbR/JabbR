@@ -216,6 +216,7 @@ $(function () {
         if (nearEnd) {
             setTimeout(function () {
                 scrollToBottom();
+                updateMessageHeight($('#m-' + id));
             }, 150);
         }
 
@@ -702,12 +703,14 @@ $(function () {
     });
 
     $(document).on('click', 'h3.collapsible_title', function () {
+        var $message = $(this).closest('.message');
         var nearEnd = $('.messages.current').isNearTheEnd();
 
         $(this).next().toggle(function () {
             if (nearEnd) {
                 scrollToBottom();
             }
+            updateMessageHeight($message);
         });
     });
 
@@ -721,61 +724,67 @@ $(function () {
         historyLocation = chatHistory.length;
     }
 
-});
+    // This stuff is to support TweetContentProvider, but should be extracted out if other content providers need custom CSS
 
-// This stuff is to support TweetContentProvider, but should be extracted out if other content providers need custom CSS
-
-function addTweet(tweet) {
-    // Keep track of whether we're need the end, so we can auto-scroll once the tweet is added.
-    var nearEnd = $('.messages.current').isNearTheEnd();
-
-    // Grab any elements we need to process.
-    var elements = $('div.tweet_' + tweet.id_str)
-    // Strip the classname off, so we don't process this again if someone posts the same tweet.
-        .removeClass('tweet_' + tweet.id_str)
-    // Add the CSS class for formatting (this is so we don't get height/border while loading).
-        .addClass('tweet');
-
-    // Process the template, and add it in to the div.
-    $('#tweet-template').tmpl(tweet)
-        .appendTo(elements);
-
-    // If near the end, scroll.
-    if (nearEnd) {
-        scrollToBottom();
-    }
-}
-
-// End of Tweet Content Provider JS
-
-function captureDocumentWrite(documentWritePath, headerText, elementToAppendTo) {
-    $.fn.captureDocumentWrite(documentWritePath, function (content) {
+    window.addTweet = function (tweet) {
+        // Keep track of whether we're need the end, so we can auto-scroll once the tweet is added.
         var nearEnd = $('.messages.current').isNearTheEnd();
 
-        //Add headers so we can collapse the captured data
-        var collapsible = $('<div class="captureDocumentWrite_collapsible"><h3>' + headerText + ' (click to show/hide)</h3><div class="captureDocumentWrite_content"></div></div>');
-        $('.captureDocumentWrite_content', collapsible).append(content);
+        // Grab any elements we need to process.
+        var elements = $('div.tweet_' + tweet.id_str)
+        // Strip the classname off, so we don't process this again if someone posts the same tweet.
+        .removeClass('tweet_' + tweet.id_str)
+        // Add the CSS class for formatting (this is so we don't get height/border while loading).
+        .addClass('tweet');
 
-        //When the header of captured content is clicked, we want to show or hide the content.
-        $('h3', collapsible).click(function () {
-            var nearEndOnToggle = $('.messages.current').isNearTheEnd();
-            $(this).next().toggle(0, function () {
-                if (nearEndOnToggle) {
-                    scrollToBottom();
-                }
-            });
-            return false;
+        // Process the template, and add it in to the div.
+        $('#tweet-template').tmpl(tweet)
+        .appendTo(elements);
+
+        $.each(elements.closest('.message'), function () {
+            updateMessageHeight($(this));
         });
 
-        //Since IE doesn't render the css if the links are not in the head element, we move those to the head element
-        var links = $('link', collapsible);
-        links.remove();
-        $('head').append(links);
-
-        elementToAppendTo.append(collapsible);
-
+        // If near the end, scroll.
         if (nearEnd) {
             scrollToBottom();
         }
-    });
-}
+    }
+
+    // End of Tweet Content Provider JS
+
+    window.captureDocumentWrite = function (documentWritePath, headerText, elementToAppendTo) {
+        $.fn.captureDocumentWrite(documentWritePath, function (content) {
+            var nearEnd = $('.messages.current').isNearTheEnd();
+
+            //Add headers so we can collapse the captured data
+            var collapsible = $('<div class="captureDocumentWrite_collapsible"><h3>' + headerText + ' (click to show/hide)</h3><div class="captureDocumentWrite_content"></div></div>');
+            $('.captureDocumentWrite_content', collapsible).append(content);
+
+            //When the header of captured content is clicked, we want to show or hide the content.
+            $('h3', collapsible).click(function () {
+                var nearEndOnToggle = $('.messages.current').isNearTheEnd();
+                $(this).next().toggle(0, function () {
+                    if (nearEndOnToggle) {
+                        scrollToBottom();
+                    }
+                });
+                return false;
+            });
+
+            //Since IE doesn't render the css if the links are not in the head element, we move those to the head element
+            var links = $('link', collapsible);
+            links.remove();
+            $('head').append(links);
+
+            elementToAppendTo.append(collapsible);
+
+            updateMessageHeight(elementToAppendTo.closest('.message'));
+
+            if (nearEnd) {
+                scrollToBottom();
+            }
+        });
+    }
+
+});
