@@ -53,6 +53,7 @@ namespace SignalR.Samples.Hubs.Chat
             HttpCookie userNameCookie = Context.Cookies["username"];
             HttpCookie userRoomCookie = Context.Cookies["userroom"];
             HttpCookie userHashCookie = Context.Cookies["userhash"];
+            HttpCookie currentRoomCookie = Context.Cookies["currentroom"];
 
             // setup user 
             ChatUser user = null;
@@ -90,6 +91,11 @@ namespace SignalR.Samples.Hubs.Chat
             var userViewModel = new UserViewModel(user);
 
             Caller.room = null;
+
+            if (currentRoomCookie != null)
+            {
+                Caller.currentRoom = HttpUtility.UrlDecode(currentRoomCookie.Value);
+            }
 
             // Set some client state
             Caller.id = user.Id;
@@ -643,10 +649,10 @@ namespace SignalR.Samples.Hubs.Chat
                 newRoom = AddRoom(newRoomName);
             }
 
-            JoinRoom(user, newRoom);
+            JoinRoom(user, newRoom, isActive: true);
         }
 
-        private void JoinRoom(ChatUser user, ChatRoom newRoom)
+        private void JoinRoom(ChatUser user, ChatRoom newRoom, bool isActive = false)
         {
             var userViewModel = new UserViewModel(user, newRoom);
 
@@ -661,7 +667,7 @@ namespace SignalR.Samples.Hubs.Chat
 
             // Set the room on the caller
             Caller.room = newRoom.Name;
-            Caller.joinRoom(newRoom.Name);
+            Caller.joinRoom(newRoom.Name, isActive);
 
             // Tell the people in this room that you've joined
             userViewModel.Room = newRoom.Name;

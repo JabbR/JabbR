@@ -149,11 +149,12 @@ $(function () {
 
     window.scrollToBottom = scrollToBottom;
 
-    chat.joinRoom = function (room) {
-
+    chat.joinRoom = function (room, makeCurrent) {
         var roomId = getRoomId(room);
         addRoom(roomId, room);
-        showRoom(roomId);
+        if (makeCurrent) {
+            showRoom(roomId);
+        }
 
         clearUsers(roomId);
 
@@ -176,7 +177,9 @@ $(function () {
                 });
             });
 
-        addMessage('Entered ' + room, 'notification');
+        if (makeCurrent) {
+            addMessage('Entered ' + room, 'notification');
+        }
         updateCookie();
     };
 
@@ -441,7 +444,6 @@ $(function () {
         var roomId = getRoomId(room);
 
         if (this.id !== user.Id) {
-
             // remove user from specified room
             $('#users-' + roomId + ' li.u-' + user.Id).addClass('removing').fadeOut('slow', function () {
                 $(this).remove();
@@ -589,6 +591,10 @@ $(function () {
         if (chat.hash) {
             $.cookie('userhash', chat.hash, { path: '/', expires: 30 });
         }
+
+        if (chat.currentRoom) {
+            $.cookie('currentroom', chat.currentRoom, { path: '/', expires: 30 });
+        }
     }
 
     $(window).focus();
@@ -651,9 +657,9 @@ $(function () {
             return;
         }
 
-        $('<li/>').attr('id', 'tabs-' + roomId).html(room).appendTo($('#tabs')).addClass('current').data('name', room);
-        $('<ul/>').attr('id', 'messages-' + roomId).addClass('messages').appendTo($('#chat-area')).addClass('current');
-        $('<ul/>').attr('id', 'users-' + roomId).addClass('users').appendTo($('#chat-area')).addClass('current');
+        $('<li/>').attr('id', 'tabs-' + roomId).html(room).appendTo($('#tabs')).data('name', room);
+        $('<ul/>').attr('id', 'messages-' + roomId).addClass('messages').appendTo($('#chat-area')).hide();
+        $('<ul/>').attr('id', 'users-' + roomId).addClass('users').appendTo($('#chat-area')).hide();
     }
 
     function removeRoom(roomId) {
@@ -682,6 +688,9 @@ $(function () {
 
         }
 
+        chat.currentRoom = room;
+        updateCookie();
+
         scrollToBottom();
         $('#new-message').focus();
 
@@ -694,7 +703,11 @@ $(function () {
                 addMessage(e, 'error');
             })
             .done(function (success) {
-                showRoom('lobby');
+                var room = this.currentRoom || 'lobby';
+                var roomId = getRoomId(room);
+                addRoom(roomId, room);
+                showRoom(roomId);
+
                 if (success === false) {
                     $.cookie('userid', '');
                     addMessage('Choose a name using "/nick nickname".', 'notification');
