@@ -219,6 +219,10 @@
     <Compile Include="Migrations\201111240945284_Initial.Designer.cs">
       <DependentUpon>201111240945284_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201111250306100_RoomOwners.cs" />
+    <Compile Include="Migrations\201111250306100_RoomOwners.Designer.cs">
+      <DependentUpon>201111250306100_RoomOwners.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Settings.cs" />
     <Compile Include="Models\ChatMessage.cs" />
     <Compile Include="Models\ChatRoom.cs" />
