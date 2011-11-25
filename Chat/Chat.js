@@ -342,12 +342,15 @@ $(function () {
     };
 
     chat.changeUserName = function (user, oldName, newName) {
-        var roomId = getRoomId(user.Room);
-        $('#users-' + roomId + ' .u-' + user.Id).replaceWith(
+        var roomId = getRoomId(user.Room),
+            $user = $('#users-' + roomId + ' .u-' + user.Id);
+
+        $user.replaceWith(
                 $('#new-user-template').tmpl({
                     name: user.Name,
                     hash: user.Hash,
-                    id: user.Id
+                    id: user.Id,
+                    owner: user.IsOwner
                 })
         );
 
@@ -369,12 +372,15 @@ $(function () {
     chat.changeGravatar = function (currentUser) {
 
         if (currentUser.Room) {
-            var roomId = getRoomId(currentUser.Room);
-            $('#users-' + roomId + ' .u-' + currentUser.Id).replaceWith(
+            var roomId = getRoomId(currentUser.Room),
+                user = $('#users-' + roomId + ' .u-' + currentUser.Id);
+
+            $user.replaceWith(
                 $('#new-user-template').tmpl({
                     name: currentUser.Name,
                     hash: currentUser.Hash,
-                    id: currentUser.Id
+                    id: currentUser.Id,
+                    owner: currentUser.IsOwner
                 })
             );
         }
