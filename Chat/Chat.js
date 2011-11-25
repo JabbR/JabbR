@@ -664,11 +664,7 @@ $(function () {
         get: function () {
             return $('.users.current li')
                 .map(function () {
-                    var item = trim($(this).text());
-                    if (item.length && item[0] === '@') {
-                        item = trim(item.substr(1));
-                    }
-                    return item;
+                    return trim($(this).data('name'));
                 })
                 .get();
         }
