@@ -1,19 +1,30 @@
 ﻿body {
     font-family: Trebuchet MS;
-    font-size: 13px; 
-}
-
-h2 {
-    margin-bottom: 0px;
+    font-size: 13px;
+    background-color: #e5e5e5;
 }
 
 #chat-area {
     position: absolute;
     top: 75px;
     bottom: 10px;
-    left: 10px;
+    left: 30px;
     right: 10px;
     min-height: 450px;
+}
+
+#heading {
+    background-color: #5d7d5f;
+    color: #fff;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0 5px 0 5px;
+}
+
+#heading h2 {
+    margin-left: 5px;
 }
 
 .messages {
@@ -26,6 +37,7 @@ h2 {
     position: absolute;
     top: 24px;
     bottom: 70px;
+    background-color: #fff;
 }
 
 .messages li {
@@ -38,9 +50,6 @@ h2 {
 }
 
 .users {
-    border-right: 1px solid #ccc;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
     margin-left: 0px;
     padding-left: 0px;
     overflow: auto;
@@ -48,7 +57,7 @@ h2 {
     white-space: nowrap;
     position: absolute;
     top: 24px;
-    left: 70%;
+    left: 71%;
     width: 25%;
     bottom: 70px;
     margin-left: 2px; /* for #messages border */
@@ -63,12 +72,9 @@ h2 {
     background-image: url('Content/images/keyboard.png');
     background-repeat: no-repeat;
     background-position: right center;
-    background-color: #f9f9f9;
 }
 
 #tabs {
-    position: absolute;
-    top: 0;
     padding: 0;
     margin: 0;
     cursor: pointer;
@@ -80,26 +86,15 @@ h2 {
     padding: 4px 15px;
     margin: 0px 4px 0px 0px;
     font-weight: bold;
-    background-color: #f5f5f5;
-    border: 1px solid #ccc;
+    background-color: #3b5b3d;
     border-bottom: 0px;
-    color: #000;
+    color: #fff;
     height: 15px;
-    -webkit-border-top-left-radius: 3px;
-    -webkit-border-top-right-radius: 3px;
-    -moz-border-radius-topleft: 3px;
-    -moz-border-radius-topright: 3px;
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
 }
 
 #tabs li.current {
-    background-color: #fff;
-    color: #000;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #fff;
+    background-color: #e5e5e5;
+    color: #32aa52;
 }
 
 #tabs li.unread {
@@ -107,11 +102,12 @@ h2 {
 }
 
 #tabs li:hover {
-    background-color: #eee;
+    background-color: #e5e5e5;
+    color: #000;
 }
 
 #tabs li.current:hover {
-    background-color: #fff;
+    background-color: #e5e5e5;
 }
 
 .close-icon {
