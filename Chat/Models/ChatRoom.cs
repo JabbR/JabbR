@@ -13,6 +13,8 @@ namespace Chat.Models
         public DateTime? LastNudged { get; set; }
         public string Name { get; set; }
 
+        public int OwnerId { get; set; }
+        [ForeignKey("OwnerId")]
         public virtual ChatUser Owner { get; set; }
         
         public virtual ICollection<ChatMessage> Messages { get; set; }
