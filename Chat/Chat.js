@@ -64,6 +64,10 @@ $(function () {
         var dt = new Date(ticks);
         return formatTime(dt);
     }
+    
+    function isiPad() {
+        return (navigator.platform.indexOf("iPad") != -1);
+    }
 
     function clearMessages(roomId) {
         $('#messages-' + roomId).html('');
@@ -746,7 +750,10 @@ $(function () {
         updateCookie();
 
         scrollToBottom();
-        $('#new-message').focus();
+
+        if (isiPad() === false) {
+            $('#new-message').focus();
+        }
 
         updateRoomMessageDimensions(roomId);
     }
