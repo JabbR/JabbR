@@ -573,12 +573,13 @@ namespace SignalR.Samples.Hubs.Chat
 
         private void HandleLeave(ChatUser user, string[] parts)
         {
-            if (String.IsNullOrWhiteSpace(parts[1]))
+            string roomName = parts[1];
+            if (String.IsNullOrWhiteSpace(roomName))
             {
                 throw new InvalidOperationException("Room name cannot be blank!");
             }
 
-            var room = _repo.Rooms.FirstOrDefault(r => r.Name.Equals(parts[1], StringComparison.OrdinalIgnoreCase));
+            var room = _repo.Rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
 
             if (room == null)
             {
