@@ -129,22 +129,35 @@ $(function () {
         return escape(room.toLowerCase()).replace(/[^a-z0-9]/, '_');
     }
 
-    function updateMessageHeight($message) {
+    function updateMessageDimensions($message) {
+        // Clear the previous heights and widths
         $message.css('height', '');
+        $message.find('.middle').css('width', '');
         $message.find('.left').css('height', '');
 
         var $left = $message.find('.left'),
-            height = $message.height(),
-            extra = $left.outerHeight() - $left.height(),
-            calculated = height - extra;
+            $middle = $message.find('.middle'),
+            $right = $message.find('.right'),
+            width = $message.width(),
+            leftWidth = $left.outerWidth(true),
+            rightWidth = $right.outerWidth(true),
+            middleExtra = $middle.outerWidth(true) - $middle.width(),
+            middleWidth = width - (leftWidth + rightWidth + middleExtra) - 20;
+
+        $middle.css('width', middleWidth + 'px');
+
+        var height = $message.height(),
+            leftExtra = $left.outerHeight() - $left.height(),
+            leftHeightCalculated = height - leftExtra;
+
         $message.css('height', height + 'px');
-        $left.css('height', calculated + 'px');
+        $left.css('height', leftHeightCalculated + 'px');
     }
 
-    function updateRoomMessageHeights(roomId) {
+    function updateRoomMessageDimensions(roomId) {
         var $messages = $('#messages-' + roomId + ' .message');
         $.each($messages, function () {
-            updateMessageHeight($(this));
+            updateMessageDimensions($(this));
         });
     }
 
@@ -220,11 +233,11 @@ $(function () {
         if (nearEnd) {
             setTimeout(function () {
                 scrollToBottom();
-                updateMessageHeight($('#m-' + id));
+                updateMessageDimensions($('#m-' + id));
             }, 150);
         }
 
-        updateMessageHeight($('#m-' + id));
+        updateMessageDimensions($('#m-' + id));
     };
 
     chat.addMessage = function (message, restore) {
@@ -275,7 +288,7 @@ $(function () {
 
         var $message = $('#m-' + message.Id);
         if ($message.is(':visible')) {
-            updateMessageHeight($message);
+            updateMessageDimensions($message);
         }
 
         if (!restore && nearEnd) {
@@ -720,7 +733,7 @@ $(function () {
         scrollToBottom();
         $('#new-message').focus();
 
-        updateRoomMessageHeights(roomId);
+        updateRoomMessageDimensions(roomId);
     }
 
     $.connection.hub.start(function () {
@@ -749,7 +762,7 @@ $(function () {
             if (nearEnd) {
                 scrollToBottom();
             }
-            updateMessageHeight($message);
+            updateMessageDimensions($message);
         });
     });
 
@@ -781,7 +794,7 @@ $(function () {
         .appendTo(elements);
 
         $.each(elements.closest('.message'), function () {
-            updateMessageHeight($(this));
+            updateMessageDimensions($(this));
         });
 
         // If near the end, scroll.
@@ -808,7 +821,7 @@ $(function () {
                     if (nearEndOnToggle) {
                         scrollToBottom();
                     }
-                    updateMessageHeight($message);
+                    updateMessageDimensions($message);
                 });
                 return false;
             });
@@ -820,7 +833,7 @@ $(function () {
 
             elementToAppendTo.append(collapsible);
 
-            updateMessageHeight($message);
+            updateMessageDimensions($message);
 
             if (nearEnd) {
                 scrollToBottom();

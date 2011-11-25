@@ -200,14 +200,13 @@ li.room {
 }
 
 .message .middle {
-    width: 60%;
-    margin-right: 15px;
     margin-top: 3px;
     word-wrap: break-word;
 }
 
 .message .right {
     float: right;
+    width: 70px;
 }
 
 .message .right .time {
