@@ -22,16 +22,17 @@ namespace Chat.App_Start
         private static bool _sweeping;
         private static Timer _timer;
         private static Func<IJabbrRepository> repoCreator;
+        private static bool _persistChat;
 
         public static void PreAppStart()
         {
             var kernel = new StandardKernel();
 
             var setting = ConfigurationManager.AppSettings["persistChat"];
-            bool persistChat = false;
+            _persistChat = false;
             if (!String.IsNullOrEmpty(setting) &&
-                Boolean.TryParse(setting, out persistChat) &&
-                persistChat)
+                Boolean.TryParse(setting, out _persistChat) &&
+                _persistChat)
             {
                 kernel.Bind<JabbrContext>()
                     .To<JabbrContext>()
@@ -54,8 +55,10 @@ namespace Chat.App_Start
 
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
 
-            if (persistChat)
+            if (_persistChat)
+            {
                 new DbMigrator(new Settings()).Update();
+            }
 
             _timer = new Timer(_ => Sweep(), null, _sweepInterval, _sweepInterval);
         }
@@ -69,16 +72,21 @@ namespace Chat.App_Start
 
             _sweeping = true;
 
-            using (var repo = repoCreator())
+            try
             {
-                MarkInactiveUsers(repo);
+                using (var repo = repoCreator())
+                {
+                    MarkInactiveUsers(repo);
 
-                RemoveInactiveRooms(repo);
+                    RemoveInactiveRooms(repo);
 
-                repo.Update();
+                    repo.Update();
+                }
             }
-
-            _sweeping = false;
+            finally
+            {
+                _sweeping = false;
+            }
         }
 
         private static void MarkInactiveUsers(IJabbrRepository repo)
@@ -115,6 +123,12 @@ namespace Chat.App_Start
 
         private static void RemoveInactiveRooms(IJabbrRepository repo)
         {
+            // Don't remove rooms if the chat is persistant
+            if (_persistChat)
+            {
+                return;
+            }
+
             var inactiveRooms = new List<ChatRoom>();
             foreach (var room in repo.Rooms)
             {
