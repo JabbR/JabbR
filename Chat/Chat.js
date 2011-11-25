@@ -64,7 +64,7 @@ $(function () {
         var dt = new Date(ticks);
         return formatTime(dt);
     }
-    
+
     function isiPad() {
         return (navigator.platform.indexOf("iPad") != -1);
     }
@@ -739,6 +739,9 @@ $(function () {
             $('#users-lobby').html('');
             chat.getRooms()
                 .done(function (rooms) {
+                    // Empty the lobby rooms
+                    $('#users-lobby').empty();
+
                     $.each(rooms, function () {
                         $('<li/>').addClass('room').data('name', this.Name).html(this.Name + ' (' + this.Count + ')').appendTo('#users-lobby');
                     });
