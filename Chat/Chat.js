@@ -95,9 +95,10 @@ $(function () {
     }
 
     function addMessage(content, type, room) {
-        var m = $('.messages.current');
+        var m = $('.messages.current'),
+            roomId = null;
         if (room) {
-            var roomId = getRoomId(room);
+            roomId = getRoomId(room);
             m = $('#messages-' + roomId);
         }
         var nearEnd = m.isNearTheEnd();
@@ -116,6 +117,10 @@ $(function () {
         // notifications are not that important (issue #79)
         if (type !== 'notification') {
             updateUnread();
+        }
+
+        if (roomId) {
+            updateRoomMessageDimensions(roomId);
         }
 
         if (nearEnd) {
@@ -242,8 +247,8 @@ $(function () {
 
         if (nearEnd) {
             setTimeout(function () {
-                scrollToBottom();
                 updateMessageDimensions($('#m-' + id));
+                scrollToBottom();
             }, 150);
         }
 
@@ -752,13 +757,13 @@ $(function () {
         chat.currentRoom = room;
         updateCookie();
 
-        scrollToBottom();
-
         if (isiPad() === false) {
             $('#new-message').focus();
         }
 
         updateRoomMessageDimensions(roomId);
+
+        scrollToBottom();
     }
 
     $.connection.hub.start(function () {
@@ -784,10 +789,10 @@ $(function () {
         var nearEnd = $('.messages.current').isNearTheEnd();
 
         $(this).next().toggle(0, function () {
+            updateMessageDimensions($message);
             if (nearEnd) {
                 scrollToBottom();
             }
-            updateMessageDimensions($message);
         });
     });
 
@@ -845,10 +850,10 @@ $(function () {
             $('h3', collapsible).click(function () {
                 var nearEndOnToggle = $('.messages.current').isNearTheEnd();
                 $(this).next().toggle(0, function () {
+                    updateMessageDimensions($message);
                     if (nearEndOnToggle) {
                         scrollToBottom();
                     }
-                    updateMessageDimensions($message);
                 });
                 return false;
             });
