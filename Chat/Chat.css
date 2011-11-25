@@ -4,9 +4,20 @@
     background-color: #e5e5e5;
 }
 
+.banner > * {
+    float: left;
+    margin-left: 10px;
+}
+
+.banner > div {
+    float: left;
+    margin-top: 28px;
+    margin-left: 10px;
+}
+
 #chat-area {
     position: absolute;
-    top: 75px;
+    top: 95px;
     bottom: 10px;
     left: 30px;
     right: 10px;
@@ -20,10 +31,9 @@
     left: 0;
     top: 0;
     width: 100%;
-    padding: 0 5px 0 5px;
 }
 
-#heading h2 {
+#heading h1 {
     margin-left: 5px;
 }
 
@@ -76,7 +86,7 @@
 
 #tabs {
     padding: 0;
-    margin: 0;
+    margin: 0px 0px 0px 5px;
     cursor: pointer;
     z-index: 1000;
 }
@@ -98,12 +108,11 @@
 }
 
 #tabs li.unread {
-    
 }
 
 #tabs li:hover {
     background-color: #e5e5e5;
-    color: #000;
+    color: #32aa52;
 }
 
 #tabs li.current:hover {
@@ -117,6 +126,10 @@
 
 li.room {
     cursor: pointer;
+}
+
+li.room:hover {
+    background-color: #f5f5f5;
 }
 
 

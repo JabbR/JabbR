@@ -646,6 +646,7 @@ $(function () {
 
     addMessage('Welcome to the JabbR', 'notification');
     addMessage('Type /help to see the list of commands', 'notification');
+    addMessage('You can join any of the rooms on the right', 'notification');
 
     function ltrim(s) {
         return s.replace(/^\s+/g, "");
