@@ -161,6 +161,12 @@ $(function () {
         });
     }
 
+    function resizeActiveRoom() {
+        var roomId = getCurrentRoomId();
+
+        updateRoomMessageDimensions(roomId);
+    }
+
     window.scrollToBottom = scrollToBottom;
 
     chat.joinRoom = function (room, makeCurrent) {
@@ -765,6 +771,8 @@ $(function () {
             updateMessageDimensions($message);
         });
     });
+
+    $(window).resize(resizeActiveRoom);
 
     //Chat history setup
     var chatHistory = [];
