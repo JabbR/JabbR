@@ -15,6 +15,11 @@
     margin-left: 10px;
 }
 
+#logo {
+    margin-top: 10px;
+    margin-left: 0px;
+}
+
 #chat-area {
     position: absolute;
     top: 95px;
@@ -25,7 +30,7 @@
 }
 
 #heading {
-    background-color: #5d7d5f;
+    background-color: #00103f;
     color: #fff;
     position: absolute;
     left: 0;
@@ -96,7 +101,7 @@
     padding: 4px 15px;
     margin: 0px 4px 0px 0px;
     font-weight: bold;
-    background-color: #3b5b3d;
+    background-color: #164c85;
     border-bottom: 0px;
     color: #fff;
     height: 15px;

@@ -161,6 +161,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Images\big-logo.png" />
+    <Content Include="Images\logo32.png" />
     <Content Include="Images\small-logo.png" />
     <Content Include="index.htm" />
     <Content Include="Global.asax" />
