@@ -84,7 +84,7 @@ namespace SignalR.Samples.Hubs.Chat
 
             // Update the users's client id mapping
             user.ClientId = Context.ClientId;
-            user.Active = true;
+            user.Status = (int)UserStatus.Active;
             user.LastActivity = DateTime.UtcNow;
             _repo.Update();
 
@@ -306,6 +306,9 @@ namespace SignalR.Samples.Hubs.Chat
             }
 
             LeaveAllRooms(user);
+
+            user.Status = (int)UserStatus.Offline;
+            _repo.Update();
 
             // Remove the user
             _repo.Remove(user);
@@ -906,7 +909,7 @@ namespace SignalR.Samples.Hubs.Chat
             var user = new ChatUser
             {
                 Name = name,
-                Active = true,
+                Status = (int)UserStatus.Active,
                 Id = Guid.NewGuid().ToString("d"),
                 LastActivity = DateTime.UtcNow,
                 ClientId = Context.ClientId
@@ -1009,7 +1012,7 @@ namespace SignalR.Samples.Hubs.Chat
                 throw new InvalidOperationException("Nice try...");
             }
 
-            user.Active = true;
+            user.Status = (int)UserStatus.Active;
             user.LastActivity = DateTime.UtcNow;
             _repo.Update();
 

@@ -224,6 +224,10 @@
     <Compile Include="Migrations\201111250306100_RoomOwners.Designer.cs">
       <DependentUpon>201111250306100_RoomOwners.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201111251652132_UserStatus.cs" />
+    <Compile Include="Migrations\201111251652132_UserStatus.Designer.cs">
+      <DependentUpon>201111251652132_UserStatus.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Settings.cs" />
     <Compile Include="Models\ChatMessage.cs" />
     <Compile Include="Models\ChatRoom.cs" />
@@ -238,6 +242,7 @@
     <Compile Include="Profiling\TraceHelper.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\RoomViewModel.cs" />
+    <Compile Include="ViewModels\UserStatus.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="_SignalTrace.aspx.cs">
       <DependentUpon>_SignalTrace.aspx</DependentUpon>

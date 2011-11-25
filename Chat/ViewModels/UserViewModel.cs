@@ -13,7 +13,7 @@ namespace Chat.ViewModels
             Name = user.Name;
             Hash = user.Hash;
             Id = user.Id;
-            Active = user.Active;
+            Active = user.Status == (int)UserStatus.Active;
             Room = room == null ? null : room.Name;
             IsOwner = room == null ? false : room.Owner == user;
         }

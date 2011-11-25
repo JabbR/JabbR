@@ -92,7 +92,7 @@ namespace Chat.App_Start
                 var elapsed = DateTime.UtcNow - user.LastActivity;
                 if (elapsed.TotalMinutes > 5)
                 {
-                    user.Active = false;
+                    user.Status = (int)UserStatus.Inactive;
                     inactiveUsers.Add(user);
                 }
             }
