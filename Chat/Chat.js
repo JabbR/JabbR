@@ -662,7 +662,13 @@ $(function () {
     $('#new-message').autoTabComplete({
         get: function () {
             return $('.users.current li')
-                .map(function () { return trim($(this).text()); })
+                .map(function () {
+                    var item = trim($(this).text());
+                    if (item.length && item[0] === '@') {
+                        item = trim(item.substr(1));
+                    }
+                    return item;
+                })
                 .get();
         }
     });
