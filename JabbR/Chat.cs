@@ -7,22 +7,23 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using JabbR.ContentProviders;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.ViewModels;
-using JabbR.ContentProviders;
 using Microsoft.Security.Application;
+using Newtonsoft.Json;
 using SignalR.Hubs;
 
 namespace JabbR
 {
     public class Chat : Hub, IDisconnect
     {
-        private readonly IJabbrRepository _repo;
+        private readonly IJabbrRepository _repository;
 
-        public Chat(IJabbrRepository repo)
+        public Chat(IJabbrRepository repository)
         {
-            _repo = repo;
+            _repository = repository;
         }
 
         private static readonly List<IContentProvider> _contentProviders = new List<IContentProvider>() {
@@ -46,125 +47,86 @@ namespace JabbR
 
         public bool Join()
         {
+            // Set the version on the client
             Caller.version = typeof(Chat).Assembly.GetName().Version.ToString();
 
-            // Check the user id cookie
-            HttpCookie userIdCookie = Context.Cookies["userid"];
-            HttpCookie userNameCookie = Context.Cookies["username"];
-            HttpCookie userRoomCookie = Context.Cookies["userroom"];
-            HttpCookie userHashCookie = Context.Cookies["userhash"];
-            HttpCookie currentRoomCookie = Context.Cookies["currentroom"];
+            // Get the client state
+            ClientState clientState = GetClientState();
 
-            // setup user 
-            ChatUser user = null;
+            // Try to get the user from the client state
+            ChatUser user = _repository.Users.FirstOrDefault(u => u.Id == clientState.UserId);
 
-            // First try to retrieve user by id if exists
-            if (userIdCookie != null && !String.IsNullOrWhiteSpace(userIdCookie.Value))
-            {
-                user = _repo.Users.FirstOrDefault(u => u.Id == userIdCookie.Value);
-            }
-
-            // If we couldn't get user by id try it by name server could be reset
-            if (user == null && userNameCookie != null && !String.IsNullOrWhiteSpace(userNameCookie.Value))
-            {
-                user = AddUser(HttpUtility.UrlDecode(userNameCookie.Value));
-            }
-
-            // If we have no user return false will force user to set new nick
+            // Threre's no user being tracked
             if (user == null)
             {
+                // We've failed to get the user from the client's state
                 return false;
             }
 
-            // If we have user hash cookie set gravatar
-            if (userHashCookie != null)
-            {
-                SetGravatar(user, HttpUtility.UrlDecode(userHashCookie.Value));
-            }
-
-            // Update the users's client id mapping
+            // Update some user values
             user.ClientId = Context.ClientId;
             user.Status = (int)UserStatus.Active;
             user.LastActivity = DateTime.UtcNow;
-            _repo.Update();
 
-            var userViewModel = new UserViewModel(user);
+            // Perform the update
+            _repository.Update();
 
+            // Update the client state
             Caller.room = null;
-
-            if (currentRoomCookie != null)
-            {
-                Caller.currentRoom = HttpUtility.UrlDecode(currentRoomCookie.Value);
-            }
-
-            // Set some client state
             Caller.id = user.Id;
             Caller.name = user.Name;
             Caller.hash = user.Hash;
 
-            // If we have room add user to room
-            if (userRoomCookie != null && !String.IsNullOrWhiteSpace(userRoomCookie.Value))
+            // Tell the client to rejoin these rooms
+            foreach (var room in user.Rooms)
             {
-                foreach (var item in HttpUtility.UrlDecode(userRoomCookie.Value).Split(';'))
+                if (room.Name.Equals(clientState.ActiveRoom, StringComparison.OrdinalIgnoreCase))
                 {
-                    var userRoom = item;
-                    var room = _repo.Rooms.Where(x => x.Name == userRoom).FirstOrDefault();
-
-                    // If user has room name in the cookie but it doesn't exists skip it!
-                    if (room == null)
-                    {
-                        room = AddRoom(user, userRoom);
-                    }
-
-                    FixOwner(user, room);
-
-                    // Check if the user is already in the room if so let him rejoin
-                    if (IsUserInRoom(room, user))
-                    {
-                        HandleRejoin(room, user);
-                    }
-                    // if the user is not in the room join the room
-                    else
-                    {
-                        HandleJoin(null, user, new[] { room.Name, room.Name });
-                    }
+                    // Update the active room on the client
+                    Caller.activeRoom = clientState.ActiveRoom;
                 }
+
+                HandleRejoin(room, user);
             }
-            // if user is in a room rejoin it
-            else if (IsUserInARoom(user))
-            {
-                // retrieve user rooms
-                foreach (var room in GetUserRooms(user))
-                {
-                    FixOwner(user, room);
-                    // handle the join of the room
-                    HandleRejoin(room, user);
-                }
-            }
-            else
-            {
-                // Add this user to the list of users
-                Caller.addUser(userViewModel);
-            }
+
             return true;
         }
 
-        private static void FixOwner(ChatUser user, ChatRoom room)
+        private ClientState GetClientState()
         {
-            if (room.Owner != null &&
-                room.Owner.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase))
+            // New client state
+            var jabbrState = GetCookieValue("jabbr.state");
+
+            if (!String.IsNullOrEmpty(jabbrState))
             {
-                room.Owner = user;
+                return JsonConvert.DeserializeObject<ClientState>(jabbrState);
             }
+
+            // Legacy client state (TODO: Remove after a few releases)
+            var roomsString = GetCookieValue("userroom");
+
+            return new ClientState
+            {
+                UserId = GetCookieValue("userid"),
+                ActiveRoom = GetCookieValue("currentroom")
+            };
+        }
+
+        private string GetCookieValue(string key)
+        {
+            HttpCookie cookie = Context.Cookies[key];
+            return cookie != null ? HttpUtility.UrlDecode(cookie.Value) : null;
         }
 
         public void Send(string content)
         {
+            // If the client and server are out of sync then tell the client to refresh
             if (OutOfSync)
             {
                 throw new InvalidOperationException("Chat was just updated, please refresh you browser");
             }
 
+            // Sanitize the content (strip and bad html out)
             content = Sanitizer.GetSafeHtmlFragment(content);
 
             // See if this is a valid command (starts with /)
@@ -172,9 +134,6 @@ namespace JabbR
             {
                 return;
             }
-
-            string roomName = Caller.room;
-            string name = Caller.name;
 
             Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
 
@@ -197,7 +156,7 @@ namespace JabbR
 
             chatRoom.Messages.Add(chatMessage);
             chatRoom.LastActivity = DateTime.UtcNow;
-            _repo.Update();
+            _repository.Update();
 
             var messageViewModel = new MessageViewModel(chatMessage, chatRoom);
 
@@ -218,7 +177,7 @@ namespace JabbR
 
         public IEnumerable<RoomViewModel> GetRooms()
         {
-            var rooms = _repo.Rooms.Select(r => new RoomViewModel
+            var rooms = _repository.Rooms.Select(r => new RoomViewModel
             {
                 Name = r.Name,
                 Count = r.Users.Count
@@ -234,7 +193,7 @@ namespace JabbR
                 return Enumerable.Empty<UserViewModel>();
             }
 
-            ChatRoom chatRoom = _repo.Rooms.FirstOrDefault(r => r.Name.Equals(room, StringComparison.OrdinalIgnoreCase));
+            ChatRoom chatRoom = _repository.Rooms.FirstOrDefault(r => r.Name.Equals(room, StringComparison.OrdinalIgnoreCase));
 
             if (chatRoom == null)
             {
@@ -244,14 +203,14 @@ namespace JabbR
             return chatRoom.Users.Select(u => new UserViewModel(u, chatRoom));
         }
 
-        public IEnumerable<MessageViewModel> GetRecentMessages(string room)
+        public IEnumerable<MessageViewModel> GetRecentMessages(string roomName)
         {
-            if (String.IsNullOrEmpty(room))
+            if (String.IsNullOrEmpty(roomName))
             {
                 return Enumerable.Empty<MessageViewModel>();
             }
 
-            ChatRoom chatRoom = _repo.Rooms.FirstOrDefault(r => r.Name.Equals(room, StringComparison.OrdinalIgnoreCase));
+            ChatRoom chatRoom = _repository.Rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
 
             if (chatRoom == null)
             {
@@ -275,10 +234,21 @@ namespace JabbR
                 return;
             }
 
-            Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
+            string id = Caller.id;
+            if (String.IsNullOrEmpty(id))
+            {
+                return;
+            }
 
-            ChatUser user = tuple.Item1;
-            ChatRoom chatRoom = tuple.Item2;
+            ChatUser user = _repository.Users.FirstOrDefault(u => u.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
+
+            if (user == null)
+            {
+                return;
+            }
+
+            ChatRoom chatRoom = EnsureRoom(user);
+
             var userViewModel = new UserViewModel(user, chatRoom);
 
             if (isTyping)
@@ -298,7 +268,7 @@ namespace JabbR
 
         private void Disconnect(string clientId)
         {
-            ChatUser user = _repo.Users.FirstOrDefault(u => u.ClientId == clientId);
+            ChatUser user = _repository.Users.FirstOrDefault(u => u.ClientId == clientId);
 
             if (user == null)
             {
@@ -308,15 +278,13 @@ namespace JabbR
             LeaveAllRooms(user);
 
             user.Status = (int)UserStatus.Offline;
-            _repo.Update();
-
-            // Remove the user
-            _repo.Remove(user);
+            _repository.Update();
         }
 
         private void UpdateActivity()
         {
             Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
+
             ChatUser user = tuple.Item1;
             ChatRoom room = tuple.Item2;
 
@@ -353,7 +321,7 @@ namespace JabbR
 
                     // If we did get something, update the message and notify all clients
                     chatMessage.Content += extractedContent;
-                    _repo.Update();
+                    _repository.Update();
 
                     Clients[chatRoom.Name].addMessageContent(chatMessage.Id, extractedContent);
                 }
@@ -368,10 +336,58 @@ namespace JabbR
                 return false;
             }
 
-            string room = Caller.room;
-            string name = Caller.name;
             string[] parts = command.Substring(1).Split(' ');
             string commandName = parts[0];
+
+            if (!TryHandleBaseCommand(commandName, parts) &&
+                !TryHandleUserCommand(commandName, parts) &&
+                !TryHandleRoomCommand(commandName, parts))
+            {
+                // If none of the commands are valid then throw an exception
+                throw new InvalidOperationException(String.Format("'{0}' is not a valid command.", commandName));
+            }
+
+            return true;
+        }
+
+        // Commands that require a user and room
+        private bool TryHandleRoomCommand(string commandName, string[] parts)
+        {
+            Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
+
+            ChatUser user = tuple.Item1;
+            ChatRoom room = tuple.Item2;
+
+            if (commandName.Equals("me", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleMe(room, user, parts);
+                return true;
+            }
+            else if (commandName.Equals("leave", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleLeave(room, user);
+
+                return true;
+            }
+            else if (commandName.Equals("nudge", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleNudge(room, user, parts);
+
+                return true;
+            }
+            else if (commandName.Equals("kick", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleKick(user, room, parts);
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool TryHandleBaseCommand(string commandName, string[] parts)
+        {
+            string userName = Caller.name;
 
             if (commandName.Equals("help", StringComparison.OrdinalIgnoreCase))
             {
@@ -381,89 +397,66 @@ namespace JabbR
             }
             else if (commandName.Equals("nick", StringComparison.OrdinalIgnoreCase))
             {
-                HandleNick(name, parts);
+                HandleNick(userName, parts);
 
                 return true;
             }
-            else
+
+            return false;
+        }
+
+        // Commands that require a user name
+        private bool TryHandleUserCommand(string commandName, string[] parts)
+        {
+            ChatUser user = EnsureUser();
+            if (commandName.Equals("rooms", StringComparison.OrdinalIgnoreCase))
             {
-                ChatUser user = EnsureUser();
-                if (commandName.Equals("rooms", StringComparison.OrdinalIgnoreCase))
-                {
-                    HandleRooms();
+                HandleRooms();
 
-                    return true;
-                }
-                else if (commandName.Equals("list", StringComparison.OrdinalIgnoreCase))
-                {
-                    HandleList(parts);
-                    return true;
-                }
-                else if (commandName.Equals("who", StringComparison.OrdinalIgnoreCase))
-                {
-                    HandleWho(parts);
-                    return true;
-                }
-                else if (commandName.Equals("join", StringComparison.OrdinalIgnoreCase))
-                {
-                    HandleJoin(room, user, parts);
-
-                    return true;
-                }
-                else if (commandName.Equals("msg", StringComparison.OrdinalIgnoreCase))
-                {
-                    HandleMsg(user, parts);
-
-                    return true;
-                }
-                else if (commandName.Equals("gravatar", StringComparison.OrdinalIgnoreCase))
-                {
-                    HandleGravatar(user, parts);
-
-                    return true;
-                }
-                else if (commandName.Equals("leave", StringComparison.OrdinalIgnoreCase) && parts.Length == 2)
-                {
-                    HandleLeave(user, parts);
-
-                    return true;
-                }
-                else if (commandName.Equals("nudge", StringComparison.OrdinalIgnoreCase) && parts.Length == 2)
-                {
-                    HandleNudge(user, parts);
-
-                    return true;
-                }
-                else
-                {
-                    Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
-                    if (commandName.Equals("me", StringComparison.OrdinalIgnoreCase))
-                    {
-                        HandleMe(tuple.Item2, tuple.Item1, parts);
-                        return true;
-                    }
-                    else if (commandName.Equals("leave", StringComparison.OrdinalIgnoreCase))
-                    {
-                        HandleLeave(tuple.Item2, tuple.Item1);
-
-                        return true;
-                    }
-                    else if (commandName.Equals("nudge", StringComparison.OrdinalIgnoreCase))
-                    {
-                        HandleNudge(tuple.Item2, tuple.Item1, parts);
-
-                        return true;
-                    }
-                    else if (commandName.Equals("kick", StringComparison.OrdinalIgnoreCase))
-                    {
-                        HandleKick(tuple.Item1, tuple.Item2, parts);
-
-                        return true;
-                    }
-
-                    throw new InvalidOperationException(String.Format("'{0}' is not a valid command.", parts[0]));
-                }
+                return true;
             }
+            else if (commandName.Equals("list", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleList(parts);
+                return true;
+            }
+            else if (commandName.Equals("who", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleWho(parts);
+                return true;
+            }
+            else if (commandName.Equals("join", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleJoin(user, parts);
+
+                return true;
+            }
+            else if (commandName.Equals("msg", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleMsg(user, parts);
+
+                return true;
+            }
+            else if (commandName.Equals("gravatar", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleGravatar(user, parts);
+
+                return true;
+            }
+            else if (commandName.Equals("leave", StringComparison.OrdinalIgnoreCase) && parts.Length == 2)
+            {
+                HandleLeave(user, parts);
+
+                return true;
+            }
+            else if (commandName.Equals("nudge", StringComparison.OrdinalIgnoreCase) && parts.Length == 2)
+            {
+                HandleNudge(user, parts);
+
+                return true;
+            }
+
+            return false;
         }
 
         private void HandleKick(ChatUser chatUser, ChatRoom chatRoom, string[] parts)
@@ -484,7 +477,7 @@ namespace JabbR
             }
 
             string targetUserName = parts[1];
-            var targetUser = _repo.Users.FirstOrDefault(s => s.Name.Equals(targetUserName, StringComparison.OrdinalIgnoreCase));
+            var targetUser = _repository.Users.FirstOrDefault(s => s.Name.Equals(targetUserName, StringComparison.OrdinalIgnoreCase));
 
             if (targetUser == null)
             {
@@ -507,13 +500,13 @@ namespace JabbR
         {
             if (parts.Length == 1)
             {
-                Caller.listUsers(_repo.Users.Select(s => s.Name));
+                Caller.listUsers(_repository.Users.Select(s => s.Name));
                 return;
             }
 
             var name = NormalizeUserName(parts[1]);
 
-            var exactUserMatch = _repo.Users.FirstOrDefault(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            var exactUserMatch = _repository.Users.FirstOrDefault(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
             if (exactUserMatch != null)
             {
@@ -521,7 +514,7 @@ namespace JabbR
                 return;
             }
 
-            var users = _repo.Users.Where(s => s.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) != -1);
+            var users = _repository.Users.Where(s => s.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) != -1);
 
             if (users.Count() == 1)
             {
@@ -547,7 +540,7 @@ namespace JabbR
                 throw new InvalidOperationException("Room name cannot be blank!");
             }
 
-            var room = _repo.Rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
+            var room = _repository.Rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
 
             if (room == null)
             {
@@ -583,7 +576,7 @@ namespace JabbR
                 throw new InvalidOperationException("Room name cannot be blank!");
             }
 
-            var room = _repo.Rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
+            var room = _repository.Rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
 
             if (room == null)
             {
@@ -600,7 +593,7 @@ namespace JabbR
 
             user.Rooms.Remove(room);
 
-            _repo.Update();
+            _repository.Update();
 
             var userViewModel = new UserViewModel(user, room);
             Clients[room.Name].leave(userViewModel).Wait();
@@ -622,7 +615,7 @@ namespace JabbR
 
         private void HandleMsg(ChatUser user, string[] parts)
         {
-            if (_repo.Users.Count() == 1)
+            if (_repository.Users.Count() == 1)
             {
                 throw new InvalidOperationException("You're the only person in here...");
             }
@@ -632,7 +625,7 @@ namespace JabbR
                 throw new InvalidOperationException("Who are you trying send a private message to?");
             }
             var toUserName = NormalizeUserName(parts[1]);
-            ChatUser toUser = _repo.Users.FirstOrDefault(u => u.Name.Equals(toUserName, StringComparison.OrdinalIgnoreCase));
+            ChatUser toUser = _repository.Users.FirstOrDefault(u => u.Name.Equals(toUserName, StringComparison.OrdinalIgnoreCase));
 
             if (toUser == null)
             {
@@ -663,12 +656,12 @@ namespace JabbR
 
         private bool IsUserInRoom(ChatRoom room, ChatUser user)
         {
-            return room.Users.Any(x => x.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase)) || user.Rooms.Any(x => x.Name.Equals(room.Name, StringComparison.OrdinalIgnoreCase));
+            return room.Users.Any(r => r.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase));
         }
 
         private bool IsUserInRoom(string roomName, ChatUser user)
         {
-            var room = _repo.Rooms.FirstOrDefault(x => x.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
+            var room = _repository.Rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
 
             if (room == null)
             {
@@ -678,17 +671,12 @@ namespace JabbR
             return IsUserInRoom(room, user);
         }
 
-        private bool IsUserInARoom(ChatUser user)
-        {
-            return _repo.Rooms.Any(room => room.Users.Any(chatUser => chatUser.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase))) || user.Rooms.Any();
-        }
-
         private void HandleRejoin(ChatRoom room, ChatUser user)
         {
             JoinRoom(user, room);
         }
 
-        private void HandleJoin(string oldRoomName, ChatUser user, string[] parts)
+        private void HandleJoin(ChatUser user, string[] parts)
         {
             if (parts.Length < 2)
             {
@@ -703,7 +691,7 @@ namespace JabbR
             }
 
             // Create the room if it doesn't exist
-            ChatRoom newRoom = _repo.Rooms.FirstOrDefault(r => r.Name.Equals(newRoomName, StringComparison.OrdinalIgnoreCase));
+            ChatRoom newRoom = _repository.Rooms.FirstOrDefault(r => r.Name.Equals(newRoomName, StringComparison.OrdinalIgnoreCase));
             if (newRoom == null)
             {
                 newRoom = AddRoom(user, newRoomName);
@@ -723,7 +711,7 @@ namespace JabbR
             newRoom.Users.Add(user);
             newRoom.LastActivity = DateTime.UtcNow;
 
-            _repo.Update();
+            _repository.Update();
 
             // Set the room on the caller
             Caller.room = newRoom.Name;
@@ -755,7 +743,7 @@ namespace JabbR
         {
             // Set user hash
             user.Hash = hash;
-            _repo.Update();
+            _repository.Update();
 
             var userViewModel = new UserViewModel(user);
 
@@ -771,6 +759,7 @@ namespace JabbR
             {
                 Caller.changeGravatar(userViewModel);
             }
+
             Caller.gravatarChanged(userViewModel);
         }
 
@@ -781,7 +770,7 @@ namespace JabbR
 
         private void HandleRooms()
         {
-            var rooms = _repo.Rooms.Select(r => new
+            var rooms = _repository.Rooms.Select(r => new
             {
                 Name = r.Name,
                 Count = r.Users.Count
@@ -799,7 +788,7 @@ namespace JabbR
                 throw new InvalidOperationException("No username specified!");
             }
 
-            ChatUser user = _repo.Users.FirstOrDefault(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            ChatUser user = _repository.Users.FirstOrDefault(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
 
             if (user == null)
             {
@@ -813,13 +802,13 @@ namespace JabbR
 
         private void HandleNudge(ChatUser user, string[] parts)
         {
-            if (_repo.Users.Count() == 1)
+            if (_repository.Users.Count() == 1)
             {
                 throw new InvalidOperationException("You're the only person in here...");
             }
 
             var toUserName = NormalizeUserName(parts[1]);
-            ChatUser toUser = _repo.Users.FirstOrDefault(u => u.Name.Equals(toUserName, StringComparison.OrdinalIgnoreCase));
+            ChatUser toUser = _repository.Users.FirstOrDefault(u => u.Name.Equals(toUserName, StringComparison.OrdinalIgnoreCase));
 
             if (toUser == null)
             {
@@ -840,7 +829,7 @@ namespace JabbR
             }
 
             toUser.LastNudged = DateTime.Now;
-            _repo.Update();
+            _repository.Update();
             // Send a nudge message to the sender and the sendee                        
             Clients[toUser.ClientId].nudge(user.Name, toUser.Name);
             Caller.sendPrivateMessage(user.Name, toUser.Name, "nudged " + toUser.Name);
@@ -852,7 +841,7 @@ namespace JabbR
             if (room.LastNudged == null || room.LastNudged < DateTime.Now.Subtract(betweenNudges))
             {
                 room.LastNudged = DateTime.Now;
-                _repo.Update();
+                _repository.Update();
                 Clients[room.Name].nudge(user.Name);
             }
             else
@@ -877,7 +866,7 @@ namespace JabbR
 
             string oldUserName = user.Name;
             user.Name = newUserName;
-            _repo.Update();
+            _repository.Update();
             Caller.name = newUserName;
 
             var userViewModel = new UserViewModel(user);
@@ -915,7 +904,7 @@ namespace JabbR
                 ClientId = Context.ClientId
             };
 
-            _repo.Add(user);
+            _repository.Add(user);
 
             Caller.name = user.Name;
             Caller.hash = user.Hash;
@@ -940,7 +929,7 @@ namespace JabbR
 
             var chatRoom = new ChatRoom { Name = name, Owner = owner };
 
-            _repo.Add(chatRoom);
+            _repository.Add(chatRoom);
 
             return chatRoom;
         }
@@ -967,43 +956,44 @@ namespace JabbR
         private Tuple<ChatUser, ChatRoom> EnsureUserAndRoom()
         {
             ChatUser user = EnsureUser();
+            ChatRoom room = EnsureRoom(user);
 
-            string room = Caller.room;
+            return Tuple.Create(user, room);
+        }
 
-            if (String.IsNullOrEmpty(room))
+        private ChatRoom EnsureRoom(ChatUser user)
+        {
+            string roomName = Caller.room;
+
+            if (String.IsNullOrEmpty(roomName))
             {
                 throw new InvalidOperationException("Use '/join room' to join a room.");
             }
 
-            ChatRoom chatRoom = _repo.Rooms.FirstOrDefault(r => r.Name.Equals(room, StringComparison.OrdinalIgnoreCase));
+            ChatRoom room = _repository.Rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
 
-            if (chatRoom == null)
+            if (room == null)
             {
-                throw new InvalidOperationException(String.Format("You're in '{0}' but it doesn't exist. Use /join '{0}' to create this room.", room));
+                throw new InvalidOperationException(String.Format("You're in '{0}' but it doesn't exist. Use /join '{0}' to create this room.", roomName));
             }
 
-            if (!chatRoom.Users.Any(u => u.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase)))
+            if (!room.Users.Any(u => u.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase)))
             {
-                throw new InvalidOperationException(String.Format("You're not in '{0}'. Use '/join {0}' to join it.", room));
+                throw new InvalidOperationException(String.Format("You're not in '{0}'. Use '/join {0}' to join it.", roomName));
             }
 
-            return Tuple.Create(user, chatRoom);
+            return room;
         }
 
         private ChatUser EnsureUser()
         {
-            string name = Caller.name;
+            string id = Caller.id;
 
-            if (String.IsNullOrEmpty(name))
-            {
-                throw new InvalidOperationException("You don't have a name. Pick a name using '/nick nickname'.");
-            }
-
-            ChatUser user = _repo.Users.FirstOrDefault(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            ChatUser user = _repository.Users.FirstOrDefault(u => u.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
 
             if (user == null)
             {
-                throw new InvalidOperationException(String.Format("You go by the name '{0}' but the server has no idea who you are.", name));
+                throw new InvalidOperationException();
             }
 
             // Make sure the calling user is who they should be
@@ -1014,14 +1004,14 @@ namespace JabbR
 
             user.Status = (int)UserStatus.Active;
             user.LastActivity = DateTime.UtcNow;
-            _repo.Update();
+            _repository.Update();
 
             return user;
         }
 
         private void EnsureUserNameIsAvailable(string userName)
         {
-            var userExists = _repo.Users.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
+            var userExists = _repository.Users.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
 
             if (userExists)
             {
@@ -1066,6 +1056,22 @@ namespace JabbR
         {
             return _contentProviders.Select(c => c.GetContent(response))
                                     .FirstOrDefault(content => content != null);
+        }
+
+        private static void FixOwner(ChatUser user, ChatRoom room)
+        {
+            // This is mostly for the in memory store
+            if (room.Owner != null &&
+                room.Owner.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                room.Owner = user;
+            }
+        }
+
+        private class ClientState
+        {
+            public string UserId { get; set; }
+            public string ActiveRoom { get; set; }
         }
     }
 }

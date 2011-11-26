@@ -19,7 +19,13 @@ $(function () {
         return this;
     };
 
-    function formatTime(dt) {
+    function log(value) {
+        if (typeof console !== 'undefined' && console.log) {
+            console.debug(formatTime(new Date(), true) + ': ' + value);
+        }
+    }
+
+    function formatTime(dt, skipAp) {
         var ap = "";
         var hr = dt.getHours();
 
@@ -40,7 +46,7 @@ $(function () {
 
         var mins = padZero(dt.getMinutes());
         var seconds = padZero(dt.getSeconds());
-        return hr + ":" + mins + ":" + seconds + " " + ap;
+        return hr + ":" + mins + ":" + seconds + (skipAp ? "" : " " + ap);
     }
 
     function trimUserName(name) {
@@ -95,18 +101,20 @@ $(function () {
     }
 
     function addMessage(content, type, room) {
-        var m = $('.messages.current'),
+        var $messages = $('.messages.current'),
             roomId = null;
+
         if (room) {
             roomId = getRoomId(room);
-            m = $('#messages-' + roomId);
+            $messages = $('#messages-' + roomId);
         }
-        var nearEnd = m.isNearTheEnd();
+
+        var nearEnd = $messages.isNearTheEnd();
 
         // var converter = new Showdown.converter();
         // var html = converter.makeHtml(content);
 
-        var e = $('<li/>').html(content).appendTo(m);
+        var e = $('<li/>').html(content).appendTo($messages);
 
         refreshMessages();
 
@@ -114,7 +122,7 @@ $(function () {
             e.addClass(type);
         }
 
-        // notifications are not that important (issue #79)
+        // Notifications are not that important (issue #79)
         if (type !== 'notification') {
             updateUnread();
         }
@@ -126,10 +134,13 @@ $(function () {
         if (nearEnd) {
             scrollToBottom();
         }
+
         return e;
     }
 
     function scrollToBottom() {
+        log('scrollToBottom()');
+
         var messages = $('.messages.current');
         messages.scrollTop(messages[0].scrollHeight);
     }
@@ -180,13 +191,18 @@ $(function () {
 
     chat.joinRoom = function (room, makeCurrent) {
         var roomId = getRoomId(room);
+
+        log('chat.joinRoom called with => (' + room + ', ' + makeCurrent + ')');
+
         addRoom(roomId, room);
+
         if (makeCurrent) {
             showRoom(roomId);
         }
 
         clearUsers(roomId);
 
+        log('chat.getUsers(' + room + ')');
         chat.getUsers(room)
             .done(function (users) {
                 $.each(users, function () {
@@ -199,6 +215,7 @@ $(function () {
                 $('#new-message').focus();
             });
 
+        log('chat.getRecentMessages(' + room + ')');
         chat.getRecentMessages(room)
             .done(function (messages) {
                 $.each(messages, function () {
@@ -209,6 +226,7 @@ $(function () {
         if (makeCurrent) {
             addMessage('Entered ' + room, 'notification');
         }
+
         updateCookie();
     };
 
@@ -238,10 +256,12 @@ $(function () {
     };
 
     chat.addMessageContent = function (id, content) {
+        log('chat.addMessageContent(' + id + ', ' + content);
+
         var nearEnd = $('.messages.current').isNearTheEnd();
 
         var e = $('#m-' + id + ' .middle').append(content)
-                             .resizeMobileContent();
+                                          .resizeMobileContent();
 
         updateUnread();
 
@@ -259,12 +279,13 @@ $(function () {
         var roomId = getRoomId(message.Room),
             $messages = $('#messages-' + roomId),
             $lastMessage = $messages.find('.message').last(),
-            currentUserName = $.cookie('username'),
+            currentUserName = this.name,
             re = new RegExp("\\b@?" + currentUserName.replace(/\./, '\\.') + "\\b", "i"),
             previousUser = null,
             showUser = null,
             data = null,
-            nearEnd = null;
+            nearEnd = null,
+            messageViewModel = null;
 
 
         // var converter = new Showdown.converter();
@@ -276,7 +297,7 @@ $(function () {
 
         showUser = previousUser !== message.User.Name;
 
-        data = {
+        messageViewModel = {
             trimmedName: trimUserName(message.User.Name),
             name: message.User.Name,
             showUser: showUser,
@@ -292,7 +313,7 @@ $(function () {
         }
 
         nearEnd = $messages.isNearTheEnd();
-        $('#new-message-template').tmpl(data)
+        $('#new-message-template').tmpl(messageViewModel)
                                   .appendTo($messages)
                                   .resizeMobileContent();
         refreshMessages(roomId);
@@ -312,34 +333,41 @@ $(function () {
     };
 
     chat.addUser = function (user, exists) {
+        var userViewModel = {
+            name: user.Name,
+            hash: user.Hash,
+            owner: user.IsOwner
+        },
+            room = user.Room,
+            roomId = null,
+            $users = $('#users-' + roomId);
+
+
+        log('chat.addUser with => ' + JSON.stringify(user));
+
         // remove all users that are leaving
         $('.user.removing').remove();
 
-        var data = {
-            name: user.Name,
-            hash: user.Hash,
-            id: user.Id,
-            owner: user.IsOwner
-        };
-
-        if (user.Id === this.id) {
+        if (user.Name === this.name) {
+            log('It"s me!');
             updateCookie();
         };
 
-        var room = user.Room;
         if (!room) {
+            log('Not in a room!');
             return;
         }
 
-        var roomId = getRoomId(room);
+        roomId = getRoomId(room);
 
         // if user already listed in room
-        if ($('#users-' + roomId + ' li.u-' + user.Id).length > 0) {
+        if ($users.find('[data-' + room + ']').length > 0) {
+            log('Already in a ' + roomId);
             return;
         }
 
-        var e = $('#new-user-template').tmpl(data)
-                                       .appendTo($('#users-' + roomId));
+        $('#new-user-template').tmpl(userViewModel)
+                               .appendTo($('#users-' + roomId));
 
         refreshUsers(roomId);
 
@@ -351,6 +379,8 @@ $(function () {
     };
 
     chat.changeUserName = function (user, oldName, newName) {
+        log('chat.changeUserName');
+
         var roomId = getRoomId(user.Room),
             $user = $('#users-' + roomId + ' .u-' + user.Id);
 
@@ -366,6 +396,7 @@ $(function () {
         refreshUsers();
 
         if (user.Id === this.id) {
+            log('Changing my own name');
             return;
         }
         else {
@@ -374,13 +405,18 @@ $(function () {
     };
 
     chat.userNameChanged = function (newName) {
+        log('chat.userNameChanged with => ' + newName);
+
         addMessage('Your name is now ' + newName, 'notification');
         updateCookie();
     };
 
     chat.changeGravatar = function (currentUser) {
+        log('chat.changeGravatar with => ' + window.JSON.stringify(currentUser));
 
         if (currentUser.Room) {
+            log('Replacing user in => ' + currentUser.Room);
+
             var roomId = getRoomId(currentUser.Room),
                 user = $('#users-' + roomId + ' .u-' + currentUser.Id);
 
@@ -396,14 +432,18 @@ $(function () {
         refreshUsers();
 
         if (currentUser.Id === this.id) {
+            log('My gravatar');
             return;
         }
         else {
+            log('Not gravatar');
             addMessage(currentUser.Name + "'s gravatar changed.", 'notification', currentUser.Room);
         }
     };
 
     chat.gravatarChanged = function (currentUser) {
+        log('raised chat.gravatarChanged with => ' + window.JSON.stringify(currentUser));
+
         addMessage('Your gravatar has been set.', 'notification');
         chat.hash = currentUser.Hash;
         updateCookie();
@@ -496,11 +536,15 @@ $(function () {
     };
 
     chat.leave = function (user) {
+        log('chat.leave with => ' + window.JSON.stringify(user));
+
         var room = user.Room;
         var roomId = getRoomId(room);
 
         if (this.id !== user.Id) {
-            // remove user from specified room
+            log('Removing from ' + roomId);
+
+            // Remove user from specified room
             $('#users-' + roomId + ' li.u-' + user.Id).addClass('removing').fadeOut('slow', function () {
                 $(this).remove();
             });
@@ -510,6 +554,8 @@ $(function () {
             addMessage(user.Name + ' left ' + room, 'notification', room);
         }
         else {
+            log('Removing me from ' + roomId);
+
             removeRoom(roomId);
             showRoom('lobby');
             updateCookie();
@@ -521,12 +567,15 @@ $(function () {
     };
 
     chat.kick = function (room) {
+        log('chat.kick with ' + room);
+
         addMessage('You were kicked from ' + room, 'notification');
     };
 
     $('#send-message').submit(function () {
         var command = $('#new-message').val();
         chat.room = getCurrentRoom();
+
         if (command) {
             chat.send(command)
             .fail(function (e) {
@@ -606,6 +655,8 @@ $(function () {
     });
 
     function updateUnread(roomId) {
+        log('Updating unread for document and room ' + roomId);
+
         if (chat.focus === false) {
             if (!chat.unread) {
                 chat.unread = 0;
@@ -629,6 +680,8 @@ $(function () {
     }
 
     function updateTitle() {
+        log('Updating the title');
+
         if (chat.unread === 0) {
             document.title = 'JabbR';
         }
@@ -638,30 +691,27 @@ $(function () {
     }
 
     function updateCookie() {
-        $.cookie('userid', chat.id, { path: '/', expires: 30 });
-        $.cookie('username', chat.name, { path: '/', expires: 30 });
+        var legacyCookies = ['userid', 'username', 'userroom', 'userhash', 'currentroom'],
+            state = {
+                userId: chat.id,
+                activeRoom: chat.activeRoom
+            },
+            jsonState = window.JSON.stringify(state);
 
-        var rooms = $('#tabs li')
-                    .filter(function (index) { return index > 0; })    // skip 1st tab (Lobby)
-                    .map(function () { return $(this).data('name'); })
-                    .get()
-                    .join(';');
-        $.cookie('userroom', rooms, { path: '/', expires: 30 });
+        // Clear the legacy cookies
+        $.each(legacyCookies, function () {
+            $.cookie(this, null);
+        });
 
-        if (chat.hash) {
-            $.cookie('userhash', chat.hash, { path: '/', expires: 30 });
-        }
+        log('updateCookie(jabbr.state): ' + jsonState);
 
-        if (chat.currentRoom) {
-            $.cookie('currentroom', chat.currentRoom, { path: '/', expires: 30 });
-        }
+        $.cookie('jabbr.state', jsonState, { path: '/', expires: 30 });
     }
 
     $(window).focus();
 
     addMessage('Welcome to the JabbR', 'notification');
     addMessage('Type /help to see the list of commands', 'notification');
-    addMessage('You can join any of the rooms on the right', 'notification');
 
     function ltrim(s) {
         return s.replace(/^\s+/g, "");
@@ -687,12 +737,16 @@ $(function () {
 
     $(document).on('click', '#tabs li', function () {
         var roomId = $(this).attr('id').substr(5);  // id = tabs-roomId
+        log('Clicked on room ' + roomId);
         showRoom(roomId);
     });
 
     $(document).on('click', 'li.room', function () {
         var room = $(this).data('name');
         var roomId = getRoomId(room);
+
+        log('Clicked on room ' + roomId);
+
         if ($('#messages-' + roomId).length > 0) {
             showRoom(roomId);
         }
@@ -705,7 +759,6 @@ $(function () {
         }
     });
 
-
     function getCurrentRoomId() {
         return $('#tabs li.current').attr('id').substr(5);
     }
@@ -716,7 +769,9 @@ $(function () {
     }
 
     function addRoom(roomId, room) {
+        log('addRoom(' + roomId + ')');
         if ($('#tabs-' + roomId).length) {
+            log(roomId + ' already exists');
             return;
         }
 
@@ -726,12 +781,16 @@ $(function () {
     }
 
     function removeRoom(roomId) {
+        log('removeRoom(' + roomId + ')');
+
         $('#messages-' + roomId).remove();
         $('#users-' + roomId).remove();
         $('#tabs-' + roomId).remove();
     }
 
     function showRoom(roomId) {
+        log('showRoom(' + roomId + ')');
+
         $('#tabs li.current').removeClass('current');
         $('.messages.current').removeClass('current').hide();
         $('.users.current').removeClass('current').hide();
@@ -741,7 +800,8 @@ $(function () {
         $('#users-' + roomId).addClass('current').show();
 
         if (roomId === "lobby") {
-            $('#users-lobby').html('');
+            log('chat.getRooms()');
+
             chat.getRooms()
                 .done(function (rooms) {
                     // Empty the lobby rooms
@@ -752,9 +812,12 @@ $(function () {
                     });
                 });
 
+            chat.activeRoom = undefined;
+        }
+        else {
+            chat.activeRoom = room;
         }
 
-        chat.currentRoom = room;
         updateCookie();
 
         if (isiPad() === false) {
@@ -769,17 +832,28 @@ $(function () {
     $.connection.hub.start(function () {
         chat.join()
             .fail(function (e) {
+                log('Failed to join jabbr chat => ' + e);
                 addMessage(e, 'error');
             })
             .done(function (success) {
-                var room = this.currentRoom || 'lobby';
-                var roomId = getRoomId(room);
-                addRoom(roomId, room);
-                showRoom(roomId);
+                var activeRoom = chat.activeRoom || 'Lobby',
+                    activeRoomId = getRoomId(activeRoom);
+
+                // Show the active room
+                addRoom(activeRoomId, activeRoom);
+                showRoom(activeRoomId, activeRoom);
+
+                log('chat.join().done(' + success + ')');
+
+                // Update the cookie
+                updateCookie();
 
                 if (success === false) {
-                    $.cookie('userid', '');
                     addMessage('Choose a name using "/nick nickname".', 'notification');
+                }
+                else {
+                    addMessage('Welcome back ' + chat.name, 'notification', 'lobby');
+                    addMessage('You can join any of the rooms on the right', 'notification', 'lobby');
                 }
             });
     });

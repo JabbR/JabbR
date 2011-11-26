@@ -26,51 +26,53 @@ namespace JabbR.App_Start
         private static Timer _timer;
         private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(5);
 
-        private static Func<IJabbrRepository> _repoFactory;
-        private static bool _persistChat;
+        private const string SqlClient = "System.Data.SqlClient";
 
         public static void PreAppStart()
         {
             var kernel = new StandardKernel();
-            var persistChatSetting = ConfigurationManager.AppSettings["persistChat"];
-            _persistChat = false;
 
-            if (!String.IsNullOrEmpty(persistChatSetting) &&
-                Boolean.TryParse(persistChatSetting, out _persistChat) &&
-                _persistChat)
-            {
-                kernel.Bind<JabbrContext>()
-                    .To<JabbrContext>()
-                    .InRequestScope();
+            kernel.Bind<JabbrContext>()
+                .To<JabbrContext>()
+                .InRequestScope();
 
-                kernel.Bind<IJabbrRepository>()
-                    .To<PersistedRepository>()
-                    .InRequestScope();
-            }
-            else
-            {
-                kernel.Bind<IJabbrRepository>()
-                    .To<InMemoryRepository>()
-                    .InSingletonScope();
-            }
-
-            // Setup the repository factory
-            _repoFactory = new Func<IJabbrRepository>(() => kernel.Get<IJabbrRepository>());
-
-            // 
+            kernel.Bind<IJabbrRepository>()
+                .To<PersistedRepository>()
+                .InRequestScope();
+            
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
 
-            if (_persistChat)
-            {
-                // Run the migrations if we're persisting chat
-                var settings = new Settings();
-                var migrator = new DbMigrator(settings);
-                migrator.Update();
-            }
+            // Perform the required migrations
+            DoMigrations();
 
             // Start the sweeper
-            _timer = new Timer(_ => Sweep(), null, _sweepInterval, _sweepInterval);
+            var repositoryFactory = new Func<IJabbrRepository>(() => kernel.Get<IJabbrRepository>());
+            _timer = new Timer(_ => Sweep(repositoryFactory), null, _sweepInterval, _sweepInterval);
 
+            SetupErrorHandling();
+
+            Signaler.Instance.DefaultTimeout = TimeSpan.FromSeconds(25);
+        }
+
+        private static void DoMigrations()
+        {
+            // Get the Jabbr connection string
+            var connectionString = ConfigurationManager.ConnectionStrings["Jabbr"];
+
+            if (String.IsNullOrEmpty(connectionString.ProviderName) ||
+                !connectionString.ProviderName.Equals(SqlClient, StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            // Only run migrations for SQL server (Sql ce not supported as yet)
+            var settings = new Settings();
+            var migrator = new DbMigrator(settings);
+            migrator.Update();
+        }
+
+        private static void SetupErrorHandling()
+        {
             AppDomain.CurrentDomain.FirstChanceException += (sender, e) =>
             {
                 var ex = e.Exception.GetBaseException();
@@ -88,11 +90,9 @@ namespace JabbR.App_Start
                 // ErrorSignal.Get(this).Raise(e.Exception.GetBaseException());
                 e.SetObserved();
             };
-
-            Signaler.Instance.DefaultTimeout = TimeSpan.FromSeconds(25);
         }
 
-        private static void Sweep()
+        private static void Sweep(Func<IJabbrRepository> repositoryFactory)
         {
             if (_sweeping)
             {
@@ -103,11 +103,9 @@ namespace JabbR.App_Start
 
             try
             {
-                using (var repo = _repoFactory())
+                using (IJabbrRepository repo = repositoryFactory())
                 {
                     MarkInactiveUsers(repo);
-
-                    RemoveInactiveRooms(repo);
 
                     repo.Update();
                 }
@@ -121,7 +119,6 @@ namespace JabbR.App_Start
         private static void MarkInactiveUsers(IJabbrRepository repo)
         {
             var clients = Hub.GetClients<Chat>();
-
             var inactiveUsers = new List<ChatUser>();
 
             foreach (var user in repo.Users)
@@ -147,30 +144,6 @@ namespace JabbR.App_Start
             foreach (var roomGroup in roomGroups)
             {
                 clients[roomGroup.Room.Name].markInactive(roomGroup.Users).Wait();
-            }
-        }
-
-        private static void RemoveInactiveRooms(IJabbrRepository repo)
-        {
-            // Don't remove rooms if the chat is persistant
-            if (_persistChat)
-            {
-                return;
-            }
-
-            var inactiveRooms = new List<ChatRoom>();
-            foreach (var room in repo.Rooms)
-            {
-                var elapsed = DateTime.UtcNow - room.LastActivity;
-                if (room.Users.Count == 0 && elapsed.TotalMinutes > 30)
-                {
-                    inactiveRooms.Add(room);
-                }
-            }
-
-            foreach (var room in inactiveRooms)
-            {
-                repo.Remove(room);
             }
         }
     }

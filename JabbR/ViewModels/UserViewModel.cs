@@ -12,7 +12,6 @@ namespace JabbR.ViewModels
         {
             Name = user.Name;
             Hash = user.Hash;
-            Id = user.Id;
             Active = user.Status == (int)UserStatus.Active;
             Room = room == null ? null : room.Name;
             IsOwner = room == null ? false : room.Owner == user;
@@ -20,7 +19,6 @@ namespace JabbR.ViewModels
 
         public string Name { get; set; }
         public string Hash { get; set; }
-        public string Id { get; set; }
         public bool Active { get; set; }
 
         // REVIEW: These don't belong in this view model
