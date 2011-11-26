@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JabbR", "Chat\JabbR.csproj", "{16204F16-6354-4B68-BB0F-1A4F109FC92B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JabbR", "JabbR\JabbR.csproj", "{16204F16-6354-4B68-BB0F-1A4F109FC92B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JabbR.Test", "Chat.Test\JabbR.Test.csproj", "{45AB4285-8B37-47FD-9D38-40E6BC5D2E13}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JabbR.Test", "JabbR.Test\JabbR.Test.csproj", "{45AB4285-8B37-47FD-9D38-40E6BC5D2E13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

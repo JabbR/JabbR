@@ -61,7 +61,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Chat\Chat.csproj">
+    <ProjectReference Include="..\JabbR\JabbR.csproj">
       <Project>{16204F16-6354-4B68-BB0F-1A4F109FC92B}</Project>
       <Name>Chat</Name>
     </ProjectReference>
