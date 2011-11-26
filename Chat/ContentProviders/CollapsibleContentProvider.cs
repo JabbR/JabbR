@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Net;
 
-namespace SignalR.Samples.Hubs.Chat.ContentProviders
+namespace JabbR.ContentProviders
 {
     public abstract class CollapsibleContentProvider : IContentProvider
     {

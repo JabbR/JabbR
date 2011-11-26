@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 
-namespace SignalR.Samples.Hubs.Chat.ContentProviders
+namespace JabbR.ContentProviders
 {
     public abstract class EmbedContentProvider : CollapsibleContentProvider
     {

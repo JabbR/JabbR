@@ -5,9 +5,8 @@ using Moq;
 using SignalR;
 using SignalR.Hubs;
 using Xunit;
-using ChatHub = SignalR.Samples.Hubs.Chat.Chat;
 
-namespace Chat.Test
+namespace JabbR.Test
 {
     public class ChatTest
     {
@@ -15,7 +14,7 @@ namespace Chat.Test
         public void JoinReturnsFalseIfNoCookies()
         {
             var repository = new InMemoryRepository();
-            var chat = new ChatHub(repository);
+            var chat = new Chat(repository);
             var connection = new Mock<IConnection>();
             var prinicipal = new Mock<IPrincipal>();
             var clientState = new TrackingDictionary();
@@ -25,7 +24,7 @@ namespace Chat.Test
             chat.Context = new HubContext(clientId, new HttpCookieCollection(), prinicipal.Object);
 
             bool result = chat.Join();
-            string versionString = typeof(ChatHub).Assembly.GetName().Version.ToString();
+            string versionString = typeof(Chat).Assembly.GetName().Version.ToString();
 
             Assert.Equal(versionString, clientState["version"]);
             Assert.False(result);
@@ -43,7 +42,7 @@ namespace Chat.Test
             };
             repository.Add(user);
 
-            var chat = new ChatHub(repository);
+            var chat = new Chat(repository);
             var connection = new Mock<IConnection>();
             var prinicipal = new Mock<IPrincipal>();
             var cookies = new HttpCookieCollection();

@@ -4,7 +4,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 
-namespace SignalR.Samples.Hubs.Chat.ContentProviders
+namespace JabbR.ContentProviders
 {
     /// <summary>
     /// Content Provider that provides the necessary functionality to show Tweets in the chat when someone pastes a

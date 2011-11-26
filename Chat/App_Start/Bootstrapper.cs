@@ -91,7 +91,7 @@ namespace Chat.App_Start
 
         private static void MarkInactiveUsers(IJabbrRepository repo)
         {
-            var clients = Hub.GetClients<SignalR.Samples.Hubs.Chat.Chat>();
+            var clients = Hub.GetClients<JabbR.Chat>();
 
             var inactiveUsers = new List<ChatUser>();
 

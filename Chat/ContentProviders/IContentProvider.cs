@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace SignalR.Samples.Hubs.Chat
+namespace JabbR
 {
     public interface IContentProvider
     {

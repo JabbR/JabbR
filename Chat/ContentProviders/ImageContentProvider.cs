@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 
-namespace SignalR.Samples.Hubs.Chat.ContentProviders
+namespace JabbR.ContentProviders
 {
     public class ImageContentProvider : CollapsibleContentProvider
     {

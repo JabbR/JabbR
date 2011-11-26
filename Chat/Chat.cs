@@ -10,11 +10,11 @@ using System.Web;
 using Chat.Infrastructure;
 using Chat.Models;
 using Chat.ViewModels;
+using JabbR.ContentProviders;
 using Microsoft.Security.Application;
 using SignalR.Hubs;
-using SignalR.Samples.Hubs.Chat.ContentProviders;
 
-namespace SignalR.Samples.Hubs.Chat
+namespace JabbR
 {
     public class Chat : Hub, IDisconnect
     {

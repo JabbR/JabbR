@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Web;
 
-namespace SignalR.Samples.Hubs.Chat.ContentProviders
+namespace JabbR.ContentProviders
 {
     public class YouTubeContentProvider : EmbedContentProvider
     {
