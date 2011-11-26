@@ -5,6 +5,9 @@ namespace JabbR.Models
 {
     public interface IJabbrRepository : IDisposable
     {
+        ChatUser GetUserById(string userId);
+        ChatRoom GetRoomByName(string roomName);
+
         IQueryable<ChatRoom> Rooms { get; }
         IQueryable<ChatUser> Users { get; }
         void Add(ChatRoom room);

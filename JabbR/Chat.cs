@@ -54,7 +54,7 @@ namespace JabbR
             ClientState clientState = GetClientState();
 
             // Try to get the user from the client state
-            ChatUser user = _repository.Users.FirstOrDefault(u => u.Id == clientState.UserId);
+            ChatUser user = _repository.GetUserById(clientState.UserId);
 
             // Threre's no user being tracked
             if (user == null)
@@ -138,7 +138,7 @@ namespace JabbR
             Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
 
             ChatUser user = tuple.Item1;
-            ChatRoom chatRoom = tuple.Item2;
+            ChatRoom room = tuple.Item2;
 
             // Update activity *after* ensuring the user, this forces them to be active
             UpdateActivity();
@@ -154,20 +154,20 @@ namespace JabbR
                 When = DateTimeOffset.UtcNow
             };
 
-            chatRoom.Messages.Add(chatMessage);
-            chatRoom.LastActivity = DateTime.UtcNow;
+            room.Messages.Add(chatMessage);
+            room.LastActivity = DateTime.UtcNow;
             _repository.Update();
 
-            var messageViewModel = new MessageViewModel(chatMessage, chatRoom);
+            var messageViewModel = new MessageViewModel(chatMessage, room);
 
-            Clients[chatRoom.Name].addMessage(messageViewModel);
+            Clients[room.Name].addMessage(messageViewModel);
 
             if (!links.Any())
             {
                 return;
             }
 
-            ProcessUrls(links, chatRoom, chatMessage);
+            ProcessUrls(links, room, chatMessage);
         }
 
         public void Disconnect()
@@ -186,21 +186,21 @@ namespace JabbR
             return rooms;
         }
 
-        public IEnumerable<UserViewModel> GetUsers(string room)
+        public IEnumerable<UserViewModel> GetUsers(string roomName)
         {
-            if (String.IsNullOrEmpty(room))
+            if (String.IsNullOrEmpty(roomName))
             {
                 return Enumerable.Empty<UserViewModel>();
             }
 
-            ChatRoom chatRoom = _repository.Rooms.FirstOrDefault(r => r.Name.Equals(room, StringComparison.OrdinalIgnoreCase));
+            ChatRoom room = _repository.GetRoomByName(roomName);
 
-            if (chatRoom == null)
+            if (room == null)
             {
                 return Enumerable.Empty<UserViewModel>();
             }
 
-            return chatRoom.Users.Select(u => new UserViewModel(u, chatRoom));
+            return room.Users.Select(u => new UserViewModel(u, room));
         }
 
         public IEnumerable<MessageViewModel> GetRecentMessages(string roomName)
@@ -210,16 +210,16 @@ namespace JabbR
                 return Enumerable.Empty<MessageViewModel>();
             }
 
-            ChatRoom chatRoom = _repository.Rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
+            ChatRoom room = _repository.GetRoomByName(roomName);
 
-            if (chatRoom == null)
+            if (room == null)
             {
                 return Enumerable.Empty<MessageViewModel>();
             }
 
-            return (from m in chatRoom.Messages
+            return (from m in room.Messages
                     orderby m.When descending
-                    select new MessageViewModel(m, chatRoom)).Take(20).Reverse();
+                    select new MessageViewModel(m, room)).Take(20).Reverse();
         }
 
         public ChatRoom[] GetUserRooms(ChatUser user)
@@ -247,18 +247,18 @@ namespace JabbR
                 return;
             }
 
-            ChatRoom chatRoom = EnsureRoom(user);
+            ChatRoom room = EnsureRoom(user);
 
-            var userViewModel = new UserViewModel(user, chatRoom);
+            var userViewModel = new UserViewModel(user, room);
 
             if (isTyping)
             {
-                UpdateActivity();
+                UpdateActivity(user, room);
             }
 
-            if (chatRoom != null)
+            if (room != null)
             {
-                Clients[chatRoom.Name].setTyping(userViewModel, isTyping);
+                Clients[room.Name].setTyping(userViewModel, isTyping);
             }
             else
             {
@@ -281,6 +281,11 @@ namespace JabbR
             _repository.Update();
         }
 
+        private void UpdateActivity(ChatUser user, ChatRoom room)
+        {
+            Clients[room.Name].updateActivity(new UserViewModel(user, room));
+        }
+
         private void UpdateActivity()
         {
             Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
@@ -288,15 +293,10 @@ namespace JabbR
             ChatUser user = tuple.Item1;
             ChatRoom room = tuple.Item2;
 
-            if (user == null || room == null)
-            {
-                return;
-            }
-
-            Clients[room.Name].updateActivity(new UserViewModel(user, room));
+            UpdateActivity(user, room);
         }
 
-        private void ProcessUrls(IEnumerable<string> links, ChatRoom chatRoom, ChatMessage chatMessage)
+        private void ProcessUrls(IEnumerable<string> links, ChatRoom room, ChatMessage chatMessage)
         {
             // REVIEW: is this safe to do? We're holding on to this instance 
             // when this should really be a fire and forget.
@@ -323,7 +323,7 @@ namespace JabbR
                     chatMessage.Content += extractedContent;
                     _repository.Update();
 
-                    Clients[chatRoom.Name].addMessageContent(chatMessage.Id, extractedContent);
+                    Clients[room.Name].addMessageContent(chatMessage.Id, extractedContent);
                 }
             });
         }
@@ -459,11 +459,11 @@ namespace JabbR
             return false;
         }
 
-        private void HandleKick(ChatUser chatUser, ChatRoom chatRoom, string[] parts)
+        private void HandleKick(ChatUser chatUser, ChatRoom room, string[] parts)
         {
-            if (chatRoom.Owner != chatUser)
+            if (room.Owner != chatUser)
             {
-                throw new InvalidOperationException("You are not the owner of " + chatRoom.Name);
+                throw new InvalidOperationException("You are not the owner of " + room.Name);
             }
 
             if (parts.Length == 1)
@@ -471,7 +471,7 @@ namespace JabbR
                 throw new InvalidOperationException("Who are you trying to kick?");
             }
 
-            if (chatRoom.Users.Count == 1)
+            if (room.Users.Count == 1)
             {
                 throw new InvalidOperationException("You're the only person in here...");
             }
@@ -490,10 +490,10 @@ namespace JabbR
             }
 
             // Kick the user
-            HandleLeave(chatRoom, targetUser);
+            HandleLeave(room, targetUser);
 
             // Tell the user that they were kicked
-            Clients[targetUser.ClientId].kick(chatRoom.Name);
+            Clients[targetUser.ClientId].kick(room.Name);
         }
 
         private void HandleWho(string[] parts)
@@ -865,8 +865,12 @@ namespace JabbR
             EnsureUserNameIsAvailable(newUserName);
 
             string oldUserName = user.Name;
+
+            // Update the user name
             user.Name = newUserName;
             _repository.Update();
+
+            // Update the client side state
             Caller.name = newUserName;
 
             var userViewModel = new UserViewModel(user);
@@ -883,6 +887,7 @@ namespace JabbR
             {
                 Caller.changeUserName(userViewModel, oldUserName, newUserName);
             }
+
             Caller.userNameChanged(newUserName);
         }
 
@@ -922,16 +927,21 @@ namespace JabbR
             {
                 throw new InvalidOperationException("Lobby is not a valid chat room.");
             }
+
             if (!IsValidRoomName(name))
             {
                 throw new InvalidOperationException(String.Format("'{0}' is not a valid room name.", name));
             }
 
-            var chatRoom = new ChatRoom { Name = name, Owner = owner };
+            var room = new ChatRoom
+            {
+                Name = name,
+                Owner = owner
+            };
 
-            _repository.Add(chatRoom);
+            _repository.Add(room);
 
-            return chatRoom;
+            return room;
         }
 
         private bool IsValidUserName(string name)
@@ -970,7 +980,7 @@ namespace JabbR
                 throw new InvalidOperationException("Use '/join room' to join a room.");
             }
 
-            ChatRoom room = _repository.Rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
+            ChatRoom room = _repository.GetRoomByName(roomName);
 
             if (room == null)
             {
@@ -989,19 +999,14 @@ namespace JabbR
         {
             string id = Caller.id;
 
-            ChatUser user = _repository.Users.FirstOrDefault(u => u.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
+            ChatUser user = _repository.GetUserById(id);
 
             if (user == null)
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException("Invalid user id");
             }
 
-            // Make sure the calling user is who they should be
-            if (user.ClientId != Context.ClientId)
-            {
-                throw new InvalidOperationException("Nice try...");
-            }
-
+            // Update the user's activity
             user.Status = (int)UserStatus.Active;
             user.LastActivity = DateTime.UtcNow;
             _repository.Update();

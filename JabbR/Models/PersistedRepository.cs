@@ -57,5 +57,15 @@ namespace JabbR.Models
         {
             _db.Dispose();
         }
+
+        public ChatUser GetUserById(string userId)
+        {
+            return _db.Users.FirstOrDefault(u => u.Id == userId);
+        }
+
+        public ChatRoom GetRoomByName(string roomName)
+        {
+            return _db.Rooms.FirstOrDefault(r => r.Name == roomName);
+        }
     }
 }

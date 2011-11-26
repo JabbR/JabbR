@@ -234,7 +234,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\RoomViewModel.cs" />
-    <Compile Include="ViewModels\UserStatus.cs" />
+    <Compile Include="Models\UserStatus.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

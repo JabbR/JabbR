@@ -49,5 +49,15 @@ namespace JabbR.Models
         public void Dispose()
         {
         }
+
+        public ChatUser GetUserById(string userId)
+        {
+            return _users.FirstOrDefault(u => u.Id.Equals(userId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public ChatRoom GetRoomByName(string roomName)
+        {
+            return _rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
+        }
     }
 }
