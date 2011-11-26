@@ -1,9 +1,9 @@
 using System.Data.Entity.Migrations;
 using System.Data.Entity.Migrations.Providers;
 using System.Data.SqlClient;
-using Chat.Models;
+using JabbR.Models;
 
-namespace Chat.Migrations
+namespace JabbR.Migrations
 {
     public class Settings : DbMigrationContext<JabbrContext>
     {

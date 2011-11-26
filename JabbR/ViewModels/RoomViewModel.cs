@@ -1,4 +1,4 @@
-﻿namespace Chat.ViewModels
+﻿namespace JabbR.ViewModels
 {
     public class RoomViewModel
     {

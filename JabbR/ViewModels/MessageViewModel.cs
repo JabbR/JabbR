@@ -1,7 +1,7 @@
 ﻿using System;
-using Chat.Models;
+using JabbR.Models;
 
-namespace Chat.ViewModels
+namespace JabbR.ViewModels
 {
     public class MessageViewModel
     {

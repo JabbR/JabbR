@@ -2,9 +2,9 @@
 using System.Linq;
 using System;
 using System.Threading;
-using Chat.ViewModels;
+using JabbR.ViewModels;
 
-namespace Chat.Models
+namespace JabbR.Models
 {
     public class InMemoryRepository : IJabbrRepository
     {

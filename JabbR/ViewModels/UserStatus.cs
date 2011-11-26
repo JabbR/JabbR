@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Chat.ViewModels
+namespace JabbR.ViewModels
 {
     public enum UserStatus
     {

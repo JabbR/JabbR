@@ -4,34 +4,39 @@ using System.Configuration;
 using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading;
-using Chat.Migrations;
-using Chat.Models;
-using Chat.ViewModels;
+using System.Threading.Tasks;
+using JabbR.Migrations;
+using JabbR.Models;
+using JabbR.ViewModels;
+using Microsoft.CSharp.RuntimeBinder;
 using Ninject;
+using SignalR;
 using SignalR.Hubs;
 using SignalR.Infrastructure;
 using SignalR.Ninject;
 
-[assembly: WebActivator.PreApplicationStartMethod(typeof(Chat.App_Start.Bootstrapper), "PreAppStart")]
+[assembly: WebActivator.PreApplicationStartMethod(typeof(JabbR.App_Start.Bootstrapper), "PreAppStart")]
 
-namespace Chat.App_Start
+namespace JabbR.App_Start
 {
     public static class Bootstrapper
     {
-        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(5);
+        // Background task info
         private static bool _sweeping;
         private static Timer _timer;
-        private static Func<IJabbrRepository> repoCreator;
+        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(5);
+
+        private static Func<IJabbrRepository> _repoFactory;
         private static bool _persistChat;
 
         public static void PreAppStart()
         {
             var kernel = new StandardKernel();
-
-            var setting = ConfigurationManager.AppSettings["persistChat"];
+            var persistChatSetting = ConfigurationManager.AppSettings["persistChat"];
             _persistChat = false;
-            if (!String.IsNullOrEmpty(setting) &&
-                Boolean.TryParse(setting, out _persistChat) &&
+
+            if (!String.IsNullOrEmpty(persistChatSetting) &&
+                Boolean.TryParse(persistChatSetting, out _persistChat) &&
                 _persistChat)
             {
                 kernel.Bind<JabbrContext>()
@@ -41,26 +46,50 @@ namespace Chat.App_Start
                 kernel.Bind<IJabbrRepository>()
                     .To<PersistedRepository>()
                     .InRequestScope();
-
-                repoCreator = new Func<IJabbrRepository>(() => new PersistedRepository(new JabbrContext()));
             }
             else
             {
                 kernel.Bind<IJabbrRepository>()
                     .To<InMemoryRepository>()
                     .InSingletonScope();
-
-                repoCreator = new Func<IJabbrRepository>(() => new InMemoryRepository());
             }
 
+            // Setup the repository factory
+            _repoFactory = new Func<IJabbrRepository>(() => kernel.Get<IJabbrRepository>());
+
+            // 
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
 
             if (_persistChat)
             {
-                new DbMigrator(new Settings()).Update();
+                // Run the migrations if we're persisting chat
+                var settings = new Settings();
+                var migrator = new DbMigrator(settings);
+                migrator.Update();
             }
 
+            // Start the sweeper
             _timer = new Timer(_ => Sweep(), null, _sweepInterval, _sweepInterval);
+
+            AppDomain.CurrentDomain.FirstChanceException += (sender, e) =>
+            {
+                var ex = e.Exception.GetBaseException();
+                if (!(ex is InvalidOperationException) &&
+                    !(ex is RuntimeBinderException) &&
+                    !(ex is MissingMethodException) &&
+                    !(ex is ThreadAbortException))
+                {
+                    // ErrorSignal.Get(this).Raise(ex);
+                }
+            };
+
+            TaskScheduler.UnobservedTaskException += (sender, e) =>
+            {
+                // ErrorSignal.Get(this).Raise(e.Exception.GetBaseException());
+                e.SetObserved();
+            };
+
+            Signaler.Instance.DefaultTimeout = TimeSpan.FromSeconds(25);
         }
 
         private static void Sweep()
@@ -74,7 +103,7 @@ namespace Chat.App_Start
 
             try
             {
-                using (var repo = repoCreator())
+                using (var repo = _repoFactory())
                 {
                     MarkInactiveUsers(repo);
 
@@ -91,7 +120,7 @@ namespace Chat.App_Start
 
         private static void MarkInactiveUsers(IJabbrRepository repo)
         {
-            var clients = Hub.GetClients<JabbR.Chat>();
+            var clients = Hub.GetClients<Chat>();
 
             var inactiveUsers = new List<ChatUser>();
 
@@ -138,6 +167,7 @@ namespace Chat.App_Start
                     inactiveRooms.Add(room);
                 }
             }
+
             foreach (var room in inactiveRooms)
             {
                 repo.Remove(room);

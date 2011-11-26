@@ -1,6 +1,6 @@
 ﻿using System.Security.Principal;
 using System.Web;
-using Chat.Models;
+using JabbR.Models;
 using Moq;
 using SignalR;
 using SignalR.Hubs;

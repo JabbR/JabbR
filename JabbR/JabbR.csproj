@@ -161,7 +161,6 @@
     <Content Include="Content\images\logo32.png" />
     <Content Include="Content\images\small-logo.png" />
     <Content Include="index.htm" />
-    <Content Include="Global.asax" />
     <Content Include="Mobile.css" />
     <Content Include="mobile.htm" />
     <Content Include="Scripts\jquery-1.7-vsdoc.js" />
@@ -208,9 +207,6 @@
     <Compile Include="ContentProviders\IContentProvider.cs" />
     <Compile Include="ContentProviders\ImageContentProvider.cs" />
     <Compile Include="ContentProviders\YoutubeContentProvider.cs" />
-    <Compile Include="Global.asax.cs">
-      <DependentUpon>Global.asax</DependentUpon>
-    </Compile>
     <Compile Include="Infrastructure\StringExtensions.cs" />
     <Compile Include="Migrations\201111240945284_Initial.cs" />
     <Compile Include="Migrations\201111240945284_Initial.Designer.cs">

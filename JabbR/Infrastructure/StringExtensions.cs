@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Chat.Infrastructure
+namespace JabbR.Infrastructure
 {
     public static class StringExtensions
     {

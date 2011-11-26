@@ -1,4 +1,4 @@
-namespace Chat.Models.Migrations
+namespace JabbR.Models.Migrations
 {
     using System.Data.Entity.Migrations;
     

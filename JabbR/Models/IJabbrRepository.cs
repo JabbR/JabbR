@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System;
 
-namespace Chat.Models
+namespace JabbR.Models
 {
     public interface IJabbrRepository : IDisposable
     {

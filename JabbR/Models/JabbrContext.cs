@@ -1,6 +1,6 @@
 ﻿using System.Data.Entity;
 
-namespace Chat.Models
+namespace JabbR.Models
 {
     public class JabbrContext : DbContext
     {

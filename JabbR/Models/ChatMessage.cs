@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Chat.Models
+namespace JabbR.Models
 {
     public class ChatMessage
     {
