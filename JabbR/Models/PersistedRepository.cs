@@ -7,7 +7,7 @@ namespace JabbR.Models
 {
     public class PersistedRepository : IJabbrRepository
     {
-        readonly JabbrContext _db;
+        private readonly JabbrContext _db;
         
         public PersistedRepository(JabbrContext db)
         {
@@ -61,6 +61,11 @@ namespace JabbR.Models
         public ChatUser GetUserById(string userId)
         {
             return _db.Users.FirstOrDefault(u => u.Id == userId);
+        }
+
+        public ChatUser GetUserByName(string userName)
+        {
+            return _db.Users.FirstOrDefault(u => u.Name == userName);
         }
 
         public ChatRoom GetRoomByName(string roomName)

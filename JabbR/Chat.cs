@@ -280,12 +280,7 @@ namespace JabbR
             user.Status = (int)UserStatus.Offline;
             _repository.Update();
         }
-
-        private void UpdateActivity(ChatUser user, ChatRoom room)
-        {
-            Clients[room.Name].updateActivity(new UserViewModel(user, room));
-        }
-
+        
         private void UpdateActivity()
         {
             Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
@@ -294,6 +289,11 @@ namespace JabbR
             ChatRoom room = tuple.Item2;
 
             UpdateActivity(user, room);
+        }
+
+        private void UpdateActivity(ChatUser user, ChatRoom room)
+        {
+            Clients[room.Name].updateActivity(new UserViewModel(user, room));
         }
 
         private void ProcessUrls(IEnumerable<string> links, ChatRoom room, ChatMessage chatMessage)
@@ -323,7 +323,7 @@ namespace JabbR
                     chatMessage.Content += extractedContent;
                     _repository.Update();
 
-                    Clients[room.Name].addMessageContent(chatMessage.Id, extractedContent);
+                    Clients[room.Name].addMessageContent(chatMessage.Id, extractedContent, room.Name);
                 }
             });
         }
@@ -375,7 +375,18 @@ namespace JabbR
 
                 return true;
             }
-            else if (commandName.Equals("kick", StringComparison.OrdinalIgnoreCase))
+            else if (TryHandleOwnerCommand(user, room, commandName, parts))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        // Commands that require the user to be the owner of the room
+        private bool TryHandleOwnerCommand(ChatUser user, ChatRoom room, string commandName, string[] parts)
+        {
+            if (commandName.Equals("kick", StringComparison.OrdinalIgnoreCase))
             {
                 HandleKick(user, room, parts);
 
@@ -459,9 +470,9 @@ namespace JabbR
             return false;
         }
 
-        private void HandleKick(ChatUser chatUser, ChatRoom room, string[] parts)
+        private void HandleKick(ChatUser user, ChatRoom room, string[] parts)
         {
-            if (room.Owner != chatUser)
+            if (room.Owner != user)
             {
                 throw new InvalidOperationException("You are not the owner of " + room.Name);
             }
@@ -477,14 +488,14 @@ namespace JabbR
             }
 
             string targetUserName = parts[1];
-            var targetUser = _repository.Users.FirstOrDefault(s => s.Name.Equals(targetUserName, StringComparison.OrdinalIgnoreCase));
+            var targetUser = _repository.GetUserByName(targetUserName);
 
             if (targetUser == null)
             {
                 throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", targetUserName));
             }
 
-            if (targetUser == chatUser)
+            if (targetUser == user)
             {
                 throw new InvalidOperationException("Why would you want to kick yourself?");
             }
@@ -506,11 +517,11 @@ namespace JabbR
 
             var name = NormalizeUserName(parts[1]);
 
-            var exactUserMatch = _repository.Users.FirstOrDefault(s => s.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            ChatUser user = _repository.GetUserByName(name);
 
-            if (exactUserMatch != null)
+            if (user != null)
             {
-                Caller.showUsersRoomList(exactUserMatch.Name, exactUserMatch.Rooms.Select(r => r.Name));
+                Caller.showUsersRoomList(user.Name, user.Rooms.Select(r => r.Name));
                 return;
             }
 
@@ -518,7 +529,7 @@ namespace JabbR
 
             if (users.Count() == 1)
             {
-                var user = users.First();
+                user = users.First();
                 Caller.showUsersRoomList(user.Name, user.Rooms.Select(r => r.Name));
             }
             else
@@ -586,13 +597,18 @@ namespace JabbR
             HandleLeave(room, user);
         }
 
-        private void HandleLeave(ChatRoom room, ChatUser user)
+        private void HandleLeave(ChatRoom room, ChatUser user, bool leaveRoom = true)
         {
-            room.Users.Remove(user);
+            if (leaveRoom)
+            {
+                // Remove the user from the room
+                room.Users.Remove(user);
+                user.Rooms.Remove(room);
+            }
+
             room.LastActivity = DateTime.UtcNow;
 
-            user.Rooms.Remove(room);
-
+            // Update the store
             _repository.Update();
 
             var userViewModel = new UserViewModel(user, room);
@@ -959,7 +975,7 @@ namespace JabbR
             // Leave all rooms
             foreach (var room in user.Rooms.ToList())
             {
-                HandleLeave(room, user);
+                HandleLeave(room, user, leaveRoom: false);
             }
         }
 
