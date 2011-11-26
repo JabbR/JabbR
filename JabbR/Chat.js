@@ -125,8 +125,6 @@ $(function () {
             $messages = $('#messages-' + roomId);
         }
 
-        var nearEnd = $messages.isNearTheEnd();
-
         var e = $('<li/>').html(content).appendTo($messages);
 
         refreshMessages();
@@ -142,10 +140,6 @@ $(function () {
 
         if (roomId) {
             updateRoomMessageDimensions(roomId);
-        }
-
-        if (nearEnd) {
-            scrollToBottom();
         }
 
         return e;
@@ -225,9 +219,15 @@ $(function () {
 
         clearUsers(roomId);
 
-        log('chat.getUsers(' + room + ')');
+        var captureLevel = logLevel;
+
         chat.getUsers(room)
                     .done(function (users) {
+                        var oldLevel = logLevel;
+                        logLevel = captureLevel;
+
+                        log('chat.getUsers(' + room + ').done()');
+                        logInc();
                         $.each(users, function () {
                             chat.addUser(this, true);
                             markUserInactive(this);
@@ -236,21 +236,32 @@ $(function () {
                         refreshUsers();
 
                         $('#new-message').focus();
+                        logDec();
+
+                        logLevel = captureLevel;
                     });
 
-        log('chat.getRecentMessages(' + room + ')');
         chat.getRecentMessages(room)
                     .done(function (messages) {
+                        var oldLevel = logLevel;
+                        logLevel = captureLevel;
+
+                        log('chat.getRecentMessages(' + room + ').done()');
+
+                        logInc();
+
                         $.each(messages, function () {
                             chat.addMessage(this, true);
                         });
+                        logDec();
+
+                        logLevel = captureLevel;
                     });
 
         if (makeCurrent) {
             addMessage('Entered ' + room, 'notification', room);
         }
 
-        updateCookie();
         logDec();
 
         oldLevel = oldLevel;
@@ -375,9 +386,12 @@ $(function () {
     };
 
     chat.addUser = function (user, exists) {
-        var oldLevel = logLevel;
-        logLevel = 0;
-        log('chat.addUser with => ' + JSON.stringify(user));
+        if (!exists) {
+            var oldLevel = logLevel;
+            logLevel = 0;
+        }
+
+        log('chat.addUser(' + JSON.stringify(user) + ')');
         logInc();
         var userViewModel = null,
             room = user.Room,
@@ -386,11 +400,6 @@ $(function () {
 
         // remove all users that are leaving
         $('.user.removing').remove();
-
-        if (user.Name === this.name) {
-            log('It"s me!');
-            updateCookie();
-        };
 
         if (!room) {
             log('Not in a room!');
@@ -421,10 +430,10 @@ $(function () {
             addMessage(user.Name + ' just entered ' + room, 'notification', room);
         }
 
-        updateCookie();
-
         logDec();
-        logLevel = oldLevel;
+        if (!exists) {
+            logLevel = oldLevel;
+        }
     };
 
     chat.changeUserName = function (user, oldName, newName) {
@@ -448,7 +457,7 @@ $(function () {
         refreshUsers();
 
         if (user.Id === this.id) {
-            log('Changing my own name');
+            log('Changing my own name from ' + oldName + ' to ' + newName);
             return;
         }
         else {
@@ -466,7 +475,6 @@ $(function () {
         logInc();
 
         addMessage('Your name is now ' + newName, 'notification');
-        updateCookie();
 
         logDec();
         logLevel = oldLevel;
@@ -493,6 +501,7 @@ $(function () {
                         })
                     );
         }
+
         refreshUsers();
 
         if (currentUser.Id === this.id) {
@@ -515,7 +524,6 @@ $(function () {
 
         addMessage('Your gravatar has been set.', 'notification');
         chat.hash = currentUser.Hash;
-        updateCookie();
 
         logDec();
         logLevel = oldLevel;
@@ -636,7 +644,6 @@ $(function () {
 
             removeRoom(roomId);
             showRoom('lobby');
-            updateCookie();
 
             addMessage('You have left ' + room, 'notification');
 
@@ -768,7 +775,7 @@ $(function () {
     }
 
     function updateTitle() {
-        log('updateTitle()');
+        // log('updateTitle()');
 
         logInc();
         if (chat.unread === 0) {
@@ -920,29 +927,26 @@ $(function () {
 
         updateRoomMessageDimensions(roomId);
 
-        scrollToBottom();
-
         logDec();
     }
 
     $.connection.hub.start(function () {
+        log('chat.join()');
         chat.join()
             .fail(function (e) {
                 log('Failed to join jabbr chat => ' + e);
                 addMessage(e, 'error');
             })
             .done(function (success) {
+                var oldLevel = logLevel;
+                logLevel = 0;
+                log('chat.join().done(' + success + ')');
                 var activeRoom = chat.activeRoom || 'Lobby',
                     activeRoomId = getRoomId(activeRoom);
 
                 // Show the active room
                 addRoom(activeRoomId, activeRoom);
                 showRoom(activeRoomId, activeRoom);
-
-                log('chat.join().done(' + success + ')');
-
-                // Update the cookie
-                updateCookie();
 
                 if (success === false) {
                     addMessage('Choose a name using "/nick nickname".', 'notification');
@@ -951,6 +955,8 @@ $(function () {
                     addMessage('Welcome back ' + chat.name, 'notification', 'lobby');
                     addMessage('You can join any of the rooms on the right', 'notification', 'lobby');
                 }
+
+                logLevel = oldLevel;
             });
     });
 
