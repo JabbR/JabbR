@@ -57,6 +57,11 @@
 
 .messages li {
     list-style-type: none;
+    padding: 5px;
+}
+
+.messages li.message {
+    padding: 0px;
 }
 
 .messages li img.gravatar {

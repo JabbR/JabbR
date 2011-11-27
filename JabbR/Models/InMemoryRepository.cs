@@ -35,7 +35,7 @@ namespace JabbR.Models
         {
             _rooms.Remove(room);
         }
-        
+
         public void Remove(ChatUser user)
         {
             _users.Remove(user);
@@ -63,6 +63,12 @@ namespace JabbR.Models
         public ChatRoom GetRoomByName(string roomName)
         {
             return _rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public IQueryable<ChatUser> SearchUsers(string name)
+        {
+            return _users.Where(u => u.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) != -1)
+                         .AsQueryable();
         }
     }
 }

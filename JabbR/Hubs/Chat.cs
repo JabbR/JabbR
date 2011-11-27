@@ -492,7 +492,7 @@ namespace JabbR
                 return;
             }
 
-            var users = _repository.Users.Where(s => s.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) != -1);
+            var users = _repository.SearchUsers(name);
 
             if (users.Count() == 1)
             {

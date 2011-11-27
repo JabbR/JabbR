@@ -278,18 +278,56 @@
 
     // Helpish commands
     chat.showRooms = function (rooms) {
+        ui.addMessage('<h3>Rooms</h3>');
+        if (!rooms.length) {
+            ui.addMessage('No rooms available', 'notification');
+        }
+        else {
+            $.each(rooms, function () {
+                ui.addMessage(this.Name + ' (' + this.Count + ')');
+            });
+        }
+        ui.addMessage('<br/>');
     };
 
     chat.showCommands = function (commands) {
+        ui.addMessage('<h3>Help</h3>');
+        $.each(commands, function () {
+            ui.addMessage(this.Name + ' - ' + this.Description);
+        });
+        ui.addMessage('<br />');
     };
 
     chat.showUsersInRoom = function (room, names) {
+        ui.addMessage('<h3> Users in ' + room + '</h3>');
+        if (names.length === 0) {
+            ui.addMessage('Room is empty');
+        }
+        else {
+            $.each(names, function () {
+                ui.addMessage('- ' + this);
+            });
+        }
     };
 
     chat.listUsers = function (users) {
+        if (users.length === 0) {
+            ui.addMessage('<h3>No users matched your search</h3>');
+        }
+        else {
+            ui.addMessage('<h3> The following users match your search </h3>');
+            ui.addMessage(users.join(', '));
+        }
     };
 
     chat.showUsersRoomList = function (user, rooms) {
+        if (rooms.length == 0) {
+            ui.addMessage('<h3>' + user + ' is not in any rooms</h3>');
+        }
+        else {
+            ui.addMessage('<h3>' + user + ' is in the following rooms</h3>');
+            ui.addMessage(rooms.join(', '));
+        }
     };
 
     $(ui).bind('ui.typing', function () {
