@@ -184,8 +184,8 @@
 
             // DOM events
             $(document).on('click', 'h3.collapsible_title', function () {
-                var $message = $(this).closest('.message');
-                var nearEnd = ui.isNearTheEnd();
+                var $message = $(this).closest('.message'),
+                    nearEnd = ui.isNearTheEnd();
 
                 $(this).next().toggle(0, function () {
                     resize($message);
@@ -322,6 +322,9 @@
             return room.isNearTheEnd();
         },
         resize: resizeActiveRoom,
+        resizeContainingMessage: function ($element) {
+            resize($element.closest('.message'));
+        },
         populateLobbyRooms: function (rooms) {
             var lobby = getRoomElements('Lobby');
 

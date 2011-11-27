@@ -317,7 +317,6 @@
                 ui.addMessage(e, 'error');
             });
 
-        // 
         clearTimeout(typingTimeoutId);
         typingTimeoutId = 0;
         chat.typing(false);
