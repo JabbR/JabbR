@@ -7,7 +7,8 @@
         $tabs = null,
         $submitButton = null,
         $newMessage = null,
-        templates = null;
+        templates = null,
+        Keys = { Up: 38, Down: 40, Esc: 27 };
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -177,6 +178,7 @@
                 }
 
                 $newMessage.val('');
+                $newMessage.focus();
 
                 ev.preventDefault();
                 return false;
@@ -184,6 +186,26 @@
 
             $(window).resize(resizeActiveRoom);
 
+            $newMessage.keydown(function (e) {
+                var key = e.keyCode || e.which;
+                switch (key) {
+                    case Keys.Up:
+                        $(ui).trigger('ui.prevMessage');
+                        break;
+
+                    case Keys.Down:
+                        $(ui).trigger('ui.nextMessage');
+                        break;
+
+                    case Keys.Esc:
+                        $(this).val('');
+                        break;
+                }
+            });
+
+        },
+        setMessage: function (value) {
+            $newMessage.val(value);
         },
         addRoom: addRoom,
         removeRoom: removeRoom,

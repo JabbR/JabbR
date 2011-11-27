@@ -4,7 +4,9 @@
 /// <reference path="Chat.ui.js" />
 
 (function ($, connection, window, undefined, ui) {
-    var chat = connection.chat;
+    var chat = connection.chat,
+        messageHistory = [],
+        historyLocation = 0;
 
     function isSelf(user) {
         return chat.name === user.Name;
@@ -224,6 +226,11 @@
             .fail(function (e) {
                 ui.addMessage(e, 'error');
             });
+
+        messageHistory.push(msg);
+
+        // REVIEW: should this pop items off the top after a certain length?
+        historyLocation = messageHistory.length;
     });
 
     $(ui).bind('ui.joinRoom', function (ev, room) {
@@ -231,6 +238,19 @@
             .fail(function (e) {
                 ui.addMessage(e, 'error');
             });
+    });
+
+    $(ui).bind('ui.prevMessage', function () {
+        historyLocation -= 1;
+        if (historyLocation < 0) {
+            historyLocation = messageHistory.length - 1;
+        }
+        ui.setMessage(messageHistory[historyLocation]);
+    });
+
+    $(ui).bind('ui.nextMessage', function () {
+        historyLocation = (historyLocation + 1) % messageHistory.length;
+        ui.setMessage(messageHistory[historyLocation]);
     });
 
     $(ui).bind('ui.activeRoomChanged', function (ev, room) {
