@@ -72,21 +72,17 @@ namespace JabbR
             _repository.Update();
 
             // Update the client state
-            Caller.room = null;
             Caller.id = user.Id;
             Caller.name = user.Name;
 
-            // Tell the client to re-join these rooms
-            foreach (var room in user.Rooms)
+            if (user.Rooms.Any(room => room.Name.Equals(clientState.ActiveRoom, StringComparison.OrdinalIgnoreCase)))
             {
-                if (room.Name.Equals(clientState.ActiveRoom, StringComparison.OrdinalIgnoreCase))
-                {
-                    // Update the active room on the client
-                    Caller.activeRoom = clientState.ActiveRoom;
-                }
-
-                HandleRejoin(room, user);
+                // Update the active room on the client (only if it's still a valid room)
+                Caller.activeRoom = clientState.ActiveRoom;
             }
+
+            // Re-join the user's rooms
+            RejoinRooms(user, user.Rooms);
 
             return true;
         }
@@ -140,7 +136,7 @@ namespace JabbR
             ChatRoom room = tuple.Item2;
 
             // Update activity *after* ensuring the user, this forces them to be active
-            UpdateActivity();
+            UpdateActivity(user, room);
 
             HashSet<string> links;
             var messageText = Transform(content, out links);
@@ -154,12 +150,11 @@ namespace JabbR
             };
 
             room.Messages.Add(chatMessage);
-            room.LastActivity = DateTime.UtcNow;
             _repository.Update();
 
-            var messageViewModel = new MessageViewModel(chatMessage, room);
+            var messageViewModel = new MessageViewModel(chatMessage);
 
-            Clients[room.Name].addMessage(messageViewModel);
+            Clients[room.Name].addMessage(messageViewModel, room.Name);
 
             if (!links.Any())
             {
@@ -185,45 +180,29 @@ namespace JabbR
             return rooms;
         }
 
-        public IEnumerable<UserViewModel> GetUsers(string roomName)
+        public RoomViewModel GetRoomInfo(string roomName)
         {
             if (String.IsNullOrEmpty(roomName))
             {
-                return Enumerable.Empty<UserViewModel>();
+                return null;
             }
 
             ChatRoom room = _repository.GetRoomByName(roomName);
 
             if (room == null)
             {
-                return Enumerable.Empty<UserViewModel>();
+                return null;
             }
 
-            return room.Users.Select(u => new UserViewModel(u, room));
-        }
-
-        public IEnumerable<MessageViewModel> GetRecentMessages(string roomName)
-        {
-            if (String.IsNullOrEmpty(roomName))
+            return new RoomViewModel
             {
-                return Enumerable.Empty<MessageViewModel>();
-            }
-
-            ChatRoom room = _repository.GetRoomByName(roomName);
-
-            if (room == null)
-            {
-                return Enumerable.Empty<MessageViewModel>();
-            }
-
-            return (from m in room.Messages
-                    orderby m.When descending
-                    select new MessageViewModel(m, room)).Take(20).Reverse();
-        }
-
-        public ChatRoom[] GetUserRooms(ChatUser user)
-        {
-            return user.Rooms.ToArray();
+                Name = room.Name,
+                Users = room.Users.Select(u => new UserViewModel(u)),
+                Owner = room.Owner != null ? new UserViewModel(room.Owner) : null,
+                RecentMessages = (from m in room.Messages
+                                  orderby m.When descending
+                                  select new MessageViewModel(m)).Take(20).Reverse()
+            };
         }
 
         public void Typing(bool isTyping)
@@ -239,7 +218,7 @@ namespace JabbR
                 return;
             }
 
-            ChatUser user = _repository.Users.FirstOrDefault(u => u.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
+            ChatUser user = _repository.GetUserById(id);
 
             if (user == null)
             {
@@ -248,7 +227,7 @@ namespace JabbR
 
             ChatRoom room = EnsureRoom(user);
 
-            var userViewModel = new UserViewModel(user, room);
+            var userViewModel = new UserViewModel(user);
 
             if (isTyping)
             {
@@ -257,11 +236,11 @@ namespace JabbR
 
             if (room != null)
             {
-                Clients[room.Name].setTyping(userViewModel, isTyping);
+                Clients[room.Name].setTyping(userViewModel, room.Name, isTyping);
             }
             else
             {
-                Caller.setTyping(userViewModel, isTyping);
+                Caller.setTyping(userViewModel, room.Name, isTyping);
             }
         }
 
@@ -279,7 +258,7 @@ namespace JabbR
             user.Status = (int)UserStatus.Offline;
             _repository.Update();
         }
-        
+
         private void UpdateActivity()
         {
             Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
@@ -292,7 +271,7 @@ namespace JabbR
 
         private void UpdateActivity(ChatUser user, ChatRoom room)
         {
-            Clients[room.Name].updateActivity(new UserViewModel(user, room));
+            Clients[room.Name].updateActivity(new UserViewModel(user), room.Name);
         }
 
         private void ProcessUrls(IEnumerable<string> links, ChatRoom room, ChatMessage chatMessage)
@@ -605,13 +584,11 @@ namespace JabbR
                 user.Rooms.Remove(room);
             }
 
-            room.LastActivity = DateTime.UtcNow;
-
             // Update the store
             _repository.Update();
 
-            var userViewModel = new UserViewModel(user, room);
-            Clients[room.Name].leave(userViewModel).Wait();
+            var userViewModel = new UserViewModel(user);
+            Clients[room.Name].leave(userViewModel, room.Name).Wait();
 
             GroupManager.RemoveFromGroup(user.ClientId, room.Name).Wait();
         }
@@ -686,11 +663,6 @@ namespace JabbR
             return IsUserInRoom(room, user);
         }
 
-        private void HandleRejoin(ChatRoom room, ChatUser user)
-        {
-            JoinRoom(user, room);
-        }
-
         private void HandleJoin(ChatUser user, string[] parts)
         {
             if (parts.Length < 2)
@@ -712,29 +684,49 @@ namespace JabbR
                 newRoom = AddRoom(user, newRoomName);
             }
 
-            JoinRoom(user, newRoom, isActive: true);
+            JoinRoom(user, newRoom);
         }
 
-        private void JoinRoom(ChatUser user, ChatRoom newRoom, bool isActive = false)
+        private void RejoinRooms(ChatUser user, IEnumerable<ChatRoom> rooms)
         {
-            var userViewModel = new UserViewModel(user, newRoom);
+            var userViewModel = new UserViewModel(user);
+            var roomNames = new List<string>();
+
+            foreach (var room in rooms)
+            {
+                var ownerViewModel = room.Owner == null ? null : new UserViewModel(room.Owner);
+                // Tell the people in this room that you've joined
+                Clients[room.Name].addUser(userViewModel, room.Name, ownerViewModel).Wait();
+
+                // Add the caller to the group so they receive messages
+                AddToGroup(room.Name).Wait();
+
+                // Add to the list of room names
+                roomNames.Add(room.Name);
+            }
+
+            Caller.rejoinRooms(roomNames);
+        }
+
+        private void JoinRoom(ChatUser user, ChatRoom newRoom)
+        {
+            var userViewModel = new UserViewModel(user);
+            var ownerViewModel = newRoom.Owner == null ? null : new UserViewModel(newRoom.Owner);
 
             // Add this room to the user's list of rooms
             user.Rooms.Add(newRoom);
 
             // Add this user to the list of room's users
             newRoom.Users.Add(user);
-            newRoom.LastActivity = DateTime.UtcNow;
 
             _repository.Update();
 
             // Set the room on the caller
-            Caller.room = newRoom.Name;
-            Caller.joinRoom(newRoom.Name, isActive);
+            Caller.activeRoom = newRoom.Name;
+            Caller.joinRoom(newRoom.Name);
 
             // Tell the people in this room that you've joined
-            userViewModel.Room = newRoom.Name;
-            Clients[newRoom.Name].addUser(userViewModel).Wait();
+            Clients[newRoom.Name].addUser(userViewModel, newRoom.Name, ownerViewModel).Wait();
 
             // Add the caller to the group so they receive messages
             AddToGroup(newRoom.Name).Wait();
@@ -766,8 +758,8 @@ namespace JabbR
             {
                 foreach (var room in user.Rooms)
                 {
-                    userViewModel = new UserViewModel(user, room);
-                    Clients[room.Name].changeGravatar(userViewModel);
+                    userViewModel = new UserViewModel(user);
+                    Clients[room.Name].changeGravatar(userViewModel, room.Name);
                 }
             }
             else
@@ -898,16 +890,13 @@ namespace JabbR
             {
                 foreach (var room in user.Rooms)
                 {
-                    userViewModel = new UserViewModel(user, room);
-                    Clients[room.Name].changeUserName(userViewModel, oldUserName, newUserName);
+                    Clients[room.Name].changeUserName(oldUserName, userViewModel, room.Name);
                 }
             }
             else
             {
-                Caller.changeUserName(userViewModel, oldUserName, newUserName);
+                Caller.changeUserName(oldUserName, userViewModel);
             }
-
-            Caller.userNameChanged(newUserName);
         }
 
         private void AddUser(string name)
@@ -918,7 +907,7 @@ namespace JabbR
             }
 
             EnsureUserNameIsAvailable(name);
-            
+
             var user = new ChatUser
             {
                 Name = name,
@@ -934,7 +923,7 @@ namespace JabbR
             Caller.id = user.Id;
 
             var userViewModel = new UserViewModel(user);
-            Caller.addUser(userViewModel);
+            Caller.userCreated(userViewModel);
         }
 
         private ChatRoom AddRoom(ChatUser owner, string name)
@@ -989,7 +978,7 @@ namespace JabbR
 
         private ChatRoom EnsureRoom(ChatUser user)
         {
-            string roomName = Caller.room;
+            string roomName = Caller.activeRoom;
 
             if (String.IsNullOrEmpty(roomName))
             {

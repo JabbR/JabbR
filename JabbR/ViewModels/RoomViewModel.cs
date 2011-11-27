@@ -1,8 +1,13 @@
-﻿namespace JabbR.ViewModels
+﻿using System.Collections.Generic;
+
+namespace JabbR.ViewModels
 {
     public class RoomViewModel
     {
         public string Name { get; set; }
         public int Count { get; set; }
+        public IEnumerable<UserViewModel> Users { get; set; }
+        public UserViewModel Owner { get; set; }
+        public IEnumerable<MessageViewModel> RecentMessages { get; set; }
     }
 }
