@@ -14,8 +14,8 @@
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
     }
 
-    function room($tabs, $users, $messages) {
-        this.tab = $tabs;
+    function room($tab, $users, $messages) {
+        this.tab = $tab;
         this.users = $users;
         this.messages = $messages;
 
