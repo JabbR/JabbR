@@ -178,8 +178,9 @@ li.room:hover {
 }
 
 .error {
-    color: Red;
     padding: 5px;
+    background-color: #fddfde;
+    border-bottom: 1px solid #fbc7c6;
 }
 
 .pm {
