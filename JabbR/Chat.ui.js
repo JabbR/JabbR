@@ -109,7 +109,7 @@
         var room = getRoomElements(roomName);
 
         if (room.exists()) {
-            room.tabs.remove();
+            room.tab.remove();
             room.messages.remove();
             room.users.remove();
         }

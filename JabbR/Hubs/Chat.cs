@@ -575,10 +575,10 @@ namespace JabbR
                 // Remove the user from the room
                 room.Users.Remove(user);
                 user.Rooms.Remove(room);
-            }
 
-            // Update the store
-            _repository.Update();
+                // Update the store
+                _repository.Update();
+            }
 
             var userViewModel = new UserViewModel(user);
             Clients[room.Name].leave(userViewModel, room.Name).Wait();
