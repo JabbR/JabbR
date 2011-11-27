@@ -529,7 +529,7 @@ namespace JabbR
                 throw new InvalidOperationException("Room name cannot be blank!");
             }
 
-            var room = _repository.Rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
+            var room = _repository.GetRoomByName(roomName);
 
             if (room == null)
             {
