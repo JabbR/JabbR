@@ -133,6 +133,8 @@
     };
 
     chat.addMessageContent = function (id, content, room) {
+        var nearTheEnd = ui.isNearTheEnd(room);
+
         scrollIfNecessary(function () {
             ui.addChatMessageContent(id, content, room);
         }, room);
@@ -141,9 +143,12 @@
 
         // Adding external content can sometimes take a while to load
         // Since we don't know when it'll become full size in the DOM
-        // we're just going to wait a little bit and hope for the best :)
+        // we're just going to wait a little bit and hope for the best :) (still a HACK tho)
         window.setTimeout(function () {
-            ui.scrollToBottom();
+            ui.resize();
+            if (nearTheEnd) {
+                ui.scrollToBottom();
+            }
         }, 1000);
     };
 

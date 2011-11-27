@@ -304,6 +304,7 @@
 
             return room.isNearTheEnd();
         },
+        resize: resizeActiveRoom,
         populateLobbyRooms: function (rooms) {
             var lobby = getRoomElements('Lobby');
 
