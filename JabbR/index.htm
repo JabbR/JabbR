@@ -37,11 +37,9 @@
     </script>
     <script id="new-user-template" type="text/x-jquery-tmpl">
         <li class="user" data-name="${name}">
-            <img class="gravatar" src="http://www.gravatar.com/avatar/${hash}?s=16&d=mm" /> 
-            <span class="name">${name}</span>
-            {{if owner}}
-            <span class="owner">(owner)</span>
-            {{/if}}
+            <img class="gravatar" src="http://www.gravatar.com/avatar/${hash}?s=16&d=mm" />
+            <span class="name">${name}</span>           
+            <span class="owner">{{if owner}}(owner){{/if}}</span>
         </li>
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">
