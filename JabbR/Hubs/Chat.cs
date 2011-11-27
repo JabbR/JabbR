@@ -234,14 +234,7 @@ namespace JabbR
                 UpdateActivity(user, room);
             }
 
-            if (room != null)
-            {
-                Clients[room.Name].setTyping(userViewModel, room.Name, isTyping);
-            }
-            else
-            {
-                Caller.setTyping(userViewModel, room.Name, isTyping);
-            }
+            Clients[room.Name].setTyping(userViewModel, room.Name, isTyping);
         }
 
         private void Disconnect(string clientId)

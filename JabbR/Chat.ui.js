@@ -261,6 +261,10 @@
                 }
             });
 
+            $newMessage.keypress(function (e) {
+                $(ui).trigger('ui.typing');
+            });
+
             $newMessage.focus();
         },
         setMessage: function (value) {
@@ -384,6 +388,17 @@
                 .fadeOut('slow', function () {
                     $(this).remove();
                 });
+        },
+        setUserTyping: function (user, roomName, isTyping) {
+            var room = getCurrentRoomElements(roomName),
+                $user = room.getUser(user.Name);
+
+            if (isTyping) {
+                $user.addClass('typing');
+            }
+            else {
+                $user.removeClass('typing');
+            }
         },
         addChatMessage: function (message, roomName) {
             var room = getRoomElements(roomName),

@@ -9,7 +9,8 @@
         historyLocation = 0,
         originalTitle = document.title,
         unread = 0,
-        focus = true;
+        focus = true,
+        typingTimeoutId = null;
 
     function isSelf(user) {
         return chat.name === user.Name;
@@ -134,9 +135,6 @@
         ui.setUserActivity(user);
     };
 
-    chat.showRooms = function (rooms) {
-    };
-
     chat.addMessageContent = function (id, content, room) {
         var nearTheEnd = ui.isNearTheEnd(room);
 
@@ -214,24 +212,8 @@
         ui.addMessage('Your name is now ' + user.Name, 'notification', this.activeRoom);
     };
 
-    chat.setTyping = function (currentUser, isTyping, room) {
-
-    };
-
-    chat.showCommands = function (commands) {
-
-    };
-
-    chat.showUsersInRoom = function (room, names) {
-
-    };
-
-    chat.listUsers = function (users) {
-
-    };
-
-    chat.showUsersRoomList = function (user, rooms) {
-
+    chat.setTyping = function (user, room, isTyping) {
+        ui.setUserTyping(user, room, isTyping);        
     };
 
     chat.sendMeMessage = function (name, message) {
@@ -290,12 +272,56 @@
         ui.addMessage('You were kicked from ' + room, 'notification');
     };
 
+    // Helpish commands
+    chat.showRooms = function (rooms) {
+    };
+
+    chat.showCommands = function (commands) {
+    };
+
+    chat.showUsersInRoom = function (room, names) {
+    };
+
+    chat.listUsers = function (users) {
+    };
+
+    chat.showUsersRoomList = function (user, rooms) {
+    };
+
+    $(ui).bind('ui.typing', function () {
+        // If not in a room, don't try to send typing notifications
+        if (!chat.activeRoom) {
+            return;
+        }
+
+        // Clear any previous timeout
+        if (typingTimeoutId) {
+            clearTimeout(typingTimeoutId);
+        }
+        else {
+            // Otherwise, mark as typing
+            chat.typing(true);
+        }
+
+        // Set timeout to turn off
+        typingTimeoutId = window.setTimeout(function () {
+            typingTimeoutId = 0;
+            chat.typing(false);
+        }, 3000);
+    });
+
     $(ui).bind('ui.sendMessage', function (ev, msg) {
         chat.send(msg)
             .fail(function (e) {
                 ui.addMessage(e, 'error');
             });
 
+        // 
+        clearTimeout(typingTimeoutId);
+        typingTimeoutId = 0;
+        chat.typing(false);
+
+        // Store message history
         messageHistory.push(msg);
 
         // REVIEW: should this pop items off the top after a certain length?
