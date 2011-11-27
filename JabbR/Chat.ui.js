@@ -332,7 +332,7 @@
         addChatMessageContent: function (id, content, roomName) {
             var $message = $('#m-' + id);
 
-            $message.find(' .middle')
+            $message.find('.middle')
                     .append(content);
 
             // Resize this message
