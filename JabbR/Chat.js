@@ -136,7 +136,7 @@
     };
 
     chat.addMessageContent = function (id, content, room) {
-        var nearTheEnd = ui.isNearTheEnd(room);
+        var nearTheEndBefore = ui.isNearTheEnd(room);
 
         scrollIfNecessary(function () {
             ui.addChatMessageContent(id, content, room);
@@ -148,11 +148,12 @@
         // Since we don't know when it'll become full size in the DOM
         // we're just going to wait a little bit and hope for the best :) (still a HACK tho)
         window.setTimeout(function () {
+            var nearTheEndAfter = ui.isNearTheEnd(room);
             ui.resize();
-            if (nearTheEnd) {
+            if (nearTheEndBefore && nearTheEndAfter) {
                 ui.scrollToBottom();
             }
-        }, 1000);
+        }, 600);
     };
 
     chat.addMessage = function (message, room) {
@@ -213,7 +214,7 @@
     };
 
     chat.setTyping = function (user, room, isTyping) {
-        ui.setUserTyping(user, room, isTyping);        
+        ui.setUserTyping(user, room, isTyping);
     };
 
     chat.sendMeMessage = function (name, message) {
