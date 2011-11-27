@@ -253,19 +253,13 @@ namespace JabbR
             user.Status = (int)UserStatus.Offline;
             _repository.Update();
         }
-
-        private void UpdateActivity()
-        {
-            Tuple<ChatUser, ChatRoom> tuple = EnsureUserAndRoom();
-
-            ChatUser user = tuple.Item1;
-            ChatRoom room = tuple.Item2;
-
-            UpdateActivity(user, room);
-        }
-
+        
         private void UpdateActivity(ChatUser user, ChatRoom room)
         {
+            user.Status = (int)UserStatus.Active;
+            user.LastActivity = DateTime.UtcNow;
+            _repository.Update();
+
             Clients[room.Name].updateActivity(new UserViewModel(user), room.Name);
         }
 
@@ -692,6 +686,9 @@ namespace JabbR
                 var ownerViewModel = room.Owner == null ? null : new UserViewModel(room.Owner);
                 // Tell the people in this room that you've joined
                 Clients[room.Name].addUser(userViewModel, room.Name, ownerViewModel).Wait();
+
+                // Update activity
+                UpdateActivity(user, room);
 
                 // Add the caller to the group so they receive messages
                 AddToGroup(room.Name).Wait();

@@ -24,7 +24,7 @@ namespace JabbR.App_Start
         // Background task info
         private static bool _sweeping;
         private static Timer _timer;
-        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(5);
+        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(1);
 
         private const string SqlClient = "System.Data.SqlClient";
 
@@ -124,9 +124,9 @@ namespace JabbR.App_Start
             foreach (var user in repo.Users)
             {
                 var status = (UserStatus)user.Status;
-                if (status != UserStatus.Active)
+                if (status == UserStatus.Offline)
                 {
-                    // Skip users that aren't active
+                    // Skip offline users
                     continue;
                 }
 
