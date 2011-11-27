@@ -251,6 +251,13 @@
             $user.find('.name').html(user.Name);
             $user.attr('data-name', user.Name);
         },
+        changeGravatar: function (user, roomName) {
+            var room = getRoomElements(roomName),
+                $user = room.getUser(user.Name);
+
+            $user.find('.gravatar')
+                 .attr('src', 'http://www.gravatar.com/avatar/' + user.Hash + '?s=16&d=mm');
+        },
         removeUser: function (user, roomName) {
             var room = getRoomElements(roomName),
                 $user = room.getUser(user.Name);

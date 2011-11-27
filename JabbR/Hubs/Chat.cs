@@ -752,22 +752,19 @@ namespace JabbR
             user.Hash = hash;
             _repository.Update();
 
+            // Create the view model
             var userViewModel = new UserViewModel(user);
+
+            // Update the calling client
+            Caller.gravatarChanged(userViewModel);
 
             if (user.Rooms.Any())
             {
                 foreach (var room in user.Rooms)
                 {
-                    userViewModel = new UserViewModel(user);
                     Clients[room.Name].changeGravatar(userViewModel, room.Name);
                 }
             }
-            else
-            {
-                Caller.changeGravatar(userViewModel);
-            }
-
-            Caller.gravatarChanged(userViewModel);
         }
 
         private string CreateGravatarHash(string email)
@@ -881,10 +878,12 @@ namespace JabbR
             user.Name = newUserName;
             _repository.Update();
 
-            // Update the client side state
-            Caller.name = newUserName;
-
+            // Create the view model
             var userViewModel = new UserViewModel(user);
+
+            // Update the client side state
+            Caller.name = newUserName;            
+            Caller.userNameChanged(userViewModel);
 
             if (user.Rooms.Any())
             {
@@ -892,10 +891,6 @@ namespace JabbR
                 {
                     Clients[room.Name].changeUserName(oldUserName, userViewModel, room.Name);
                 }
-            }
-            else
-            {
-                Caller.changeUserName(oldUserName, userViewModel);
             }
         }
 

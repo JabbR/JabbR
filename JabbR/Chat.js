@@ -112,6 +112,26 @@
         }
     };
 
+    chat.changeUserName = function (oldName, user, room) {
+        ui.changeUserName(oldName, user, room);
+
+        if (!isSelf(user)) {
+            ui.addMessage(oldName + '\'s nick has changed to ' + user.Name, 'notification', room);
+        }
+    };
+
+    chat.changeGravatar = function (user, room) {
+        ui.changeGravatar(user, room);
+
+        if (!isSelf(user)) {
+            ui.addMessage(user.Name + "'s gravatar changed.", 'notification', room);
+        }
+    };
+
+    chat.gravatarChanged = function (user) {
+        ui.addMessage('Your gravatar has been set', 'notification', this.activeRoom);
+    };
+
     chat.userCreated = function (user) {
         ui.addMessage('Your nick is ' + user.Name, 'notification');
 
@@ -119,21 +139,8 @@
         updateCookie();
     };
 
-    chat.changeUserName = function (oldName, user, room) {
-        if (room) {
-            ui.changeUserName(oldName, user, room);
-        }
-
-        if (isSelf(user)) {
-            ui.addMessage('Your name is now ' + user.Name, 'notification', room);
-        }
-        else if (room) {
-            ui.addMessage(oldName + '\'s nick has changed to ' + user.Name, 'notification', room);
-        }
-    };
-
-    chat.changeGravatar = function (currentUser) {
-
+    chat.userNameChanged = function (user) {
+        ui.addMessage('Your name is now ' + user.Name, 'notification', this.activeRoom);
     };
 
     chat.setTyping = function (currentUser, isTyping, room) {
@@ -209,6 +216,7 @@
     };
 
     chat.kick = function (room) {
+        ui.addMessage('You were kicked from ' + room, 'notification');
     };
 
     $(ui).bind('ui.sendMessage', function (ev, msg) {
