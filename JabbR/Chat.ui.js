@@ -16,14 +16,14 @@
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
     }
 
+    function getUserClassName(userName) {
+        return '[data-name="' + userName + '"]';
+    }
+
     function Room($tab, $users, $messages) {
         this.tab = $tab;
         this.users = $users;
         this.messages = $messages;
-
-        function getUserClassName(userName) {
-            return '[data-name="' + userName + '"]';
-        }
 
         this.hasUnread = function () {
             return this.tab.hasClass('unread');
@@ -387,11 +387,12 @@
             return true;
         },
         setUserActivity: function (user) {
+            var $user = $(getUserClassName(user.Name));
             if (user.Active === true) {
-                $('[data-name="' + user.Name + '"]').fadeTo('slow', 1);
+                $user.fadeTo('slow', 1);
             }
             else {
-                $('[data-name="' + user.Name + '"]').fadeTo('slow', 0.5);
+                $user.fadeTo('slow', 0.5);
             }
         },
         changeUserName: function (oldName, user, roomName) {
