@@ -113,8 +113,9 @@
     // When the /join command gets raised this is called
     chat.joinRoom = function (room) {
         ui.addRoom(room);
+        ui.setActiveRoom(room);
+
         populateRoom(room).done(function () {
-            ui.setActiveRoom(room);
             ui.addMessage('You just entered ' + room, 'notification', room);
         });
     };
