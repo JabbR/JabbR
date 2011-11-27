@@ -20,6 +20,7 @@ namespace JabbR.Models
 
         public ChatRoom()
         {
+            LastActivity = DateTime.UtcNow;
             Messages = new HashSet<ChatMessage>();
             Users = new HashSet<ChatUser>();
         }
