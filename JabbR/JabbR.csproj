@@ -190,7 +190,6 @@
     <Content Include="Scripts\jquery.writeCapture.js" />
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\json2.min.js" />
-    <Content Include="Scripts\simplemarkdown.js" />
     <Content Include="Scripts\writeCapture.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
