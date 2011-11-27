@@ -9,7 +9,6 @@ namespace JabbR.Models
         [Key]
         public int Key { get; set; }
 
-        public DateTime LastActivity { get; set; }
         public DateTime? LastNudged { get; set; }
         public string Name { get; set; }
 
@@ -20,7 +19,6 @@ namespace JabbR.Models
 
         public ChatRoom()
         {
-            LastActivity = DateTime.UtcNow;
             Messages = new HashSet<ChatMessage>();
             Users = new HashSet<ChatUser>();
         }

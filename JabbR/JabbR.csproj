@@ -227,6 +227,10 @@
     <Compile Include="Migrations\201111251652132_UserStatus.Designer.cs">
       <DependentUpon>201111251652132_UserStatus.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201111271320034_DropRoomLastActivity.cs" />
+    <Compile Include="Migrations\201111271320034_DropRoomLastActivity.Designer.cs">
+      <DependentUpon>201111271320034_DropRoomLastActivity.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Settings.cs" />
     <Compile Include="Models\ChatMessage.cs" />
     <Compile Include="Models\ChatRoom.cs" />
