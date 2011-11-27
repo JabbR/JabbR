@@ -1,8 +1,4 @@
-﻿/// <reference path="Scripts/jquery-1.7.js" />
-/// <reference path="Scripts/jQuery.tmpl.js" />
-/// <reference path="Scripts/jquery.cookie.js" />
-
-(function ($, window, undefined, ui) {
+﻿(function ($, window, undefined, ui) {
     window.captureDocumentWrite = function (documentWritePath, headerText, elementToAppendTo) {
         $.fn.captureDocumentWrite(documentWritePath, function (content) {
             var nearEnd = ui.isNearTheEnd(),
