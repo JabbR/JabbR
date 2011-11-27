@@ -1,4 +1,5 @@
-﻿(function ($, window, undefined, ui) {
+﻿(function ($, window, ui) {
+    "use strict";
 
     window.addTweet = function (tweet) {
         // Keep track of whether we're need the end, so we can auto-scroll once the tweet is added.
@@ -23,4 +24,4 @@
         }
     }
 
-})(jQuery, window, undefined, chat.ui);
+})(jQuery, window, chat.ui);

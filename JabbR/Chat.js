@@ -3,7 +3,9 @@
 /// <reference path="Scripts/jquery.cookie.js" />
 /// <reference path="Chat.ui.js" />
 
-(function ($, connection, window, undefined, ui) {
+(function ($, connection, window, ui) {
+    "use strict";
+
     var chat = connection.chat,
         messageHistory = [],
         historyLocation = 0,
@@ -198,12 +200,12 @@
         }
     };
 
-    chat.gravatarChanged = function (user) {
+    chat.gravatarChanged = function () {
         ui.addMessage('Your gravatar has been set', 'notification', this.activeRoom);
     };
 
-    chat.userCreated = function (user) {
-        ui.addMessage('Your nick is ' + user.Name, 'notification');
+    chat.userCreated = function () {
+        ui.addMessage('Your nick is ' + this.name, 'notification');
 
         // Update the cookie
         updateCookie();
@@ -413,4 +415,4 @@
         });
     });
 
-})(jQuery, $.connection, window, undefined, window.chat.ui);
+})(jQuery, $.connection, window, window.chat.ui);

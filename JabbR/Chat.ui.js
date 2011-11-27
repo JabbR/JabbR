@@ -2,7 +2,9 @@
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 
-(function ($, window, undefined, utility) {
+(function ($, window, utility) {
+    "use strict";
+
     var $chatArea = null,
         $tabs = null,
         $submitButton = null,
@@ -14,44 +16,44 @@
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
     }
 
-    function room($tab, $users, $messages) {
+    function Room($tab, $users, $messages) {
         this.tab = $tab;
         this.users = $users;
         this.messages = $messages;
 
         this.hasUnread = function () {
             return this.tab.hasClass('unread');
-        }
+        };
 
         this.updateUnread = function (unread) {
             this.tab.addClass('unread')
                     .text('(' + unread + ') ' + this.getName());
-        }
+        };
 
         this.scrollToBottom = function () {
             this.messages.scrollTop(this.messages[0].scrollHeight);
-        }
+        };
 
         this.isNearTheEnd = function () {
             return this.messages.isNearTheEnd();
-        }
+        };
 
         this.getName = function () {
             return this.tab.data('name');
-        }
+        };
 
         this.isActive = function () {
             return this.tab.hasClass('current');
-        }
+        };
 
         this.exists = function () {
             return this.tab.length > 0;
-        }
+        };
 
         this.clear = function () {
             this.messages.empty();
             this.users.empty();
-        }
+        };
 
         this.makeInactive = function () {
             this.tab.removeClass('current');
@@ -61,7 +63,7 @@
 
             this.users.removeClass('current')
                       .hide();
-        }
+        };
 
         this.makeActive = function () {
             this.tab.addClass('current')
@@ -73,12 +75,25 @@
 
             this.users.addClass('current')
                       .show();
-        }
+        };
 
         // Users
         this.getUser = function (userName) {
             return this.users.find('[data-name="' + userName + '"]');
-        }
+        };
+    }
+
+    function getRoomElements(roomName) {
+        var roomId = getRoomId(roomName);
+        return new Room($('#tabs-' + roomId),
+                        $('#users-' + roomId),
+                        $('#messages-' + roomId));
+    }
+
+    function getCurrentRoomElements() {
+        return new Room($tabs.find('li.current'),
+                        $('.users.current'),
+                        $('.messages.current'));
     }
 
     function addRoom(roomName) {
@@ -115,17 +130,12 @@
         }
     }
 
-    function getRoomElements(roomName) {
-        var roomId = getRoomId(roomName);
-        return new room($('#tabs-' + roomId),
-                        $('#users-' + roomId),
-                        $('#messages-' + roomId));
-    }
+    function doResizeRoom(room) {
+        var $messages = room.messages.find('.message');
 
-    function getCurrentRoomElements() {
-        return new room($tabs.find('li.current'),
-                        $('.users.current'),
-                        $('.messages.current'));
+        $.each($messages, function () {
+            resize($(this));
+        });
     }
 
     function resizeRoom(roomName) {
@@ -136,14 +146,6 @@
     function resizeActiveRoom() {
         var room = getCurrentRoomElements();
         doResizeRoom(room);
-    }
-
-    function doResizeRoom(room) {
-        var $messages = room.messages.find('.message');
-
-        $.each($messages, function () {
-            resize($(this));
-        });
     }
 
     function resize($message) {
@@ -416,13 +418,14 @@
             }
 
             // Determine if we need to show the user name next to the message
-            showUser = previousUser !== message.name;
+            showUserName = previousUser !== message.name;
 
             // Set the trimmed name and date
             message.trimmedName = utility.trim(message.name, 21);
             message.when = message.date.formatTime();
+            message.showUser = showUserName;
 
-            if (showUser === false) {
+            if (showUserName === false) {
                 $previousMessage.addClass('continue');
             }
 
@@ -443,7 +446,8 @@
         },
         addMessage: function (content, type, roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements(),
-                nearEnd = room.isNearTheEnd();
+                nearEnd = room.isNearTheEnd(),
+                $element = null;
 
             $element = $('<li/>').html(content).appendTo(room.messages);
 
@@ -468,4 +472,4 @@
     }
     window.chat.ui = ui;
 
-})(jQuery, window, undefined, window.chat.utility);
+})(jQuery, window, window.chat.utility);

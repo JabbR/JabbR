@@ -2,7 +2,9 @@
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 
-(function ($, window, undefined) {
+(function ($, window) {
+    "use strict";
+
     function padZero(s) {
         s = s.toString();
         if (s.length == 1) {
@@ -58,4 +60,4 @@
 
     window.chat.utility = utility;
 
-})(jQuery, window, undefined);
+})(jQuery, window);

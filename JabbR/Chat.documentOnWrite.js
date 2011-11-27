@@ -1,4 +1,6 @@
-﻿(function ($, window, undefined, ui) {
+﻿(function ($, window, ui) {
+    "use strict";
+
     window.captureDocumentWrite = function (documentWritePath, headerText, elementToAppendTo) {
         $.fn.captureDocumentWrite(documentWritePath, function (content) {
             var nearEnd = ui.isNearTheEnd(),
@@ -22,4 +24,4 @@
             }
         });
     }
-})(jQuery, window, undefined, chat.ui);
+})(jQuery, window, chat.ui);

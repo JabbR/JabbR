@@ -749,7 +749,7 @@ namespace JabbR
             var userViewModel = new UserViewModel(user);
 
             // Update the calling client
-            Caller.gravatarChanged(userViewModel);
+            Caller.gravatarChanged();
 
             if (user.Rooms.Any())
             {
@@ -910,8 +910,7 @@ namespace JabbR
             Caller.name = user.Name;
             Caller.id = user.Id;
 
-            var userViewModel = new UserViewModel(user);
-            Caller.userCreated(userViewModel);
+            Caller.userCreated();
         }
 
         private ChatRoom AddRoom(ChatUser owner, string name)
