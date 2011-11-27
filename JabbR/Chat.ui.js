@@ -183,6 +183,19 @@
             };
 
             // DOM events
+            $(document).on('click', 'h3.collapsible_title', function () {
+                var $message = $(this).closest('.message');
+                var nearEnd = ui.isNearTheEnd();
+
+                $(this).next().toggle(0, function () {
+                    resize($message);
+
+                    if (nearEnd) {
+                        ui.scrollToBottom();
+                    }
+                });
+            });
+
             $(document).on('click', '#tabs li', function () {
                 ui.setActiveRoom($(this).data('name'))
             });
