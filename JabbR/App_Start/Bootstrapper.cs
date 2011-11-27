@@ -123,6 +123,13 @@ namespace JabbR.App_Start
 
             foreach (var user in repo.Users)
             {
+                var status = (UserStatus)user.Status;
+                if (status != UserStatus.Active)
+                {
+                    // Skip users that aren't active
+                    continue;
+                }
+
                 var elapsed = DateTime.UtcNow - user.LastActivity;
                 if (elapsed.TotalMinutes > 5)
                 {
