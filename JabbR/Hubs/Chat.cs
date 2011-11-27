@@ -197,7 +197,9 @@ namespace JabbR
             return new RoomViewModel
             {
                 Name = room.Name,
-                Users = room.Users.Select(u => new UserViewModel(u)),
+                Users = from u in room.Users
+                        where u.Status != (int)UserStatus.Offline
+                        select new UserViewModel(u),
                 Owner = room.Owner != null ? new UserViewModel(room.Owner) : null,
                 RecentMessages = (from m in room.Messages
                                   orderby m.When descending
@@ -875,7 +877,7 @@ namespace JabbR
             var userViewModel = new UserViewModel(user);
 
             // Update the client side state
-            Caller.name = newUserName;            
+            Caller.name = newUserName;
             Caller.userNameChanged(userViewModel);
 
             if (user.Rooms.Any())
