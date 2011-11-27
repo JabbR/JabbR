@@ -402,7 +402,12 @@ $(function () {
         $('.user.removing').remove();
 
         if (!room) {
-            log('Not in a room!');
+            log('This should only happen the first time');
+
+            // REVIEW: A little hacky
+            // If the user has no room then it's the first time the nick is being set
+            addMessage('Your nick is ' + user.Name, 'notification');
+            updateCookie();
             return;
         }
 
@@ -669,10 +674,14 @@ $(function () {
         chat.room = getCurrentRoom();
 
         if (command) {
+            var oldLevel = logLevel;
+            logLevel = 0;
+
+            log('chat.send(' + command + ')');
             chat.send(command)
-            .fail(function (e) {
-                addMessage(e, 'error');
-            });
+                .fail(function (e) {
+                    addMessage(e, 'error');
+                });
 
             // Immediately mark as not-typing when sending
             clearTimeout(chat.typingTimeoutId);
@@ -682,6 +691,8 @@ $(function () {
 
             $('#new-message').val('');
             $('#new-message').focus();
+
+            logLevel = oldLevel;
         }
 
         return false;

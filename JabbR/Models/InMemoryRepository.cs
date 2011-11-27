@@ -8,8 +8,8 @@ namespace JabbR.Models
 {
     public class InMemoryRepository : IJabbrRepository
     {
-        readonly HashSet<ChatUser> _users;
-        readonly HashSet<ChatRoom> _rooms;
+        private readonly HashSet<ChatUser> _users;
+        private readonly HashSet<ChatRoom> _rooms;
 
         public InMemoryRepository()
         {

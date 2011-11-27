@@ -75,9 +75,8 @@ namespace JabbR
             Caller.room = null;
             Caller.id = user.Id;
             Caller.name = user.Name;
-            Caller.hash = user.Hash;
 
-            // Tell the client to rejoin these rooms
+            // Tell the client to re-join these rooms
             foreach (var room in user.Rooms)
             {
                 if (room.Name.Equals(clientState.ActiveRoom, StringComparison.OrdinalIgnoreCase))
@@ -408,7 +407,7 @@ namespace JabbR
             }
             else if (commandName.Equals("nick", StringComparison.OrdinalIgnoreCase))
             {
-                HandleNick(userName, parts);
+                HandleNick(parts);
 
                 return true;
             }
@@ -795,23 +794,27 @@ namespace JabbR
             Caller.showRooms(rooms);
         }
 
-        private void HandleNick(string name, string[] parts)
+        private void HandleNick(string[] parts)
         {
             string newUserName = String.Join(" ", parts.Skip(1));
 
             if (String.IsNullOrWhiteSpace(newUserName))
             {
-                throw new InvalidOperationException("No username specified!");
+                throw new InvalidOperationException("No nick specified!");
             }
 
-            ChatUser user = _repository.Users.FirstOrDefault(u => u.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            // See if there is a current user
+            string id = Caller.id;
+            ChatUser user = _repository.GetUserById(id);
 
             if (user == null)
             {
+                // If there's no user add a new one
                 AddUser(newUserName);
             }
             else
             {
+                // Change the user's name
                 ChangeUserName(user, newUserName);
             }
         }
@@ -907,7 +910,7 @@ namespace JabbR
             Caller.userNameChanged(newUserName);
         }
 
-        private ChatUser AddUser(string name)
+        private void AddUser(string name)
         {
             if (!IsValidUserName(name))
             {
@@ -915,7 +918,7 @@ namespace JabbR
             }
 
             EnsureUserNameIsAvailable(name);
-
+            
             var user = new ChatUser
             {
                 Name = name,
@@ -928,13 +931,10 @@ namespace JabbR
             _repository.Add(user);
 
             Caller.name = user.Name;
-            Caller.hash = user.Hash;
             Caller.id = user.Id;
 
             var userViewModel = new UserViewModel(user);
             Caller.addUser(userViewModel);
-
-            return user;
         }
 
         private ChatRoom AddRoom(ChatUser owner, string name)
@@ -1077,16 +1077,6 @@ namespace JabbR
         {
             return _contentProviders.Select(c => c.GetContent(response))
                                     .FirstOrDefault(content => content != null);
-        }
-
-        private static void FixOwner(ChatUser user, ChatRoom room)
-        {
-            // This is mostly for the in memory store
-            if (room.Owner != null &&
-                room.Owner.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase))
-            {
-                room.Owner = user;
-            }
         }
 
         private class ClientState
