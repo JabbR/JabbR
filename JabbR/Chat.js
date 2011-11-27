@@ -6,7 +6,10 @@
 (function ($, connection, window, undefined, ui) {
     var chat = connection.chat,
         messageHistory = [],
-        historyLocation = 0;
+        historyLocation = 0,
+        originalTitle = document.title,
+        unread = 0,
+        focus = true;
 
     function isSelf(user) {
         return chat.name === user.Name;
@@ -51,7 +54,7 @@
         callback();
 
         if (nearEnd) {
-            ui.scrollToBottom();
+            ui.scrollToBottom(room);
         }
     }
 
@@ -82,6 +85,25 @@
         });
 
         $.cookie('jabbr.state', jsonState, { path: '/', expires: 30 });
+    }
+
+    function updateTitle() {
+        if (unread === 0) {
+            document.title = originalTitle;
+        }
+        else {
+            document.title = '(' + unread + ') ' + originalTitle;
+        }
+    }
+
+    function updateUnread(room) {
+        if (focus === false) {
+            unread = unread + 1;
+        }
+
+        ui.updateUnread(unread, room);
+
+        updateTitle();
     }
 
     // When the /join command gets raised this is called
@@ -115,6 +137,8 @@
             ui.addChatMessageContent(id, content, room);
         }, room);
 
+        updateUnread(room);
+
         // Adding external content can sometimes take a while to load
         // Since we don't know when it'll become full size in the DOM
         // we're just going to wait a little bit and hope for the best :)
@@ -129,6 +153,8 @@
             ui.addChatMessage(viewModel, room);
 
         }, room);
+
+        updateUnread(room);
     };
 
     chat.addUser = function (user, room, owner) {
@@ -266,6 +292,18 @@
         historyLocation = messageHistory.length;
     });
 
+    $(ui).bind('ui.focus', function () {
+        focus = true;
+        unread = 0;
+        updateTitle();
+    });
+
+    $(ui).bind('ui.blur', function () {
+        focus = false;
+
+        updateTitle();
+    });
+
     $(ui).bind('ui.joinRoom', function (ev, room) {
         chat.send('/join ' + room)
             .fail(function (e) {
@@ -309,7 +347,7 @@
         // Initialize the ui
         ui.initialize();
 
-        ui.addMessage('Welcome to the JabbR', 'notification');
+        ui.addMessage('Welcome to the ' + originalTitle, 'notification');
         ui.addMessage('Type /help to see the list of commands', 'notification');
 
         connection.hub.start(function () {

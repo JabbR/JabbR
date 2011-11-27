@@ -15,9 +15,18 @@
     }
 
     function room($tabs, $users, $messages) {
-        this.tabs = $tabs;
+        this.tab = $tabs;
         this.users = $users;
         this.messages = $messages;
+
+        this.hasUnread = function () {
+            return this.tab.hasClass('unread');
+        }
+
+        this.updateUnread = function (unread) {
+            this.tab.addClass('unread')
+                    .text('(' + unread + ') ' + this.getName());
+        }
 
         this.scrollToBottom = function () {
             this.messages.scrollTop(this.messages[0].scrollHeight);
@@ -28,15 +37,15 @@
         }
 
         this.getName = function () {
-            return this.tabs.data('name');
+            return this.tab.data('name');
         }
 
         this.isActive = function () {
-            return this.tabs.hasClass('current');
+            return this.tab.hasClass('current');
         }
 
         this.exists = function () {
-            return this.tabs.length > 0;
+            return this.tab.length > 0;
         }
 
         this.clear = function () {
@@ -45,15 +54,25 @@
         }
 
         this.makeInactive = function () {
-            this.tabs.removeClass('current');
-            this.messages.removeClass('current').hide();
-            this.users.removeClass('current').hide();
+            this.tab.removeClass('current');
+
+            this.messages.removeClass('current')
+                         .hide();
+
+            this.users.removeClass('current')
+                      .hide();
         }
 
         this.makeActive = function () {
-            this.tabs.addClass('current').removeClass('unread');
-            this.messages.addClass('current').show();
-            this.users.addClass('current').show();
+            this.tab.addClass('current')
+                    .removeClass('unread')
+                    .text(this.getName());
+
+            this.messages.addClass('current')
+                         .show();
+
+            this.users.addClass('current')
+                      .show();
         }
 
         // Users
@@ -194,6 +213,14 @@
 
             $(window).resize(resizeActiveRoom);
 
+            $(window).blur(function () {
+                $(ui).trigger('ui.blur');
+            });
+
+            $(window).focus(function () {
+                $(ui).trigger('ui.focus');
+            });
+
             $newMessage.keydown(function (e) {
                 var key = e.keyCode || e.which;
                 switch (key) {
@@ -240,10 +267,15 @@
             var currentRoom = getCurrentRoomElements();
 
             if (room.exists() && currentRoom.exists()) {
+                var hasUnread = room.hasUnread();
                 currentRoom.makeInactive();
                 room.makeActive();
 
                 resizeRoom(roomName);
+
+                if (hasUnread) {
+                    room.scrollToBottom();
+                }
 
                 $(ui).trigger('ui.activeRoomChanged', [roomName]);
                 return true;
@@ -251,10 +283,21 @@
 
             return false;
         },
+        updateUnread: function (unread, roomName) {
+            var room = getRoomElements(roomName);
+
+            if (room.isActive()) {
+                return;
+            }
+
+            room.updateUnread(unread);
+        },
         scrollToBottom: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
 
-            room.scrollToBottom();
+            if (room.isActive()) {
+                room.scrollToBottom();
+            }
         },
         isNearTheEnd: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
@@ -359,7 +402,8 @@
             resize($message);
         },
         addMessage: function (content, type, roomName) {
-            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
+            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements(),
+                nearEnd = room.isNearTheEnd();
 
             $element = $('<li/>').html(content).appendTo(room.messages);
 
@@ -367,16 +411,13 @@
                 $element.addClass(type);
             }
 
-            // Notifications are not that important (issue #79)
-            if (type !== 'notification') {
-                // updateUnread();
-            }
-
             if (roomName) {
                 resizeRoom(roomName);
             }
 
-            ui.scrollToBottom(roomName);
+            if (nearEnd) {
+                ui.scrollToBottom(roomName);
+            }
 
             return $element;
         }
