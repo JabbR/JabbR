@@ -203,6 +203,15 @@
                 }
             });
 
+            // Auto-complete for user names
+            $newMessage.autoTabComplete({
+                get: function () {
+                    var room = getCurrentRoomElements();
+                    return room.users.find('li')
+                                     .not('.room')
+                                     .map(function () { return $(this).data('name'); });
+                }
+            });
         },
         setMessage: function (value) {
             $newMessage.val(value);
