@@ -21,6 +21,10 @@
         this.users = $users;
         this.messages = $messages;
 
+        function getUserClassName(userName) {
+            return '[data-name="' + userName + '"]';
+        }
+
         this.hasUnread = function () {
             return this.tab.hasClass('unread');
         };
@@ -81,7 +85,12 @@
 
         // Users
         this.getUser = function (userName) {
-            return this.users.find('[data-name="' + userName + '"]');
+            return this.users.find(getUserClassName(userName));
+        };
+
+        this.getUserReferences = function (userName) {
+            return $.merge(this.getUser(userName),
+                           this.messages.find(getUserClassName(userName)));
         };
     }
 
@@ -387,7 +396,7 @@
         },
         changeUserName: function (oldName, user, roomName) {
             var room = getRoomElements(roomName),
-                $user = room.getUser(oldName);
+                $user = room.getUserReferences(oldName);
 
             // Update the user's name
             $user.find('.name').html(user.Name);
@@ -395,10 +404,11 @@
         },
         changeGravatar: function (user, roomName) {
             var room = getRoomElements(roomName),
-                $user = room.getUser(user.Name);
+                $user = room.getUserReferences(user.Name),
+                src = 'http://www.gravatar.com/avatar/' + user.Hash + '?s=16&d=mm';
 
             $user.find('.gravatar')
-                 .attr('src', 'http://www.gravatar.com/avatar/' + user.Hash + '?s=16&d=mm');
+                 .attr('src', src);
         },
         removeUser: function (user, roomName) {
             var room = getRoomElements(roomName),
@@ -429,7 +439,7 @@
 
 
             if ($previousMessage) {
-                previousUser = $previousMessage.data('user');
+                previousUser = $previousMessage.data('name');
             }
 
             // Determine if we need to show the user name next to the message
