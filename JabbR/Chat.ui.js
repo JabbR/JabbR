@@ -353,6 +353,14 @@
 
             return true;
         },
+        setUserActivity: function (user) {
+            if (user.Active === true) {
+                $('[data-name="' + user.Name + '"]').fadeTo('slow', 1);
+            }
+            else {
+                $('[data-name="' + user.Name + '"]').fadeTo('slow', 0.5);
+            }
+        },
         changeUserName: function (oldName, user, roomName) {
             var room = getRoomElements(roomName),
                 $user = room.getUser(oldName);

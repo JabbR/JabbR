@@ -29,6 +29,7 @@
                             };
 
                         ui.addUser(viewModel, room);
+                        ui.setUserActivity(this);
                     });
 
                     $.each(roomInfo.RecentMessages, function () {
@@ -124,9 +125,13 @@
     };
 
     chat.markInactive = function (users) {
+        $.each(users, function () {
+            ui.setUserActivity(this);
+        });
     };
 
     chat.updateActivity = function (user) {
+        ui.setUserActivity(user);
     };
 
     chat.showRooms = function (rooms) {
