@@ -27,6 +27,7 @@
 
         this.updateUnread = function (unread) {
             this.tab.addClass('unread')
+                    .find('.content')
                     .text('(' + unread + ') ' + this.getName());
         };
 
@@ -68,6 +69,7 @@
         this.makeActive = function () {
             this.tab.addClass('current')
                     .removeClass('unread')
+                    .find('.content')
                     .text(this.getName());
 
             this.messages.addClass('current')
@@ -105,10 +107,13 @@
 
         var roomId = getRoomId(roomName);
 
-        $('<li/>').attr('id', 'tabs-' + roomId)
-                  .attr('data-name', roomName)
-                  .html(roomName)
-                  .appendTo($tabs)
+        // Add the tab
+        var viewModel = {
+            id: roomId,
+            name: roomName
+        };
+
+        templates.tab.tmpl(viewModel).appendTo($tabs);
 
         $('<ul/>').attr('id', 'messages-' + roomId)
                   .addClass('messages')
@@ -181,7 +186,8 @@
             $newMessage = $('#new-message');
             templates = {
                 user: $('#new-user-template'),
-                message: $('#new-message-template')
+                message: $('#new-message-template'),
+                tab: $('#new-tab-template')
             };
 
             // DOM events
@@ -206,9 +212,18 @@
                 var roomName = $(this).data('name');
 
                 if (ui.setActiveRoom(roomName) === false) {
-                    $(ui).trigger('ui.joinRoom', [roomName]);
+                    $(ui).trigger('ui.openRoom', [roomName]);
                 }
 
+                return false;
+            });
+
+            $(document).on('click', '#tabs li .close', function (ev) {
+                var roomName = $(this).closest('li').data('name');
+
+                $(ui).trigger('ui.closeRoom', [roomName]);
+
+                ev.preventDefault();
                 return false;
             });
 

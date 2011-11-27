@@ -43,7 +43,10 @@
         </li>
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">
-        <li id="tabs-${id}">${name} <img src="Content/images/close-icon.png" class="close-icon" /></li>
+        <li id="tabs-${id}" data-name="${name}">
+            <span class="content">${name}</span>
+            <img src="Content/images/close-icon.png" class="close" />
+        </li>
     </script>
     <!-- TweetContentProvider: Should be extracted out if other content providers need templates -->
     <script id="tweet-template" type="text/x-jquery-tmpl">
@@ -66,7 +69,9 @@
         <div style="clear:both">
         </div>
         <ul id="tabs">
-            <li id="tabs-lobby" class="current" data-name="Lobby">Lobby</li>
+            <li id="tabs-lobby" class="current" data-name="Lobby">
+                <span class="content">Lobby</span>
+            </li>
         </ul>
     </div>
 

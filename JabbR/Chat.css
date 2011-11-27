@@ -93,17 +93,16 @@
     padding: 0;
     margin: 0px 0px 0px 5px;
     z-index: 1000;
+    height: 30px;
 }
 
 #tabs li {
-    display: inline-block;
-    padding: 6px 20px;
+    display: inline-block;    
     margin: 0px 4px 0px 0px;
     font-weight: bold;
     background-color: #164c85;
     border-bottom: 0px;
     color: #fff;
-    height: 15px;
     cursor: pointer;
 }
 
@@ -112,6 +111,16 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', endColorstr='#e5e5e5'); /* for IE */
     background: -webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#e5e5e5)); /* for webkit browsers */
     background: -moz-linear-gradient(top,  #f5f5f5,  #e5e5e5); /* for firefox 3.6+ */
+}
+
+#tabs li .content {
+    float: left;
+    margin: 6px 10px 6px 10px;
+}
+
+#tabs li .close {
+    float: right;
+    margin: 8px 6px 6px 0px;
 }
 
 #tabs li.unread {
@@ -124,11 +133,6 @@
 
 #tabs li.current:hover {
     background-color: #e5e5e5;
-}
-
-.close-icon {
-    width: 16px;
-    height: 16px;
 }
 
 li.room {

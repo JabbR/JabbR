@@ -342,8 +342,15 @@
         updateTitle();
     });
 
-    $(ui).bind('ui.joinRoom', function (ev, room) {
+    $(ui).bind('ui.openRoom', function (ev, room) {
         chat.send('/join ' + room)
+            .fail(function (e) {
+                ui.addMessage(e, 'error');
+            });
+    });
+
+    $(ui).bind('ui.closeRoom', function (ev, room) {
+        chat.send('/leave ' + room)
             .fail(function (e) {
                 ui.addMessage(e, 'error');
             });
