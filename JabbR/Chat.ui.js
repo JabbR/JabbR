@@ -389,10 +389,14 @@
         setUserActivity: function (user) {
             var $user = $(getUserClassName(user.Name));
             if (user.Active === true) {
-                $user.fadeTo('slow', 1);
+                $user.fadeTo('slow', 1, function () {
+                    $user.removeClass('idle');
+                });
             }
             else {
-                $user.fadeTo('slow', 0.5);
+                $user.fadeTo('slow', 0.5, function () {
+                    $user.addClass('idle');
+                });
             }
         },
         changeUserName: function (oldName, user, roomName) {
