@@ -19,6 +19,10 @@
         this.users = $users;
         this.messages = $messages;
 
+        this.scrollToBottom = function () {
+            this.messages.scrollTop(this.messages[0].scrollHeight);
+        }
+
         this.getName = function () {
             return this.tabs.data('name');
         }
@@ -235,11 +239,18 @@
                 currentRoom.makeInactive();
                 room.makeActive();
 
+                resizeRoom(roomName);
+
                 $(ui).trigger('ui.activeRoomChanged', [roomName]);
                 return true;
             }
 
             return false;
+        },
+        scrollToBottom: function (roomName) {
+            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
+
+            room.scrollToBottom();
         },
         populateLobbyRooms: function (rooms) {
             var lobby = getRoomElements('Lobby');

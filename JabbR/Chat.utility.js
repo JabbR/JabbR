@@ -11,6 +11,10 @@
         return s;
     }
 
+    $.fn.isNearTheEnd = function () {
+        return this[0].scrollTop + this.height() >= this[0].scrollHeight;
+    };
+
     String.prototype.fromJsonDate = function () {
         return eval(this.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"))
     };
