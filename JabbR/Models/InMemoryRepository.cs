@@ -67,7 +67,8 @@ namespace JabbR.Models
 
         public IQueryable<ChatUser> SearchUsers(string name)
         {
-            return _users.Where(u => u.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) != -1)
+            return _users.Online()
+                         .Where(u => u.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) != -1)
                          .AsQueryable();
         }
     }

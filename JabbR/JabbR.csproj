@@ -239,6 +239,7 @@
     <Compile Include="Models\InMemoryRepository.cs" />
     <Compile Include="Models\JabbrContext.cs" />
     <Compile Include="Models\PersistedRepository.cs" />
+    <Compile Include="Models\RepositoryExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\RoomViewModel.cs" />

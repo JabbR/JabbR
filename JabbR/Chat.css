@@ -109,6 +109,7 @@
     border-bottom: 0px;
     color: #fff;
     cursor: pointer;
+    height: 30px;
 }
 
 #tabs li.current {

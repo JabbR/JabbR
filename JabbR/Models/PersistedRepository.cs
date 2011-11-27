@@ -75,7 +75,7 @@ namespace JabbR.Models
 
         public IQueryable<ChatUser> SearchUsers(string name)
         {
-            return _db.Users.Where(u => u.Name.Contains(name));
+            return _db.Users.Online().Where(u => u.Name.Contains(name));
         }
     }
 }

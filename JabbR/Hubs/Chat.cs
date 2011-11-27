@@ -174,7 +174,7 @@ namespace JabbR
             var rooms = _repository.Rooms.Select(r => new RoomViewModel
             {
                 Name = r.Name,
-                Count = r.Users.Count
+                Count = r.Users.Count(u => u.Status != (int)UserStatus.Offline)
             });
 
             return rooms;
@@ -197,8 +197,7 @@ namespace JabbR
             return new RoomViewModel
             {
                 Name = room.Name,
-                Users = from u in room.Users
-                        where u.Status != (int)UserStatus.Offline
+                Users = from u in room.Users.Online()
                         select new UserViewModel(u),
                 Owner = room.Owner != null ? new UserViewModel(room.Owner) : null,
                 RecentMessages = (from m in room.Messages
@@ -241,7 +240,7 @@ namespace JabbR
 
         private void Disconnect(string clientId)
         {
-            ChatUser user = _repository.Users.FirstOrDefault(u => u.ClientId == clientId);
+            ChatUser user = _repository.GetUserByClientId(clientId);
 
             if (user == null)
             {
@@ -253,7 +252,7 @@ namespace JabbR
             user.Status = (int)UserStatus.Offline;
             _repository.Update();
         }
-        
+
         private void UpdateActivity(ChatUser user, ChatRoom room)
         {
             user.Status = (int)UserStatus.Active;
@@ -478,7 +477,7 @@ namespace JabbR
         {
             if (parts.Length == 1)
             {
-                Caller.listUsers(_repository.Users.Select(s => s.Name));
+                Caller.listUsers(_repository.Users.Online().Select(s => s.Name));
                 return;
             }
 
@@ -525,7 +524,8 @@ namespace JabbR
                 throw new InvalidOperationException("No room with that name!");
             }
 
-            var names = room.Users.Select(s => s.Name);
+            var names = room.Users.Online().Select(s => s.Name);
+
             Caller.showUsersInRoom(room.Name, names);
         }
 
