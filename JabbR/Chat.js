@@ -34,6 +34,8 @@
                         ui.addChatMessage(viewModel, room);
                     });
 
+                    ui.scrollToBottom(room);
+
                     d.resolveWith(chat);
                 })
                 .fail(function () {
@@ -41,6 +43,16 @@
                 });
 
         return d;
+    }
+
+    function scrollIfNecessary(callback, room) {
+        var nearEnd = ui.isNearTheEnd(room);
+
+        callback();
+
+        if (nearEnd) {
+            ui.scrollToBottom();
+        }
     }
 
     function getMessageViewModel(message) {
@@ -99,12 +111,24 @@
     };
 
     chat.addMessageContent = function (id, content, room) {
-        ui.addChatMessageContent(id, content, room);
+        scrollIfNecessary(function () {
+            ui.addChatMessageContent(id, content, room);
+        }, room);
+
+        // Adding external content can sometimes take a while to load
+        // Since we don't know when it'll become full size in the DOM
+        // we're just going to wait a little bit and hope for the best :)
+        window.setTimeout(function () {
+            ui.scrollToBottom();
+        }, 1000);
     };
 
     chat.addMessage = function (message, room) {
-        var viewModel = getMessageViewModel(message);
-        ui.addChatMessage(viewModel, room);
+        scrollIfNecessary(function () {
+            var viewModel = getMessageViewModel(message);
+            ui.addChatMessage(viewModel, room);
+
+        }, room);
     };
 
     chat.addUser = function (user, room, owner) {
@@ -306,6 +330,7 @@
                     if (this.activeRoom) {
                         ui.addRoom(this.activeRoom);
                         ui.setActiveRoom(this.activeRoom);
+                        ui.scrollToBottom(this.activeRoom);
                     }
                     else {
                         ui.setActiveRoom('Lobby');

@@ -23,6 +23,10 @@
             this.messages.scrollTop(this.messages[0].scrollHeight);
         }
 
+        this.isNearTheEnd = function () {
+            return this.messages.isNearTheEnd();
+        }
+
         this.getName = function () {
             return this.tabs.data('name');
         }
@@ -252,6 +256,11 @@
 
             room.scrollToBottom();
         },
+        isNearTheEnd: function (roomName) {
+            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
+
+            return room.isNearTheEnd();
+        },
         populateLobbyRooms: function (rooms) {
             var lobby = getRoomElements('Lobby');
 
@@ -366,6 +375,8 @@
             if (roomName) {
                 resizeRoom(roomName);
             }
+
+            ui.scrollToBottom(roomName);
 
             return $element;
         }
