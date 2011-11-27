@@ -28,6 +28,12 @@
                         ui.addUser(viewModel, room);
                     });
 
+                    $.each(roomInfo.RecentMessages, function () {
+                        var viewModel = getMessageViewModel(this);
+
+                        ui.addChatMessage(viewModel, room);
+                    });
+
                     d.resolveWith(chat);
                 })
                 .fail(function () {
@@ -35,6 +41,18 @@
                 });
 
         return d;
+    }
+
+    function getMessageViewModel(message) {
+        var re = new RegExp("\\b@?" + message.User.Name.replace(/\./, '\\.') + "\\b", "i");
+        return {
+            name: message.User.Name,
+            hash: message.User.Hash,
+            message: message.Content,
+            id: message.Id,
+            date: message.When.fromJsonDate(),
+            highlight: re.test(message.Content) ? 'highlight' : ''
+        };
     }
 
     // Save some state in a cookie
@@ -85,17 +103,8 @@
     };
 
     chat.addMessage = function (message, room) {
-        var re = new RegExp("\\b@?" + message.User.Name.replace(/\./, '\\.') + "\\b", "i"),
-            messageViewModel = {
-                name: message.User.Name,
-                hash: message.User.Hash,
-                message: message.Content,
-                id: message.Id,
-                date: message.When.fromJsonDate(),
-                highlight: re.test(message.Content) ? 'highlight' : ''
-            };
-
-        ui.addChatMessage(messageViewModel, room);
+        var viewModel = getMessageViewModel(message);
+        ui.addChatMessage(viewModel, room);
     };
 
     chat.addUser = function (user, room, owner) {

@@ -212,6 +212,8 @@
                                      .map(function () { return $(this).data('name'); });
                 }
             });
+
+            $newMessage.focus();
         },
         setMessage: function (value) {
             $newMessage.val(value);
