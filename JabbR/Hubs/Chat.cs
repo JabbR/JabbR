@@ -946,9 +946,10 @@ namespace JabbR
             };
 
             room.Owners.Add(user);
-            user.OwnedRooms.Add(room);
 
             _repository.Add(room);
+
+            user.OwnedRooms.Add(room);
 
             return room;
         }
