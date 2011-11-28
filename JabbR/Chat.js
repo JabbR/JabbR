@@ -428,6 +428,7 @@
             chat.activeRoom = room;
         }
 
+        ui.scrollToBottom(room);
         updateCookie();
     });
 
@@ -456,7 +457,6 @@
                     if (this.activeRoom) {
                         ui.addRoom(this.activeRoom);
                         ui.setActiveRoom(this.activeRoom);
-                        ui.scrollToBottom(this.activeRoom);
                     }
                     else {
                         ui.setActiveRoom('Lobby');

@@ -157,7 +157,7 @@
         $tabs.find('li')
              .not('.lobby')
              .sortElements(function (a, b) {
-                 return $(a).data('name') > $(b).data('name') ? 1 : -1;
+                 return $(a).data('name').toLowerCase() > $(b).data('name').toLowerCase() ? 1 : -1;
              });
     }
 
@@ -401,7 +401,7 @@
 
             lobby.users.find('li')
                        .sortElements(function (a, b) {
-                           return $(a).data('name') > $(b).data('name') ? 1 : -1;
+                           return $(a).data('name').toLowerCase() > $(b).data('name').toLowerCase() ? 1 : -1;
                        });
         },
         addUser: function (user, roomName) {
