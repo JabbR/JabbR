@@ -1,4 +1,4 @@
-﻿; (function ($, window, document, undefined) {
+﻿; (function ($, window, document) {
     var pluginName = 'autoTabComplete',
         defaults = {
             values: [],
@@ -6,35 +6,28 @@
                 return this.values;
             }
         };
-    var UNDEF = undefined;
 
     function AutoTabComplete(element, options) {
-        var element = element;
-        var options = $.extend({}, defaults, options);
-
-        var _defaults = defaults;
-        var _name = pluginName;
-
-        var _inAutoComplete;
-        var _text;
-        var _prefix;
-        var _index;
-        var _caret;
-
-        var KEY = {
-            TAB: 9,
-            SHIFT: 16
-        };
+        var element = element,
+            options = $.extend({}, defaults, options),
+            _defaults = defaults,
+            _name = pluginName,
+            _inAutoComplete,
+            _text,
+            _prefix,
+            _index,
+            _caret,
+            Keys = { Tab: 9, Shift: 16 };
 
         reset();
 
         $(element).keydown(function (event) {
-            if (event.which == KEY.TAB) {
+            if (event.which === Keys.Tab) {
                 event.preventDefault();
 
                 // call get() to retrieve current list of values
                 var values = options.get();
-                if (values.length == 0) {
+                if (values.length === 0) {
                     reset();
                     return;
                 }
@@ -66,7 +59,7 @@
                 var i = _index;
                 while (true) {
                     var value = values[i];
-                    if (value.substr(0, prefixLen).toLowerCase() == _prefix) {
+                    if (value.substr(0, prefixLen).toLowerCase() === _prefix) {
                         var newText = _text.substr(0, _caret - prefixLen) + value + _text.substr(_caret);
                         $(this).val(newText);
 
@@ -76,20 +69,20 @@
                         break;
                     }
                     i = getNextIndex(i , offset, values.length);
-                    if (i == _index) break;
+                    if (i === _index) break;
                 }
                 _index = i;
                 return;
             }
             else {
-                if (event.which == KEY.SHIFT) return; // ignore shift key press
+                if (event.which === Keys.Shift) return; // ignore shift key press
                 reset();
             }
         });
 
         // create helper to get current caret position
         // only works if support selectionStart/End properties
-        if (typeof(element["selectionStart"]) != UNDEF) {
+        if (typeof(element["selectionStart"]) !== "undefined") {
             getSelection = function (el) {
                 return { start: el.selectionStart, end: el.selectionEnd };
             };
