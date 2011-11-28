@@ -423,7 +423,8 @@
             return true;
         },
         setUserActivity: function (user) {
-            var $user = $(getUserClassName(user.Name));
+            var $user = $('.users').find(getUserClassName(user.Name));
+
             if (user.Active === true) {
                 $user.fadeTo('slow', 1, function () {
                     $user.removeClass('idle');
