@@ -509,8 +509,7 @@ namespace JabbR
                 throw new InvalidOperationException("You're the only person in here...");
             }
 
-            string targetUserName = parts[1];
-            ChatUser targetUser = EnsureUser(targetUserName);
+            ChatUser targetUser = EnsureUser(parts[1]);
 
             if (targetUser == user)
             {
@@ -646,8 +645,7 @@ namespace JabbR
             {
                 throw new InvalidOperationException("Who are you trying send a private message to?");
             }
-            var toUserName = NormalizeUserName(parts[1]);
-            ChatUser toUser = EnsureUser(toUserName);
+            ChatUser toUser = EnsureUser(parts[1]);
 
             if (toUser == user)
             {
@@ -865,9 +863,7 @@ namespace JabbR
                 throw new InvalidOperationException("You're the only person in here...");
             }
 
-            var toUserName = NormalizeUserName(parts[1]);
-
-            ChatUser toUser = EnsureUser(toUserName);
+            ChatUser toUser = EnsureUser(parts[1]);
 
             if (toUser == user)
             {
@@ -1090,6 +1086,7 @@ namespace JabbR
 
         private ChatUser EnsureUser(string userName)
         {
+            userName = NormalizeUserName(userName);
             ChatUser user = _repository.GetUserByName(userName);
 
             if (user == null)
