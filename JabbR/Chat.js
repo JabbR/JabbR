@@ -131,12 +131,17 @@
             populateRoom(room);
         });
 
-        ui.setActiveRoom(this.activeRoom || 'Lobby');
+        var activeRoom = this.activeRoom;
         ui.addMessage('Welcome back ' + chat.name, 'notification', 'lobby');
         ui.addMessage('You can join any of the rooms on the right', 'notification', 'lobby');
 
         // Process any urls that may contain room names
         ui.run();
+
+        // If the active room didn't change then set the active room (since no navigation happened)
+        if (activeRoom === this.activeRoom) {
+            ui.setActiveRoom(this.activeRoom || 'Lobby');
+        }
     };
 
     chat.addOwner = function (user, room) {

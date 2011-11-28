@@ -618,9 +618,9 @@ namespace JabbR
             var userViewModel = new UserViewModel(user);
             Clients[room.Name].leave(userViewModel, room.Name).Wait();
 
-            UpdateRoomCount(room);
-
             GroupManager.RemoveFromGroup(user.ClientId, room.Name).Wait();
+
+            UpdateRoomCount(room);
         }
 
         private void HandleMe(ChatRoom room, ChatUser user, string[] parts)
