@@ -88,6 +88,10 @@
     padding: 4px;
 }
 
+.users li .name {
+    word-wrap: break-word;
+}
+
 .users li.typing {
     background-image: url('Content/images/keyboard.png');
     background-repeat: no-repeat;

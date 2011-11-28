@@ -996,12 +996,12 @@ namespace JabbR
 
         private bool IsValidUserName(string name)
         {
-            return Regex.IsMatch(name, "^[A-Za-z0-9-_.]+$");
+            return Regex.IsMatch(name, "^[A-Za-z0-9-_.]{1,30}$");
         }
 
         private bool IsValidRoomName(string name)
         {
-            return Regex.IsMatch(name, "^[A-Za-z0-9-_.]+$");
+            return Regex.IsMatch(name, "^[A-Za-z0-9-_.]{1,30}$");
         }
 
         private void LeaveAllRooms(ChatUser user)
