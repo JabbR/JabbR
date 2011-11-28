@@ -117,10 +117,14 @@
 
     function updateLobbyRoomCount(roomName, count) {
         var lobby = getLobby(),
-            $count = lobby.users.find('[data-room="' + roomName + '"]')
-                                .find('.count');
+            $room = lobby.users.find('[data-room="' + roomName + '"]'),
+            $count = $room.find('.count');
 
+
+        $room.css('background-color', '#f5f5f5');
         $count.text(' (' + count + ')');
+        // Do a little animation
+        $room.animate({ backgroundColor: '#e5e5e5' }, 800);
     }
 
 
