@@ -474,7 +474,7 @@
         },
         addChatMessage: function (message, roomName) {
             var room = getRoomElements(roomName),
-                $previousMessage = room.messages.find('.message').last(),
+                $previousMessage = room.messages.children().last(),
                 previousUser = null,
                 showUserName = true,
                 $message = null;
