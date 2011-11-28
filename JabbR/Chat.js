@@ -246,8 +246,13 @@
     chat.userCreated = function () {
         ui.addMessage('Your nick is ' + this.name, 'notification');
 
-        // Set the active room to the lobby so the rooms on the right load
-        ui.setActiveRoom('Lobby');
+        // Process any urls that may contain room names
+        ui.run();
+
+        if (!this.activeRoom) {
+            // Set the active room to the lobby so the rooms on the right load
+            ui.setActiveRoom('Lobby');
+        }
 
         // Update the cookie
         updateCookie();
