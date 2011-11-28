@@ -509,7 +509,7 @@ namespace JabbR
                 throw new InvalidOperationException("You're the only person in here...");
             }
 
-            string targetUserName = parts[1];
+            string targetUserName = NormalizeUserName(parts[1]);
             ChatUser targetUser = EnsureUser(targetUserName);
 
             if (targetUser == user)
