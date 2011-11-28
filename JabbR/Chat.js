@@ -107,7 +107,7 @@
             unread = unread + 1;
         }
 
-        ui.updateUnread(unread, room);
+        ui.updateUnread(room);
 
         updateTitle();
     }

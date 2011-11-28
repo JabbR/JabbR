@@ -34,10 +34,13 @@
             return this.tab.hasClass('unread');
         };
 
-        this.updateUnread = function (unread) {
-            this.tab.addClass('unread')
-                    .find('.content')
-                    .text('(' + unread + ') ' + this.getName());
+        this.updateUnread = function () {
+            var $tab = this.tab.addClass('unread'),
+                $content = $tab.find('.content'),
+                unread = ($tab.data('unread') || 0) + 1;
+
+            $content.text('(' + unread + ') ' + this.getName());
+            $tab.data('unread', unread);
         };
 
         this.scrollToBottom = function () {
@@ -78,6 +81,7 @@
         this.makeActive = function () {
             this.tab.addClass('current')
                     .removeClass('unread')
+                    .data('unread', 0)
                     .find('.content')
                     .text(this.getName());
 
@@ -380,14 +384,14 @@
             return false;
         },
         updateLobbyRoomCount: updateLobbyRoomCount,
-        updateUnread: function (unread, roomName) {
+        updateUnread: function (roomName) {
             var room = getRoomElements(roomName);
 
             if (room.isActive()) {
                 return;
             }
 
-            room.updateUnread(unread);
+            room.updateUnread();
         },
         scrollToBottom: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
