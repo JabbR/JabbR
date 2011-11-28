@@ -199,7 +199,8 @@ namespace JabbR
                 Name = room.Name,
                 Users = from u in room.Users.Online()
                         select new UserViewModel(u),
-                Owner = room.Owner != null ? new UserViewModel(room.Owner) : null,
+                Owners = from u in room.Owners.Online()
+                         select u.Name,
                 RecentMessages = (from m in room.Messages
                                   orderby m.When descending
                                   select new MessageViewModel(m)).Take(20).Reverse()
@@ -438,9 +439,9 @@ namespace JabbR
 
         private void HandleKick(ChatUser user, ChatRoom room, string[] parts)
         {
-            if (room.Owner != user)
+            if (!room.Owners.Contains(user))
             {
-                throw new InvalidOperationException("You are not the owner of " + room.Name);
+                throw new InvalidOperationException("You are not an owner of " + room.Name);
             }
 
             if (parts.Length == 1)
@@ -685,9 +686,10 @@ namespace JabbR
 
             foreach (var room in rooms)
             {
-                var ownerViewModel = room.Owner == null ? null : new UserViewModel(room.Owner);
+                var isOwner = user.OwnedRooms.Contains(room);
+
                 // Tell the people in this room that you've joined
-                Clients[room.Name].addUser(userViewModel, room.Name, ownerViewModel).Wait();
+                Clients[room.Name].addUser(userViewModel, room.Name, isOwner).Wait();
 
                 // Update the room count
                 UpdateRoomCount(room);
@@ -708,7 +710,7 @@ namespace JabbR
         private void JoinRoom(ChatUser user, ChatRoom room)
         {
             var userViewModel = new UserViewModel(user);
-            var ownerViewModel = room.Owner == null ? null : new UserViewModel(room.Owner);
+            var isOwner = user.OwnedRooms.Contains(room);
 
             // Add this room to the user's list of rooms
             user.Rooms.Add(room);
@@ -723,7 +725,7 @@ namespace JabbR
             Caller.joinRoom(room.Name);
 
             // Tell the people in this room that you've joined
-            Clients[room.Name].addUser(userViewModel, room.Name, ownerViewModel).Wait();
+            Clients[room.Name].addUser(userViewModel, room.Name, isOwner).Wait();
 
             UpdateRoomCount(room);
 
@@ -925,7 +927,7 @@ namespace JabbR
             Caller.userCreated();
         }
 
-        private ChatRoom AddRoom(ChatUser owner, string name)
+        private ChatRoom AddRoom(ChatUser user, string name)
         {
             if (name.Equals("Lobby", StringComparison.OrdinalIgnoreCase))
             {
@@ -940,8 +942,11 @@ namespace JabbR
             var room = new ChatRoom
             {
                 Name = name,
-                Owner = owner
+                Creator = user
             };
+
+            room.Owners.Add(user);
+            user.OwnedRooms.Add(room);
 
             _repository.Add(room);
 

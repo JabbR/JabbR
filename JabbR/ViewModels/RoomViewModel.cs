@@ -7,7 +7,7 @@ namespace JabbR.ViewModels
         public string Name { get; set; }
         public int Count { get; set; }
         public IEnumerable<UserViewModel> Users { get; set; }
-        public UserViewModel Owner { get; set; }
+        public IEnumerable<string> Owners { get; set; }
         public IEnumerable<MessageViewModel> RecentMessages { get; set; }
     }
 }

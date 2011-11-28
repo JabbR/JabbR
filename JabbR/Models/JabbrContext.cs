@@ -12,7 +12,10 @@ namespace JabbR.Models
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ChatRoom>()
-                        .HasOptional(r => r.Owner);
+                        .HasOptional(r => r.Creator);
+
+            modelBuilder.Entity<ChatRoom>()
+                        .HasMany(r => r.Owners).WithMany(r => r.OwnedRooms);
             
             modelBuilder.Entity<ChatUser>()
                         .HasMany(u => u.Rooms).WithMany(r => r.Users);

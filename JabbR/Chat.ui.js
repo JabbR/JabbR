@@ -325,6 +325,13 @@
         },
         addRoom: addRoom,
         removeRoom: removeRoom,
+        setRoomOwner: function (ownerName, roomName) {
+            var room = getRoomElements(roomName),
+                $user = room.getUser(ownerName);
+
+            $user.find('.owner')
+                 .text('(owner)');
+        },
         setActiveRoom: function (roomName) {
             var room = getRoomElements(roomName);
 

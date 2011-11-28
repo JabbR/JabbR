@@ -110,6 +110,10 @@ namespace JabbR.App_Start
                     repo.Update();
                 }
             }
+            catch(Exception ex)
+            {
+                // ErrorSignal.Get(this).Raise(ex);
+            }
             finally
             {
                 _sweeping = false;

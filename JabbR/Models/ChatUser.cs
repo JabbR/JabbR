@@ -16,11 +16,13 @@ namespace JabbR.Models
         public DateTime? LastNudged { get; set; }
         public string ClientId { get; set; }
         public int Status { get; set; }
-        
+
+        public virtual ICollection<ChatRoom> OwnedRooms { get; set; }
         public virtual ICollection<ChatRoom> Rooms { get; set; }
 
         public ChatUser()
         {
+            OwnedRooms = new HashSet<ChatRoom>();
             Rooms = new HashSet<ChatRoom>();
         }
     }

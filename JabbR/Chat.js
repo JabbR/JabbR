@@ -24,15 +24,17 @@
         chat.getRoomInfo(room)
                 .done(function (roomInfo) {
                     $.each(roomInfo.Users, function () {
-                        var owner = roomInfo.Owner ? roomInfo.Owner.Name === this.Name : false,
-                            viewModel = {
-                                name: this.Name,
-                                hash: this.Hash,
-                                owner: owner
-                            };
+                        var viewModel = {
+                            name: this.Name,
+                            hash: this.Hash
+                        };
 
                         ui.addUser(viewModel, room);
                         ui.setUserActivity(this);
+                    });
+
+                    $.each(roomInfo.Owners, function () {
+                        ui.setRoomOwner(this, room);
                     });
 
                     $.each(roomInfo.RecentMessages, function () {
@@ -173,11 +175,11 @@
         updateUnread(room);
     };
 
-    chat.addUser = function (user, room, owner) {
+    chat.addUser = function (user, room, isOwner) {
         var viewModel = {
             name: user.Name,
             hash: user.Hash,
-            owner: owner ? owner.Name === user.Name : false
+            owner: isOwner
         };
 
         var added = ui.addUser(viewModel, room);
