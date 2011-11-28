@@ -89,6 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="apple-touch-icon.png" />
     <Content Include="Chat.css" />
     <Content Include="Chat.documentOnWrite.js" />
     <Content Include="Chat.js" />
@@ -170,6 +171,7 @@
     <Content Include="index.htm" />
     <Content Include="Mobile.css" />
     <Content Include="mobile.htm" />
+    <Content Include="robots.txt" />
     <Content Include="Scripts\jquery-1.7-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.js" />
     <Content Include="Scripts\jquery-1.7.min.js" />
