@@ -124,12 +124,19 @@
         });
     };
 
-    // When the user joins the chat app and has to be re-added to these rooms
-    chat.rejoinRooms = function (rooms) {
+    // Called when a returning users join chat
+    chat.initialize = function (rooms) {
         $.each(rooms, function (index, room) {
             ui.addRoom(room);
             populateRoom(room);
         });
+
+        ui.setActiveRoom(this.activeRoom || 'Lobby');
+        ui.addMessage('Welcome back ' + chat.name, 'notification', 'lobby');
+        ui.addMessage('You can join any of the rooms on the right', 'notification', 'lobby');
+
+        // Process any urls that may contain room names
+        ui.run();
     };
 
     chat.addOwner = function (user, room) {
@@ -233,6 +240,9 @@
     // Called when you created a new user
     chat.userCreated = function () {
         ui.addMessage('Your nick is ' + this.name, 'notification');
+
+        // Set the active room to the lobby so the rooms on the right load
+        ui.setActiveRoom('Lobby');
 
         // Update the cookie
         updateCookie();
@@ -410,6 +420,7 @@
     $(ui).bind('ui.openRoom', function (ev, room) {
         chat.send('/join ' + room)
             .fail(function (e) {
+                ui.setActiveRoom('Lobby');
                 ui.addMessage(e, 'error');
             });
     });
@@ -469,19 +480,6 @@
                 .done(function (success) {
                     if (success === false) {
                         ui.addMessage('Choose a name using "/nick nickname".', 'notification');
-                    }
-                    else {
-                        ui.addMessage('Welcome back ' + chat.name, 'notification', 'lobby');
-                        ui.addMessage('You can join any of the rooms on the right', 'notification', 'lobby');
-                    }
-
-                    // If there's an active room, navigate to it
-                    if (this.activeRoom) {
-                        ui.addRoom(this.activeRoom);
-                        ui.setActiveRoom(this.activeRoom);
-                    }
-                    else {
-                        ui.setActiveRoom('Lobby');
                     }
                 });
         });

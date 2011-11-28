@@ -59,7 +59,6 @@ namespace JabbR
             // Threre's no user being tracked
             if (user == null)
             {
-                // We've failed to get the user from the client's state
                 return false;
             }
 
@@ -75,15 +74,15 @@ namespace JabbR
             Caller.id = user.Id;
             Caller.name = user.Name;
 
+            // Update the active room on the client (only if it's still a valid room)
             if (user.Rooms.Any(room => room.Name.Equals(clientState.ActiveRoom, StringComparison.OrdinalIgnoreCase)))
             {
                 // Update the active room on the client (only if it's still a valid room)
                 Caller.activeRoom = clientState.ActiveRoom;
             }
 
-            // Re-join the user's rooms
             RejoinRooms(user, user.Rooms);
-
+            
             return true;
         }
 
@@ -448,7 +447,7 @@ namespace JabbR
 
             return false;
         }
-        
+
         private void HandleMakeOwner(ChatUser user, string[] parts)
         {
             if (parts.Length == 1)
@@ -747,7 +746,8 @@ namespace JabbR
                 roomNames.Add(room.Name);
             }
 
-            Caller.rejoinRooms(roomNames);
+            // Initialize the chat with the rooms the user is in
+            Caller.initialize(roomNames);
         }
 
         private void JoinRoom(ChatUser user, ChatRoom room)

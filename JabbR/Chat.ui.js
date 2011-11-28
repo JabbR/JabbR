@@ -10,6 +10,7 @@
         $submitButton = null,
         $newMessage = null,
         templates = null,
+        app = null,
         Keys = { Up: 38, Down: 40, Esc: 27 };
 
     function getRoomId(roomName) {
@@ -214,6 +215,12 @@
         $left.css('height', leftHeightCalculated + 'px');
     }
 
+    function navigateToRoom(roomName) {
+        app.runRoute('get', '#/rooms/' + roomName, {
+            room: roomName
+        });
+    }
+
     var ui = {
         initialize: function () {
             $chatArea = $('#chat-area');
@@ -224,7 +231,17 @@
                 user: $('#new-user-template'),
                 message: $('#new-message-template'),
                 tab: $('#new-tab-template')
-            };
+            },
+            app = Sammy(function () {
+                // Process this route
+                this.get('#/rooms/:room', function () {
+                    var roomName = this.params.room;
+
+                    if (ui.setActiveRoom(roomName) === false) {
+                        $(ui).trigger('ui.openRoom', [roomName]);
+                    }
+                });
+            });
 
             // DOM events
             $(document).on('click', 'h3.collapsible_title', function () {
@@ -247,9 +264,7 @@
             $(document).on('click', 'li.room', function () {
                 var roomName = $(this).data('name');
 
-                if (ui.setActiveRoom(roomName) === false) {
-                    $(ui).trigger('ui.openRoom', [roomName]);
-                }
+                navigateToRoom(roomName);
 
                 return false;
             });
@@ -320,6 +335,9 @@
 
             $newMessage.focus();
         },
+        run: function () {
+            app.run();
+        },
         setMessage: function (value) {
             $newMessage.val(value);
         },
@@ -354,6 +372,7 @@
                     room.scrollToBottom();
                 }
 
+                app.setLocation('#/rooms/' + roomName);
                 $(ui).trigger('ui.activeRoomChanged', [roomName]);
                 return true;
             }
