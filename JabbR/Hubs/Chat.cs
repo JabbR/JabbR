@@ -409,6 +409,12 @@ namespace JabbR
 
                 return true;
             }
+            else if (commandName.Equals("create", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleCreate(user, parts);
+
+                return true;
+            }
             else if (commandName.Equals("msg", StringComparison.OrdinalIgnoreCase))
             {
                 HandleMsg(user, parts);
@@ -442,7 +448,7 @@ namespace JabbR
 
             return false;
         }
-
+        
         private void HandleMakeOwner(ChatUser user, string[] parts)
         {
             if (parts.Length == 1)
@@ -576,7 +582,8 @@ namespace JabbR
             Caller.showCommands(new[] { 
                 new { Name = "help", Description = "Shows the list of commands" },
                 new { Name = "nick", Description = "/nick changes your nickname" },
-                new { Name = "join", Description = "Type /join room -- to join a channel of your choice" },
+                new { Name = "join", Description = "Type /join [room] -- to join a channel of your choice" },
+                new { Name = "create", Description = "Type /create [room] to create a room" },
                 new { Name = "me", Description = "Type /me 'does anything'" },
                 new { Name = "msg", Description = "Type /msg @nickname (message) to send a private message to nickname. @ is optional." },
                 new { Name = "leave", Description = "Type /leave to leave the current room. Type /leave [room name] to leave a specific room." },
@@ -670,6 +677,32 @@ namespace JabbR
             return room.Users.Any(r => r.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase));
         }
 
+        private void HandleCreate(ChatUser user, string[] parts)
+        {
+            if (parts.Length == 1)
+            {
+                throw new InvalidOperationException("No room specified.");
+            }
+
+            string roomName = parts[1];
+            if (String.IsNullOrWhiteSpace(roomName))
+            {
+                throw new InvalidOperationException("No room specified.");
+            }
+
+            ChatRoom room = _repository.GetRoomByName(roomName);
+
+            if (room != null)
+            {
+                throw new InvalidOperationException(String.Format("The room '{0}' already exists", roomName));
+            }
+
+            // Create the room, then join it
+            room = AddRoom(user, roomName);
+
+            JoinRoom(user, room);
+        }
+
         private void HandleJoin(ChatUser user, string[] parts)
         {
             if (parts.Length < 2)
@@ -679,13 +712,9 @@ namespace JabbR
 
             // Create the room if it doesn't exist
             string roomName = parts[1];
-            ChatRoom room = _repository.GetRoomByName(roomName);
+            ChatRoom room = EnsureRoom(roomName);
 
-            if (room == null)
-            {
-                room = AddRoom(user, roomName);
-            }
-            else if (IsUserInRoom(room, user))
+            if (IsUserInRoom(room, user))
             {
                 throw new InvalidOperationException("You're already in that room!");
             }
