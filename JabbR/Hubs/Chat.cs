@@ -438,9 +438,9 @@ namespace JabbR
 
                 return true;
             }
-            else if (commandName.EndsWith("makeowner", StringComparison.OrdinalIgnoreCase))
+            else if (commandName.EndsWith("addowner", StringComparison.OrdinalIgnoreCase))
             {
-                HandleMakeOwner(user, parts);
+                HandleAddOwner(user, parts);
 
                 return true;
             }
@@ -448,7 +448,7 @@ namespace JabbR
             return false;
         }
 
-        private void HandleMakeOwner(ChatUser user, string[] parts)
+        private void HandleAddOwner(ChatUser user, string[] parts)
         {
             if (parts.Length == 1)
             {
