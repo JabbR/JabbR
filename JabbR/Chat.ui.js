@@ -132,6 +132,12 @@
         $('<ul/>').attr('id', 'users-' + roomId)
                   .addClass('users')
                   .appendTo($chatArea).hide();
+
+        $tabs.find('li')
+             .not('.lobby')
+             .sortElements(function (a, b) {
+                 return $(a).data('name') > $(b).data('name') ? 1 : -1;
+             });
     }
 
     function removeRoom(roomName) {
@@ -357,16 +363,23 @@
             lobby.users.empty();
 
             $.each(rooms, function () {
-                var $count = $('<span/>').addClass('count')
+                var $name = $('<span/>').addClass('name')
+                                        .html(this.Name),
+                    $count = $('<span/>').addClass('count')
                                          .html(' (' + this.Count + ')')
                                          .data('count', this.Count);
 
                 $('<li/>').addClass('room')
                           .data('name', this.Name)
-                          .html(this.Name)
+                          .append($name)
                           .append($count)
                           .appendTo(lobby.users);
             });
+
+            lobby.users.find('li')
+                       .sortElements(function (a, b) {
+                           return $(a).data('name') > $(b).data('name') ? 1 : -1;
+                       });
         },
         addUser: function (user, roomName) {
             var room = getRoomElements(roomName),
