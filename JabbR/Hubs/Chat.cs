@@ -82,7 +82,7 @@ namespace JabbR
             }
 
             RejoinRooms(user, user.Rooms);
-            
+
             return true;
         }
 
@@ -1083,7 +1083,7 @@ namespace JabbR
 
             if (room == null)
             {
-                throw new InvalidOperationException("No room with that name!");
+                throw new InvalidOperationException(String.Format("Unable to find room '{0}'.", roomName));
             }
             return room;
         }
@@ -1094,7 +1094,7 @@ namespace JabbR
 
             if (user == null)
             {
-                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", userName));
+                throw new InvalidOperationException(String.Format("Unable to find user '{0}'.", userName));
             }
 
             return user;
