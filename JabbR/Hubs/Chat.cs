@@ -579,6 +579,8 @@ namespace JabbR
             var userViewModel = new UserViewModel(user);
             Clients[room.Name].leave(userViewModel, room.Name).Wait();
 
+            UpdateRoomCount(room);
+
             GroupManager.RemoveFromGroup(user.ClientId, room.Name).Wait();
         }
 
@@ -687,6 +689,9 @@ namespace JabbR
                 // Tell the people in this room that you've joined
                 Clients[room.Name].addUser(userViewModel, room.Name, ownerViewModel).Wait();
 
+                // Update the room count
+                UpdateRoomCount(room);
+
                 // Update activity
                 UpdateActivity(user, room);
 
@@ -700,28 +705,36 @@ namespace JabbR
             Caller.rejoinRooms(roomNames);
         }
 
-        private void JoinRoom(ChatUser user, ChatRoom newRoom)
+        private void JoinRoom(ChatUser user, ChatRoom room)
         {
             var userViewModel = new UserViewModel(user);
-            var ownerViewModel = newRoom.Owner == null ? null : new UserViewModel(newRoom.Owner);
+            var ownerViewModel = room.Owner == null ? null : new UserViewModel(room.Owner);
 
             // Add this room to the user's list of rooms
-            user.Rooms.Add(newRoom);
+            user.Rooms.Add(room);
 
             // Add this user to the list of room's users
-            newRoom.Users.Add(user);
+            room.Users.Add(user);
 
             _repository.Update();
 
             // Set the room on the caller
-            Caller.activeRoom = newRoom.Name;
-            Caller.joinRoom(newRoom.Name);
+            Caller.activeRoom = room.Name;
+            Caller.joinRoom(room.Name);
 
             // Tell the people in this room that you've joined
-            Clients[newRoom.Name].addUser(userViewModel, newRoom.Name, ownerViewModel).Wait();
+            Clients[room.Name].addUser(userViewModel, room.Name, ownerViewModel).Wait();
+
+            UpdateRoomCount(room);
 
             // Add the caller to the group so they receive messages
-            AddToGroup(newRoom.Name).Wait();
+            AddToGroup(room.Name).Wait();
+        }
+
+        private void UpdateRoomCount(ChatRoom room)
+        {
+            // Update the room count
+            Clients.updateRoomCount(room.Name, room.Users.Online().Count());
         }
 
         private void HandleGravatar(ChatUser user, string[] parts)

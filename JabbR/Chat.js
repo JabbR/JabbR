@@ -128,6 +128,10 @@
         });
     };
 
+    chat.updateRoomCount = function (room, count) {
+        ui.updateLobbyRoomCount(room, count);
+    };
+
     chat.markInactive = function (users) {
         $.each(users, function () {
             ui.setUserActivity(this);

@@ -25,6 +25,10 @@
         this.users = $users;
         this.messages = $messages;
 
+        this.isLobby = function () {
+            return this.tab.hasClass('lobby');
+        };
+
         this.hasUnread = function () {
             return this.tab.hasClass('unread');
         };
@@ -106,6 +110,19 @@
                         $('.users.current'),
                         $('.messages.current'));
     }
+
+    function getLobby() {
+        return getRoomElements('Lobby');
+    }
+
+    function updateLobbyRoomCount(roomName, count) {
+        var lobby = getLobby(),
+            $count = lobby.users.find('[data-room="' + roomName + '"]')
+                                .find('.count');
+
+        $count.text(' (' + count + ')');
+    }
+
 
     function addRoom(roomName) {
         // Do nothing if the room exists
@@ -332,6 +349,7 @@
 
             return false;
         },
+        updateLobbyRoomCount: updateLobbyRoomCount,
         updateUnread: function (unread, roomName) {
             var room = getRoomElements(roomName);
 
@@ -358,7 +376,7 @@
             resize($element.closest('.message'));
         },
         populateLobbyRooms: function (rooms) {
-            var lobby = getRoomElements('Lobby');
+            var lobby = getLobby();
 
             lobby.users.empty();
 
@@ -370,6 +388,7 @@
                                          .data('count', this.Count);
 
                 $('<li/>').addClass('room')
+                          .attr('data-room', this.Name)
                           .data('name', this.Name)
                           .append($name)
                           .append($count)
