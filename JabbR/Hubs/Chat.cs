@@ -512,6 +512,12 @@ namespace JabbR
                 throw new InvalidOperationException("Why would you want to kick yourself?");
             }
 
+            // If this user isnt' the creator and the target user is an owner then throw
+            if (room.Creator != user && room.Owners.Contains(targetUser))
+            {
+                throw new InvalidOperationException("Owners cannot kick other owners. Only the room creator and kick an owner.");
+            }
+
             // Kick the user
             HandleLeave(room, targetUser);
 
@@ -673,7 +679,7 @@ namespace JabbR
 
             // Create the room if it doesn't exist
             string roomName = parts[1];
-            ChatRoom room = _repository.GetRoomByName(roomName);            
+            ChatRoom room = _repository.GetRoomByName(roomName);
 
             if (room == null)
             {
