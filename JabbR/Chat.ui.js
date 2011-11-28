@@ -461,7 +461,7 @@
                 });
         },
         setUserTyping: function (user, roomName, isTyping) {
-            var room = getCurrentRoomElements(roomName),
+            var room = getRoomElements(roomName),
                 $user = room.getUser(user.Name);
 
             if (isTyping) {
