@@ -168,7 +168,7 @@
             if (nearTheEndBefore && nearTheEndAfter) {
                 ui.scrollToBottom();
             }
-        }, 600);
+        }, 850);
     };
 
     chat.addMessage = function (message, room) {
