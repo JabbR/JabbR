@@ -1007,7 +1007,7 @@ namespace JabbR
 
             if (user == null)
             {
-                throw new InvalidOperationException("Invalid user id");
+                throw new InvalidOperationException("You don't have a name. Pick a name using '/nick nickname'.");
             }
 
             // Update the user's activity
