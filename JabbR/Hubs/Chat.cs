@@ -227,7 +227,7 @@ namespace JabbR
                 return;
             }
 
-            ChatRoom room = EnsureRoom(user);
+            ChatRoom room = EnsureActiveRoom(user);
 
             var userViewModel = new UserViewModel(user);
 
@@ -386,7 +386,7 @@ namespace JabbR
         // Commands that require a user name
         private bool TryHandleUserCommand(string commandName, string[] parts)
         {
-            ChatUser user = EnsureUser();
+            ChatUser user = EnsureActiveUser();
             if (commandName.Equals("rooms", StringComparison.OrdinalIgnoreCase))
             {
                 HandleRooms();
@@ -433,16 +433,66 @@ namespace JabbR
 
                 return true;
             }
+            else if (commandName.EndsWith("makeowner", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleMakeOwner(user, parts);
+
+                return true;
+            }
 
             return false;
         }
 
+        private void HandleMakeOwner(ChatUser user, string[] parts)
+        {
+            if (parts.Length == 1)
+            {
+                throw new InvalidOperationException("Who do you want to make an owner?");
+            }
+
+            string targetUserName = parts[1];
+
+            ChatUser targetUser = EnsureUser(targetUserName);
+
+            if (parts.Length == 2)
+            {
+                throw new InvalidOperationException("Which room?");
+            }
+
+            string roomName = parts[2];
+            ChatRoom targetRoom = EnsureRoom(roomName);
+
+            // Ensure the user is owner of the target room
+            EnsureOwner(user, targetRoom);
+
+            if (targetUser == user || targetRoom.Owners.Contains(targetUser))
+            {
+                // If the target user is already an owner, then throw
+                throw new InvalidOperationException(String.Format("'{0}' is already and owner of '{1}'.", targetUser.Name, targetRoom.Name));
+            }
+
+            // Make the user an owner
+            targetRoom.Owners.Add(targetUser);
+            targetUser.OwnedRooms.Add(targetRoom);
+            _repository.Update();
+
+            // Tell this client it's an owner
+            Clients[targetUser.ClientId].makeOwner(targetRoom.Name);
+
+            // If the target user is in the target room.
+            // Tell everyone in the target room that a new owner was added
+            if (IsUserInRoom(targetRoom, targetUser))
+            {
+                Clients[targetRoom.Name].addOwner(new UserViewModel(targetUser), targetRoom.Name);
+            }
+
+            // Tell the calling client the granting of ownership was successful
+            Caller.ownerMade(targetUser.Name, targetRoom.Name);
+        }
+
         private void HandleKick(ChatUser user, ChatRoom room, string[] parts)
         {
-            if (!room.Owners.Contains(user))
-            {
-                throw new InvalidOperationException("You are not an owner of " + room.Name);
-            }
+            EnsureOwner(user, room);
 
             if (parts.Length == 1)
             {
@@ -455,12 +505,7 @@ namespace JabbR
             }
 
             string targetUserName = parts[1];
-            var targetUser = _repository.GetUserByName(targetUserName);
-
-            if (targetUser == null)
-            {
-                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", targetUserName));
-            }
+            ChatUser targetUser = EnsureUser(targetUserName);
 
             if (targetUser == user)
             {
@@ -513,17 +558,7 @@ namespace JabbR
             }
 
             string roomName = parts[1];
-            if (String.IsNullOrWhiteSpace(roomName))
-            {
-                throw new InvalidOperationException("Room name cannot be blank!");
-            }
-
-            var room = _repository.GetRoomByName(roomName);
-
-            if (room == null)
-            {
-                throw new InvalidOperationException("No room with that name!");
-            }
+            ChatRoom room = EnsureRoom(roomName);
 
             var names = room.Users.Online().Select(s => s.Name);
 
@@ -542,25 +577,16 @@ namespace JabbR
                 new { Name = "rooms", Description = "Type /rooms to show the list of rooms" },
                 new { Name = "who", Description = "Type /who to show a list of all users, /who [name] to the rooms that user is in" },
                 new { Name = "list", Description = "Type /list (room) to show a list of users in the room" },
-                new { Name = "gravatar", Description = "Type \"/gravatar email\" to set your gravatar." },
-                new { Name = "nudge", Description = "Type \"/nudge\" to send a nudge to the whole room, or \"/nudge @nickname\" to nudge a particular user. @ is optional." }
+                new { Name = "gravatar", Description = "Type /gravatar [email] to set your gravatar." },
+                new { Name = "nudge", Description = "Type /nudge to send a nudge to the whole room, or \"/nudge @nickname\" to nudge a particular user. @ is optional." },
+                new { Name = "kick", Description = "Type /kick [user] to kick a user from the room. Note, this is only valid for owners of the room." }
             });
         }
 
         private void HandleLeave(ChatUser user, string[] parts)
         {
             string roomName = parts[1];
-            if (String.IsNullOrWhiteSpace(roomName))
-            {
-                throw new InvalidOperationException("Room name cannot be blank!");
-            }
-
-            var room = _repository.GetRoomByName(roomName);
-
-            if (room == null)
-            {
-                throw new InvalidOperationException("No room with that name!");
-            }
+            ChatRoom room = EnsureRoom(roomName);
 
             HandleLeave(room, user);
         }
@@ -609,12 +635,7 @@ namespace JabbR
                 throw new InvalidOperationException("Who are you trying send a private message to?");
             }
             var toUserName = NormalizeUserName(parts[1]);
-            ChatUser toUser = _repository.Users.FirstOrDefault(u => u.Name.Equals(toUserName, StringComparison.OrdinalIgnoreCase));
-
-            if (toUser == null)
-            {
-                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", toUserName));
-            }
+            ChatUser toUser = EnsureUser(toUserName);
 
             if (toUser == user)
             {
@@ -643,18 +664,6 @@ namespace JabbR
             return room.Users.Any(r => r.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase));
         }
 
-        private bool IsUserInRoom(string roomName, ChatUser user)
-        {
-            var room = _repository.Rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
-
-            if (room == null)
-            {
-                return false;
-            }
-
-            return IsUserInRoom(room, user);
-        }
-
         private void HandleJoin(ChatUser user, string[] parts)
         {
             if (parts.Length < 2)
@@ -662,21 +671,20 @@ namespace JabbR
                 throw new InvalidOperationException("Join which room?");
             }
 
-            string newRoomName = parts[1];
+            // Create the room if it doesn't exist
+            string roomName = parts[1];
+            ChatRoom room = _repository.GetRoomByName(roomName);            
 
-            if (IsUserInRoom(newRoomName, user))
+            if (room == null)
+            {
+                room = AddRoom(user, roomName);
+            }
+            else if (IsUserInRoom(room, user))
             {
                 throw new InvalidOperationException("You're already in that room!");
             }
 
-            // Create the room if it doesn't exist
-            ChatRoom newRoom = _repository.Rooms.FirstOrDefault(r => r.Name.Equals(newRoomName, StringComparison.OrdinalIgnoreCase));
-            if (newRoom == null)
-            {
-                newRoom = AddRoom(user, newRoomName);
-            }
-
-            JoinRoom(user, newRoom);
+            JoinRoom(user, room);
         }
 
         private void RejoinRooms(ChatUser user, IEnumerable<ChatRoom> rooms)
@@ -823,12 +831,8 @@ namespace JabbR
             }
 
             var toUserName = NormalizeUserName(parts[1]);
-            ChatUser toUser = _repository.Users.FirstOrDefault(u => u.Name.Equals(toUserName, StringComparison.OrdinalIgnoreCase));
 
-            if (toUser == null)
-            {
-                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", toUserName));
-            }
+            ChatUser toUser = EnsureUser(toUserName);
 
             if (toUser == user)
             {
@@ -845,6 +849,7 @@ namespace JabbR
 
             toUser.LastNudged = DateTime.Now;
             _repository.Update();
+
             // Send a nudge message to the sender and the sendee                        
             Clients[toUser.ClientId].nudge(user.Name, toUser.Name);
             Caller.sendPrivateMessage(user.Name, toUser.Name, "nudged " + toUser.Name);
@@ -975,13 +980,21 @@ namespace JabbR
 
         private Tuple<ChatUser, ChatRoom> EnsureUserAndRoom()
         {
-            ChatUser user = EnsureUser();
-            ChatRoom room = EnsureRoom(user);
+            ChatUser user = EnsureActiveUser();
+            ChatRoom room = EnsureActiveRoom(user);
 
             return Tuple.Create(user, room);
         }
 
-        private ChatRoom EnsureRoom(ChatUser user)
+        private static void EnsureOwner(ChatUser user, ChatRoom room)
+        {
+            if (!room.Owners.Contains(user))
+            {
+                throw new InvalidOperationException("You are not an owner of " + room.Name);
+            }
+        }
+
+        private ChatRoom EnsureActiveRoom(ChatUser user)
         {
             string roomName = Caller.activeRoom;
 
@@ -1005,7 +1018,7 @@ namespace JabbR
             return room;
         }
 
-        private ChatUser EnsureUser()
+        private ChatUser EnsureActiveUser()
         {
             string id = Caller.id;
 
@@ -1020,6 +1033,34 @@ namespace JabbR
             user.Status = (int)UserStatus.Active;
             user.LastActivity = DateTime.UtcNow;
             _repository.Update();
+
+            return user;
+        }
+
+        private ChatRoom EnsureRoom(string roomName)
+        {
+            if (String.IsNullOrWhiteSpace(roomName))
+            {
+                throw new InvalidOperationException("Room name cannot be blank!");
+            }
+
+            var room = _repository.GetRoomByName(roomName);
+
+            if (room == null)
+            {
+                throw new InvalidOperationException("No room with that name!");
+            }
+            return room;
+        }
+
+        private ChatUser EnsureUser(string userName)
+        {
+            ChatUser user = _repository.GetUserByName(userName);
+
+            if (user == null)
+            {
+                throw new InvalidOperationException(String.Format("Couldn't find any user named '{0}'.", userName));
+            }
 
             return user;
         }

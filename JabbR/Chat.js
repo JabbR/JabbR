@@ -112,6 +112,8 @@
         updateTitle();
     }
 
+    // Room commands
+
     // When the /join command gets raised this is called
     chat.joinRoom = function (room) {
         ui.addRoom(room);
@@ -128,6 +130,10 @@
             ui.addRoom(room);
             populateRoom(room);
         });
+    };
+
+    chat.addOwner = function (user, room) {
+        ui.setRoomOwner(user.Name, room);
     };
 
     chat.updateRoomCount = function (room, count) {
@@ -207,10 +213,24 @@
         }
     };
 
+    // User single client commands
+
+    // Called when you make someone an owner
+    chat.ownerMade = function (user, room) {
+        ui.addMessage(user + ' is now an owner of ' + room, 'notification', this.activeRoom);
+    };
+
+    // Called when you've been made an owner
+    chat.makeOwner = function (room) {
+        ui.addMessage('You are now an owner of ' + room, 'notification', this.activeRoom);
+    };
+
+    // Called when your gravatar has been changed
     chat.gravatarChanged = function () {
         ui.addMessage('Your gravatar has been set', 'notification', this.activeRoom);
     };
 
+    // Called when you created a new user
     chat.userCreated = function () {
         ui.addMessage('Your nick is ' + this.name, 'notification');
 
