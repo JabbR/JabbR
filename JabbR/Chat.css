@@ -229,8 +229,8 @@ li.room:hover {
     background-color: #fff6bd;
 }
 
-.message .left strong {
-    vertical-align: middle;
+.message .left .name {
+    font-weight: bold;
 }
 
 .message .middle {
