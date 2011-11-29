@@ -16,8 +16,6 @@
         // Process the template, and add it in to the div.
         $('#tweet-template').tmpl(tweet).appendTo(elements);
 
-        ui.resize();
-
         // If near the end, scroll.
         if (nearEnd) {
             ui.scrollToBottom();

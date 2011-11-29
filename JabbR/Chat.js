@@ -176,7 +176,6 @@
         // we're just going to wait a little bit and hope for the best :) (still a HACK tho)
         window.setTimeout(function () {
             var nearTheEndAfter = ui.isNearTheEnd(room);
-            ui.resize();
             if (nearTheEndBefore && nearTheEndAfter) {
                 ui.scrollToBottom();
             }

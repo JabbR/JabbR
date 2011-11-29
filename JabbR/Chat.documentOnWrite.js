@@ -17,8 +17,6 @@
 
             elementToAppendTo.append(collapsible);
 
-            ui.resizeContainingMessage(elementToAppendTo);
-
             if (nearEnd) {
                 ui.scrollToBottom();
             }

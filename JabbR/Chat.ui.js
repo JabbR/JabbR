@@ -176,49 +176,6 @@
         }
     }
 
-    function doResizeRoom(room) {
-        var $messages = room.messages.find('.message');
-
-        $.each($messages, function () {
-            resize($(this));
-        });
-    }
-
-    function resizeRoom(roomName) {
-        var room = getRoomElements(roomName);
-        doResizeRoom(room);
-    }
-
-    function resizeActiveRoom() {
-        var room = getCurrentRoomElements();
-        doResizeRoom(room);
-    }
-
-    function resize($message) {
-        // Clear the previous heights and widths
-        $message.css('height', '');
-        $message.find('.middle').css('width', '');
-        $message.find('.left').css('height', '');
-
-        var $left = $message.find('.left'),
-            $middle = $message.find('.middle'),
-            $right = $message.find('.right'),
-            width = $message.width(),
-            leftWidth = $left.outerWidth(true),
-            rightWidth = $right.outerWidth(true),
-            middleExtra = $middle.outerWidth(true) - $middle.width(),
-            middleWidth = width - (leftWidth + rightWidth + middleExtra) - 20;
-
-        $middle.css('width', middleWidth + 'px');
-
-        var height = $message.height(),
-            leftExtra = $left.outerHeight() - $left.height(),
-            leftHeightCalculated = height - leftExtra;
-
-        $message.css('height', height + 'px');
-        $left.css('height', leftHeightCalculated + 'px');
-    }
-
     function navigateToRoom(roomName) {
         app.runRoute('get', '#/rooms/' + roomName, {
             room: roomName
@@ -253,8 +210,6 @@
                     nearEnd = ui.isNearTheEnd();
 
                 $(this).next().toggle(0, function () {
-                    resize($message);
-
                     if (nearEnd) {
                         ui.scrollToBottom();
                     }
@@ -295,8 +250,6 @@
                 ev.preventDefault();
                 return false;
             });
-
-            $(window).resize(resizeActiveRoom);
 
             $(window).blur(function () {
                 $(ui).trigger('ui.blur');
@@ -370,8 +323,6 @@
                 currentRoom.makeInactive();
                 room.makeActive();
 
-                resizeRoom(roomName);
-
                 if (hasUnread) {
                     room.scrollToBottom();
                 }
@@ -404,10 +355,6 @@
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
 
             return room.isNearTheEnd();
-        },
-        resize: resizeActiveRoom,
-        resizeContainingMessage: function ($element) {
-            resize($element.closest('.message'));
         },
         populateLobbyRooms: function (rooms) {
             var lobby = getLobby();
@@ -527,19 +474,12 @@
             }
 
             templates.message.tmpl(message).appendTo(room.messages);
-
-            // Resize this message
-            $message = $('#m-' + message.id);
-            resize($message);
         },
         addChatMessageContent: function (id, content, roomName) {
             var $message = $('#m-' + id);
 
             $message.find('.middle')
                     .append(content);
-
-            // Resize this message
-            resize($message);
         },
         addMessage: function (content, type, roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements(),
@@ -550,10 +490,6 @@
 
             if (type) {
                 $element.addClass(type);
-            }
-
-            if (roomName) {
-                resizeRoom(roomName);
             }
 
             if (nearEnd) {
