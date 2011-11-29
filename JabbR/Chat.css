@@ -59,11 +59,11 @@
     list-style-type: none;
     position: relative;
     margin: 0px;
-    border-left: 175px solid #f1f1f1; /* background color for left column (user info) */
 }
 
 .messages li.message {
     padding: 0px;
+    border-left: 175px solid #f1f1f1; /* background color for left column (user info) */
 }
 
 .messages li img.gravatar {
