@@ -239,7 +239,7 @@ li.room:hover {
     word-wrap: break-word;
 }
 
-.message .right {
+.messages li .right {
     position: absolute;
     padding: 5px;
     top: 0px;
@@ -247,7 +247,7 @@ li.room:hover {
     width: 75px;
 }
 
-.message .right .time {
+.messages li .right .time {
     color: #bbb;
 }
 
@@ -255,6 +255,25 @@ li.room:hover {
     background-color: #fff6bd;
 }
 
+.list-header {
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.list-item {
+    padding: 5px;
+    padding-left: 10px;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+
+.list-header .content {
+    font-weight: bold;
+}
+
+.list-item .right { /* hide time for list items */
+    display: none;
+}
 
 /* This stuff is to support TweetContentProvider, but should be extracted out if other content providers need custom CSS */
 

@@ -191,6 +191,7 @@
             templates = {
                 user: $('#new-user-template'),
                 message: $('#new-message-template'),
+                notification: $('#new-notification-template'),
                 tab: $('#new-tab-template')
             },
             app = Sammy(function () {
@@ -466,8 +467,9 @@
 
             // Set the trimmed name and date
             message.trimmedName = utility.trim(message.name, 21);
-            message.when = message.date.formatTime();
+            message.when = message.date.formatTime(true);
             message.showUser = showUserName;
+            message.fulldate = message.date.formatDate() + ' ' + message.date.formatTime(true);
 
             if (showUserName === false) {
                 $previousMessage.addClass('continue');
@@ -484,13 +486,16 @@
         addMessage: function (content, type, roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements(),
                 nearEnd = room.isNearTheEnd(),
-                $element = null;
+                $element = null,
+                now = new Date(),
+                message = {
+                    message: content,
+                    type: type,
+                    when: now.formatTime(true),
+                    fulldate: now.formatDate() + ' ' + now.formatTime(true)
+                };
 
-            $element = $('<li/>').html(content).appendTo(room.messages);
-
-            if (type) {
-                $element.addClass(type);
-            }
+            $element = templates.notification.tmpl(message).appendTo(room.messages);
 
             if (nearEnd) {
                 ui.scrollToBottom(roomName);
