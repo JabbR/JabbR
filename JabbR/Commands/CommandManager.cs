@@ -249,7 +249,7 @@ namespace JabbR.Commands
                 return;
             }
 
-            var name = NormalizeUserName(parts[1]);
+            var name = ChatService.NormalizeUserName(parts[1]);
 
             ChatUser user = _repository.GetUserByName(name);
 
@@ -332,7 +332,7 @@ namespace JabbR.Commands
             {
                 throw new InvalidOperationException("Who are you trying send a private message to?");
             }
-            var toUserName = NormalizeUserName(parts[1]);
+            var toUserName = parts[1];
             ChatUser toUser = _repository.VerifyUser(toUserName);
 
             if (toUser == user)
@@ -556,7 +556,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("You're the only person in here...");
             }
 
-            var toUserName = NormalizeUserName(parts[1]);
+            var toUserName = parts[1];
 
             ChatUser toUser = _repository.VerifyUser(toUserName);
 
@@ -593,11 +593,6 @@ namespace JabbR.Commands
             {
                 throw new InvalidOperationException(String.Format("Room can only be nudged once every {0} seconds", betweenNudges.TotalSeconds));
             }
-        }
-
-        private string NormalizeUserName(string userName)
-        {
-            return userName.StartsWith("@") ? userName.Substring(1) : userName;
-        }
+        }        
     }
 }

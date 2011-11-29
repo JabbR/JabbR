@@ -210,6 +210,11 @@ namespace JabbR.Services
             }
         }
 
+        internal static string NormalizeUserName(string userName)
+        {
+            return userName.StartsWith("@") ? userName.Substring(1) : userName;
+        }
+
         internal static void ThrowUserExists(string userName)
         {
             throw new InvalidOperationException(String.Format("Username {0} already taken, please pick a new one using '/nick nickname'.", userName));
