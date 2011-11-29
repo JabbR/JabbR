@@ -23,7 +23,7 @@
 
     Date.prototype.formatDate = function () {
         var m = this.getMonth() + 1,
-            d = this.getDay(),
+            d = this.getDate(),
             y = this.getFullYear();
 
         return m + "/" + d + "/" + y;
