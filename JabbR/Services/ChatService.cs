@@ -141,6 +141,8 @@ namespace JabbR.Services
         {
             // Remove the user from the room
             room.Users.Remove(user);
+
+            // Remove this room from the users' list
             user.Rooms.Remove(room);
         }
 

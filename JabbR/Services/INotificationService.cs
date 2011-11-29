@@ -21,11 +21,11 @@ namespace JabbR.Services
         void ChangePassword();
         void SetPassword();
 
-        void SendPrivateMessage(ChatUser user, ChatUser toUser, string messageText);        
+        void SendPrivateMessage(ChatUser user, ChatUser targetUser, string messageText);        
         void LeaveRoom(ChatUser user, ChatRoom room);
 
         void OnOwnerAdded(ChatUser targetUser, ChatRoom targetRoom);
-        void KickUser(ChatRoom room, ChatUser targetUser);
+        void KickUser(ChatUser targetUser, ChatRoom targetRoom);
 
         void OnUserCreated(ChatUser user);
         void OnUserNameChanged(ChatUser user, string oldUserName, string newUserName);

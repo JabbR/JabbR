@@ -236,7 +236,7 @@ namespace JabbR.Commands
 
             _chatService.KickUser(user, targetUser, room);
 
-            _notificationService.KickUser(room, targetUser);
+            _notificationService.KickUser(targetUser, room);
 
             _repository.CommitChanges();
         }
@@ -400,7 +400,7 @@ namespace JabbR.Commands
         private void JoinRoom(ChatUser user, ChatRoom room)
         {
             _chatService.JoinRoom(user, room);
-
+                        
             _notificationService.JoinRoom(user, room);
 
             _repository.CommitChanges();

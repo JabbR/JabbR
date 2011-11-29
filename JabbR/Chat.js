@@ -338,7 +338,6 @@
         if (isSelf(user)) {
             ui.setActiveRoom('Lobby');
             ui.removeRoom(room);
-
             ui.addMessage('You have left ' + room, 'notification');
         }
         else {
@@ -348,6 +347,8 @@
     };
 
     chat.kick = function (room) {
+        ui.setActiveRoom('Lobby');
+        ui.removeRoom(room);
         ui.addMessage('You were kicked from ' + room, 'notification');
     };
 
