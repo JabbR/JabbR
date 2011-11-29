@@ -458,13 +458,25 @@ namespace JabbR.Commands
             // See if there is a current user
             ChatUser user = _repository.GetUserById(_userId);
 
-            if (user == null)
+            if (user == null && String.IsNullOrEmpty(newPassword))
             {
-                // Claim a nick name
-                if (!String.IsNullOrEmpty(password))
+                user = _repository.GetUserByName(userName);
+
+                // There's a user with the name specified
+                if (user != null)
                 {
-                    // If there's no user but there's a password then authenticate the user
-                    user = _chatService.AuthenticateUser(userName, password);
+                    if (String.IsNullOrEmpty(password))
+                    {
+                        ChatService.ThrowUserExists(userName);
+                    }
+                    else
+                    {
+                        // If there's no user but there's a password then authenticate the user
+                        _chatService.AuthenticateUser(userName, password);
+
+                        // TODO: Handle multple clients per user
+                        user.ClientId = _clientId;
+                    }
                 }
                 else
                 {
@@ -477,7 +489,7 @@ namespace JabbR.Commands
             }
             else
             {
-                if (!String.IsNullOrEmpty(password))
+                if (String.IsNullOrEmpty(password))
                 {
                     string oldUserName = user.Name;
 
@@ -498,7 +510,7 @@ namespace JabbR.Commands
                     }
 
                     if (String.IsNullOrEmpty(newPassword))
-                    {
+                    {                        
                         if (targetUser.HashedPassword == null)
                         {
                             _chatService.SetUserPassword(user, password);

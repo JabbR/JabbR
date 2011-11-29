@@ -45,7 +45,7 @@ namespace JabbR.Services
             return user;
         }
 
-        public ChatUser AuthenticateUser(string userName, string password)
+        public void AuthenticateUser(string userName, string password)
         {
             ChatUser user = _repository.VerifyUser(userName);
 
@@ -58,8 +58,6 @@ namespace JabbR.Services
             {
                 throw new InvalidOperationException(String.Format("Unable to authorize '{0}'.", userName));
             }
-
-            return user;
         }
 
         public void ChangeUserName(ChatUser user, string newUserName)
@@ -206,11 +204,16 @@ namespace JabbR.Services
 
             if (userExists)
             {
-                throw new InvalidOperationException(String.Format("Username {0} already taken, please pick a new one using '/nick nickname'.", userName));
+                ThrowUserExists(userName);
             }
         }
 
-        public static bool IsUserInRoom(ChatRoom room, ChatUser user)
+        internal static void ThrowUserExists(string userName)
+        {
+            throw new InvalidOperationException(String.Format("Username {0} already taken, please pick a new one using '/nick nickname'.", userName));
+        }
+
+        internal static bool IsUserInRoom(ChatRoom room, ChatUser user)
         {
             return room.Users.Any(r => r.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase));
         }

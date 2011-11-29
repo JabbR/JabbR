@@ -258,6 +258,14 @@
         updateCookie();
     };
 
+    chat.setPassword = function () {
+        ui.addMessage('Your password has been set', 'notification', this.activeRoom);
+    };
+
+    chat.changePassword = function () {
+        ui.addMessage('Your password has been changed', 'notification', this.activeRoom);
+    };
+
     chat.userNameChanged = function (user) {
         ui.addMessage('Your name is now ' + user.Name, 'notification', this.activeRoom);
     };
