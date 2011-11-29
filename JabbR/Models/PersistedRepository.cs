@@ -48,7 +48,7 @@ namespace JabbR.Models
             _db.SaveChanges();
         }
 
-        public void Update()
+        public void CommitChanges()
         {
             _db.SaveChanges();
         }

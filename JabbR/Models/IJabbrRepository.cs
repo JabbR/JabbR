@@ -18,6 +18,6 @@ namespace JabbR.Models
         void Add(ChatUser user);
         void Remove(ChatRoom room);
         void Remove(ChatUser user);
-        void Update();
+        void CommitChanges();
     }
 }

@@ -203,6 +203,8 @@ namespace JabbR.Commands
             _chatService.AddOwner(user, targetUser, targetRoom);
 
             _notificationService.OnOwnerAdded(targetUser, targetRoom);
+
+            _repository.CommitChanges();
         }
 
         private void HandleKick(ChatUser user, ChatRoom room, string[] parts)
@@ -224,6 +226,8 @@ namespace JabbR.Commands
             _chatService.KickUser(user, targetUser, room);
 
             _notificationService.KickUser(room, targetUser);
+
+            _repository.CommitChanges();
         }
 
         private void HandleWho(string[] parts)
@@ -290,6 +294,8 @@ namespace JabbR.Commands
             _chatService.LeaveRoom(user, room);
 
             _notificationService.LeaveRoom(user, room);
+
+            _repository.CommitChanges();
         }
 
         private void HandleMe(ChatRoom room, ChatUser user, string[] parts)
@@ -357,6 +363,8 @@ namespace JabbR.Commands
             room = _chatService.AddRoom(user, roomName);
 
             JoinRoom(user, room);
+
+            _repository.CommitChanges();
         }
 
         private void HandleJoin(ChatUser user, string[] parts)
@@ -383,6 +391,8 @@ namespace JabbR.Commands
             _chatService.JoinRoom(user, room);
 
             _notificationService.JoinRoom(user, room);
+
+            _repository.CommitChanges();
         }
 
         private void HandleGravatar(ChatUser user, string[] parts)
@@ -403,9 +413,10 @@ namespace JabbR.Commands
         {
             // Set user hash
             user.Hash = hash;
-            _repository.Update();
-
+            
             _notificationService.ChangeGravatar(user);
+
+            _repository.CommitChanges();
         }
 
         private void HandleRooms()
@@ -507,6 +518,9 @@ namespace JabbR.Commands
                     }
                 }
             }
+
+            // Commit the changes
+            _repository.CommitChanges();
         }
 
         private void HandleNudge(ChatUser user, string[] parts)
@@ -534,7 +548,7 @@ namespace JabbR.Commands
             }
 
             toUser.LastNudged = DateTime.Now;
-            _repository.Update();
+            _repository.CommitChanges();
 
             _notificationService.NugeUser(user, toUser);
         }
@@ -545,7 +559,7 @@ namespace JabbR.Commands
             if (room.LastNudged == null || room.LastNudged < DateTime.Now.Subtract(betweenNudges))
             {
                 room.LastNudged = DateTime.Now;
-                _repository.Update();
+                _repository.CommitChanges();
 
                 _notificationService.NudgeRoom(room, user);
             }

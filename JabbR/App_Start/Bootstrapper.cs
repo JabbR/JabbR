@@ -112,7 +112,7 @@ namespace JabbR.App_Start
                 {
                     MarkInactiveUsers(repo);
 
-                    repo.Update();
+                    repo.CommitChanges();
                 }
             }
             catch(Exception ex)

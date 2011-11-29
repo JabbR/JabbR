@@ -41,7 +41,7 @@ namespace JabbR.Models
             _users.Remove(user);
         }
 
-        public void Update()
+        public void CommitChanges()
         {
             // no-op since this is an in-memory impl' of the repo
         }

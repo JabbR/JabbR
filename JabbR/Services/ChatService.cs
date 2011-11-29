@@ -78,15 +78,12 @@ namespace JabbR.Services
 
             // Update the user name
             user.Name = newUserName;
-            _repository.Update();
         }
 
         public void SetUserPassword(ChatUser user, string password)
         {
             ValidatePassword(password);
             user.HashedPassword = password.ToSha256();
-
-            _repository.Update();
         }
 
         public void ChangeUserPassword(ChatUser user, string oldPassword, string newPassword)
@@ -98,8 +95,6 @@ namespace JabbR.Services
 
             ValidatePassword(newPassword);
             user.HashedPassword = newPassword.ToSha256();
-
-            _repository.Update();
         }
 
         public ChatRoom AddRoom(ChatUser user, string name)
@@ -136,18 +131,12 @@ namespace JabbR.Services
 
             // Add this user to the list of room's users
             room.Users.Add(user);
-
-            // Update the repo
-            _repository.Update();
         }
 
         public void UpdateActivity(ChatUser user)
         {
             user.Status = (int)UserStatus.Active;
             user.LastActivity = DateTime.UtcNow;
-
-            // Perform the update
-            _repository.Update();
         }
 
         public void LeaveRoom(ChatUser user, ChatRoom room)
@@ -155,9 +144,6 @@ namespace JabbR.Services
             // Remove the user from the room
             room.Users.Remove(user);
             user.Rooms.Remove(room);
-
-            // Update the store
-            _repository.Update();
         }
 
         public ChatMessage AddMessage(ChatUser user, ChatRoom room, string content)
@@ -171,7 +157,6 @@ namespace JabbR.Services
             };
 
             room.Messages.Add(chatMessage);
-            _repository.Update();
 
             return chatMessage;
         }
@@ -190,8 +175,6 @@ namespace JabbR.Services
             // Make the user an owner
             targetRoom.Owners.Add(targetUser);
             targetUser.OwnedRooms.Add(targetRoom);
-
-            _repository.Update();
         }
 
         public void KickUser(ChatUser user, ChatUser targetUser, ChatRoom targetRoom)
