@@ -13,5 +13,12 @@ namespace JabbR.Infrastructure
                          .ComputeHash(Encoding.Default.GetBytes(value))
                          .Select(b => b.ToString("x2")));
         }
+
+        public static string ToSha256(this string value)
+        {
+            return String.Join("", SHA256.Create()
+                         .ComputeHash(Encoding.Default.GetBytes(value))
+                         .Select(b => b.ToString("x2")));
+        }
     }
 }

@@ -11,7 +11,9 @@ namespace JabbR.Models
 
         public string Id { get; set; }
         public string Name { get; set; }
+        // MD5 email hash for gravatar
         public string Hash { get; set; }
+        public string HashedPassword { get; set; }
         public DateTime LastActivity { get; set; }
         public DateTime? LastNudged { get; set; }
         public string ClientId { get; set; }

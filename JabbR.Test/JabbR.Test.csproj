@@ -8,8 +8,8 @@
     <ProjectGuid>{45AB4285-8B37-47FD-9D38-40E6BC5D2E13}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Chat.Test</RootNamespace>
-    <AssemblyName>Chat.Test</AssemblyName>
+    <RootNamespace>JabbR.Test</RootNamespace>
+    <AssemblyName>JabbR.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\Chat\</SolutionDir>
@@ -57,7 +57,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChatTest.cs" />
+    <Compile Include="ChatServiceFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
