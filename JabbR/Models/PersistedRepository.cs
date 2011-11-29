@@ -35,6 +35,11 @@ namespace JabbR.Models
             _db.Users.Add(user);
             _db.SaveChanges();
         }
+        
+        public void AddMessage(ChatMessage message)
+        {
+            _db.Messages.Add(message);
+        }
 
         public void Remove(ChatRoom room)
         {

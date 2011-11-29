@@ -370,6 +370,7 @@ namespace JabbR.Test
                 {
                     Name = "Room"
                 };
+                repository.Add(room);
                 room.Users.Add(user);
                 user.Rooms.Add(room);
 

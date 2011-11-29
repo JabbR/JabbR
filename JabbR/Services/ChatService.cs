@@ -153,10 +153,11 @@ namespace JabbR.Services
                 Id = Guid.NewGuid().ToString("d"),
                 User = user,
                 Content = content,
-                When = DateTimeOffset.UtcNow
+                When = DateTimeOffset.UtcNow,
+                Room = room
             };
 
-            room.Messages.Add(chatMessage);
+            _repository.AddMessage(chatMessage);
 
             return chatMessage;
         }

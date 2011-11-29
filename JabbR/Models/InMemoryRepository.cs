@@ -31,6 +31,13 @@ namespace JabbR.Models
             _users.Add(user);
         }
 
+        public void AddMessage(ChatMessage message)
+        {
+            // There's no need to keep a collection of messages outside of a room
+            var room = _rooms.First(r => r == message.Room);
+            room.Messages.Add(message);
+        }
+
         public void Remove(ChatRoom room)
         {
             _rooms.Remove(room);
