@@ -258,6 +258,27 @@
         updateCookie();
     };
 
+    chat.logOut = function (rooms) {
+        ui.setActiveRoom('Lobby');
+
+        // Close all rooms
+        $.each(rooms, function () {
+            ui.removeRoom(this);
+        });
+
+        ui.addMessage("You've been logged out.", 'notification', this.activeRoom);
+
+        chat.activeRoom = undefined;
+        chat.name = undefined;
+        chat.id = undefined;
+
+        updateCookie();
+
+        // Restart the connection
+        connection.stop();
+        connection.start();
+    };
+
     chat.setPassword = function () {
         ui.addMessage('Your password has been set', 'notification', this.activeRoom);
     };

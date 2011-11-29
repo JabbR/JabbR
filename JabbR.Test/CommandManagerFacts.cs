@@ -55,7 +55,7 @@ namespace JabbR.Test
                 Assert.NotNull(user);
                 Assert.Equal("dfowler", user.Name);
                 Assert.Equal("clientid", user.ClientId);
-                notificationService.Verify(m => m.OnUserCreated(It.IsAny<ChatUser>()), Times.Once());
+                notificationService.Verify(m => m.OnUserCreated(user), Times.Once());
             }
 
             [Fact]
@@ -83,7 +83,7 @@ namespace JabbR.Test
                 Assert.True(result);
                 Assert.NotNull(user);
                 Assert.Equal("dfowler2", user.Name);
-                notificationService.Verify(m => m.OnUserNameChanged(It.IsAny<ChatUser>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once());
+                notificationService.Verify(m => m.OnUserNameChanged(user, "dfowler", "dfowler2"), Times.Once());
             }
 
             [Fact]
@@ -107,7 +107,7 @@ namespace JabbR.Test
                 Assert.Equal("dfowler", user.Name);
                 Assert.Equal("clientid", user.ClientId);
                 Assert.Equal("password".ToSha256(), user.HashedPassword);
-                notificationService.Verify(m => m.OnUserCreated(It.IsAny<ChatUser>()), Times.Once());
+                notificationService.Verify(m => m.OnUserCreated(user), Times.Once());
             }
 
             [Fact]
@@ -164,7 +164,7 @@ namespace JabbR.Test
                 Assert.NotNull(user);
                 Assert.Equal("dfowler", user.Name);
                 Assert.Equal("clientid", user.ClientId);
-                notificationService.Verify(m => m.OnUserCreated(It.IsAny<ChatUser>()), Times.Once());
+                notificationService.Verify(m => m.Initialize(user), Times.Once());
             }
 
             [Fact]
@@ -217,6 +217,39 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nick dfowler password newpassword"));
+            }
+        }
+
+        public class LogOutCommand
+        {
+            public void ThrowsIfNoUser()
+            {                
+                VerifyThrows<InvalidOperationException>("/logout");
+            }
+
+            public void LogOut()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1",
+                    HashedPassword = "password".ToSha256()
+                };
+                repository.Add(user);
+                var service = new ChatService(repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/logout");
+
+                Assert.True(result);
+                notificationService.Verify(m => m.LogOut(user), Times.Once());
             }
         }
 

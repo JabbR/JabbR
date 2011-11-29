@@ -56,7 +56,7 @@ namespace JabbR.Services
 
             if (user.HashedPassword != password.ToSha256())
             {
-                throw new InvalidOperationException(String.Format("Unable to authorize '{0}'.", userName));
+                throw new InvalidOperationException(String.Format("Unable to claim '{0}'.", userName));
             }
         }
 

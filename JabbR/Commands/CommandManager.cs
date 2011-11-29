@@ -171,14 +171,25 @@ namespace JabbR.Commands
 
                 return true;
             }
-            else if (commandName.EndsWith("addowner", StringComparison.OrdinalIgnoreCase))
+            else if (commandName.Equals("addowner", StringComparison.OrdinalIgnoreCase))
             {
                 HandleAddOwner(user, parts);
 
                 return true;
             }
+            else if (commandName.Equals("logout", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleLogOut(user);
+
+                return true;
+            }
 
             return false;
+        }
+
+        private void HandleLogOut(ChatUser user)
+        {
+            _notificationService.LogOut(user);
         }
 
         private void HandleAddOwner(ChatUser user, string[] parts)
@@ -476,16 +487,19 @@ namespace JabbR.Commands
 
                         // TODO: Handle multple clients per user
                         user.ClientId = _clientId;
+
+                        // Initialize the returning user
+                        _notificationService.Initialize(user);
                     }
                 }
                 else
                 {
                     // If there's no user add a new one
                     user = _chatService.AddUser(userName, _clientId, password);
-                }
 
-                // Notify the user that they're good to go!
-                _notificationService.OnUserCreated(user);
+                    // Notify the user that they're good to go!
+                    _notificationService.OnUserCreated(user);
+                }
             }
             else
             {
@@ -496,7 +510,7 @@ namespace JabbR.Commands
                     // Change the user's name
                     _chatService.ChangeUserName(user, userName);
 
-                    _notificationService.OnUserNameChanged(user, userName, oldUserName);
+                    _notificationService.OnUserNameChanged(user, oldUserName, userName);
                 }
                 else
                 {
