@@ -13,7 +13,7 @@ namespace JabbR.Commands
         private readonly string _roomName;
         private readonly INotificationService _notificationService;
         private readonly IChatService _chatService;
-        private readonly IJabbrRepository _repository;        
+        private readonly IJabbrRepository _repository;
 
         public CommandManager(string clientId,
                               string userId,
@@ -200,7 +200,6 @@ namespace JabbR.Commands
             string roomName = parts[2];
             ChatRoom targetRoom = _repository.VerifyRoom(roomName);
 
-
             _chatService.AddOwner(user, targetUser, targetRoom);
 
             _notificationService.OnOwnerAdded(targetUser, targetRoom);
@@ -208,8 +207,6 @@ namespace JabbR.Commands
 
         private void HandleKick(ChatUser user, ChatRoom room, string[] parts)
         {
-            ChatService.EnsureOwner(user, room);
-
             if (parts.Length == 1)
             {
                 throw new InvalidOperationException("Who are you trying to kick?");
@@ -221,18 +218,10 @@ namespace JabbR.Commands
             }
 
             string targetUserName = parts[1];
+
             ChatUser targetUser = _repository.VerifyUser(targetUserName);
 
-            if (targetUser == user)
-            {
-                throw new InvalidOperationException("Why would you want to kick yourself?");
-            }
-
-            // If this user isnt' the creator and the target user is an owner then throw
-            if (room.Creator != user && room.Owners.Contains(targetUser))
-            {
-                throw new InvalidOperationException("Owners cannot kick other owners. Only the room creator and kick an owner.");
-            }
+            _chatService.KickUser(user, targetUser, room);
 
             _notificationService.KickUser(room, targetUser);
         }
@@ -342,11 +331,6 @@ namespace JabbR.Commands
             }
 
             _notificationService.SendPrivateMessage(user, toUser, messageText);
-        }
-
-        private string NormalizeUserName(string userName)
-        {
-            return userName.StartsWith("@") ? userName.Substring(1) : userName;
         }
 
         private void HandleCreate(ChatUser user, string[] parts)
@@ -569,6 +553,11 @@ namespace JabbR.Commands
             {
                 throw new InvalidOperationException(String.Format("Room can only be nudged once every {0} seconds", betweenNudges.TotalSeconds));
             }
+        }
+
+        private string NormalizeUserName(string userName)
+        {
+            return userName.StartsWith("@") ? userName.Substring(1) : userName;
         }
     }
 }

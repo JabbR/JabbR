@@ -24,20 +24,21 @@ namespace JabbR.Services
 
             EnsureUserNameIsAvailable(userName);
 
-            if (!String.IsNullOrEmpty(password))
-            {
-                ValidatePassword(password);
-            }
-
             var user = new ChatUser
             {
                 Name = userName,
                 Status = (int)UserStatus.Active,
                 Id = Guid.NewGuid().ToString("d"),
                 LastActivity = DateTime.UtcNow,
-                ClientId = clientId,
-                HashedPassword = password.ToSha256()
+                ClientId = clientId
             };
+
+
+            if (!String.IsNullOrEmpty(password))
+            {
+                ValidatePassword(password);
+                user.HashedPassword = password.ToSha256();
+            }
 
             _repository.Add(user);
 
@@ -193,6 +194,29 @@ namespace JabbR.Services
             _repository.Update();
         }
 
+        public void KickUser(ChatUser user, ChatUser targetUser, ChatRoom targetRoom)
+        {
+            EnsureOwner(user, targetRoom);
+
+            if (targetUser == user)
+            {
+                throw new InvalidOperationException("Why would you want to kick yourself?");
+            }
+
+            if (!IsUserInRoom(targetRoom, targetUser))
+            {
+                throw new InvalidOperationException(String.Format("'{0}' isn't in '{1}'.", targetUser.Name, targetRoom.Name));
+            }
+
+            // If this user isnt' the creator and the target user is an owner then throw
+            if (targetRoom.Creator != user && targetRoom.Owners.Contains(targetUser))
+            {
+                throw new InvalidOperationException("Owners cannot kick other owners. Only the room creator and kick an owner.");
+            }
+
+            LeaveRoom(targetUser, targetRoom);
+        }
+
         private void EnsureUserNameIsAvailable(string userName)
         {
             var userExists = _repository.Users.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
@@ -218,15 +242,15 @@ namespace JabbR.Services
 
         private static bool IsValidUserName(string name)
         {
-            return Regex.IsMatch(name, "^[A-Za-z0-9-_.]{1,30}$");
+            return !String.IsNullOrEmpty(name) && Regex.IsMatch(name, "^[A-Za-z0-9-_.]{1,30}$");
         }
 
         private static bool IsValidRoomName(string name)
         {
-            return Regex.IsMatch(name, "^[A-Za-z0-9-_.]{1,30}$");
+            return !String.IsNullOrEmpty(name) && Regex.IsMatch(name, "^[A-Za-z0-9-_.]{1,30}$");
         }
 
-        public static void EnsureOwner(ChatUser user, ChatRoom room)
+        private static void EnsureOwner(ChatUser user, ChatRoom room)
         {
             if (!room.Owners.Contains(user))
             {

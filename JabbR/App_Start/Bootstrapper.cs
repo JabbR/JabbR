@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JabbR.Migrations;
 using JabbR.Models;
+using JabbR.Services;
 using JabbR.ViewModels;
 using Microsoft.CSharp.RuntimeBinder;
 using Ninject;
@@ -39,6 +40,10 @@ namespace JabbR.App_Start
             kernel.Bind<IJabbrRepository>()
                 .To<PersistedRepository>()
                 .InRequestScope();
+
+            kernel.Bind<IChatService>()
+                  .To<ChatService>()
+                  .InRequestScope();
             
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
 

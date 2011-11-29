@@ -16,7 +16,6 @@ namespace JabbR.Services
         void NudgeRoom(ChatRoom room, ChatUser user);
         void NugeUser(ChatUser user, ChatUser toUser);
 
-        void AddMessage(ChatRoom room, ChatMessage chatMessage);
         void ChangePassword();
         void SetPassword();
 
@@ -29,9 +28,7 @@ namespace JabbR.Services
         void OnUserCreated(ChatUser user);
         void OnUserNameChanged(ChatUser user, string newUserName, string oldUserName);
 
-        void OnRoomCountChanged(ChatRoom room);
         void OnSelfMessage(ChatRoom room, ChatUser user, string content);
-        void OnTyping(bool isTyping, ChatUser user, ChatRoom room);
 
         void ShowHelp();
         void ShowRooms();

@@ -457,5 +457,165 @@ namespace JabbR.Test
                 Assert.True(user2.OwnedRooms.Contains(room));
             }
         }
+
+        public class KickUser
+        {
+            public void ThrowsIfKickSelf()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Creator = user
+                };
+                room.Owners.Add(user);
+                user.OwnedRooms.Add(room);
+                user.Rooms.Add(room);
+                room.Users.Add(user);
+
+                var service = new ChatService(repository);
+
+                Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user, room));
+            }
+
+            public void ThrowsIfUserIsNotOwner()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                };
+
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                room.Users.Add(user);
+                room.Users.Add(user2);
+
+                var service = new ChatService(repository);
+
+                Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
+            }
+
+            public void ThrowsIfTargetUserNotInRoom()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Creator = user
+                };
+                user.OwnedRooms.Add(room);
+                room.Owners.Add(user);
+                user.Rooms.Add(room);
+                room.Users.Add(user);
+
+                var service = new ChatService(repository);
+
+                Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
+            }
+
+            public void ThrowsIfOwnerTriesToRemoveOwner()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                };
+                user.OwnedRooms.Add(room);
+                room.Owners.Add(user);
+
+                user2.OwnedRooms.Add(room);
+                room.Owners.Add(user2);
+
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                room.Users.Add(user);
+                room.Users.Add(user2);
+
+                var service = new ChatService(repository);
+
+                Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
+            }
+
+            public void DoesNotThrowIfCreatorKicksOwner()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Creator = user
+                };
+                user.OwnedRooms.Add(room);
+                room.Owners.Add(user);
+
+                user2.OwnedRooms.Add(room);
+                room.Owners.Add(user2);
+
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                room.Users.Add(user);
+                room.Users.Add(user2);
+
+                var service = new ChatService(repository);
+
+                service.KickUser(user, user2, room);
+
+                Assert.False(user2.Rooms.Contains(room));
+                Assert.False(room.Users.Contains(user2));
+            }
+        }
     }
 }
