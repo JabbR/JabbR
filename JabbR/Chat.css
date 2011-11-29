@@ -57,11 +57,13 @@
 
 .messages li {
     list-style-type: none;
-    padding: 5px;
+    position: relative;
+    margin: 0px;
 }
 
 .messages li.message {
     padding: 0px;
+    border-left: 175px solid #f1f1f1; /* background color for left column (user info) */
 }
 
 .messages li img.gravatar {
@@ -217,42 +219,61 @@ li.room:hover {
 }
 
 .message .left {
-    width: 175px;
-    margin-right: 10px;
-    background-color: #f1f1f1;
+    float: left;
+    width: 170px;    /* width should exclude padding */
+    padding: 5px;
+    margin-left: -175px;
 }
 
 .message.highlight .left {
     background-color: #fff6bd;
 }
 
-.message .left strong {
-    vertical-align: middle;
+.message .left .name {
+    font-weight: bold;
 }
 
 .message .middle {
-    margin-top: 3px;
+    margin-right: 85px;
+    padding: 5px;
     word-wrap: break-word;
 }
 
-.message .right {
-    float: right;
+.messages li .right {
+    position: absolute;
+    padding: 5px;
+    top: 0px;
+    right: 0px;
     width: 75px;
 }
 
-.message .right .time {
+.messages li .right .time {
     color: #bbb;
-}
-
-.message > div {
-    float: left;
-    padding: 5px;
 }
 
 .highlight {
     background-color: #fff6bd;
 }
 
+.list-header {
+    padding: 5px;
+    border-bottom: 1px solid #eee;
+}
+
+.list-item {
+    padding: 5px;
+    padding-left: 10px;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+
+.list-header .content {
+    font-weight: bold;
+}
+
+.list-item .right { /* hide time for list items */
+    display: none;
+}
 
 /* This stuff is to support TweetContentProvider, but should be extracted out if other content providers need custom CSS */
 

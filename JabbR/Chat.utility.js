@@ -21,7 +21,15 @@
         return eval(this.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"))
     };
 
-    Date.prototype.formatTime = function () {
+    Date.prototype.formatDate = function () {
+        var m = this.getMonth() + 1,
+            d = this.getDate(),
+            y = this.getFullYear();
+
+        return m + "/" + d + "/" + y;
+    };
+
+    Date.prototype.formatTime = function (showAp) {
         var ap = "";
         var hr = this.getHours();
 
@@ -42,7 +50,8 @@
 
         var mins = padZero(this.getMinutes());
         var seconds = padZero(this.getSeconds());
-        return hr + ":" + mins + ":" + seconds;
+        return hr + ":" + mins + ":" + seconds
+            + (showAp ? " " + ap : "");
     };
 
     var utility = {

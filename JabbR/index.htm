@@ -25,14 +25,24 @@
             <div class="left">
                 {{if showUser}}
                 <img src="http://www.gravatar.com/avatar/${hash}?s=16&d=mm" class="gravatar" />
-                <strong class="name">${trimmedName}</strong>
+                <span class="name">${trimmedName}</span>
                 {{/if}}
             </div>
             <div class="middle">
                 {{html message}}
             </div>
             <div class="right">
-                <span id="t-${id}" class="time">${when}</span>
+                <span id="t-${id}" class="time" title="${fulldate}">${when}</span>
+            </div>
+        </li>
+    </script>
+    <script id="new-notification-template" type="text/x-jquery-tmpl">
+        <li class="${type}">
+            <div class="content">
+                {{html message}}
+            </div>
+            <div class="right">
+                <span class="time" title="${fulldate}">${when}</span>
             </div>
         </li>
     </script>
