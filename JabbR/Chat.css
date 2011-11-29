@@ -225,10 +225,6 @@ li.room:hover {
     margin-left: -175px;
 }
 
-.message.highlight .left {
-    background-color: #fff6bd;
-}
-
 .message .left .name {
     font-weight: bold;
 }
