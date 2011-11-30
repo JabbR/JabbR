@@ -298,6 +298,12 @@ namespace JabbR
         {
             ChatUser user = _service.DisconnectClient(clientId);
 
+            // There's no associated user for this client id
+            if (user == null)
+            {
+                return;
+            }
+
             // The user will be marked as offline if all clients leave
             if (user.Status == (int)UserStatus.Offline)
             {

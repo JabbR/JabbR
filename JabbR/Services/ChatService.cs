@@ -218,19 +218,28 @@ namespace JabbR.Services
             // Remove this client from the list of user's clients
             ChatClient client = _repository.GetClientById(clientId);
 
+            // No client tracking this user
+            if (client == null)
+            {
+                return null;
+            }
+
             // Get the user for this client
             ChatUser user = client.User;
 
-            user.ConnectedClients.Remove(client);
-
-            if (!user.ConnectedClients.Any())
+            if (user != null)
             {
-                // If no more clients mark the user as offline
-                user.Status = (int)UserStatus.Offline;
-            }
+                user.ConnectedClients.Remove(client);
 
-            _repository.Remove(client);
-            _repository.CommitChanges();
+                if (!user.ConnectedClients.Any())
+                {
+                    // If no more clients mark the user as offline
+                    user.Status = (int)UserStatus.Offline;
+                }
+
+                _repository.Remove(client);
+                _repository.CommitChanges();
+            }
 
             return user;
         }

@@ -674,6 +674,17 @@ namespace JabbR.Test
                 Assert.Equal(0, user.ConnectedClients.Count);
                 Assert.Equal((int)UserStatus.Offline, user.Status);
             }
+
+            [Fact]
+            public void ReturnsNullIfNoUserForClientId()
+            {
+                var repository = new InMemoryRepository();
+                var service = new ChatService(repository);
+
+                ChatUser user = service.DisconnectClient("foo");
+
+                Assert.Null(user);
+            }
         }
     }
 }
