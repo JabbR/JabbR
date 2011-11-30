@@ -15,6 +15,11 @@
     margin-left: 10px;
 }
 
+.banner a {
+    color: #fff;
+    text-decoration: none;
+}
+
 #logo {
     margin-top: 10px;
     margin-left: 0px;
@@ -108,7 +113,7 @@
 }
 
 #tabs li {
-    display: inline-block;    
+    display: inline-block;
     margin: 0px 4px 0px 0px;
     font-weight: bold;
     background-color: #164c85;
@@ -220,7 +225,7 @@ li.room:hover {
 
 .message .left {
     float: left;
-    width: 170px;    /* width should exclude padding */
+    width: 170px; /* width should exclude padding */
     padding: 5px;
     margin-left: -175px;
 }
@@ -267,7 +272,8 @@ li.room:hover {
     font-weight: bold;
 }
 
-.list-item .right { /* hide time for list items */
+.list-item .right {
+    /* hide time for list items */
     display: none;
 }
 
