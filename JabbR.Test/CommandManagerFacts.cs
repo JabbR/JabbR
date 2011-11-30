@@ -165,7 +165,7 @@ namespace JabbR.Test
                 Assert.NotNull(user);
                 Assert.Equal("dfowler", user.Name);
                 Assert.True(user.ConnectedClients.Any(c => c.Id == "clientid"));
-                notificationService.Verify(m => m.LogOn(user, "clientId"), Times.Once());
+                notificationService.Verify(m => m.LogOn(user, "clientid"), Times.Once());
             }
 
             [Fact]
