@@ -512,13 +512,7 @@ namespace JabbR
 
         void INotificationService.ShowRooms()
         {
-            var rooms = _repository.Rooms.Select(r => new
-            {
-                Name = r.Name,
-                Count = r.Users.Count
-            });
-
-            Caller.showRooms(rooms);
+            Caller.showRooms(GetRooms());
         }
 
         void INotificationService.NugeUser(ChatUser user, ChatUser targetUser)
