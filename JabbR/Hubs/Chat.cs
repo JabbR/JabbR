@@ -486,9 +486,9 @@ namespace JabbR
         void INotificationService.ShowHelp()
         {
             Caller.showCommands(new[] { 
-                new { Name = "help", Description = "Shows the list of commands" },
-                new { Name = "nick", Description = "/nick changes your nickname" },
-                new { Name = "join", Description = "Type /join [room] -- to join a channel of your choice" },
+                new { Name = "help", Description = "Type /help to show the list of commands" },
+                new { Name = "nick", Description = "Type /nick to create a user (e.g /nick user) or change your nickname. The nick command can also be used to manage passwords. To create a user with a password or assign your user to a password type /nick user password." },
+                new { Name = "join", Description = "Type /join [room] - to join a channel of your choice" },
                 new { Name = "create", Description = "Type /create [room] to create a room" },
                 new { Name = "me", Description = "Type /me 'does anything'" },
                 new { Name = "msg", Description = "Type /msg @nickname (message) to send a private message to nickname. @ is optional." },
