@@ -146,8 +146,7 @@ namespace JabbR.Test
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
-                    HashedPassword = "password".ToSha256()
+                    Id = "1"
                 };
                  
                 repository.Add(user);
@@ -322,8 +321,7 @@ namespace JabbR.Test
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
-                    HashedPassword = "password".ToSha256()
+                    Id = "1"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
@@ -353,8 +351,7 @@ namespace JabbR.Test
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
-                    HashedPassword = "password".ToSha256()
+                    Id = "1"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
@@ -461,6 +458,8 @@ namespace JabbR.Test
 
                 Assert.True(result);
                 notificationService.Verify(m => m.OnOwnerAdded(targetUser, room), Times.Once());
+                Assert.True(room.Owners.Contains(targetUser));
+                Assert.True(targetUser.OwnedRooms.Contains(room));
             }
             
         }
