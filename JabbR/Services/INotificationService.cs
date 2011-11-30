@@ -6,9 +6,11 @@ namespace JabbR.Services
     public interface INotificationService
     {
         void ChangeGravatar(ChatUser user);
-        void LogOut(ChatUser user);
         void JoinRoom(ChatUser user, ChatRoom room);
-        void Initialize(ChatUser user);
+
+        // Client actions
+        void LogOn(ChatUser user, string clientId);
+        void LogOut(ChatUser user, string clientId);
 
         void ListUsers();
         void ListUsers(ChatRoom room, IEnumerable<string> names);
@@ -16,12 +18,12 @@ namespace JabbR.Services
         void ListUsers(IEnumerable<ChatUser> users);
 
         void NudgeRoom(ChatRoom room, ChatUser user);
-        void NugeUser(ChatUser user, ChatUser toUser);
+        void NugeUser(ChatUser user, ChatUser targetUser);
 
         void ChangePassword();
         void SetPassword();
 
-        void SendPrivateMessage(ChatUser user, ChatUser targetUser, string messageText);        
+        void SendPrivateMessage(ChatUser user, ChatUser targetUser, string messageText);
         void LeaveRoom(ChatUser user, ChatRoom room);
 
         void OnOwnerAdded(ChatUser targetUser, ChatRoom targetRoom);

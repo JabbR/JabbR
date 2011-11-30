@@ -17,11 +17,6 @@ namespace JabbR.Models
             return source.Where(u => u.Status != (int)UserStatus.Offline);
         }
 
-        public static ChatUser GetUserByClientId(this IJabbrRepository repository, string clientId)
-        {
-            return repository.Users.FirstOrDefault(u => u.ClientId == clientId);
-        }
-
         public static ChatRoom VerifyUserRoom(this IJabbrRepository repository, ChatUser user, string roomName)
         {            
             if (String.IsNullOrEmpty(roomName))

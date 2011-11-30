@@ -6,11 +6,13 @@ namespace JabbR.Services
     {
         // Users
         ChatUser AddUser(string userName, string clientId, string password);
+        void AddClient(ChatUser user, string clientId);
         void AuthenticateUser(string userName, string password);
         void ChangeUserName(ChatUser user, string newUserName);
         void ChangeUserPassword(ChatUser user, string oldPassword, string newPassword);
         void SetUserPassword(ChatUser user, string password);
         void UpdateActivity(ChatUser user);
+        ChatUser DisconnectClient(string clientId);
 
         // Rooms
         ChatRoom AddRoom(ChatUser user, string roomName);

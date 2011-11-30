@@ -189,7 +189,7 @@ namespace JabbR.Commands
 
         private void HandleLogOut(ChatUser user)
         {
-            _notificationService.LogOut(user);
+            _notificationService.LogOut(user, _clientId);
         }
 
         private void HandleAddOwner(ChatUser user, string[] parts)
@@ -485,11 +485,11 @@ namespace JabbR.Commands
                         // If there's no user but there's a password then authenticate the user
                         _chatService.AuthenticateUser(userName, password);
 
-                        // TODO: Handle multple clients per user
-                        user.ClientId = _clientId;
+                        // Add this client to the list of clients for this user
+                        _chatService.AddClient(user, _clientId);
 
                         // Initialize the returning user
-                        _notificationService.Initialize(user);
+                        _notificationService.LogOn(user, _clientId);
                     }
                 }
                 else

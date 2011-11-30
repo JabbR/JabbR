@@ -618,5 +618,62 @@ namespace JabbR.Test
                 Assert.False(room.Users.Contains(user2));
             }
         }
+
+        public class DisconnectClient
+        {
+            [Fact]
+            public void RemovesClientFromUserClientList()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo",
+                    Status = (int)UserStatus.Inactive
+                };
+                user.ConnectedClients.Add(new ChatClient
+                {
+                    Id = "foo",
+                    User = user
+                });
+
+                user.ConnectedClients.Add(new ChatClient
+                {
+                    Id = "bar",
+                    User = user
+                });
+
+                repository.Add(user);
+                var service = new ChatService(repository);
+
+                service.DisconnectClient("foo");
+
+                Assert.Equal(1, user.ConnectedClients.Count);
+                Assert.Equal("bar", user.ConnectedClients.First().Id);
+            }
+
+            [Fact]
+            public void MarksUserAsOfflineIfNoMoreClients()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo",
+                    Status = (int)UserStatus.Inactive
+                };
+                user.ConnectedClients.Add(new ChatClient
+                {
+                    Id = "foo",
+                    User = user
+                });
+
+                repository.Add(user);
+                var service = new ChatService(repository);
+
+                service.DisconnectClient("foo");
+
+                Assert.Equal(0, user.ConnectedClients.Count);
+                Assert.Equal((int)UserStatus.Offline, user.Status);
+            }
+        }
     }
 }

@@ -125,7 +125,7 @@
     };
 
     // Called when a returning users join chat
-    chat.initialize = function (rooms) {
+    chat.logOn = function (rooms) {
         $.each(rooms, function (index, room) {
             ui.addRoom(room);
             populateRoom(room);
@@ -287,6 +287,9 @@
     };
 
     chat.userNameChanged = function (user) {
+        // Update the client state
+        chat.name = user.Name;
+
         ui.addMessage('Your name is now ' + user.Name, 'notification', this.activeRoom);
     };
 

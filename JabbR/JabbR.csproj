@@ -222,6 +222,11 @@
     <Compile Include="Migrations\201111290920351_Passwords.Designer.cs">
       <DependentUpon>201111290920351_Passwords.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201111300434138_MultipleClients.cs" />
+    <Compile Include="Migrations\201111300434138_MultipleClients.Designer.cs">
+      <DependentUpon>201111300434138_MultipleClients.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ChatClient.cs" />
     <Compile Include="Services\ChatService.cs" />
     <Compile Include="Services\IChatService.cs" />
     <Compile Include="Services\INotificationService.cs" />

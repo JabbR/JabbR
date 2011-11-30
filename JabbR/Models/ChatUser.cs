@@ -16,14 +16,16 @@ namespace JabbR.Models
         public string HashedPassword { get; set; }
         public DateTime LastActivity { get; set; }
         public DateTime? LastNudged { get; set; }
-        public string ClientId { get; set; }
         public int Status { get; set; }
 
+        // List of clients that are currently connected for this user
+        public virtual ICollection<ChatClient> ConnectedClients { get; set; }
         public virtual ICollection<ChatRoom> OwnedRooms { get; set; }
         public virtual ICollection<ChatRoom> Rooms { get; set; }
 
         public ChatUser()
         {
+            ConnectedClients = new HashSet<ChatClient>();
             OwnedRooms = new HashSet<ChatRoom>();
             Rooms = new HashSet<ChatRoom>();
         }

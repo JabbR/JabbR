@@ -29,10 +29,8 @@ namespace JabbR.Services
                 Name = userName,
                 Status = (int)UserStatus.Active,
                 Id = Guid.NewGuid().ToString("d"),
-                LastActivity = DateTime.UtcNow,
-                ClientId = clientId
+                LastActivity = DateTime.UtcNow
             };
-
 
             if (!String.IsNullOrEmpty(password))
             {
@@ -41,6 +39,8 @@ namespace JabbR.Services
             }
 
             _repository.Add(user);
+
+            AddClient(user, clientId);
 
             return user;
         }
@@ -157,7 +157,7 @@ namespace JabbR.Services
                 Room = room
             };
 
-            _repository.AddMessage(chatMessage);
+            _repository.Add(chatMessage);
 
             return chatMessage;
         }
@@ -199,6 +199,40 @@ namespace JabbR.Services
             }
 
             LeaveRoom(targetUser, targetRoom);
+        }
+
+        public void AddClient(ChatUser user, string clientId)
+        {
+            var client = new ChatClient
+            {
+                Id = clientId,
+                User = user
+            };
+
+            _repository.Add(client);
+            _repository.CommitChanges();
+        }
+
+        public ChatUser DisconnectClient(string clientId)
+        {
+            // Remove this client from the list of user's clients
+            ChatClient client = _repository.GetClientById(clientId);
+
+            // Get the user for this client
+            ChatUser user = client.User;
+
+            user.ConnectedClients.Remove(client);
+
+            if (!user.ConnectedClients.Any())
+            {
+                // If no more clients mark the user as offline
+                user.Status = (int)UserStatus.Offline;
+            }
+
+            _repository.Remove(client);
+            _repository.CommitChanges();
+
+            return user;
         }
 
         private void EnsureUserNameIsAvailable(string userName)

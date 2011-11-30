@@ -13,10 +13,15 @@ namespace JabbR.Models
         ChatUser GetUserById(string userId);
         ChatRoom GetRoomByName(string roomName);
         ChatUser GetUserByName(string userName);
+        ChatUser GetUserByClientId(string clientId);
 
-        void AddMessage(ChatMessage message);
+        ChatClient GetClientById(string clientId);
+
+        void Add(ChatClient client);
+        void Add(ChatMessage message);
         void Add(ChatRoom room);
         void Add(ChatUser user);
+        void Remove(ChatClient client);
         void Remove(ChatRoom room);
         void Remove(ChatUser user);
         void CommitChanges();

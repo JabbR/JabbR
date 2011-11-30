@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Linq;
+using System.Data.Entity;
 
 namespace JabbR.Models
 {
@@ -35,8 +33,8 @@ namespace JabbR.Models
             _db.Users.Add(user);
             _db.SaveChanges();
         }
-        
-        public void AddMessage(ChatMessage message)
+
+        public void Add(ChatMessage message)
         {
             _db.Messages.Add(message);
         }
@@ -81,6 +79,33 @@ namespace JabbR.Models
         public IQueryable<ChatUser> SearchUsers(string name)
         {
             return _db.Users.Online().Where(u => u.Name.Contains(name));
+        }
+
+        public void Add(ChatClient client)
+        {
+            _db.Clients.Add(client);
+            _db.SaveChanges();
+        }
+
+        public void Remove(ChatClient client)
+        {
+            _db.Clients.Remove(client);
+            _db.SaveChanges();
+        }
+
+        public ChatUser GetUserByClientId(string clientId)
+        {
+            var client = GetClientById(clientId);
+            if (client != null)
+            {
+                return client.User;
+            }
+            return null;
+        }
+
+        public ChatClient GetClientById(string clientId)
+        {
+            return _db.Clients.Include(c => c.User).FirstOrDefault(c => c.Id == clientId);
         }
     }
 }

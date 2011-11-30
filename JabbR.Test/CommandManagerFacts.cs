@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using JabbR.Commands;
 using JabbR.Infrastructure;
 using JabbR.Models;
@@ -54,7 +55,7 @@ namespace JabbR.Test
                 var user = repository.GetUserByName("dfowler");
                 Assert.NotNull(user);
                 Assert.Equal("dfowler", user.Name);
-                Assert.Equal("clientid", user.ClientId);
+                Assert.True(user.ConnectedClients.Any(c => c.Id == "clientid"));
                 notificationService.Verify(m => m.OnUserCreated(user), Times.Once());
             }
 
@@ -105,7 +106,7 @@ namespace JabbR.Test
                 var user = repository.GetUserByName("dfowler");
                 Assert.NotNull(user);
                 Assert.Equal("dfowler", user.Name);
-                Assert.Equal("clientid", user.ClientId);
+                Assert.True(user.ConnectedClients.Any(c => c.Id == "clientid"));
                 Assert.Equal("password".ToSha256(), user.HashedPassword);
                 notificationService.Verify(m => m.OnUserCreated(user), Times.Once());
             }
@@ -163,8 +164,8 @@ namespace JabbR.Test
                 Assert.True(result);
                 Assert.NotNull(user);
                 Assert.Equal("dfowler", user.Name);
-                Assert.Equal("clientid", user.ClientId);
-                notificationService.Verify(m => m.Initialize(user), Times.Once());
+                Assert.True(user.ConnectedClients.Any(c => c.Id == "clientid"));
+                notificationService.Verify(m => m.LogOn(user, "clientId"), Times.Once());
             }
 
             [Fact]
@@ -223,7 +224,7 @@ namespace JabbR.Test
         public class LogOutCommand
         {
             public void ThrowsIfNoUser()
-            {                
+            {
                 VerifyThrows<InvalidOperationException>("/logout");
             }
 
@@ -249,7 +250,7 @@ namespace JabbR.Test
                 bool result = commandManager.TryHandleCommand("/logout");
 
                 Assert.True(result);
-                notificationService.Verify(m => m.LogOut(user), Times.Once());
+                notificationService.Verify(m => m.LogOut(user, "clientid"), Times.Once());
             }
         }
 
