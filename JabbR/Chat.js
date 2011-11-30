@@ -399,7 +399,7 @@
     };
 
     chat.showUsersRoomList = function (user, rooms) {
-        if (rooms.length == 0) {
+        if (rooms.length === 0) {
             ui.addMessage(user + ' is not in any rooms', 'list-header');
         }
         else {
@@ -522,6 +522,7 @@
                 .done(function (success) {
                     if (success === false) {
                         ui.addMessage('Choose a name using "/nick nickname".', 'notification');
+                        ui.addMessage('You can also set a password so you can use this nick on multiple clients using /nick user password.', 'notification');
                     }
                 });
         });

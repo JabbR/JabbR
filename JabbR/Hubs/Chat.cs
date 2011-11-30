@@ -499,7 +499,8 @@ namespace JabbR
                 new { Name = "gravatar", Description = "Type /gravatar [email] to set your gravatar." },
                 new { Name = "nudge", Description = "Type /nudge to send a nudge to the whole room, or \"/nudge @nickname\" to nudge a particular user. @ is optional." },
                 new { Name = "kick", Description = "Type /kick [user] to kick a user from the room. Note, this is only valid for owners of the room." },
-                new { Name = "logout", Description = "Type /logout - To logout from this client (chat cookie will be removed)." }
+                new { Name = "logout", Description = "Type /logout - To logout from this client (chat cookie will be removed)." },
+                new { Name = "addowner", Description = "Type /addowner [user] [room] - To add an owner a user as an owner to the specified room. Only works if you're an owner of that room." }
             });
         }
 
