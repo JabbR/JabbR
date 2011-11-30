@@ -14,10 +14,12 @@ namespace JabbR.Infrastructure
                          .Select(b => b.ToString("x2")));
         }
 
-        public static string ToSha256(this string value)
+        public static string ToSha256(this string value, string salt)
         {
+            string saltedValue = ((salt ?? "") + value);
+
             return String.Join("", SHA256.Create()
-                         .ComputeHash(Encoding.Default.GetBytes(value))
+                         .ComputeHash(Encoding.Default.GetBytes(saltedValue))
                          .Select(b => b.ToString("x2")));
         }
     }

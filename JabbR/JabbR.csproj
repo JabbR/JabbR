@@ -226,9 +226,15 @@
     <Compile Include="Migrations\201111300434138_MultipleClients.Designer.cs">
       <DependentUpon>201111300434138_MultipleClients.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201111302209099_UserSalt.cs" />
+    <Compile Include="Migrations\201111302209099_UserSalt.Designer.cs">
+      <DependentUpon>201111302209099_UserSalt.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ChatClient.cs" />
     <Compile Include="Services\ChatService.cs" />
+    <Compile Include="Services\CryptoService.cs" />
     <Compile Include="Services\IChatService.cs" />
+    <Compile Include="Services\ICryptoService.cs" />
     <Compile Include="Services\INotificationService.cs" />
     <Compile Include="Infrastructure\StringExtensions.cs" />
     <Compile Include="Migrations\201111240945284_Initial.cs" />

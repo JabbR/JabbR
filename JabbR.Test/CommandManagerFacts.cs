@@ -67,7 +67,7 @@ namespace JabbR.Test
                 {
                     Name = "dfowler",
                     Id = "1",
-                    HashedPassword = "password".ToSha256()
+                    HashedPassword = "password".ToSha256(null)
                 };
                 repository.Add(user);
                 var service = new ChatService(repository);
@@ -107,7 +107,7 @@ namespace JabbR.Test
                 Assert.NotNull(user);
                 Assert.Equal("dfowler", user.Name);
                 Assert.True(user.ConnectedClients.Any(c => c.Id == "clientid"));
-                Assert.Equal("password".ToSha256(), user.HashedPassword);
+                Assert.Equal("password".ToSha256(user.Salt), user.HashedPassword);
                 notificationService.Verify(m => m.OnUserCreated(user), Times.Once());
             }
 
@@ -118,6 +118,7 @@ namespace JabbR.Test
                 var user = new ChatUser
                 {
                     Name = "dfowler",
+                    Salt = "salt",
                     Id = "1"
                 };
                 repository.Add(user);
@@ -135,7 +136,7 @@ namespace JabbR.Test
                 Assert.True(result);
                 Assert.NotNull(user);
                 Assert.Equal("dfowler", user.Name);
-                Assert.Equal("password".ToSha256(), user.HashedPassword);
+                Assert.Equal("password".ToSha256("salt"), user.HashedPassword);
                 notificationService.Verify(m => m.SetPassword(), Times.Once());
             }
 
@@ -147,7 +148,8 @@ namespace JabbR.Test
                 {
                     Name = "dfowler",
                     Id = "1",
-                    HashedPassword = "password".ToSha256()
+                    Salt = "salt",
+                    HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
                 var service = new ChatService(repository);
@@ -176,7 +178,8 @@ namespace JabbR.Test
                 {
                     Name = "dfowler",
                     Id = "1",
-                    HashedPassword = "password".ToSha256()
+                    Salt = "salt",
+                    HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
                 var service = new ChatService(repository);
@@ -193,7 +196,7 @@ namespace JabbR.Test
                 Assert.True(result);
                 Assert.NotNull(user);
                 Assert.Equal("dfowler", user.Name);
-                Assert.Equal("newpassword".ToSha256(), user.HashedPassword);
+                Assert.Equal("newpassword".ToSha256("salt"), user.HashedPassword);
                 notificationService.Verify(m => m.ChangePassword(), Times.Once());
             }
 
@@ -205,7 +208,8 @@ namespace JabbR.Test
                 {
                     Name = "dfowler",
                     Id = "1",
-                    HashedPassword = "password".ToSha256()
+                    Salt = "salt",
+                    HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
                 var service = new ChatService(repository);
@@ -235,7 +239,8 @@ namespace JabbR.Test
                 {
                     Name = "dfowler",
                     Id = "1",
-                    HashedPassword = "password".ToSha256()
+                    Salt = "salt",
+                    HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
                 var service = new ChatService(repository);
@@ -263,7 +268,8 @@ namespace JabbR.Test
                 {
                     Name = "dfowler",
                     Id = "1",
-                    HashedPassword = "password".ToSha256()
+                    Salt = "salt",
+                    HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
                 var room = new ChatRoom

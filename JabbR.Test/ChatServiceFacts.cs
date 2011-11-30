@@ -3,6 +3,7 @@ using System.Linq;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
+using Moq;
 using Xunit;
 
 namespace JabbR.Test
@@ -55,15 +56,18 @@ namespace JabbR.Test
             [Fact]
             public void AddsUserToRepository()
             {
+                var crypto = new Mock<ICryptoService>();
+                crypto.Setup(c => c.CreateSalt()).Returns("salted");
                 var repository = new InMemoryRepository();
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, crypto.Object);
 
                 service.AddUser("SomeUser", clientId: null, password: "password");
 
                 var user = repository.GetUserByName("SomeUser");
                 Assert.NotNull(user);
                 Assert.Equal("SomeUser", user.Name);
-                Assert.Equal("password".ToSha256(), user.HashedPassword);
+                Assert.Equal("salted", user.Salt);
+                Assert.Equal("8f5793009fe15c2227e3528d0507413a83dff10635d3a6acf1ba3229a03380d8", user.HashedPassword);
             }
         }
 
@@ -141,7 +145,8 @@ namespace JabbR.Test
                 var user = new ChatUser
                 {
                     Name = "Test",
-                    HashedPassword = "password".ToSha256()
+                    Salt = "salt",
+                    HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
                 var service = new ChatService(repository);
@@ -156,7 +161,8 @@ namespace JabbR.Test
                 var user = new ChatUser
                 {
                     Name = "Test",
-                    HashedPassword = "password".ToSha256()
+                    Salt = "salt",
+                    HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
                 var service = new ChatService(repository);
@@ -171,14 +177,36 @@ namespace JabbR.Test
                 var user = new ChatUser
                 {
                     Name = "Test",
-                    HashedPassword = "password".ToSha256()
+                    Salt = "pepper",
+                    HashedPassword = "password".ToSha256("pepper")
                 };
                 repository.Add(user);
                 var service = new ChatService(repository);
 
                 service.ChangeUserPassword(user, "password", "password2");
 
-                Assert.Equal("password2".ToSha256(), user.HashedPassword);
+                Assert.Equal("password2".ToSha256("pepper"), user.HashedPassword);
+            }
+
+            [Fact]
+            public void UpatesUserSaltIfNoSalt()
+            {
+                var crypto = new Mock<ICryptoService>();
+                crypto.Setup(c => c.CreateSalt()).Returns("salt");
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "Test",
+                    Salt = null,
+                    HashedPassword = "password".ToSha256(null)
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, crypto.Object);
+
+                service.ChangeUserPassword(user, "password", "password");
+
+                Assert.Equal("salt", user.Salt);
+                Assert.Equal("password".ToSha256("salt"), user.HashedPassword);
             }
         }
 
@@ -200,7 +228,8 @@ namespace JabbR.Test
                 repository.Add(new ChatUser
                 {
                     Name = "foo",
-                    HashedPassword = "passwords".ToSha256()
+                    Salt = "salt",
+                    HashedPassword = "passwords".ToSha256("salt")
                 });
                 var service = new ChatService(repository);
 
@@ -227,11 +256,44 @@ namespace JabbR.Test
                 repository.Add(new ChatUser
                 {
                     Name = "foo",
-                    HashedPassword = "passwords".ToSha256()
+                    HashedPassword = "3049a1f8327e0215ea924b9e4e04cd4b0ff1800c74a536d9b81d3d8ced9994d3"
                 });
                 var service = new ChatService(repository);
+                service.AuthenticateUser("foo", "passwords");
+            }
+
+            [Fact]
+            public void DoesNotThrowIfSaltedPasswordsMatch()
+            {
+                var repository = new InMemoryRepository();
+                repository.Add(new ChatUser
+                {
+                    Name = "foo",
+                    Salt = "salted",
+                    HashedPassword = "8f5793009fe15c2227e3528d0507413a83dff10635d3a6acf1ba3229a03380d8"
+                });
+                var service = new ChatService(repository);
+                service.AuthenticateUser("foo", "password");
+            }
+
+            [Fact]
+            public void UpdatesStoredPasswordWithSaltIfNotAlreadySalted()
+            {
+                var crypto = new Mock<ICryptoService>();
+                crypto.Setup(c => c.CreateSalt()).Returns("salted");
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo",
+                    HashedPassword = "3049a1f8327e0215ea924b9e4e04cd4b0ff1800c74a536d9b81d3d8ced9994d3"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, crypto.Object);
 
                 service.AuthenticateUser("foo", "passwords");
+
+                Assert.Equal("salted", user.Salt);
+                Assert.Equal("9ce70d2ab42c9a9012ed6f80f85ab400ef1483f70e227a42b6d77faea204db26", user.HashedPassword);
             }
         }
 
