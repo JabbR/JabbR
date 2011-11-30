@@ -137,7 +137,7 @@
         // Do nothing if the room exists
         var room = getRoomElements(roomName);
         if (room.exists()) {
-            return;
+            return false;
         }
 
         var roomId = getRoomId(roomName);
@@ -164,6 +164,8 @@
              .sortElements(function (a, b) {
                  return $(a).data('name').toLowerCase() > $(b).data('name').toLowerCase() ? 1 : -1;
              });
+
+        return true;
     }
 
     function removeRoom(roomName) {

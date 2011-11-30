@@ -116,12 +116,14 @@
 
     // When the /join command gets raised this is called
     chat.joinRoom = function (room) {
-        ui.addRoom(room);
+        var added = ui.addRoom(room);
         ui.setActiveRoom(room);
 
-        populateRoom(room).done(function () {
-            ui.addMessage('You just entered ' + room, 'notification', room);
-        });
+        if (added) {
+            populateRoom(room).done(function () {
+                ui.addMessage('You just entered ' + room, 'notification', room);
+            });
+        }
     };
 
     // Called when a returning users join chat

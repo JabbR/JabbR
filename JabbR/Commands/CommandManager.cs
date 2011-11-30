@@ -391,10 +391,12 @@ namespace JabbR.Commands
 
             if (ChatService.IsUserInRoom(room, user))
             {
-                throw new InvalidOperationException("You're already in that room!");
+                _notificationService.JoinRoom(user, room);
             }
-
-            JoinRoom(user, room);
+            else
+            {
+                JoinRoom(user, room);
+            }
         }
 
         private void JoinRoom(ChatUser user, ChatRoom room)

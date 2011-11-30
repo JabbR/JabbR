@@ -254,6 +254,41 @@ namespace JabbR.Test
             }
         }
 
+        public class JoinCommand
+        {
+            public void DoesNotThrowIfUserAlreadyInRoom()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1",
+                    HashedPassword = "password".ToSha256()
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                user.Rooms.Add(room);
+                repository.Add(room);
+                var service = new ChatService(repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/join room");
+
+                Assert.True(result);
+                notificationService.Verify(m => m.JoinRoom(user, room), Times.Once());
+            }
+        }
+
         public static void VerifyThrows<T>(string command) where T : Exception
         {
             var repository = new InMemoryRepository();
