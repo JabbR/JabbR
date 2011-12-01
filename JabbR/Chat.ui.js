@@ -34,13 +34,21 @@
             return this.tab.hasClass('unread');
         };
 
-        this.updateUnread = function () {
+        this.updateUnread = function (isMentioned) {
             var $tab = this.tab.addClass('unread'),
                 $content = $tab.find('.content'),
-                unread = ($tab.data('unread') || 0) + 1;
+                unread = ($tab.data('unread') || 0) + 1,
+                //whether or not the user already has unread messages to him/her
+                hasExitingUnreadMessages = ($tab.data('unread-messages'));
+                
+            isMentioned = isMentioned || hasExitingUnreadMessages;
+            $content.text(
+                (isMentioned ? '*' : '') 
+                + '(' + unread + ') ' 
+                + this.getName());
 
-            $content.text('(' + unread + ') ' + this.getName());
             $tab.data('unread', unread);
+            $tab.data('unread-messages', isMentioned);
         };
 
         this.scrollToBottom = function () {
@@ -83,8 +91,11 @@
                     .removeClass('unread')
                     .data('unread', 0)
                     .find('.content')
-                    .text(this.getName());
-
+                    .text(this.getName())
+                    .data('unread-messages', false); //remove the set the unread-messages to false
+                                                     //to prevent future unread messages from being 
+                                                     //marked as to the user if they're not
+                                                     
             this.messages.addClass('current')
                          .show();
 
@@ -338,14 +349,14 @@
             return false;
         },
         updateLobbyRoomCount: updateLobbyRoomCount,
-        updateUnread: function (roomName) {
+        updateUnread: function (roomName, isMentioned) {
             var room = getRoomElements(roomName);
 
             if (room.isActive()) {
                 return;
             }
 
-            room.updateUnread();
+            room.updateUnread(isMentioned);
         },
         scrollToBottom: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();

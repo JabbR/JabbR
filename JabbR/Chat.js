@@ -11,6 +11,7 @@
         historyLocation = 0,
         originalTitle = document.title,
         unread = 0,
+        isUnreadMessageForUser = false,
         focus = true,
         typingTimeoutId = null;
 
@@ -98,16 +99,24 @@
             document.title = originalTitle;
         }
         else {
-            document.title = '(' + unread + ') ' + originalTitle;
+            document.title =
+                (isUnreadMessageForUser ? '*' : '')
+                + '(' + unread + ') ' + originalTitle;
         }
     }
 
-    function updateUnread(room) {
+    function updateUnread(room, isMentioned) {
         if (focus === false) {
+            isUnreadMessageForUser = (isUnreadMessageForUser || isMentioned);
+
             unread = unread + 1;
+        } else {
+            //we're currently focused so remove
+            //the * notification
+            isUnreadMessageForUser = false;
         }
 
-        ui.updateUnread(room);
+        ui.updateUnread(room, isMentioned);
 
         updateTitle();
     }
@@ -171,7 +180,7 @@
             ui.addChatMessageContent(id, content, room);
         }, room);
 
-        updateUnread(room);
+        updateUnread(room, false /* isMentioned: this is outside normal messages and user shouldn't be mentioned */);
 
         // Adding external content can sometimes take a while to load
         // Since we don't know when it'll become full size in the DOM
@@ -185,13 +194,15 @@
     };
 
     chat.addMessage = function (message, room) {
+        var viewModel = getMessageViewModel(message);
         scrollIfNecessary(function () {
-            var viewModel = getMessageViewModel(message);
             ui.addChatMessage(viewModel, room);
 
         }, room);
 
-        updateUnread(room);
+        var isMentioned = viewModel.highlight === 'highlight';
+
+        updateUnread(room, isMentioned);
     };
 
     chat.addUser = function (user, room, isOwner) {
