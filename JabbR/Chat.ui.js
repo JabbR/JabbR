@@ -167,11 +167,14 @@
                   .appendTo($chatArea).hide();
 
         $tabs.find('li')
-             .not('.lobby')
-             .sortElements(function (a, b) {
-                 return $(a).data('name').toLowerCase() > $(b).data('name').toLowerCase() ? 1 : -1;
-             });
+            .not('.lobby')
+            .sortElements(function (a, b) {
+                return $(a).data('name').toLowerCase() > $(b).data('name').toLowerCase() ? 1 : -1;
+            });
 
+        $.each($tabs.find('li'), function (index, item) {
+            $(item).children('button:first-child').attr('accesskey', index);
+        });
         return true;
     }
 
