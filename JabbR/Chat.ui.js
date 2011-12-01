@@ -11,6 +11,7 @@
         $newMessage = null,
         templates = null,
         app = null,
+        focus = true,
         Keys = { Up: 38, Down: 40, Esc: 27 };
 
     function getRoomId(roomName) {
@@ -34,6 +35,17 @@
             return this.tab.hasClass('unread');
         };
 
+        this.hasSeparator = function () {
+            return this.messages.find('.message-separator').length > 0;
+        };
+
+        this.needsSeparator = function (focus) {
+            if (this.isActive() && focus === true) {
+                return false;
+            }
+            return this.hasSeparator() === false;
+        };
+
         this.updateUnread = function (isMentioned) {
             var $tab = this.tab.addClass('unread'),
                 $content = $tab.find('.content'),
@@ -44,6 +56,14 @@
 
             $tab.data('unread', unread);
             $tab.data('hasMentions', hasMentions);
+        };
+
+        this.scrollToSeparator = function () {
+            var $e = this.messages.find('.message-separator');
+
+            if ($e.position().top > this.messages.scrollTop()) {
+                this.messages.scrollTop($e.position().top + $e.height());
+            }
         };
 
         this.scrollToBottom = function () {
@@ -87,13 +107,18 @@
                     .data('unread', 0)
                     .data('hasMentions', false)
                     .find('.content')
-                    .text(this.getName())
-            
+                    .text(this.getName());
+
             this.messages.addClass('current')
                          .show();
 
             this.users.addClass('current')
                       .show();
+
+            // remove message separator
+            this.messages.find('.message-separator').fadeOut(3000, function () {
+                $(this).remove();
+            });
         };
 
         // Users
@@ -206,6 +231,7 @@
                 user: $('#new-user-template'),
                 message: $('#new-message-template'),
                 notification: $('#new-notification-template'),
+                separator: $('#message-separator-template'),
                 tab: $('#new-tab-template')
             },
             app = Sammy(function () {
@@ -262,15 +288,24 @@
                 $newMessage.val('');
                 $newMessage.focus();
 
+                // always scroll to bottom after new message sent
+                var room = getCurrentRoomElements();
+                room.scrollToBottom();
+
                 ev.preventDefault();
                 return false;
             });
 
             $(window).blur(function () {
+                focus = false;
                 $(ui).trigger('ui.blur');
             });
 
             $(window).focus(function () {
+                focus = true;
+                // clear unread count in active room
+                var room = getCurrentRoomElements();
+                room.makeActive();
                 $(ui).trigger('ui.focus');
             });
 
@@ -338,9 +373,9 @@
                 currentRoom.makeInactive();
                 room.makeActive();
 
-                if (hasUnread) {
-                    room.scrollToBottom();
-                }
+                //                if (hasUnread) {
+                //                    room.scrollToBottom();
+                //                }
 
                 app.setLocation('#/rooms/' + roomName);
                 $(ui).trigger('ui.activeRoomChanged', [roomName]);
@@ -351,9 +386,9 @@
         },
         updateLobbyRoomCount: updateLobbyRoomCount,
         updateUnread: function (roomName, isMentioned) {
-            var room = getRoomElements(roomName);
+            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
 
-            if (room.isActive()) {
+            if (focus && room.isActive()) {
                 return;
             }
 
@@ -362,7 +397,13 @@
         scrollToBottom: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
 
-            if (room.isActive()) {
+            if (room.hasSeparator()) {
+                // scoll to separator
+                room.scrollToSeparator();
+                return;
+            }
+
+            if ((focus && room.isActive())) {
                 room.scrollToBottom();
             }
         },
@@ -489,7 +530,12 @@
                 $previousMessage.addClass('continue');
             }
 
-            templates.message.tmpl(message).appendTo(room.messages);
+            if (room.needsSeparator(focus)) {
+                ui.addSeparator(roomName);
+            }
+
+            var $e = templates.message.tmpl(message).appendTo(room.messages);
+
         },
         addChatMessageContent: function (id, content, roomName) {
             var $message = $('#m-' + id);
@@ -509,6 +555,10 @@
                     fulldate: now.formatDate() + ' ' + now.formatTime(true)
                 };
 
+            if (room.needsSeparator(focus)) {
+                ui.addSeparator(roomName);
+            }
+
             $element = templates.notification.tmpl(message).appendTo(room.messages);
 
             if (nearEnd) {
@@ -516,6 +566,16 @@
             }
 
             return $element;
+        },
+        addSeparator: function (roomName) {
+            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
+
+            templates.separator.tmpl().appendTo(room.messages);
+            ui.scrollToBottom(roomName);
+        },
+        removeSeparator: function (roomName) {
+            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
+            room.messages.find('.message-separator').remove();
         }
     };
 

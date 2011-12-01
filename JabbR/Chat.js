@@ -43,7 +43,8 @@
 
                         ui.addChatMessage(viewModel, room);
                     });
-
+                    // populated messages will be treated as unread, so remove separator
+                    ui.removeSeparator(room);
                     ui.scrollToBottom(room);
 
                     d.resolveWith(chat);
