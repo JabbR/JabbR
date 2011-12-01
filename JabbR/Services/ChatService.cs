@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using JabbR.Infrastructure;
 using JabbR.Models;
@@ -11,11 +10,6 @@ namespace JabbR.Services
     {
         private readonly IJabbrRepository _repository;
         private readonly ICryptoService _crypto;
-
-        public ChatService(IJabbrRepository repository)
-            : this(repository, new CryptoService())
-        {
-        }
 
         public ChatService(IJabbrRepository repository, ICryptoService crypto)
         {
@@ -312,18 +306,6 @@ namespace JabbR.Services
             if (!room.Owners.Contains(user))
             {
                 throw new InvalidOperationException("You are not an owner of " + room.Name);
-            }
-        }
-
-        private static string GenerateSalt()
-        {
-            byte[] data = new byte[0x10];
-
-            using (var crypto = new RNGCryptoServiceProvider())
-            {
-                crypto.GetBytes(data);
-
-                return Convert.ToBase64String(data);
             }
         }
     }

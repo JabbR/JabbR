@@ -7,7 +7,7 @@ namespace JabbR.Services
     {
         public string CreateSalt()
         {
-            byte[] data = new byte[0x10];
+            var data = new byte[0x10];
 
             using (var crypto = new RNGCryptoServiceProvider())
             {
