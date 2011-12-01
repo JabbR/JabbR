@@ -114,16 +114,26 @@
 
 #tabs li {
     display: inline-block;
+    padding: 0;
     margin: 0px 4px 0px 0px;
-    font-weight: bold;
-    background-color: #164c85;
-    border-bottom: 0px;
-    color: #fff;
-    cursor: pointer;
     height: 30px;
+    border-bottom: 0px;
+    position: relative;
 }
 
-#tabs li.current {
+#tabs li button {
+    height: 100%;
+    margin: 0;
+    padding: 0 20px 0 0;
+    border: none;
+    outline: 0;
+    font-weight: bold;
+    background-color: #164c85;
+    color: #fff;
+    cursor: pointer;    
+}
+
+#tabs li.current button {
     color: #32aa52;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', endColorstr='#e5e5e5'); /* for IE */
     background: -webkit-gradient(linear, left top, left bottom, from(#f5f5f5), to(#e5e5e5)); /* for webkit browsers */
@@ -136,19 +146,20 @@
 }
 
 #tabs li .close {
-    float: right;
-    margin: 8px 6px 6px 0px;
+    position: absolute;
+    top: 7px;
+    right: 5px;
 }
 
 #tabs li.unread {
 }
 
-#tabs li:hover {
+#tabs li button:hover {
     background-color: #e5e5e5;
     color: #32aa52;
 }
 
-#tabs li.current:hover {
+#tabs li.current button:hover {
     background-color: #e5e5e5;
 }
 

@@ -55,7 +55,9 @@
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">
         <li id="tabs-${id}" data-name="${name}">
-            <span class="content">${name}</span>
+            <button>
+                <span class="content">${name}</span>
+            </button>
             <img src="Content/images/close-icon.png" class="close" />
         </li>
     </script>
@@ -81,7 +83,7 @@
         </div>
         <ul id="tabs">
             <li id="tabs-lobby" class="current lobby" data-name="Lobby">
-                <span class="content">Lobby</span>
+                <button><span class="content">Lobby</span></button>
             </li>
         </ul>
     </div>
