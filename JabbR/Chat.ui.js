@@ -34,13 +34,17 @@
             return this.tab.hasClass('unread');
         };
 
-        this.updateUnread = function () {
+        this.updateUnread = function (isMentioned) {
             var $tab = this.tab.addClass('unread'),
                 $content = $tab.find('.content'),
-                unread = ($tab.data('unread') || 0) + 1;
+                unread = ($tab.data('unread') || 0) + 1,
+                //whether or not the user already has unread messages to him/her
+                hasExitingUnreadMessages = ($tab.data('unread-messages'));
+                
+            $content.text((isMentioned || hasExitingUnreadMessages ? '*' : '') + '(' + unread + ') ' + this.getName());
 
-            $content.text('(' + unread + ') ' + this.getName());
             $tab.data('unread', unread);
+            $tab.data('unread-messages', hasExitingUnreadMessages || isMentioned);
         };
 
         this.scrollToBottom = function () {
@@ -85,6 +89,11 @@
                     .find('.content')
                     .text(this.getName());
 
+            //remove the set the unread-messages to false
+            //to prevent future unread messages from being 
+            //marked as to the user if they're not
+            this.tab.data('unread-messages', false);
+            
             this.messages.addClass('current')
                          .show();
 
@@ -260,6 +269,7 @@
 
             $(window).focus(function () {
                 $(ui).trigger('ui.focus');
+                //TODO: this is where i need to make a change
             });
 
             $newMessage.keydown(function (e) {
@@ -338,14 +348,14 @@
             return false;
         },
         updateLobbyRoomCount: updateLobbyRoomCount,
-        updateUnread: function (roomName) {
+        updateUnread: function (roomName, isMentioned) {
             var room = getRoomElements(roomName);
 
             if (room.isActive()) {
                 return;
             }
 
-            room.updateUnread();
+            room.updateUnread(isMentioned);
         },
         scrollToBottom: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
