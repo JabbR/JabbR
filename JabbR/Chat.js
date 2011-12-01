@@ -310,8 +310,8 @@
         ui.setUserTyping(user, room, isTyping);
     };
 
-    chat.sendMeMessage = function (name, message) {
-        ui.addMessage('*' + name + ' ' + message, 'notification');
+    chat.sendMeMessage = function (name, message, room) {
+        ui.addMessage('*' + name + ' ' + message, 'notification', room);
     };
 
     chat.sendPrivateMessage = function (from, to, message) {

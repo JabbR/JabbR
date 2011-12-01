@@ -442,7 +442,7 @@ namespace JabbR
 
         void INotificationService.OnSelfMessage(ChatRoom room, ChatUser user, string content)
         {
-            Clients[room.Name].sendMeMessage(user.Name, content);
+            Clients[room.Name].sendMeMessage(user.Name, content, room.Name);
         }
 
         void INotificationService.SendPrivateMessage(ChatUser user, ChatUser toUser, string messageText)
