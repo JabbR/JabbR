@@ -5,6 +5,7 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Elmah;
 using JabbR.Migrations;
 using JabbR.Models;
 using JabbR.Services;
@@ -121,7 +122,7 @@ namespace JabbR.App_Start
             }
             catch (Exception ex)
             {
-                // ErrorSignal.Get(this).Raise(ex);
+                Elmah.ErrorLog.GetDefault(null).Log(new Error(ex));
             }
             finally
             {
