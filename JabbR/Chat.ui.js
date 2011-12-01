@@ -34,21 +34,16 @@
             return this.tab.hasClass('unread');
         };
 
-        this.updateUnread = function (isMentioned) {
+        this.updateUnread = function (isMentioned) {            
             var $tab = this.tab.addClass('unread'),
                 $content = $tab.find('.content'),
                 unread = ($tab.data('unread') || 0) + 1,
-                //whether or not the user already has unread messages to him/her
-                hasExitingUnreadMessages = ($tab.data('unread-messages'));
-                
-            isMentioned = isMentioned || hasExitingUnreadMessages;
-            $content.text(
-                (isMentioned ? '*' : '') 
-                + '(' + unread + ') ' 
-                + this.getName());
+                hasMentions = $tab.data('unread-messages') || isMentioned; // Whether or not the user already has unread messages to him/her
+
+            $content.text((hasMentions ? '*' : '') + '(' + unread + ') ' + this.getName());
 
             $tab.data('unread', unread);
-            $tab.data('unread-messages', isMentioned);
+            $tab.data('unread-messages', hasMentions);
         };
 
         this.scrollToBottom = function () {
@@ -92,10 +87,11 @@
                     .data('unread', 0)
                     .find('.content')
                     .text(this.getName())
-                    .data('unread-messages', false); //remove the set the unread-messages to false
-                                                     //to prevent future unread messages from being 
-                                                     //marked as to the user if they're not
-                                                     
+                    .data('unread-messages', false);
+
+            // Set the unread-messages to false to prevent future unread messages from being 
+            // marked as to the user if they're not
+
             this.messages.addClass('current')
                          .show();
 
