@@ -152,7 +152,7 @@ namespace JabbR.Test
                  
                 repository.Add(user);
 
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "2",
@@ -335,7 +335,7 @@ namespace JabbR.Test
                     Name = "room"
                 };
                 repository.Add(room);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -367,7 +367,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -393,7 +393,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -415,7 +415,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -451,7 +451,7 @@ namespace JabbR.Test
                 roomOwnerUser.Rooms.Add(room);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
