@@ -11,6 +11,7 @@
         historyLocation = 0,
         originalTitle = document.title,
         unread = 0,
+        unreadNotice = false,
         focus = true,
         typingTimeoutId = null;
 
@@ -98,12 +99,18 @@
             document.title = originalTitle;
         }
         else {
-            document.title = '(' + unread + ') ' + originalTitle;
+            document.title =
+                (unreadNotice ? '*' : '')
+                + '(' + unread + ') ' + originalTitle;
         }
     }
 
-    function updateUnread(room) {
+    function updateUnread(room, viewModel) {
         if (focus === false) {
+            if (unreadNotice === false) {
+                unreadNotice = viewModel.highlight === 'highlight';
+            }
+            
             unread = unread + 1;
         }
 
@@ -185,13 +192,13 @@
     };
 
     chat.addMessage = function (message, room) {
+        var viewModel = getMessageViewModel(message);
         scrollIfNecessary(function () {
-            var viewModel = getMessageViewModel(message);
             ui.addChatMessage(viewModel, room);
 
         }, room);
 
-        updateUnread(room);
+        updateUnread(room, viewModel);
     };
 
     chat.addUser = function (user, room, isOwner) {
