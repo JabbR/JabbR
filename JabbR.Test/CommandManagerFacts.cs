@@ -37,7 +37,13 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void CreateNewUser()
+            public void CreateNewUserFailsIfNoPassword()
+            {                
+                VerifyThrows<InvalidOperationException>("/nick dfowler");
+            }
+
+            [Fact]
+            public void CreatesNewUserIfPasswordSpecified()
             {
                 var repository = new InMemoryRepository();
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
@@ -49,12 +55,13 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
 
-                bool result = commandManager.TryHandleCommand("/nick dfowler");
+                bool result = commandManager.TryHandleCommand("/nick dfowler password");
 
                 Assert.True(result);
                 var user = repository.GetUserByName("dfowler");
                 Assert.NotNull(user);
                 Assert.Equal("dfowler", user.Name);
+                Assert.Equal("password".ToSha256(null), user.HashedPassword);
                 Assert.True(user.ConnectedClients.Any(c => c.Id == "clientid"));
                 notificationService.Verify(m => m.OnUserCreated(user), Times.Once());
             }

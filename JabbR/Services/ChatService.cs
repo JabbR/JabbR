@@ -35,11 +35,13 @@ namespace JabbR.Services
                 LastActivity = DateTime.UtcNow
             };
 
-            if (!String.IsNullOrEmpty(password))
+            if (String.IsNullOrEmpty(password))
             {
-                ValidatePassword(password);
-                user.HashedPassword = password.ToSha256(user.Salt);
+                throw new InvalidOperationException("A password is required.");
             }
+
+            ValidatePassword(password);
+            user.HashedPassword = password.ToSha256(user.Salt);
 
             _repository.Add(user);
 
