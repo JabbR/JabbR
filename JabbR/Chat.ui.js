@@ -41,10 +41,14 @@
                 //whether or not the user already has unread messages to him/her
                 hasExitingUnreadMessages = ($tab.data('unread-messages'));
                 
-            $content.text((isMentioned || hasExitingUnreadMessages ? '*' : '') + '(' + unread + ') ' + this.getName());
+            isMentioned = isMentioned || hasExitingUnreadMessages;
+            $content.text(
+                (isMentioned ? '*' : '') 
+                + '(' + unread + ') ' 
+                + this.getName());
 
             $tab.data('unread', unread);
-            $tab.data('unread-messages', hasExitingUnreadMessages || isMentioned);
+            $tab.data('unread-messages', isMentioned);
         };
 
         this.scrollToBottom = function () {
@@ -87,13 +91,11 @@
                     .removeClass('unread')
                     .data('unread', 0)
                     .find('.content')
-                    .text(this.getName());
-
-            //remove the set the unread-messages to false
-            //to prevent future unread messages from being 
-            //marked as to the user if they're not
-            this.tab.data('unread-messages', false);
-            
+                    .text(this.getName())
+                    .data('unread-messages', false); //remove the set the unread-messages to false
+                                                     //to prevent future unread messages from being 
+                                                     //marked as to the user if they're not
+                                                     
             this.messages.addClass('current')
                          .show();
 
