@@ -189,7 +189,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void UpatesUserSaltIfNoSalt()
+            public void EnsuresSaltedPassword()
             {
                 var crypto = new Mock<ICryptoService>();
                 crypto.Setup(c => c.CreateSalt()).Returns("salt");
@@ -277,7 +277,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void UpdatesStoredPasswordWithSaltIfNotAlreadySalted()
+            public void EnsuresStoredPasswordIsSalted()
             {
                 var crypto = new Mock<ICryptoService>();
                 crypto.Setup(c => c.CreateSalt()).Returns("salted");

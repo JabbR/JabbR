@@ -62,10 +62,7 @@ namespace JabbR.Services
                 throw new InvalidOperationException(String.Format("Unable to claim '{0}'.", userName));
             }
 
-            if (String.IsNullOrEmpty(user.Salt))
-            {
-                ChangeUserPassword(user, password, password);
-            }
+            EnsureSaltedPassword(user, password);
         }
 
         public void ChangeUserName(ChatUser user, string newUserName)
@@ -101,12 +98,7 @@ namespace JabbR.Services
 
             ValidatePassword(newPassword);
 
-            if (String.IsNullOrEmpty(user.Salt))
-            {
-                user.Salt = _crypto.CreateSalt();
-            }
-
-            user.HashedPassword = newPassword.ToSha256(user.Salt);
+            EnsureSaltedPassword(user, newPassword);
         }
 
         public ChatRoom AddRoom(ChatUser user, string name)
@@ -307,6 +299,15 @@ namespace JabbR.Services
             {
                 throw new InvalidOperationException("You are not an owner of " + room.Name);
             }
+        }
+
+        private void EnsureSaltedPassword(ChatUser user, string password)
+        {
+            if (String.IsNullOrEmpty(user.Salt))
+            {
+                user.Salt = _crypto.CreateSalt();
+            }
+            user.HashedPassword = password.ToSha256(user.Salt);
         }
     }
 }
