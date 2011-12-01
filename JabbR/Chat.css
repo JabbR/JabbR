@@ -145,7 +145,6 @@
 }
 
 #tabs li .content {
-    float: left;
     margin: 6px 10px 6px 10px;
 }
 
@@ -182,6 +181,22 @@ li.room:hover {
     background-color: #f5f5f5;
 }
 
+#tabs li.lobby {
+    background-color: #00103f;
+    color: #fff;
+    padding-right: 0;
+}
+
+#tabs li.lobby button 
+{
+    padding-right: 0;
+    margin-right: 10px;
+}
+
+#tabs li.lobby.current {
+    background-color: #00103f;
+    color: #000;
+}
 
 #send-message {
     position: absolute;
