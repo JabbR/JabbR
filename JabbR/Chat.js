@@ -107,8 +107,8 @@
 
     function updateUnread(room, isMentioned) {
         if (focus === false) {
-            isUnreadMessageForUser = isMentioned && isUnreadMessageForUser === false;
-            
+            isUnreadMessageForUser = (isUnreadMessageForUser || isMentioned);
+
             unread = unread + 1;
         } else {
             //we're currently focused so remove
