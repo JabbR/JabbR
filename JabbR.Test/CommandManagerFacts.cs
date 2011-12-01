@@ -58,7 +58,7 @@ namespace JabbR.Test
                 Assert.True(user.ConnectedClients.Any(c => c.Id == "clientid"));
                 notificationService.Verify(m => m.OnUserCreated(user), Times.Once());
             }
-
+                        
             [Fact]
             public void ChangeNick()
             {
@@ -137,6 +137,30 @@ namespace JabbR.Test
                 Assert.Equal("dfowler", user.Name);
                 Assert.Equal("password".ToSha256(), user.HashedPassword);
                 notificationService.Verify(m => m.SetPassword(), Times.Once());
+            }
+
+            [Fact]
+            public void ThrowsIfTryingToClaimExistingUserName()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                 
+                repository.Add(user);
+
+                var service = new ChatService(repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "2",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nick dfowler"));
             }
 
             [Fact]
@@ -219,6 +243,7 @@ namespace JabbR.Test
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nick dfowler password newpassword"));
             }
+
         }
 
         public class LogOutCommand
@@ -256,6 +281,7 @@ namespace JabbR.Test
 
         public class JoinCommand
         {
+            [Fact]
             public void DoesNotThrowIfUserAlreadyInRoom()
             {
                 var repository = new InMemoryRepository();
@@ -287,6 +313,155 @@ namespace JabbR.Test
                 Assert.True(result);
                 notificationService.Verify(m => m.JoinRoom(user, room), Times.Once());
             }
+
+            [Fact]
+            public void CanJoinRoom()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                repository.Add(room);
+                var service = new ChatService(repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/join room");
+
+                Assert.True(result);
+                notificationService.Verify(m => m.JoinRoom(user, room), Times.Once());
+            }
+
+            [Fact]
+            public void ThrowIfRoomIsEmpty()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                user.Rooms.Add(room);
+                repository.Add(room);
+                var service = new ChatService(repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join"));
+            }
+        }
+
+        public class AddOwnerCommand
+        {
+            [Fact]
+            public void MissingUserNameThrows()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/addowner "));
+            }
+
+            [Fact]
+            public void MissingRoomNameThrows()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/addowner dfowler"));
+            }
+
+            [Fact]
+            public void CanAddOwnerToRoom()
+            {
+                var repository = new InMemoryRepository();
+                var roomOwnerUser = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                var targetUser = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(roomOwnerUser);
+                repository.Add(targetUser);
+                var room = new ChatRoom()
+                {
+                    Name = "test"
+                };
+                room.Owners.Add(roomOwnerUser);
+                roomOwnerUser.Rooms.Add(room);
+                targetUser.Rooms.Add(room);
+                repository.Add(room);
+                var service = new ChatService(repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                var result = commandManager.TryHandleCommand("/addowner dfowler2 test");
+
+                Assert.True(result);
+                notificationService.Verify(m => m.OnOwnerAdded(targetUser, room), Times.Once());
+                Assert.True(room.Owners.Contains(targetUser));
+                Assert.True(targetUser.OwnedRooms.Contains(room));
+            }
+            
         }
 
         public static void VerifyThrows<T>(string command) where T : Exception
