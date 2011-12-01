@@ -373,10 +373,6 @@
                 currentRoom.makeInactive();
                 room.makeActive();
 
-                //                if (hasUnread) {
-                //                    room.scrollToBottom();
-                //                }
-
                 app.setLocation('#/rooms/' + roomName);
                 $(ui).trigger('ui.activeRoomChanged', [roomName]);
                 return true;
