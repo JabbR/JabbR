@@ -269,7 +269,6 @@
 
             $(window).focus(function () {
                 $(ui).trigger('ui.focus');
-                //TODO: this is where i need to make a change
             });
 
             $newMessage.keydown(function (e) {
