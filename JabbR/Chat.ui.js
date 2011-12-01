@@ -38,12 +38,12 @@
             var $tab = this.tab.addClass('unread'),
                 $content = $tab.find('.content'),
                 unread = ($tab.data('unread') || 0) + 1,
-                hasMentions = $tab.data('unread-messages') || isMentioned; // Whether or not the user already has unread messages to him/her
+                hasMentions = $tab.data('hasMentions') || isMentioned; // Whether or not the user already has unread messages to him/her
 
             $content.text((hasMentions ? '*' : '') + '(' + unread + ') ' + this.getName());
 
             $tab.data('unread', unread);
-            $tab.data('unread-messages', hasMentions);
+            $tab.data('hasMentions', hasMentions);
         };
 
         this.scrollToBottom = function () {
@@ -85,13 +85,10 @@
             this.tab.addClass('current')
                     .removeClass('unread')
                     .data('unread', 0)
+                    .data('hasMentions', false)
                     .find('.content')
                     .text(this.getName())
-                    .data('unread-messages', false);
-
-            // Set the unread-messages to false to prevent future unread messages from being 
-            // marked as to the user if they're not
-
+            
             this.messages.addClass('current')
                          .show();
 
