@@ -9,3 +9,4 @@ deploy/*
 *.suo
 *.cache
 packages/
+msbuild.log
