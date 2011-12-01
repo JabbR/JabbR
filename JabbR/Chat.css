@@ -149,6 +149,7 @@
     position: absolute;
     top: 7px;
     right: 5px;
+    cursor: pointer;
 }
 
 #tabs li.unread {
