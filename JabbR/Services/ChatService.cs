@@ -9,10 +9,12 @@ namespace JabbR.Services
     public class ChatService : IChatService
     {
         private readonly IJabbrRepository _repository;
+        private readonly ICryptoService _crypto;
 
-        public ChatService(IJabbrRepository repository)
+        public ChatService(IJabbrRepository repository, ICryptoService crypto)
         {
             _repository = repository;
+            _crypto = crypto;
         }
 
         public ChatUser AddUser(string userName, string clientId, string password)
@@ -29,13 +31,14 @@ namespace JabbR.Services
                 Name = userName,
                 Status = (int)UserStatus.Active,
                 Id = Guid.NewGuid().ToString("d"),
+                Salt = _crypto.CreateSalt(),
                 LastActivity = DateTime.UtcNow
             };
 
             if (!String.IsNullOrEmpty(password))
             {
                 ValidatePassword(password);
-                user.HashedPassword = password.ToSha256();
+                user.HashedPassword = password.ToSha256(user.Salt);
             }
 
             _repository.Add(user);
@@ -54,10 +57,12 @@ namespace JabbR.Services
                 throw new InvalidOperationException(String.Format("The nick '{0}' is unclaimable", userName));
             }
 
-            if (user.HashedPassword != password.ToSha256())
+            if (user.HashedPassword != password.ToSha256(user.Salt))
             {
                 throw new InvalidOperationException(String.Format("Unable to claim '{0}'.", userName));
             }
+
+            EnsureSaltedPassword(user, password);
         }
 
         public void ChangeUserName(ChatUser user, string newUserName)
@@ -81,18 +86,19 @@ namespace JabbR.Services
         public void SetUserPassword(ChatUser user, string password)
         {
             ValidatePassword(password);
-            user.HashedPassword = password.ToSha256();
+            user.HashedPassword = password.ToSha256(user.Salt);
         }
 
         public void ChangeUserPassword(ChatUser user, string oldPassword, string newPassword)
         {
-            if (user.HashedPassword != oldPassword.ToSha256())
+            if (user.HashedPassword != oldPassword.ToSha256(user.Salt))
             {
                 throw new InvalidOperationException("Passwords don't match.");
             }
 
             ValidatePassword(newPassword);
-            user.HashedPassword = newPassword.ToSha256();
+
+            EnsureSaltedPassword(user, newPassword);
         }
 
         public ChatRoom AddRoom(ChatUser user, string name)
@@ -293,6 +299,15 @@ namespace JabbR.Services
             {
                 throw new InvalidOperationException("You are not an owner of " + room.Name);
             }
+        }
+
+        private void EnsureSaltedPassword(ChatUser user, string password)
+        {
+            if (String.IsNullOrEmpty(user.Salt))
+            {
+                user.Salt = _crypto.CreateSalt();
+            }
+            user.HashedPassword = password.ToSha256(user.Salt);
         }
     }
 }

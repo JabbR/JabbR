@@ -3,6 +3,7 @@ using System.Linq;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
+using Moq;
 using Xunit;
 
 namespace JabbR.Test
@@ -15,7 +16,7 @@ namespace JabbR.Test
             public void ThrowsIfNameIsInValid()
             {
                 var repository = new InMemoryRepository();
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.AddUser("some in valid name", clientId: null, password: null));
             }
@@ -28,7 +29,7 @@ namespace JabbR.Test
                 {
                     Name = "taken"
                 });
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.AddUser("taken", clientId: null, password: null));
             }
@@ -37,7 +38,7 @@ namespace JabbR.Test
             public void ThrowsIfNameIsNullOrEmpty()
             {
                 var repository = new InMemoryRepository();
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.AddUser(null, clientId: null, password: null));
                 Assert.Throws<InvalidOperationException>(() => service.AddUser(String.Empty, clientId: null, password: null));
@@ -47,7 +48,7 @@ namespace JabbR.Test
             public void ThrowsIfPasswordIsTooShort()
             {
                 var repository = new InMemoryRepository();
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.AddUser("SomeUser", clientId: null, password: "short"));
             }
@@ -55,15 +56,18 @@ namespace JabbR.Test
             [Fact]
             public void AddsUserToRepository()
             {
+                var crypto = new Mock<ICryptoService>();
+                crypto.Setup(c => c.CreateSalt()).Returns("salted");
                 var repository = new InMemoryRepository();
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, crypto.Object);
 
                 service.AddUser("SomeUser", clientId: null, password: "password");
 
                 var user = repository.GetUserByName("SomeUser");
                 Assert.NotNull(user);
                 Assert.Equal("SomeUser", user.Name);
-                Assert.Equal("password".ToSha256(), user.HashedPassword);
+                Assert.Equal("salted", user.Salt);
+                Assert.Equal("8f5793009fe15c2227e3528d0507413a83dff10635d3a6acf1ba3229a03380d8", user.HashedPassword);
             }
         }
 
@@ -78,7 +82,7 @@ namespace JabbR.Test
                     Name = "Test"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.ChangeUserName(user, "name with spaces"));
             }
@@ -96,7 +100,7 @@ namespace JabbR.Test
                 {
                     Name = "taken"
                 });
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.ChangeUserName(user, "taken"));
             }
@@ -110,7 +114,7 @@ namespace JabbR.Test
                     Name = "Test"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.ChangeUserName(user, "Test"));
             }
@@ -124,7 +128,7 @@ namespace JabbR.Test
                     Name = "Test"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 service.ChangeUserName(user, "Test2");
 
@@ -141,10 +145,11 @@ namespace JabbR.Test
                 var user = new ChatUser
                 {
                     Name = "Test",
-                    HashedPassword = "password".ToSha256()
+                    Salt = "salt",
+                    HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.ChangeUserPassword(user, "passwor", "foo"));
             }
@@ -156,10 +161,11 @@ namespace JabbR.Test
                 var user = new ChatUser
                 {
                     Name = "Test",
-                    HashedPassword = "password".ToSha256()
+                    Salt = "salt",
+                    HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.ChangeUserPassword(user, "password", null));
             }
@@ -171,14 +177,36 @@ namespace JabbR.Test
                 var user = new ChatUser
                 {
                     Name = "Test",
-                    HashedPassword = "password".ToSha256()
+                    Salt = "pepper",
+                    HashedPassword = "password".ToSha256("pepper")
                 };
                 repository.Add(user);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 service.ChangeUserPassword(user, "password", "password2");
 
-                Assert.Equal("password2".ToSha256(), user.HashedPassword);
+                Assert.Equal("password2".ToSha256("pepper"), user.HashedPassword);
+            }
+
+            [Fact]
+            public void EnsuresSaltedPassword()
+            {
+                var crypto = new Mock<ICryptoService>();
+                crypto.Setup(c => c.CreateSalt()).Returns("salt");
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "Test",
+                    Salt = null,
+                    HashedPassword = "password".ToSha256(null)
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, crypto.Object);
+
+                service.ChangeUserPassword(user, "password", "password");
+
+                Assert.Equal("salt", user.Salt);
+                Assert.Equal("password".ToSha256("salt"), user.HashedPassword);
             }
         }
 
@@ -188,7 +216,7 @@ namespace JabbR.Test
             public void ThrowsIfUserDoesNotExist()
             {
                 var repository = new InMemoryRepository();
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.AuthenticateUser("SomeUser", "foo"));
             }
@@ -200,9 +228,10 @@ namespace JabbR.Test
                 repository.Add(new ChatUser
                 {
                     Name = "foo",
-                    HashedPassword = "passwords".ToSha256()
+                    Salt = "salt",
+                    HashedPassword = "passwords".ToSha256("salt")
                 });
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.AuthenticateUser("SomeUser", "foo"));
             }
@@ -215,7 +244,7 @@ namespace JabbR.Test
                 {
                     Name = "foo"
                 });
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.AuthenticateUser("SomeUser", null));
             }
@@ -227,11 +256,44 @@ namespace JabbR.Test
                 repository.Add(new ChatUser
                 {
                     Name = "foo",
-                    HashedPassword = "passwords".ToSha256()
+                    HashedPassword = "3049a1f8327e0215ea924b9e4e04cd4b0ff1800c74a536d9b81d3d8ced9994d3"
                 });
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                service.AuthenticateUser("foo", "passwords");
+            }
+
+            [Fact]
+            public void DoesNotThrowIfSaltedPasswordsMatch()
+            {
+                var repository = new InMemoryRepository();
+                repository.Add(new ChatUser
+                {
+                    Name = "foo",
+                    Salt = "salted",
+                    HashedPassword = "8f5793009fe15c2227e3528d0507413a83dff10635d3a6acf1ba3229a03380d8"
+                });
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                service.AuthenticateUser("foo", "password");
+            }
+
+            [Fact]
+            public void EnsuresStoredPasswordIsSalted()
+            {
+                var crypto = new Mock<ICryptoService>();
+                crypto.Setup(c => c.CreateSalt()).Returns("salted");
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo",
+                    HashedPassword = "3049a1f8327e0215ea924b9e4e04cd4b0ff1800c74a536d9b81d3d8ced9994d3"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, crypto.Object);
 
                 service.AuthenticateUser("foo", "passwords");
+
+                Assert.Equal("salted", user.Salt);
+                Assert.Equal("9ce70d2ab42c9a9012ed6f80f85ab400ef1483f70e227a42b6d77faea204db26", user.HashedPassword);
             }
         }
 
@@ -245,7 +307,7 @@ namespace JabbR.Test
                     Name = "foo"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.AddRoom(user, "Lobby"));
                 Assert.Throws<InvalidOperationException>(() => service.AddRoom(user, "LObbY"));
@@ -259,7 +321,7 @@ namespace JabbR.Test
                     Name = "foo"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.AddRoom(user, "Invalid name"));
             }
@@ -272,7 +334,7 @@ namespace JabbR.Test
                     Name = "foo"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 ChatRoom room = service.AddRoom(user, "NewRoom");
 
@@ -300,7 +362,7 @@ namespace JabbR.Test
                 {
                     Name = "Room"
                 };
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 service.JoinRoom(user, room);
 
@@ -320,7 +382,7 @@ namespace JabbR.Test
                     Status = (int)UserStatus.Inactive
                 };
                 repository.Add(user);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 service.UpdateActivity(user);
 
@@ -346,7 +408,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
 
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 service.LeaveRoom(user, room);
 
@@ -374,7 +436,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
 
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
                 ChatMessage message = service.AddMessage(user, room, "Content");
 
                 Assert.NotNull(message);
@@ -400,7 +462,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
 
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.AddOwner(user, user, room));
             }
@@ -422,7 +484,7 @@ namespace JabbR.Test
                 user.OwnedRooms.Add(room);
                 user.Rooms.Add(room);
 
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.AddOwner(user, user, room));
             }
@@ -450,7 +512,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
 
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 service.AddOwner(user, user2, room);
 
@@ -479,7 +541,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
 
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user, room));
             }
@@ -509,7 +571,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.Users.Add(user2);
 
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
             }
@@ -539,7 +601,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
 
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
             }
@@ -574,7 +636,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.Users.Add(user2);
 
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
             }
@@ -610,7 +672,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.Users.Add(user2);
 
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 service.KickUser(user, user2, room);
 
@@ -643,7 +705,7 @@ namespace JabbR.Test
                 });
 
                 repository.Add(user);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 service.DisconnectClient("foo");
 
@@ -667,7 +729,7 @@ namespace JabbR.Test
                 });
 
                 repository.Add(user);
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 service.DisconnectClient("foo");
 
@@ -679,7 +741,7 @@ namespace JabbR.Test
             public void ReturnsNullIfNoUserForClientId()
             {
                 var repository = new InMemoryRepository();
-                var service = new ChatService(repository);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 ChatUser user = service.DisconnectClient("foo");
 

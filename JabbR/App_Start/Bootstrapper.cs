@@ -44,7 +44,11 @@ namespace JabbR.App_Start
             kernel.Bind<IChatService>()
                   .To<ChatService>()
                   .InRequestScope();
-            
+
+            kernel.Bind<ICryptoService>()
+                .To<CryptoService>()
+                .InSingletonScope();
+
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
 
             // Perform the required migrations
@@ -115,7 +119,7 @@ namespace JabbR.App_Start
                     repo.CommitChanges();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 // ErrorSignal.Get(this).Raise(ex);
             }
