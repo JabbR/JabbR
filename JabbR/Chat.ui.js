@@ -34,7 +34,7 @@
             return this.tab.hasClass('unread');
         };
 
-        this.updateUnread = function (isMentioned) {            
+        this.updateUnread = function (isMentioned) {
             var $tab = this.tab.addClass('unread'),
                 $content = $tab.find('.content'),
                 unread = ($tab.data('unread') || 0) + 1,
@@ -169,9 +169,7 @@
                 return $(a).data('name').toLowerCase() > $(b).data('name').toLowerCase() ? 1 : -1;
             });
 
-        $.each($tabs.find('li'), function (index, item) {
-            $(item).children('button:first-child').attr('accesskey', index);
-        });
+        setAccessKeys();
         return true;
     }
 
@@ -182,7 +180,14 @@
             room.tab.remove();
             room.messages.remove();
             room.users.remove();
+            setAccessKeys();
         }
+    }
+
+    function setAccessKeys() {
+        $.each($tabs.find('li'), function (index, item) {
+            $(item).children('button:first-child').attr('accesskey', index);
+        });
     }
 
     function navigateToRoom(roomName) {
