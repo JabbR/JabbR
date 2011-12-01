@@ -493,7 +493,7 @@ namespace JabbR
         {
             Caller.showCommands(new[] { 
                 new { Name = "help", Description = "Type /help to show the list of commands" },
-                new { Name = "nick", Description = "Type /nick to create a user (e.g /nick user) or change your nickname. The nick command can also be used to manage passwords. To create a user with a password or assign your user to a password type /nick user password." },
+                new { Name = "nick", Description = "Type /nick [user] [password] to create a user or change your nickname. You can change your password with /nick [user] [oldpassword] [newpassword]" },
                 new { Name = "join", Description = "Type /join [room] - to join a channel of your choice" },
                 new { Name = "create", Description = "Type /create [room] to create a room" },
                 new { Name = "me", Description = "Type /me 'does anything'" },

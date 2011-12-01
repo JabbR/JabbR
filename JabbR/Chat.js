@@ -521,8 +521,7 @@
                 })
                 .done(function (success) {
                     if (success === false) {
-                        ui.addMessage('Choose a name using "/nick nickname".', 'notification');
-                        ui.addMessage('You can also set a password so you can use this nick on multiple clients using /nick user password.', 'notification');
+                        ui.addMessage('Choose a name using "/nick nickname password".', 'notification');
                     }
                 });
         });
