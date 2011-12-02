@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Elmah;
+using JabbR.ContentProviders;
 using JabbR.Migrations;
 using JabbR.Models;
 using JabbR.Services;
@@ -48,6 +49,10 @@ namespace JabbR.App_Start
 
             kernel.Bind<ICryptoService>()
                 .To<CryptoService>()
+                .InSingletonScope();
+
+            kernel.Bind<IResourceProcessor>()
+                .To<ResourceProcessor>()
                 .InSingletonScope();
 
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));

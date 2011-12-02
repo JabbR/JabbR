@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
@@ -22,22 +21,14 @@ namespace JabbR
     {
         private readonly IJabbrRepository _repository;
         private readonly IChatService _service;
+        private readonly IResourceProcessor _resourceProcessor;
 
-        public Chat(IChatService service, IJabbrRepository repository)
+        public Chat(IResourceProcessor resourceProcessor, IChatService service, IJabbrRepository repository)
         {
+            _resourceProcessor = resourceProcessor;
             _service = service;
             _repository = repository;
         }
-
-        private static readonly List<IContentProvider> _contentProviders = new List<IContentProvider>() {
-            new ImageContentProvider(),
-            new YouTubeContentProvider(),
-            new CollegeHumorContentProvider(),
-            new TweetContentProvider(),
-            new PastieContentProvider(),
-            new ImgurContentProvider(),
-            new GistContentProvider()
-        };
 
         public bool OutOfSync
         {
@@ -256,7 +247,7 @@ namespace JabbR
         {
             // REVIEW: is this safe to do? We're holding on to this instance 
             // when this should really be a fire and forget.
-            var contentTasks = links.Select(ExtractContent).ToArray();
+            var contentTasks = links.Select(_resourceProcessor.ExtractResource).ToArray();
             Task.Factory.ContinueWhenAll(contentTasks, tasks =>
             {
                 foreach (var task in tasks)
@@ -591,20 +582,7 @@ namespace JabbR
             extractedUrls = urls;
             return message;
         }
-
-        private Task<string> ExtractContent(string url)
-        {
-            var request = (HttpWebRequest)HttpWebRequest.Create(url);
-            var requestTask = Task.Factory.FromAsync((cb, state) => request.BeginGetResponse(cb, state), ar => request.EndGetResponse(ar), null);
-            return requestTask.ContinueWith(task => ExtractContent((HttpWebResponse)task.Result));
-        }
-
-        private string ExtractContent(HttpWebResponse response)
-        {
-            return _contentProviders.Select(c => c.GetContent(response))
-                                    .FirstOrDefault(content => content != null);
-        }
-
+        
         private ClientState GetClientState()
         {
             // New client state

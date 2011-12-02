@@ -68,6 +68,7 @@
     <Reference Include="SignalR.Ninject">
       <HintPath>..\packages\SignalR.Ninject.0.3.3\lib\net40\SignalR.Ninject.dll</HintPath>
     </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Web.DynamicData" />
@@ -212,7 +213,9 @@
   <ItemGroup>
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="ContentProviders\ResourceProcessor.cs" />
     <Compile Include="ContentProviders\GistContentProvider.cs" />
+    <Compile Include="ContentProviders\IResourceProcessor.cs" />
     <Compile Include="Hubs\Chat.cs" />
     <Compile Include="ContentProviders\CollapsibleContentProvider.cs" />
     <Compile Include="ContentProviders\CollegeHumorContentProvider.cs" />
