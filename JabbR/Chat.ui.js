@@ -222,9 +222,16 @@
     }
 
     function setAccessKeys() {
-        $.each($tabs.find('li'), function (index, item) {
-            $(item).children('button:first-child').attr('accesskey', index);
+        $.each($tabs.find('li.room'), function (index, item) {
+            $(item).children('button:first-child').attr('accesskey', getRoomAccessKey(index));
         });
+    }
+
+    function getRoomAccessKey(index) {
+        if (index < 10) {
+            return index + 1;
+        }
+        return 0;
     }
 
     function navigateToRoom(roomName) {
