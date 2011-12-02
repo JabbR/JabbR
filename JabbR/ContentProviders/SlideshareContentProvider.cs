@@ -13,14 +13,26 @@ namespace JabbR.ContentProviders
     /// slideshare link (eg. http://www.slideshare.net/verticalmeasures/search-social-and-content-marketing-move-your-business-forward-accelerate). 
     /// Send feedback/issues to Seth Webster (@sethwebsterDanTup on Twitter).
     /// </summary>
-    public class SlideShareContentProvider : IContentProvider
+    public class SlideShareContentProvider : CollapsibleContentProvider
     {
         private static readonly String oEmbedUrl = "http://www.slideshare.net/api/oembed/2?url={0}&format=json";
+        private dynamic slideShareData;
 
-        public string GetContent(HttpWebResponse response)
+        protected override string GetTitle(HttpWebResponse response)
         {
-            if (response.ResponseUri.AbsoluteUri.StartsWith("http://slideshare.net/", StringComparison.OrdinalIgnoreCase)
-              || response.ResponseUri.AbsoluteUri.StartsWith("http://www.slideshare.net/", StringComparison.OrdinalIgnoreCase))
+            EnsureSlideShareData(response);
+            return slideShareData.title;
+        }
+
+        protected override string GetCollapsibleContent(HttpWebResponse response)
+        {
+            EnsureSlideShareData(response);
+            return slideShareData.html;
+        }
+
+        private void EnsureSlideShareData(HttpWebResponse response)
+        {
+            if (null == slideShareData)
             {
                 // We have to make a call to the SlideShare api because
                 // their embed code request the unique ID of the slide deck
@@ -31,12 +43,15 @@ namespace JabbR.ContentProviders
                 var webResponse = webRequest.GetResponse();
                 using (var reader = new StreamReader(webResponse.GetResponseStream()))
                 {
-                    dynamic slideShareData = JsonConvert.DeserializeObject(reader.ReadToEnd()
-                               );
-                    return slideShareData.html;
+                    slideShareData = JsonConvert.DeserializeObject(reader.ReadToEnd());
                 }
             }
-            return null;
+        }
+
+        protected override bool IsValidContent(HttpWebResponse response)
+        {
+            return response.ResponseUri.AbsoluteUri.StartsWith("http://slideshare.net/", StringComparison.OrdinalIgnoreCase)
+               || response.ResponseUri.AbsoluteUri.StartsWith("http://www.slideshare.net/", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
