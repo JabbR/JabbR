@@ -191,8 +191,6 @@
                   .addClass('messages')
                   .appendTo($chatArea)
                   .hide()
-                  // add scroll hander to each messages list because
-                  // global handler doesn't always trigger
                   .scroll(handleScroll);
 
 
@@ -246,7 +244,7 @@
 
         // remove separator once use has scrolled to bottom of messages list
         if ($(this).isNearTheEnd() && room.hasSeparator() && room.isActive() && ui.hasFocus()) {
-            $(this).find('.message-separator').fadeOut(1500, function () {
+            $(this).find('.message-separator').animate({ height: 0 }, 500, function () {
                 $(this).remove();
             });
         }
