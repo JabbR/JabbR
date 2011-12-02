@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Elmah;
+using JabbR.ContentProviders;
 using JabbR.Migrations;
 using JabbR.Models;
 using JabbR.Services;
@@ -50,6 +51,10 @@ namespace JabbR.App_Start
                 .To<CryptoService>()
                 .InSingletonScope();
 
+            kernel.Bind<IResourceProcessor>()
+                .To<ResourceProcessor>()
+                .InSingletonScope();
+
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
 
             // Perform the required migrations
@@ -91,13 +96,13 @@ namespace JabbR.App_Start
                     !(ex is MissingMethodException) &&
                     !(ex is ThreadAbortException))
                 {
-                    // ErrorSignal.Get(this).Raise(ex);
+                    Elmah.ErrorLog.GetDefault(null).Log(new Error(ex));
                 }
             };
 
             TaskScheduler.UnobservedTaskException += (sender, e) =>
             {
-                // ErrorSignal.Get(this).Raise(e.Exception.GetBaseException());
+                Elmah.ErrorLog.GetDefault(null).Log(new Error(e.Exception.GetBaseException()));
                 e.SetObserved();
             };
         }

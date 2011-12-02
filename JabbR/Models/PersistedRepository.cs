@@ -73,7 +73,14 @@ namespace JabbR.Models
 
         public ChatRoom GetRoomByName(string roomName)
         {
-            return _db.Rooms.FirstOrDefault(r => r.Name == roomName);
+            return _db.Rooms.Include(r => r.Owners)
+                            .Include(r => r.Users)
+                            .FirstOrDefault(r => r.Name == roomName);
+        }
+
+        public IQueryable<ChatMessage> GetMessagesByRoom(string roomName)
+        {
+            return _db.Messages.Include(r => r.Room).Where(r => r.Room.Name == roomName);
         }
 
         public IQueryable<ChatUser> SearchUsers(string name)

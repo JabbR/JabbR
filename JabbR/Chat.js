@@ -138,12 +138,19 @@
 
     // Called when a returning users join chat
     chat.logOn = function (rooms) {
+        var activeRoom = this.activeRoom,
+            loadRooms = function () {
+                $.each(rooms, function (index, room) {
+                    if (chat.activeRoom !== room) {
+                        populateRoom(room);
+                    }
+                });
+            };
+
         $.each(rooms, function (index, room) {
             ui.addRoom(room);
-            populateRoom(room);
         });
 
-        var activeRoom = this.activeRoom;
         ui.addMessage('Welcome back ' + chat.name, 'notification', 'lobby');
         ui.addMessage('You can join any of the rooms on the right', 'notification', 'lobby');
 
@@ -153,6 +160,15 @@
         // If the active room didn't change then set the active room (since no navigation happened)
         if (activeRoom === this.activeRoom) {
             ui.setActiveRoom(this.activeRoom || 'Lobby');
+        }
+
+        if (this.activeRoom) {
+            // Always populate the active room first then load the other rooms so it looks fast :)
+            populateRoom(this.activeRoom).done(loadRooms);
+        }
+        else {
+            // There's no active room so we don't care
+            loadRooms();
         }
     };
 
