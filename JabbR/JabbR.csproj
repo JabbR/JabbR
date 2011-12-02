@@ -209,6 +209,7 @@
   <ItemGroup>
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="ContentProviders\GistContentProvider.cs" />
     <Compile Include="Hubs\Chat.cs" />
     <Compile Include="ContentProviders\CollapsibleContentProvider.cs" />
     <Compile Include="ContentProviders\CollegeHumorContentProvider.cs" />

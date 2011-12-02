@@ -35,7 +35,8 @@ namespace JabbR
             new CollegeHumorContentProvider(),
             new TweetContentProvider(),
             new PastieContentProvider(),
-            new ImgurContentProvider()
+            new ImgurContentProvider(),
+            new GistContentProvider()
         };
 
         public bool OutOfSync
