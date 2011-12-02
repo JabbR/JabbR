@@ -15,7 +15,7 @@ namespace JabbR.ContentProviders
     /// </summary>
     public class SlideShareContentProvider : IContentProvider
     {
-        private static readonly string oEmbedUrl = "http://www.slideshare.net/api/oembed/2?url={0}&format=json";
+        private static readonly String oEmbedUrl = "http://www.slideshare.net/api/oembed/2?url={0}&format=json";
 
         public string GetContent(HttpWebResponse response)
         {
@@ -26,9 +26,9 @@ namespace JabbR.ContentProviders
                 // their embed code request the unique ID of the slide deck
                 // where we will only have the url -- this call gets the json information
                 // on the slide deck and that package happens to already contain the embed code (.html)
-                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(
-                        string.Format(oEmbedUrl, response.ResponseUri.AbsoluteUri));
-                WebResponse webResponse = webRequest.GetResponse();
+                var webRequest = (HttpWebRequest)HttpWebRequest.Create(
+                        String.Format(oEmbedUrl, response.ResponseUri.AbsoluteUri));
+                var webResponse = webRequest.GetResponse();
                 using (var reader = new StreamReader(webResponse.GetResponseStream()))
                 {
                     dynamic slideShareData = JsonConvert.DeserializeObject(reader.ReadToEnd()
