@@ -22,28 +22,19 @@ namespace JabbR.ContentProviders
             if (response.ResponseUri.AbsoluteUri.StartsWith("http://slideshare.net/", StringComparison.OrdinalIgnoreCase)
               || response.ResponseUri.AbsoluteUri.StartsWith("http://www.slideshare.net/", StringComparison.OrdinalIgnoreCase))
             {
-
-                try
+                // We have to make a call to the SlideShare api because
+                // their embed code request the unique ID of the slide deck
+                // where we will only have the url -- this call gets the json information
+                // on the slide deck and that package happens to already contain the embed code (.html)
+                HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(
+                        string.Format(oEmbedUrl, response.ResponseUri.AbsoluteUri));
+                WebResponse webResponse = webRequest.GetResponse();
+                using (var reader = new StreamReader(webResponse.GetResponseStream()))
                 {
-                    // We have to make a call to the SlideShare api because
-                    // their embed code request the unique ID of the slide deck
-                    // where we will only have the url -- this call gets the json information
-                    // on the slide deck and that package happens to already contain the embed code (.html)
-                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(
-                            string.Format(oEmbedUrl, response.ResponseUri.AbsoluteUri));
-                    WebResponse webResponse = webRequest.GetResponse();
-                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
-                    {
-                        dynamic slideShareData = JsonConvert.DeserializeObject(reader.ReadToEnd()
-                                   );
-                        return slideShareData.html;
-                    }
+                    dynamic slideShareData = JsonConvert.DeserializeObject(reader.ReadToEnd()
+                               );
+                    return slideShareData.html;
                 }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-
             }
             return null;
         }
