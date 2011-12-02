@@ -40,7 +40,7 @@
         };
 
         this.needsSeparator = function (focus) {
-            if (this.isActive() && focus === true) {
+            if (this.isActive() && ui.focus === true) {
                 return false;
             }
             return this.hasSeparator() === false;
@@ -61,8 +61,17 @@
         this.scrollToSeparator = function () {
             var $e = this.messages.find('.message-separator');
 
-            if ($e.position().top > this.messages.scrollTop()) {
-                this.messages.scrollTop($e.position().top + $e.height());
+            var top = $e.position().top,
+                scrollHeight = this.messages[0].scrollHeight,
+                scrollTop = this.messages.scrollTop(),
+                height = this.messages.height()
+
+            // keep separator scrolled half way in message list
+            if (top < 0) {
+                this.messages.scrollTop(scrollTop + top - (height / 2));
+            }
+            else if (top > height / 2) {
+                this.messages.scrollTop(scrollHeight - (height / 2));
             }
         };
 
@@ -115,10 +124,9 @@
             this.users.addClass('current')
                       .show();
 
-            // remove message separator
-            this.messages.find('.message-separator').fadeOut(3000, function () {
-                $(this).remove();
-            });
+            // force scroll handling
+            this.messages.scroll();
+
         };
 
         // Users
@@ -182,7 +190,11 @@
         $('<ul/>').attr('id', 'messages-' + roomId)
                   .addClass('messages')
                   .appendTo($chatArea)
-                  .hide();
+                  .hide()
+                  // add scroll hander to each messages list because
+                  // global handler doesn't always trigger
+                  .scroll(handleScroll);
+
 
         $('<ul/>').attr('id', 'users-' + roomId)
                   .addClass('users')
@@ -221,12 +233,25 @@
         });
     }
 
+    function handleScroll() {
+        var roomName = $(this).attr('id').substring(9);
+        var room = getRoomElements(roomName);
+
+        // remove separator once use has scrolled to bottom of messages list
+        if ($(this).isNearTheEnd() && room.hasSeparator() && room.isActive() && ui.hasFocus()) {
+            $(this).find('.message-separator').fadeOut(1500, function () {
+                $(this).remove();
+            });
+        }
+    }
+
     var ui = {
         initialize: function () {
             $chatArea = $('#chat-area');
             $tabs = $('#tabs');
             $submitButton = $('#send-message');
             $newMessage = $('#new-message');
+            focus = true;
             templates = {
                 user: $('#new-user-template'),
                 message: $('#new-message-template'),
@@ -297,12 +322,12 @@
             });
 
             $(window).blur(function () {
-                focus = false;
+                ui.focus = false;
                 $(ui).trigger('ui.blur');
             });
 
             $(window).focus(function () {
-                focus = true;
+                ui.focus = true;
                 // clear unread count in active room
                 var room = getCurrentRoomElements();
                 room.makeActive();
@@ -363,6 +388,8 @@
             if (room.isActive()) {
                 // Still trigger the event (just do less overall work)
                 $(ui).trigger('ui.activeRoomChanged', [roomName]);
+                // force scoll logic
+                room.messages.scroll();
                 return true;
             }
 
@@ -384,7 +411,7 @@
         updateUnread: function (roomName, isMentioned) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
 
-            if (focus && room.isActive()) {
+            if (ui.focus && room.isActive()) {
                 return;
             }
 
@@ -399,7 +426,7 @@
                 return;
             }
 
-            if ((focus && room.isActive())) {
+            if (ui.focus && room.isActive()) {
                 room.scrollToBottom();
             }
         },
@@ -526,7 +553,7 @@
                 $previousMessage.addClass('continue');
             }
 
-            if (room.needsSeparator(focus)) {
+            if (room.needsSeparator(ui.focus)) {
                 ui.addSeparator(roomName);
             }
 
@@ -551,7 +578,7 @@
                     fulldate: now.formatDate() + ' ' + now.formatTime(true)
                 };
 
-            if (room.needsSeparator(focus)) {
+            if (room.needsSeparator(ui.focus)) {
                 ui.addSeparator(roomName);
             }
 
@@ -565,13 +592,18 @@
         },
         addSeparator: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
-
+            if (room.isLobby()) {
+                return;
+            }
             templates.separator.tmpl().appendTo(room.messages);
             ui.scrollToBottom(roomName);
         },
         removeSeparator: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
             room.messages.find('.message-separator').remove();
+        },
+        hasFocus: function () {
+            return ui.focus;
         }
     };
 
