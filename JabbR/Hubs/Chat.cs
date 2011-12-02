@@ -467,7 +467,7 @@ namespace JabbR
 
         void INotificationService.ListUsers()
         {
-            var users = _repository.Users.Online().Select(s => s.Name);
+            var users = _repository.Users.Online().Select(s => s.Name).OrderBy(s => s);
             Caller.listUsers(users);
         }
 
