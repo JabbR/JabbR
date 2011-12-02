@@ -91,13 +91,13 @@ namespace JabbR.App_Start
                     !(ex is MissingMethodException) &&
                     !(ex is ThreadAbortException))
                 {
-                    // ErrorSignal.Get(this).Raise(ex);
+                    Elmah.ErrorLog.GetDefault(null).Log(new Error(ex));
                 }
             };
 
             TaskScheduler.UnobservedTaskException += (sender, e) =>
             {
-                // ErrorSignal.Get(this).Raise(e.Exception.GetBaseException());
+                Elmah.ErrorLog.GetDefault(null).Log(new Error(e.Exception.GetBaseException()));
                 e.SetObserved();
             };
         }
