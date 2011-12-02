@@ -40,7 +40,7 @@
         };
 
         this.needsSeparator = function (focus) {
-            if (this.isActive() && ui.focus === true) {
+            if (this.isActive() && focus === true) {
                 return false;
             }
             return this.hasSeparator() === false;
@@ -317,6 +317,7 @@
 
                 $newMessage.val('');
                 $newMessage.focus();
+                ui.focus = true;
 
                 // always scroll to bottom after new message sent
                 var room = getCurrentRoomElements();
@@ -403,6 +404,7 @@
             if (room.exists() && currentRoom.exists()) {
                 var hasUnread = room.hasUnread();
                 currentRoom.makeInactive();
+                ui.focus = true;
                 room.makeActive();
 
                 app.setLocation('#/rooms/' + roomName);
@@ -416,7 +418,7 @@
         updateUnread: function (roomName, isMentioned) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
 
-            if (ui.focus && room.isActive()) {
+            if (ui.hasFocus() && room.isActive()) {
                 return;
             }
 
@@ -425,13 +427,13 @@
         scrollToBottom: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
 
-            if (room.hasSeparator()) {
+            if (room.hasSeparator() && room.isActive()) {
                 // scoll to separator
                 room.scrollToSeparator();
                 return;
             }
 
-            if (ui.focus && room.isActive()) {
+            if (ui.hasFocus() && room.isActive()) {
                 room.scrollToBottom();
             }
         },
@@ -558,7 +560,7 @@
                 $previousMessage.addClass('continue');
             }
 
-            if (room.needsSeparator(ui.focus)) {
+            if (room.needsSeparator(ui.hasFocus())) {
                 ui.addSeparator(roomName);
             }
 
@@ -583,7 +585,7 @@
                     fulldate: now.formatDate() + ' ' + now.formatTime(true)
                 };
 
-            if (room.needsSeparator(ui.focus)) {
+            if (room.needsSeparator(ui.hasFocus())) {
                 ui.addSeparator(roomName);
             }
 
