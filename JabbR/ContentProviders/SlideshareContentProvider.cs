@@ -16,7 +16,7 @@ namespace JabbR.ContentProviders
     public class SlideShareContentProvider : CollapsibleContentProvider
     {
         private static readonly String oEmbedUrl = "http://www.slideshare.net/api/oembed/2?url={0}&format=json";
-        dynamic slideShareData;
+        private dynamic slideShareData;
 
         protected override string GetTitle(HttpWebResponse response)
         {
