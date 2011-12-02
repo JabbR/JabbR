@@ -173,7 +173,7 @@ namespace JabbR
                         select new UserViewModel(u),
                 Owners = from u in room.Owners.Online()
                          select u.Name,
-                RecentMessages = recentMessages.ToList().Select(m => new MessageViewModel(m))
+                RecentMessages = recentMessages.AsEnumerable().Reverse().Select(m => new MessageViewModel(m))
             };
         }
 
