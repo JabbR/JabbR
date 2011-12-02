@@ -4,6 +4,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace JabbR.ContentProviders
 {
@@ -21,25 +22,28 @@ namespace JabbR.ContentProviders
             if (response.ResponseUri.AbsoluteUri.StartsWith("http://slideshare.net/", StringComparison.OrdinalIgnoreCase)
               || response.ResponseUri.AbsoluteUri.StartsWith("http://www.slideshare.net/", StringComparison.OrdinalIgnoreCase))
             {
-                using (WebClient client = new WebClient())
+
+                try
                 {
-                    try
+                    // We have to make a call to the SlideShare api because
+                    // their embed code request the unique ID of the slide deck
+                    // where we will only have the url -- this call gets the json information
+                    // on the slide deck and that package happens to already contain the embed code (.html)
+                    HttpWebRequest webRequest = (HttpWebRequest)HttpWebRequest.Create(
+                            string.Format(oEmbedUrl, response.ResponseUri.AbsoluteUri));
+                    WebResponse webResponse = webRequest.GetResponse();
+                    using (var reader = new StreamReader(webResponse.GetResponseStream()))
                     {
-                        dynamic slideShareData = JsonConvert.DeserializeObject
-                                   (
-                                       client.DownloadString
-                                       (
-                                           string.Format(oEmbedUrl, response.ResponseUri.AbsoluteUri)
-                                       )
+                        dynamic slideShareData = JsonConvert.DeserializeObject(reader.ReadToEnd()
                                    );
                         return slideShareData.html;
-
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
                     }
                 }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+
             }
             return null;
         }
