@@ -423,7 +423,7 @@
                 return;
             }
 
-            if (ui.hasFocus() && room.isActive()) {
+            if (room.isActive()) {
                 room.scrollToBottom();
             }
         },
