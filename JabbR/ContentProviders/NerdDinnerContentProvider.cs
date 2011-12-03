@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace JabbR.ContentProviders
 {
@@ -20,12 +20,12 @@ namespace JabbR.ContentProviders
         protected override string GetCollapsibleContent(HttpWebResponse response)
         {
             string strDinnerId = ExtractParameter(response.ResponseUri);
-            if (!String.IsNullOrEmpty(strDinnerId))
+            int dinnerId = 0;
+            if (!String.IsNullOrEmpty(strDinnerId) && Int32.TryParse(strDinnerId, out dinnerId))
             {
-                int dinnerId = int.Parse(strDinnerId);
                 var dinner = FetchDinner(dinnerId);
 
-                if (null != dinner && null!=dinner.d)
+                if (dinner != null && dinner.d != null)
                 {
                     return String.Format(_nerdDinnerContentFormat,
                         dinner.d.Latitude,
@@ -40,6 +40,7 @@ namespace JabbR.ContentProviders
                         dinner.d.Description,
                         dinner.d.DinnerID));
                 }
+
             }
             return null;
         }
@@ -49,9 +50,12 @@ namespace JabbR.ContentProviders
             var webRequest = (HttpWebRequest)WebRequest.Create(
                 String.Format(_nerdDinnerODdataFeedServiceDinnerQueryFormat, dinnerId));
             webRequest.Accept = "application/json";
-            using (var sr = new StreamReader(webRequest.GetResponse().GetResponseStream()))
+            using (var webResponse = webRequest.GetResponse())
             {
-                return JsonConvert.DeserializeObject(sr.ReadToEnd());
+                using (var sr = new StreamReader(webResponse.GetResponseStream()))
+                {
+                    return JsonConvert.DeserializeObject(sr.ReadToEnd());
+                }
             }
         }
 
