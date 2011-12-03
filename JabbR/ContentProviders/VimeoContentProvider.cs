@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace JabbR.ContentProviders
 {
@@ -6,7 +7,7 @@ namespace JabbR.ContentProviders
     {
         private static readonly Regex _vimeoIdRegex = new Regex(@"(\d+)");
 
-        public override System.Text.RegularExpressions.Regex MediaUrlRegex
+        public override Regex MediaUrlRegex
         {
             get
             {
@@ -15,7 +16,7 @@ namespace JabbR.ContentProviders
         }
 
 
-        public override System.Collections.Generic.IEnumerable<string> Domains
+        public override IEnumerable<string> Domains
         {
             get
             {
