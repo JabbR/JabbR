@@ -338,11 +338,21 @@
 
             // Auto-complete for user names
             $newMessage.autoTabComplete({
-                get: function () {
-                    var room = getCurrentRoomElements();
-                    return room.users.find('li')
-                                     .not('.room')
-                                     .map(function () { return $(this).data('name'); });
+                prefixMatch: '[@#]',
+                get: function (prefix) {
+                    switch (prefix) {
+                        case '@':
+                            var room = getCurrentRoomElements();
+                            return room.users.find('li')
+                                         .not('.room')
+                                         .map(function () { return $(this).data('name'); });
+                        case '#':
+                            var lobby = getLobby();
+                            return lobby.users.find('li')
+                                          .map(function () { return $(this).data('name'); });
+                        default:
+                            return [];
+                    }
                 }
             });
 

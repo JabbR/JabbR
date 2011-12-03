@@ -54,6 +54,14 @@
         return d;
     }
 
+    function populateLobbyRooms() {
+        // Populate the user list with room names
+        chat.getRooms()
+            .done(function (rooms) {
+                ui.populateLobbyRooms(rooms);
+            });
+    }
+
     function scrollIfNecessary(callback, room) {
         var nearEnd = ui.isNearTheEnd(room);
 
@@ -143,6 +151,7 @@
                         populateRoom(room);
                     }
                 });
+                populateLobbyRooms();
             };
 
         $.each(rooms, function (index, room) {
@@ -515,11 +524,7 @@
 
     $(ui).bind('ui.activeRoomChanged', function (ev, room) {
         if (room === 'Lobby') {
-            // Populate the user list with room names
-            chat.getRooms()
-                .done(function (rooms) {
-                    ui.populateLobbyRooms(rooms);
-                });
+            populateLobbyRooms();
 
             // Remove the active room
             chat.activeRoom = undefined;

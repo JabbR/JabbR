@@ -24,6 +24,8 @@ namespace JabbR.Models
                 throw new InvalidOperationException("Use '/join room' to join a room.");
             }
 
+            roomName = ChatService.NormalizeRoomName(roomName);
+
             ChatRoom room = repository.GetRoomByName(roomName);
 
             if (room == null)
@@ -58,6 +60,8 @@ namespace JabbR.Models
                 throw new InvalidOperationException("Room name cannot be blank!");
             }
 
+            roomName = ChatService.NormalizeRoomName(roomName);
+
             var room = repository.GetRoomByName(roomName);
 
             if (room == null)
@@ -80,6 +84,6 @@ namespace JabbR.Models
             }
 
             return user;
-        }        
+        }
     }
 }

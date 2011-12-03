@@ -267,6 +267,11 @@ namespace JabbR.Services
             return userName.StartsWith("@") ? userName.Substring(1) : userName;
         }
 
+        internal static string NormalizeRoomName(string roomName)
+        {
+            return roomName.StartsWith("#") ? roomName.Substring(1) : roomName;
+        }
+
         internal static void ThrowUserExists(string userName)
         {
             throw new InvalidOperationException(String.Format("Username {0} already taken, please pick a new one using '/nick nickname'.", userName));
