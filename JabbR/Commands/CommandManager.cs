@@ -347,6 +347,9 @@ namespace JabbR.Commands
                 throw new InvalidOperationException(String.Format("What did you want to say to '{0}'.", toUser.Name));
             }
 
+            var transform = new TextTransform(_repository);
+            messageText = transform.Parse(messageText);
+
             _notificationService.SendPrivateMessage(user, toUser, messageText);
         }
 
