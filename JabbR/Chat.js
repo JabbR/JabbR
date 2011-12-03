@@ -43,13 +43,7 @@
 
                         ui.addChatMessage(viewModel, room);
                     });
-                    // populated messages will be treated as unread, so remove separator
-                    // from the beginning and add it back to the end (except active room)
-                    ui.removeSeparator(room);
                     ui.scrollToBottom(room);
-                    if (this.activeRoom !== room) {
-                        ui.addSeparator(room);
-                    }
 
                     d.resolveWith(chat);
                 })
