@@ -1,23 +1,21 @@
 ﻿using System;
-using System.Dynamic;
-using System.Globalization;
 using System.Linq;
-using System.Security.Principal;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
 using Moq;
-using SignalR.Hubs;
 using Xunit;
 
-namespace JabbR.Test {
-    public class ChatServiceFacts {
-        public class AddUser {
+namespace JabbR.Test
+{
+    public class ChatServiceFacts
+    {
+        public class AddUser
+        {
             [Fact]
-            public void ThrowsIfNameIsInValid() {
+            public void ThrowsIfNameIsInValid()
+            {
                 var repository = new InMemoryRepository();
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
@@ -25,9 +23,11 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void ThrowsIfNameInUse() {
+            public void ThrowsIfNameInUse()
+            {
                 var repository = new InMemoryRepository();
-                repository.Add(new ChatUser() {
+                repository.Add(new ChatUser()
+                {
                     Name = "taken"
                 });
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
@@ -36,7 +36,8 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void ThrowsIfNameIsNullOrEmpty() {
+            public void ThrowsIfNameIsNullOrEmpty()
+            {
                 var repository = new InMemoryRepository();
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
@@ -45,7 +46,8 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void ThrowsIfPasswordIsTooShort() {
+            public void ThrowsIfPasswordIsTooShort()
+            {
                 var repository = new InMemoryRepository();
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
@@ -53,7 +55,8 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void AddsUserToRepository() {
+            public void AddsUserToRepository()
+            {
                 var crypto = new Mock<ICryptoService>();
                 crypto.Setup(c => c.CreateSalt()).Returns("salted");
                 var repository = new InMemoryRepository();
@@ -69,11 +72,14 @@ namespace JabbR.Test {
             }
         }
 
-        public class ChangeUserName {
+        public class ChangeUserName
+        {
             [Fact]
-            public void ThrowsIfNameIsInvalid() {
+            public void ThrowsIfNameIsInvalid()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "Test"
                 };
                 repository.Add(user);
@@ -83,13 +89,16 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void ThrowsIfNameIsTaken() {
+            public void ThrowsIfNameIsTaken()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "Test"
                 };
                 repository.Add(user);
-                repository.Add(new ChatUser() {
+                repository.Add(new ChatUser()
+                {
                     Name = "taken"
                 });
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
@@ -98,9 +107,11 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void ThrowsIfUserNameIsSame() {
+            public void ThrowsIfUserNameIsSame()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "Test"
                 };
                 repository.Add(user);
@@ -110,9 +121,11 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void UpdatesUserName() {
+            public void UpdatesUserName()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "Test"
                 };
                 repository.Add(user);
@@ -124,11 +137,14 @@ namespace JabbR.Test {
             }
         }
 
-        public class ChangeUserPassword {
+        public class ChangeUserPassword
+        {
             [Fact]
-            public void ThrowsUserPasswordDoesNotMatchOldPassword() {
+            public void ThrowsUserPasswordDoesNotMatchOldPassword()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "Test",
                     Salt = "salt",
                     HashedPassword = "password".ToSha256("salt")
@@ -140,9 +156,11 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void ThrowsIfNewPasswordIsNull() {
+            public void ThrowsIfNewPasswordIsNull()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "Test",
                     Salt = "salt",
                     HashedPassword = "password".ToSha256("salt")
@@ -154,9 +172,11 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void UpatesUserPassword() {
+            public void UpatesUserPassword()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "Test",
                     Salt = "pepper",
                     HashedPassword = "password".ToSha256("pepper")
@@ -170,11 +190,13 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void EnsuresSaltedPassword() {
+            public void EnsuresSaltedPassword()
+            {
                 var crypto = new Mock<ICryptoService>();
                 crypto.Setup(c => c.CreateSalt()).Returns("salt");
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "Test",
                     Salt = null,
                     HashedPassword = "password".ToSha256(null)
@@ -189,9 +211,11 @@ namespace JabbR.Test {
             }
         }
 
-        public class AuthenticateUser {
+        public class AuthenticateUser
+        {
             [Fact]
-            public void ThrowsIfUserDoesNotExist() {
+            public void ThrowsIfUserDoesNotExist()
+            {
                 var repository = new InMemoryRepository();
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
@@ -199,9 +223,11 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void ThrowsIfUserPasswordDoesNotMatch() {
+            public void ThrowsIfUserPasswordDoesNotMatch()
+            {
                 var repository = new InMemoryRepository();
-                repository.Add(new ChatUser {
+                repository.Add(new ChatUser
+                {
                     Name = "foo",
                     Salt = "salt",
                     HashedPassword = "passwords".ToSha256("salt")
@@ -212,9 +238,11 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void ThrowsIfUserPasswordNotSet() {
+            public void ThrowsIfUserPasswordNotSet()
+            {
                 var repository = new InMemoryRepository();
-                repository.Add(new ChatUser {
+                repository.Add(new ChatUser
+                {
                     Name = "foo"
                 });
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
@@ -223,9 +251,11 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void DoesNotThrowIfPasswordsMatch() {
+            public void DoesNotThrowIfPasswordsMatch()
+            {
                 var repository = new InMemoryRepository();
-                repository.Add(new ChatUser {
+                repository.Add(new ChatUser
+                {
                     Name = "foo",
                     HashedPassword = "3049a1f8327e0215ea924b9e4e04cd4b0ff1800c74a536d9b81d3d8ced9994d3"
                 });
@@ -234,9 +264,11 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void DoesNotThrowIfSaltedPasswordsMatch() {
+            public void DoesNotThrowIfSaltedPasswordsMatch()
+            {
                 var repository = new InMemoryRepository();
-                repository.Add(new ChatUser {
+                repository.Add(new ChatUser
+                {
                     Name = "foo",
                     Salt = "salted",
                     HashedPassword = "8f5793009fe15c2227e3528d0507413a83dff10635d3a6acf1ba3229a03380d8"
@@ -246,11 +278,13 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void EnsuresStoredPasswordIsSalted() {
+            public void EnsuresStoredPasswordIsSalted()
+            {
                 var crypto = new Mock<ICryptoService>();
                 crypto.Setup(c => c.CreateSalt()).Returns("salted");
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo",
                     HashedPassword = "3049a1f8327e0215ea924b9e4e04cd4b0ff1800c74a536d9b81d3d8ced9994d3"
                 };
@@ -264,10 +298,13 @@ namespace JabbR.Test {
             }
         }
 
-        public class AddRoom {
-            public void ThrowsIfRoomNameIsLobby() {
+        public class AddRoom
+        {
+            public void ThrowsIfRoomNameIsLobby()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo"
                 };
                 repository.Add(user);
@@ -277,9 +314,11 @@ namespace JabbR.Test {
                 Assert.Throws<InvalidOperationException>(() => service.AddRoom(user, "LObbY"));
             }
 
-            public void ThrowsIfRoomNameInvalid() {
+            public void ThrowsIfRoomNameInvalid()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo"
                 };
                 repository.Add(user);
@@ -288,9 +327,11 @@ namespace JabbR.Test {
                 Assert.Throws<InvalidOperationException>(() => service.AddRoom(user, "Invalid name"));
             }
 
-            public void AddsUserAsCreatorAndOwner() {
+            public void AddsUserAsCreatorAndOwner()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo"
                 };
                 repository.Add(user);
@@ -307,15 +348,19 @@ namespace JabbR.Test {
             }
         }
 
-        public class JoinRoom {
+        public class JoinRoom
+        {
             [Fact]
-            public void AddsUserToRoom() {
+            public void AddsUserToRoom()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo"
                 };
                 repository.Add(user);
-                var room = new ChatRoom {
+                var room = new ChatRoom
+                {
                     Name = "Room"
                 };
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
@@ -327,10 +372,13 @@ namespace JabbR.Test {
             }
         }
 
-        public class UpdateActivity {
-            public void UpdatesStatus() {
+        public class UpdateActivity
+        {
+            public void UpdatesStatus()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo",
                     Status = (int)UserStatus.Inactive
                 };
@@ -343,15 +391,19 @@ namespace JabbR.Test {
             }
         }
 
-        public class LeaveRoom {
+        public class LeaveRoom
+        {
             [Fact]
-            public void RemovesUserFromRoom() {
+            public void RemovesUserFromRoom()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo"
                 };
                 repository.Add(user);
-                var room = new ChatRoom {
+                var room = new ChatRoom
+                {
                     Name = "Room"
                 };
                 room.Users.Add(user);
@@ -366,15 +418,19 @@ namespace JabbR.Test {
             }
         }
 
-        public class AddMessage {
+        public class AddMessage
+        {
             [Fact]
-            public void AddsNewMessageToRepository() {
+            public void AddsNewMessageToRepository()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo"
                 };
                 repository.Add(user);
-                var room = new ChatRoom {
+                var room = new ChatRoom
+                {
                     Name = "Room"
                 };
                 repository.Add(room);
@@ -390,14 +446,18 @@ namespace JabbR.Test {
             }
         }
 
-        public class AddOwner {
-            public void ThrowsIfUserIsNotOwner() {
+        public class AddOwner
+        {
+            public void ThrowsIfUserIsNotOwner()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo"
                 };
                 repository.Add(user);
-                var room = new ChatRoom {
+                var room = new ChatRoom
+                {
                     Name = "Room"
                 };
                 room.Users.Add(user);
@@ -408,13 +468,16 @@ namespace JabbR.Test {
                 Assert.Throws<InvalidOperationException>(() => service.AddOwner(user, user, room));
             }
 
-            public void ThrowsIfUserIsAlreadyAnOwner() {
+            public void ThrowsIfUserIsAlreadyAnOwner()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo"
                 };
                 repository.Add(user);
-                var room = new ChatRoom {
+                var room = new ChatRoom
+                {
                     Name = "Room"
                 };
                 room.Users.Add(user);
@@ -427,17 +490,21 @@ namespace JabbR.Test {
                 Assert.Throws<InvalidOperationException>(() => service.AddOwner(user, user, room));
             }
 
-            public void MakesUserOwner() {
+            public void MakesUserOwner()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo"
                 };
-                var user2 = new ChatUser {
+                var user2 = new ChatUser
+                {
                     Name = "foo2"
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var room = new ChatRoom {
+                var room = new ChatRoom
+                {
                     Name = "Room",
                     Creator = user
                 };
@@ -455,14 +522,18 @@ namespace JabbR.Test {
             }
         }
 
-        public class KickUser {
-            public void ThrowsIfKickSelf() {
+        public class KickUser
+        {
+            public void ThrowsIfKickSelf()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo"
                 };
                 repository.Add(user);
-                var room = new ChatRoom {
+                var room = new ChatRoom
+                {
                     Name = "Room",
                     Creator = user
                 };
@@ -476,19 +547,23 @@ namespace JabbR.Test {
                 Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user, room));
             }
 
-            public void ThrowsIfUserIsNotOwner() {
+            public void ThrowsIfUserIsNotOwner()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo"
                 };
 
-                var user2 = new ChatUser {
+                var user2 = new ChatUser
+                {
                     Name = "foo2"
                 };
 
                 repository.Add(user);
                 repository.Add(user2);
-                var room = new ChatRoom {
+                var room = new ChatRoom
+                {
                     Name = "Room",
                 };
 
@@ -502,19 +577,23 @@ namespace JabbR.Test {
                 Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
             }
 
-            public void ThrowsIfTargetUserNotInRoom() {
+            public void ThrowsIfTargetUserNotInRoom()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo"
                 };
 
-                var user2 = new ChatUser {
+                var user2 = new ChatUser
+                {
                     Name = "foo2"
                 };
 
                 repository.Add(user);
                 repository.Add(user2);
-                var room = new ChatRoom {
+                var room = new ChatRoom
+                {
                     Name = "Room",
                     Creator = user
                 };
@@ -528,19 +607,23 @@ namespace JabbR.Test {
                 Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
             }
 
-            public void ThrowsIfOwnerTriesToRemoveOwner() {
+            public void ThrowsIfOwnerTriesToRemoveOwner()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo"
                 };
 
-                var user2 = new ChatUser {
+                var user2 = new ChatUser
+                {
                     Name = "foo2"
                 };
 
                 repository.Add(user);
                 repository.Add(user2);
-                var room = new ChatRoom {
+                var room = new ChatRoom
+                {
                     Name = "Room",
                 };
                 user.OwnedRooms.Add(room);
@@ -559,19 +642,23 @@ namespace JabbR.Test {
                 Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
             }
 
-            public void DoesNotThrowIfCreatorKicksOwner() {
+            public void DoesNotThrowIfCreatorKicksOwner()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo"
                 };
 
-                var user2 = new ChatUser {
+                var user2 = new ChatUser
+                {
                     Name = "foo2"
                 };
 
                 repository.Add(user);
                 repository.Add(user2);
-                var room = new ChatRoom {
+                var room = new ChatRoom
+                {
                     Name = "Room",
                     Creator = user
                 };
@@ -595,20 +682,25 @@ namespace JabbR.Test {
             }
         }
 
-        public class DisconnectClient {
+        public class DisconnectClient
+        {
             [Fact]
-            public void RemovesClientFromUserClientList() {
+            public void RemovesClientFromUserClientList()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo",
                     Status = (int)UserStatus.Inactive
                 };
-                user.ConnectedClients.Add(new ChatClient {
+                user.ConnectedClients.Add(new ChatClient
+                {
                     Id = "foo",
                     User = user
                 });
 
-                user.ConnectedClients.Add(new ChatClient {
+                user.ConnectedClients.Add(new ChatClient
+                {
                     Id = "bar",
                     User = user
                 });
@@ -623,13 +715,16 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void MarksUserAsOfflineIfNoMoreClients() {
+            public void MarksUserAsOfflineIfNoMoreClients()
+            {
                 var repository = new InMemoryRepository();
-                var user = new ChatUser {
+                var user = new ChatUser
+                {
                     Name = "foo",
                     Status = (int)UserStatus.Inactive
                 };
-                user.ConnectedClients.Add(new ChatClient {
+                user.ConnectedClients.Add(new ChatClient
+                {
                     Id = "foo",
                     User = user
                 });
@@ -644,7 +739,8 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void ReturnsNullIfNoUserForClientId() {
+            public void ReturnsNullIfNoUserForClientId()
+            {
                 var repository = new InMemoryRepository();
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
@@ -652,19 +748,20 @@ namespace JabbR.Test {
 
                 Assert.Null(user);
             }
-
         }
 
         public class ParseChatMessage {
 
-            public Regex HashtagRegex() {
+            public Regex HashtagRegex() 
+            {
                 return new Regex(TextTransform.HashTagPattern);
             }
 
-            public IJabbrRepository CreateRoomRepository() {
+            public IJabbrRepository CreateRoomRepository() 
+            {
                 var repository = new InMemoryRepository();
-                var room = new ChatRoom() {Name = "hashtag"};
-                var user = new ChatUser() {Name = "testhashtaguser"};
+                var room = new ChatRoom() { Name = "hashtag" };
+                var user = new ChatUser() { Name = "testhashtaguser" };
                 repository.Add(room);
                 room.Users.Add(user);
                 user.Rooms.Add(room);
@@ -673,7 +770,8 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void HashtagRegexMatchesHashtagString() {
+            public void HashtagRegexMatchesHashtagString() 
+            {
                 Regex hashtagRegex = HashtagRegex();
 
                 var result = hashtagRegex.IsMatch("#hashtag");
@@ -682,7 +780,8 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void HashtagRegexMatchesHashtagInSubstring() {
+            public void HashtagRegexMatchesHashtagInSubstring() 
+            {
                 Regex hashtagRegex = HashtagRegex();
 
                 var result = hashtagRegex.IsMatch("this #hashtag is in the middle of the string");
@@ -691,7 +790,8 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void HashtagRegexDoesNotMatchInStringWithoutHashtag() {
+            public void HashtagRegexDoesNotMatchInStringWithoutHashtag() 
+            {
                 Regex hashtagRegex = HashtagRegex();
 
                 var result = hashtagRegex.IsMatch("this hashtag is in the middle of the string");
@@ -710,7 +810,8 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void StringWithHashtagModifiesHashtagToRoomLink() {
+            public void StringWithHashtagModifiesHashtagToRoomLink() 
+            {
                 IJabbrRepository repository = CreateRoomRepository();
                 string expected = "<a href=\"#/rooms/hashtag\" title=\"#hashtag\">#hashtag</a>";
 
@@ -721,7 +822,8 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void StringWithHashtagButRoomDoesntExistDoesNotModifyMessage() {
+            public void StringWithHashtagButRoomDoesntExistDoesNotModifyMessage() 
+            {
                 IJabbrRepository repository = CreateRoomRepository();
 
                 TextTransform transform = new TextTransform(repository);
@@ -731,6 +833,7 @@ namespace JabbR.Test {
             }
 
         }
-    }
 
+    }
 }
+
