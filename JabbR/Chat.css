@@ -252,6 +252,10 @@ li.room:hover {
     padding: 5px;
 }
 
+.notification .content {
+    margin-right: 95px;
+}
+
 .message {
     border-bottom: 1px solid #eee;
 }
@@ -272,7 +276,7 @@ li.room:hover {
 }
 
 .message .middle {
-    margin-right: 85px;
+    margin-right: 95px;
     padding: 5px;
     word-wrap: break-word;
 }
@@ -282,7 +286,7 @@ li.room:hover {
     padding: 5px;
     top: 0px;
     right: 0px;
-    width: 75px;
+    width: 85px;
 }
 
 .messages li .right .time {
@@ -315,10 +319,8 @@ li.room:hover {
 }
 
 .message-separator {
-    height: 8px;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#164c85', endColorstr='#eeeeee'); /* for IE */
-    background: -webkit-gradient(linear, left top, left bottom, from(#164c85), to(#eee)); /* for webkit browsers */
-    background: -moz-linear-gradient(top,  #164c85,  #eee); /* for firefox 3.6+ */
+    height: 2px;
+    background-color: #164c85;
 }
 
 /* This stuff is to support TweetContentProvider, but should be extracted out if other content providers need custom CSS */
