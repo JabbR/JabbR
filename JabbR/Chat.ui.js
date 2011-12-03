@@ -59,11 +59,13 @@
         };
 
         this.scrollToSeparator = function () {
-            var $e = this.messages.find('.message-separator');
+            var $e = this.messages.find('.message-separator'),
                 top = $e.position().top,
                 height = this.messages.height()
 
-            this.messages.scrollTop(top - height);
+            if (top > height) {
+                this.messages.scrollTop(top - height);
+            }
         };
 
         this.scrollToBottom = function () {
