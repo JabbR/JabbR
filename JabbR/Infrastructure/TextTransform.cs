@@ -15,7 +15,7 @@ namespace JabbR.Infrastructure {
 
         public TextTransform(IJabbrRepository repository) 
         {
-            this._repository = repository;
+            _repository = repository;
         }
 
         public string Parse(string message) 
@@ -27,13 +27,16 @@ namespace JabbR.Infrastructure {
         {
 
             message = Regex.Replace(message, HashTagPattern, m => {
-                string roomName = m.Groups[1].Value; /* hashtag without #*/
+                //hashtag without #
+                string roomName = m.Groups[1].Value;
 
-                if (_repository.GetRoomByName(roomName) != null) {
-                    return string.Format(CultureInfo.InvariantCulture,
+                var room = _repository.GetRoomByName(roomName);
+
+                if (room != null) {
+                    return String.Format(CultureInfo.InvariantCulture,
                                          "<a href=\"#/rooms/{0}\" title=\"{1}\">{1}</a>",
                                          roomName,
-                                         m.Value /* full match */);
+                                         m.Value);
                 }
 
                 return m.Value;

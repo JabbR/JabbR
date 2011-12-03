@@ -126,7 +126,7 @@ namespace JabbR
 
         private string ParseChatMessageText(string content, out HashSet<string> links) 
         {
-            TextTransform textTransform = new TextTransform(this._repository);
+            TextTransform textTransform = new TextTransform(_repository);
             string message = textTransform.Parse(content);
             return Transform(message, out links);
         }
