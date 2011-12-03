@@ -214,6 +214,7 @@
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="ContentProviders\VimeoContentProvider.cs" />
+    <Compile Include="ContentProviders\GoogleDocsFormProvider.cs" />
     <Compile Include="ContentProviders\SlideshareContentProvider.cs" />
     <Compile Include="ContentProviders\ResourceProcessor.cs" />
     <Compile Include="ContentProviders\GistContentProvider.cs" />
