@@ -1,33 +1,27 @@
-﻿
-
-using System;
-using System.IO;
-using System.Net;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Web;
+﻿using System.Text.RegularExpressions;
 
 namespace JabbR.ContentProviders
 {
     public class VimeoContentProvider : EmbedContentProvider
     {
-        protected override IEnumerable<object> ExtractParameters(Uri responseUri)
+        private static readonly Regex _vimeoIdRegex = new Regex(@"(\d+)");
+
+        public override System.Text.RegularExpressions.Regex MediaUrlRegex
         {
-            if (responseUri.Segments.Length > 1)
+            get
             {
-                string videoId = responseUri.Segments[1];
-                if (!String.IsNullOrEmpty(videoId))
-                {
-                    yield return videoId;
-                }
+                return _vimeoIdRegex;
             }
-            yield return "";
         }
 
 
         public override System.Collections.Generic.IEnumerable<string> Domains
         {
-            get { return new String[] { "http://vimeo.com", "http://www.vimeo.com" }; }
+            get
+            {
+                yield return "http://vimeo.com";
+                yield return "http://www.vimeo.com";
+            }
         }
 
         public override string MediaFormatString
