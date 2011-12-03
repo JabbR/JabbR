@@ -32,8 +32,6 @@ namespace JabbR.ContentProviders
             return null;
         }
 
-        protected override abstract string GetTitle(HttpWebResponse response);
-
         protected override string GetCollapsibleContent(HttpWebResponse response)
         {
             var args = ExtractParameters(response.ResponseUri);
