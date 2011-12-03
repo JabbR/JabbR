@@ -19,8 +19,8 @@ namespace JabbR.ContentProviders
         {
             get
             {
-                yield return "https://docs.google.com";
-                yield return "http://docs.google.com";
+                yield return "https://docs.google.com/spreadsheet";
+                yield return "http://docs.google.com/spreadsheet";
             }
         }
 
