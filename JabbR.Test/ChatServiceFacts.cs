@@ -748,5 +748,7 @@ namespace JabbR.Test
                 Assert.Null(user);
             }
         }
+
     }
 }
+

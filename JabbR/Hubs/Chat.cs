@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using JabbR.Commands;
 using JabbR.ContentProviders;
+using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
@@ -106,7 +107,7 @@ namespace JabbR
             UpdateActivity(user, room);
 
             HashSet<string> links;
-            var messageText = Transform(content, out links);
+            var messageText = ParseChatMessageText(content, out links);
 
             ChatMessage chatMessage = _service.AddMessage(user, room, messageText);
 
@@ -121,6 +122,13 @@ namespace JabbR
             }
 
             ProcessUrls(links, room, chatMessage);
+        }
+
+        private string ParseChatMessageText(string content, out HashSet<string> links) 
+        {
+            TextTransform textTransform = new TextTransform(_repository);
+            string message = textTransform.Parse(content);
+            return Transform(message, out links);
         }
 
         public void Disconnect()
