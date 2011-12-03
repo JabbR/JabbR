@@ -355,6 +355,11 @@ namespace JabbR.Commands
 
         private void HandleCreate(ChatUser user, string[] parts)
         {
+            if (parts.Length > 2)
+            {
+                throw new InvalidOperationException("Room name cannot contain spaces.");
+            }
+
             if (parts.Length == 1)
             {
                 throw new InvalidOperationException("No room specified.");

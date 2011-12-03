@@ -529,6 +529,28 @@ namespace JabbR.Test
             }
 
             [Fact]
+            public void CreateRoomFailsIfRoomNameContainsSpaces()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/create Test Room"));
+            }
+
+            [Fact]
             public void CanCreateRoomAndJoinsAutomaticly()
             {
                 var repository = new InMemoryRepository();
