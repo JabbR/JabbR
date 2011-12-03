@@ -59,12 +59,19 @@
         };
 
         this.scrollToSeparator = function () {
-            var $e = this.messages.find('.message-separator'),
-                top = $e.position().top,
+            var $e = this.messages.find('.message-separator');
+
+            var top = $e.position().top,
+                scrollHeight = this.messages[0].scrollHeight,
+                scrollTop = this.messages.scrollTop(),
                 height = this.messages.height()
 
-            if (top > height) {
-                this.messages.scrollTop(top - height);
+            // keep separator scrolled half way in message list
+            if (top < 0) {
+                this.messages.scrollTop(scrollTop + top - (height / 2));
+            }
+            else if (top > height / 2) {
+                this.messages.scrollTop(scrollHeight - (height / 2));
             }
         };
 
