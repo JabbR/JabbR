@@ -220,8 +220,11 @@
   <ItemGroup>
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="Commands\CommandManager.cs" />
+<<<<<<< HEAD
     <Compile Include="ContentProviders\GoogleDocsPresentationsContentProvider.cs" />
+=======
     <Compile Include="ContentProviders\NerdDinnerContentProvider.cs" />
+>>>>>>> add-nerddinner-content-provider
     <Compile Include="ContentProviders\VimeoContentProvider.cs" />
     <Compile Include="ContentProviders\GoogleDocsFormProvider.cs" />
     <Compile Include="ContentProviders\SlideshareContentProvider.cs" />
