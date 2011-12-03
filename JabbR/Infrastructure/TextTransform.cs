@@ -12,7 +12,6 @@ namespace JabbR.Infrastructure {
     {
         private readonly IJabbrRepository _repository;
         public const string HashTagPattern = @"(?:(?<=\s)|^)#([A-Za-z0-9-_.]{1,30}\w*)";
-        //public const string HashTagPattern = @"(?:(?<=\s)|^)#(\w*[A-Za-z_-]+\w*)";
 
         public TextTransform(IJabbrRepository repository) 
         {
