@@ -60,19 +60,10 @@
 
         this.scrollToSeparator = function () {
             var $e = this.messages.find('.message-separator');
-
-            var top = $e.position().top,
-                scrollHeight = this.messages[0].scrollHeight,
-                scrollTop = this.messages.scrollTop(),
+                top = $e.position().top,
                 height = this.messages.height()
 
-            // keep separator scrolled half way in message list
-            if (top < 0) {
-                this.messages.scrollTop(scrollTop + top - (height / 2));
-            }
-            else if (top > height / 2) {
-                this.messages.scrollTop(scrollHeight - (height / 2));
-            }
+            this.messages.scrollTop(top - height);
         };
 
         this.scrollToBottom = function () {
@@ -244,7 +235,7 @@
 
         // remove separator once use has scrolled to bottom of messages list
         if ($(this).isNearTheEnd() && room.hasSeparator() && room.isActive() && ui.hasFocus()) {
-            $(this).find('.message-separator').animate({ height: 0 }, 500, function () {
+            $(this).find('.message-separator').fadeOut(2000, function () {
                 $(this).remove();
             });
         }
@@ -427,8 +418,7 @@
         scrollToBottom: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
 
-            if (room.hasSeparator() && room.isActive()) {
-                // scoll to separator
+            if (room.isActive() && room.hasSeparator()) {
                 room.scrollToSeparator();
                 return;
             }
@@ -565,7 +555,6 @@
             }
 
             var $e = templates.message.tmpl(message).appendTo(room.messages);
-
         },
         addChatMessageContent: function (id, content, roomName) {
             var $message = $('#m-' + id);
