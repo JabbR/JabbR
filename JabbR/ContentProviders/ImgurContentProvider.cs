@@ -5,12 +5,7 @@ using System.Net;
 namespace JabbR.ContentProviders
 {
     public class ImgurContentProvider : CollapsibleContentProvider
-    {
-        protected override string GetTitle(HttpWebResponse response)
-        {
-            return response.ResponseUri.ToString();
-        }
-
+    {        
         protected override string GetCollapsibleContent(HttpWebResponse response)
         {
             string id = response.ResponseUri.AbsoluteUri.Split('/').Last();

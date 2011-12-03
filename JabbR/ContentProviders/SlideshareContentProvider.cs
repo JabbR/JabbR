@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Linq;
+using System.IO;
 using System.Net;
-using System.Text.RegularExpressions;
-using System.Web;
 using Newtonsoft.Json;
 
 namespace JabbR.ContentProviders
@@ -12,36 +10,33 @@ namespace JabbR.ContentProviders
     /// slideshare link (eg. http://www.slideshare.net/verticalmeasures/search-social-and-content-marketing-move-your-business-forward-accelerate). 
     /// Send feedback/issues to Seth Webster (@sethwebsterDanTup on Twitter).
     /// </summary>
-    public class SlideShareContentProvider : IContentProvider
+    public class SlideShareContentProvider : CollapsibleContentProvider
     {
-        private static readonly string oEmbedUrl = "http://www.slideshare.net/api/oembed/2?url={0}&format=json";
+        private static readonly String _oEmbedUrl = "http://www.slideshare.net/api/oembed/2?url={0}&format=json";
 
-        public string GetContent(HttpWebResponse response)
+        protected override string GetCollapsibleContent(HttpWebResponse response)
         {
-            if (response.ResponseUri.AbsoluteUri.StartsWith("http://slideshare.net/", StringComparison.OrdinalIgnoreCase)
-              || response.ResponseUri.AbsoluteUri.StartsWith("http://www.slideshare.net/", StringComparison.OrdinalIgnoreCase))
-            {
-                using (WebClient client = new WebClient())
-                {
-                    try
-                    {
-                        dynamic slideShareData = JsonConvert.DeserializeObject
-                                   (
-                                       client.DownloadString
-                                       (
-                                           string.Format(oEmbedUrl, response.ResponseUri.AbsoluteUri)
-                                       )
-                                   );
-                        return slideShareData.html;
+            // We have to make a call to the SlideShare api because
+            // their embed code request the unique ID of the slide deck
+            // where we will only have the url -- this call gets the json information
+            // on the slide deck and that package happens to already contain the embed code (.html)
+            var webRequest = (HttpWebRequest)HttpWebRequest.Create(
+                    String.Format(_oEmbedUrl, response.ResponseUri.AbsoluteUri));
 
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
-                    }
+            using (var webResponse = webRequest.GetResponse())
+            {
+                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                {
+                    dynamic slideShareData = JsonConvert.DeserializeObject(reader.ReadToEnd());
+                    return slideShareData.html;
                 }
             }
-            return null;
+        }
+
+        protected override bool IsValidContent(HttpWebResponse response)
+        {
+            return response.ResponseUri.AbsoluteUri.StartsWith("http://slideshare.net/", StringComparison.OrdinalIgnoreCase)
+               || response.ResponseUri.AbsoluteUri.StartsWith("http://www.slideshare.net/", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

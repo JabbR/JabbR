@@ -35,11 +35,6 @@ namespace JabbR.ContentProviders
             }
         }
 
-        protected override string GetTitle(HttpWebResponse response)
-        {
-            return response.ResponseUri.ToString();
-        }
-
         protected override bool IsCollapsible { get { return false; } }
 
         private const string ScriptTagFormat = @"
