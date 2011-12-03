@@ -8,19 +8,23 @@ using JabbR.Models;
 
 namespace JabbR.Infrastructure {
 
-    public class TextTransform {
+    public class TextTransform 
+    {
         private readonly IJabbrRepository _repository;
         public const string HashTagPattern = @"(?:(?<=\s)|^)#(\w*[A-Za-z_]+\w*)";
 
-        public TextTransform(IJabbrRepository repository) {
+        public TextTransform(IJabbrRepository repository) 
+        {
             this._repository = repository;
         }
 
-        public string Parse(string message) {
+        public string Parse(string message) 
+        {
             return ConvertHashtagsToRoomLinks(message);
         }
 
-        private string ConvertHashtagsToRoomLinks(string message) {
+        private string ConvertHashtagsToRoomLinks(string message) 
+        {
 
             message = Regex.Replace(message, HashTagPattern, m => {
                 string roomName = m.Groups[1].Value; /* hashtag without #*/
