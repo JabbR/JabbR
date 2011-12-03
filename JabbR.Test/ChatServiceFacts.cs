@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
