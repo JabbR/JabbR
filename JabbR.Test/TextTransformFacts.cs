@@ -37,7 +37,17 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void HashtagRegexMatchesHashtagInSubstring()
+            public void HashtagRegexMatchesHashtagWithDashString()
+            {
+                Regex hashtagRegex = HashtagRegex();
+
+                var result = hashtagRegex.IsMatch("#dash-tag");
+
+                Assert.True(result);
+            }
+
+            [Fact]
+            public void HashtagRegexMatchesHashtagInSubstring() 
             {
                 Regex hashtagRegex = HashtagRegex();
 
