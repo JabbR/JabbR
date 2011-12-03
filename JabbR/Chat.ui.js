@@ -58,23 +58,6 @@
             $tab.data('hasMentions', hasMentions);
         };
 
-        this.scrollToSeparator = function () {
-            var $e = this.messages.find('.message-separator');
-
-            var top = $e.position().top,
-                scrollHeight = this.messages[0].scrollHeight,
-                scrollTop = this.messages.scrollTop(),
-                height = this.messages.height()
-
-            // keep separator scrolled half way in message list
-            if (top < 0) {
-                this.messages.scrollTop(scrollTop + top - (height / 2));
-            }
-            else if (top > height / 2) {
-                this.messages.scrollTop(scrollHeight - (height / 2));
-            }
-        };
-
         this.scrollToBottom = function () {
             this.messages.scrollTop(this.messages[0].scrollHeight);
         };
@@ -123,9 +106,6 @@
 
             this.users.addClass('current')
                       .show();
-
-            // force scroll handling
-            this.messages.scroll();
 
         };
 
@@ -190,8 +170,7 @@
         $('<ul/>').attr('id', 'messages-' + roomId)
                   .addClass('messages')
                   .appendTo($chatArea)
-                  .hide()
-                  .scroll(handleScroll);
+                  .hide();
 
 
         $('<ul/>').attr('id', 'users-' + roomId)
@@ -394,8 +373,6 @@
             if (room.isActive()) {
                 // Still trigger the event (just do less overall work)
                 $(ui).trigger('ui.activeRoomChanged', [roomName]);
-                // force scoll logic
-                room.messages.scroll();
                 return true;
             }
 
@@ -426,11 +403,6 @@
         },
         scrollToBottom: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
-
-            if (room.isActive() && room.hasSeparator()) {
-                room.scrollToSeparator();
-                return;
-            }
 
             if (room.isActive()) {
                 room.scrollToBottom();
@@ -559,10 +531,6 @@
                 $previousMessage.addClass('continue');
             }
 
-            if (room.needsSeparator(ui.hasFocus())) {
-                ui.addSeparator(roomName);
-            }
-
             var $e = templates.message.tmpl(message).appendTo(room.messages);
         },
         addChatMessageContent: function (id, content, roomName) {
@@ -582,10 +550,6 @@
                     when: now.formatTime(true),
                     fulldate: now.formatDate() + ' ' + now.formatTime(true)
                 };
-
-            if (room.needsSeparator(ui.hasFocus())) {
-                ui.addSeparator(roomName);
-            }
 
             $element = templates.notification.tmpl(message).appendTo(room.messages);
 
