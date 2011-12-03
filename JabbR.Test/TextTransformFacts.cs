@@ -29,7 +29,7 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void HashtagRegexMatchesHashtagString() 
+            public void HashtagRegexMatchesHashtagString()
             {
                 Regex hashtagRegex = HashtagRegex();
 
@@ -37,7 +37,7 @@ namespace JabbR.Test {
 
                 Assert.True(result);
             }
-
+            
             [Fact]
             public void HashtagRegexMatchesHashtagInSubstring() 
             {
