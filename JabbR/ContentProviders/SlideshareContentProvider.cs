@@ -16,36 +16,31 @@ namespace JabbR.ContentProviders
     public class SlideShareContentProvider : CollapsibleContentProvider
     {
         private static readonly String _oEmbedUrl = "http://www.slideshare.net/api/oembed/2?url={0}&format=json";
-        private dynamic _slideShareData;
-
+       
         protected override string GetTitle(HttpWebResponse response)
         {
-            EnsureSlideShareData(response);
-            return _slideShareData.title;
+            return response.ResponseUri.AbsoluteUri.ToString();
         }
 
         protected override string GetCollapsibleContent(HttpWebResponse response)
         {
-            EnsureSlideShareData(response);
-            return _slideShareData.html;
+            return FetchSlideShareData(response).html;
         }
 
-        private void EnsureSlideShareData(HttpWebResponse response)
+        private dynamic FetchSlideShareData(HttpWebResponse response)
         {
-            if (null == _slideShareData)
+            // We have to make a call to the SlideShare api because
+            // their embed code request the unique ID of the slide deck
+            // where we will only have the url -- this call gets the json information
+            // on the slide deck and that package happens to already contain the embed code (.html)
+            var webRequest = (HttpWebRequest)HttpWebRequest.Create(
+                    String.Format(_oEmbedUrl, response.ResponseUri.AbsoluteUri));
+            var webResponse = webRequest.GetResponse();
+            using (var reader = new StreamReader(webResponse.GetResponseStream()))
             {
-                // We have to make a call to the SlideShare api because
-                // their embed code request the unique ID of the slide deck
-                // where we will only have the url -- this call gets the json information
-                // on the slide deck and that package happens to already contain the embed code (.html)
-                var webRequest = (HttpWebRequest)HttpWebRequest.Create(
-                        String.Format(_oEmbedUrl, response.ResponseUri.AbsoluteUri));
-                var webResponse = webRequest.GetResponse();
-                using (var reader = new StreamReader(webResponse.GetResponseStream()))
-                {
-                    _slideShareData = JsonConvert.DeserializeObject(reader.ReadToEnd());
-                }
+                return JsonConvert.DeserializeObject(reader.ReadToEnd());
             }
+
         }
 
         protected override bool IsValidContent(HttpWebResponse response)
