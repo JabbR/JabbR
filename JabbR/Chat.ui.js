@@ -40,7 +40,7 @@
         };
 
         this.needsSeparator = function (focus) {
-            if (this.isActive() && ui.focus === true) {
+            if (this.isActive()) {
                 return false;
             }
             return this.hasSeparator() === false;
@@ -56,23 +56,6 @@
 
             $tab.data('unread', unread);
             $tab.data('hasMentions', hasMentions);
-        };
-
-        this.scrollToSeparator = function () {
-            var $e = this.messages.find('.message-separator');
-
-            var top = $e.position().top,
-                scrollHeight = this.messages[0].scrollHeight,
-                scrollTop = this.messages.scrollTop(),
-                height = this.messages.height()
-
-            // keep separator scrolled half way in message list
-            if (top < 0) {
-                this.messages.scrollTop(scrollTop + top - (height / 2));
-            }
-            else if (top > height / 2) {
-                this.messages.scrollTop(scrollHeight - (height / 2));
-            }
         };
 
         this.scrollToBottom = function () {
@@ -123,9 +106,6 @@
 
             this.users.addClass('current')
                       .show();
-
-            // force scroll handling
-            this.messages.scroll();
 
         };
 
@@ -190,10 +170,7 @@
         $('<ul/>').attr('id', 'messages-' + roomId)
                   .addClass('messages')
                   .appendTo($chatArea)
-                  .hide()
-                  // add scroll hander to each messages list because
-                  // global handler doesn't always trigger
-                  .scroll(handleScroll);
+                  .hide();
 
 
         $('<ul/>').attr('id', 'users-' + roomId)
@@ -222,9 +199,16 @@
     }
 
     function setAccessKeys() {
-        $.each($tabs.find('li'), function (index, item) {
-            $(item).children('button:first-child').attr('accesskey', index);
+        $.each($tabs.find('li.room'), function (index, item) {
+            $(item).children('button:first-child').attr('accesskey', getRoomAccessKey(index));
         });
+    }
+
+    function getRoomAccessKey(index) {
+        if (index < 10) {
+            return index + 1;
+        }
+        return 0;
     }
 
     function navigateToRoom(roomName) {
@@ -239,7 +223,7 @@
 
         // remove separator once use has scrolled to bottom of messages list
         if ($(this).isNearTheEnd() && room.hasSeparator() && room.isActive() && ui.hasFocus()) {
-            $(this).find('.message-separator').fadeOut(1500, function () {
+            $(this).find('.message-separator').fadeOut(2000, function () {
                 $(this).remove();
             });
         }
@@ -312,6 +296,7 @@
 
                 $newMessage.val('');
                 $newMessage.focus();
+                ui.focus = true;
 
                 // always scroll to bottom after new message sent
                 var room = getCurrentRoomElements();
@@ -388,8 +373,6 @@
             if (room.isActive()) {
                 // Still trigger the event (just do less overall work)
                 $(ui).trigger('ui.activeRoomChanged', [roomName]);
-                // force scoll logic
-                room.messages.scroll();
                 return true;
             }
 
@@ -398,6 +381,7 @@
             if (room.exists() && currentRoom.exists()) {
                 var hasUnread = room.hasUnread();
                 currentRoom.makeInactive();
+                ui.focus = true;
                 room.makeActive();
 
                 app.setLocation('#/rooms/' + roomName);
@@ -411,7 +395,7 @@
         updateUnread: function (roomName, isMentioned) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
 
-            if (ui.focus && room.isActive()) {
+            if (ui.hasFocus() && room.isActive()) {
                 return;
             }
 
@@ -420,13 +404,7 @@
         scrollToBottom: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
 
-            if (room.hasSeparator()) {
-                // scoll to separator
-                room.scrollToSeparator();
-                return;
-            }
-
-            if (ui.focus && room.isActive()) {
+            if (room.isActive()) {
                 room.scrollToBottom();
             }
         },
@@ -553,12 +531,7 @@
                 $previousMessage.addClass('continue');
             }
 
-            if (room.needsSeparator(ui.focus)) {
-                ui.addSeparator(roomName);
-            }
-
             var $e = templates.message.tmpl(message).appendTo(room.messages);
-
         },
         addChatMessageContent: function (id, content, roomName) {
             var $message = $('#m-' + id);
@@ -577,10 +550,6 @@
                     when: now.formatTime(true),
                     fulldate: now.formatDate() + ' ' + now.formatTime(true)
                 };
-
-            if (room.needsSeparator(ui.focus)) {
-                ui.addSeparator(roomName);
-            }
 
             $element = templates.notification.tmpl(message).appendTo(room.messages);
 

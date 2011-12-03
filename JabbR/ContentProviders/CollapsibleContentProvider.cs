@@ -1,15 +1,16 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Net;
 
 namespace JabbR.ContentProviders
 {
     public abstract class CollapsibleContentProvider : IContentProvider
     {
-        public string GetContent(HttpWebResponse response)
+        public virtual string GetContent(HttpWebResponse response)
         {
             if (IsValidContent(response))
             {
-                return IsCollapsible ? string.Format(CultureInfo.InvariantCulture,
+                return IsCollapsible ? String.Format(CultureInfo.InvariantCulture,
                                                       ContentFormat,
                                                       GetTitle(response),
                                                       GetCollapsibleContent(response)) : GetCollapsibleContent(response);
@@ -18,7 +19,10 @@ namespace JabbR.ContentProviders
             return null;
         }
 
-        protected abstract string GetTitle(HttpWebResponse response);
+        protected virtual string GetTitle(HttpWebResponse response)
+        {
+            return response.ResponseUri.ToString();
+        }
 
         protected abstract string GetCollapsibleContent(HttpWebResponse response);
 

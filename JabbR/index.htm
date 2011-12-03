@@ -8,6 +8,8 @@
     <link href="Chat.css" rel="Stylesheet" />
     <script src="Scripts/json2.min.js" type="text/javascript"></script>
     <script src="Scripts/jquery-1.7.min.js" type="text/javascript"></script>
+    <link href="Content/KeyTips.css" rel="stylesheet" type="text/css" />
+    <script src="Scripts/jquery.KeyTips.js" type="text/javascript"></script>
     <script src="Scripts/jquery-ui-1.8.16.min.js" type="text/javascript"></script>
     <script src="Scripts/jquery.signalR.js" type="text/javascript"></script>
     <script src="signalr/hubs" type="text/javascript"></script>
@@ -62,7 +64,7 @@
         </li>
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">
-        <li id="tabs-${id}" data-name="${name}">
+        <li id="tabs-${id}" class="room" data-name="${name}">
             <button>
                 <span class="content">${name}</span>
             </button>
@@ -91,7 +93,7 @@
         </div>
         <ul id="tabs">
             <li id="tabs-lobby" class="current lobby" data-name="Lobby">
-                <button><span class="content">Lobby</span></button>
+                <button accesskey="l"><span class="content">Lobby</span></button>
             </li>
         </ul>
     </div>
@@ -101,7 +103,7 @@
         <ul id="users-lobby" class="users current"></ul>
         <form id="send-message" action="#">
             <div id="message-box">
-                <input type="text" id="new-message" autocomplete="off" />
+                <input type="text" id="new-message" autocomplete="off" accesskey="m" />
             </div>
             <input type="submit" id="send" value="Send" class="send" />
             <div id="message-instruction">Type @ then press TAB to auto-complete nicknames</div>

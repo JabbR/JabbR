@@ -13,11 +13,6 @@ namespace JabbR.ContentProviders
             "image/bmp",
             "image/gif",
         };
-               
-        protected override string GetTitle(HttpWebResponse response)
-        {
-            return response.ResponseUri.ToString();
-        }
 
         protected override string GetCollapsibleContent(HttpWebResponse response)
         {

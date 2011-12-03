@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
@@ -23,21 +22,14 @@ namespace JabbR
     {
         private readonly IJabbrRepository _repository;
         private readonly IChatService _service;
+        private readonly IResourceProcessor _resourceProcessor;
 
-        public Chat(IChatService service, IJabbrRepository repository)
+        public Chat(IResourceProcessor resourceProcessor, IChatService service, IJabbrRepository repository)
         {
+            _resourceProcessor = resourceProcessor;
             _service = service;
             _repository = repository;
         }
-
-        private static readonly List<IContentProvider> _contentProviders = new List<IContentProvider>() {
-            new ImageContentProvider(),
-            new YouTubeContentProvider(),
-            new CollegeHumorContentProvider(),
-            new TweetContentProvider(),
-            new PastieContentProvider(),
-            new ImgurContentProvider()
-        };
 
         public bool OutOfSync
         {
@@ -168,6 +160,10 @@ namespace JabbR
                 return null;
             }
 
+            var recentMessages = (from m in _repository.GetMessagesByRoom(roomName)
+                                  orderby m.When descending
+                                  select m).Take(100);
+
             return new RoomViewModel
             {
                 Name = room.Name,
@@ -175,9 +171,7 @@ namespace JabbR
                         select new UserViewModel(u),
                 Owners = from u in room.Owners.Online()
                          select u.Name,
-                RecentMessages = (from m in room.Messages
-                                  orderby m.When descending
-                                  select new MessageViewModel(m)).Take(20).Reverse()
+                RecentMessages = recentMessages.AsEnumerable().Reverse().Select(m => new MessageViewModel(m))
             };
         }
 
@@ -260,7 +254,7 @@ namespace JabbR
         {
             // REVIEW: is this safe to do? We're holding on to this instance 
             // when this should really be a fire and forget.
-            var contentTasks = links.Select(ExtractContent).ToArray();
+            var contentTasks = links.Select(_resourceProcessor.ExtractResource).ToArray();
             Task.Factory.ContinueWhenAll(contentTasks, tasks =>
             {
                 foreach (var task in tasks)
@@ -473,7 +467,7 @@ namespace JabbR
 
         void INotificationService.ListUsers()
         {
-            var users = _repository.Users.Online().Select(s => s.Name);
+            var users = _repository.Users.Online().Select(s => s.Name).OrderBy(s => s);
             Caller.listUsers(users);
         }
 
@@ -572,7 +566,7 @@ namespace JabbR
 
         private string Transform(string message, out HashSet<string> extractedUrls)
         {
-            const string urlPattern = @"((https?|ftp)://|www\.)[\w]+(.[\w]+)([\w\-\.,@?^=%&amp;:/~\+#!]*[\w\-\@?^=%&amp;/~\+#])";
+            const string urlPattern = @"((https?|ftp)://|www\.)[\w]+(.[\w]+)([\w\-\.\[\],@?^=%&amp;:/~\+#!]*[\w\-\@?^=%&amp;/~\+#\[\]])";
 
             var urls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             message = Regex.Replace(message, urlPattern, m =>
@@ -595,20 +589,7 @@ namespace JabbR
             extractedUrls = urls;
             return message;
         }
-
-        private Task<string> ExtractContent(string url)
-        {
-            var request = (HttpWebRequest)HttpWebRequest.Create(url);
-            var requestTask = Task.Factory.FromAsync((cb, state) => request.BeginGetResponse(cb, state), ar => request.EndGetResponse(ar), null);
-            return requestTask.ContinueWith(task => ExtractContent((HttpWebResponse)task.Result));
-        }
-
-        private string ExtractContent(HttpWebResponse response)
-        {
-            return _contentProviders.Select(c => c.GetContent(response))
-                                    .FirstOrDefault(content => content != null);
-        }
-
+        
         private ClientState GetClientState()
         {
             // New client state

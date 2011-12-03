@@ -32,10 +32,5 @@ namespace JabbR.ContentProviders
                 yield return videoId;
             }
         }
-
-        protected override string GetTitle(HttpWebResponse response)
-        {
-            return response.ResponseUri.ToString();
-        }
     }
 }
