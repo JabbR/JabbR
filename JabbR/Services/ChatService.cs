@@ -186,6 +186,22 @@ namespace JabbR.Services
             targetUser.OwnedRooms.Add(targetRoom);
         }
 
+        public void RemoveOwner(ChatUser creator, ChatUser targetUser, ChatRoom targetRoom)
+        {
+            // Ensure the user is creator of the target room
+            EnsureCreator(creator, targetRoom);
+
+            if (!targetRoom.Owners.Contains(targetUser))
+            {
+                // If the target user is not an owner, then throw
+                throw new InvalidOperationException(String.Format("'{0}' is not an owner of '{1}'.", targetUser.Name, targetRoom.Name));
+            }
+
+            // Remove user as owner of room
+            targetRoom.Owners.Remove(targetUser);
+            targetUser.OwnedRooms.Remove(targetRoom);
+        }
+
         public void KickUser(ChatUser user, ChatUser targetUser, ChatRoom targetRoom)
         {
             EnsureOwner(user, targetRoom);
@@ -305,6 +321,14 @@ namespace JabbR.Services
             if (!room.Owners.Contains(user))
             {
                 throw new InvalidOperationException("You are not an owner of " + room.Name);
+            }
+        }
+
+        private static void EnsureCreator(ChatUser user, ChatRoom room)
+        {
+            if (user != room.Creator)
+            {
+                throw new InvalidOperationException("You are not the creator of " + room.Name);
             }
         }
 

@@ -183,6 +183,10 @@
         ui.setRoomOwner(user.Name, room);
     };
 
+    chat.removeOwner = function (user, room) {
+        ui.clearRoomOwner(user.Name, room);
+    };
+
     chat.updateRoomCount = function (room, count) {
         ui.updateLobbyRoomCount(room, count);
     };
@@ -268,9 +272,18 @@
         ui.addMessage(user + ' is now an owner of ' + room, 'notification', this.activeRoom);
     };
 
+    chat.ownerRemoved = function (user, room) {
+        ui.addMessage(user + ' is no longer an owner of ' + room, 'notification', this.activeRoom);
+    };
+
     // Called when you've been made an owner
     chat.makeOwner = function (room) {
         ui.addMessage('You are now an owner of ' + room, 'notification', this.activeRoom);
+    };
+
+    // Called when you've been removed as an owner
+    chat.demoteOwner = function (room) {
+        ui.addMessage('You are no longer an owner of ' + room, 'notification', this.activeRoom);
     };
 
     // Called when your gravatar has been changed

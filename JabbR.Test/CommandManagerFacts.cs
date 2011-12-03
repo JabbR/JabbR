@@ -476,7 +476,136 @@ namespace JabbR.Test
             }
             
         }
-        
+
+        public class RemoveOwnerCommand
+        {
+            [Fact]
+            public void MissingUserNameThrows()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/removeowner "));
+            }
+
+            [Fact]
+            public void MissingRoomNameThrows()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/removeowner dfowler"));
+            }
+
+            [Fact]
+            public void CreatorCanRemoveOwnerFromRoom()
+            {
+                var repository = new InMemoryRepository();
+                var roomCreator = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                var targetUser = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(roomCreator);
+                repository.Add(targetUser);
+                var room = new ChatRoom()
+                {
+                    Name = "test",
+                    Creator = roomCreator
+                };
+                room.Owners.Add(roomCreator);
+                roomCreator.Rooms.Add(room);
+                // make target user an owner
+                room.Owners.Add(targetUser);
+                targetUser.Rooms.Add(room);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                var result = commandManager.TryHandleCommand("/removeowner dfowler2 test");
+
+                Assert.True(result);
+                notificationService.Verify(m => m.OnOwnerRemoved(targetUser, room), Times.Once());
+                Assert.False(room.Owners.Contains(targetUser));
+                Assert.False(targetUser.OwnedRooms.Contains(room));
+            }
+
+            [Fact]
+            public void NonCreatorsCannotRemoveOwnerFromRoom()
+            {
+                var repository = new InMemoryRepository();
+                var roomOwner = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                var targetUser = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(roomOwner);
+                repository.Add(targetUser);
+                var room = new ChatRoom()
+                {
+                    Name = "test"
+                };
+                room.Owners.Add(roomOwner);
+                roomOwner.Rooms.Add(room);
+                // make target user an owner
+                room.Owners.Add(targetUser);
+                targetUser.Rooms.Add(room);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/removeowner dfowler2 test"));
+            }
+        }
+
         public class CreateCommand
         {
             [Fact]

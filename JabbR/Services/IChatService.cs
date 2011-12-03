@@ -24,6 +24,7 @@ namespace JabbR.Services
 
         // Owner commands
         void AddOwner(ChatUser user, ChatUser targetUser, ChatRoom targetRoom);
+        void RemoveOwner(ChatUser user, ChatUser targetUser, ChatRoom targetRoom);
         void KickUser(ChatUser user, ChatUser targetUser, ChatRoom targetRoom);
     }
 }

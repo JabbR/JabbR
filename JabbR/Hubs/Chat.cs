@@ -424,6 +424,27 @@ namespace JabbR
             Caller.ownerMade(targetUser.Name, targetRoom.Name);
         }
 
+        void INotificationService.OnOwnerRemoved(ChatUser targetUser, ChatRoom targetRoom)
+        {
+            foreach (var client in targetUser.ConnectedClients)
+            {
+                // Tell this client it's no longer an owner
+                Clients[client.Id].demoteOwner(targetRoom.Name);
+            }
+
+            var userViewModel = new UserViewModel(targetUser);
+
+            // If the target user is in the target room.
+            // Tell everyone in the target room that the owner was removed
+            if (ChatService.IsUserInRoom(targetRoom, targetUser))
+            {
+                Clients[targetRoom.Name].removeOwner(userViewModel, targetRoom.Name);
+            }
+
+            // Tell the calling client the removal of ownership was successful
+            Caller.ownerRemoved(targetUser.Name, targetRoom.Name);
+        }
+
         void INotificationService.ChangeGravatar(ChatUser user)
         {
             // Update the calling client
@@ -508,7 +529,8 @@ namespace JabbR
                 new { Name = "nudge", Description = "Type /nudge to send a nudge to the whole room, or \"/nudge @nickname\" to nudge a particular user. @ is optional." },
                 new { Name = "kick", Description = "Type /kick [user] to kick a user from the room. Note, this is only valid for owners of the room." },
                 new { Name = "logout", Description = "Type /logout - To logout from this client (chat cookie will be removed)." },
-                new { Name = "addowner", Description = "Type /addowner [user] [room] - To add an owner a user as an owner to the specified room. Only works if you're an owner of that room." }
+                new { Name = "addowner", Description = "Type /addowner [user] [room] - To add an owner a user as an owner to the specified room. Only works if you're an owner of that room." },
+                new { Name = "removeowner", Description = "Type /removeowner [user] [room] - To remove an owner from the specified room. Only works if you're the creator of that room." }
             });
         }
 

@@ -377,6 +377,13 @@
             $user.find('.owner')
                  .text('(owner)');
         },
+        clearRoomOwner: function (ownerName, roomName) {
+            var room = getRoomElements(roomName),
+                $user = room.getUser(ownerName);
+
+            $user.find('.owner')
+                 .text('');
+        },
         setActiveRoom: function (roomName) {
             var room = getRoomElements(roomName);
 
