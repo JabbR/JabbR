@@ -12,6 +12,7 @@
         templates = null,
         app = null,
         focus = true,
+        commands = [],
         Keys = { Up: 38, Down: 40, Esc: 27 };
 
     function getRoomId(roomName) {
@@ -338,7 +339,7 @@
 
             // Auto-complete for user names
             $newMessage.autoTabComplete({
-                prefixMatch: '[@#]',
+                prefixMatch: '[@#/]',
                 get: function (prefix) {
                     switch (prefix) {
                         case '@':
@@ -349,7 +350,12 @@
                         case '#':
                             var lobby = getLobby();
                             return lobby.users.find('li')
-                                          .map(function () { return $(this).data('name'); });
+                                         .map(function () { return $(this).data('name'); });
+
+                        case '/':
+                            var commands = ui.getCommands();
+                            return ui.getCommands()
+                                         .map(function (cmd) { return cmd.Name; });
                         default:
                             return [];
                     }
@@ -590,6 +596,12 @@
         },
         hasFocus: function () {
             return ui.focus;
+        },
+        getCommands: function () {
+            return ui.commands;
+        },
+        setCommands: function (commands) {
+            ui.commands = commands;
         }
     };
 
