@@ -40,7 +40,7 @@
         };
 
         this.needsSeparator = function (focus) {
-            if (this.isActive() && focus === true) {
+            if (this.isActive()) {
                 return false;
             }
             return this.hasSeparator() === false;
