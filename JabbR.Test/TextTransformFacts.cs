@@ -3,24 +3,22 @@ using JabbR.Infrastructure;
 using JabbR.Models;
 using Xunit;
 
-namespace JabbR.Test {
-
-    public class TextTransformFacts 
+namespace JabbR.Test
+{
+    public class TextTransformFacts
     {
-
-        public class ConvertHashtagsToRoomLinksFacts 
+        public class ConvertHashtagsToRoomLinksFacts
         {
-
-            public Regex HashtagRegex() 
+            private Regex HashtagRegex()
             {
                 return new Regex(TextTransform.HashTagPattern);
             }
 
-            public IJabbrRepository CreateRoomRepository() 
+            public IJabbrRepository CreateRoomRepository()
             {
                 var repository = new InMemoryRepository();
-                var room = new ChatRoom() {Name = "hashtag"};
-                var user = new ChatUser() {Name = "testhashtaguser"};
+                var room = new ChatRoom() { Name = "hashtag" };
+                var user = new ChatUser() { Name = "testhashtaguser" };
                 repository.Add(room);
                 room.Users.Add(user);
                 user.Rooms.Add(room);
@@ -29,7 +27,7 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void HashtagRegexMatchesHashtagString() 
+            public void HashtagRegexMatchesHashtagString()
             {
                 Regex hashtagRegex = HashtagRegex();
 
@@ -39,7 +37,7 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void HashtagRegexMatchesHashtagInSubstring() 
+            public void HashtagRegexMatchesHashtagInSubstring()
             {
                 Regex hashtagRegex = HashtagRegex();
 
@@ -49,7 +47,7 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void HashtagRegexDoesNotMatchInStringWithoutHashtag() 
+            public void HashtagRegexDoesNotMatchInStringWithoutHashtag()
             {
                 Regex hashtagRegex = HashtagRegex();
 
@@ -59,7 +57,7 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void HashtagRegexParts() 
+            public void HashtagRegexParts()
             {
                 Regex hashtagRegex = HashtagRegex();
                 var match = hashtagRegex.Match("#hashtag");
@@ -70,7 +68,7 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void StringWithHashtagModifiesHashtagToRoomLink() 
+            public void StringWithHashtagModifiesHashtagToRoomLink()
             {
                 IJabbrRepository repository = CreateRoomRepository();
                 string expected = "<a href=\"#/rooms/hashtag\" title=\"#hashtag\">#hashtag</a>";
@@ -82,7 +80,7 @@ namespace JabbR.Test {
             }
 
             [Fact]
-            public void StringWithHashtagButRoomDoesntExistDoesNotModifyMessage() 
+            public void StringWithHashtagButRoomDoesntExistDoesNotModifyMessage()
             {
                 IJabbrRepository repository = CreateRoomRepository();
 
@@ -91,7 +89,6 @@ namespace JabbR.Test {
 
                 Assert.Equal("#thisdoesnotexist", result);
             }
-
         }
     }
 }
