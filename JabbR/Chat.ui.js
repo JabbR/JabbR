@@ -12,6 +12,7 @@
         templates = null,
         app = null,
         focus = true,
+        commands = [],
         Keys = { Up: 38, Down: 40, Esc: 27 };
 
     function getRoomId(roomName) {
@@ -40,7 +41,7 @@
         };
 
         this.needsSeparator = function (focus) {
-            if (this.isActive() && focus === true) {
+            if (this.isActive()) {
                 return false;
             }
             return this.hasSeparator() === false;
@@ -56,23 +57,6 @@
 
             $tab.data('unread', unread);
             $tab.data('hasMentions', hasMentions);
-        };
-
-        this.scrollToSeparator = function () {
-            var $e = this.messages.find('.message-separator');
-
-            var top = $e.position().top,
-                scrollHeight = this.messages[0].scrollHeight,
-                scrollTop = this.messages.scrollTop(),
-                height = this.messages.height()
-
-            // keep separator scrolled half way in message list
-            if (top < 0) {
-                this.messages.scrollTop(scrollTop + top - (height / 2));
-            }
-            else if (top > height / 2) {
-                this.messages.scrollTop(scrollHeight - (height / 2));
-            }
         };
 
         this.scrollToBottom = function () {
@@ -123,9 +107,6 @@
 
             this.users.addClass('current')
                       .show();
-
-            // force scroll handling
-            this.messages.scroll();
 
         };
 
@@ -190,8 +171,7 @@
         $('<ul/>').attr('id', 'messages-' + roomId)
                   .addClass('messages')
                   .appendTo($chatArea)
-                  .hide()
-                  .scroll(handleScroll);
+                  .hide();
 
 
         $('<ul/>').attr('id', 'users-' + roomId)
@@ -244,7 +224,7 @@
 
         // remove separator once use has scrolled to bottom of messages list
         if ($(this).isNearTheEnd() && room.hasSeparator() && room.isActive() && ui.hasFocus()) {
-            $(this).find('.message-separator').animate({ height: 0 }, 500, function () {
+            $(this).find('.message-separator').fadeOut(2000, function () {
                 $(this).remove();
             });
         }
@@ -359,11 +339,26 @@
 
             // Auto-complete for user names
             $newMessage.autoTabComplete({
-                get: function () {
-                    var room = getCurrentRoomElements();
-                    return room.users.find('li')
-                                     .not('.room')
-                                     .map(function () { return $(this).data('name'); });
+                prefixMatch: '[@#/]',
+                get: function (prefix) {
+                    switch (prefix) {
+                        case '@':
+                            var room = getCurrentRoomElements();
+                            return room.users.find('li')
+                                         .not('.room')
+                                         .map(function () { return $(this).data('name'); });
+                        case '#':
+                            var lobby = getLobby();
+                            return lobby.users.find('li')
+                                         .map(function () { return $(this).data('name'); });
+
+                        case '/':
+                            var commands = ui.getCommands();
+                            return ui.getCommands()
+                                         .map(function (cmd) { return cmd.Name; });
+                        default:
+                            return [];
+                    }
                 }
             });
 
@@ -388,14 +383,19 @@
             $user.find('.owner')
                  .text('(owner)');
         },
+        clearRoomOwner: function (ownerName, roomName) {
+            var room = getRoomElements(roomName),
+                $user = room.getUser(ownerName);
+
+            $user.find('.owner')
+                 .text('');
+        },
         setActiveRoom: function (roomName) {
             var room = getRoomElements(roomName);
 
             if (room.isActive()) {
                 // Still trigger the event (just do less overall work)
                 $(ui).trigger('ui.activeRoomChanged', [roomName]);
-                // force scoll logic
-                room.messages.scroll();
                 return true;
             }
 
@@ -426,12 +426,6 @@
         },
         scrollToBottom: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
-
-            if (room.hasSeparator() && room.isActive()) {
-                // scoll to separator
-                room.scrollToSeparator();
-                return;
-            }
 
             if (room.isActive()) {
                 room.scrollToBottom();
@@ -560,12 +554,7 @@
                 $previousMessage.addClass('continue');
             }
 
-            if (room.needsSeparator(ui.hasFocus())) {
-                ui.addSeparator(roomName);
-            }
-
             var $e = templates.message.tmpl(message).appendTo(room.messages);
-
         },
         addChatMessageContent: function (id, content, roomName) {
             var $message = $('#m-' + id);
@@ -584,10 +573,6 @@
                     when: now.formatTime(true),
                     fulldate: now.formatDate() + ' ' + now.formatTime(true)
                 };
-
-            if (room.needsSeparator(ui.hasFocus())) {
-                ui.addSeparator(roomName);
-            }
 
             $element = templates.notification.tmpl(message).appendTo(room.messages);
 
@@ -611,6 +596,12 @@
         },
         hasFocus: function () {
             return ui.focus;
+        },
+        getCommands: function () {
+            return ui.commands;
+        },
+        setCommands: function (commands) {
+            ui.commands = commands;
         }
     };
 

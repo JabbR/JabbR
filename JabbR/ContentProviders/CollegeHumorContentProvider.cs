@@ -28,10 +28,5 @@ namespace JabbR.ContentProviders
                 return @"<object type=""application/x-shockwave-flash"" data=""http://www.collegehumor.com/moogaloop/moogaloop.swf?clip_id={0}&use_node_id=true&fullscreen=1"" width=""600"" height=""338""><param name=""allowfullscreen"" value=""true""/><param name=""wmode"" value=""transparent""/><param name=""allowScriptAccess"" value=""always""/><param name=""movie"" quality=""best"" value=""http://www.collegehumor.com/moogaloop/moogaloop.swf?clip_id={0}&use_node_id=true&fullscreen=1""/><embed src=""http://www.collegehumor.com/moogaloop/moogaloop.swf?clip_id={0}&use_node_id=true&fullscreen=1"" type=""application/x-shockwave-flash"" wmode=""transparent"" width=""600"" height=""338"" allowScriptAccess=""always""></embed></object>";
             }
         }
-
-        protected override string GetTitle(HttpWebResponse response)
-        {
-            return response.ResponseUri.ToString();
-        }
     }
 }

@@ -27,6 +27,7 @@ namespace JabbR.Services
         void LeaveRoom(ChatUser user, ChatRoom room);
 
         void OnOwnerAdded(ChatUser targetUser, ChatRoom targetRoom);
+        void OnOwnerRemoved(ChatUser targetUser, ChatRoom targetRoom);
         void KickUser(ChatUser targetUser, ChatRoom targetRoom);
 
         void OnUserCreated(ChatUser user);

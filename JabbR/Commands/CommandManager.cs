@@ -177,6 +177,12 @@ namespace JabbR.Commands
 
                 return true;
             }
+            else if (commandName.Equals("removeowner", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleRemoveOwner(user, parts);
+
+                return true;
+            }
             else if (commandName.Equals("logout", StringComparison.OrdinalIgnoreCase))
             {
                 HandleLogOut(user);
@@ -214,6 +220,32 @@ namespace JabbR.Commands
             _chatService.AddOwner(user, targetUser, targetRoom);
 
             _notificationService.OnOwnerAdded(targetUser, targetRoom);
+
+            _repository.CommitChanges();
+        }
+
+        private void HandleRemoveOwner(ChatUser user, string[] parts)
+        {
+            if (parts.Length == 1)
+            {
+                throw new InvalidOperationException("Which owner do you want to remove?");
+            }
+
+            string targetUserName = parts[1];
+
+            ChatUser targetUser = _repository.VerifyUser(targetUserName);
+
+            if (parts.Length == 2)
+            {
+                throw new InvalidOperationException("Which room?");
+            }
+
+            string roomName = parts[2];
+            ChatRoom targetRoom = _repository.VerifyRoom(roomName);
+
+            _chatService.RemoveOwner(user, targetUser, targetRoom);
+
+            _notificationService.OnOwnerRemoved(targetUser, targetRoom);
 
             _repository.CommitChanges();
         }
@@ -347,11 +379,19 @@ namespace JabbR.Commands
                 throw new InvalidOperationException(String.Format("What did you want to say to '{0}'.", toUser.Name));
             }
 
+            var transform = new TextTransform(_repository);
+            messageText = transform.Parse(messageText);
+
             _notificationService.SendPrivateMessage(user, toUser, messageText);
         }
 
         private void HandleCreate(ChatUser user, string[] parts)
         {
+            if (parts.Length > 2)
+            {
+                throw new InvalidOperationException("Room name cannot contain spaces.");
+            }
+
             if (parts.Length == 1)
             {
                 throw new InvalidOperationException("No room specified.");

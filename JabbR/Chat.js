@@ -43,8 +43,6 @@
 
                         ui.addChatMessage(viewModel, room);
                     });
-                    // populated messages will be treated as unread, so remove separator
-                    ui.removeSeparator(room);
                     ui.scrollToBottom(room);
 
                     d.resolveWith(chat);
@@ -54,6 +52,14 @@
                 });
 
         return d;
+    }
+
+    function populateLobbyRooms() {
+        // Populate the user list with room names
+        chat.getRooms()
+            .done(function (rooms) {
+                ui.populateLobbyRooms(rooms);
+            });
     }
 
     function scrollIfNecessary(callback, room) {
@@ -145,6 +151,7 @@
                         populateRoom(room);
                     }
                 });
+                populateLobbyRooms();
             };
 
         $.each(rooms, function (index, room) {
@@ -174,6 +181,10 @@
 
     chat.addOwner = function (user, room) {
         ui.setRoomOwner(user.Name, room);
+    };
+
+    chat.removeOwner = function (user, room) {
+        ui.clearRoomOwner(user.Name, room);
     };
 
     chat.updateRoomCount = function (room, count) {
@@ -261,9 +272,18 @@
         ui.addMessage(user + ' is now an owner of ' + room, 'notification', this.activeRoom);
     };
 
+    chat.ownerRemoved = function (user, room) {
+        ui.addMessage(user + ' is no longer an owner of ' + room, 'notification', this.activeRoom);
+    };
+
     // Called when you've been made an owner
     chat.makeOwner = function (room) {
         ui.addMessage('You are now an owner of ' + room, 'notification', this.activeRoom);
+    };
+
+    // Called when you've been removed as an owner
+    chat.demoteOwner = function (room) {
+        ui.addMessage('You are no longer an owner of ' + room, 'notification', this.activeRoom);
     };
 
     // Called when your gravatar has been changed
@@ -397,9 +417,9 @@
         }
     };
 
-    chat.showCommands = function (commands) {
+    chat.showCommands = function () {
         ui.addMessage('Help', 'list-header');
-        $.each(commands, function () {
+        $.each(ui.getCommands(), function () {
             ui.addMessage(this.Name + ' - ' + this.Description, 'list-item');
         });
     };
@@ -517,11 +537,7 @@
 
     $(ui).bind('ui.activeRoomChanged', function (ev, room) {
         if (room === 'Lobby') {
-            // Populate the user list with room names
-            chat.getRooms()
-                .done(function (rooms) {
-                    ui.populateLobbyRooms(rooms);
-                });
+            populateLobbyRooms();
 
             // Remove the active room
             chat.activeRoom = undefined;
@@ -551,6 +567,11 @@
                     if (success === false) {
                         ui.addMessage('Choose a name using "/nick nickname password".', 'notification');
                     }
+                    // get list of available commands
+                    chat.getCommands()
+                        .done(function (commands) {
+                            ui.setCommands(commands);
+                        });
                 });
         });
     });

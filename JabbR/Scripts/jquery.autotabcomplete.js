@@ -1,6 +1,7 @@
 ﻿; (function ($, window, document) {
     var pluginName = 'autoTabComplete',
         defaults = {
+            prefixMatch: '[@]',
             values: [],
             get: function() {
                 return this.values;
@@ -14,9 +15,11 @@
             _name = pluginName,
             _inAutoComplete,
             _text,
-            _prefix,
+            _initial,
             _index,
             _caret,
+            _prefix,
+            _matchRegExp = new RegExp(options.prefixMatch + "\\S*$", "i"),
             Keys = { Tab: 9, Shift: 16 };
 
         reset();
@@ -25,13 +28,6 @@
             if (event.which === Keys.Tab) {
                 event.preventDefault();
 
-                // call get() to retrieve current list of values
-                var values = options.get();
-                if (values.length === 0) {
-                    reset();
-                    return;
-                }
-
                 var offset = event.shiftKey ? -1 : 1;
 
                 if (!_inAutoComplete) {
@@ -39,19 +35,30 @@
                     var sel = getSelection(this);
                     _caret = sel.end;
 
-                    // find prefix (starts with @)
-                    var match = _text.substr(0, _caret).match(/@\S*$/i);
+                    // find initial text (starts with prefix char)
+                    var match = _text.substr(0, _caret).match(_matchRegExp);
                     if (!match) return;
 
-                    _prefix = match.toString().substr(1).toLowerCase();
+                    _initial = match.toString().substr(1).toLowerCase();
+
+                    // get prefix character to pass to get()
+                    _prefix = match.toString().substring(0, 1);
 
                     _inAutoComplete = true;
                 }
+
+                // call get() to retrieve current list of values
+                var values = options.get(_prefix);
+                if (values.length === 0) {
+                    reset();
+                    return;
+                }
+
                 _index = getNextIndex(_index, offset, values.length);
 
-                var prefixLen = _prefix.length;
+                var initialLen = _initial.length;
                 // sort values if there's a prefix
-                if (prefixLen > 0) {
+                if (initialLen > 0) {
                     values = values.sort(sortInsensitive);
                 }
 
@@ -59,8 +66,8 @@
                 var i = _index;
                 while (true) {
                     var value = values[i];
-                    if (value.substr(0, prefixLen).toLowerCase() === _prefix) {
-                        var newText = _text.substr(0, _caret - prefixLen) + value + _text.substr(_caret);
+                    if (value.substr(0, initialLen).toLowerCase() === _initial) {
+                        var newText = _text.substr(0, _caret - initialLen) + value + _text.substr(_caret);
                         $(this).val(newText);
 
                         if (_caret < _text.length) {
@@ -109,6 +116,7 @@
             _inAutoComplete = false;
             _index = -1;
             _text = '';
+            _initial = '';
             _prefix = '';
             _caret = 0;
         }
