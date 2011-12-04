@@ -3,9 +3,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using System.Collections.Generic;
-using Newtonsoft.Json;
 using JabbR.Models;
+using Newtonsoft.Json;
 
 namespace JabbR.ContentProviders
 {
