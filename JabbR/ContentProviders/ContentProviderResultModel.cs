@@ -1,5 +1,5 @@
 ﻿
-namespace JabbR.Models
+namespace JabbR.ContentProviders
 {
     public class ContentProviderResultModel
     {

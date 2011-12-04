@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using JabbR.Models;
 using Newtonsoft.Json;
 
 namespace JabbR.ContentProviders

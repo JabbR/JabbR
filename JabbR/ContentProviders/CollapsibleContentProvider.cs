@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Net;
-using JabbR.Models;
 
 namespace JabbR.ContentProviders
 {

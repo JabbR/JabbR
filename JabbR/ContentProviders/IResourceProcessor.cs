@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using JabbR.Models;
 
 namespace JabbR.ContentProviders
 {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using System.Net;
-using JabbR.Models;
+using JabbR.ContentProviders;
 
 namespace JabbR
 {

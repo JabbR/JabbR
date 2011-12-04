@@ -4,7 +4,6 @@ using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using JabbR.Models;
 
 namespace JabbR.ContentProviders
 {

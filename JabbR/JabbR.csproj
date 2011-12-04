@@ -216,6 +216,7 @@
   <ItemGroup>
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="ContentProviders\ContentProviderResultModel.cs" />
     <Compile Include="ContentProviders\GoogleDocsPresentationsContentProvider.cs" />
     <Compile Include="ContentProviders\NerdDinnerContentProvider.cs" />
     <Compile Include="ContentProviders\VimeoContentProvider.cs" />
@@ -248,7 +249,6 @@
       <DependentUpon>201111302209099_UserSalt.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ChatClient.cs" />
-    <Compile Include="Models\ContentProviderResultModel.cs" />
     <Compile Include="Services\ChatService.cs" />
     <Compile Include="Services\CryptoService.cs" />
     <Compile Include="Services\IChatService.cs" />
