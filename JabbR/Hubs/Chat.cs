@@ -124,7 +124,7 @@ namespace JabbR
             ProcessUrls(links, room, chatMessage);
         }
 
-        private string ParseChatMessageText(string content, out HashSet<string> links) 
+        private string ParseChatMessageText(string content, out HashSet<string> links)
         {
             TextTransform textTransform = new TextTransform(_repository);
             string message = textTransform.Parse(content);
@@ -287,13 +287,13 @@ namespace JabbR
                         continue;
                     }
 
-                    if (String.IsNullOrEmpty(task.Result))
+                    if (task.Result == null || String.IsNullOrEmpty(task.Result.Content))
                     {
                         continue;
                     }
 
                     // Try to get content from each url we're resolved in the query
-                    string extractedContent = "<p>" + task.Result + "</p>";
+                    string extractedContent = "<p>" + task.Result.Content + "</p>";
 
                     // If we did get something, update the message and notify all clients
                     chatMessage.Content += extractedContent;
@@ -616,7 +616,7 @@ namespace JabbR
             extractedUrls = urls;
             return message;
         }
-        
+
         private ClientState GetClientState()
         {
             // New client state

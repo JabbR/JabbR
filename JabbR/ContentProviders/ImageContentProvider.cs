@@ -14,16 +14,20 @@ namespace JabbR.ContentProviders
             "image/gif",
         };
 
-        protected override string GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
-           return String.Format(@"<img src=""{0}"" />", response.ResponseUri);
+            return new ContentProviderResultModel()
+             {
+                 Content = String.Format(@"<img src=""{0}"" />", response.ResponseUri),
+                 Title = response.ResponseUri.AbsoluteUri.ToString()
+             };
         }
 
         protected override bool IsValidContent(HttpWebResponse response)
         {
             return !String.IsNullOrEmpty(response.ContentType) &&
                     _imageMimeTypes.Contains(response.ContentType);
-            
+
         }
     }
 }

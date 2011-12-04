@@ -11,14 +11,14 @@ namespace JabbR.ContentProviders
     {
         private readonly Lazy<IList<IContentProvider>> _contentProviders = new Lazy<IList<IContentProvider>>(GetContentProviders);
 
-        public Task<string> ExtractResource(string url)
+        public Task<ContentProviderResultModel> ExtractResource(string url)
         {
             var request = (HttpWebRequest)HttpWebRequest.Create(url);
             var requestTask = Task.Factory.FromAsync((cb, state) => request.BeginGetResponse(cb, state), ar => request.EndGetResponse(ar), null);
             return requestTask.ContinueWith(task => ExtractContent((HttpWebResponse)task.Result));
         }
         
-        private string ExtractContent(HttpWebResponse response)
+        private ContentProviderResultModel ExtractContent(HttpWebResponse response)
         {
             return _contentProviders.Value.Select(c => c.GetContent(response))
                                           .FirstOrDefault(content => content != null);

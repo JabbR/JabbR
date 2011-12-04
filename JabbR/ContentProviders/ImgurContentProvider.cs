@@ -6,11 +6,15 @@ namespace JabbR.ContentProviders
 {
     public class ImgurContentProvider : CollapsibleContentProvider
     {        
-        protected override string GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
             string id = response.ResponseUri.AbsoluteUri.Split('/').Last();
 
-            return string.Format(@"<img src=""http://i.imgur.com/{0}.jpg"" />", id);
+            return new ContentProviderResultModel()
+            {
+                Content = string.Format(@"<img src=""http://i.imgur.com/{0}.jpg"" />", id),
+                Title = response.ResponseUri.AbsoluteUri.ToString()
+            };
         }
 
         protected override bool IsValidContent(HttpWebResponse response)

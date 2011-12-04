@@ -32,7 +32,7 @@ namespace JabbR.ContentProviders
             return null;
         }
 
-        protected override string GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
             var args = ExtractParameters(response.ResponseUri);
             if (args == null || !args.Any())
@@ -40,7 +40,11 @@ namespace JabbR.ContentProviders
                 return null;
             }
 
-            return String.Format(MediaFormatString, args.ToArray());
+            return new ContentProviderResultModel()
+            {
+                Content = String.Format(MediaFormatString, args.ToArray()),
+                Title = response.ResponseUri.AbsoluteUri.ToString()
+            };
         }
 
         protected override bool IsValidContent(HttpWebResponse response)

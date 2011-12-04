@@ -216,8 +216,9 @@
   <ItemGroup>
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="Commands\CommandManager.cs" />
-    <Compile Include="ContentProviders\NerdDinnerContentProvider.cs" />
+    <Compile Include="ContentProviders\ContentProviderResultModel.cs" />
     <Compile Include="ContentProviders\GoogleDocsPresentationsContentProvider.cs" />
+    <Compile Include="ContentProviders\NerdDinnerContentProvider.cs" />
     <Compile Include="ContentProviders\VimeoContentProvider.cs" />
     <Compile Include="ContentProviders\GoogleDocsFormProvider.cs" />
     <Compile Include="ContentProviders\SlideshareContentProvider.cs" />
