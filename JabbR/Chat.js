@@ -417,9 +417,9 @@
         }
     };
 
-    chat.showCommands = function (commands) {
+    chat.showCommands = function () {
         ui.addMessage('Help', 'list-header');
-        $.each(commands, function () {
+        $.each(ui.getCommands(), function () {
             ui.addMessage(this.Name + ' - ' + this.Description, 'list-item');
         });
     };
@@ -567,6 +567,11 @@
                     if (success === false) {
                         ui.addMessage('Choose a name using "/nick nickname password".', 'notification');
                     }
+                    // get list of available commands
+                    chat.getCommands()
+                        .done(function (commands) {
+                            ui.setCommands(commands);
+                        });
                 });
         });
     });

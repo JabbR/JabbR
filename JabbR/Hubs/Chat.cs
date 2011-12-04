@@ -136,6 +136,27 @@ namespace JabbR
             DisconnectClient(Context.ClientId);
         }
 
+        public object GetCommands()
+        {
+            return new[] {
+                new { Name = "help", Description = "Type /help to show the list of commands" },
+                new { Name = "nick", Description = "Type /nick [user] [password] to create a user or change your nickname. You can change your password with /nick [user] [oldpassword] [newpassword]" },
+                new { Name = "join", Description = "Type /join [room] - to join a channel of your choice" },
+                new { Name = "create", Description = "Type /create [room] to create a room" },
+                new { Name = "me", Description = "Type /me 'does anything'" },
+                new { Name = "msg", Description = "Type /msg @nickname (message) to send a private message to nickname. @ is optional." },
+                new { Name = "leave", Description = "Type /leave to leave the current room. Type /leave [room name] to leave a specific room." },
+                new { Name = "rooms", Description = "Type /rooms to show the list of rooms" },
+                new { Name = "who", Description = "Type /who to show a list of all users, /who [name] to the rooms that user is in" },
+                new { Name = "list", Description = "Type /list (room) to show a list of users in the room" },
+                new { Name = "gravatar", Description = "Type /gravatar [email] to set your gravatar." },
+                new { Name = "nudge", Description = "Type /nudge to send a nudge to the whole room, or \"/nudge @nickname\" to nudge a particular user. @ is optional." },
+                new { Name = "kick", Description = "Type /kick [user] to kick a user from the room. Note, this is only valid for owners of the room." },
+                new { Name = "logout", Description = "Type /logout - To logout from this client (chat cookie will be removed)." },
+                new { Name = "addowner", Description = "Type /addowner [user] [room] - To add an owner a user as an owner to the specified room. Only works if you're an owner of that room." },
+                new { Name = "removeowner", Description = "Type /removeowner [user] [room] - To remove an owner from the specified room. Only works if you're the creator of that room." }
+            };
+        }
         public IEnumerable<RoomViewModel> GetRooms()
         {
             var rooms = _repository.Rooms.Select(r => new RoomViewModel
@@ -514,24 +535,7 @@ namespace JabbR
 
         void INotificationService.ShowHelp()
         {
-            Caller.showCommands(new[] { 
-                new { Name = "help", Description = "Type /help to show the list of commands" },
-                new { Name = "nick", Description = "Type /nick [user] [password] to create a user or change your nickname. You can change your password with /nick [user] [oldpassword] [newpassword]" },
-                new { Name = "join", Description = "Type /join [room] - to join a channel of your choice" },
-                new { Name = "create", Description = "Type /create [room] to create a room" },
-                new { Name = "me", Description = "Type /me 'does anything'" },
-                new { Name = "msg", Description = "Type /msg @nickname (message) to send a private message to nickname. @ is optional." },
-                new { Name = "leave", Description = "Type /leave to leave the current room. Type /leave [room name] to leave a specific room." },
-                new { Name = "rooms", Description = "Type /rooms to show the list of rooms" },
-                new { Name = "who", Description = "Type /who to show a list of all users, /who [name] to the rooms that user is in" },
-                new { Name = "list", Description = "Type /list (room) to show a list of users in the room" },
-                new { Name = "gravatar", Description = "Type /gravatar [email] to set your gravatar." },
-                new { Name = "nudge", Description = "Type /nudge to send a nudge to the whole room, or \"/nudge @nickname\" to nudge a particular user. @ is optional." },
-                new { Name = "kick", Description = "Type /kick [user] to kick a user from the room. Note, this is only valid for owners of the room." },
-                new { Name = "logout", Description = "Type /logout - To logout from this client (chat cookie will be removed)." },
-                new { Name = "addowner", Description = "Type /addowner [user] [room] - To add an owner a user as an owner to the specified room. Only works if you're an owner of that room." },
-                new { Name = "removeowner", Description = "Type /removeowner [user] [room] - To remove an owner from the specified room. Only works if you're the creator of that room." }
-            });
+            Caller.showCommands();
         }
 
         void INotificationService.ShowRooms()
