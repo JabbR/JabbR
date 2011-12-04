@@ -8,7 +8,7 @@ namespace JabbR.ContentProviders
     public class JoinMeContentProvider : CollapsibleContentProvider
     {
         private static readonly Regex _joinMeIdRegex = new Regex(@"(\d+)");
-        // 0 Lat, 1 Long, 2 Address, 3 Content Format for Info       
+
         private static readonly string _iframedMeetingFormat = "<iframe src=\"{0}\" width=\"700\" height=\"400\"></iframe>";
         protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
