@@ -256,6 +256,15 @@ li.room:hover {
     margin-right: 95px;
 }
 
+.notification a.info {
+    color: #bbb;
+    font-style: italic;
+    text-decoration: none;
+}
+.notification a.info:visited {
+    color: inherit;
+}
+
 .message {
     border-bottom: 1px solid #eee;
 }

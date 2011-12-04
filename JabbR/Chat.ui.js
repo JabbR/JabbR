@@ -288,6 +288,18 @@
                 return false;
             });
 
+            // handle click on notifications
+            $(document).on('click', '.notification a.info', function (ev) {
+                var $notification = $(this).closest('.notification');
+
+                if ($(this).hasClass('collapse')) {
+                    ui.collapseNotifications($notification);
+                }
+                else {
+                    ui.expandNotifications($notification);
+                }
+            });
+
             $submitButton.submit(function (ev) {
                 var msg = $.trim($newMessage.val());
 
@@ -576,6 +588,10 @@
 
             $element = templates.notification.tmpl(message).appendTo(room.messages);
 
+            if (type === 'notification' && room.isLobby() === false) {
+                ui.collapseNotifications($element);
+            }
+
             if (nearEnd) {
                 ui.scrollToBottom(roomName);
             }
@@ -602,6 +618,35 @@
         },
         setCommands: function (commands) {
             ui.commands = commands;
+        },
+        collapseNotifications: function ($notification) {
+            // collapse multiple notifications
+            var $notifications = $notification.prevUntil(':not(.notification)');
+            if ($notifications.length > 3) {
+                $notifications
+                    .hide()
+                    .find('.info').text('');    // clear any prior text
+                $notification.find('.info')
+                    .text(' (plus ' + $notifications.length + ' hidden... click to expand)')
+                    .removeClass('collapse');
+            }
+        },
+        expandNotifications: function ($notification) {
+            // expand collapsed notifications
+            var $notifications = $notification.prevUntil(':not(.notification)'),
+                topBefore = $notification.position().top;
+
+            $notification.find('.info')
+                .text(' (click to collapse)')
+                .addClass('collapse');
+            $notifications.show();
+
+            var room = getCurrentRoomElements(),
+                topAfter = $notification.position().top,
+                scrollTop = room.messages.scrollTop();
+
+            // make sure last notification is visible
+            room.messages.scrollTop(scrollTop + topAfter - topBefore + $notification.height());
         }
     };
 
