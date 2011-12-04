@@ -115,6 +115,7 @@
     <Content Include="Content\jquery.mobile.structure-1.0rc2.min.css" />
     <Content Include="Content\KeyTips.css" />
     <Content Include="Content\popup-back.gif" />
+    <Content Include="Content\qunit.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -201,8 +202,10 @@
     <Content Include="Scripts\jquery.writeCapture.js" />
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\json2.min.js" />
+    <Content Include="Scripts\qunit.js" />
     <Content Include="Scripts\sammy-latest.min.js" />
     <Content Include="Scripts\writeCapture.js" />
+    <Content Include="Test\index.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
