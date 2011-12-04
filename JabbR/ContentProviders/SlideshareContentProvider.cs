@@ -2,6 +2,7 @@
 using System.IO;
 using System.Net;
 using Newtonsoft.Json;
+using JabbR.Models;
 
 namespace JabbR.ContentProviders
 {
@@ -15,7 +16,7 @@ namespace JabbR.ContentProviders
         private static readonly String _oEmbedUrl = "http://www.slideshare.net/api/oembed/2?url={0}&format=json";
 
 
-        protected override string GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
             // We have to make a call to the SlideShare api because
             // their embed code request the unique ID of the slide deck
@@ -29,7 +30,11 @@ namespace JabbR.ContentProviders
                 using (var reader = new StreamReader(webResponse.GetResponseStream()))
                 {
                     dynamic slideShareData = JsonConvert.DeserializeObject(reader.ReadToEnd());
-                    return slideShareData.html;
+                    return new ContentProviderResultModel()
+                    {
+                        Content = slideShareData.html,
+                        Title = slideShareData.title
+                    };
                 }
             }
         }

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
+using JabbR.Models;
 
 namespace JabbR.ContentProviders
 {
@@ -27,7 +28,7 @@ namespace JabbR.ContentProviders
             HttpUtility.HtmlEncode("http://api.twitter.com/1/statuses/show/{0}.json?include_entities=false&callback=addTweet")
         );
 
-        protected override string GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
 
             // Extract the status id from the URL.
@@ -41,9 +42,13 @@ namespace JabbR.ContentProviders
             // It's possible the link didn't have a status, so only process it if there was a match.
             if (!String.IsNullOrWhiteSpace(status))
             {
-                return String.Format(tweetScript, status);
+                return new ContentProviderResultModel()
+                {
+                    Content = String.Format(tweetScript, status),
+                    Title = response.ResponseUri.AbsoluteUri
+                };
             }
-            return string.Empty;
+            return null;
         }
 
         protected override bool IsValidContent(HttpWebResponse response)

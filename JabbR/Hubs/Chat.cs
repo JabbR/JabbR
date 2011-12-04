@@ -124,7 +124,7 @@ namespace JabbR
             ProcessUrls(links, room, chatMessage);
         }
 
-        private string ParseChatMessageText(string content, out HashSet<string> links) 
+        private string ParseChatMessageText(string content, out HashSet<string> links)
         {
             TextTransform textTransform = new TextTransform(_repository);
             string message = textTransform.Parse(content);
@@ -287,7 +287,7 @@ namespace JabbR
                         continue;
                     }
 
-                    if (String.IsNullOrEmpty(task.Result.Content))
+                    if (task.Result == null || String.IsNullOrEmpty(task.Result.Content))
                     {
                         continue;
                     }
@@ -616,7 +616,7 @@ namespace JabbR
             extractedUrls = urls;
             return message;
         }
-        
+
         private ClientState GetClientState()
         {
             // New client state

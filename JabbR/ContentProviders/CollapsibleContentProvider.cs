@@ -11,30 +11,21 @@ namespace JabbR.ContentProviders
         {
             if (IsValidContent(response))
             {
-                return IsCollapsible ? new ContentProviderResultModel()
+                var result = GetCollapsibleContent(response);
+                if (IsCollapsible)
                 {
-                    Title = GetTitle(response),
-                    Content = String.Format(CultureInfo.InvariantCulture,
+                    result.Content = String.Format(CultureInfo.InvariantCulture,
                                                       ContentFormat,
-                                                      GetTitle(response),
-                                                      GetCollapsibleContent(response))
+                                                      result.Title,
+                                                      result.Content);
                 }
-                : new ContentProviderResultModel()
-                {
-                    Title = GetTitle(response),
-                    Content = GetCollapsibleContent(response)
-                };
+                return result;
             }
 
             return null;
         }
 
-        protected virtual string GetTitle(HttpWebResponse response)
-        {
-            return response.ResponseUri.ToString();
-        }
-
-        protected abstract string GetCollapsibleContent(HttpWebResponse response);
+        protected abstract ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response);
 
         protected abstract bool IsValidContent(HttpWebResponse response);
 
