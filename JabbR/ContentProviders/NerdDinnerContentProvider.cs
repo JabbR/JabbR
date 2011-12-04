@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace JabbR.ContentProviders
@@ -17,7 +16,7 @@ namespace JabbR.ContentProviders
         private static readonly string _nerdDinnerInfoContentFormat = "<h2>{0}</h2><p><strong>When: </strong>{1} @ {2}</p><p><strong>Where: </strong>{3}</p><p><strong>Description: </strong>{4}</p><p><div id='rsvpmsg'><strong>RSVP for this event:</strong><a href='http://nerddinner.com/RSVP/RsvpTwitterBegin/{5}'><img alt='Twitter' src='http://nerddinner.com/Content/Img/icon-twitter.png' border='0' style='padding:3px;' align='absmiddle'></a><a href='http://nerddinner.com/RSVP/RsvpBegin/{5}?identifier=https%3A%2F%2Fwww.google.com%2Faccounts%2Fo8%2Fid'><img alt='Google' src='http://nerddinner.com/Content/Img/icon-google.png' border='0'  style='padding:3px;' align='absmiddle'></a><a href='http://nerddinner.com/RSVP/RsvpBegin/{5}?identifier=https%3A%2F%2Fme.yahoo.com%2F'><img alt='Yahoo!' src='http://nerddinner.com/Content/Img/icon-yahoo.png' border='0'  style='padding:3px;' align='absmiddle'></a></p></div>";
         private static readonly string _nerdDinnerODdataFeedServiceDinnerQueryFormat = "http://nerddinner.com/Services/OData.svc/Dinners({0})";
 
-        protected override string GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
             string strDinnerId = ExtractParameter(response.ResponseUri);
             int dinnerId = 0;
@@ -27,7 +26,9 @@ namespace JabbR.ContentProviders
 
                 if (dinner != null && dinner.d != null)
                 {
-                    return String.Format(_nerdDinnerContentFormat,
+                    return new ContentProviderResultModel()
+                    {
+                        Content = String.Format(_nerdDinnerContentFormat,
                         dinner.d.Latitude,
                         dinner.d.Longitude,
                         dinner.d.Address,
@@ -38,9 +39,10 @@ namespace JabbR.ContentProviders
                         dinner.d.EventDate.Value.ToLongTimeString(),
                         dinner.d.Address,
                         dinner.d.Description,
-                        dinner.d.DinnerID));
+                        dinner.d.DinnerID)),
+                        Title = dinner.d.Title
+                    };
                 }
-
             }
             return null;
         }

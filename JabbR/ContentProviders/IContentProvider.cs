@@ -1,11 +1,12 @@
 ﻿using System.ComponentModel.Composition;
 using System.Net;
+using JabbR.ContentProviders;
 
 namespace JabbR
 {
     [InheritedExport]
     public interface IContentProvider
     {
-        string GetContent(HttpWebResponse response);
+        ContentProviderResultModel GetContent(HttpWebResponse response);
     }
 }

@@ -4,6 +4,6 @@ namespace JabbR.ContentProviders
 {
     public interface IResourceProcessor
     {
-        Task<string> ExtractResource(string url);
+        Task<ContentProviderResultModel> ExtractResource(string url);
     }
 }

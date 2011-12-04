@@ -6,25 +6,25 @@ namespace JabbR.ContentProviders
 {
     public abstract class CollapsibleContentProvider : IContentProvider
     {
-        public virtual string GetContent(HttpWebResponse response)
+        public virtual ContentProviderResultModel GetContent(HttpWebResponse response)
         {
             if (IsValidContent(response))
             {
-                return IsCollapsible ? String.Format(CultureInfo.InvariantCulture,
+                var result = GetCollapsibleContent(response);
+                if (IsCollapsible)
+                {
+                    result.Content = String.Format(CultureInfo.InvariantCulture,
                                                       ContentFormat,
-                                                      GetTitle(response),
-                                                      GetCollapsibleContent(response)) : GetCollapsibleContent(response);
+                                                      result.Title,
+                                                      result.Content);
+                }
+                return result;
             }
 
             return null;
         }
 
-        protected virtual string GetTitle(HttpWebResponse response)
-        {
-            return response.ResponseUri.ToString();
-        }
-
-        protected abstract string GetCollapsibleContent(HttpWebResponse response);
+        protected abstract ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response);
 
         protected abstract bool IsValidContent(HttpWebResponse response);
 
