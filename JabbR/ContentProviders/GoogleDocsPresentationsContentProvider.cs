@@ -41,7 +41,6 @@ namespace JabbR.ContentProviders
             {
                 // Someone may have pasted a link requiring a login --
                 // We can handle that here
-                //ResponseUri = {https://accounts.google.com/ServiceLogin?service=wise&passive=1209600&continue=https://docs.google.com/presentation/d/1XuGxg-JgTKg9wTl48ne7w8jXYuHa6WQr01LBcYDEJfw/edit?hl=en_US&followup=https://docs.google.com/presentation/d/1XuGxg-JgTKg9wTl48ne7w8jXYuHa6W...
                 if (response.ResponseUri.AbsoluteUri.StartsWith("https://accounts.google.com/ServiceLogin") ||
                     response.ResponseUri.AbsoluteUri.StartsWith("http://accounts.google.com/ServiceLogin"))
                 {
@@ -50,8 +49,8 @@ namespace JabbR.ContentProviders
                     {
                         return Domains.Any(d => qs["continue"].StartsWith(d));
                     }
-
                 }
+                return false;
             }
             return true;
         }
