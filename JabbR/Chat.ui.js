@@ -36,15 +36,33 @@
             return this.tab.hasClass('unread');
         };
 
+        this.getUnread = function () {
+            return $tab.data('unread') || 0;
+        };
+
         this.hasSeparator = function () {
             return this.messages.find('.message-separator').length > 0;
         };
 
         this.needsSeparator = function (focus) {
-            if (this.isActive()) {
+            if (focus === true && this.isActive()) {
                 return false;
             }
-            return this.hasSeparator() === false;
+            return this.isInitialized() && this.getUnread() === 0;
+        };
+
+        this.addSeparator = function () {
+            if (this.isLobby()) {
+                return;
+            }
+            templates.separator.tmpl().appendTo(this.messages);
+            this.scrollToBottom();
+        };
+
+        this.removeSeparator = function () {
+            this.messages.find('.message-separator').fadeOut(2000, function () {
+                $(this).remove();
+            });
         };
 
         this.updateUnread = function (isMentioned) {
@@ -95,6 +113,8 @@
         };
 
         this.makeActive = function () {
+            var hasUnread = this.hasUnread();
+
             this.tab.addClass('current')
                     .removeClass('unread')
                     .data('unread', 0)
@@ -108,6 +128,19 @@
             this.users.addClass('current')
                       .show();
 
+            // if no unread since last separator
+            // remove previous separator
+            if (!hasUnread) {
+                this.removeSeparator();
+            }
+        };
+
+        this.setInitialized = function () {
+            this.tab.data('initialized', true);
+        };
+
+        this.isInitialized = function () {
+            return this.tab.data('initialized') === true;
         };
 
         // Users
@@ -218,18 +251,6 @@
         });
     }
 
-    function handleScroll() {
-        var roomName = $(this).attr('id').substring(9);
-        var room = getRoomElements(roomName);
-
-        // remove separator once use has scrolled to bottom of messages list
-        if ($(this).isNearTheEnd() && room.hasSeparator() && room.isActive() && ui.hasFocus()) {
-            $(this).find('.message-separator').fadeOut(2000, function () {
-                $(this).remove();
-            });
-        }
-    }
-
     var ui = {
         initialize: function () {
             $chatArea = $('#chat-area');
@@ -314,6 +335,7 @@
                 // always scroll to bottom after new message sent
                 var room = getCurrentRoomElements();
                 room.scrollToBottom();
+                room.removeSeparator();
 
                 ev.preventDefault();
                 return false;
@@ -566,6 +588,15 @@
                 $previousMessage.addClass('continue');
             }
 
+            // check to see if room needs a separator
+            if (room.needsSeparator(ui.hasFocus())) {
+                // if there's an existing separator, remove it
+                if (room.hasSeparator()) {
+                    room.removeSeparator();
+                }
+                room.addSeparator();
+            }
+
             var $e = templates.message.tmpl(message).appendTo(room.messages);
         },
         addChatMessageContent: function (id, content, roomName) {
@@ -598,18 +629,6 @@
 
             return $element;
         },
-        addSeparator: function (roomName) {
-            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
-            if (room.isLobby()) {
-                return;
-            }
-            templates.separator.tmpl().appendTo(room.messages);
-            ui.scrollToBottom(roomName);
-        },
-        removeSeparator: function (roomName) {
-            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
-            room.messages.find('.message-separator').remove();
-        },
         hasFocus: function () {
             return ui.focus;
         },
@@ -618,6 +637,10 @@
         },
         setCommands: function (commands) {
             ui.commands = commands;
+        },
+        setInitialized: function (roomName) {
+            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
+            room.setInitialized();
         },
         collapseNotifications: function ($notification) {
             // collapse multiple notifications
