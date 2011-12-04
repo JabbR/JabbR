@@ -248,6 +248,7 @@
       <DependentUpon>201111302209099_UserSalt.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ChatClient.cs" />
+    <Compile Include="Models\ContentProviderResultModel.cs" />
     <Compile Include="Services\ChatService.cs" />
     <Compile Include="Services\CryptoService.cs" />
     <Compile Include="Services\IChatService.cs" />

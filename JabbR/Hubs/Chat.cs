@@ -287,13 +287,13 @@ namespace JabbR
                         continue;
                     }
 
-                    if (String.IsNullOrEmpty(task.Result))
+                    if (String.IsNullOrEmpty(task.Result.Content))
                     {
                         continue;
                     }
 
                     // Try to get content from each url we're resolved in the query
-                    string extractedContent = "<p>" + task.Result + "</p>";
+                    string extractedContent = "<p>" + task.Result.Content + "</p>";
 
                     // If we did get something, update the message and notify all clients
                     chatMessage.Content += extractedContent;

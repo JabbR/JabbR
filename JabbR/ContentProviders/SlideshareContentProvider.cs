@@ -26,12 +26,12 @@ namespace JabbR.ContentProviders
 
             using (var webResponse = webRequest.GetResponse())
             {
-            using (var reader = new StreamReader(webResponse.GetResponseStream()))
-            {
+                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                {
                     dynamic slideShareData = JsonConvert.DeserializeObject(reader.ReadToEnd());
                     return slideShareData.html;
+                }
             }
-
         }
 
         protected override bool IsValidContent(HttpWebResponse response)

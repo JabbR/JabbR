@@ -1,19 +1,29 @@
 ﻿using System;
 using System.Globalization;
 using System.Net;
+using JabbR.Models;
 
 namespace JabbR.ContentProviders
 {
     public abstract class CollapsibleContentProvider : IContentProvider
     {
-        public virtual string GetContent(HttpWebResponse response)
+        public virtual ContentProviderResultModel GetContent(HttpWebResponse response)
         {
             if (IsValidContent(response))
             {
-                return IsCollapsible ? String.Format(CultureInfo.InvariantCulture,
+                return IsCollapsible ? new ContentProviderResultModel()
+                {
+                    Title = GetTitle(response),
+                    Content = String.Format(CultureInfo.InvariantCulture,
                                                       ContentFormat,
                                                       GetTitle(response),
-                                                      GetCollapsibleContent(response)) : GetCollapsibleContent(response);
+                                                      GetCollapsibleContent(response))
+                }
+                : new ContentProviderResultModel()
+                {
+                    Title = GetTitle(response),
+                    Content = GetCollapsibleContent(response)
+                };
             }
 
             return null;

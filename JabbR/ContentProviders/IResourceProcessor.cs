@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
+using JabbR.Models;
 
 namespace JabbR.ContentProviders
 {
     public interface IResourceProcessor
     {
-        Task<string> ExtractResource(string url);
+        Task<ContentProviderResultModel> ExtractResource(string url);
     }
 }
