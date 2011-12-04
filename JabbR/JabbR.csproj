@@ -71,6 +71,9 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -213,6 +216,7 @@
   <ItemGroup>
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="ContentProviders\NerdDinnerContentProvider.cs" />
     <Compile Include="ContentProviders\GoogleDocsPresentationsContentProvider.cs" />
     <Compile Include="ContentProviders\VimeoContentProvider.cs" />
     <Compile Include="ContentProviders\GoogleDocsFormProvider.cs" />
