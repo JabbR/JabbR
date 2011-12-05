@@ -52,7 +52,8 @@
             test("populates Rooms and updates ui with message", function () {
                 ui.addRoom = function () { return true; };
                 ui.setActiveRoom = function () { };
-                ui.scrollToBottom = function() {};
+                ui.setInitialized = function () { };
+                ui.scrollToBottom = function () { };
                 var message = null;
                 ui.addMessage = function (msg) { message = msg; };
                 var roomInfoGotten = false;
@@ -77,10 +78,11 @@
                 var user = null;
                 ui.addUser = function(usr) { user = usr; };
                 var userActivitySet = false;
-                ui.setUserActivity = function() { userActivitySet = true; };
+                ui.setUserActivity = function () { userActivitySet = true; };
                 ui.setActiveRoom = function () { };
-                ui.scrollToBottom = function() {};
-                ui.addMessage = function (msg) {};
+                ui.setInitialized = function () { };
+                ui.scrollToBottom = function () { };
+                ui.addMessage = function (msg) { };
                 var deferred = $.Deferred();
                 chat.getRoomInfo = function (room) {
                     return deferred;
