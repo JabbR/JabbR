@@ -607,7 +607,10 @@
         prependChatMessages: function (messages, roomName) {
             var room = getRoomElements(roomName),
                 $messages = room.messages,
-                $target = $messages.children().first();
+                $target = $messages.children().first(),
+                $previousMessage = null,
+                $current = null,
+                previousUser = null;
 
             if (messages.length === 0) {
                 // Mark this list as full
@@ -618,8 +621,22 @@
             // Populate the old messages
             $.each(messages, function (index) {
                 processMessage(this);
-                this.showUser = index === 0 || $target.data('name') !== this.name;
-                $target = $target.before(templates.message.tmpl(this));
+
+                if ($previousMessage) {
+                    previousUser = $previousMessage.data('name');
+                }
+
+                // Determine if we need to show the user
+                this.showUser = !previousUser || previousUser !== this.name;
+
+                // Render the new message
+                $target.before(templates.message.tmpl(this));
+
+                if (this.showUser === false) {
+                    $previousMessage.addClass('continue');
+                }
+
+                $previousMessage = $('#m-' + this.id);
             });
 
             // Scroll to the bottom element so the user sees there's more messages
