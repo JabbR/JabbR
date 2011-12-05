@@ -44,18 +44,25 @@
             return this.messages.find('.message-separator').length > 0;
         };
 
-        this.needsSeparator = function (focus) {
-            if (focus === true && this.isActive()) {
+        this.needsSeparator = function () {
+            if (this.isActive()) {
                 return false;
             }
-            return this.isInitialized() && this.getUnread() === 0;
+            return this.isInitialized() && this.getUnread() === 5;
         };
 
         this.addSeparator = function () {
             if (this.isLobby()) {
                 return;
             }
-            templates.separator.tmpl().appendTo(this.messages);
+
+            // find first correct unread message
+            var n = this.getUnread();
+                $unread = this.messages.find('.message').eq(-(n + 1));
+
+            $unread.after(templates.separator.tmpl())
+                .data('unread', n); // store unread count
+
             this.scrollToBottom();
         };
 
@@ -113,7 +120,8 @@
         };
 
         this.makeActive = function () {
-            var hasUnread = this.hasUnread();
+            var currUnread = this.getUnread(),
+                lastUnread = this.messages.find('.message-separator').data('unread') || 0;
 
             this.tab.addClass('current')
                     .removeClass('unread')
@@ -130,7 +138,7 @@
 
             // if no unread since last separator
             // remove previous separator
-            if (!hasUnread) {
+            if (currUnread <= lastUnread) {
                 this.removeSeparator();
             }
         };
@@ -589,7 +597,7 @@
             }
 
             // check to see if room needs a separator
-            if (room.needsSeparator(ui.hasFocus())) {
+            if (room.needsSeparator()) {
                 // if there's an existing separator, remove it
                 if (room.hasSeparator()) {
                     room.removeSeparator();
