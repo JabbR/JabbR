@@ -13,6 +13,7 @@
         unread = 0,
         isUnreadMessageForUser = false,
         focus = true,
+        loadingHistory = false,
         typingTimeoutId = null;
 
     function isSelf(user) {
@@ -553,6 +554,25 @@
 
         ui.scrollToBottom(room);
         updateCookie();
+    });
+
+    $(ui).bind('ui.scrollRoomTop', function (ev, roomInfo) {
+        // Do nothing if we're loading history already
+        if (loadingHistory === true) {
+            return;
+        }
+
+        loadingHistory = true;
+
+        // TODO: Show a little animation so the user experience looks fancy
+        chat.getPreviousMessages(roomInfo.messageId)
+            .done(function (messages) {
+                ui.prependChatMessages($.map(messages, getMessageViewModel), roomInfo.name);
+                loadingHistory = false;
+            })
+            .fail(function () {
+                loadingHistory = false;
+            });
     });
 
     $(function () {

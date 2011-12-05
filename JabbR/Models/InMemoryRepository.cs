@@ -83,7 +83,7 @@ namespace JabbR.Models
         {
             return _rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
         }
-        
+
         public IQueryable<ChatMessage> GetMessagesByRoom(string roomName)
         {
             var room = GetRoomByName(roomName);
@@ -109,6 +109,18 @@ namespace JabbR.Models
         public ChatClient GetClientById(string clientId)
         {
             return _users.SelectMany(u => u.ConnectedClients).FirstOrDefault(c => c.Id == clientId);
-        }        
+        }
+
+        public IQueryable<ChatMessage> GetPreviousMessages(string messageId)
+        {
+            // Ineffcient since we don't have a messages collection
+
+            return (from r in _rooms
+                    let message = r.Messages.FirstOrDefault(m => m.Id == messageId)
+                    where message != null
+                    from m in r.Messages
+                    where m.When < message.When
+                    select m).AsQueryable();
+        }
     }
 }

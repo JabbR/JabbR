@@ -168,6 +168,18 @@ namespace JabbR
             return rooms;
         }
 
+        public IEnumerable<MessageViewModel> GetPreviousMessages(string messageId)
+        {
+            var previousMessages = (from m in _repository.GetPreviousMessages(messageId)
+                                    orderby m.When descending
+                                    select m).Take(100);
+
+
+            return previousMessages.AsEnumerable()
+                                   .Reverse()
+                                   .Select(m => new MessageViewModel(m));
+        }
+
         public RoomViewModel GetRoomInfo(string roomName)
         {
             if (String.IsNullOrEmpty(roomName))
