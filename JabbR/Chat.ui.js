@@ -241,7 +241,7 @@
 
             // If you're we're near the top, raise the event
             if ($(this).scrollTop() <= scrollTopThreshold) {
-                var $child = $messages.children('.message:first-child');
+                var $child = $messages.children('.message:first');
                 if ($child.length > 0) {
                     messageId = $child.attr('id')
                                       .substr(2); // Remove the "m-"
