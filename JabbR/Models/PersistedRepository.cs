@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using System.Data.Entity;
+﻿using System.Data.Entity;
+using System.Linq;
 
 namespace JabbR.Models
 {
@@ -81,6 +81,21 @@ namespace JabbR.Models
         public IQueryable<ChatMessage> GetMessagesByRoom(string roomName)
         {
             return _db.Messages.Include(r => r.Room).Where(r => r.Room.Name == roomName);
+        }
+
+        public IQueryable<ChatMessage> GetPreviousMessages(string messageId)
+        {
+            var info = (from m in _db.Messages.Include(m => m.Room)
+                        where m.Id == messageId
+                        select new
+                        {
+                            m.When,
+                            RoomName = m.Room.Name
+                        }).FirstOrDefault();
+
+            return from m in GetMessagesByRoom(info.RoomName)
+                   where m.When < info.When
+                   select m;
         }
 
         public IQueryable<ChatUser> SearchUsers(string name)

@@ -13,7 +13,8 @@
         app = null,
         focus = true,
         commands = [],
-        Keys = { Up: 38, Down: 40, Esc: 27 };
+        Keys = { Up: 38, Down: 40, Esc: 27 },
+        scrollTopThreshold = 5;
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -186,25 +187,30 @@
 
     function addRoom(roomName) {
         // Do nothing if the room exists
-        var room = getRoomElements(roomName);
+        var room = getRoomElements(roomName),
+            roomId = null,
+            viewModel = null,
+            $messages = null,
+            scrollHandler = null;
+
         if (room.exists()) {
             return false;
         }
 
-        var roomId = getRoomId(roomName);
+        roomId = getRoomId(roomName);
 
         // Add the tab
-        var viewModel = {
+        viewModel = {
             id: roomId,
             name: roomName
         };
 
         templates.tab.tmpl(viewModel).appendTo($tabs);
 
-        $('<ul/>').attr('id', 'messages-' + roomId)
-                  .addClass('messages')
-                  .appendTo($chatArea)
-                  .hide();
+        $messages = $('<ul/>').attr('id', 'messages-' + roomId)
+                              .addClass('messages')
+                              .appendTo($chatArea)
+                              .hide();
 
 
         $('<ul/>').attr('id', 'users-' + roomId)
@@ -217,14 +223,43 @@
                 return $(a).data('name').toLowerCase() > $(b).data('name').toLowerCase() ? 1 : -1;
             });
 
+        scrollHandler = function (ev) {
+            var messageId = null;
+
+            // Do nothing if there's nothing else
+            if ($(this).data('full') === true) {
+                return;
+            }
+
+            // If you're we're near the top, raise the event
+            if ($(this).scrollTop() <= scrollTopThreshold) {
+                messageId = $messages.children('.message:first-child')
+                                     .attr('id')
+                                     .substr(2); // Remove the "m-"
+
+                $(ui).trigger('ui.scrollRoomTop', [{ name: roomName, messageId: messageId}]);
+            }
+        };
+
+        // Hookup the scroll handler since event delegation doesn't work with scroll events
+        $messages.bind('scroll', scrollHandler);
+
+        // Store the scroll handler so we can remove it later
+        $messages.data('scrollHandler', scrollHandler);
+
         setAccessKeys();
         return true;
     }
 
     function removeRoom(roomName) {
-        var room = getRoomElements(roomName);
+        var room = getRoomElements(roomName),
+            scrollHandler = null;
 
         if (room.exists()) {
+            // Remove the scroll handler from this room
+            scrollHandler = room.messages.data('scrollHandler');
+            room.messages.unbind('scrollHandler', scrollHandler);
+
             room.tab.remove();
             room.messages.remove();
             room.users.remove();
@@ -249,6 +284,12 @@
         app.runRoute('get', '#/rooms/' + roomName, {
             room: roomName
         });
+    }
+
+    function processMessage(message) {
+        message.trimmedName = utility.trim(message.name, 21);
+        message.when = message.date.formatTime(true);
+        message.fulldate = message.date.formatDate() + ' ' + message.date.formatTime(true);
     }
 
     var ui = {
@@ -563,6 +604,27 @@
                 $user.removeClass('typing');
             }
         },
+        prependChatMessages: function (messages, roomName) {
+            var room = getRoomElements(roomName),
+                $messages = room.messages,
+                $target = $messages.children().first();
+
+            if (messages.length === 0) {
+                // Mark this list as full
+                $messages.data('full', true);
+                return;
+            }
+
+            // Populate the old messages
+            $.each(messages, function (index) {
+                processMessage(this);
+                this.showUser = index === 0 || $target.data('name') !== this.name;
+                $target = $target.before(templates.message.tmpl(this));
+            });
+
+            // Scroll to the bottom element so the user sees there's more messages
+            $target[0].scrollIntoView();
+        },
         addChatMessage: function (message, roomName) {
             var room = getRoomElements(roomName),
                 $previousMessage = room.messages.children().last(),
@@ -577,12 +639,9 @@
 
             // Determine if we need to show the user name next to the message
             showUserName = previousUser !== message.name;
-
-            // Set the trimmed name and date
-            message.trimmedName = utility.trim(message.name, 21);
-            message.when = message.date.formatTime(true);
             message.showUser = showUserName;
-            message.fulldate = message.date.formatDate() + ' ' + message.date.formatTime(true);
+
+            processMessage(message)
 
             if (showUserName === false) {
                 $previousMessage.addClass('continue');
@@ -597,7 +656,7 @@
                 room.addSeparator();
             }
 
-            var $e = templates.message.tmpl(message).appendTo(room.messages);
+            templates.message.tmpl(message).appendTo(room.messages);
         },
         addChatMessageContent: function (id, content, roomName) {
             var $message = $('#m-' + id);
