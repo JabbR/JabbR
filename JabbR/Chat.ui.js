@@ -298,7 +298,7 @@
     function processMessage(message) {
         message.trimmedName = utility.trim(message.name, 21);
         message.when = message.date.formatTime(true);
-        message.fulldate = message.date.formatDate() + ' ' + message.date.formatTime(true);
+        message.fulldate = message.date.toLocaleString()
     }
 
     var ui = {
@@ -654,15 +654,15 @@
         },
         addChatMessage: function (message, roomName) {
             var room = getRoomElements(roomName),
-                $previousMessage = room.messages.find('.message').last(),
+                $previousMessage = room.messages.children().last(),
                 previousUser = null,
-                previousTmestamp = new Date(),
+                previousTimestamp = new Date(),
                 showUserName = true,
                 $message = null;
 
             if ($previousMessage.length > 0) {
                 previousUser = $previousMessage.data('name');
-                previousTmestamp = new Date($previousMessage.data('timestamp'));
+                previousTimestamp = new Date($previousMessage.data('timestamp') || new Date());
             }
 
             // Determine if we need to show the user name next to the message
@@ -684,7 +684,7 @@
                 room.addSeparator();
             }
 
-            if (message.date.toDate().diffDays(previousTmestamp.toDate())) {
+            if (message.date.toDate().diffDays(previousTimestamp.toDate())) {
                 ui.addMessage(message.date.toLocaleDateString(), 'list-header', roomName)
                   .find('.right').remove(); // remove timestamp on date indicator
             }
@@ -705,8 +705,9 @@
                 message = {
                     message: content,
                     type: type,
+                    date: now,
                     when: now.formatTime(true),
-                    fulldate: now.formatDate() + ' ' + now.formatTime(true)
+                    fulldate: now.toLocaleString()
                 };
 
             $element = templates.notification.tmpl(message).appendTo(room.messages);
