@@ -54,6 +54,19 @@
             + (showAp ? " " + ap : "");
     };
 
+    // returns the date portion only (strips time)
+    Date.prototype.toDate = function () {
+        return new Date(this.getFullYear(), this.getMonth(), this.getDate());
+    }
+
+    // returns difference (this - d) in days
+    Date.prototype.diffDays = function (d) {
+        var t1 = this.getTime(),
+            t2 = d.getTime();
+
+        return parseInt((t1 - t2) / (24 * 3600 * 1000));
+    };
+
     var utility = {
         trim: function (value, length) {
             if (value.length > length) {

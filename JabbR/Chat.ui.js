@@ -241,11 +241,12 @@
 
             // If you're we're near the top, raise the event
             if ($(this).scrollTop() <= scrollTopThreshold) {
-                messageId = $messages.children('.message:first-child')
-                                     .attr('id')
-                                     .substr(2); // Remove the "m-"
-
-                $(ui).trigger('ui.scrollRoomTop', [{ name: roomName, messageId: messageId}]);
+                var $child = $messages.children('.message:first-child');
+                if ($child.length > 0) {
+                    messageId = $child.attr('id')
+                                      .substr(2); // Remove the "m-"
+                    $(ui).trigger('ui.scrollRoomTop', [{ name: roomName, messageId: messageId}]);
+                }
             }
         };
 
@@ -653,14 +654,15 @@
         },
         addChatMessage: function (message, roomName) {
             var room = getRoomElements(roomName),
-                $previousMessage = room.messages.children().last(),
+                $previousMessage = room.messages.find('.message').last(),
                 previousUser = null,
+                previousTmestamp = new Date(),
                 showUserName = true,
                 $message = null;
 
-
-            if ($previousMessage) {
+            if ($previousMessage.length > 0) {
                 previousUser = $previousMessage.data('name');
+                previousTmestamp = new Date($previousMessage.data('timestamp'));
             }
 
             // Determine if we need to show the user name next to the message
@@ -680,6 +682,10 @@
                     room.removeSeparator();
                 }
                 room.addSeparator();
+            }
+
+            if (message.date.toDate().diffDays(previousTmestamp.toDate())) {
+                ui.addMessage(message.date.toLocaleDateString(), 'list-header', roomName);
             }
 
             templates.message.tmpl(message).appendTo(room.messages);
