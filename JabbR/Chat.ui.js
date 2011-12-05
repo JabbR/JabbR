@@ -685,7 +685,8 @@
             }
 
             if (message.date.toDate().diffDays(previousTmestamp.toDate())) {
-                ui.addMessage(message.date.toLocaleDateString(), 'list-header', roomName);
+                ui.addMessage(message.date.toLocaleDateString(), 'list-header', roomName)
+                  .find('.right').remove(); // remove timestamp on date indicator
             }
 
             templates.message.tmpl(message).appendTo(room.messages);
