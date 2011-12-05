@@ -58,7 +58,7 @@
             }
 
             // find first correct unread message
-            var n = this.getUnread();
+            var n = this.getUnread(),
                 $unread = this.messages.find('.message').eq(-(n + 1));
 
             $unread.after(templates.separator.tmpl())
@@ -456,6 +456,7 @@
         },
         setMessage: function (value) {
             $newMessage.val(value);
+            $newMessage.selectionEnd = value.length;
         },
         addRoom: addRoom,
         removeRoom: removeRoom,
