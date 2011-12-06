@@ -26,9 +26,11 @@ namespace JabbR.Services
         void SendPrivateMessage(ChatUser user, ChatUser targetUser, string messageText);
         void LeaveRoom(ChatUser user, ChatRoom room);
 
-        void OnOwnerAdded(ChatUser targetUser, ChatRoom targetRoom);
-        void OnOwnerRemoved(ChatUser targetUser, ChatRoom targetRoom);
+        void AddOwner(ChatUser targetUser, ChatRoom targetRoom);
+        void RemoveOwner(ChatUser targetUser, ChatRoom targetRoom);
         void KickUser(ChatUser targetUser, ChatRoom targetRoom);
+        void AllowUser(ChatUser targetUser, ChatRoom targetRoom);
+        void UnallowUser(ChatUser targetUser, ChatRoom targetRoom);
 
         void OnUserCreated(ChatUser user);
         void OnUserNameChanged(ChatUser user, string oldUserName, string newUserName);
@@ -37,5 +39,7 @@ namespace JabbR.Services
 
         void ShowHelp();
         void ShowRooms();
+
+        void LockRoom(ChatUser targetUser, ChatRoom room);
     }
 }

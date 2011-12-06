@@ -369,6 +369,50 @@ namespace JabbR.Test
                 Assert.True(user.Rooms.Contains(room));
                 Assert.True(room.Users.Contains(user));
             }
+
+            [Fact]
+            public void AddsUserToRoomIfAllowedAndRoomIsPrivate()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Private = true
+                };
+                room.AllowedUsers.Add(user);
+                user.AllowedRooms.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                service.JoinRoom(user, room);
+
+                Assert.True(user.Rooms.Contains(room));
+                Assert.True(room.Users.Contains(user));
+            }
+
+            [Fact]
+            public void ThrowsIfRoomIsPrivateAndNotAllowed()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Private = true
+                };
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.JoinRoom(user, room));
+            }
         }
 
         public class UpdateActivity
@@ -447,6 +491,7 @@ namespace JabbR.Test
 
         public class AddOwner
         {
+            [Fact]
             public void ThrowsIfUserIsNotOwner()
             {
                 var repository = new InMemoryRepository();
@@ -467,6 +512,7 @@ namespace JabbR.Test
                 Assert.Throws<InvalidOperationException>(() => service.AddOwner(user, user, room));
             }
 
+            [Fact]
             public void ThrowsIfUserIsAlreadyAnOwner()
             {
                 var repository = new InMemoryRepository();
@@ -489,6 +535,7 @@ namespace JabbR.Test
                 Assert.Throws<InvalidOperationException>(() => service.AddOwner(user, user, room));
             }
 
+            [Fact]
             public void MakesUserOwner()
             {
                 var repository = new InMemoryRepository();
@@ -519,10 +566,82 @@ namespace JabbR.Test
                 Assert.True(room.Owners.Contains(user2));
                 Assert.True(user2.OwnedRooms.Contains(room));
             }
+
+            [Fact]
+            public void MakesUserOwnerIfUserAlreadyAllowed()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Private = true,
+                    Creator = user
+                };
+                room.Owners.Add(user);
+                user.OwnedRooms.Add(room);
+                user.Rooms.Add(room);
+                room.Users.Add(user);
+
+                user2.AllowedRooms.Add(room);
+                room.AllowedUsers.Add(user2);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                service.AddOwner(user, user2, room);
+
+                Assert.True(room.Owners.Contains(user2));
+                Assert.True(user2.OwnedRooms.Contains(room));
+            }
+
+            [Fact]
+            public void MakesOwnerAllowedIfRoomLocked()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Creator = user,
+                    Private = true
+                };
+                room.Owners.Add(user);
+                user.OwnedRooms.Add(room);
+                user.Rooms.Add(room);
+                room.Users.Add(user);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                service.AddOwner(user, user2, room);
+
+                Assert.True(user2.AllowedRooms.Contains(room));
+                Assert.True(room.AllowedUsers.Contains(user2));
+                Assert.True(room.Owners.Contains(user2));
+                Assert.True(user2.OwnedRooms.Contains(room));
+            }
         }
 
         public class KickUser
         {
+            [Fact]
             public void ThrowsIfKickSelf()
             {
                 var repository = new InMemoryRepository();
@@ -546,6 +665,7 @@ namespace JabbR.Test
                 Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user, room));
             }
 
+            [Fact]
             public void ThrowsIfUserIsNotOwner()
             {
                 var repository = new InMemoryRepository();
@@ -576,6 +696,7 @@ namespace JabbR.Test
                 Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
             }
 
+            [Fact]
             public void ThrowsIfTargetUserNotInRoom()
             {
                 var repository = new InMemoryRepository();
@@ -606,6 +727,7 @@ namespace JabbR.Test
                 Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
             }
 
+            [Fact]
             public void ThrowsIfOwnerTriesToRemoveOwner()
             {
                 var repository = new InMemoryRepository();
@@ -641,6 +763,7 @@ namespace JabbR.Test
                 Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
             }
 
+            [Fact]
             public void DoesNotThrowIfCreatorKicksOwner()
             {
                 var repository = new InMemoryRepository();
@@ -746,6 +869,456 @@ namespace JabbR.Test
                 ChatUser user = service.DisconnectClient("foo");
 
                 Assert.Null(user);
+            }
+        }
+
+        public class LockRoom
+        {
+            [Fact]
+            public void ThrowsIfUserIsNotCreator()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "Room"
+                };
+                room.Users.Add(user);
+                user.Rooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.LockRoom(user, room));
+            }
+
+            [Fact]
+            public void ThrowsIfUserIsOwner()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "Room"
+                };
+                room.Users.Add(user);
+                room.Owners.Add(user);
+                user.OwnedRooms.Add(room);
+                user.Rooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.LockRoom(user, room));
+            }
+
+            [Fact]
+            public void ThrowsIfRoomAlreadyLocked()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Creator = user,
+                    Private = true
+                };
+                room.AllowedUsers.Add(user);
+                user.AllowedRooms.Add(room);
+                user.Rooms.Add(room);
+                room.Users.Add(user);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.LockRoom(user, room));
+            }
+
+            [Fact]
+            public void LocksRoom()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Creator = user
+                };
+                room.Owners.Add(user);
+                user.OwnedRooms.Add(room);
+                user.Rooms.Add(room);
+                room.Users.Add(user);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                service.LockRoom(user, room);
+
+                Assert.True(room.Private);
+                Assert.True(user.AllowedRooms.Contains(room));
+                Assert.True(room.AllowedUsers.Contains(user));
+            }
+
+            [Fact]
+            public void MakesAllUsersAllowed()
+            {
+                var repository = new InMemoryRepository();
+                var creator = new ChatUser
+                {
+                    Name = "foo"
+                };
+                var users = Enumerable.Range(0, 10).Select(i => new ChatUser
+                {
+                    Name = "user_" + i
+                }).ToList();
+
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Creator = creator
+                };
+                room.Owners.Add(creator);
+                creator.OwnedRooms.Add(room);
+                repository.Add(room);
+                foreach (var u in users)
+                {
+                    room.Users.Add(u);
+                    u.Rooms.Add(room);
+                    repository.Add(u);
+                }
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                service.LockRoom(creator, room);
+
+                foreach (var u in users)
+                {
+                    Assert.True(u.AllowedRooms.Contains(room));
+                    Assert.True(room.AllowedUsers.Contains(u));
+                }
+
+            }
+        }
+
+        public class AllowUser
+        {
+            [Fact]
+            public void ThrowsIfRoomNotPrivate()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                };
+                room.Users.Add(user);
+                user.Rooms.Add(room);
+                room.Owners.Add(user);
+                user.OwnedRooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.AllowUser(user, user2, room));
+            }
+
+            [Fact]
+            public void ThrowsIfUserIsNotOwner()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Private = true
+                };
+                room.Users.Add(user);
+                user.Rooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.AllowUser(user, user, room));
+            }
+
+            [Fact]
+            public void ThrowsIfUserIsAlreadyAllowed()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Private = true
+                };
+                room.Users.Add(user);
+                room.AllowedUsers.Add(user2);
+                room.Owners.Add(user);
+                user.OwnedRooms.Add(room);
+                user.Rooms.Add(room);
+                user2.AllowedRooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.AllowUser(user, user2, room));
+            }
+
+            [Fact]
+            public void AllowsUserIntoRoom()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Private = true
+                };
+                room.Owners.Add(user);
+                user.OwnedRooms.Add(room);
+                user.Rooms.Add(room);
+                room.Users.Add(user);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                service.AllowUser(user, user2, room);
+
+                Assert.True(room.AllowedUsers.Contains(user2));
+                Assert.True(user2.AllowedRooms.Contains(room));
+            }
+        }
+
+        public class UnallowUser
+        {
+            [Fact]
+            public void ThrowsIfRoomNotPrivate()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                };
+                room.Users.Add(user);
+                user.Rooms.Add(room);
+                room.Owners.Add(user);
+                user.OwnedRooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.UnallowUser(user, user2, room));
+            }
+
+            [Fact]
+            public void ThrowsIfUserIsCreator()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Private = true,
+                    Creator = user
+                };
+                room.Users.Add(user);
+                user.Rooms.Add(room);
+                room.Owners.Add(user);
+                user.OwnedRooms.Add(room);
+                room.AllowedUsers.Add(user);
+                user.AllowedRooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.UnallowUser(user, user, room));
+            }
+
+            [Fact]
+            public void ThrowsIfUserIsNotOwner()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Private = true
+                };
+                room.Users.Add(user);
+                user.Rooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.UnallowUser(user, user2, room));
+            }
+
+            [Fact]
+            public void ThrowsIfUserIsNotAllowed()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Private = true
+                };
+                room.Users.Add(user);
+                room.Owners.Add(user);
+                user.OwnedRooms.Add(room);
+                user.Rooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.UnallowUser(user, user2, room));
+            }
+
+            [Fact]
+            public void ThrowIfOwnerTriesToUnallowOwner()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Private = true
+                };
+                user.OwnedRooms.Add(room);
+                room.Owners.Add(user);
+                user.AllowedRooms.Add(room);
+                room.AllowedUsers.Add(user);
+
+                user2.OwnedRooms.Add(room);
+                room.Owners.Add(user2);
+                user2.AllowedRooms.Add(room);
+                room.AllowedUsers.Add(user2);
+
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                room.Users.Add(user);
+                room.Users.Add(user2);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.UnallowUser(user, user2, room));
+            }
+
+            [Fact]
+            public void UnallowsAndRemovesUserFromRoom()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                    Private = true
+                };
+                room.AllowedUsers.Add(user2);
+                room.Owners.Add(user);
+                room.Users.Add(user);
+                user.OwnedRooms.Add(room);
+                user.Rooms.Add(room);
+                user2.AllowedRooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                service.UnallowUser(user, user2, room);
+
+                Assert.False(room.Users.Contains(user2));
+                Assert.False(user2.Rooms.Contains(room));
+                Assert.False(room.AllowedUsers.Contains(user2));
+                Assert.False(user2.AllowedRooms.Contains(room));
             }
         }
     }

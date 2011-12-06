@@ -136,12 +136,15 @@
 
     // When the /join command gets raised this is called
     chat.joinRoom = function (room) {
-        var added = ui.addRoom(room);
-        ui.setActiveRoom(room);
+        var added = ui.addRoom(room.Name);
+        ui.setActiveRoom(room.Name);
+        if (room.Private) {
+            ui.setRoomLocked(room.Name);
+        }
 
         if (added) {
-            populateRoom(room).done(function () {
-                ui.addMessage('You just entered ' + room, 'notification', room);
+            populateRoom(room.Name).done(function () {
+                ui.addMessage('You just entered ' + room.Name, 'notification', room.Name);
             });
         }
     };
@@ -151,15 +154,18 @@
         var activeRoom = this.activeRoom,
             loadRooms = function () {
                 $.each(rooms, function (index, room) {
-                    if (chat.activeRoom !== room) {
-                        populateRoom(room);
+                    if (chat.activeRoom !== room.Name) {
+                        populateRoom(room.Name);
                     }
                 });
                 populateLobbyRooms();
             };
 
         $.each(rooms, function (index, room) {
-            ui.addRoom(room);
+            ui.addRoom(room.Name);
+            if (room.Private) {
+                ui.setRoomLocked(room.Name);
+            }
         });
 
         ui.addMessage('Welcome back ' + chat.name, 'notification', 'lobby');
@@ -182,6 +188,19 @@
             // There's no active room so we don't care
             loadRooms();
         }
+    };
+
+    chat.lockRoom = function (user, room) {
+        if (!isSelf(user)) {
+            ui.addMessage(user.Name + ' has locked ' + room + '.', 'notification', this.activeRoom);
+        }
+
+        ui.setRoomLocked(room);
+    };
+
+    // Called when this user locked a room
+    chat.roomLocked = function (room) {
+        ui.addMessage(room + ' is now locked.', 'notification', this.activeRoom);
     };
 
     chat.addOwner = function (user, room) {
@@ -272,6 +291,22 @@
     };
 
     // User single client commands
+
+    chat.allowUser = function (room) {
+        ui.addMessage('You were granted access to ' + room, 'notification', this.activeRoom);
+    };
+
+    chat.userAllowed = function (user, room) {
+        ui.addMessage(user + ' now has access to ' + room, 'notification', this.activeRoom);
+    };
+
+    chat.unallowUser = function (user) {
+        ui.addMessage('You access to ' + room + ' was revoked.', 'notification', this.activeRoom);
+    };
+
+    chat.userUnallowed = function (user, room) {
+        ui.addMessage('You have revoked ' + user + '"s access to ' + room, 'notification', this.activeRoom);
+    };
 
     // Called when you make someone an owner
     chat.ownerMade = function (user, room) {

@@ -16,6 +16,9 @@ namespace JabbR.Models
 
             modelBuilder.Entity<ChatRoom>()
                         .HasMany(r => r.Owners).WithMany(r => r.OwnedRooms);
+
+            modelBuilder.Entity<ChatRoom>()
+                        .HasMany(r => r.AllowedUsers).WithMany(r => r.AllowedRooms);
             
             modelBuilder.Entity<ChatUser>()
                         .HasMany(u => u.Rooms).WithMany(r => r.Users);

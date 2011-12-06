@@ -161,6 +161,10 @@
             return $.merge(this.getUser(userName),
                            this.messages.find(getUserClassName(userName)));
         };
+
+        this.setLocked = function () {
+            this.tab.addClass('locked');
+        };
     }
 
     function getRoomElements(roomName) {
@@ -504,6 +508,11 @@
             }
 
             return false;
+        },
+        setRoomLocked: function (roomName) {
+            var room = getRoomElements(roomName);
+
+            room.setLocked();
         },
         updateLobbyRoomCount: updateLobbyRoomCount,
         updateUnread: function (roomName, isMentioned) {

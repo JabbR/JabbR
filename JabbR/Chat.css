@@ -148,6 +148,10 @@
     margin: 6px 10px 6px 10px;
 }
 
+#tabs li.locked .content {
+    margin: 6px 10px 6px 23px;
+}
+
 #tabs li .close {
     position: absolute;
     top: 7px;
@@ -155,6 +159,15 @@
     width: 16px;
     height: 16px;
     background: url(Content/images/close-icon.png);
+}
+
+#tabs li.locked .lock {
+    position: absolute;
+    top: 7px;
+    width: 16px;
+    height: 16px;
+    margin-left: 5px;
+    background: url(Content/images/lock.png) no-repeat;
 }
 
 #tabs li .close:hover {

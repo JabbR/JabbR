@@ -24,11 +24,15 @@ namespace JabbR.Models
         public virtual ICollection<ChatRoom> OwnedRooms { get; set; }
         public virtual ICollection<ChatRoom> Rooms { get; set; }
 
+        // Private rooms this user is allowed to go into
+        public virtual ICollection<ChatRoom> AllowedRooms { get; set; }
+
         public ChatUser()
         {
             ConnectedClients = new HashSet<ChatClient>();
             OwnedRooms = new HashSet<ChatRoom>();
             Rooms = new HashSet<ChatRoom>();
+            AllowedRooms = new HashSet<ChatRoom>();
         }
     }
 }

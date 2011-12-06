@@ -11,12 +11,17 @@ namespace JabbR.Models
 
         public DateTime? LastNudged { get; set; }
         public string Name { get; set; }
+        
+        // Private rooms
+        public bool Private { get; set; }
+        public virtual ICollection<ChatUser> AllowedUsers { get; set; }
 
         // Creator of the room
         public virtual ChatUser Creator { get; set; }
 
         // Creator and owners
         public virtual ICollection<ChatUser> Owners { get; set; } 
+
         public virtual ICollection<ChatMessage> Messages { get; set; }
         public virtual ICollection<ChatUser> Users { get; set; }
 
@@ -25,6 +30,7 @@ namespace JabbR.Models
             Owners = new HashSet<ChatUser>();
             Messages = new HashSet<ChatMessage>();
             Users = new HashSet<ChatUser>();
+            AllowedUsers = new HashSet<ChatUser>();
         }
     }
 }

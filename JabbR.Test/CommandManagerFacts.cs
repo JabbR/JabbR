@@ -552,7 +552,7 @@ namespace JabbR.Test
                 var result = commandManager.TryHandleCommand("/addowner dfowler2 test");
 
                 Assert.True(result);
-                notificationService.Verify(m => m.OnOwnerAdded(targetUser, room), Times.Once());
+                notificationService.Verify(m => m.AddOwner(targetUser, room), Times.Once());
                 Assert.True(room.Owners.Contains(targetUser));
                 Assert.True(targetUser.OwnedRooms.Contains(room));
             }
@@ -644,7 +644,7 @@ namespace JabbR.Test
                 var result = commandManager.TryHandleCommand("/removeowner dfowler2 test");
 
                 Assert.True(result);
-                notificationService.Verify(m => m.OnOwnerRemoved(targetUser, room), Times.Once());
+                notificationService.Verify(m => m.RemoveOwner(targetUser, room), Times.Once());
                 Assert.False(room.Owners.Contains(targetUser));
                 Assert.False(targetUser.OwnedRooms.Contains(room));
             }

@@ -109,6 +109,7 @@
     <Content Include="Content\images\icons-36-black.png" />
     <Content Include="Content\images\icons-36-white.png" />
     <Content Include="Content\images\keyboard.png" />
+    <Content Include="Content\images\lock.png" />
     <Content Include="Content\jquery.mobile-1.0rc2.css" />
     <Content Include="Content\jquery.mobile-1.0rc2.min.css" />
     <Content Include="Content\jquery.mobile.structure-1.0rc2.css" />
@@ -251,6 +252,10 @@
     <Compile Include="Migrations\201111302209099_UserSalt.cs" />
     <Compile Include="Migrations\201111302209099_UserSalt.Designer.cs">
       <DependentUpon>201111302209099_UserSalt.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201112061116504_PrivateRooms.cs" />
+    <Compile Include="Migrations\201112061116504_PrivateRooms.Designer.cs">
+      <DependentUpon>201112061116504_PrivateRooms.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ChatClient.cs" />
     <Compile Include="Services\ChatService.cs" />

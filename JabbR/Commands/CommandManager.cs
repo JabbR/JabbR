@@ -194,6 +194,24 @@ namespace JabbR.Commands
 
                 return true;
             }
+            else if (commandName.Equals("lock", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleLock(user, parts);
+
+                return true;
+            }
+            else if (commandName.Equals("allow", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleAllow(user, parts);
+
+                return true;
+            }
+            else if (commandName.Equals("unallow", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleUnallow(user, parts);
+
+                return true;
+            }
             else if (commandName.Equals("logout", StringComparison.OrdinalIgnoreCase))
             {
                 HandleLogOut(user);
@@ -203,10 +221,62 @@ namespace JabbR.Commands
 
             return false;
         }
-
+        
         private void HandleLogOut(ChatUser user)
         {
             _notificationService.LogOut(user, _clientId);
+        }
+
+        private void HandleUnallow(ChatUser user, string[] parts)
+        {
+            if (parts.Length == 1)
+            {
+                throw new InvalidOperationException("Which user to you want to revoke persmissions from?");
+            }
+
+            string targetUserName = parts[1];
+
+            ChatUser targetUser = _repository.VerifyUser(targetUserName);
+
+            if (parts.Length == 2)
+            {
+                throw new InvalidOperationException("Which room?");
+            }
+
+            string roomName = parts[2];
+            ChatRoom targetRoom = _repository.VerifyRoom(roomName);
+
+            _chatService.UnallowUser(user, targetUser, targetRoom);
+
+            _notificationService.UnallowUser(targetUser, targetRoom);
+
+            _repository.CommitChanges();
+        }
+
+        private void HandleAllow(ChatUser user, string[] parts)
+        {
+            if (parts.Length == 1)
+            {
+                throw new InvalidOperationException("Who do you want to allow?");
+            }
+
+            string targetUserName = parts[1];
+
+            ChatUser targetUser = _repository.VerifyUser(targetUserName);
+
+            if (parts.Length == 2)
+            {
+                throw new InvalidOperationException("Which room?");
+            }
+
+            string roomName = parts[2];
+            ChatRoom targetRoom = _repository.VerifyRoom(roomName);
+
+            _chatService.AllowUser(user, targetUser, targetRoom);
+
+            _notificationService.AllowUser(targetUser, targetRoom);
+
+            _repository.CommitChanges();
         }
 
         private void HandleAddOwner(ChatUser user, string[] parts)
@@ -230,7 +300,7 @@ namespace JabbR.Commands
 
             _chatService.AddOwner(user, targetUser, targetRoom);
 
-            _notificationService.OnOwnerAdded(targetUser, targetRoom);
+            _notificationService.AddOwner(targetUser, targetRoom);
 
             _repository.CommitChanges();
         }
@@ -256,7 +326,7 @@ namespace JabbR.Commands
 
             _chatService.RemoveOwner(user, targetUser, targetRoom);
 
-            _notificationService.OnOwnerRemoved(targetUser, targetRoom);
+            _notificationService.RemoveOwner(targetUser, targetRoom);
 
             _repository.CommitChanges();
         }
@@ -282,6 +352,21 @@ namespace JabbR.Commands
             _notificationService.KickUser(targetUser, room);
 
             _repository.CommitChanges();
+        }
+
+        private void HandleLock(ChatUser user, string[] parts)
+        {
+            if (parts.Length < 2)
+            {
+                throw new InvalidOperationException("Which room do you want to lock?");
+            }
+
+            string roomName = parts[1];
+            ChatRoom room = _repository.VerifyRoom(roomName);
+
+            _chatService.LockRoom(user, room);
+
+            _notificationService.LockRoom(user, room);
         }
 
         private void HandleWho(string[] parts)

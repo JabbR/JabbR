@@ -132,13 +132,19 @@ namespace JabbR.Services
 
         public void JoinRoom(ChatUser user, ChatRoom room)
         {
+            // Throw if the room is private but the user isn't allowed
+            if (room.Private && !IsUserAllowed(room, user))
+            {
+                throw new InvalidOperationException(String.Format("Unable to join {0}. This room is locked and you don't have permission to enter.", room.Name));
+            }
+
             // Add this room to the user's list of rooms
             user.Rooms.Add(room);
 
             // Add this user to the list of room's users
             room.Users.Add(user);
         }
-
+        
         public void UpdateActivity(ChatUser user)
         {
             user.Status = (int)UserStatus.Active;
@@ -184,6 +190,16 @@ namespace JabbR.Services
             // Make the user an owner
             targetRoom.Owners.Add(targetUser);
             targetUser.OwnedRooms.Add(targetRoom);
+
+            if (targetRoom.Private)
+            {
+                if (!targetRoom.AllowedUsers.Contains(targetUser))
+                {
+                    // If the room is private make this user allowed
+                    targetRoom.AllowedUsers.Add(targetUser);
+                    targetUser.AllowedRooms.Add(targetRoom);
+                }
+            }
         }
 
         public void RemoveOwner(ChatUser creator, ChatUser targetUser, ChatRoom targetRoom)
@@ -298,6 +314,11 @@ namespace JabbR.Services
             return room.Users.Any(r => r.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase));
         }
 
+        private bool IsUserAllowed(ChatRoom room, ChatUser user)
+        {
+            return room.AllowedUsers.Contains(user);
+        }
+
         private static void ValidatePassword(string password)
         {
             if (String.IsNullOrEmpty(password) || password.Length < 6)
@@ -339,6 +360,88 @@ namespace JabbR.Services
                 user.Salt = _crypto.CreateSalt();
             }
             user.HashedPassword = password.ToSha256(user.Salt);
+        }
+
+        public void AllowUser(ChatUser user, ChatUser targetUser, ChatRoom targetRoom)
+        {
+            EnsureOwner(user, targetRoom);
+
+            if (!targetRoom.Private)
+            {
+                throw new InvalidOperationException(String.Format("{0} is not a private room.", targetRoom.Name));
+            }
+
+            if (targetUser.AllowedRooms.Contains(targetRoom))
+            {
+                throw new InvalidOperationException(String.Format("{0} is already allowed for {0}.", targetUser.Name, targetRoom.Name));
+            }
+
+            targetRoom.AllowedUsers.Add(targetUser);
+            targetUser.AllowedRooms.Add(targetRoom);
+
+            _repository.CommitChanges();
+        }
+
+        public void UnallowUser(ChatUser user, ChatUser targetUser, ChatRoom targetRoom)
+        {
+            EnsureOwner(user, targetRoom);
+
+            if (targetUser == user)
+            {
+                throw new InvalidOperationException("Why would you want to unallow yourself?");
+            }
+
+            if (!targetRoom.Private)
+            {
+                throw new InvalidOperationException(String.Format("{0} is not a private room.", targetRoom.Name));
+            }
+
+            if (!targetUser.AllowedRooms.Contains(targetRoom))
+            {
+                throw new InvalidOperationException(String.Format("{0} isn't allowed to access {0}.", targetUser.Name, targetRoom.Name));
+            }
+
+            // If this user isn't the creator and the target user is an owner then throw
+            if (targetRoom.Creator != user && targetRoom.Owners.Contains(targetUser))
+            {
+                throw new InvalidOperationException("Owners cannot unallow other owners. Only the room creator and unallow an owner.");
+            }
+
+            targetRoom.AllowedUsers.Remove(targetUser);
+            targetUser.AllowedRooms.Remove(targetRoom);
+
+            // Make the user leave the room
+            LeaveRoom(targetUser, targetRoom);
+
+            _repository.CommitChanges();
+        }
+
+        public void LockRoom(ChatUser user, ChatRoom targetRoom)
+        {
+            EnsureCreator(user, targetRoom);
+
+            if (targetRoom.Private)
+            {
+                throw new InvalidOperationException(String.Format("{0} is already locked.", targetRoom.Name));
+            }
+
+            // Make the room private
+            targetRoom.Private = true;
+
+            // Add the creator to the allowed list
+            targetRoom.AllowedUsers.Add(user);
+
+            // Add the room to the users' list
+            user.AllowedRooms.Add(targetRoom);
+
+            // Make all users in the current room allowed
+            foreach (var u in targetRoom.Users)
+            {
+                u.AllowedRooms.Add(targetRoom);
+                targetRoom.AllowedUsers.Add(u);
+            }
+
+            _repository.CommitChanges();
         }
     }
 }

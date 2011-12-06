@@ -154,7 +154,10 @@ namespace JabbR
                 new { Name = "kick", Description = "Type /kick [user] to kick a user from the room. Note, this is only valid for owners of the room." },
                 new { Name = "logout", Description = "Type /logout - To logout from this client (chat cookie will be removed)." },
                 new { Name = "addowner", Description = "Type /addowner [user] [room] - To add an owner a user as an owner to the specified room. Only works if you're an owner of that room." },
-                new { Name = "removeowner", Description = "Type /removeowner [user] [room] - To remove an owner from the specified room. Only works if you're the creator of that room." }
+                new { Name = "removeowner", Description = "Type /removeowner [user] [room] - To remove an owner from the specified room. Only works if you're the creator of that room." },
+                new { Name = "lock", Description = "Type /lock [room] - To make a room private. Only works if you're the creator of that room." },
+                new { Name = "allow", Description = "Type /allow [user] [room] - To give a user permission to a private room. Only works if you're an owner of that room." },
+                new { Name = "unallow", Description = "Type /unallow [user] [room] - To revoke a user's permission to a private room. Only works if you're an owner of that room." },
             };
         }
         public IEnumerable<RoomViewModel> GetRooms()
@@ -162,7 +165,8 @@ namespace JabbR
             var rooms = _repository.Rooms.Select(r => new RoomViewModel
             {
                 Name = r.Name,
-                Count = r.Users.Count(u => u.Status != (int)UserStatus.Offline)
+                Count = r.Users.Count(u => u.Status != (int)UserStatus.Offline),
+                Private = r.Private
             });
 
             return rooms;
@@ -249,7 +253,7 @@ namespace JabbR
             Caller.name = user.Name;
 
             var userViewModel = new UserViewModel(user);
-            var roomNames = new List<string>();
+            var rooms = new List<RoomViewModel>();
 
             foreach (var room in user.Rooms)
             {
@@ -268,11 +272,15 @@ namespace JabbR
                 GroupManager.AddToGroup(clientId, room.Name).Wait();
 
                 // Add to the list of room names
-                roomNames.Add(room.Name);
+                rooms.Add(new RoomViewModel
+                {
+                    Name = room.Name,
+                    Private = room.Private
+                });
             }
 
             // Initialize the chat with the rooms the user is in
-            Caller.logOn(roomNames);
+            Caller.logOn(rooms);
         }
 
         private void UpdateActivity(ChatUser user, ChatRoom room)
@@ -415,12 +423,18 @@ namespace JabbR
         void INotificationService.JoinRoom(ChatUser user, ChatRoom room)
         {
             var userViewModel = new UserViewModel(user);
+            var roomViewModel = new RoomViewModel
+            {
+                Name = room.Name,
+                Private = room.Private
+            };
+
             var isOwner = user.OwnedRooms.Contains(room);
 
             // Tell all clients to join this room
             foreach (var client in user.ConnectedClients)
             {
-                Clients[client.Id].joinRoom(room.Name);
+                Clients[client.Id].joinRoom(roomViewModel);
             }
 
             // Tell the people in this room that you've joined
@@ -436,7 +450,34 @@ namespace JabbR
             }
         }
 
-        void INotificationService.OnOwnerAdded(ChatUser targetUser, ChatRoom targetRoom)
+        void INotificationService.AllowUser(ChatUser targetUser, ChatRoom targetRoom)
+        {
+            foreach (var client in targetUser.ConnectedClients)
+            {
+                // Tell this client it's an owner
+                Clients[client.Id].allowUser(targetRoom.Name);
+            }
+
+            // Tell the calling client the granting permission into the room was successful
+            Caller.userAllowed(targetUser.Name, targetRoom.Name);
+        }
+        
+        void INotificationService.UnallowUser(ChatUser targetUser, ChatRoom targetRoom)
+        {
+            // Kick the user from the room when they are unallowed
+            ((INotificationService)this).KickUser(targetUser, targetRoom);
+
+            foreach (var client in targetUser.ConnectedClients)
+            {
+                // Tell this client it's an owner
+                Clients[client.Id].unallowUser(targetRoom.Name);
+            }
+
+            // Tell the calling client the granting permission into the room was successful
+            Caller.userUnallowed(targetUser.Name, targetRoom.Name);
+        }
+
+        void INotificationService.AddOwner(ChatUser targetUser, ChatRoom targetRoom)
         {
             foreach (var client in targetUser.ConnectedClients)
             {
@@ -457,7 +498,7 @@ namespace JabbR
             Caller.ownerMade(targetUser.Name, targetRoom.Name);
         }
 
-        void INotificationService.OnOwnerRemoved(ChatUser targetUser, ChatRoom targetRoom)
+        void INotificationService.RemoveOwner(ChatUser targetUser, ChatRoom targetRoom)
         {
             foreach (var client in targetUser.ConnectedClients)
             {
@@ -534,6 +575,17 @@ namespace JabbR
         void INotificationService.ListUsers(ChatRoom room, IEnumerable<string> names)
         {
             Caller.showUsersInRoom(room.Name, names);
+        }
+
+        void INotificationService.LockRoom(ChatUser targetUser, ChatRoom room)
+        {
+            var userViewModel = new UserViewModel(targetUser);
+
+            // Tell the room it's locked
+            Clients.lockRoom(userViewModel, room.Name);
+
+            // Tell the caller the room was successfully locked
+            Caller.roomLocked(room.Name);
         }
 
         void INotificationService.LogOut(ChatUser user, string clientId)
