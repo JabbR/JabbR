@@ -220,6 +220,7 @@
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="ContentProviders\ContentProviderResultModel.cs" />
+    <Compile Include="ContentProviders\UStreamContentProvider.cs" />
     <Compile Include="ContentProviders\GoogleDocsPresentationsContentProvider.cs" />
     <Compile Include="ContentProviders\JoinMeContentProvider.cs" />
     <Compile Include="ContentProviders\NerdDinnerContentProvider.cs" />
