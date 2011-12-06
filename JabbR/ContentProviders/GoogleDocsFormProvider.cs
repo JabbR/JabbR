@@ -25,7 +25,7 @@ namespace JabbR.ContentProviders
             }
         }
 
-        protected override System.Text.RegularExpressions.Regex ParameterExtractionRegex
+        protected override Regex ParameterExtractionRegex
         {
             get
             {
