@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JabbR.Commands;
 using JabbR.Infrastructure;
@@ -6,7 +7,6 @@ using JabbR.Models;
 using JabbR.Services;
 using Moq;
 using Xunit;
-using System.Collections.Generic;
 
 namespace JabbR.Test
 {
