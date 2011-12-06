@@ -39,24 +39,6 @@ namespace JabbR.ContentProviders
             return matches.Count() > 0 ? matches.First() : string.Empty;
         }
 
-
-
-        private dynamic FetchAssetData(string assetType, string embedId)
-        {
-            var webRequest = (HttpWebRequest)HttpWebRequest.Create(
-                   String.Format(_apiQueryFormat, assetType, embedId));
-
-            using (var webResponse = webRequest.GetResponse())
-            {
-                using (var reader = new StreamReader(webResponse.GetResponseStream()))
-                {
-                    dynamic ustreamAssetData = JsonConvert.DeserializeObject(reader.ReadToEnd());
-                    return ustreamAssetData;
-                }
-            }
-        }
-
-
         protected override bool IsValidContent(HttpWebResponse response)
         {
             return response.ResponseUri.AbsoluteUri.StartsWith("http://ustream.tv/", StringComparison.OrdinalIgnoreCase)
