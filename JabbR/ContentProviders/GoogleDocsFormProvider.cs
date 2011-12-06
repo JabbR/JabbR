@@ -1,11 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Web;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using JabbR.ContentProviders.Core;
 
 namespace JabbR.ContentProviders
 {
     public class GoogleDocsFormProvider : EmbedContentProvider
     {
+        private static readonly Regex _formIdExtractRegex = new Regex(@".*formkey=(.+)#|^");
+
         public override string MediaFormatString
         {
             get
@@ -23,13 +25,11 @@ namespace JabbR.ContentProviders
             }
         }
 
-        protected override IEnumerable<object> ExtractParameters(Uri responseUri)
+        protected override Regex ParameterExtractionRegex
         {
-            var queryString = HttpUtility.ParseQueryString(responseUri.Query);
-            string formId = queryString["formkey"];
-            if (!String.IsNullOrEmpty(formId))
+            get
             {
-                yield return formId;
+                return _formIdExtractRegex;
             }
         }
     }

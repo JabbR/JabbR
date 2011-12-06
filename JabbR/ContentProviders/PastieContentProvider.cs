@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using JabbR.ContentProviders.Core;
 
 namespace JabbR.ContentProviders
 {
@@ -17,7 +18,7 @@ namespace JabbR.ContentProviders
             }
         }
 
-        public override Regex MediaUrlRegex
+        protected override Regex ParameterExtractionRegex
         {
             get
             {

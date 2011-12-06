@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using JabbR.ContentProviders.Core;
 
 namespace JabbR.ContentProviders
 {
