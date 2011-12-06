@@ -220,8 +220,7 @@
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="ContentProviders\Core\CollapsibleContentProvider.cs" />
-    <Compile Include="ContentProviders\ContentProviderResultModel.cs" />
-    <Compile Include="ContentProviders\UStreamContentProvider.cs" />
+    <Compile Include="ContentProviders\Core\ContentProviderResultModel.cs" />
     <Compile Include="ContentProviders\Core\EmbedContentProvider.cs" />
     <Compile Include="ContentProviders\Core\IContentProvider.cs" />
     <Compile Include="ContentProviders\Core\IResourceProcessor.cs" />
@@ -229,6 +228,7 @@
     <Compile Include="ContentProviders\GoogleDocsPresentationsContentProvider.cs" />
     <Compile Include="ContentProviders\JoinMeContentProvider.cs" />
     <Compile Include="ContentProviders\NerdDinnerContentProvider.cs" />
+    <Compile Include="ContentProviders\UStreamContentProvider.cs" />
     <Compile Include="ContentProviders\VimeoContentProvider.cs" />
     <Compile Include="ContentProviders\GoogleDocsFormProvider.cs" />
     <Compile Include="ContentProviders\SlideshareContentProvider.cs" />
