@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JabbR.Commands;
 using JabbR.Infrastructure;
@@ -25,6 +26,45 @@ namespace JabbR.Test
 
                 Assert.False(result);
             }
+
+            [Fact]
+            public void ReturnsFalseIfCommandStartsWithSlash()
+            {
+                var repository = new InMemoryRepository();
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("id", "id", "name", service, repository, notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/foo", new string[] {});
+
+                Assert.False(result);
+            }
+
+            [Fact]
+            public void ThrowsIfCommandDoesntExists()
+            {
+                var repository = new InMemoryRepository();
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1",
+                    HashedPassword = "password".ToSha256(null)
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+
+                user.Rooms.Add(room);
+                room.Users.Add(user);
+                repository.Add(room);
+                var commandManager = new CommandManager("1", "1", "room", service, repository, notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/foo"));
+            }
         }
 
         public class NickCommand
@@ -40,6 +80,22 @@ namespace JabbR.Test
             public void CreateNewUserFailsIfNoPassword()
             {                
                 VerifyThrows<InvalidOperationException>("/nick dfowler");
+            }
+
+            [Fact]
+            public void ThrowsIfNickIsEmpty()
+            {
+                var repository = new InMemoryRepository();
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        null,
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("nick", new string[] { "", ""}));
             }
 
             [Fact]
@@ -145,6 +201,30 @@ namespace JabbR.Test
                 Assert.Equal("dfowler", user.Name);
                 Assert.Equal("password".ToSha256("salt"), user.HashedPassword);
                 notificationService.Verify(m => m.SetPassword(), Times.Once());
+            }
+
+            [Fact]
+            public void CanChangePasswordIfNewPasswordIsEmpty()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Salt = "salt",
+                    Id = "1",
+                    HashedPassword = ""
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("nick", new string[] { "/nick", "dfowler", "password", ""}));
             }
 
             [Fact]
@@ -259,11 +339,13 @@ namespace JabbR.Test
 
         public class LogOutCommand
         {
+            [Fact]
             public void ThrowsIfNoUser()
             {
                 VerifyThrows<InvalidOperationException>("/logout");
             }
 
+            [Fact]
             public void LogOut()
             {
                 var repository = new InMemoryRepository();
@@ -628,6 +710,28 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/create "));
+            }
+
+            [Fact]
+            public void ThrowsIfRoomNameIsEmpty()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("create", new string[] { "", ""}));
             }
 
             [Fact]
@@ -1142,6 +1246,840 @@ namespace JabbR.Test
                 notificationService.Verify(x => x.KickUser(user2, room), Times.Once());
             }
         }
+
+        public class LeaveCommand
+        {
+            [Fact]
+            public void CanLeaveRoom()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                user.Rooms.Add(room);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/leave");
+
+                Assert.True(result);
+                Assert.False(room.Users.Contains(user));
+                Assert.False(user.Rooms.Contains(room));
+                notificationService.Verify(x => x.LeaveRoom(user, room), Times.Once());
+            }
+
+            [Fact]
+            public void CanLeaveRoomByGivingRoomName()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                user.Rooms.Add(room);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/leave room");
+
+                Assert.True(result);
+                Assert.False(room.Users.Contains(user));
+                Assert.False(user.Rooms.Contains(room));
+                notificationService.Verify(x => x.LeaveRoom(user, room), Times.Once());
+            }
+
+            [Fact]
+            public void CannotLeaveRoomIfNotImRoom()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                user.Rooms.Add(room);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/leave"));
+            }
+        }
+
+        public class ListCommand
+        {
+            [Fact]
+            public void MissingRoomThrows()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/list"));
+            }
+
+            [Fact]
+            public void NotExistingRoomThrows()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/list test"));
+            }
+
+            [Fact]
+            public void CanShowUserList()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                room.Users.Add(user2);
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/list room");
+
+                var userList = new List<String>();
+                userList.Add(user.Name);
+                userList.Add(user2.Name);
+
+                Assert.True(result);
+                notificationService.Verify(x => x.ListUsers(room, userList), Times.Once());
+            }
+        }
+
+        public class MeCommand
+        {
+            [Fact]
+            public void MissingContentThrows()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                user.Rooms.Add(room);
+                room.Users.Add(user);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/me"));
+            }
+
+            [Fact]
+            public void MissingRoomThrows()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                user.Rooms.Add(room);
+                room.Users.Add(user);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/me is testing"));
+            }
+
+            [Fact]
+            public void CanUseMeCommand()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                user.Rooms.Add(room);
+                room.Users.Add(user);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/me is testing");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.OnSelfMessage(room, user, "is testing"), Times.Once());
+            }
+        }
+
+        public class MsgCommand
+        {
+            [Fact]
+            public void ThrowsIfThereIsOnlyOneUser()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/msg"));
+            }
+
+            [Fact]
+            public void MissingUserNameThrows()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user2);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/msg"));
+            }
+            
+            [Fact]
+            public void ThrowsIfUserDoesntExists()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user2);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/msg dfowler3"));
+            }
+
+            [Fact]
+            public void CannotMessageOwnUser()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user2);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/msg dfowler"));
+            }
+
+            [Fact]
+            public void MissingMessageTextThrows()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user2);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/msg dfowler2 "));
+            }
+
+            [Fact]
+            public void CanSendMessage()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user2);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/msg dfowler2 what is up?");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.SendPrivateMessage(user, user2, "what is up?"), Times.Once());
+            }
+        }
+
+        public class NudgeCommand
+        {
+            [Fact]
+            public void ThrowsIfThereIsOnlyOneUser()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                user.Rooms.Add(room);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nudge void"));
+            }
+
+            [Fact]
+            public void ThrowsIfUserDoesntExists()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user2);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nudge void"));
+            }
+
+            [Fact]
+            public void CannotNudgeOwnUser()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user2);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nudge dfowler"));
+            }
+
+            [Fact]
+            public void NudgingTwiceWithin60SecondsThrows()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user2);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/nudge dfowler2");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.NugeUser(user, user2), Times.Once());
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nudge dfowler2"));
+            }
+
+            [Fact]
+            public void CanNudge()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user2);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/nudge dfowler2");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.NugeUser(user, user2), Times.Once());
+                Assert.NotNull(user2.LastNudged);
+            }
+
+            [Fact]
+            public void CanNudgeRoom()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                user.Rooms.Add(room);
+                room.Users.Add(user);
+                user2.Rooms.Add(room);
+                room.Users.Add(user2);
+                repository.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/nudge");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.NudgeRoom(room, user), Times.Once());
+                Assert.NotNull(room.LastNudged);
+            }
+
+            [Fact]
+            public void CannotNudgeRoomTwiceWithin60Seconds()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                user.Rooms.Add(room);
+                room.Users.Add(user);
+                user2.Rooms.Add(room);
+                room.Users.Add(user2);
+                repository.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/nudge");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.NudgeRoom(room, user), Times.Once());
+                Assert.NotNull(room.LastNudged);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nudge"));
+            }
+
+        }
+
+        public class RoomsCommand
+        {
+            [Fact]
+            public void CanShowRooms()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/rooms");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.ShowRooms(), Times.Once());
+            }
+        }
+
+        public class WhoCommand
+        {
+            [Fact]
+            public void CanGetUserList()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/who");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.ListUsers(), Times.Once());
+            }
+
+            [Fact]
+            public void CanShowUserRoomsWhenEnteringPartOfName()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/who dfow");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.ListRooms(user), Times.Once());
+            }
+
+            [Fact]
+            public void CanShowUserRooms()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/who dfowler");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.ListRooms(user), Times.Once());
+            }
+
+            [Fact]
+            public void ShowsUserListIfFoundMoreThenOneUser()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user2);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                var userList = new List<ChatUser>();
+                userList.Add(user);
+                userList.Add(user2);
+
+                bool result = commandManager.TryHandleCommand("/who dfow");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.ListUsers(userList), Times.Once());
+            }
+
+        }
+
 
         public static void VerifyThrows<T>(string command) where T : Exception
         {

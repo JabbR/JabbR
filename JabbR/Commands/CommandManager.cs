@@ -30,6 +30,25 @@ namespace JabbR.Commands
             _notificationService = notificationService;
         }
 
+        public bool TryHandleCommand(string commandName, string[] parts)
+        {
+            commandName = commandName.Trim();
+            if (commandName.StartsWith("/"))
+            {
+                return false;
+            }
+
+            if (!TryHandleBaseCommand(commandName, parts) &&
+                !TryHandleUserCommand(commandName, parts) &&
+                !TryHandleRoomCommand(commandName, parts))
+            {
+                // If none of the commands are valid then throw an exception
+                throw new InvalidOperationException(String.Format("'{0}' is not a valid command.", commandName));
+            }
+
+            return true;
+        }
+
         public bool TryHandleCommand(string command)
         {
             command = command.Trim();
@@ -41,15 +60,7 @@ namespace JabbR.Commands
             string[] parts = command.Substring(1).Split(' ');
             string commandName = parts[0];
 
-            if (!TryHandleBaseCommand(commandName, parts) &&
-                !TryHandleUserCommand(commandName, parts) &&
-                !TryHandleRoomCommand(commandName, parts))
-            {
-                // If none of the commands are valid then throw an exception
-                throw new InvalidOperationException(String.Format("'{0}' is not a valid command.", commandName));
-            }
-
-            return true;
+            return TryHandleCommand(commandName, parts);
         }
 
         // Commands that require a user and room
@@ -597,7 +608,7 @@ namespace JabbR.Commands
             {
                 throw new InvalidOperationException("You're the only person in here...");
             }
-
+            
             var toUserName = parts[1];
 
             ChatUser toUser = _repository.VerifyUser(toUserName);
