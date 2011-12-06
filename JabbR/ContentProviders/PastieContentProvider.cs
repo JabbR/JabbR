@@ -17,7 +17,7 @@ namespace JabbR.ContentProviders
             }
         }
 
-        public override Regex MediaUrlRegex
+        protected override Regex ParameterExtractionRegex
         {
             get
             {

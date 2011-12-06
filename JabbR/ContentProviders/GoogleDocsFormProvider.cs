@@ -23,7 +23,7 @@ namespace JabbR.ContentProviders
             }
         }
 
-        protected override IEnumerable<object> ExtractParameters(Uri responseUri)
+        protected override IEnumerable<string> ExtractParameters(Uri responseUri)
         {
             var queryString = HttpUtility.ParseQueryString(responseUri.Query);
             string formId = queryString["formkey"];

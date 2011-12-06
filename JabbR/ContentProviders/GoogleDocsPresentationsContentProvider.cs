@@ -18,7 +18,7 @@ namespace JabbR.ContentProviders
             }
         }
 
-        public override Regex MediaUrlRegex
+        protected override Regex ParameterExtractionRegex
         {
             get
             {
@@ -55,7 +55,7 @@ namespace JabbR.ContentProviders
             return true;
         }
 
-        protected override IEnumerable<object> ExtractParameters(Uri responseUri)
+        protected override IEnumerable<string> ExtractParameters(Uri responseUri)
         {
             // If someone uses a google created share url (hard to find in interface)
             // this will work

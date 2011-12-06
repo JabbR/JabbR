@@ -7,7 +7,7 @@ namespace JabbR.ContentProviders
     {
         private static readonly Regex _vimeoIdRegex = new Regex(@"(\d+)");
 
-        public override Regex MediaUrlRegex
+        protected override Regex ParameterExtractionRegex
         {
             get
             {
