@@ -252,7 +252,7 @@ li.room:hover {
     padding: 5px;
 }
 
-.notification .content {
+.notification .content, .pm .content {
     margin-right: 95px;
 }
 
