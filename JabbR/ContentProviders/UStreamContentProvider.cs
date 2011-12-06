@@ -5,30 +5,41 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using Newtonsoft.Json;
+using JabbR.ContentProviders.Core;
+using System.Web;
 
 namespace JabbR.ContentProviders
 {
     public class UStreamContentProvider : CollapsibleContentProvider
     {
-        private static readonly Regex _locateIdRegex = new Regex(@"(\d+)|.*/(channel|recorded)/(.+)");
-        private static readonly string _channelEmbedFormat = @"<iframe src=""http://www.ustream.tv/embed/{0}"" width=""700"" height=""400"" scrolling=""no"" frameborder=""0"" style=""border: 0px none transparent;""></iframe>";
         private static readonly string _apiQueryFormat = @"http://api.ustream.tv/json/{0}/{1}/getInfo";
+        private static readonly Regex _extractEmbedCodeRegex = new Regex(@"<textarea\s.*class=""embedCode"".*>(.*)</textarea>");
 
         protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
-            var assetParts = ExtractParameters(response.ResponseUri);
-          
-            string noun = assetParts.ElementAt(0) == "recorded" ? "video" : assetParts.ElementAt(0);
-            string prefix = assetParts.ElementAt(0) == "recorded" ? "recorded/" : "";
-
-            dynamic assetData = FetchAssetData(noun, assetParts.ElementAt(1));
-            
+            var iframeHtml = HttpUtility.HtmlDecode(ExtractIFrameCode(response));
             return new ContentProviderResultModel()
             {
-                Content = String.Format(_channelEmbedFormat, prefix + assetData.results.id),
-                Title = assetData.results.title
+                Content = iframeHtml,
+                Title = response.ResponseUri.AbsoluteUri.ToString()
             };
         }
+
+        private string ExtractIFrameCode(HttpWebResponse response)
+        {
+            var iframeStr = new System.IO.StreamReader(response.GetResponseStream()).ReadToEnd();
+
+            var matches = _extractEmbedCodeRegex.Match(iframeStr)
+                                .Groups
+                                .Cast<Group>()
+                                .Skip(1)
+                                .Select(g => g.Value)
+                                .Where(v => !String.IsNullOrEmpty(v));
+
+            return matches.Count() > 0 ? matches.First() : string.Empty;
+        }
+
+
 
         private dynamic FetchAssetData(string assetType, string embedId)
         {
@@ -45,18 +56,6 @@ namespace JabbR.ContentProviders
             }
         }
 
-
-
-        protected IEnumerable<string> ExtractParameters(Uri responseUri)
-        {
-            return _locateIdRegex.Match(responseUri.AbsoluteUri)
-                                .Groups
-                                .Cast<Group>()
-                                .Skip(1)
-                                .Select(g => g.Value)
-                                .Where(v => !String.IsNullOrEmpty(v));
-
-        }
 
         protected override bool IsValidContent(HttpWebResponse response)
         {
