@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Globalization;
 using System.Net;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace JabbR.ContentProviders
 {
     public abstract class CollapsibleContentProvider : IContentProvider
     {
+
         public virtual ContentProviderResultModel GetContent(HttpWebResponse response)
         {
             if (IsValidContent(response))
@@ -24,6 +28,25 @@ namespace JabbR.ContentProviders
             return null;
         }
 
+        protected virtual Regex ParameterExtractionRegex
+        {
+            get
+            {
+                return new Regex(@"(\d+)");
+
+            }
+        }
+
+        protected virtual IEnumerable<string> ExtractParameters(Uri responseUri)
+        {
+            return ParameterExtractionRegex.Match(responseUri.AbsoluteUri)
+                                .Groups
+                                .Cast<Group>()
+                                .Skip(1)
+                                .Select(g => g.Value)
+                                .Where(v => !String.IsNullOrEmpty(v));
+
+        }
         protected abstract ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response);
 
         protected abstract bool IsValidContent(HttpWebResponse response);
