@@ -185,9 +185,15 @@
             $room = lobby.users.find('[data-room="' + roomName + '"]'),
             $count = $room.find('.count');
 
-
         $room.css('background-color', '#f5f5f5');
         $count.text(' (' + count + ')');
+        if (count > 0) {
+            $room.show('slow');
+        }
+        else {
+            $room.hide('slow');
+        }
+
         // Do a little animation
         $room.animate({ backgroundColor: '#e5e5e5' }, 800);
     }
