@@ -7,7 +7,6 @@ using JabbR.Services;
 using Moq;
 using Xunit;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace JabbR.Test
 {
