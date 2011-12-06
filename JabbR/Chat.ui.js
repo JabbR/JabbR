@@ -531,14 +531,18 @@
                                         .html(this.Name),
                     $count = $('<span/>').addClass('count')
                                          .html(' (' + this.Count + ')')
-                                         .data('count', this.Count);
-
-                $('<li/>').addClass('room')
+                                         .data('count', this.Count),
+                    $li = $('<li/>').addClass('room')
                           .attr('data-room', this.Name)
                           .data('name', this.Name)
                           .append($name)
                           .append($count)
                           .appendTo(lobby.users);
+
+                // hide empty rooms (still need to add so we can maintain room list)
+                if (this.Count == 0) {
+                    $li.hide();
+                }
             });
 
             lobby.users.find('li')
