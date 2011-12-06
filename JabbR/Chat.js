@@ -191,7 +191,7 @@
     };
 
     chat.lockRoom = function (user, room) {
-        if (!isSelf(user)) {
+        if (!isSelf(user) && this.activeRoom === room) {
             ui.addMessage(user.Name + ' has locked ' + room + '.', 'notification', this.activeRoom);
         }
 
