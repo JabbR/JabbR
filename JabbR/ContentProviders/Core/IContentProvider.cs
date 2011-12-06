@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.Net;
-using JabbR.ContentProviders;
 
-namespace JabbR
+namespace JabbR.ContentProviders.Core
 {
     [InheritedExport]
     public interface IContentProvider

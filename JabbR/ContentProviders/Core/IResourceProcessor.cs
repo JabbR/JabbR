@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace JabbR.ContentProviders
+namespace JabbR.ContentProviders.Core
 {
     public interface IResourceProcessor
     {

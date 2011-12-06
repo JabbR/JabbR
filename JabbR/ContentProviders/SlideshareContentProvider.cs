@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using JabbR.ContentProviders.Core;
 using Newtonsoft.Json;
 
 namespace JabbR.ContentProviders

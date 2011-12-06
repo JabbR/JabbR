@@ -231,7 +231,6 @@
     <Compile Include="ContentProviders\VimeoContentProvider.cs" />
     <Compile Include="ContentProviders\GoogleDocsFormProvider.cs" />
     <Compile Include="ContentProviders\SlideshareContentProvider.cs" />
-    <Compile Include="ContentProviders\ResourceProcessor.cs" />
     <Compile Include="ContentProviders\GistContentProvider.cs" />
     <Compile Include="Hubs\Chat.cs" />
     <Compile Include="ContentProviders\CollegeHumorContentProvider.cs" />
