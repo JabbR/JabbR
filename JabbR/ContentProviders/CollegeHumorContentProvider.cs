@@ -7,7 +7,7 @@ namespace JabbR.ContentProviders
     {
         private static readonly Regex _videoIdRegex = new Regex(@".*video/(\d+).*");
 
-        public override Regex MediaUrlRegex
+        protected override Regex ParameterMatchRegex
         {
             get
             {
