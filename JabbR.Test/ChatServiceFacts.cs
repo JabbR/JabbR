@@ -875,28 +875,7 @@ namespace JabbR.Test
         public class LockRoom
         {
             [Fact]
-            public void ThrowsIfUserIsNotCreator()
-            {
-                var repository = new InMemoryRepository();
-                var user = new ChatUser
-                {
-                    Name = "foo"
-                };
-                repository.Add(user);
-                var room = new ChatRoom
-                {
-                    Name = "Room"
-                };
-                room.Users.Add(user);
-                user.Rooms.Add(room);
-
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
-
-                Assert.Throws<InvalidOperationException>(() => service.LockRoom(user, room));
-            }
-
-            [Fact]
-            public void ThrowsIfUserIsOwner()
+            public void LocksRoomIfOwner()
             {
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
@@ -915,7 +894,11 @@ namespace JabbR.Test
 
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
-                Assert.Throws<InvalidOperationException>(() => service.LockRoom(user, room));
+                service.LockRoom(user, room);
+
+                Assert.True(room.Private);
+                Assert.True(user.AllowedRooms.Contains(room));
+                Assert.True(room.AllowedUsers.Contains(user));
             }
 
             [Fact]

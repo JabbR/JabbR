@@ -418,7 +418,7 @@ namespace JabbR.Services
 
         public void LockRoom(ChatUser user, ChatRoom targetRoom)
         {
-            EnsureCreator(user, targetRoom);
+            EnsureOwner(user, targetRoom);
 
             if (targetRoom.Private)
             {

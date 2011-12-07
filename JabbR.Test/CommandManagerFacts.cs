@@ -35,7 +35,7 @@ namespace JabbR.Test
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("id", "id", "name", service, repository, notificationService.Object);
 
-                bool result = commandManager.TryHandleCommand("/foo", new string[] {});
+                bool result = commandManager.TryHandleCommand("/foo", new string[] { });
 
                 Assert.False(result);
             }
@@ -78,7 +78,7 @@ namespace JabbR.Test
 
             [Fact]
             public void CreateNewUserFailsIfNoPassword()
-            {                
+            {
                 VerifyThrows<InvalidOperationException>("/nick dfowler");
             }
 
@@ -95,7 +95,7 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
 
-                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("nick", new string[] { "", ""}));
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("nick", new string[] { "", "" }));
             }
 
             [Fact]
@@ -121,7 +121,7 @@ namespace JabbR.Test
                 Assert.True(user.ConnectedClients.Any(c => c.Id == "clientid"));
                 notificationService.Verify(m => m.OnUserCreated(user), Times.Once());
             }
-                        
+
             [Fact]
             public void ChangeNick()
             {
@@ -224,7 +224,7 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
 
-                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("nick", new string[] { "/nick", "dfowler", "password", ""}));
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("nick", new string[] { "/nick", "dfowler", "password", "" }));
             }
 
             [Fact]
@@ -236,7 +236,7 @@ namespace JabbR.Test
                     Name = "dfowler",
                     Id = "1"
                 };
-                 
+
                 repository.Add(user);
 
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
@@ -556,7 +556,7 @@ namespace JabbR.Test
                 Assert.True(room.Owners.Contains(targetUser));
                 Assert.True(targetUser.OwnedRooms.Contains(room));
             }
-            
+
         }
 
         public class RemoveOwnerCommand
@@ -731,7 +731,7 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
 
-                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("create", new string[] { "", ""}));
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("create", new string[] { "", "" }));
             }
 
             [Fact]
@@ -1582,7 +1582,7 @@ namespace JabbR.Test
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/msg"));
             }
-            
+
             [Fact]
             public void ThrowsIfUserDoesntExists()
             {
@@ -2339,35 +2339,6 @@ namespace JabbR.Test
                 Assert.True(room.Private);
             }
 
-            [Fact]
-            public void CannotLockRoomIfNotCreator()
-            {
-                var repository = new InMemoryRepository();
-                var user = new ChatUser
-                {
-                    Name = "dfowler",
-                    Id = "1"
-                };
-                repository.Add(user);
-                var room = new ChatRoom
-                {
-                    Name = "room",
-                    Private = false
-                };
-                room.Owners.Add(user);
-                user.OwnedRooms.Add(room);
-                repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        notificationService.Object);
-
-                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/lock room"));
-            }
         }
 
         public class UnAllowCommand
@@ -2505,7 +2476,7 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
 
-                Assert.Throws<InvalidOperationException>(() =>commandManager.TryHandleCommand("/unallow dfowler2 room"));
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/unallow dfowler2 room"));
             }
 
             [Fact]
