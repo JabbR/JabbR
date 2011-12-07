@@ -12,7 +12,6 @@ using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
-using Microsoft.Security.Application;
 using Newtonsoft.Json;
 using SignalR.Hubs;
 
