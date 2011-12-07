@@ -191,12 +191,6 @@
 
         $room.css('background-color', '#f5f5f5');
         $count.text(' (' + count + ')');
-        if (count > 0) {
-            $room.show('slow');
-        }
-        else {
-            $room.hide('slow');
-        }
 
         if (room.Private === true) {
             $room.addClass('locked');
@@ -541,11 +535,15 @@
             return room.isNearTheEnd();
         },
         populateLobbyRooms: function (rooms) {
-            var lobby = getLobby();
+            var lobby = getLobby(),
+                // sort lobby by room count descending
+                sorted = rooms.sort(function (a, b) {
+                    return a.Count > b.Count ? -1 : 1;
+                });
 
             lobby.users.empty();
 
-            $.each(rooms, function () {
+            $.each(sorted, function () {
                 var $name = $('<span/>').addClass('name')
                                         .html(this.Name),
                     $count = $('<span/>').addClass('count')
@@ -563,17 +561,7 @@
                 if (this.Private) {
                     $li.addClass('locked');
                 }
-
-                // hide empty rooms (still need to add so we can maintain room list)
-                if (this.Count == 0) {
-                    $li.hide();
-                }
             });
-
-            lobby.users.find('li')
-                       .sortElements(function (a, b) {
-                           return $(a).data('name').toLowerCase() > $(b).data('name').toLowerCase() ? 1 : -1;
-                       });
         },
         addUser: function (user, roomName) {
             var room = getRoomElements(roomName),
