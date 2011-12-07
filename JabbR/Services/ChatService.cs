@@ -373,7 +373,7 @@ namespace JabbR.Services
 
             if (targetUser.AllowedRooms.Contains(targetRoom))
             {
-                throw new InvalidOperationException(String.Format("{0} is already allowed for {0}.", targetUser.Name, targetRoom.Name));
+                throw new InvalidOperationException(String.Format("{0} is already allowed for {1}.", targetUser.Name, targetRoom.Name));
             }
 
             targetRoom.AllowedUsers.Add(targetUser);
