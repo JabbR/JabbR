@@ -89,7 +89,7 @@ namespace JabbR
             }
 
             // Sanitize the content (strip and bad html out)
-            content = Sanitizer.GetSafeHtmlFragment(content);
+            content = HttpUtility.HtmlEncode(content);
 
             // See if this is a valid command (starts with /)
             if (TryHandleCommand(content))
