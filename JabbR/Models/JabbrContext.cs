@@ -15,13 +15,19 @@ namespace JabbR.Models
                         .HasOptional(r => r.Creator);
 
             modelBuilder.Entity<ChatRoom>()
-                        .HasMany(r => r.Owners).WithMany(r => r.OwnedRooms);
+                        .HasMany(r => r.Owners)
+                        .WithMany(u => u.OwnedRooms)
+                        .Map(c => c.ToTable("ChatRoomChatUsers"));
 
             modelBuilder.Entity<ChatRoom>()
-                        .HasMany(r => r.AllowedUsers).WithMany(r => r.AllowedRooms);
+                        .HasMany(r => r.AllowedUsers)
+                        .WithMany(u => u.AllowedRooms)
+                        .Map(c => c.ToTable("ChatRoomChatUser1")); 
             
             modelBuilder.Entity<ChatUser>()
-                        .HasMany(u => u.Rooms).WithMany(r => r.Users);
+                        .HasMany(u => u.Rooms)
+                        .WithMany(r => r.Users)
+                        .Map(c => c.ToTable("ChatUserChatRooms"));
 
             modelBuilder.Entity<ChatUser>()
                         .HasMany(u => u.ConnectedClients);
