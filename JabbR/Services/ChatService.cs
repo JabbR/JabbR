@@ -398,7 +398,7 @@ namespace JabbR.Services
 
             if (!targetUser.AllowedRooms.Contains(targetRoom))
             {
-                throw new InvalidOperationException(String.Format("{0} isn't allowed to access {0}.", targetUser.Name, targetRoom.Name));
+                throw new InvalidOperationException(String.Format("{0} isn't allowed to access {1}.", targetUser.Name, targetRoom.Name));
             }
 
             // If this user isn't the creator and the target user is an owner then throw
