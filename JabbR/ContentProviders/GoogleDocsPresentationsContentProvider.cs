@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
+using JabbR.ContentProviders.Core;
 
 namespace JabbR.ContentProviders
 {
     public class GoogleDocsPresentationsContentProvider : EmbedContentProvider
     {
-        private static readonly Regex _googleDocsInternalUrlIdRegex = new Regex(@".*/d/(.+)/.*");
+        private static readonly Regex _googleDocsInternalUrlIdRegex = new Regex(@".*/d/(.+)/.|(?:id=)([a-zA-Z0-9-]*)");
         public override string MediaFormatString
         {
             get
@@ -18,7 +18,7 @@ namespace JabbR.ContentProviders
             }
         }
 
-        public override Regex MediaUrlRegex
+        protected override Regex ParameterExtractionRegex
         {
             get
             {
@@ -53,23 +53,6 @@ namespace JabbR.ContentProviders
                 return false;
             }
             return true;
-        }
-
-        protected override IEnumerable<object> ExtractParameters(Uri responseUri)
-        {
-            // If someone uses a google created share url (hard to find in interface)
-            // this will work
-            var queryString = HttpUtility.ParseQueryString(responseUri.Query);
-            string formId = queryString["id"];
-            if (!String.IsNullOrEmpty(formId))
-            {
-                yield return formId;
-            }
-
-            // If someone uses the obvious link used while they are logged in and editing
-            // the url will come through as a login redirect -- the MediaUrlRegex will
-            // extract the correct Id and we may continue as normal in that case
-            yield return base.ExtractParameters(responseUri).FirstOrDefault();
         }
     }
 }

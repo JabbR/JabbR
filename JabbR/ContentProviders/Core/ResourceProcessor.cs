@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace JabbR.ContentProviders
+namespace JabbR.ContentProviders.Core
 {
     public class ResourceProcessor : IResourceProcessor
     {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Elmah;
-using JabbR.ContentProviders;
+using JabbR.ContentProviders.Core;
 using JabbR.Migrations;
 using JabbR.Models;
 using JabbR.Services;

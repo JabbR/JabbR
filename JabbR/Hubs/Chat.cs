@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using JabbR.Commands;
-using JabbR.ContentProviders;
+using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;

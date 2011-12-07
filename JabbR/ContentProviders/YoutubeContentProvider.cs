@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web;
+using JabbR.ContentProviders.Core;
 
 namespace JabbR.ContentProviders
 {
@@ -22,7 +23,7 @@ namespace JabbR.ContentProviders
             }
         }
 
-        protected override IEnumerable<object> ExtractParameters(Uri responseUri)
+        protected override IEnumerable<string> ExtractParameters(Uri responseUri)
         {
             var queryString = HttpUtility.ParseQueryString(responseUri.Query);
             string videoId = queryString["v"];

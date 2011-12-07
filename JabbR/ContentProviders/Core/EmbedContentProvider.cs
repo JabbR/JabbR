@@ -2,36 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 
-namespace JabbR.ContentProviders
+namespace JabbR.ContentProviders.Core
 {
     public abstract class EmbedContentProvider : CollapsibleContentProvider
     {
-        public virtual Regex MediaUrlRegex
-        {
-            get
-            {
-                return null;
-            }
-        }
         public abstract IEnumerable<string> Domains { get; }
         public abstract string MediaFormatString { get; }
 
-        protected virtual IEnumerable<object> ExtractParameters(Uri responseUri)
-        {
-            if (MediaUrlRegex != null)
-            {
-                return MediaUrlRegex.Match(responseUri.AbsoluteUri)
-                                    .Groups
-                                    .Cast<Group>()
-                                    .Skip(1)
-                                    .Select(g => g.Value)
-                                    .Where(v => !String.IsNullOrEmpty(v));
-            }
-            return null;
-        }
-
+       
         protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
             var args = ExtractParameters(response.ResponseUri);
