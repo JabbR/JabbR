@@ -4,6 +4,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using JabbR.ContentProviders.Core;
+using System.IO;
 
 namespace JabbR.ContentProviders
 {
@@ -23,16 +24,22 @@ namespace JabbR.ContentProviders
 
         private string ExtractIFrameCode(HttpWebResponse response)
         {
-            var iframeStr = new System.IO.StreamReader(response.GetResponseStream()).ReadToEnd();
+            using (var responseStream = response.GetResponseStream())
+            {
+                using (var sr = new StreamReader(responseStream))
+                {
+                    var iframeStr = sr.ReadToEnd();
 
-            var matches = _extractEmbedCodeRegex.Match(iframeStr)
-                                .Groups
-                                .Cast<Group>()
-                                .Skip(1)
-                                .Select(g => g.Value)
-                                .Where(v => !String.IsNullOrEmpty(v));
+                    var matches = _extractEmbedCodeRegex.Match(iframeStr)
+                                        .Groups
+                                        .Cast<Group>()
+                                        .Skip(1)
+                                        .Select(g => g.Value)
+                                        .Where(v => !String.IsNullOrEmpty(v));
 
-            return matches.Count() > 0 ? matches.First() : string.Empty;
+                    return matches.FirstOrDefault() ?? String.Empty;
+                }
+            }
         }
 
         protected override bool IsValidContent(HttpWebResponse response)
