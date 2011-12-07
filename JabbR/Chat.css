@@ -99,10 +99,21 @@
     word-wrap: break-word;
 }
 
+.users li.room.locked .name {
+    margin-left: 20px;
+}
+
 .users li.typing {
     background-image: url('Content/images/keyboard.png');
     background-repeat: no-repeat;
     background-position: right center;
+}
+
+.users li.room.locked .lock {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: url(Content/images/lock.png) no-repeat;
 }
 
 #tabs {

@@ -184,9 +184,9 @@
         return getRoomElements('Lobby');
     }
 
-    function updateLobbyRoomCount(roomName, count) {
+    function updateLobbyRoomCount(room, count) {
         var lobby = getLobby(),
-            $room = lobby.users.find('[data-room="' + roomName + '"]'),
+            $room = lobby.users.find('[data-room="' + room.Name + '"]'),
             $count = $room.find('.count');
 
         $room.css('background-color', '#f5f5f5');
@@ -196,6 +196,10 @@
         }
         else {
             $room.hide('slow');
+        }
+
+        if (room.Private === true) {
+            $room.addClass('locked');
         }
 
         // Do a little animation
@@ -547,12 +551,18 @@
                     $count = $('<span/>').addClass('count')
                                          .html(' (' + this.Count + ')')
                                          .data('count', this.Count),
+                    $locked = $('<span/>').addClass('lock'),
                     $li = $('<li/>').addClass('room')
                           .attr('data-room', this.Name)
                           .data('name', this.Name)
+                          .append($locked)
                           .append($name)
                           .append($count)
                           .appendTo(lobby.users);
+
+                if (this.Private) {
+                    $li.addClass('locked');
+                }
 
                 // hide empty rooms (still need to add so we can maintain room list)
                 if (this.Count == 0) {

@@ -263,7 +263,7 @@ namespace JabbR
                 Clients[room.Name].addUser(userViewModel, room.Name, isOwner).Wait();
 
                 // Update the room count
-                OnRoomCountChanged(room);
+                OnRoomChanged(room);
 
                 // Update activity
                 UpdateActivity(user, room);
@@ -356,7 +356,7 @@ namespace JabbR
 
                     Clients[room.Name].leave(userViewModel, room.Name).Wait();
 
-                    OnRoomCountChanged(room);
+                    OnRoomChanged(room);
                 }
             }
         }
@@ -377,7 +377,7 @@ namespace JabbR
                 GroupManager.RemoveFromGroup(client.Id, room.Name).Wait();
             }
 
-            OnRoomCountChanged(room);
+            OnRoomChanged(room);
         }
 
         void INotificationService.LogOn(ChatUser user, string clientId)
@@ -441,7 +441,7 @@ namespace JabbR
             Clients[room.Name].addUser(userViewModel, room.Name, isOwner).Wait();
 
             // Notify users of the room count change
-            OnRoomCountChanged(room);
+            OnRoomChanged(room);
 
             foreach (var client in user.ConnectedClients)
             {
@@ -461,7 +461,7 @@ namespace JabbR
             // Tell the calling client the granting permission into the room was successful
             Caller.userAllowed(targetUser.Name, targetRoom.Name);
         }
-        
+
         void INotificationService.UnallowUser(ChatUser targetUser, ChatRoom targetRoom)
         {
             // Kick the user from the room when they are unallowed
@@ -580,12 +580,15 @@ namespace JabbR
         void INotificationService.LockRoom(ChatUser targetUser, ChatRoom room)
         {
             var userViewModel = new UserViewModel(targetUser);
-
+            
             // Tell the room it's locked
             Clients.lockRoom(userViewModel, room.Name);
 
             // Tell the caller the room was successfully locked
             Caller.roomLocked(room.Name);
+
+            // Notify people of the change
+            OnRoomChanged(room);
         }
 
         void INotificationService.LogOut(ChatUser user, string clientId)
@@ -649,10 +652,16 @@ namespace JabbR
             }
         }
 
-        private void OnRoomCountChanged(ChatRoom room)
+        private void OnRoomChanged(ChatRoom room)
         {
+            var roomViewModel = new RoomViewModel
+            {
+                Name = room.Name,
+                Private = room.Private
+            };
+
             // Update the room count
-            Clients.updateRoomCount(room.Name, room.Users.Online().Count());
+            Clients.updateRoomCount(roomViewModel, room.Users.Online().Count());
         }
 
         private string Transform(string message, out HashSet<string> extractedUrls)
