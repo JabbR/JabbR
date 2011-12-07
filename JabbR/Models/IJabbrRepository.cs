@@ -11,6 +11,7 @@ namespace JabbR.Models
         IQueryable<ChatUser> SearchUsers(string name);
         IQueryable<ChatMessage> GetMessagesByRoom(string roomName);
         IQueryable<ChatMessage> GetPreviousMessages(string messageId);
+        IQueryable<ChatRoom> GetAllowedRooms(ChatUser user);
 
         ChatUser GetUserById(string userId);
         ChatRoom GetRoomByName(string roomName);
@@ -26,6 +27,6 @@ namespace JabbR.Models
         void Remove(ChatClient client);
         void Remove(ChatRoom room);
         void Remove(ChatUser user);
-        void CommitChanges();
+        void CommitChanges();        
     }
 }

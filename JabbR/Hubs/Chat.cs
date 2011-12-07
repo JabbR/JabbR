@@ -161,7 +161,10 @@ namespace JabbR
         }
         public IEnumerable<RoomViewModel> GetRooms()
         {
-            var rooms = _repository.Rooms.Select(r => new RoomViewModel
+            string id = Caller.id;
+            ChatUser user = _repository.VerifyUserId(id);
+
+            var rooms = _repository.GetAllowedRooms(user).Select(r => new RoomViewModel
             {
                 Name = r.Name,
                 Count = r.Users.Count(u => u.Status != (int)UserStatus.Offline),

@@ -84,6 +84,11 @@ namespace JabbR.Models
             return _rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
         }
 
+        public IQueryable<ChatRoom> GetAllowedRooms(ChatUser user)
+        {
+            return _rooms.Where(r => !r.Private || r.Private && r.AllowedUsers.Contains(user)).AsQueryable();
+        }
+
         public IQueryable<ChatMessage> GetMessagesByRoom(string roomName)
         {
             var room = GetRoomByName(roomName);
