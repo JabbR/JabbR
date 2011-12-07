@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using Newtonsoft.Json;
-using JabbR.ContentProviders.Core;
 using System.Web;
+using JabbR.ContentProviders.Core;
 
 namespace JabbR.ContentProviders
 {
     public class UStreamContentProvider : CollapsibleContentProvider
     {
-        private static readonly string _apiQueryFormat = @"http://api.ustream.tv/json/{0}/{1}/getInfo";
         private static readonly Regex _extractEmbedCodeRegex = new Regex(@"<textarea\s.*class=""embedCode"".*>(.*)</textarea>");
 
         protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
