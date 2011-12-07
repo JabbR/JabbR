@@ -962,9 +962,15 @@ namespace JabbR.Test
                 {
                     Name = "foo"
                 };
-                var users = Enumerable.Range(0, 10).Select(i => new ChatUser
+                var users = Enumerable.Range(0, 5).Select(i => new ChatUser
                 {
                     Name = "user_" + i
+                }).ToList();
+
+                var offlineUsers = Enumerable.Range(6, 10).Select(i => new ChatUser
+                {
+                    Name = "user_" + i,
+                    Status = (int)UserStatus.Offline
                 }).ToList();
 
                 var room = new ChatRoom
@@ -981,6 +987,12 @@ namespace JabbR.Test
                     u.Rooms.Add(room);
                     repository.Add(u);
                 }
+                foreach (var u in offlineUsers)
+                {
+                    room.Users.Add(u);
+                    u.Rooms.Add(room);
+                    repository.Add(u);
+                }
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 service.LockRoom(creator, room);
@@ -991,6 +1003,11 @@ namespace JabbR.Test
                     Assert.True(room.AllowedUsers.Contains(u));
                 }
 
+                foreach (var u in offlineUsers)
+                {
+                    Assert.False(u.AllowedRooms.Contains(room));
+                    Assert.False(room.AllowedUsers.Contains(u));
+                }
             }
         }
 

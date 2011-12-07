@@ -435,7 +435,7 @@ namespace JabbR.Services
             user.AllowedRooms.Add(targetRoom);
 
             // Make all users in the current room allowed
-            foreach (var u in targetRoom.Users)
+            foreach (var u in targetRoom.Users.Online())
             {
                 u.AllowedRooms.Add(targetRoom);
                 targetRoom.AllowedUsers.Add(u);
