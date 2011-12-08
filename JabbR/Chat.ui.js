@@ -335,36 +335,38 @@
             });
 
             // DOM events
-            var _this = this;
-            $(document).on('click', 'div.collapsible_pin', function () {
-                if (_this.id_counter = null) {
-                    _this.id_counter = 0;
-                }
 
+            var collapsibleUtility = {
+                handlePopOut: function () {
+                    var prevIdStr = "pop-out-prev-", currIdStr = "pop-out-";
 
-                var el = $(this);
-                var depth = 0;
-                while (el.attr("class") != "collapsible_content") {
-                    el = el.parent();
-                }
+                    var el = $(this).closest(".collapsible_content").first();
 
-                if (el.parent().attr("id") == "draggable_content_wrapper") {
-                    el.insertAfter("#" + el.attr("prev-id"));
-                }
-                else {
-                    var prevId = el.prev().attr("id");
-                    if (prevId == null || prevId == "") {
-                        prevId = "pop_out_prev" + _this.id_counter;
-                        el.prev().attr("id", prevId);
-                        _this.id_counter++;
+                    if (el.attr("floating") == "true") {
+                        el.attr("floating", false);
+                        $(el).insertAfter("#" + el.attr("prev-id"))
+                            .removeClass("ui-draggable")
+                            .css("position", "inherit");
                     }
-
-                    $("#draggable_content_wrapper").append(el).css("background-color", "#fff").width(800).draggable();
-                    el.attr("prev-id", prevId);
+                    else {
+                        var prevId = el.prev().attr("id");
+                        if (prevId == null || prevId == "") {
+                            prevId = $.randomUniqueId(prevIdStr);
+                            el.prev().attr("id", prevId);
+                        }
+                        $("body").append(el);
+                        el.draggable({ containment: "body", scroll: false })
+                            .attr("prev-id", prevId)
+                            .attr("floating", true)
+                            .css("position", "absolute");
+                    }
+                },
+                hookPins: function () {
+                    $(document).off('click', 'div.collapsible_pin');
+                    $(document).on('click', 'div.collapsible_pin', collapsibleUtility.handlePopOut);
                 }
-
-
-            });
+            }
+            collapsibleUtility.hookPins();
 
             $(document).on('click', 'h3.collapsible_title', function () {
                 var $message = $(this).closest('.message'),

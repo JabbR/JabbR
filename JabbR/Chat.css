@@ -424,6 +424,16 @@ li.clearfix {
     display: list-item;
 }
 
+#draggable_content_wrapper
+{
+    z-index:10000;
+}
+
+.collapsible_content.ui-draggable
+{
+    width:800px;
+    background-color:#fff;
+}
 .collapsible_pin
 {
     width: 20px;
@@ -432,6 +442,7 @@ li.clearfix {
     background-image: url('Content/images/pop-out-icon.png');
     background-repeat: no-repeat;
     margin-top:8px;
+    cursor:pointer;
 }
 
 /* CLEAR FIX */
