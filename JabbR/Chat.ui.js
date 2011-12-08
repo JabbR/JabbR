@@ -9,7 +9,7 @@
         $tabs = null,
         $submitButton = null,
         $newMessage = null,
-        $enableToast = null,
+        $enableDisableToast = null,
         templates = null,
         app = null,
         focus = true,
@@ -343,6 +343,21 @@
             chromeToast.cancel();
         }
     }
+    
+    function toggleEnableToast() {
+        if (window.webkitNotifications) {
+            if (!toastEnabled) {
+                window.webkitNotifications.requestPermission(function() {
+                    $enableDisableToast.html('Disable notifications');
+                    toastEnabled = true;
+                });
+            }
+            else {
+                $enableDisableToast.html('Enable notifications');
+                toastEnabled = false;
+            }
+        }
+    }
 
     function triggerFocus() {
         ui.focus = true;
@@ -356,7 +371,7 @@
             $tabs = $('#tabs');
             $submitButton = $('#send-message');
             $newMessage = $('#new-message');
-            $enableToast = $('#enable-toast');
+            $enableDisableToast = $('#enable-disable-toast');
             focus = true;
             templates = {
                 user: $('#new-user-template'),
@@ -376,6 +391,14 @@
                 });
             });
 
+            // TODO: persist and restore previous toast enabled setting
+            if (window.webkitNotifications) {
+                if (window.webkitNotifications.checkPermission() === 0) {
+                    $enableDisableToast.html('Disable notifications');
+                    toastEnabled = true;
+                }
+            }
+            
             // DOM events
             $(document).on('click', 'h3.collapsible_title', function () {
                 var $message = $(this).closest('.message'),
@@ -442,19 +465,8 @@
                 return false;
             });
 
-            $enableToast.click(function () {
-                if (window.webkitNotifications) {
-                    if (!toastEnabled) {
-                        window.webkitNotifications.requestPermission(function() {
-                            $enableToast.html('Disable notifications');
-                            toastEnabled = true;
-                        });
-                    }
-                    else {
-                        $enableToast.html('Enable notifications');
-                        toastEnabled = false;
-                    }
-                }
+            $enableDisableToast.click(function () {
+                toggleEnableToast();
             });
 
             $(window).blur(function () {
