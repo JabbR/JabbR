@@ -424,4 +424,14 @@ li.clearfix {
     display: list-item;
 }
 
+.collapsible_pin
+{
+    width: 20px;
+    height: 20px;
+    float: right;
+    background-image: url('Content/images/pop-out-icon.png');
+    background-repeat: no-repeat;
+    margin-top:8px;
+}
+
 /* CLEAR FIX */

@@ -335,6 +335,37 @@
             });
 
             // DOM events
+            var _this = this;
+            $(document).on('click', 'div.collapsible_pin', function () {
+                if (_this.id_counter = null) {
+                    _this.id_counter = 0;
+                }
+
+
+                var el = $(this);
+                var depth = 0;
+                while (el.attr("class") != "collapsible_content") {
+                    el = el.parent();
+                }
+
+                if (el.parent().attr("id") == "draggable_content_wrapper") {
+                    el.insertAfter("#" + el.attr("prev-id"));
+                }
+                else {
+                    var prevId = el.prev().attr("id");
+                    if (prevId == null || prevId == "") {
+                        prevId = "pop_out_prev" + _this.id_counter;
+                        el.prev().attr("id", prevId);
+                        _this.id_counter++;
+                    }
+
+                    $("#draggable_content_wrapper").append(el).css("background-color", "#fff").width(800).draggable();
+                    el.attr("prev-id", prevId);
+                }
+
+
+            });
+
             $(document).on('click', 'h3.collapsible_title', function () {
                 var $message = $(this).closest('.message'),
                     nearEnd = ui.isNearTheEnd();
@@ -536,7 +567,7 @@
         },
         populateLobbyRooms: function (rooms) {
             var lobby = getLobby(),
-                // sort lobby by room count descending
+            // sort lobby by room count descending
                 sorted = rooms.sort(function (a, b) {
                     return a.Count > b.Count ? -1 : 1;
                 });
