@@ -16,6 +16,7 @@
         commands = [],
         Keys = { Up: 38, Down: 40, Esc: 27 },
         scrollTopThreshold = 5,
+        toastEnabled = false,
         chromeToast = null;
 
     function getRoomId(roomName) {
@@ -443,7 +444,16 @@
 
             $enableToast.click(function () {
                 if (window.webkitNotifications) {
-                    window.webkitNotifications.requestPermission();
+                    if (!toastEnabled) {
+                        window.webkitNotifications.requestPermission(function() {
+                            $enableToast.html('Disable notifications');
+                            toastEnabled = true;
+                        });
+                    }
+                    else {
+                        $enableToast.html('Enable notifications');
+                        toastEnabled = false;
+                    }
                 }
             });
 
@@ -753,7 +763,9 @@
                   .find('.right').remove(); // remove timestamp on date indicator
             }
 
-            toastMessage(message);
+            if (toastEnabled) {
+                toastMessage(message);
+            }
 
             templates.message.tmpl(message).appendTo(room.messages);
         },
