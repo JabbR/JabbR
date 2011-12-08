@@ -404,7 +404,7 @@
 
             $enableNotifications.click(function () {
                 if (window.webkitNotifications) {
-                    window.webkitNotifications.requestPermission(function () { alert('Notification permissions granted.'); });
+                    window.webkitNotifications.requestPermission();
                 }
             });
 
@@ -717,7 +717,7 @@
 
             // when we are not focused, attempt chrome notifications
             if (!ui.focus) {
-                if (window.webkitNotifications && window.webkitNotifications.checkPermission() == 0) {
+                if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
                     // replace any previous popup
                     if (chromePopup && chromePopup.cancel) {
                         chromePopup.cancel();

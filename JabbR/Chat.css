@@ -253,6 +253,12 @@ li.room:hover {
 
 #enable-notifications {
     cursor: pointer;
+    display: block;
+    position: absolute;
+    bottom: 35px;
+    height: 20px;
+    padding: 5px;
+    left: 71%;
 }
 
 #message-instruction {
