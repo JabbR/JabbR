@@ -17,15 +17,6 @@
         return this[0].scrollTop + this.height() >= this[0].scrollHeight;
     };
 
-    $.extend({
-        randomUniqueId: function (prefix) {
-            var n = Math.floor(Math.random() * 100);
-            while ($("#" + prefix + n.toString()).length > 0)
-                n = Math.Floor(Math.random() * 100);
-            return prefix + n;
-        } 
-    });
-
     String.prototype.fromJsonDate = function () {
         return eval(this.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"))
     };
@@ -82,7 +73,13 @@
                 return value.substr(0, length - 3) + '...';
             }
             return value;
-        }
+        },
+        randomUniqueId: function (prefix) {
+            var n = Math.floor(Math.random() * 100);
+            while ($("#" + prefix + n.toString()).length > 0)
+                n = Math.Floor(Math.random() * 100);
+            return prefix + n;
+        } 
     };
 
     if (!window.chat) {

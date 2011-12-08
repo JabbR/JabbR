@@ -12,7 +12,7 @@
         },
         handlePopOut: function (el) {
             $("#page").height($(window).height()).width($(window).width());
-            var divId = $.randomUniqueId("pop-out-");
+            var divId = window.chat.utility.randomUniqueId("pop-out-");
             el.attr("floating", true)
                     .attr("prev-id", collapsibleUtility.getPrevId(el.parent().prev()))
                     .parent()
@@ -32,7 +32,7 @@
         getPrevId: function (el) {
             var prevId = el.attr("id");
             if (prevId == null || prevId == "") {
-                prevId = $.randomUniqueId("prev-pop-out-");
+                prevId = window.chat.utility.randomUniqueId("prev-pop-out-");
                 el.attr("id", prevId);
             }
             return prevId;
