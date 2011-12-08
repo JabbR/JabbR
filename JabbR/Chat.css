@@ -251,7 +251,7 @@ li.room:hover {
     width: 100px;
 }
 
-#enable-notifications {
+#enable-toast {
     cursor: pointer;
     display: block;
     position: absolute;

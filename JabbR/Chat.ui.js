@@ -1,4 +1,4 @@
-﻿/// <reference path="Scripts/jquery-1.7.js" />
+﻿﻿/// <reference path="Scripts/jquery-1.7.js" />
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 
@@ -9,14 +9,15 @@
         $tabs = null,
         $submitButton = null,
         $newMessage = null,
-        $enableNotifications = null,
+        $enableToast = null,
         templates = null,
         app = null,
         focus = true,
         commands = [],
         Keys = { Up: 38, Down: 40, Esc: 27 },
         scrollTopThreshold = 5,
-        chromePopup = null;
+        toastEnabled = false,
+        chromeToast = null;
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -310,23 +311,43 @@
         message.when = message.date.formatTime(true);
         message.fulldate = message.date.toLocaleString()
     }
-    
-    function notifyMessage(message) {
-        // when we are not focused, attempt chrome notifications
+
+    function toastMessage(message) {
+        // when we are not focused, attempt chrome popup notifications (toast)
         if (!ui.focus) {
             if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
-                // replace any previous popup
-                if (chromePopup && chromePopup.cancel) {
-                    chromePopup.cancel();
+                // replace any previous toast
+                if (chromeToast && chromeToast.cancel) {
+                    chromeToast.cancel();
                 }
-                chromePopup = window.webkitNotifications.createNotification(
+                chromeToast = window.webkitNotifications.createNotification(
                         "Content/images/logo32.png",
                         message.trimmedName,
                         message.message);
 
-                chromePopup.show();
+                chromeToast.ondisplay = function () {
+                    setTimeout(function() { chromeToast.cancel(); }, 10000);
+                };
+                
+                chromeToast.onclick = function() {
+                    window.focus(); // this will cause that toast to be hidden in triggerFocus
+                };
+
+                chromeToast.show();
             }
         }
+    }
+
+    function hideToast() {
+        if (chromeToast && chromeToast.cancel) {
+            chromeToast.cancel();
+        }
+    }
+
+    function triggerFocus() {
+        ui.focus = true;
+        hideToast();
+        $(ui).trigger('ui.focus');
     }
 
     var ui = {
@@ -335,7 +356,7 @@
             $tabs = $('#tabs');
             $submitButton = $('#send-message');
             $newMessage = $('#new-message');
-            $enableNotifications = $('#enable-notifications');
+            $enableToast = $('#enable-toast');
             focus = true;
             templates = {
                 user: $('#new-user-template'),
@@ -409,7 +430,8 @@
 
                 $newMessage.val('');
                 $newMessage.focus();
-                ui.focus = true;
+
+                triggerFocus();
 
                 // always scroll to bottom after new message sent
                 var room = getCurrentRoomElements();
@@ -420,9 +442,18 @@
                 return false;
             });
 
-            $enableNotifications.click(function () {
+            $enableToast.click(function () {
                 if (window.webkitNotifications) {
-                    window.webkitNotifications.requestPermission();
+                    if (!toastEnabled) {
+                        window.webkitNotifications.requestPermission(function() {
+                            $enableToast.html('Disable notifications');
+                            toastEnabled = true;
+                        });
+                    }
+                    else {
+                        $enableToast.html('Enable notifications');
+                        toastEnabled = false;
+                    }
                 }
             });
 
@@ -432,11 +463,10 @@
             });
 
             $(window).focus(function () {
-                ui.focus = true;
                 // clear unread count in active room
                 var room = getCurrentRoomElements();
                 room.makeActive();
-                $(ui).trigger('ui.focus');
+                triggerFocus();
             });
 
             $newMessage.keydown(function (e) {
@@ -524,7 +554,7 @@
             if (room.exists() && currentRoom.exists()) {
                 var hasUnread = room.hasUnread();
                 currentRoom.makeInactive();
-                ui.focus = true;
+                triggerFocus();
                 room.makeActive();
 
                 app.setLocation('#/rooms/' + roomName);
@@ -733,7 +763,9 @@
                   .find('.right').remove(); // remove timestamp on date indicator
             }
 
-            notifyMessage(message);
+            if (toastEnabled) {
+                toastMessage(message);
+            }
 
             templates.message.tmpl(message).appendTo(room.messages);
         },
@@ -816,5 +848,4 @@
         window.chat = {};
     }
     window.chat.ui = ui;
-
 })(jQuery, window, window.chat.utility);
