@@ -434,4 +434,27 @@ li.clearfix {
     display: list-item;
 }
 
+/* CSS for Popout Content Providers */
+.collapsible_wrapper.ui-draggable
+{
+    width:800px;
+    background-color:#fff;
+    position:absolute;
+}
+.collapsible_wrapper.ui-draggable h3
+{
+    margin-top:0px;
+}
+
+.collapsible_pin
+{
+    width: 20px;
+    height: 20px;
+    float: right;
+    background-image: url('Content/images/pop-out-icon.png');
+    background-repeat: no-repeat;
+    margin-top:8px;
+    cursor:pointer;
+}
+
 /* CLEAR FIX */
