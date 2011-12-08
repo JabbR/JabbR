@@ -347,13 +347,15 @@
                 },
                 handlePopOut: function (el) {
                     $("#page").height($(window).height()).width($(window).width());
+                    var divId = $.randomUniqueId("pop-out-");
                     el.attr("floating", true)
                     .attr("prev-id", collapsibleUtility.getPrevId(el.parent().prev()))
                     .parent()
-                    .wrap("<div id='" + $.randomUniqueId("pop-out-") + "'/>").parent()
+                    .wrap("<div id='" + divId + "'/>").parent()
                         .addClass("collapsible_wrapper")
                         .appendTo("#page")
                         .draggable({ containment: "#page", scroll: false });
+                    $("#" + divId).css("position", "absolute");
                 },
                 handlePopIn: function (el) {
                     $("#page").height($(window).height()).width($(window).width());

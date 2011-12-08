@@ -431,6 +431,11 @@ li.clearfix {
     background-color:#fff;
     position:absolute;
 }
+.collapsible_wrapper.ui-draggable h3
+{
+    padding-top:0px;
+    margin-top:0px;
+}
 
 .collapsible_pin
 {
