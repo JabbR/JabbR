@@ -9,14 +9,14 @@
         $tabs = null,
         $submitButton = null,
         $newMessage = null,
-        $enableNotifications = null,
+        $enableToast = null,
         templates = null,
         app = null,
         focus = true,
         commands = [],
         Keys = { Up: 38, Down: 40, Esc: 27 },
         scrollTopThreshold = 5,
-        chromePopup = null;
+        chromeToast = null;
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -310,23 +310,39 @@
         message.when = message.date.formatTime(true);
         message.fulldate = message.date.toLocaleString()
     }
-    
-    function notifyMessage(message) {
-        // when we are not focused, attempt chrome notifications
+
+    function toastMessage(message) {
+        // when we are not focused, attempt chrome popup notifications (toast)
         if (!ui.focus) {
             if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
-                // replace any previous popup
-                if (chromePopup && chromePopup.cancel) {
-                    chromePopup.cancel();
+                // replace any previous toast
+                if (chromeToast && chromeToast.cancel) {
+                    chromeToast.cancel();
                 }
-                chromePopup = window.webkitNotifications.createNotification(
+                chromeToast = window.webkitNotifications.createNotification(
                         "Content/images/logo32.png",
                         message.trimmedName,
                         message.message);
 
-                chromePopup.show();
+                chromeToast.ondisplay = function () {
+                    setTimeout(function() { chromeToast.cancel(); }, 10000);
+                };
+
+                chromeToast.show();
             }
         }
+    }
+
+    function hideToast() {
+        if (chromeToast && chromeToast.cancel) {
+            chromeToast.cancel();
+        }
+    }
+
+    function triggerFocus() {
+        ui.focus = true;
+        hideToast();
+        $(ui).trigger('ui.focus');
     }
 
     var ui = {
@@ -335,7 +351,7 @@
             $tabs = $('#tabs');
             $submitButton = $('#send-message');
             $newMessage = $('#new-message');
-            $enableNotifications = $('#enable-notifications');
+            $enableToast = $('#enable-toast');
             focus = true;
             templates = {
                 user: $('#new-user-template'),
@@ -409,7 +425,8 @@
 
                 $newMessage.val('');
                 $newMessage.focus();
-                ui.focus = true;
+
+                triggerFocus();
 
                 // always scroll to bottom after new message sent
                 var room = getCurrentRoomElements();
@@ -420,7 +437,7 @@
                 return false;
             });
 
-            $enableNotifications.click(function () {
+            $enableToast.click(function () {
                 if (window.webkitNotifications) {
                     window.webkitNotifications.requestPermission();
                 }
@@ -432,11 +449,10 @@
             });
 
             $(window).focus(function () {
-                ui.focus = true;
                 // clear unread count in active room
                 var room = getCurrentRoomElements();
                 room.makeActive();
-                $(ui).trigger('ui.focus');
+                triggerFocus();
             });
 
             $newMessage.keydown(function (e) {
@@ -524,7 +540,7 @@
             if (room.exists() && currentRoom.exists()) {
                 var hasUnread = room.hasUnread();
                 currentRoom.makeInactive();
-                ui.focus = true;
+                triggerFocus();
                 room.makeActive();
 
                 app.setLocation('#/rooms/' + roomName);
@@ -733,7 +749,7 @@
                   .find('.right').remove(); // remove timestamp on date indicator
             }
 
-            notifyMessage(message);
+            toastMessage(message);
 
             templates.message.tmpl(message).appendTo(room.messages);
         },
