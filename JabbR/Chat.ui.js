@@ -310,6 +310,24 @@
         message.when = message.date.formatTime(true);
         message.fulldate = message.date.toLocaleString()
     }
+    
+    function notifyMessage(message) {
+        // when we are not focused, attempt chrome notifications
+        if (!ui.focus) {
+            if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
+                // replace any previous popup
+                if (chromePopup && chromePopup.cancel) {
+                    chromePopup.cancel();
+                }
+                chromePopup = window.webkitNotifications.createNotification(
+                        "Content/images/logo32.png",
+                        message.trimmedName,
+                        message.message);
+
+                chromePopup.show();
+            }
+        }
+    }
 
     var ui = {
         initialize: function () {
@@ -715,21 +733,7 @@
                   .find('.right').remove(); // remove timestamp on date indicator
             }
 
-            // when we are not focused, attempt chrome notifications
-            if (!ui.focus) {
-                if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
-                    // replace any previous popup
-                    if (chromePopup && chromePopup.cancel) {
-                        chromePopup.cancel();
-                    }
-                    chromePopup = window.webkitNotifications.createNotification(
-                        "Content/images/logo32.png",
-                        message.trimmedName,
-                        message.message);
-
-                    chromePopup.show();
-                }
-            }
+            notifyMessage(message);
 
             templates.message.tmpl(message).appendTo(room.messages);
         },
