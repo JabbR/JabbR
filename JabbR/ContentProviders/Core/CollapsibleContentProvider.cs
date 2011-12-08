@@ -53,6 +53,6 @@ namespace JabbR.ContentProviders.Core
 
         protected virtual bool IsCollapsible { get { return true; } }
 
-        private const string ContentFormat = @"<div class=""collapsible_content""><div class=""collapsible_pin"">div><h3 class=""collapsible_title"">{0} (click to show/hide)</h3><div class=""collapsible_box"">{1}</div></div>";
+        private const string ContentFormat = @"<div class=""collapsible_content""><div class=""collapsible_pin""></div><h3 class=""collapsible_title"">{0} (click to show/hide)</h3><div class=""collapsible_box"">{1}</div></div>";
     }
 }
