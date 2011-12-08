@@ -1,4 +1,8 @@
-﻿(function ($, window, utility) {
+﻿﻿/// <reference path="Scripts/jquery-1.7.js" />
+/// <reference path="Scripts/jQuery.tmpl.js" />
+/// <reference path="Scripts/jquery.cookie.js" />
+
+(function ($, window, utility) {
     "use strict";
 
     var $chatArea = null,
@@ -322,6 +326,10 @@
 
                 chromeToast.ondisplay = function () {
                     setTimeout(function() { chromeToast.cancel(); }, 10000);
+                };
+                
+                chromeToast.onclick = function() {
+                    window.focus(); // this will cause that toast to be hidden in triggerFocus
                 };
 
                 chromeToast.show();
