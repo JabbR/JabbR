@@ -158,6 +158,7 @@
                         populateRoom(room.Name);
                     }
                 });
+                populateLobbyRooms();
             };
 
         $.each(rooms, function (index, room) {
