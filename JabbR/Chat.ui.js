@@ -9,12 +9,14 @@
         $tabs = null,
         $submitButton = null,
         $newMessage = null,
+        $enableNotifications = null,
         templates = null,
         app = null,
         focus = true,
         commands = [],
         Keys = { Up: 38, Down: 40, Esc: 27 },
-        scrollTopThreshold = 5;
+        scrollTopThreshold = 5,
+        chromePopup = null;
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -308,6 +310,24 @@
         message.when = message.date.formatTime(true);
         message.fulldate = message.date.toLocaleString()
     }
+    
+    function notifyMessage(message) {
+        // when we are not focused, attempt chrome notifications
+        if (!ui.focus) {
+            if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
+                // replace any previous popup
+                if (chromePopup && chromePopup.cancel) {
+                    chromePopup.cancel();
+                }
+                chromePopup = window.webkitNotifications.createNotification(
+                        "Content/images/logo32.png",
+                        message.trimmedName,
+                        message.message);
+
+                chromePopup.show();
+            }
+        }
+    }
 
     var ui = {
         initialize: function () {
@@ -315,6 +335,7 @@
             $tabs = $('#tabs');
             $submitButton = $('#send-message');
             $newMessage = $('#new-message');
+            $enableNotifications = $('#enable-notifications');
             focus = true;
             templates = {
                 user: $('#new-user-template'),
@@ -397,6 +418,12 @@
 
                 ev.preventDefault();
                 return false;
+            });
+
+            $enableNotifications.click(function () {
+                if (window.webkitNotifications) {
+                    window.webkitNotifications.requestPermission();
+                }
             });
 
             $(window).blur(function () {
@@ -536,7 +563,7 @@
         },
         populateLobbyRooms: function (rooms) {
             var lobby = getLobby(),
-                // sort lobby by room count descending
+            // sort lobby by room count descending
                 sorted = rooms.sort(function (a, b) {
                     return a.Count > b.Count ? -1 : 1;
                 });
@@ -686,7 +713,7 @@
             showUserName = previousUser !== message.name;
             message.showUser = showUserName;
 
-            processMessage(message)
+            processMessage(message);
 
             if (showUserName === false) {
                 $previousMessage.addClass('continue');
@@ -705,6 +732,8 @@
                 ui.addMessage(message.date.toLocaleDateString(), 'list-header', roomName)
                   .find('.right').remove(); // remove timestamp on date indicator
             }
+
+            notifyMessage(message);
 
             templates.message.tmpl(message).appendTo(room.messages);
         },

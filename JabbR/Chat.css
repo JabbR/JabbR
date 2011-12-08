@@ -251,6 +251,16 @@ li.room:hover {
     width: 100px;
 }
 
+#enable-notifications {
+    cursor: pointer;
+    display: block;
+    position: absolute;
+    bottom: 35px;
+    height: 20px;
+    padding: 5px;
+    left: 71%;
+}
+
 #message-instruction {
     color: #999;
     font-style: italic;
