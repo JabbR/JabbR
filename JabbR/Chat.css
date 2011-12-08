@@ -424,9 +424,11 @@ li.clearfix {
     display: list-item;
 }
 
-#draggable_content_wrapper
+.collapsible_wrapper.ui-draggable
 {
-    z-index:10000;
+    width:800px;
+    background-color:#fff;
+    position:absolute;
 }
 
 .collapsible_content.ui-draggable

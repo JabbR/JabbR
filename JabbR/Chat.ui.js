@@ -337,33 +337,42 @@
             // DOM events
 
             var collapsibleUtility = {
-                handlePopOut: function () {
-                    var prevIdStr = "pop-out-prev-", currIdStr = "pop-out-";
-
-                    var el = $(this).closest(".collapsible_content").first();
-
-                    if (el.attr("floating") == "true") {
-                        el.attr("floating", false);
-                        $(el).insertAfter("#" + el.attr("prev-id"))
-                            .removeClass("ui-draggable")
-                            .css("position", "inherit");
+                handlePinClick: function () {
+                    if ($(this).attr("floating") == "true") {
+                        collapsibleUtility.handlePopIn($(this));
                     }
                     else {
-                        var prevId = el.prev().attr("id");
-                        if (prevId == null || prevId == "") {
-                            prevId = $.randomUniqueId(prevIdStr);
-                            el.prev().attr("id", prevId);
-                        }
-                        $("body").append(el);
-                        el.draggable({ containment: "body", scroll: false })
-                            .attr("prev-id", prevId)
-                            .attr("floating", true)
-                            .css("position", "absolute");
+                        collapsibleUtility.handlePopOut($(this));
                     }
+                },
+                handlePopOut: function (el) {
+                    $("#page").height($(window).height()).width($(window).width());
+                    el.attr("floating", true)
+                    .attr("prev-id", collapsibleUtility.getPrevId(el.parent().prev()))
+                    .parent()
+                    .wrap("<div id='" + $.randomUniqueId("pop-out-") + "'/>").parent()
+                        .addClass("collapsible_wrapper")
+                        .appendTo("#page")
+                        .draggable({ containment: "#page", scroll: false });
+                },
+                handlePopIn: function (el) {
+                    $("#page").height($(window).height()).width($(window).width());
+                    el.attr("floating", false);
+                    $(el.parent().parent().html()).
+                    insertAfter("#" + el.attr("prev-id"));
+                    el.parent().parent().remove();
+                },
+                getPrevId: function (el) {
+                    var prevId = el.attr("id");
+                    if (prevId == null || prevId == "") {
+                        prevId = $.randomUniqueId("prev-pop-out-");
+                        el.attr("id", prevId);
+                    }
+                    return prevId;
                 },
                 hookPins: function () {
                     $(document).off('click', 'div.collapsible_pin');
-                    $(document).on('click', 'div.collapsible_pin', collapsibleUtility.handlePopOut);
+                    $(document).on('click', 'div.collapsible_pin', collapsibleUtility.handlePinClick);
                 }
             }
             collapsibleUtility.hookPins();
