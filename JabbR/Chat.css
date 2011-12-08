@@ -424,6 +424,7 @@ li.clearfix {
     display: list-item;
 }
 
+/* CSS for Popout Content Providers */
 .collapsible_wrapper.ui-draggable
 {
     width:800px;
@@ -431,11 +432,6 @@ li.clearfix {
     position:absolute;
 }
 
-.collapsible_content.ui-draggable
-{
-    width:800px;
-    background-color:#fff;
-}
 .collapsible_pin
 {
     width: 20px;
