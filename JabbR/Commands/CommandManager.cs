@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Cryptography;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
-using System.Security.Cryptography;
 
 namespace JabbR.Commands
 {
