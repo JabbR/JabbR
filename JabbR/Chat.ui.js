@@ -323,7 +323,7 @@
                 chromeToast = window.webkitNotifications.createNotification(
                         "Content/images/logo32.png",
                         message.trimmedName,
-                        message.message);
+                        $('<div />').html(message.message).text());
 
                 chromeToast.ondisplay = function () {
                     setTimeout(function() { chromeToast.cancel(); }, 10000);
