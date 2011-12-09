@@ -736,6 +736,18 @@
             notifyMessage(message);
 
             templates.message.tmpl(message).appendTo(room.messages);
+
+            if (message.highlight && room.isInitialized()) {
+                // alwasy play if the window does have focus.
+                if (!ui.focus) {
+                    ui.notify();
+                } // if the window has focus only play if the message isn't to the active room
+                else {
+                    if (!room.isActive()) {
+                        ui.notify();
+                    }
+                }
+            }
         },
         addChatMessageContent: function (id, content, roomName) {
             var $message = $('#m-' + id);
@@ -760,6 +772,11 @@
 
             if (type === 'notification' && room.isLobby() === false) {
                 ui.collapseNotifications($element);
+            }
+
+            // Always play the sound for PMs
+            if (type === 'pm') {
+                ui.notify();
             }
 
             if (nearEnd) {
@@ -809,6 +826,9 @@
 
             // make sure last notification is visible
             room.messages.scrollTop(scrollTop + topAfter - topBefore + $notification.height());
+        },
+        notify: function () {
+            document.getElementById('noftificationSound').play();
         }
     };
 
