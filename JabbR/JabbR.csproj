@@ -110,6 +110,8 @@
     <Content Include="Content\images\icons-36-white.png" />
     <Content Include="Content\images\keyboard.png" />
     <Content Include="Content\images\lock.png" />
+    <Content Include="Content\images\pop-in-icon.png" />
+    <Content Include="Content\images\pop-out-icon.png" />
     <Content Include="Content\jquery.mobile-1.0rc2.css" />
     <Content Include="Content\jquery.mobile-1.0rc2.min.css" />
     <Content Include="Content\jquery.mobile.structure-1.0rc2.css" />
@@ -173,6 +175,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Chat.pinnedWindows.js" />
     <Content Include="favicon.ico" />
     <Content Include="Content\images\big-logo.png" />
     <Content Include="Content\images\logo32.png" />

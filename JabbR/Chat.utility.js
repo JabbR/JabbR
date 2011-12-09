@@ -73,7 +73,13 @@
                 return value.substr(0, length - 3) + '...';
             }
             return value;
-        }
+        },
+        randomUniqueId: function (prefix) {
+            var n = Math.floor(Math.random() * 100);
+            while ($("#" + prefix + n.toString()).length > 0)
+                n = Math.Floor(Math.random() * 100);
+            return prefix + n;
+        } 
     };
 
     if (!window.chat) {
