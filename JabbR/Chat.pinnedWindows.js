@@ -3,7 +3,7 @@
 
     var collapsibleUtility = {
         handlePinClick: function () {
-            if ($(this).attr('floating') == 'true') {
+            if ($(this).attr('floating') === 'true') {
                 collapsibleUtility.handlePopIn($(this));
             }
             else {
@@ -13,7 +13,7 @@
         handlePopOut: function (el) {
             $('#page').height($(window).height()).width($(window).width());
             var divId = window.chat.utility.randomUniqueId('pop-out-');
-            el.attr('floating', true)
+            el.attr('floating', 'true')
                     .attr('prev-id', collapsibleUtility.getPrevId(el.parent().prev()))
                     .parent()
                     .wrap('<div id=' + divId + '/>').parent()
@@ -24,14 +24,14 @@
         },
         handlePopIn: function (el) {
             $('#page').height($(window).height()).width($(window).width());
-            el.attr('floating', false);
+            el.attr('floating', 'false');
             $(el.parent().parent().html()).
                     insertAfter('#' + el.attr('prev-id'));
             el.parent().parent().remove();
         },
         getPrevId: function (el) {
             var prevId = el.attr('id');
-            if (prevId == null || prevId == '') {
+            if (prevId === null || prevId === '') {
                 prevId = window.chat.utility.randomUniqueId('prev-pop-out-');
                 el.attr('id', prevId);
             }
