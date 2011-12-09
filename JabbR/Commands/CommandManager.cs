@@ -3,6 +3,7 @@ using System.Linq;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
+using System.Security.Cryptography;
 
 namespace JabbR.Commands
 {
@@ -101,6 +102,16 @@ namespace JabbR.Commands
             {
                 HandleKick(user, room, parts);
 
+                return true;
+            }
+            else if (commandName.Equals("invitecode", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleInviteCode(user, room, forceReset: false);
+                return true;
+            }
+            else if (commandName.Equals("resetinvitecode", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleInviteCode(user, room, forceReset: true);
                 return true;
             }
 
@@ -220,6 +231,25 @@ namespace JabbR.Commands
             }
 
             return false;
+        }
+
+        private void HandleInviteCode(ChatUser user, ChatRoom room, bool forceReset)
+        {
+            if (String.IsNullOrEmpty(room.InviteCode) || forceReset)
+            {
+                // Generate a new invite code
+                string code;
+                using (var crypto = new RNGCryptoServiceProvider())
+                {
+                    byte[] data = new byte[4];
+                    crypto.GetBytes(data);
+                    int value = BitConverter.ToInt32(data, 0);
+                    value = Math.Abs(value) % 1000000;
+                    code = value.ToString("000000");
+                }
+                _chatService.SetInviteCode(user, room, code);
+            }
+            _notificationService.PostNotification(room, user, String.Format("Invite Code for this room: {0}", room.InviteCode));
         }
         
         private void HandleLogOut(ChatUser user)
@@ -509,7 +539,7 @@ namespace JabbR.Commands
             // Create the room, then join it
             room = _chatService.AddRoom(user, roomName);
 
-            JoinRoom(user, room);
+            JoinRoom(user, room, null);
 
             _repository.CommitChanges();
         }
@@ -521,8 +551,15 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Join which room?");
             }
 
-            // Create the room if it doesn't exist
+            // Extract arguments
             string roomName = parts[1];
+            string inviteCode = null;
+            if (parts.Length > 2)
+            {
+                inviteCode = parts[2];
+            }
+
+            // Locate the room
             ChatRoom room = _repository.VerifyRoom(roomName);
 
             if (ChatService.IsUserInRoom(room, user))
@@ -531,13 +568,13 @@ namespace JabbR.Commands
             }
             else
             {
-                JoinRoom(user, room);
+                JoinRoom(user, room, inviteCode);
             }
         }
 
-        private void JoinRoom(ChatUser user, ChatRoom room)
+        private void JoinRoom(ChatUser user, ChatRoom room, string inviteCode)
         {
-            _chatService.JoinRoom(user, room);
+            _chatService.JoinRoom(user, room, inviteCode);
                         
             _notificationService.JoinRoom(user, room);
 

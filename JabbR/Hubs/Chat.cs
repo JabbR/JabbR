@@ -140,7 +140,7 @@ namespace JabbR
             return new[] {
                 new { Name = "help", Description = "Type /help to show the list of commands" },
                 new { Name = "nick", Description = "Type /nick [user] [password] to create a user or change your nickname. You can change your password with /nick [user] [oldpassword] [newpassword]" },
-                new { Name = "join", Description = "Type /join [room] - to join a channel of your choice" },
+                new { Name = "join", Description = "Type /join [room] [inviteCode] - to join a channel of your choice. If it is private and you have an invite code, enter it after the room name" },
                 new { Name = "create", Description = "Type /create [room] to create a room" },
                 new { Name = "me", Description = "Type /me 'does anything'" },
                 new { Name = "msg", Description = "Type /msg @nickname (message) to send a private message to nickname. @ is optional." },
@@ -157,6 +157,8 @@ namespace JabbR
                 new { Name = "lock", Description = "Type /lock [room] - To make a room private. Only works if you're the creator of that room." },
                 new { Name = "allow", Description = "Type /allow [user] [room] - To give a user permission to a private room. Only works if you're an owner of that room." },
                 new { Name = "unallow", Description = "Type /unallow [user] [room] - To revoke a user's permission to a private room. Only works if you're an owner of that room." },
+                new { Name = "invitecode", Description = "Type /invitecode - To show the current invite code" },
+                new { Name = "resetinvitecode", Description = "Type /resetinvitecode - To reset the current invite code. This will render the previous invite code invalid" }
             };
         }
         public IEnumerable<RoomViewModel> GetRooms()
@@ -555,6 +557,14 @@ namespace JabbR
             foreach (var client in toUser.ConnectedClients)
             {
                 Clients[client.Id].sendPrivateMessage(user.Name, toUser.Name, messageText);
+            }
+        }
+
+        void INotificationService.PostNotification(ChatRoom room, ChatUser user, string message)
+        {
+            foreach (var client in user.ConnectedClients)
+            {
+                Clients[client.Id].postNotification(message, room.Name);
             }
         }
 

@@ -364,7 +364,7 @@ namespace JabbR.Test
                 };
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
-                service.JoinRoom(user, room);
+                service.JoinRoom(user, room, null);
 
                 Assert.True(user.Rooms.Contains(room));
                 Assert.True(room.Users.Contains(user));
@@ -388,7 +388,7 @@ namespace JabbR.Test
                 user.AllowedRooms.Add(room);
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
-                service.JoinRoom(user, room);
+                service.JoinRoom(user, room, null);
 
                 Assert.True(user.Rooms.Contains(room));
                 Assert.True(room.Users.Contains(user));
@@ -411,7 +411,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
-                Assert.Throws<InvalidOperationException>(() => service.JoinRoom(user, room));
+                Assert.Throws<InvalidOperationException>(() => service.JoinRoom(user, room, null));
             }
         }
 

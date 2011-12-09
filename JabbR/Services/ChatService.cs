@@ -130,12 +130,19 @@ namespace JabbR.Services
             return room;
         }
 
-        public void JoinRoom(ChatUser user, ChatRoom room)
+        public void JoinRoom(ChatUser user, ChatRoom room, string inviteCode)
         {
             // Throw if the room is private but the user isn't allowed
-            if (room.Private && !IsUserAllowed(room, user))
+            if (room.Private)
             {
-                throw new InvalidOperationException(String.Format("Unable to join {0}. This room is locked and you don't have permission to enter.", room.Name));
+                if (!String.IsNullOrEmpty(inviteCode) && String.Equals(inviteCode, room.InviteCode, StringComparison.OrdinalIgnoreCase))
+                {
+                    room.AllowedUsers.Add(user);
+                }
+                if (!IsUserAllowed(room, user))
+                {
+                    throw new InvalidOperationException(String.Format("Unable to join {0}. This room is locked and you don't have permission to enter. If you have an invite code, make sure to enter it in the /join command", room.Name));
+                }
             }
 
             // Add this room to the user's list of rooms
@@ -143,6 +150,19 @@ namespace JabbR.Services
 
             // Add this user to the list of room's users
             room.Users.Add(user);
+        }
+
+        public void SetInviteCode(ChatUser user, ChatRoom room, string inviteCode)
+        {
+            EnsureOwner(user, room);
+            if (!room.Private)
+            {
+                throw new InvalidOperationException("Only private rooms need invite codes");
+            }
+
+            // Set the invite code and save
+            room.InviteCode = inviteCode;
+            _repository.CommitChanges();
         }
         
         public void UpdateActivity(ChatUser user)
