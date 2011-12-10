@@ -416,8 +416,8 @@
             nextMessage         : 'nextMessage',
             activeRoomChanged   : 'activeRoomChanged',
             scrollRoomTop       : 'scrollRoomTop',
-            typing              : 'ui.typing',
-            sendMessage         : 'ui.sendMessage',
+            typing              : 'typing',
+            sendMessage         : 'sendMessage',
             focusit             : 'focusit',
             blurit              : 'blurit',
             preferencesChanged  : 'preferencesChanged'
