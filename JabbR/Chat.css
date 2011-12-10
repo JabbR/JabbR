@@ -20,6 +20,30 @@
     text-decoration: none;
 }
 
+#preferences {
+    margin-left: 0px;
+    padding-left: 0px;    
+    font-size: small;
+    position: absolute;
+    top: 24px;
+    left: 71%;
+    width: 25%;
+    bottom: 70px;
+    margin-left: 2px;
+    height: 16px;
+}
+
+#preferences .sound {
+    background: url('Content/images/sound-on.png') no-repeat;
+    width: 16px;
+    height: 16px;
+    position:  absolute;
+}
+
+#preferences .sound.off {
+    background: url('Content/images/sound-off.png') no-repeat;
+}
+
 #logo {
     margin-top: 10px;
     margin-left: 0px;
@@ -83,7 +107,7 @@
     font-size: small;
     white-space: nowrap;
     position: absolute;
-    top: 24px;
+    top: 55px;
     left: 71%;
     width: 25%;
     bottom: 70px;
