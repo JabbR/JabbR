@@ -874,12 +874,7 @@
             if (type === 'notification' && room.isLobby() === false) {
                 ui.collapseNotifications($element);
             }
-
-            // Always play the sound for PMs
-            if (type === 'pm') {
-                ui.notify();
-            }
-
+            
             if (nearEnd) {
                 ui.scrollToBottom(roomName);
             }
@@ -931,9 +926,9 @@
         getState: function() {
             return preferences;
         },
-        notify: function () {
+        notify: function (force) {
             var hasSound = getActivePreference('hasSound');
-            if(hasSound === true) {
+            if(hasSound === true || force) {
                 $('#noftificationSound')[0].play();
             }
         }

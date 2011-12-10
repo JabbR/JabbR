@@ -394,6 +394,11 @@
     };
 
     chat.sendPrivateMessage = function (from, to, message) {
+        if (isSelf({ Name: to })) {
+            // Force notification for direct messages
+            ui.notify(true);
+        }
+
         ui.addMessage('<emp>*' + from + '* &raquo; *' + to + '*</emp> ' + message, 'pm');
     };
 
