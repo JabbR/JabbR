@@ -1,0 +1,2 @@
+This application uses these sounds from freesound:
+S: Button Click.wav by KorgMS2000B (http://www.freesound.org/people/KorgMS2000B/sounds/54405/)
