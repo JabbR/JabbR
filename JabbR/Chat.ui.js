@@ -1,4 +1,4 @@
-﻿﻿/// <reference path="Scripts/jquery-1.7.js" />
+﻿/// <reference path="Scripts/jquery-1.7.js" />
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 
@@ -10,6 +10,7 @@
         $submitButton = null,
         $newMessage = null,
         $enableDisableToast = null,
+        $ui=null,
         templates = null,
         app = null,
         focus = true,
@@ -257,7 +258,7 @@
                 if ($child.length > 0) {
                     messageId = $child.attr('id')
                                       .substr(2); // Remove the "m-"
-                    $(ui).trigger('ui.scrollRoomTop', [{ name: roomName, messageId: messageId}]);
+                    $ui.trigger(ui.events.scrollRoomTop, [{ name: roomName, messageId: messageId}]);
                 }
             }
         };
@@ -364,11 +365,27 @@
 
     function triggerFocus() {
         ui.focus = true;
-        $(ui).trigger('ui.focus');
+        $ui.trigger(ui.events.focusit);
     }
 
     var ui = {
+        //lets store any events to be triggered as constants here to aid intellisense and avoid
+        //string duplication everywhere
+        events: {
+            closeRoom           : 'closeRoom',
+            prevMessage         : 'prevMessage',
+            openRoom            : 'openRoom',
+            nextMessage         : 'nextMessage',
+            activeRoomChanged   : 'activeRoomChanged',
+            scrollRoomTop       : 'scrollRoomTop',
+            typing              : 'ui.typing',
+            sendMessage         : 'ui.sendMessage',
+            focusit               : 'focusit',
+            blurit                : 'blurit'
+        },
+
         initialize: function () {
+            $ui = $(this);
             $chatArea = $('#chat-area');
             $tabs = $('#tabs');
             $submitButton = $('#send-message');
@@ -388,7 +405,7 @@
                     var roomName = this.params.room;
 
                     if (ui.setActiveRoom(roomName) === false) {
-                        $(ui).trigger('ui.openRoom', [roomName]);
+                        $(ui).trigger(ui.events.openRoom, [roomName]);
                     }
                 });
             });
@@ -428,7 +445,7 @@
             $(document).on('click', '#tabs li .close', function (ev) {
                 var roomName = $(this).closest('li').data('name');
 
-                $(ui).trigger('ui.closeRoom', [roomName]);
+                $ui.trigger(ui.events.closeRoom, [roomName]);
 
                 ev.preventDefault();
                 return false;
@@ -473,7 +490,7 @@
 
             $(window).blur(function () {
                 ui.focus = false;
-                $(ui).trigger('ui.blur');
+                $ui.trigger(ui.events.blurit);
             });
 
             $(window).focus(function () {
@@ -487,11 +504,11 @@
                 var key = e.keyCode || e.which;
                 switch (key) {
                     case Keys.Up:
-                        $(ui).trigger('ui.prevMessage');
+                        $ui.trigger(ui.events.prevMessage);
                         break;
 
                     case Keys.Down:
-                        $(ui).trigger('ui.nextMessage');
+                        $ui.trigger(ui.events.nextMessage);
                         break;
 
                     case Keys.Esc:
@@ -526,7 +543,7 @@
             });
 
             $newMessage.keypress(function (e) {
-                $(ui).trigger('ui.typing');
+                $ui.trigger(ui.events.typing);
             });
 
             $newMessage.focus();
@@ -559,7 +576,7 @@
 
             if (room.isActive()) {
                 // Still trigger the event (just do less overall work)
-                $(ui).trigger('ui.activeRoomChanged', [roomName]);
+                $ui.trigger(ui.events.activeRoomChanged, [roomName]);
                 return true;
             }
 
@@ -572,7 +589,7 @@
                 room.makeActive();
 
                 app.setLocation('#/rooms/' + roomName);
-                $(ui).trigger('ui.activeRoomChanged', [roomName]);
+                $ui.trigger(ui.events.activeRoomChanged, [roomName]);
                 return true;
             }
 
