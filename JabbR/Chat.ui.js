@@ -392,7 +392,7 @@
 
         roomPreferences[name] = value;
 
-        $(ui).trigger(ui.events.preferencesChanged);
+        $ui.trigger(ui.events.preferencesChanged);
     }
 
     function getPreference(roomName, name) {
@@ -446,7 +446,7 @@
                     var roomName = this.params.room;
 
                     if (ui.setActiveRoom(roomName) === false) {
-                        $(ui).trigger(ui.events.openRoom, [roomName]);
+                        $ui.trigger(ui.events.openRoom, [roomName]);
                     }
                 });
             });
@@ -508,7 +508,7 @@
                 var msg = $.trim($newMessage.val());
 
                 if (msg) {
-                    $(ui).trigger(ui.events.sendMessage, [msg]);
+                    $ui.trigger(ui.events.sendMessage, [msg]);
                 }
 
                 $newMessage.val('');
