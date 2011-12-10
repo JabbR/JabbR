@@ -392,7 +392,7 @@
 
         roomPreferences[name] = value;
 
-        $(ui).trigger('ui.preferencesChanged');
+        $(ui).trigger(ui.events.preferencesChanged);
     }
 
     function getPreference(roomName, name) {
@@ -418,8 +418,9 @@
             scrollRoomTop       : 'scrollRoomTop',
             typing              : 'ui.typing',
             sendMessage         : 'ui.sendMessage',
-            focusit               : 'focusit',
-            blurit                : 'blurit'
+            focusit             : 'focusit',
+            blurit              : 'blurit',
+            preferencesChanged  : 'preferencesChanged'
         },
 
         initialize: function (state) {
