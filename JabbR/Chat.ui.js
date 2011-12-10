@@ -30,6 +30,10 @@
         return '[data-name="' + userName + '"]';
     }
 
+    function getRoomPreferenceKey(roomName) {
+        return '_room_' + roomName;
+    }
+
     function Room($tab, $users, $messages) {
         this.tab = $tab;
         this.users = $users;
@@ -369,11 +373,9 @@
         $(ui).trigger('ui.focus');
     }
 
-    function loadRoomPreferences(roomName) {
-        var roomPreferences = preferences[roomName] || {};
-
+    function loadPreferences() {
         // Restore the preference
-        if(roomPreferences.hasSound === true) {
+        if(preferences.hasSound === true) {
             $sound.removeClass('off');
         }
         else {
@@ -381,12 +383,24 @@
         }
     }
 
-    function setPreference(roomName, name, value) {
-        var roomPreferences = preferences[roomName];
+    function loadRoomPreferences(roomName) {
+        var roomPreferences = preferences[roomName] || {};
+        
+        // Placeholder for room level preferences
+    }
+
+    function setPreference(name, value) {
+        preferences[name] = value;
+
+        $(ui).trigger('ui.preferencesChanged');
+    }
+
+    function setRoomPreference(roomName, name, value) {
+        var roomPreferences = preferences[getRoomPreferenceKey(roomName)];
 
         if(!roomPreferences) {
             roomPreferences = {};
-            preferences[roomName] = roomPreferences;
+            preferences[getRoomPreferenceKey(roomName)] = roomPreferences;
         }
 
         roomPreferences[name] = value;
@@ -394,11 +408,11 @@
         $(ui).trigger('ui.preferencesChanged');
     }
 
-    function getPreference(roomName, name) {
-        return (preferences[roomName] || {})[name];
+    function getRoomPreference(roomName, name) {
+        return (preferences[getRoomPreferenceKey(roomName)] || {})[name];
     }
 
-    function getActivePreference(name) {
+    function getActiveRoomPreference(name) {
         var room = getCurrentRoomElements();
 
         return getPreference(room.getName(), name);
@@ -508,14 +522,10 @@
             });
 
             $sound.click(function() {
-                var room = getCurrentRoomElements();
+                $(this).toggleClass('off');
 
-                if(!room.isLobby()){
-                    $(this).toggleClass('off');
-
-                    // Store the preference
-                    setPreference(room.getName(), 'hasSound', !$(this).hasClass('off'));
-                }
+                // Store the preference
+                setPreference('hasSound', !$(this).hasClass('off'));
             });
 
             $enableDisableToast.click(function () {
@@ -581,6 +591,9 @@
             });
 
             $newMessage.focus();
+
+            // Load preferences
+            loadPreferences();
         },
         run: function () {
             app.run();
@@ -837,7 +850,7 @@
             templates.message.tmpl(message).appendTo(room.messages);
 
             // TODO: Determine level of preference in the future (i.e direct message vs all messages)
-            if (room.isInitialized()) {
+            if (message.highlight && room.isInitialized()) {
                 // Always play if the window does not have focus.
                 if (ui.focus === false) {
                     ui.notify();
@@ -927,8 +940,7 @@
             return preferences;
         },
         notify: function (force) {
-            var hasSound = getActivePreference('hasSound');
-            if(hasSound === true || force) {
+            if(preferences.hasSound === true || force) {
                 $('#noftificationSound')[0].play();
             }
         }
