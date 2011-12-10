@@ -508,7 +508,7 @@
                 var msg = $.trim($newMessage.val());
 
                 if (msg) {
-                    $(ui).trigger('ui.sendMessage', [msg]);
+                    $(ui).trigger(ui.events.sendMessage, [msg]);
                 }
 
                 $newMessage.val('');
