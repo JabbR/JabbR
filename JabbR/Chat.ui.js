@@ -10,14 +10,17 @@
         $submitButton = null,
         $newMessage = null,
         $enableDisableToast = null,
+        $sound = null,
         templates = null,
         app = null,
         focus = true,
         commands = [],
         Keys = { Up: 38, Down: 40, Esc: 27 },
-        scrollTopThreshold = 5,
+        scrollTopThreshold = 75,
+        toastTimeOut = 10000,
         toastEnabled = false,
-        chromeToast = null;
+        chromeToast = null,
+        preferences = null;
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -25,6 +28,10 @@
 
     function getUserClassName(userName) {
         return '[data-name="' + userName + '"]';
+    }
+
+    function getRoomPreferenceKey(roomName) {
+        return '_room_' + roomName;
     }
 
     function Room($tab, $users, $messages) {
@@ -323,18 +330,19 @@
                 chromeToast = window.webkitNotifications.createNotification(
                         "Content/images/logo32.png",
                         message.trimmedName,
-                        $('<div />').html(message.message).text());
+                        message.message);
 
-                chromeToast.ondisplay = function () {
-                    setTimeout(function() { chromeToast.cancel(); }, 10000);
-                };
-                
-                chromeToast.onclick = function() {
-                    window.focus(); // this will cause that toast to be hidden in triggerFocus
-                };
+            chromeToast.ondisplay = function () {
+                setTimeout(function() {
+                    chromeToast.cancel(); 
+                }, toastTimeOut);
+            };
+                 
+            chromeToast.onclick = function() {
+                hideToast();
+            };
 
-                chromeToast.show();
-            }
+            chromeToast.show();
         }
     }
 
@@ -365,13 +373,61 @@
         $(ui).trigger('ui.focus');
     }
 
+    function loadPreferences() {
+        // Restore the preference
+        if(preferences.hasSound === true) {
+            $sound.removeClass('off');
+        }
+        else {
+            $sound.addClass('off');
+        }
+    }
+
+    function loadRoomPreferences(roomName) {
+        var roomPreferences = preferences[roomName] || {};
+        
+        // Placeholder for room level preferences
+    }
+
+    function setPreference(name, value) {
+        preferences[name] = value;
+
+        $(ui).trigger('ui.preferencesChanged');
+    }
+
+    function setRoomPreference(roomName, name, value) {
+        var roomPreferences = preferences[getRoomPreferenceKey(roomName)];
+
+        if(!roomPreferences) {
+            roomPreferences = {};
+            preferences[getRoomPreferenceKey(roomName)] = roomPreferences;
+        }
+
+        roomPreferences[name] = value;
+
+        $(ui).trigger('ui.preferencesChanged');
+    }
+
+    function getRoomPreference(roomName, name) {
+        return (preferences[getRoomPreferenceKey(roomName)] || {})[name];
+    }
+
+    function getActiveRoomPreference(name) {
+        var room = getCurrentRoomElements();
+
+        return getPreference(room.getName(), name);
+    }
+
     var ui = {
-        initialize: function () {
+        initialize: function (state) {
+            preferences = state || {};
+
             $chatArea = $('#chat-area');
             $tabs = $('#tabs');
             $submitButton = $('#send-message');
             $newMessage = $('#new-message');
             $enableDisableToast = $('#enable-disable-toast');
+            $sound = $('#preferences .sound');
             focus = true;
             templates = {
                 user: $('#new-user-template'),
@@ -465,6 +521,13 @@
                 return false;
             });
 
+            $sound.click(function() {
+                $(this).toggleClass('off');
+
+                // Store the preference
+                setPreference('hasSound', !$(this).hasClass('off'));
+            });
+
             $enableDisableToast.click(function () {
                 toggleEnableToast();
             });
@@ -528,6 +591,9 @@
             });
 
             $newMessage.focus();
+
+            // Load preferences
+            loadPreferences();
         },
         run: function () {
             app.run();
@@ -554,6 +620,8 @@
         },
         setActiveRoom: function (roomName) {
             var room = getRoomElements(roomName);
+
+            loadRoomPreferences(roomName);
 
             if (room.isActive()) {
                 // Still trigger the event (just do less overall work)
@@ -775,11 +843,25 @@
                   .find('.right').remove(); // remove timestamp on date indicator
             }
 
-            if (toastEnabled) {
+            if (!ui.focus && toastEnabled) {
                 toastMessage(message);
             }
 
             templates.message.tmpl(message).appendTo(room.messages);
+
+            // TODO: Determine level of preference in the future (i.e direct message vs all messages)
+            if (message.highlight && room.isInitialized()) {
+                // Always play if the window does not have focus.
+                if (ui.focus === false) {
+                    ui.notify();
+                } 
+                else {
+                    // if the window has focus only play if the message isn't to the active room
+                    if (!room.isActive()) {
+                        ui.notify();
+                    }
+                }
+            }
         },
         addChatMessageContent: function (id, content, roomName) {
             var $message = $('#m-' + id);
@@ -805,7 +887,7 @@
             if (type === 'notification' && room.isLobby() === false) {
                 ui.collapseNotifications($element);
             }
-
+            
             if (nearEnd) {
                 ui.scrollToBottom(roomName);
             }
@@ -853,6 +935,14 @@
 
             // make sure last notification is visible
             room.messages.scrollTop(scrollTop + topAfter - topBefore + $notification.height());
+        },
+        getState: function() {
+            return preferences;
+        },
+        notify: function (force) {
+            if(preferences.hasSound === true || force) {
+                $('#noftificationSound')[0].play();
+            }
         }
     };
 

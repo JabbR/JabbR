@@ -112,6 +112,8 @@
     <Content Include="Content\images\lock.png" />
     <Content Include="Content\images\pop-in-icon.png" />
     <Content Include="Content\images\pop-out-icon.png" />
+    <Content Include="Content\images\sound-off.png" />
+    <Content Include="Content\images\sound-on.png" />
     <Content Include="Content\jquery.mobile-1.0rc2.css" />
     <Content Include="Content\jquery.mobile-1.0rc2.min.css" />
     <Content Include="Content\jquery.mobile.structure-1.0rc2.css" />
@@ -183,6 +185,7 @@
     <Content Include="index.htm" />
     <Content Include="Mobile.css" />
     <Content Include="mobile.htm" />
+    <Content Include="Content\sounds\notification.wav" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\jquery-1.7-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.js" />
