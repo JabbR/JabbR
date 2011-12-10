@@ -15,7 +15,8 @@
         focus = true,
         commands = [],
         Keys = { Up: 38, Down: 40, Esc: 27 },
-        scrollTopThreshold = 5,
+        scrollTopThreshold = 75,
+        toastTimeOut = 10000,
         toastEnabled = false,
         chromeToast = null;
 
@@ -312,29 +313,31 @@
         message.fulldate = message.date.toLocaleString()
     }
 
-    function toastMessage(message) {
-        // when we are not focused, attempt chrome popup notifications (toast)
-        if (!ui.focus) {
-            if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
-                // replace any previous toast
-                if (chromeToast && chromeToast.cancel) {
-                    chromeToast.cancel();
-                }
-                chromeToast = window.webkitNotifications.createNotification(
-                        "Content/images/logo32.png",
-                        message.trimmedName,
-                        message.message);
+    function canToast() {
+        return window.webkitNotifications;
+    }
 
-                chromeToast.ondisplay = function () {
-                    setTimeout(function() { chromeToast.cancel(); }, 10000);
-                };
-                
-                chromeToast.onclick = function() {
-                    window.focus(); // this will cause that toast to be hidden in triggerFocus
-                };
+    function toastMessage(message) {        
+        if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
+            // Replace any previous toast
+            hideToast();
 
-                chromeToast.show();
-            }
+            chromeToast = window.webkitNotifications.createNotification(
+                    'Content/images/logo32.png',
+                    message.trimmedName,
+                    message.message);
+
+            chromeToast.ondisplay = function () {
+                setTimeout(function() {
+                    chromeToast.cancel(); 
+                }, toastTimeOut);
+            };
+                 
+            chromeToast.onclick = function() {
+                hideToast();
+            };
+
+            chromeToast.show();
         }
     }
 
@@ -361,7 +364,6 @@
 
     function triggerFocus() {
         ui.focus = true;
-        hideToast();
         $(ui).trigger('ui.focus');
     }
 
@@ -775,7 +777,7 @@
                   .find('.right').remove(); // remove timestamp on date indicator
             }
 
-            if (toastEnabled) {
+            if (!ui.focus && toastEnabled) {
                 toastMessage(message);
             }
 
@@ -853,6 +855,8 @@
 
             // make sure last notification is visible
             room.messages.scrollTop(scrollTop + topAfter - topBefore + $notification.height());
+        },
+        getState: function() {
         }
     };
 
