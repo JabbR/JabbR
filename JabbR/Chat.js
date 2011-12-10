@@ -93,7 +93,8 @@
         var legacyCookies = ['userid', 'username', 'userroom', 'userhash', 'currentroom'],
             state = {
                 userId: chat.id,
-                activeRoom: chat.activeRoom
+                activeRoom: chat.activeRoom,
+                preferences: ui.getState()
             },
             jsonState = window.JSON.stringify(state);
 
@@ -616,9 +617,16 @@
             });
     });
 
+    $(ui).bind('ui.preferencesChanged', function (ev) {
+        updateCookie();
+    });
+
     $(function () {
-        // Initialize the ui
-        ui.initialize();
+        var stateCookie = $.cookie('jabbr.state'),
+            state = stateCookie ? JSON.parse(stateCookie) : {};
+
+        // Initialize the ui, passing the user preferences
+        ui.initialize(state.preferences);
 
         ui.addMessage('Welcome to ' + originalTitle, 'notification');
         ui.addMessage('Type /help to see the list of commands', 'notification');

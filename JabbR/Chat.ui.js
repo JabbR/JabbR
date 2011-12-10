@@ -10,6 +10,7 @@
         $submitButton = null,
         $newMessage = null,
         $enableDisableToast = null,
+        $sound = null,
         templates = null,
         app = null,
         focus = true,
@@ -18,7 +19,8 @@
         scrollTopThreshold = 75,
         toastTimeOut = 10000,
         toastEnabled = false,
-        chromeToast = null;
+        chromeToast = null,
+        preferences = null;
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -367,13 +369,51 @@
         $(ui).trigger('ui.focus');
     }
 
+    function loadRoomPreferences(roomName) {
+        var roomPreferences = preferences[roomName] || {};
+
+        // Restore the preference
+        if(roomPreferences.hasSound === true) {
+            $sound.removeClass('off');
+        }
+        else {
+            $sound.addClass('off');
+        }
+    }
+
+    function setPreference(roomName, name, value) {
+        var roomPreferences = preferences[roomName];
+
+        if(!roomPreferences) {
+            roomPreferences = {};
+            preferences[roomName] = roomPreferences;
+        }
+
+        roomPreferences[name] = value;
+
+        $(ui).trigger('ui.preferencesChanged');
+    }
+
+    function getPreference(roomName, name) {
+        return (preferences[roomName] || {})[name];
+    }
+
+    function getActivePreference(name) {
+        var room = getCurrentRoomElements();
+
+        return getPreference(room.getName(), name);
+    }
+
     var ui = {
-        initialize: function () {
+        initialize: function (state) {
+            preferences = state || {};
+
             $chatArea = $('#chat-area');
             $tabs = $('#tabs');
             $submitButton = $('#send-message');
             $newMessage = $('#new-message');
             $enableDisableToast = $('#enable-disable-toast');
+            $sound = $('#preferences .sound');
             focus = true;
             templates = {
                 user: $('#new-user-template'),
@@ -467,6 +507,17 @@
                 return false;
             });
 
+            $sound.click(function() {
+                var room = getCurrentRoomElements();
+
+                if(!room.isLobby()){
+                    $(this).toggleClass('off');
+
+                    // Store the preference
+                    setPreference(room.getName(), 'hasSound', !$(this).hasClass('off'));
+                }
+            });
+
             $enableDisableToast.click(function () {
                 toggleEnableToast();
             });
@@ -556,6 +607,8 @@
         },
         setActiveRoom: function (roomName) {
             var room = getRoomElements(roomName);
+
+            loadRoomPreferences(roomName);
 
             if (room.isActive()) {
                 // Still trigger the event (just do less overall work)
@@ -783,12 +836,14 @@
 
             templates.message.tmpl(message).appendTo(room.messages);
 
-            if (message.highlight && room.isInitialized()) {
-                // alwasy play if the window does have focus.
-                if (!ui.focus) {
+            // TODO: Determine level of preference in the future (i.e direct message vs all messages)
+            if (room.isInitialized()) {
+                // Always play if the window does not have focus.
+                if (ui.focus === false) {
                     ui.notify();
-                } // if the window has focus only play if the message isn't to the active room
+                } 
                 else {
+                    // if the window has focus only play if the message isn't to the active room
                     if (!room.isActive()) {
                         ui.notify();
                     }
@@ -874,9 +929,13 @@
             room.messages.scrollTop(scrollTop + topAfter - topBefore + $notification.height());
         },
         getState: function() {
+            return preferences;
         },
         notify: function () {
-            document.getElementById('noftificationSound').play();
+            var hasSound = getActivePreference('hasSound');
+            if(hasSound === true) {
+                $('#noftificationSound')[0].play();
+            }
         }
     };
 
