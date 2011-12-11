@@ -1,6 +1,7 @@
 ﻿﻿/// <reference path="Scripts/jquery-1.7.js" />
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
+/// <reference path="Chat.toast.js" />
 
 (function ($, window, utility) {
     "use strict";
@@ -17,9 +18,7 @@
         commands = [],
         Keys = { Up: 38, Down: 40, Esc: 27 },
         scrollTopThreshold = 75,
-        toastTimeOut = 10000,
-        toastEnabled = false,
-        chromeToast = null,
+        toast = window.chat.toast,
         preferences = null;
 
     function getRoomId(roomName) {
@@ -319,57 +318,9 @@
         message.fulldate = message.date.toLocaleString()
     }
 
-    function toastMessage(message) {
-        // when we are not focused, attempt chrome popup notifications (toast)
-        if (!ui.focus) {
-            if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
-                // replace any previous toast
-                if (chromeToast && chromeToast.cancel) {
-                    chromeToast.cancel();
-                }
-                chromeToast = window.webkitNotifications.createNotification(
-                        "Content/images/logo32.png",
-                        message.trimmedName,
-                        $('<div />').html(message.message).text());
-
-            chromeToast.ondisplay = function () {
-                setTimeout(function() {
-                    chromeToast.cancel(); 
-                }, toastTimeOut);
-            };
-                 
-            chromeToast.onclick = function() {
-                hideToast();
-            };
-
-            chromeToast.show();
-        }
-    }
-
-    function hideToast() {
-        if (chromeToast && chromeToast.cancel) {
-            chromeToast.cancel();
-        }
-    }
-    
-    function toggleEnableToast() {
-        if (window.webkitNotifications) {
-            if (!toastEnabled) {
-                window.webkitNotifications.requestPermission(function() {
-                    $enableDisableToast.html('Disable notifications');
-                    toastEnabled = true;
-                });
-            }
-            else {
-                $enableDisableToast.html('Enable notifications');
-                toastEnabled = false;
-            }
-        }
-    }
-
     function triggerFocus() {
         ui.focus = true;
-        hideToast();
+        toast.hideToast();
         $(ui).trigger('ui.focus');
     }
 
@@ -448,12 +399,7 @@
             });
 
             // TODO: persist and restore previous toast enabled setting
-            if (window.webkitNotifications) {
-                if (window.webkitNotifications.checkPermission() === 0) {
-                    $enableDisableToast.html('Disable notifications');
-                    toastEnabled = true;
-                }
-            }
+            toast.initializeToast($enableDisableToast);
             
             // DOM events
             $(document).on('click', 'h3.collapsible_title', function () {
@@ -529,7 +475,7 @@
             });
 
             $enableDisableToast.click(function () {
-                toggleEnableToast();
+                toast.toggleEnableToast($enableDisableToast);
             });
 
             $(window).blur(function () {
@@ -843,8 +789,8 @@
                   .find('.right').remove(); // remove timestamp on date indicator
             }
 
-            if (!ui.focus && toastEnabled) {
-                toastMessage(message);
+            if (!ui.focus) {
+                toast.toastMessage(message);
             }
 
             templates.message.tmpl(message).appendTo(room.messages);
