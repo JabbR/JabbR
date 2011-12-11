@@ -125,18 +125,18 @@ namespace JabbR.Test
         
         public class TestableChat : Chat
         {
-            public Mock<IResourceProcessor> MockedResourceProcessor;
-            public Mock<IChatService> MockedChatService;
-            public IJabbrRepository Repository;
-            public Mock<IConnection> MockedConnection;
+            public Mock<IResourceProcessor> MockedResourceProcessor { get; private set; }
+            public Mock<IChatService> MockedChatService { get; private set; }
+            public IJabbrRepository Repository { get; private set; }
+            public Mock<IConnection> MockedConnection { get; private set; }
 
             public TestableChat(Mock<IResourceProcessor> mockedResourceProcessor, Mock<IChatService> mockedChatService, IJabbrRepository repository, Mock<IConnection> connection)
                 : base(mockedResourceProcessor.Object, mockedChatService.Object, repository)
             {
-                this.MockedResourceProcessor = mockedResourceProcessor;
-                this.MockedChatService = mockedChatService;
-                this.Repository = repository;
-                this.MockedConnection = connection;
+                MockedResourceProcessor = mockedResourceProcessor;
+                MockedChatService = mockedChatService;
+                Repository = repository;
+                MockedConnection = connection;
             }
         }
     }
