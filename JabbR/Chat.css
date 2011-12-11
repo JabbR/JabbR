@@ -433,6 +433,7 @@ li.room:hover {
 
 .collapsible_box {
     border: 1px solid #DDD;
+    padding: 5px;
 }
 
 /* CLEAR FIX */
