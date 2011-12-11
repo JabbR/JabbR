@@ -202,6 +202,11 @@
     width: 16px;
     height: 16px;
     margin-left: 5px;
+    background: url(Content/images/lockwhite.png) no-repeat;
+}
+
+#tabs li.locked.current .lock, 
+#tabs li.locked:hover .lock {
     background: url(Content/images/lock.png) no-repeat;
 }
 
