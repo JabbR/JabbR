@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System;
-using System.Threading;
-using JabbR.ViewModels;
 
 namespace JabbR.Models
 {
@@ -71,17 +69,17 @@ namespace JabbR.Models
 
         public ChatUser GetUserById(string userId)
         {
-            return _users.FirstOrDefault(u => u.Id.Equals(userId, StringComparison.OrdinalIgnoreCase));
+            return _users.FirstOrDefault(u => u.Id != null && u.Id.Equals(userId, StringComparison.OrdinalIgnoreCase));
         }
 
         public ChatUser GetUserByName(string userName)
         {
-            return _users.FirstOrDefault(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
+            return _users.FirstOrDefault(u => u.Name != null && u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
         }
 
         public ChatRoom GetRoomByName(string roomName)
         {
-            return _rooms.FirstOrDefault(r => r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
+            return _rooms.FirstOrDefault(r => r.Name != null && r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
         }
 
         public IQueryable<ChatRoom> GetAllowedRooms(ChatUser user)
