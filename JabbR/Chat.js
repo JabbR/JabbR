@@ -14,7 +14,8 @@
         isUnreadMessageForUser = false,
         focus = true,
         loadingHistory = false,
-        typingTimeoutId = null;
+        typingTimeoutId = null,
+	    $ui = $(ui);
 
     function isSelf(user) {
         return chat.name === user.Name;
@@ -508,7 +509,7 @@
         }
     };
 
-    $(ui).bind('ui.typing', function () {
+    $ui.bind(ui.events.typing, function () {
         // If not in a room, don't try to send typing notifications
         if (!chat.activeRoom) {
             return;
@@ -530,7 +531,7 @@
         }, 3000);
     });
 
-    $(ui).bind('ui.sendMessage', function (ev, msg) {
+    $ui.bind(ui.events.sendMessage, function (ev, msg) {
         chat.send(msg)
             .fail(function (e) {
                 ui.addMessage(e, 'error');
@@ -547,19 +548,19 @@
         historyLocation = messageHistory.length;
     });
 
-    $(ui).bind('ui.focus', function () {
+    $ui.bind(ui.events.focusit, function () {
         focus = true;
         unread = 0;
         updateTitle();
     });
 
-    $(ui).bind('ui.blur', function () {
+    $ui.bind(ui.events.blurit, function () {
         focus = false;
 
         updateTitle();
     });
 
-    $(ui).bind('ui.openRoom', function (ev, room) {
+    $ui.bind(ui.events.openRoom, function (ev, room) {
         chat.send('/join ' + room)
             .fail(function (e) {
                 ui.setActiveRoom('Lobby');
@@ -567,14 +568,14 @@
             });
     });
 
-    $(ui).bind('ui.closeRoom', function (ev, room) {
+    $ui.bind(ui.events.closeRoom, function (ev, room) {
         chat.send('/leave ' + room)
             .fail(function (e) {
                 ui.addMessage(e, 'error');
             });
     });
 
-    $(ui).bind('ui.prevMessage', function () {
+    $ui.bind(ui.events.prevMessage, function () {
         historyLocation -= 1;
         if (historyLocation < 0) {
             historyLocation = messageHistory.length - 1;
@@ -582,12 +583,12 @@
         ui.setMessage(messageHistory[historyLocation]);
     });
 
-    $(ui).bind('ui.nextMessage', function () {
+    $ui.bind(ui.events.nextMessage, function () {
         historyLocation = (historyLocation + 1) % messageHistory.length;
         ui.setMessage(messageHistory[historyLocation]);
     });
 
-    $(ui).bind('ui.activeRoomChanged', function (ev, room) {
+    $ui.bind(ui.events.activeRoomChanged, function (ev, room) {
         if (room === 'Lobby') {
             populateLobbyRooms();
 
@@ -603,7 +604,7 @@
         updateCookie();
     });
 
-    $(ui).bind('ui.scrollRoomTop', function (ev, roomInfo) {
+    $ui.bind(ui.events.scrollRoomTop, function (ev, roomInfo) {
         // Do nothing if we're loading history already
         if (loadingHistory === true) {
             return;
@@ -622,7 +623,7 @@
             });
     });
 
-    $(ui).bind('ui.preferencesChanged', function (ev) {
+        $(ui).bind(ui.events.preferencesChanged, function (ev) {
         updateCookie();
     });
 
