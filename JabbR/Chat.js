@@ -15,7 +15,7 @@
         focus = true,
         loadingHistory = false,
         typingTimeoutId = null,
-	    $ui = $(ui);
+        $ui = $(ui);
 
     function isSelf(user) {
         return chat.name === user.Name;
