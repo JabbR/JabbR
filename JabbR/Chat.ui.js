@@ -10,7 +10,7 @@
         $submitButton = null,
         $newMessage = null,
         $enableDisableToast = null,
-        $ui=null,
+        $ui = null,
         $sound = null,
         templates = null,
         app = null,
@@ -324,7 +324,7 @@
         return window.webkitNotifications;
     }
 
-    function toastMessage(message) {        
+    function toastMessage(message) {
         if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
             // Replace any previous toast
             hideToast();
@@ -335,12 +335,12 @@
                     message.message);
 
             chromeToast.ondisplay = function () {
-                setTimeout(function() {
-                    chromeToast.cancel(); 
+                setTimeout(function () {
+                    chromeToast.cancel();
                 }, toastTimeOut);
             };
-                 
-            chromeToast.onclick = function() {
+
+            chromeToast.onclick = function () {
                 hideToast();
             };
 
@@ -353,11 +353,11 @@
             chromeToast.cancel();
         }
     }
-    
+
     function toggleEnableToast() {
         if (window.webkitNotifications) {
             if (!toastEnabled) {
-                window.webkitNotifications.requestPermission(function() {
+                window.webkitNotifications.requestPermission(function () {
                     $enableDisableToast.html('Disable notifications');
                     toastEnabled = true;
                 });
@@ -376,7 +376,7 @@
 
     function loadPreferences() {
         // Restore the preference
-        if(preferences.hasSound === true) {
+        if (preferences.hasSound === true) {
             $sound.removeClass('off');
         }
         else {
@@ -386,20 +386,20 @@
 
     function loadRoomPreferences(roomName) {
         var roomPreferences = preferences[roomName] || {};
-        
+
         // Placeholder for room level preferences
     }
 
     function setPreference(name, value) {
         preferences[name] = value;
 
-        $(ui).trigger('ui.preferencesChanged');
+        $(ui).trigger(ui.events.preferencesChanged);
     }
 
     function setRoomPreference(roomName, name, value) {
         var roomPreferences = preferences[getRoomPreferenceKey(roomName)];
 
-        if(!roomPreferences) {
+        if (!roomPreferences) {
             roomPreferences = {};
             preferences[getRoomPreferenceKey(roomName)] = roomPreferences;
         }
@@ -424,17 +424,17 @@
         //lets store any events to be triggered as constants here to aid intellisense and avoid
         //string duplication everywhere
         events: {
-            closeRoom           : 'closeRoom',
-            prevMessage         : 'prevMessage',
-            openRoom            : 'openRoom',
-            nextMessage         : 'nextMessage',
-            activeRoomChanged   : 'activeRoomChanged',
-            scrollRoomTop       : 'scrollRoomTop',
-            typing              : 'typing',
-            sendMessage         : 'sendMessage',
-            focusit             : 'focusit',
-            blurit              : 'blurit',
-            preferencesChanged  : 'preferencesChanged'
+            closeRoom: 'closeRoom',
+            prevMessage: 'prevMessage',
+            openRoom: 'openRoom',
+            nextMessage: 'nextMessage',
+            activeRoomChanged: 'activeRoomChanged',
+            scrollRoomTop: 'scrollRoomTop',
+            typing: 'typing',
+            sendMessage: 'sendMessage',
+            focusit: 'focusit',
+            blurit: 'blurit',
+            preferencesChanged: 'preferencesChanged'
         },
 
         initialize: function (state) {
@@ -472,7 +472,7 @@
                     toastEnabled = true;
                 }
             }
-            
+
             // DOM events
             $(document).on('click', 'h3.collapsible_title', function () {
                 var $message = $(this).closest('.message'),
@@ -539,7 +539,7 @@
                 return false;
             });
 
-            $sound.click(function() {
+            $sound.click(function () {
                 $(this).toggleClass('off');
 
                 // Store the preference
@@ -872,7 +872,7 @@
                 // Always play if the window does not have focus.
                 if (ui.focus === false) {
                     ui.notify();
-                } 
+                }
                 else {
                     // if the window has focus only play if the message isn't to the active room
                     if (!room.isActive()) {
@@ -905,7 +905,7 @@
             if (type === 'notification' && room.isLobby() === false) {
                 ui.collapseNotifications($element);
             }
-            
+
             if (nearEnd) {
                 ui.scrollToBottom(roomName);
             }
@@ -954,11 +954,11 @@
             // make sure last notification is visible
             room.messages.scrollTop(scrollTop + topAfter - topBefore + $notification.height());
         },
-        getState: function() {
+        getState: function () {
             return preferences;
         },
         notify: function (force) {
-            if(preferences.hasSound === true || force) {
+            if (preferences.hasSound === true || force) {
                 $('#noftificationSound')[0].play();
             }
         }
