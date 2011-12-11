@@ -23,6 +23,7 @@
     <script src="Chat.ui.js" type="text/javascript"></script>
     <script src="Chat.documentOnWrite.js" type="text/javascript"></script>
     <script src="Chat.twitter.js" type="text/javascript"></script>
+    <script src="Chat.pinnedWindows.js" type="text/javascript"></script>
     <script src="Chat.js" type="text/javascript"></script>
     <script id="new-message-template" type="text/x-jquery-tmpl">
         <li class="message ${highlight} clearfix" id="m-${id}" data-name="${name}" data-timestamp="${date}">
@@ -84,38 +85,40 @@
     <!-- /TweetContentProvider -->
 </head>
 <body>
-    <a href="https://github.com/davidfowl/JabbR" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0; z-index:1000" src="https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub"></a>
-    <div id="heading">
-        <div class="banner">            
-            <h1>Jabb</h1>
-            <img src="Content/images/logo32.png" id="logo" />
-            <div>Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a></div>
-        </div>
-        <div style="clear:both">
-        </div>
-        <ul id="tabs">
-            <li id="tabs-lobby" class="current lobby" data-name="Lobby">
-                <button accesskey="l"><span class="content">Lobby</span></button>
-            </li>
-        </ul>
-    </div>
-
-    <div id="chat-area">
-        <ul id="messages-lobby" class="messages current"></ul>
-        <ul id="users-lobby" class="users current"></ul>
-        <div id="preferences">
-            <a href="#" class="sound" title="sound preferences"></a>
-        </div>
-        <!--Disable this until we make it less obtrusive-->
-        <!--<a id="enable-notifications"><span class="content">Enable notifications</span></a>-->
-        <form id="send-message" action="#">
-            <div id="message-box">
-                <input type="text" id="new-message" autocomplete="off" accesskey="m" />
+    <div id="page">
+        <a href="https://github.com/davidfowl/JabbR" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0; z-index:1000" src="https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub"></a>
+        <div id="heading">
+            <div class="banner">            
+                <h1>Jabb</h1>
+                <img src="Content/images/logo32.png" id="logo" />
+                <div>Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a></div>
             </div>
-            <input type="submit" id="send" value="Send" class="send" />
-            <div id="message-instruction">Type @ then press TAB to auto-complete nicknames</div>
-        </form>
+            <div style="clear:both">
+            </div>
+            <ul id="tabs">
+                <li id="tabs-lobby" class="current lobby" data-name="Lobby">
+                    <button accesskey="l"><span class="content">Lobby</span></button>
+                </li>
+            </ul>
+        </div>
+
+        <div id="chat-area">
+            <ul id="messages-lobby" class="messages current"></ul>
+            <ul id="users-lobby" class="users current"></ul>
+            <div id="preferences">
+                <a href="#" class="sound" title="sound preferences"></a>
+            </div>
+            <!--Disable this until we make it less obtrusive-->
+            <!--<a id="enable-notifications"><span class="content">Enable notifications</span></a>-->
+            <form id="send-message" action="#">
+                <div id="message-box">
+                    <input type="text" id="new-message" autocomplete="off" accesskey="m" />
+                </div>
+                <input type="submit" id="send" value="Send" class="send" />
+                <div id="message-instruction">Type @ then press TAB to auto-complete nicknames</div>
+            </form>
+        </div>
+        <audio src="Content/sounds/notification.wav" id="noftificationSound" hidden="hidden" />
     </div>
-    <audio src="Content/sounds/notification.wav" id="noftificationSound" hidden="hidden" />
 </body>
 </html>
