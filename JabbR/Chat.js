@@ -335,7 +335,7 @@
     // Called when the server sends a notification message
     chat.postNotification = function (msg, room) {
         ui.addMessage(msg, 'notification', room);
-    }
+    };
 
     // Called when you created a new user
     chat.userCreated = function () {

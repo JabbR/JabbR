@@ -135,8 +135,10 @@ namespace JabbR.Services
             // Throw if the room is private but the user isn't allowed
             if (room.Private)
             {
+                // First, check if the invite code is correct
                 if (!String.IsNullOrEmpty(inviteCode) && String.Equals(inviteCode, room.InviteCode, StringComparison.OrdinalIgnoreCase))
                 {
+                    // It is, add the user to the allowed users so that future joins will work
                     room.AllowedUsers.Add(user);
                 }
                 if (!IsUserAllowed(room, user))

@@ -237,17 +237,7 @@ namespace JabbR.Commands
         {
             if (String.IsNullOrEmpty(room.InviteCode) || forceReset)
             {
-                // Generate a new invite code
-                string code;
-                using (var crypto = new RNGCryptoServiceProvider())
-                {
-                    byte[] data = new byte[4];
-                    crypto.GetBytes(data);
-                    int value = BitConverter.ToInt32(data, 0);
-                    value = Math.Abs(value) % 1000000;
-                    code = value.ToString("000000");
-                }
-                _chatService.SetInviteCode(user, room, code);
+                _chatService.SetInviteCode(user, room, RandomUtils.NextInviteCode());
             }
             _notificationService.PostNotification(room, user, String.Format("Invite Code for this room: {0}", room.InviteCode));
         }
