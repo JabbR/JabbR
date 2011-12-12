@@ -57,7 +57,7 @@
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.0.4\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.4.0.5\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.2.2.1.4\lib\net40-Full\Ninject.dll</HintPath>
@@ -104,12 +104,15 @@
     <Content Include="Content\images\ajax-loader.png" />
     <Content Include="Content\images\close-icon-hover.png" />
     <Content Include="Content\images\close-icon.png" />
+    <Content Include="Content\images\lockwhite.png" />
     <Content Include="Content\images\icons-18-black.png" />
     <Content Include="Content\images\icons-18-white.png" />
     <Content Include="Content\images\icons-36-black.png" />
     <Content Include="Content\images\icons-36-white.png" />
     <Content Include="Content\images\keyboard.png" />
     <Content Include="Content\images\lock.png" />
+    <Content Include="Content\images\toast-off.png" />
+    <Content Include="Content\images\toast-on.png" />
     <Content Include="Content\images\pop-in-icon.png" />
     <Content Include="Content\images\pop-out-icon.png" />
     <Content Include="Content\images\sound-off.png" />
@@ -265,6 +268,7 @@
       <DependentUpon>201112061116504_PrivateRooms.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ChatClient.cs" />
+    <Compile Include="Models\ClientState.cs" />
     <Compile Include="Services\ChatService.cs" />
     <Compile Include="Services\CryptoService.cs" />
     <Compile Include="Services\IChatService.cs" />

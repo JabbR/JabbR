@@ -17,7 +17,7 @@ namespace JabbR.ContentProviders
         /// <summary>
         /// Regex for parsing the tweet ID out of the link.
         /// </summary>
-        private static readonly Regex tweetRegex = new Regex(@".*https?://twitter.com/(?:#!/)*[^/]+/status/(\d+).*");
+        private static readonly Regex _tweetRegex = new Regex(@".*/statuses/(\d+)");
 
         /// <summary>
         /// The block of HTML/Script that is sent to the client to render the tweet text. The tweet ID will be passed
@@ -32,7 +32,7 @@ namespace JabbR.ContentProviders
         {
 
             // Extract the status id from the URL.
-            var status = tweetRegex.Match(response.ResponseUri.AbsoluteUri)
+            var status = _tweetRegex.Match(response.ResponseUri.AbsoluteUri)
                                 .Groups
                                 .Cast<Group>()
                                 .Skip(1)

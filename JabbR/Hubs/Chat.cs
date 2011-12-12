@@ -714,11 +714,5 @@ namespace JabbR
             HttpCookie cookie = Context.Cookies[key];
             return cookie != null ? HttpUtility.UrlDecode(cookie.Value) : null;
         }
-
-        private class ClientState
-        {
-            public string UserId { get; set; }
-            public string ActiveRoom { get; set; }
-        }
     }
 }

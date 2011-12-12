@@ -22,7 +22,7 @@
 
 #preferences {
     margin-left: 0px;
-    padding-left: 0px;    
+    padding-left: 0px;
     font-size: small;
     position: absolute;
     top: 24px;
@@ -30,18 +30,32 @@
     width: 25%;
     bottom: 70px;
     margin-left: 2px;
-    height: 16px;
+    height: 20px;
 }
 
 #preferences .sound {
     background: url('Content/images/sound-on.png') no-repeat;
     width: 16px;
     height: 16px;
-    position:  absolute;
+    position: absolute;
+    margin-top: 4px;
 }
 
 #preferences .sound.off {
     background: url('Content/images/sound-off.png') no-repeat;
+}
+
+#preferences .toast {
+    background: url('Content/images/toast-on.png') no-repeat;
+    width: 16px;
+    height: 20px;
+    left: 26px;
+    position: absolute;
+    display: none;
+}
+
+#preferences .toast.off {
+    background: url('Content/images/toast-off.png') no-repeat;
 }
 
 #logo {
@@ -202,6 +216,10 @@
     width: 16px;
     height: 16px;
     margin-left: 5px;
+    background: url(Content/images/lockwhite.png) no-repeat;
+}
+
+#tabs li.locked.current .lock, #tabs li.locked:hover .lock {
     background: url(Content/images/lock.png) no-repeat;
 }
 
@@ -235,8 +253,7 @@ li.room:hover {
     padding-right: 0;
 }
 
-#tabs li.lobby button 
-{
+#tabs li.lobby button {
     padding-right: 0;
     margin-right: 10px;
 }
@@ -417,10 +434,6 @@ li.room:hover {
 /* End TweetContentProvider CSS */
 
 .captureDocumentWrite_collapsible h3, h3.collapsible_title {
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
     color: #1c94c4;
     font-size: smaller;
     padding: 5px;
@@ -432,6 +445,7 @@ li.room:hover {
 
 .collapsible_box {
     border: 1px solid #DDD;
+    padding: 5px;
 }
 
 /* CLEAR FIX */
@@ -459,26 +473,23 @@ li.clearfix {
 }
 
 /* CSS for Popout Content Providers */
-.collapsible_wrapper.ui-draggable
-{
-    width:800px;
-    background-color:#fff;
-    position:absolute;
+.collapsible_wrapper.ui-draggable {
+    width: 800px;
+    background-color: #fff;
+    position: absolute;
 }
-.collapsible_wrapper.ui-draggable h3
-{
-    margin-top:0px;
+.collapsible_wrapper.ui-draggable h3 {
+    margin-top: 0px;
 }
 
-.collapsible_pin
-{
+.collapsible_pin {
     width: 20px;
     height: 20px;
     float: right;
     background-image: url('Content/images/pop-out-icon.png');
     background-repeat: no-repeat;
-    margin-top:8px;
-    cursor:pointer;
+    margin-top: 8px;
+    cursor: pointer;
 }
 
 /* CLEAR FIX */
