@@ -17,7 +17,7 @@ namespace JabbR.ContentProviders
         /// <summary>
         /// Regex for parsing the tweet ID out of the link.
         /// </summary>
-        private static readonly Regex _tweetRegex = new Regex(@".*/statuses/(\d+)");
+        private static readonly Regex _tweetRegex = new Regex(@".*/(?:statuses|status)/(\d+)");
 
         /// <summary>
         /// The block of HTML/Script that is sent to the client to render the tweet text. The tweet ID will be passed
