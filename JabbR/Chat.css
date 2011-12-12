@@ -33,6 +33,10 @@
     height: 20px;
 }
 
+#preferences a {
+    cursor: pointer;
+}
+
 #preferences .sound {
     background: url('Content/images/sound-on.png') no-repeat;
     width: 16px;
