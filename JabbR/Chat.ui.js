@@ -9,7 +9,7 @@
         $tabs = null,
         $submitButton = null,
         $newMessage = null,
-        $enableDisableToast = null,
+        $toast = null,
         $ui = null,
         $sound = null,
         templates = null,
@@ -17,9 +17,9 @@
         focus = true,
         commands = [],
         Keys = { Up: 38, Down: 40, Esc: 27 },
+        ToastStatus = { Allowed: 0, NotConfigured: 1, Blocked: 2 },
         scrollTopThreshold = 75,
         toastTimeOut = 10000,
-        toastEnabled = false,
         chromeToast = null,
         preferences = null;
 
@@ -321,31 +321,35 @@
     }
 
     function canToast() {
-        return window.webkitNotifications;
+        // We can toast if it's not disabled
+        return window.webkitNotifications && window.webkitNotifications.checkPermission() !== ToastStatus.Blocked;
     }
 
     function toastMessage(message) {
-        if (window.webkitNotifications && window.webkitNotifications.checkPermission() === 0) {
-            // Replace any previous toast
-            hideToast();
+        if (!window.webkitNotifications ||
+            window.webkitNotifications.checkPermission() !== ToastStatus.Allowed) {
+            return;
+        }
 
-            chromeToast = window.webkitNotifications.createNotification(
+        // Hide any previously displayed toast
+        hideToast();
+
+        chromeToast = window.webkitNotifications.createNotification(
                     'Content/images/logo32.png',
                     message.trimmedName,
                     message.message);
 
-            chromeToast.ondisplay = function () {
-                setTimeout(function () {
-                    chromeToast.cancel();
-                }, toastTimeOut);
-            };
+        chromeToast.ondisplay = function () {
+            setTimeout(function () {
+                chromeToast.cancel();
+            }, toastTimeOut);
+        };
 
-            chromeToast.onclick = function () {
-                hideToast();
-            };
+        chromeToast.onclick = function () {
+            hideToast();
+        };
 
-            chromeToast.show();
-        }
+        chromeToast.show();
     }
 
     function hideToast() {
@@ -354,18 +358,37 @@
         }
     }
 
-    function toggleEnableToast() {
+    function enableToast(callback) {
+        var deferred = $.Deferred();
         if (window.webkitNotifications) {
-            if (!toastEnabled) {
+            // If not configured, request permission
+            if (window.webkitNotifications.checkPermission() === ToastStatus.NotConfigured) {
                 window.webkitNotifications.requestPermission(function () {
-                    $enableDisableToast.html('Disable notifications');
-                    toastEnabled = true;
+                    if (window.webkitNotifications.checkPermission()) {
+                        deferred.reject();
+                    }
+                    else {
+                        deferred.resolve();
+                    }
                 });
             }
-            else {
-                $enableDisableToast.html('Enable notifications');
-                toastEnabled = false;
+            else if (window.webkitNotifications.checkPermission() === ToastStatus.Allowed) {
+                // If we're allowed then just resolve here
+                deferred.resolve();
             }
+            else {
+                // We don't have permission
+                deferred.reject();
+            }
+        }
+
+        return deferred;
+    }
+
+    function ensureToast() {
+        if (window.webkitNotifications &&
+            window.webkitNotifications.checkPermission() === ToastStatus.NotConfigured) {
+            preferences.canToast = false;
         }
     }
 
@@ -376,11 +399,16 @@
 
     function loadPreferences() {
         // Restore the preference
-        if (preferences.hasSound === true) {
-            $sound.removeClass('off');
+        toggleElement($sound, 'hasSound');
+        toggleElement($toast, 'canToast');
+    }
+
+    function toggleElement($element, preferenceName) {
+        if (preferences[preferenceName] === true) {
+            $element.removeClass('off');
         }
         else {
-            $sound.addClass('off');
+            $element.addClass('off');
         }
     }
 
@@ -444,7 +472,7 @@
             $tabs = $('#tabs');
             $submitButton = $('#send-message');
             $newMessage = $('#new-message');
-            $enableDisableToast = $('#enable-disable-toast');
+            $toast = $('#preferences .toast');
             $sound = $('#preferences .sound');
             focus = true;
             templates = {
@@ -465,12 +493,12 @@
                 });
             });
 
-            // TODO: persist and restore previous toast enabled setting
-            if (window.webkitNotifications) {
-                if (window.webkitNotifications.checkPermission() === 0) {
-                    $enableDisableToast.html('Disable notifications');
-                    toastEnabled = true;
-                }
+            if (canToast()) {
+                $toast.show();
+            }
+            else {
+                // We need to set the toast setting to false
+                preferences.canToast = false;
             }
 
             // DOM events
@@ -542,12 +570,32 @@
             $sound.click(function () {
                 $(this).toggleClass('off');
 
+                var enabled = !$(this).hasClass('off');
+
                 // Store the preference
-                setPreference('hasSound', !$(this).hasClass('off'));
+                setPreference('hasSound', enabled);
             });
 
-            $enableDisableToast.click(function () {
-                toggleEnableToast();
+            $toast.click(function () {
+                var $this = $(this),
+                    enabled = !$this.hasClass('off');
+
+                if (enabled) {
+                    // If it's enabled toggle the preference
+                    setPreference('canToast', !enabled);
+                    $this.toggleClass('off');
+                }
+                else {
+                    enableToast()
+                    .done(function () {
+                        setPreference('canToast', true);
+                        $this.removeClass('off');
+                    })
+                    .fail(function () {
+                        setPreference('canToast', false);
+                        $this.addClass('off');
+                    });
+                }
             });
 
             $(window).blur(function () {
@@ -609,6 +657,9 @@
             });
 
             $newMessage.focus();
+
+            // Make sure we can toast at all
+            ensureToast();
 
             // Load preferences
             loadPreferences();
@@ -861,10 +912,6 @@
                   .find('.right').remove(); // remove timestamp on date indicator
             }
 
-            if (!ui.focus && toastEnabled) {
-                toastMessage(message);
-            }
-
             templates.message.tmpl(message).appendTo(room.messages);
 
             // TODO: Determine level of preference in the future (i.e direct message vs all messages)
@@ -872,11 +919,13 @@
                 // Always play if the window does not have focus.
                 if (ui.focus === false) {
                     ui.notify();
+                    ui.toast(message);
                 }
                 else {
                     // if the window has focus only play if the message isn't to the active room
                     if (!room.isActive()) {
                         ui.notify();
+                        ui.toast(message);
                     }
                 }
             }
@@ -960,6 +1009,11 @@
         notify: function (force) {
             if (preferences.hasSound === true || force) {
                 $('#noftificationSound')[0].play();
+            }
+        },
+        toast: function (message) {
+            if (preferences.canToast === true) {
+                toastMessage(message);
             }
         }
     };

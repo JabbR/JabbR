@@ -30,7 +30,7 @@
     width: 25%;
     bottom: 70px;
     margin-left: 2px;
-    height: 16px;
+    height: 20px;
 }
 
 #preferences .sound {
@@ -38,10 +38,24 @@
     width: 16px;
     height: 16px;
     position: absolute;
+    margin-top: 4px;
 }
 
 #preferences .sound.off {
     background: url('Content/images/sound-off.png') no-repeat;
+}
+
+#preferences .toast {
+    background: url('Content/images/toast-on.png') no-repeat;
+    width: 16px;
+    height: 20px;
+    left: 26px;
+    position: absolute;
+    display: none;
+}
+
+#preferences .toast.off {
+    background: url('Content/images/toast-off.png') no-repeat;
 }
 
 #logo {
