@@ -1,2 +1,2 @@
 This application uses these sounds from freesound:
-S: Button Click.wav by KorgMS2000B (http://www.freesound.org/people/KorgMS2000B/sounds/54405/)
+S: Wood019.wav by HardPCM (http://www.freesound.org/people/HardPCM/sounds/35978/) (notification.wav)
