@@ -2,42 +2,43 @@
 (function($) {
     "use strict";
 
-    var toastTimeOut = 10000,
-        toastEnabled = false,
+    var ToastStatus = { Allowed: 0, NotConfigured: 1, Blocked: 2 },
+        toastTimeOut = 10000,
         chromeToast = null;
 
     var toast = {
-        initializeToast: function (enableDisableToast) {
-            if (window.webkitNotifications) {
-                if (window.webkitNotifications.checkPermission() === 0) {
-                    enableDisableToast.html('Disable notifications');
-                    toastEnabled = true;
-                }
+        canToast: function () {
+            // we can toast if webkitNotifications exist and the user hasn't explicitly denied
+            return window.webkitNotifications && window.webkitNotifications.checkPermission() !== ToastStatus.Blocked;
+        },
+        ensureToast: function (preferences) {
+            if (window.webkitNotifications &&
+                window.webkitNotifications.checkPermission() === ToastStatus.NotConfigured) {
+                preferences.canToast = false;
             }
         },
         toastMessage: function(message) {
-            if (!toastEnabled || !window.webkitNotifications || !(window.webkitNotifications.checkPermission() === 0)) {
+            if (!window.webkitNotifications ||
+                window.webkitNotifications.checkPermission() !== ToastStatus.Allowed) {
                 return;
             }
-            
-            // replace any previous toast
-            if (chromeToast && chromeToast.cancel) {
-                chromeToast.cancel();
-            }
-            
-            chromeToast = window.webkitNotifications.createNotification(
-                "Content/images/logo32.png",
-                message.trimmedName,
-                $('<div />').html(message.message).text());
 
-            chromeToast.ondisplay = function() {
-                setTimeout(function() {
+            // Hide any previously displayed toast
+            toast.hideToast();
+
+            chromeToast = window.webkitNotifications.createNotification(
+                'Content/images/logo32.png',
+                message.trimmedName,
+                $('<div/>').html(message.message).text());
+
+            chromeToast.ondisplay = function () {
+                setTimeout(function () {
                     chromeToast.cancel();
                 }, toastTimeOut);
             };
 
-            chromeToast.onclick = function() {
-                hideToast();
+            chromeToast.onclick = function () {
+                toast.hideToast();
             };
 
             chromeToast.show();
@@ -47,19 +48,31 @@
                 chromeToast.cancel();
             }
         },
-        toggleEnableToast: function(enableDisableToast) {
+        enableToast: function(callback) {
+            var deferred = $.Deferred();
             if (window.webkitNotifications) {
-                if (!toastEnabled) {
-                    window.webkitNotifications.requestPermission(function() {
-                        enableDisableToast.html('Disable notifications');
-                        toastEnabled = true;
+                // If not configured, request permission
+                if (window.webkitNotifications.checkPermission() === ToastStatus.NotConfigured) {
+                    window.webkitNotifications.requestPermission(function () {
+                        if (window.webkitNotifications.checkPermission()) {
+                            deferred.reject();
+                        }
+                        else {
+                            deferred.resolve();
+                        }
                     });
                 }
+                else if (window.webkitNotifications.checkPermission() === ToastStatus.Allowed) {
+                    // If we're allowed then just resolve here
+                    deferred.resolve();
+                }
                 else {
-                    enableDisableToast.html('Enable notifications');
-                    toastEnabled = false;
+                    // We don't have permission
+                    deferred.reject();
                 }
             }
+
+            return deferred;
         }
     };
     

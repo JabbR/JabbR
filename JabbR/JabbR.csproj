@@ -98,6 +98,7 @@
     <Content Include="Chat.css" />
     <Content Include="Chat.documentOnWrite.js" />
     <Content Include="Chat.js" />
+    <Content Include="Chat.toast.js" />
     <Content Include="Chat.twitter.js" />
     <Content Include="Chat.ui.js" />
     <Content Include="Chat.utility.js" />

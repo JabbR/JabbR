@@ -18,7 +18,6 @@
         focus = true,
         commands = [],
         Keys = { Up: 38, Down: 40, Esc: 27 },
-        ToastStatus = { Allowed: 0, NotConfigured: 1, Blocked: 2 },
         scrollTopThreshold = 75,
         toast = window.chat.toast,
         preferences = null;
@@ -320,78 +319,6 @@
         message.fulldate = message.date.toLocaleString()
     }
 
-    function canToast() {
-        // We can toast if it's not disabled
-        return window.webkitNotifications && window.webkitNotifications.checkPermission() !== ToastStatus.Blocked;
-    }
-
-    function toastMessage(message) {
-        if (!window.webkitNotifications ||
-            window.webkitNotifications.checkPermission() !== ToastStatus.Allowed) {
-            return;
-        }
-
-        // Hide any previously displayed toast
-        hideToast();
-
-        chromeToast = window.webkitNotifications.createNotification(
-                    'Content/images/logo32.png',
-                    message.trimmedName,
-                    message.message);
-
-        chromeToast.ondisplay = function () {
-            setTimeout(function () {
-                chromeToast.cancel();
-            }, toastTimeOut);
-        };
-
-        chromeToast.onclick = function () {
-            hideToast();
-        };
-
-        chromeToast.show();
-    }
-
-    function hideToast() {
-        if (chromeToast && chromeToast.cancel) {
-            chromeToast.cancel();
-        }
-    }
-
-    function enableToast(callback) {
-        var deferred = $.Deferred();
-        if (window.webkitNotifications) {
-            // If not configured, request permission
-            if (window.webkitNotifications.checkPermission() === ToastStatus.NotConfigured) {
-                window.webkitNotifications.requestPermission(function () {
-                    if (window.webkitNotifications.checkPermission()) {
-                        deferred.reject();
-                    }
-                    else {
-                        deferred.resolve();
-                    }
-                });
-            }
-            else if (window.webkitNotifications.checkPermission() === ToastStatus.Allowed) {
-                // If we're allowed then just resolve here
-                deferred.resolve();
-            }
-            else {
-                // We don't have permission
-                deferred.reject();
-            }
-        }
-
-        return deferred;
-    }
-
-    function ensureToast() {
-        if (window.webkitNotifications &&
-            window.webkitNotifications.checkPermission() === ToastStatus.NotConfigured) {
-            preferences.canToast = false;
-        }
-    }
-
     function triggerFocus() {
         ui.focus = true;
         $ui.trigger(ui.events.focusit);
@@ -493,7 +420,7 @@
                 });
             });
 
-            if (canToast()) {
+            if (toast.canToast()) {
                 $toast.show();
             }
             else {
@@ -586,7 +513,7 @@
                     $this.toggleClass('off');
                 }
                 else {
-                    enableToast()
+                    toast.enableToast()
                     .done(function () {
                         setPreference('canToast', true);
                         $this.removeClass('off');
@@ -659,7 +586,7 @@
             $newMessage.focus();
 
             // Make sure we can toast at all
-            ensureToast();
+            toast.ensureToast(preferences);
 
             // Load preferences
             loadPreferences();
@@ -1013,7 +940,7 @@
         },
         toast: function (message) {
             if (preferences.canToast === true) {
-                toastMessage(message);
+                toast.toastMessage(message);
             }
         }
     };
