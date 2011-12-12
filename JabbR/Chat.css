@@ -22,7 +22,7 @@
 
 #preferences {
     margin-left: 0px;
-    padding-left: 0px;    
+    padding-left: 0px;
     font-size: small;
     position: absolute;
     top: 24px;
@@ -37,7 +37,7 @@
     background: url('Content/images/sound-on.png') no-repeat;
     width: 16px;
     height: 16px;
-    position:  absolute;
+    position: absolute;
 }
 
 #preferences .sound.off {
@@ -205,8 +205,7 @@
     background: url(Content/images/lockwhite.png) no-repeat;
 }
 
-#tabs li.locked.current .lock, 
-#tabs li.locked:hover .lock {
+#tabs li.locked.current .lock, #tabs li.locked:hover .lock {
     background: url(Content/images/lock.png) no-repeat;
 }
 
@@ -240,8 +239,7 @@ li.room:hover {
     padding-right: 0;
 }
 
-#tabs li.lobby button 
-{
+#tabs li.lobby button {
     padding-right: 0;
     margin-right: 10px;
 }
@@ -461,26 +459,23 @@ li.clearfix {
 }
 
 /* CSS for Popout Content Providers */
-.collapsible_wrapper.ui-draggable
-{
-    width:800px;
-    background-color:#fff;
-    position:absolute;
+.collapsible_wrapper.ui-draggable {
+    width: 800px;
+    background-color: #fff;
+    position: absolute;
 }
-.collapsible_wrapper.ui-draggable h3
-{
-    margin-top:0px;
+.collapsible_wrapper.ui-draggable h3 {
+    margin-top: 0px;
 }
 
-.collapsible_pin
-{
+.collapsible_pin {
     width: 20px;
     height: 20px;
     float: right;
     background-image: url('Content/images/pop-out-icon.png');
     background-repeat: no-repeat;
-    margin-top:8px;
-    cursor:pointer;
+    margin-top: 8px;
+    cursor: pointer;
 }
 
 /* CLEAR FIX */
