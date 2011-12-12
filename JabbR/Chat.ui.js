@@ -297,7 +297,7 @@
 
     function setAccessKeys() {
         $.each($tabs.find('li.room'), function (index, item) {
-            $(item).children('button:first-child').attr('accesskey', getRoomAccessKey(index));
+            $(item).children('button').attr('accesskey', getRoomAccessKey(index));
         });
     }
 
