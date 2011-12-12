@@ -103,6 +103,16 @@ namespace JabbR.Commands
 
                 return true;
             }
+            else if (commandName.Equals("invitecode", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleInviteCode(user, room, forceReset: false);
+                return true;
+            }
+            else if (commandName.Equals("resetinvitecode", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleInviteCode(user, room, forceReset: true);
+                return true;
+            }
 
             return false;
         }
@@ -220,6 +230,15 @@ namespace JabbR.Commands
             }
 
             return false;
+        }
+
+        private void HandleInviteCode(ChatUser user, ChatRoom room, bool forceReset)
+        {
+            if (String.IsNullOrEmpty(room.InviteCode) || forceReset)
+            {
+                _chatService.SetInviteCode(user, room, RandomUtils.NextInviteCode());
+            }
+            _notificationService.PostNotification(room, user, String.Format("Invite Code for this room: {0}", room.InviteCode));
         }
         
         private void HandleLogOut(ChatUser user)
@@ -509,7 +528,7 @@ namespace JabbR.Commands
             // Create the room, then join it
             room = _chatService.AddRoom(user, roomName);
 
-            JoinRoom(user, room);
+            JoinRoom(user, room, null);
 
             _repository.CommitChanges();
         }
@@ -521,8 +540,15 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Join which room?");
             }
 
-            // Create the room if it doesn't exist
+            // Extract arguments
             string roomName = parts[1];
+            string inviteCode = null;
+            if (parts.Length > 2)
+            {
+                inviteCode = parts[2];
+            }
+
+            // Locate the room
             ChatRoom room = _repository.VerifyRoom(roomName);
 
             if (ChatService.IsUserInRoom(room, user))
@@ -531,13 +557,13 @@ namespace JabbR.Commands
             }
             else
             {
-                JoinRoom(user, room);
+                JoinRoom(user, room, inviteCode);
             }
         }
 
-        private void JoinRoom(ChatUser user, ChatRoom room)
+        private void JoinRoom(ChatUser user, ChatRoom room, string inviteCode)
         {
-            _chatService.JoinRoom(user, room);
+            _chatService.JoinRoom(user, room, inviteCode);
                         
             _notificationService.JoinRoom(user, room);
 

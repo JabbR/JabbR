@@ -16,8 +16,9 @@ namespace JabbR.Services
 
         // Rooms
         ChatRoom AddRoom(ChatUser user, string roomName);
-        void JoinRoom(ChatUser user, ChatRoom room);
+        void JoinRoom(ChatUser user, ChatRoom room, string inviteCode);
         void LeaveRoom(ChatUser user, ChatRoom room);
+        void SetInviteCode(ChatUser user, ChatRoom room, string inviteCode);
 
         // Messages
         ChatMessage AddMessage(ChatUser user, ChatRoom room, string content);

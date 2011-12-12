@@ -334,6 +334,11 @@
         ui.addMessage('Your gravatar has been set', 'notification', this.activeRoom);
     };
 
+    // Called when the server sends a notification message
+    chat.postNotification = function (msg, room) {
+        ui.addMessage(msg, 'notification', room);
+    };
+
     // Called when you created a new user
     chat.userCreated = function () {
         ui.addMessage('Your nick is ' + this.name, 'notification');

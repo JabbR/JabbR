@@ -268,6 +268,10 @@
     <Compile Include="Migrations\201112061116504_PrivateRooms.Designer.cs">
       <DependentUpon>201112061116504_PrivateRooms.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201112092057338_InviteCodes.cs" />
+    <Compile Include="Migrations\201112092057338_InviteCodes.Designer.cs">
+      <DependentUpon>201112092057338_InviteCodes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ChatClient.cs" />
     <Compile Include="Models\ClientState.cs" />
     <Compile Include="Services\ChatService.cs" />

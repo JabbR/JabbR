@@ -373,6 +373,206 @@ namespace JabbR.Test
             }
         }
 
+        public class InviteCodeCommand
+        {
+            [Fact]
+            public void InviteCodeShowsErrorForPublicRoom()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                room.Owners.Add(user);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        room.Name,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invitecode"));
+                Assert.Equal("Only private rooms need invite codes", ex.Message);
+            }
+
+            [Fact]
+            public void InviteCodeSetsCodeIfNoCodeAndCurrentUserOwner()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = true
+                };
+                room.Users.Add(user);
+                room.Owners.Add(user);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        room.Name,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/invitecode");
+
+                Assert.True(result);
+                Assert.NotNull(room.InviteCode);
+                Assert.Equal(6, room.InviteCode.Length);
+                Assert.True(room.InviteCode.All(c => Char.IsDigit(c)));
+                notificationService.Verify(n => n.PostNotification(room, user, String.Format("Invite Code for this room: {0}", room.InviteCode)));
+            }
+
+            [Fact]
+            public void InviteCodeDisplaysCodeIfCodeSet()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = true,
+                    InviteCode = "123456"
+                };
+                room.Users.Add(user);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        room.Name,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/invitecode");
+
+                Assert.True(result);
+                Assert.NotNull(room.InviteCode);
+                Assert.Equal(6, room.InviteCode.Length);
+                Assert.True(room.InviteCode.All(c => Char.IsDigit(c)));
+                notificationService.Verify(n => n.PostNotification(room, user, String.Format("Invite Code for this room: {0}", room.InviteCode)));
+            }
+
+            [Fact]
+            public void InviteCodeResetCodeWhenResetInviteCodeCalled()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = true,
+                    InviteCode = "123456"
+                };
+                room.Owners.Add(user);
+                room.Users.Add(user);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        room.Name,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/resetinvitecode");
+
+                Assert.True(result);
+                Assert.NotEqual("123456", room.InviteCode);
+            }
+
+            [Fact]
+            public void ThrowsIfNonOwnerRequestsInviteCodeWhenNoneSet()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = true
+                };
+                room.Users.Add(user);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        room.Name,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invitecode"));
+                Assert.Equal("You are not an owner of room", ex.Message);
+            }
+
+            [Fact]
+            public void ThrowsIfNonOwnerRequestsResetInviteCode()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = true,
+                    InviteCode = "123456"
+                };
+                room.Users.Add(user);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        room.Name,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/resetinvitecode"));
+                Assert.Equal("You are not an owner of room", ex.Message);
+            }
+        }
+
         public class JoinCommand
         {
             [Fact]
@@ -467,6 +667,193 @@ namespace JabbR.Test
 
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join"));
+            }
+
+            [Fact]
+            public void ThrowIfUserNotAllowedAndNoInviteCodeProvided()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "anurse",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = true
+                };
+                repository.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid", 
+                                                        "1", 
+                                                        null, 
+                                                        service, 
+                                                        repository, 
+                                                        notificationService.Object);
+
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join room"));
+                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, make sure to enter it in the /join command",
+                             ex.Message);
+            }
+
+            [Fact]
+            public void ThrowIfUserNotAllowedAndInviteCodeIncorrect()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "anurse",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = true,
+                    InviteCode = "123456"
+                };
+                repository.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join room 789012"));
+                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, make sure to enter it in the /join command",
+                             ex.Message);
+            }
+
+            [Fact]
+            public void ThrowIfUserNotAllowedAndNoInviteCodeSet()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "anurse",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = true
+                };
+                repository.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join room 789012"));
+                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, make sure to enter it in the /join command",
+                             ex.Message);
+            }
+
+            [Fact]
+            public void JoinIfInviteCodeIsCorrect()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "anurse",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = true,
+                    InviteCode = "123456"
+                };
+                repository.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                commandManager.TryHandleCommand("/join room 123456");
+                notificationService.Verify(ns => ns.JoinRoom(user, room));
+            }
+
+            [Fact]
+            public void JoinIfUserIsAllowed()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "anurse",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = true
+                };
+                room.AllowedUsers.Add(user);
+                repository.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                commandManager.TryHandleCommand("/join room");
+                notificationService.Verify(ns => ns.JoinRoom(user, room));
+            }
+
+            [Fact]
+            public void ThrowIfUserNotAllowedToJoinPrivateRoom()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "anurse",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = true
+                };
+                repository.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join room"));
+                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, make sure to enter it in the /join command",
+                             ex.Message);
             }
         }
 
