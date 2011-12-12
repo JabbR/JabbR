@@ -21,5 +21,5 @@
                 ui.scrollToBottom();
             }
         });
-    }
+    };
 })(jQuery, window, chat.ui);
