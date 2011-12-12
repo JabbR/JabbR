@@ -159,7 +159,7 @@ namespace JabbR.Services
             EnsureOwner(user, room);
             if (!room.Private)
             {
-                throw new InvalidOperationException("Only private rooms need invite codes");
+                throw new InvalidOperationException("Only private rooms can have invite codes");
             }
 
             // Set the invite code and save

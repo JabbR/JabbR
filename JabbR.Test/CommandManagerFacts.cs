@@ -402,7 +402,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invitecode"));
-                Assert.Equal("Only private rooms need invite codes", ex.Message);
+                Assert.Equal("Only private rooms can have invite codes", ex.Message);
             }
 
             [Fact]
