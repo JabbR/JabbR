@@ -20,6 +20,6 @@
         if (nearEnd) {
             ui.scrollToBottom();
         }
-    }
+    };
 
 })(jQuery, window, chat.ui);

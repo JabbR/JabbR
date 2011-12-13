@@ -47,7 +47,7 @@
             }
             return prevId;
         }
-    }
+    };
     $(document).on('click', 'div.collapsible_pin', collapsibleUtility.handlePinClick);
 
 })(jQuery, window, chat.ui);
