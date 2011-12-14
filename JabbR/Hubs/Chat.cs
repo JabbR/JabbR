@@ -129,7 +129,7 @@ namespace JabbR
             string message = textTransform.Parse(content);
             return Transform(message, out links);
         }
-        
+
         public void Disconnect()
         {
             DisconnectClient(Context.ClientId);
@@ -593,7 +593,7 @@ namespace JabbR
         void INotificationService.LockRoom(ChatUser targetUser, ChatRoom room)
         {
             var userViewModel = new UserViewModel(targetUser);
-            
+
             // Tell the room it's locked
             Clients.lockRoom(userViewModel, room.Name);
 
@@ -611,6 +611,17 @@ namespace JabbR
             var rooms = user.Rooms.Select(r => r.Name);
 
             Caller.logOut(rooms);
+        }
+
+        void INotificationService.ShowUserInfo(ChatUser user)
+        {
+            Caller.showUserInfo(new
+            {
+                Name = user.Name,
+                OwnedRooms = user.OwnedRooms.Select(r => r.Name),
+                LastActivity = new DateTimeOffset(user.LastActivity, new TimeSpan()).ToString("o"),
+                Rooms = user.Rooms.Select(r => r.Name)
+            });
         }
 
         void INotificationService.ShowHelp()
@@ -664,6 +675,8 @@ namespace JabbR
                 Clients[room.Name].changeUserName(oldUserName, userViewModel, room.Name);
             }
         }
+
+
 
         private void OnRoomChanged(ChatRoom room)
         {
