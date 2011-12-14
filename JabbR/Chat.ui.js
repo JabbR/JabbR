@@ -325,13 +325,13 @@
     }
 
     function loadPreferences() {
-        // Restore the preference
-        toggleElement($sound, 'hasSound');
-        toggleElement($toast, 'canToast');
+        // Restore the global preferences
+
     }
 
-    function toggleElement($element, preferenceName) {
-        if (preferences[preferenceName] === true) {
+    function toggleElement($element, preferenceName, roomName) {
+        var value = roomName ? getRoomPreference(roomName, preferenceName) : preferences[preferenceName];
+        if (value === true) {
             $element.removeClass('off');
         }
         else {
@@ -340,9 +340,11 @@
     }
 
     function loadRoomPreferences(roomName) {
-        var roomPreferences = preferences[roomName] || {};
+        var roomPreferences = getRoomPreference(roomName);
 
         // Placeholder for room level preferences
+        toggleElement($sound, 'hasSound', roomName);
+        toggleElement($toast, 'canToast', roomName);
     }
 
     function setPreference(name, value) {
@@ -371,7 +373,16 @@
     function getActiveRoomPreference(name) {
         var room = getCurrentRoomElements();
 
-        return getPreference(room.getName(), name);
+        return getRoomPreference(room.getName(), name);
+    }
+
+    function anyRoomPreference(name, value) {
+        for (var key in preferences) {
+            if (preferences[key][name] === value) {
+                return true;
+            }
+        }
+        return false;
     }
 
     var ui = {
@@ -495,31 +506,42 @@
             });
 
             $sound.click(function () {
+                var room = getCurrentRoomElements();
+
+                if (room.isLobby()) {
+                    return;
+                }
+
                 $(this).toggleClass('off');
 
                 var enabled = !$(this).hasClass('off');
 
                 // Store the preference
-                setPreference('hasSound', enabled);
+                setRoomPreference(room.getName(), 'hasSound', enabled);
             });
 
             $toast.click(function () {
                 var $this = $(this),
-                    enabled = !$this.hasClass('off');
+                    enabled = !$this.hasClass('off'),
+                    room = getCurrentRoomElements();
+
+                if (room.isLobby()) {
+                    return;
+                }
 
                 if (enabled) {
                     // If it's enabled toggle the preference
-                    setPreference('canToast', !enabled);
+                    setRoomPreference(room.getName(), 'canToast', !enabled);
                     $this.toggleClass('off');
                 }
                 else {
                     toast.enableToast()
                     .done(function () {
-                        setPreference('canToast', true);
+                        setRoomPreference(room.getName(), 'canToast', true);
                         $this.removeClass('off');
                     })
                     .fail(function () {
-                        setPreference('canToast', false);
+                        setRoomPreference(room.getName(), 'canToast', false);
                         $this.addClass('off');
                     });
                 }
@@ -808,7 +830,8 @@
                 previousUser = null,
                 previousTimestamp = new Date(),
                 showUserName = true,
-                $message = null;
+                $message = null,
+                isMention = message.highlight;
 
             if ($previousMessage.length > 0) {
                 previousUser = $previousMessage.data('name');
@@ -841,16 +864,21 @@
 
             templates.message.tmpl(message).appendTo(room.messages);
 
-            // TODO: Determine level of preference in the future (i.e direct message vs all messages)
-            if (message.highlight && room.isInitialized()) {
-                // Always play if the window does not have focus.
-                if (ui.focus === false) {
-                    ui.notify();
-                    ui.toast(message);
+            if (room.isInitialized()) {
+                if (isMention) {
+                    // Always do sound notification for mentions if any room as sound enabled
+                    if (anyRoomPreference('hasSound') === true) {
+                        ui.notify(true);
+                    }
+
+                    if (ui.focus === false && anyRoomPreference('canToast') === true) {
+                        // Only toast if there's no focus (even on mentions)
+                        ui.toast(message, true);
+                    }
                 }
                 else {
-                    // if the window has focus only play if the message isn't to the active room
-                    if (!room.isActive()) {
+                    // Only toast if the room isn't active or if there's no focus
+                    if (ui.focus === false || room.isActive() === false) {
                         ui.notify();
                         ui.toast(message);
                     }
@@ -934,12 +962,12 @@
             return preferences;
         },
         notify: function (force) {
-            if (preferences.hasSound === true || force) {
+            if (getActiveRoomPreference('hasSound') === true || force) {
                 $('#noftificationSound')[0].play();
             }
         },
-        toast: function (message) {
-            if (preferences.canToast === true) {
+        toast: function (message, force) {
+            if (getActiveRoomPreference('canToast') === true || force) {
                 toast.toastMessage(message);
             }
         }
