@@ -385,6 +385,24 @@
         return false;
     }
 
+    function triggerSend() {
+        var msg = $newMessage.val();
+
+        if ($.trim(msg)) {
+            $ui.trigger(ui.events.sendMessage, [msg]);
+        }
+
+        $newMessage.val('');
+        $newMessage.focus();
+
+        triggerFocus();
+
+        // always scroll to bottom after new message sent
+        var room = getCurrentRoomElements();
+        room.scrollToBottom();
+        room.removeSeparator();
+    }
+
     var ui = {
 
         //lets store any events to be triggered as constants here to aid intellisense and avoid
@@ -484,6 +502,13 @@
                 }
             });
 
+            $submitButton.click(function (ev) {
+                triggerSend();
+
+                ev.preventDefault();
+                return false;
+            });
+
             $sound.click(function () {
                 var room = getCurrentRoomElements();
 
@@ -553,21 +578,7 @@
                         $(this).val('');
                         break;
                     case Keys.Enter:
-                        var msg = $newMessage.val();
-
-                        if ($.trim(msg)) {
-                            $ui.trigger(ui.events.sendMessage, [msg]);
-                        }
-
-                        $newMessage.val('');
-                        $newMessage.focus();
-
-                        triggerFocus();
-
-                        // always scroll to bottom after new message sent
-                        var room = getCurrentRoomElements();
-                        room.scrollToBottom();
-                        room.removeSeparator();
+                        triggerSend();
 
                         ev.preventDefault();
                         return false;
