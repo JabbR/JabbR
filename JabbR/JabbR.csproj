@@ -196,6 +196,7 @@
     <Content Include="mobile.htm" />
     <Content Include="Content\sounds\notification.wav" />
     <Content Include="robots.txt" />
+    <Content Include="Scripts\jquery.history.js" />
     <Content Include="Scripts\jquery-1.7-vsdoc.js" />
     <Content Include="Scripts\jquery-1.7.js" />
     <Content Include="Scripts\jquery-1.7.min.js" />

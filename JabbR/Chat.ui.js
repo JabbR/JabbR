@@ -14,7 +14,6 @@
         $ui = null,
         $sound = null,
         templates = null,
-        app = null,
         focus = true,
         commands = [],
         Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13 },
@@ -350,9 +349,7 @@
     }
 
     function navigateToRoom(roomName) {
-        app.runRoute('get', '#/rooms/' + roomName, {
-            room: roomName
-        });
+        $.history.load('rooms/' + roomName);
     }
 
     function processMessage(message) {
@@ -513,18 +510,8 @@
                 notification: $('#new-notification-template'),
                 separator: $('#message-separator-template'),
                 tab: $('#new-tab-template')
-            },
-            app = Sammy(function () {
-                // Process this route
-                this.get('#/rooms/:room', function () {
-                    var roomName = this.params.room;
-
-                    if (ui.setActiveRoom(roomName) === false) {
-                        $ui.trigger(ui.events.openRoom, [roomName]);
-                    }
-                });
-            });
-
+            };
+            
             if (toast.canToast()) {
                 $toast.show();
             }
@@ -727,7 +714,17 @@
             loadPreferences();
         },
         run: function () {
-            app.run();
+            $.history.init(function (hash) {
+                var parts = hash.split('/');
+                if (parts[0] === 'rooms') {
+                    var roomName = parts[1];
+
+                    if (ui.setActiveRoom(roomName) === false) {
+                        $ui.trigger(ui.events.openRoom, [roomName]);
+                    }
+                }
+            },
+            { unescape: ',/' });
         },
         setMessage: function (value) {
             $newMessage.val(value);
@@ -771,7 +768,7 @@
                 triggerFocus();
                 room.makeActive();
 
-                app.setLocation('#/rooms/' + roomName);
+                document.location.hash = '#/rooms/' + roomName;
                 $ui.trigger(ui.events.activeRoomChanged, [roomName]);
                 return true;
             }
