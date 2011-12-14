@@ -790,6 +790,10 @@
             var room = getRoomElements(roomName),
                 $user = room.getUser(user.Name);
 
+            // do not show typing indicator for current user
+            if (user.Name === ui.getUserName()) {
+                return;
+            }
             if (isTyping) {
                 $user.addClass('typing');
             }

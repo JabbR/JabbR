@@ -169,7 +169,7 @@
                 ui.setRoomLocked(room.Name);
             }
         });
-
+        ui.setUserName(chat.name);
         ui.addMessage('Welcome back ' + chat.name, 'notification', 'lobby');
         ui.addMessage('You can join any of the rooms on the right', 'notification', 'lobby');
         ui.addMessage('Type /rooms to list all available rooms', 'notification', 'lobby');
@@ -341,6 +341,7 @@
 
     // Called when you created a new user
     chat.userCreated = function () {
+        ui.setUserName(this.name);
         ui.addMessage('Your nick is ' + this.name, 'notification');
 
         // Process any urls that may contain room names
@@ -651,7 +652,6 @@
                     if (success === false) {
                         ui.addMessage('Choose a name using "/nick nickname password".', 'notification');
                     }
-                    ui.setUserName(chat.name);
                     // get list of available commands
                     chat.getCommands()
                         .done(function (commands) {
