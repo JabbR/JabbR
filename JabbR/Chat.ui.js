@@ -877,10 +877,10 @@
                     }
                 }
                 else {
-                    // Only toast if the room isn't active or if there's no focus
-                    if (ui.focus === false || room.isActive() === false) {
-                        ui.notify();
-                        ui.toast(message);
+                    // Only toast if chat isn't focused
+                    if (ui.focus === false) {
+                        ui.notifyRoom(roomName);
+                        ui.toastRoom(roomName, message);
                     }
                 }
             }
@@ -960,6 +960,16 @@
         },
         getState: function () {
             return preferences;
+        },
+        notifyRoom: function (roomName) {
+            if (getRoomPreference(roomName, 'hasSound') === true) {
+                $('#noftificationSound')[0].play();
+            }
+        },
+        toastRoom: function (roomName, message) {
+            if (getRoomPreference(roomName, 'canToast') === true) {
+                toast.toastMessage(message);
+            }
         },
         notify: function (force) {
             if (getActiveRoomPreference('hasSound') === true || force) {
