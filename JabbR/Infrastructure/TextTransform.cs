@@ -33,7 +33,7 @@ namespace JabbR.Infrastructure
 <div class=""collapsible_content"">
     <h3 class=""collapsible_title"">Paste (click to show/hide)</h3>
     <div class=""collapsible_box"">
-        <pre>{0}</pre>
+        <pre class=""multiline"">{0}</pre>
     </div>
 </div>
 ", message);
