@@ -20,7 +20,8 @@
         Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13 },
         scrollTopThreshold = 75,
         toast = window.chat.toast,
-        preferences = null;
+        preferences = null,
+        name;
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -592,7 +593,8 @@
                     switch (prefix) {
                         case '@':
                             var room = getCurrentRoomElements();
-                            return room.users.find('li')
+                            // exclude current username from autocomplete
+                            return room.users.find('li[data-name != "' + ui.getUserName() + '"]')
                                          .not('.room')
                                          .map(function () { return $(this).data('name'); });
                         case '#':
@@ -989,6 +991,12 @@
             if (getActiveRoomPreference('canToast') === true || force) {
                 toast.toastMessage(message);
             }
+        },
+        setUserName: function (name) {
+            ui.name = name;
+        },
+        getUserName: function () {
+            return ui.name;
         }
     };
 

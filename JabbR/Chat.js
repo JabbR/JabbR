@@ -387,7 +387,7 @@
     chat.userNameChanged = function (user) {
         // Update the client state
         chat.name = user.Name;
-
+        ui.setUserName(chat.name);
         ui.addMessage('Your name is now ' + user.Name, 'notification', this.activeRoom);
     };
 
@@ -651,6 +651,7 @@
                     if (success === false) {
                         ui.addMessage('Choose a name using "/nick nickname password".', 'notification');
                     }
+                    ui.setUserName(chat.name);
                     // get list of available commands
                     chat.getCommands()
                         .done(function (commands) {
