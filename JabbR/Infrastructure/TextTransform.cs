@@ -6,33 +6,53 @@ using System.Text.RegularExpressions;
 using System.Web;
 using JabbR.Models;
 
-namespace JabbR.Infrastructure {
+namespace JabbR.Infrastructure
+{
 
-    public class TextTransform 
+    public class TextTransform
     {
         private readonly IJabbrRepository _repository;
         public const string HashTagPattern = @"(?:(?<=\s)|^)#([A-Za-z0-9-_.]{1,30}\w*)";
 
-        public TextTransform(IJabbrRepository repository) 
+        public TextTransform(IJabbrRepository repository)
         {
             _repository = repository;
         }
 
-        public string Parse(string message) 
+        public string Parse(string message)
         {
-            return ConvertHashtagsToRoomLinks(message);
+            return ConvertTextWithNewLines(ConvertHashtagsToRoomLinks(message));
         }
 
-        private string ConvertHashtagsToRoomLinks(string message) 
+        private string ConvertTextWithNewLines(string message)
         {
+            // If the message contains new lines wrap all of it in a pre tag
+            if (message.Contains('\n'))
+            {
+                return String.Format(@"
+<div class=""collapsible_content"">
+    <h3 class=""collapsible_title"">Paste (click to show/hide)</h3>
+    <div class=""collapsible_box"">
+        <pre>{0}</pre>
+    </div>
+</div>
+", message);
+            }
 
-            message = Regex.Replace(message, HashTagPattern, m => {
+            return message;
+        }
+
+        private string ConvertHashtagsToRoomLinks(string message)
+        {
+            message = Regex.Replace(message, HashTagPattern, m =>
+            {
                 //hashtag without #
                 string roomName = m.Groups[1].Value;
 
                 var room = _repository.GetRoomByName(roomName);
 
-                if (room != null) {
+                if (room != null)
+                {
                     return String.Format(CultureInfo.InvariantCulture,
                                          "<a href=\"#/rooms/{0}\" title=\"{1}\">{1}</a>",
                                          roomName,

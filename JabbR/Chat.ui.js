@@ -17,7 +17,7 @@
         app = null,
         focus = true,
         commands = [],
-        Keys = { Up: 38, Down: 40, Esc: 27 },
+        Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13 },
         scrollTopThreshold = 75,
         toast = window.chat.toast,
         preferences = null;
@@ -484,27 +484,6 @@
                 }
             });
 
-            $submitButton.submit(function (ev) {
-                var msg = $.trim($newMessage.val());
-
-                if (msg) {
-                    $ui.trigger(ui.events.sendMessage, [msg]);
-                }
-
-                $newMessage.val('');
-                $newMessage.focus();
-
-                triggerFocus();
-
-                // always scroll to bottom after new message sent
-                var room = getCurrentRoomElements();
-                room.scrollToBottom();
-                room.removeSeparator();
-
-                ev.preventDefault();
-                return false;
-            });
-
             $sound.click(function () {
                 var room = getCurrentRoomElements();
 
@@ -559,8 +538,8 @@
                 triggerFocus();
             });
 
-            $newMessage.keydown(function (e) {
-                var key = e.keyCode || e.which;
+            $newMessage.keydown(function (ev) {
+                var key = ev.keyCode || ev.which;
                 switch (key) {
                     case Keys.Up:
                         $ui.trigger(ui.events.prevMessage);
@@ -573,6 +552,25 @@
                     case Keys.Esc:
                         $(this).val('');
                         break;
+                    case Keys.Enter:
+                        var msg = $newMessage.val();
+
+                        if ($.trim(msg)) {
+                            $ui.trigger(ui.events.sendMessage, [msg]);
+                        }
+
+                        $newMessage.val('');
+                        $newMessage.focus();
+
+                        triggerFocus();
+
+                        // always scroll to bottom after new message sent
+                        var room = getCurrentRoomElements();
+                        room.scrollToBottom();
+                        room.removeSeparator();
+
+                        ev.preventDefault();
+                        return false;
                 }
             });
 
