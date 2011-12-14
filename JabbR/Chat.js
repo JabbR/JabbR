@@ -628,7 +628,7 @@
             });
     });
 
-        $(ui).bind(ui.events.preferencesChanged, function (ev) {
+    $(ui).bind(ui.events.preferencesChanged, function (ev) {
         updateCookie();
     });
 
