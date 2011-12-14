@@ -151,6 +151,11 @@ namespace JabbR.Commands
                 HandleList(parts);
                 return true;
             }
+            else if (commandName.Equals("where", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleWhere(parts);
+                return true;
+            }
             else if (commandName.Equals("who", StringComparison.OrdinalIgnoreCase))
             {
                 HandleWho(parts);
@@ -386,6 +391,37 @@ namespace JabbR.Commands
             _chatService.LockRoom(user, room);
 
             _notificationService.LockRoom(user, room);
+        }
+
+        private void HandleWhere(string[] parts)
+        {
+            if (parts.Length == 1)
+            {
+                _notificationService.ListUsers();
+                return;
+            }
+
+            var name = ChatService.NormalizeUserName(parts[1]);
+
+            ChatUser user = _repository.GetUserByName(name);
+
+            if (user != null)
+            {
+                _notificationService.ListRooms(user);
+                return;
+            }
+
+            var users = _repository.SearchUsers(name);
+
+            if (users.Count() == 1)
+            {
+                user = users.First();
+                _notificationService.ListRooms(user);
+            }
+            else
+            {
+                _notificationService.ListUsers(users);
+            }
         }
 
         private void HandleWho(string[] parts)
