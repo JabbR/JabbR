@@ -427,7 +427,8 @@ namespace JabbR.Commands
         {
             if (parts.Length == 1)
             {
-                throw new InvalidOperationException("Which user would you like to see information for?");
+                _notificationService.ListUsers();
+                return;
             }
 
             var name = ChatService.NormalizeUserName(parts[1]);
