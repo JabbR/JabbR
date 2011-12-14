@@ -58,7 +58,7 @@ namespace JabbR
             }
 
             // Update some user values
-            _service.AddClient(user, Context.ClientId);
+            _service.AddClient(user, Context.ConnectionId);
             _service.UpdateActivity(user);
             _repository.CommitChanges();
 
@@ -76,7 +76,7 @@ namespace JabbR
                 Caller.activeRoom = clientState.ActiveRoom;
             }
 
-            LogOn(user, Context.ClientId);
+            LogOn(user, Context.ConnectionId);
         }
 
         public void Send(string content)
@@ -132,7 +132,7 @@ namespace JabbR
 
         public void Disconnect()
         {
-            DisconnectClient(Context.ClientId);
+            DisconnectClient(Context.ConnectionId);
         }
 
         public object GetCommands()
@@ -351,7 +351,7 @@ namespace JabbR
 
         private bool TryHandleCommand(string command)
         {
-            string clientId = Context.ClientId;
+            string clientId = Context.ConnectionId;
             string userId = Caller.id;
             string room = Caller.activeRoom;
 
