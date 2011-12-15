@@ -38,6 +38,7 @@ namespace JabbR.Services
 
         void OnSelfMessage(ChatRoom room, ChatUser user, string content);
 
+        void ShowUserInfo(ChatUser user);
         void ShowHelp();
         void ShowRooms();
 

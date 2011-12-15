@@ -208,6 +208,7 @@
     <Content Include="Scripts\jquery.signalR.js" />
     <Content Include="Scripts\jquery.signalR.min.js" />
     <Content Include="Scripts\jquery.sortElements.js" />
+    <Content Include="Scripts\jquery.timeago.0.10.js" />
     <Content Include="Scripts\jQuery.tmpl.js" />
     <Content Include="Scripts\jQuery.tmpl.min.js" />
     <Content Include="Scripts\jquery.writeCapture.js" />

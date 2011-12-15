@@ -146,7 +146,8 @@ namespace JabbR
                 new { Name = "msg", Description = "Type /msg @nickname (message) to send a private message to nickname. @ is optional." },
                 new { Name = "leave", Description = "Type /leave to leave the current room. Type /leave [room name] to leave a specific room." },
                 new { Name = "rooms", Description = "Type /rooms to show the list of rooms" },
-                new { Name = "who", Description = "Type /who to show a list of all users, /who [name] to the rooms that user is in" },
+                new { Name = "where", Description = "Type /where [name] to the rooms that user is in" },
+                new { Name = "who", Description = "Type /who to show a list of all users, /who [name] to show specific information about that user" },
                 new { Name = "list", Description = "Type /list (room) to show a list of users in the room" },
                 new { Name = "gravatar", Description = "Type /gravatar [email] to set your gravatar." },
                 new { Name = "nudge", Description = "Type /nudge to send a nudge to the whole room, or \"/nudge @nickname\" to nudge a particular user. @ is optional." },
@@ -592,7 +593,7 @@ namespace JabbR
         void INotificationService.LockRoom(ChatUser targetUser, ChatRoom room)
         {
             var userViewModel = new UserViewModel(targetUser);
-            
+
             // Tell the room it's locked
             Clients.lockRoom(userViewModel, room.Name);
 
@@ -610,6 +611,17 @@ namespace JabbR
             var rooms = user.Rooms.Select(r => r.Name);
 
             Caller.logOut(rooms);
+        }
+
+        void INotificationService.ShowUserInfo(ChatUser user)
+        {
+            Caller.showUserInfo(new
+            {
+                Name = user.Name,
+                OwnedRooms = user.OwnedRooms.Select(r => r.Name),
+                LastActivity = user.LastActivity,
+                Rooms = user.Rooms.Select(r => r.Name)
+            });
         }
 
         void INotificationService.ShowHelp()
@@ -663,6 +675,8 @@ namespace JabbR
                 Clients[room.Name].changeUserName(oldUserName, userViewModel, room.Name);
             }
         }
+
+
 
         private void OnRoomChanged(ChatRoom room)
         {

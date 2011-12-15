@@ -688,11 +688,11 @@ namespace JabbR.Test
 
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid", 
-                                                        "1", 
-                                                        null, 
-                                                        service, 
-                                                        repository, 
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join room"));
@@ -2381,7 +2381,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void CanShowUserRoomsWhenEnteringPartOfName()
+            public void CanGetUserInfo()
             {
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
@@ -2399,10 +2399,58 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
 
-                bool result = commandManager.TryHandleCommand("/who dfow");
+                bool result = commandManager.TryHandleCommand("/who dfowler");
 
                 Assert.True(result);
-                notificationService.Verify(x => x.ListRooms(user), Times.Once());
+                notificationService.Verify(x => x.ShowUserInfo(user), Times.Once());
+            }
+
+            [Fact]
+            public void CannotGetInfoForInvalidUser()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/who sethwebster"));
+            }
+        }
+
+        public class WhereCommand
+        {
+
+            [Fact]
+            public void CannotShowUserRoomsWhenEnteringPartOfName()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/where dfow"));
             }
 
             [Fact]
@@ -2424,45 +2472,10 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
 
-                bool result = commandManager.TryHandleCommand("/who dfowler");
+                bool result = commandManager.TryHandleCommand("/where dfowler");
 
                 Assert.True(result);
                 notificationService.Verify(x => x.ListRooms(user), Times.Once());
-            }
-
-            [Fact]
-            public void ShowsUserListIfFoundMoreThenOneUser()
-            {
-                var repository = new InMemoryRepository();
-                var user = new ChatUser
-                {
-                    Name = "dfowler",
-                    Id = "1"
-                };
-                repository.Add(user);
-                var user2 = new ChatUser
-                {
-                    Name = "dfowler2",
-                    Id = "2"
-                };
-                repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        notificationService.Object);
-
-                var userList = new List<ChatUser>();
-                userList.Add(user);
-                userList.Add(user2);
-
-                bool result = commandManager.TryHandleCommand("/who dfow");
-
-                Assert.True(result);
-                notificationService.Verify(x => x.ListUsers(userList), Times.Once());
             }
 
         }
