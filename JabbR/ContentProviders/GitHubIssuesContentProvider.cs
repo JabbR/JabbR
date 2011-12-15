@@ -52,7 +52,7 @@ namespace JabbR.ContentProviders
 
         protected override bool IsValidContent(HttpWebResponse response)
         {
-            return ExtractParameters(response.ResponseUri).Count() == 2;
+            return ExtractParameters(response.ResponseUri).Count == 2;
         }
     }
 }
