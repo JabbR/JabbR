@@ -378,7 +378,8 @@
     };
 
     chat.showUserInfo = function (userInfo) {
-        ui.addMessage('User information for ' + userInfo.Name + " last seen " + jQuery.timeago(new Date(userInfo.LastActivity)), 'list-header');
+        ui.addMessage('User information for ' + userInfo.Name + 
+            " (last seen " + jQuery.timeago(new Date(userInfo.LastActivity)) + ")", 'list-header');
         chat.showUsersRoomList(userInfo.Name, userInfo.Rooms);
         chat.showUsersOwnedRoomList(userInfo.Name, userInfo.OwnedRooms);
     };
