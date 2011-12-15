@@ -40,6 +40,27 @@
         this.users = $users;
         this.messages = $messages;
 
+        function glowTab() {
+            // Stop if we're not unread anymore
+            if (!$tab.hasClass('unread')) {
+                return;
+            }
+
+            // Go light
+            $tab.animate({ backgroundColor: '#e5e5e5', color: '#000000' }, 800, function () {
+                // Stop if we're not unread anymore
+                if (!$tab.hasClass('unread')) {
+                    return;
+                }
+
+                // Go dark
+                $tab.animate({ backgroundColor: '#164C85', color: '#ffffff' }, 800, function () {
+                    // Glow the tab again
+                    glowTab();
+                });
+            });
+        }
+
         this.isLobby = function () {
             return this.tab.hasClass('lobby');
         };
@@ -94,6 +115,12 @@
 
             $tab.data('unread', unread);
             $tab.data('hasMentions', hasMentions);
+
+            if (!this.isActive() && unread === 1) {
+                // If this room isn't active then we're going to glow the tab
+                // to get the user's attention
+                glowTab();
+            }
         };
 
         this.scrollToBottom = function () {
@@ -137,6 +164,9 @@
 
             this.tab.addClass('current')
                     .removeClass('unread')
+                    .stop(true, true)
+                    .css('backgroundColor', '')
+                    .css('color', '')
                     .data('unread', 0)
                     .data('hasMentions', false)
                     .find('.content')
