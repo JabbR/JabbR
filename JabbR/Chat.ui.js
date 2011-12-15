@@ -427,7 +427,7 @@
             preferences = state || {};
             $chatArea = $('#chat-area');
             $tabs = $('#tabs');
-            $submitButton = $('#send-message');
+            $submitButton = $('#send');
             $newMessage = $('#new-message');
             $toast = $('#preferences .toast');
             $sound = $('#preferences .sound');
