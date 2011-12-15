@@ -216,6 +216,7 @@
     <Content Include="Scripts\jquery.writeCapture.js" />
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\json2.min.js" />
+    <Content Include="Scripts\Markdown.Converter.js" />
     <Content Include="Scripts\qunit.js" />
     <Content Include="Scripts\sammy-latest.min.js" />
     <Content Include="Scripts\writeCapture.js" />
