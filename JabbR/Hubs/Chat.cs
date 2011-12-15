@@ -619,7 +619,7 @@ namespace JabbR
             {
                 Name = user.Name,
                 OwnedRooms = user.OwnedRooms.Select(r => r.Name),
-                LastActivity = new DateTimeOffset(user.LastActivity, new TimeSpan()).ToString("o"),
+                LastActivity = user.LastActivity,
                 Rooms = user.Rooms.Select(r => r.Name)
             });
         }

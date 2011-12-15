@@ -378,8 +378,11 @@
     };
 
     chat.showUserInfo = function (userInfo) {
-        ui.addMessage('User information for ' + userInfo.Name + 
-            " (last seen " + jQuery.timeago(new Date(userInfo.LastActivity)) + ")", 'list-header');
+        var lastActivityDate = userInfo.LastActivity.fromJsonDate();
+        // Workaround for dateTimeOffset issues
+        var utcDate = new Date(lastActivityDate.toString().replace(/(GMT-.{3,4}\s)/, "GMT-0000 "));
+        ui.addMessage('User information for ' + userInfo.Name +
+            " (last seen " + jQuery.timeago(utcDate) + ")", 'list-header');
         chat.showUsersRoomList(userInfo.Name, userInfo.Rooms);
         chat.showUsersOwnedRoomList(userInfo.Name, userInfo.OwnedRooms);
     };

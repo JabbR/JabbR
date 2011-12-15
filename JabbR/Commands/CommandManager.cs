@@ -400,27 +400,8 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Who are you trying to locate?");
             }
 
-            var name = ChatService.NormalizeUserName(parts[1]);
-
-            ChatUser user = _repository.GetUserByName(name);
-
-            if (user != null)
-            {
-                _notificationService.ListRooms(user);
-                return;
-            }
-
-            var users = _repository.SearchUsers(name);
-
-            if (users.Count() == 1)
-            {
-                user = users.First();
-                _notificationService.ListRooms(user);
-            }
-            else
-            {
-                _notificationService.ListUsers(users);
-            }
+            ChatUser user = _repository.VerifyUser(parts[1]);
+            _notificationService.ListRooms(user);
         }
 
         private void HandleWho(string[] parts)
