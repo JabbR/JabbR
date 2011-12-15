@@ -524,7 +524,7 @@
 
     chat.showUsersOwnedRoomList = function (user, rooms) {
         if (rooms.length === 0) {
-            ui.addMessage(user + ' is not in any rooms', 'list-header');
+            ui.addMessage(user + ' does not own any rooms', 'list-header');
         }
         else {
             ui.addMessage(user + ' owns the following rooms', 'list-header');
