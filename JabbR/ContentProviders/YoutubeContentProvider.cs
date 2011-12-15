@@ -23,14 +23,16 @@ namespace JabbR.ContentProviders
             }
         }
 
-        protected override IEnumerable<string> ExtractParameters(Uri responseUri)
+        protected override IList<string> ExtractParameters(Uri responseUri)
         {
             var queryString = HttpUtility.ParseQueryString(responseUri.Query);
             string videoId = queryString["v"];
+            
             if (!String.IsNullOrEmpty(videoId))
             {
-                yield return videoId;
+                return new List<string>() { videoId };
             }
+            return null;
         }
     }
 }
