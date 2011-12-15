@@ -509,4 +509,50 @@ li.clearfix {
     cursor: pointer;
 }
 
-/* CLEAR FIX */
+
+@media screen and (max-width:480px) {
+  .messages {
+    width: auto;
+    right: 50px;
+    left: 0px;
+  }
+
+  .messages li.message {
+      border-left: inherit;
+  }
+
+  .users {
+    top: 24px;
+    width: 50px;
+    right :0px;
+    left: auto;
+    bottom: 70px;
+  }
+
+
+  .users span {
+    display:none;
+  }
+
+  .message .left {
+    float: inherit;
+    width: inherit;
+    margin-left: inherit;
+  }
+
+  .message .middle {
+    position:relative;
+    top:0.5em;
+    margin-bottom:10px;
+    margin-right: 0px;
+    padding: 5px;
+  }
+
+  #message-instruction {
+    display: none;
+  }
+
+  #tabs {
+    overflow: auto;
+  }
+}
