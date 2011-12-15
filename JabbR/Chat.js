@@ -377,6 +377,13 @@
         connection.start();
     };
 
+    chat.showUserInfo = function (userInfo) {
+        ui.addMessage('User information for ' + userInfo.Name + 
+            " (last seen " + jQuery.timeago(new Date(userInfo.LastActivity)) + ")", 'list-header');
+        chat.showUsersRoomList(userInfo.Name, userInfo.Rooms);
+        chat.showUsersOwnedRoomList(userInfo.Name, userInfo.OwnedRooms);
+    };
+
     chat.setPassword = function () {
         ui.addMessage('Your password has been set', 'notification', this.activeRoom);
     };
@@ -511,6 +518,16 @@
         }
         else {
             ui.addMessage(user + ' is in the following rooms', 'list-header');
+            ui.addMessage(rooms.join(', '), 'list-item');
+        }
+    };
+
+    chat.showUsersOwnedRoomList = function (user, rooms) {
+        if (rooms.length === 0) {
+            ui.addMessage(user + ' does not own any rooms', 'list-header');
+        }
+        else {
+            ui.addMessage(user + ' owns the following rooms', 'list-header');
             ui.addMessage(rooms.join(', '), 'list-item');
         }
     };

@@ -151,6 +151,11 @@ namespace JabbR.Commands
                 HandleList(parts);
                 return true;
             }
+            else if (commandName.Equals("where", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleWhere(parts);
+                return true;
+            }
             else if (commandName.Equals("who", StringComparison.OrdinalIgnoreCase))
             {
                 HandleWho(parts);
@@ -240,7 +245,7 @@ namespace JabbR.Commands
             }
             _notificationService.PostNotification(room, user, String.Format("Invite Code for this room: {0}", room.InviteCode));
         }
-        
+
         private void HandleLogOut(ChatUser user)
         {
             _notificationService.LogOut(user, _clientId);
@@ -388,12 +393,11 @@ namespace JabbR.Commands
             _notificationService.LockRoom(user, room);
         }
 
-        private void HandleWho(string[] parts)
+        private void HandleWhere(string[] parts)
         {
             if (parts.Length == 1)
             {
-                _notificationService.ListUsers();
-                return;
+                throw new InvalidOperationException("Who are you trying to locate?");
             }
 
             var name = ChatService.NormalizeUserName(parts[1]);
@@ -416,6 +420,29 @@ namespace JabbR.Commands
             else
             {
                 _notificationService.ListUsers(users);
+            }
+        }
+
+        private void HandleWho(string[] parts)
+        {
+            if (parts.Length == 1)
+            {
+                _notificationService.ListUsers();
+                return;
+            }
+
+            var name = ChatService.NormalizeUserName(parts[1]);
+
+            ChatUser user = _repository.GetUserByName(name);
+
+            if (user != null)
+            {
+                _notificationService.ShowUserInfo(user);
+                return;
+            }
+            else
+            {
+                throw new InvalidOperationException(String.Format("We didn't find anyone with the username {0}", name));
             }
         }
 
@@ -564,7 +591,7 @@ namespace JabbR.Commands
         private void JoinRoom(ChatUser user, ChatRoom room, string inviteCode)
         {
             _chatService.JoinRoom(user, room, inviteCode);
-                        
+
             _notificationService.JoinRoom(user, room);
 
             _repository.CommitChanges();
@@ -588,7 +615,7 @@ namespace JabbR.Commands
         {
             // Set user hash
             user.Hash = hash;
-            
+
             _notificationService.ChangeGravatar(user);
 
             _repository.CommitChanges();
@@ -688,7 +715,7 @@ namespace JabbR.Commands
                     }
 
                     if (String.IsNullOrEmpty(newPassword))
-                    {                        
+                    {
                         if (targetUser.HashedPassword == null)
                         {
                             _chatService.SetUserPassword(user, password);
@@ -719,7 +746,7 @@ namespace JabbR.Commands
             {
                 throw new InvalidOperationException("You're the only person in here...");
             }
-            
+
             var toUserName = parts[1];
 
             ChatUser toUser = _repository.VerifyUser(toUserName);
@@ -757,6 +784,6 @@ namespace JabbR.Commands
             {
                 throw new InvalidOperationException(String.Format("Room can only be nudged once every {0} seconds", betweenNudges.TotalSeconds));
             }
-        }        
+        }
     }
 }

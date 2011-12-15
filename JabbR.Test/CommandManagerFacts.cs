@@ -688,11 +688,11 @@ namespace JabbR.Test
 
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid", 
-                                                        "1", 
-                                                        null, 
-                                                        service, 
-                                                        repository, 
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join room"));
@@ -2381,6 +2381,60 @@ namespace JabbR.Test
             }
 
             [Fact]
+            public void CanGetUserInfo()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/who dfowler");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.ShowUserInfo(user), Times.Once());
+            }
+
+            [Fact]
+
+            public void CannotGetInfoForInvalidUser()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/who sethwebster"));
+
+            }
+
+        }
+
+        public class WhereCommand
+        {
+
+            [Fact]
             public void CanShowUserRoomsWhenEnteringPartOfName()
             {
                 var repository = new InMemoryRepository();
@@ -2399,7 +2453,7 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
 
-                bool result = commandManager.TryHandleCommand("/who dfow");
+                bool result = commandManager.TryHandleCommand("/where dfow");
 
                 Assert.True(result);
                 notificationService.Verify(x => x.ListRooms(user), Times.Once());
@@ -2424,7 +2478,7 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
 
-                bool result = commandManager.TryHandleCommand("/who dfowler");
+                bool result = commandManager.TryHandleCommand("/where dfowler");
 
                 Assert.True(result);
                 notificationService.Verify(x => x.ListRooms(user), Times.Once());
@@ -2459,7 +2513,7 @@ namespace JabbR.Test
                 userList.Add(user);
                 userList.Add(user2);
 
-                bool result = commandManager.TryHandleCommand("/who dfow");
+                bool result = commandManager.TryHandleCommand("/where dfow");
 
                 Assert.True(result);
                 notificationService.Verify(x => x.ListUsers(userList), Times.Once());
