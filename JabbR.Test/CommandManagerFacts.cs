@@ -2406,7 +2406,6 @@ namespace JabbR.Test
             }
 
             [Fact]
-
             public void CannotGetInfoForInvalidUser()
             {
                 var repository = new InMemoryRepository();
@@ -2426,9 +2425,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/who sethwebster"));
-
             }
-
         }
 
         public class WhereCommand
