@@ -39,6 +39,7 @@
 .new-comments h2,.new-comments a h2, .new-comments a h2:visited
 {
     color:#111;
+    text-decoration:none;
 }
 .new-comments .comment .cmeta .gravatar {
     background: none repeat scroll 0 0 #FFFFFF;
