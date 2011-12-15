@@ -4,7 +4,8 @@
 
     var ToastStatus = { Allowed: 0, NotConfigured: 1, Blocked: 2 },
         toastTimeOut = 10000,
-        chromeToast = null;
+        chromeToast = null,
+        toastRoom = null;
 
     var toast = {
         canToast: function () {
@@ -17,11 +18,13 @@
                 preferences.canToast = false;
             }
         },
-        toastMessage: function(message) {
+        toastMessage: function(message, roomName) {
             if (!window.webkitNotifications ||
                 window.webkitNotifications.checkPermission() !== ToastStatus.Allowed) {
                 return;
             }
+
+            toastRoom = roomName;
 
             // Hide any previously displayed toast
             toast.hideToast();
@@ -39,6 +42,9 @@
 
             chromeToast.onclick = function () {
                 toast.hideToast();
+                                
+                // Trigger the focus event
+                $(toast).trigger('toast.focus', [toastRoom]);
             };
 
             chromeToast.show();

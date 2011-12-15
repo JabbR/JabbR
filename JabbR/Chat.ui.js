@@ -582,6 +582,14 @@
                 }
             });
 
+            $(toast).bind('toast.focus', function (ev, room) {
+                window.focus();
+
+                if (room) {
+                    ui.setActiveRoom(room);
+                }
+            });
+
             $(window).blur(function () {
                 ui.focus = false;
                 $ui.trigger(ui.events.blurit);
@@ -1013,7 +1021,7 @@
         },
         toastRoom: function (roomName, message) {
             if (getRoomPreference(roomName, 'canToast') === true) {
-                toast.toastMessage(message);
+                toast.toastMessage(message, roomName);
             }
         },
         notify: function (force) {
