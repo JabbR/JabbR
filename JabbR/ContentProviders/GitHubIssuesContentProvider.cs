@@ -24,7 +24,8 @@ namespace JabbR.ContentProviders
                 Content = String.Format(_gitHubIssuesContentFormat,
                         parameters[1],
                     String.Format(_gitHubIssuesApiFormat, parameters[0], parameters[1])
-                )
+                ),
+                Title = response.ResponseUri.AbsoluteUri
             };
         }
 
