@@ -1,26 +1,31 @@
-﻿body {
+﻿body
+{
     font-family: Lucida Grande, Trebuchet MS;
     font-size: 13px;
     background-color: #e5e5e5;
 }
 
-.banner > * {
+.banner > *
+{
     float: left;
     margin-left: 10px;
 }
 
-.banner > div {
+.banner > div
+{
     float: left;
     margin-top: 28px;
     margin-left: 10px;
 }
 
-.banner a {
+.banner a
+{
     color: #fff;
     text-decoration: none;
 }
 
-#preferences {
+#preferences
+{
     margin-left: 0px;
     padding-left: 0px;
     font-size: small;
@@ -33,11 +38,13 @@
     height: 18px;
 }
 
-#preferences a {
+#preferences a
+{
     cursor: pointer;
 }
 
-#preferences .sound {
+#preferences .sound
+{
     background: url('Content/images/sound-on.png') no-repeat;
     width: 16px;
     height: 16px;
@@ -45,11 +52,13 @@
     margin-top: 4px;
 }
 
-#preferences .sound.off {
+#preferences .sound.off
+{
     background: url('Content/images/sound-off.png') no-repeat;
 }
 
-#preferences .toast {
+#preferences .toast
+{
     background: url('Content/images/toast-on.png') no-repeat;
     width: 16px;
     height: 20px;
@@ -58,16 +67,19 @@
     display: none;
 }
 
-#preferences .toast.off {
+#preferences .toast.off
+{
     background: url('Content/images/toast-off.png') no-repeat;
 }
 
-#logo {
+#logo
+{
     margin-top: 10px;
     margin-left: 0px;
 }
 
-#chat-area {
+#chat-area
+{
     position: absolute;
     top: 95px;
     bottom: 10px;
@@ -76,7 +88,8 @@
     min-height: 450px;
 }
 
-#heading {
+#heading
+{
     background-color: #00103f;
     color: #fff;
     position: absolute;
@@ -85,11 +98,13 @@
     width: 100%;
 }
 
-#heading h1 {
+#heading h1
+{
     margin-left: 5px;
 }
 
-.messages {
+.messages
+{
     width: 70%;
     border: 1px solid #ccc;
     overflow: auto;
@@ -102,23 +117,27 @@
     background-color: #fff;
 }
 
-.messages li {
+.messages li
+{
     list-style-type: none;
     position: relative;
     margin: 0px;
 }
 
-.messages li.message {
+.messages li.message
+{
     padding: 0px;
     border-left: 175px solid #f1f1f1; /* background color for left column (user info) */
 }
 
-.messages li img.gravatar {
+.messages li img.gravatar
+{
     height: 16px;
     width: 16px;
 }
 
-.users {
+.users
+{
     margin-left: 0px;
     padding-left: 0px;
     overflow: auto;
@@ -133,39 +152,46 @@
     margin-top: 0px;
 }
 
-.users li {
+.users li
+{
     padding: 4px;
 }
 
-.users li .name {
+.users li .name
+{
     word-wrap: break-word;
 }
 
-.users li.room.locked .name {
+.users li.room.locked .name
+{
     margin-left: 20px;
 }
 
-.users li.typing {
+.users li.typing
+{
     background-image: url('Content/images/keyboard.png');
     background-repeat: no-repeat;
     background-position: right center;
 }
 
-.users li.room.locked .lock {
+.users li.room.locked .lock
+{
     position: absolute;
     width: 16px;
     height: 16px;
     background: url(Content/images/lock.png) no-repeat;
 }
 
-#tabs {
+#tabs
+{
     padding: 0;
     margin: 0px 0px 0px 5px;
     z-index: 1000;
     height: 30px;
 }
 
-#tabs li {
+#tabs li
+{
     display: inline-block;
     padding: 0;
     margin: 0px 4px 0px 0px;
@@ -178,7 +204,8 @@
     cursor: pointer;
 }
 
-#tabs li button {
+#tabs li button
+{
     height: inherit;
     margin: 0;
     padding: 0 20px 0 0;
@@ -190,22 +217,26 @@
     font-weight: inherit;
 }
 
-#tabs li.current {
+#tabs li.current
+{
     color: #32aa52;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', endColorstr='#e5e5e5'); /* for IE */
     background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e5e5e5)); /* for webkit browsers */
     background: -moz-linear-gradient(top,  #f5f5f5,  #e5e5e5); /* for firefox 3.6+ */
 }
 
-#tabs li .content {
+#tabs li .content
+{
     margin: 6px 10px 6px 10px;
 }
 
-#tabs li.locked .content {
+#tabs li.locked .content
+{
     margin: 6px 10px 6px 23px;
 }
 
-#tabs li .close {
+#tabs li .close
+{
     position: absolute;
     top: 7px;
     right: 5px;
@@ -214,7 +245,8 @@
     background: url(Content/images/close-icon.png);
 }
 
-#tabs li.locked .lock {
+#tabs li.locked .lock
+{
     position: absolute;
     top: 7px;
     width: 16px;
@@ -223,58 +255,70 @@
     background: url(Content/images/lockwhite.png) no-repeat;
 }
 
-#tabs li.locked.current .lock, #tabs li.locked:hover .lock {
+#tabs li.locked.current .lock, #tabs li.locked:hover .lock
+{
     background: url(Content/images/lock.png) no-repeat;
 }
 
-#tabs li .close:hover {
+#tabs li .close:hover
+{
     background: url(Content/images/close-icon-hover.png);
 }
 
-#tabs li.unread {
+#tabs li.unread
+{
 }
 
-#tabs li:hover {
+#tabs li:hover
+{
     background-color: #e5e5e5;
     color: #32aa52;
 }
 
-#tabs li.current:hover {
+#tabs li.current:hover
+{
     background-color: #e5e5e5;
 }
 
-li.room {
+li.room
+{
     cursor: pointer;
 }
 
-li.room:hover {
+li.room:hover
+{
     background-color: #f5f5f5;
 }
 
-#tabs li.lobby {
+#tabs li.lobby
+{
     background-color: #00103f;
     color: #fff;
     padding-right: 0;
 }
 
-#tabs li.lobby button {
+#tabs li.lobby button
+{
     padding-right: 0;
     margin-right: 10px;
 }
 
-#tabs li.lobby.current {
+#tabs li.lobby.current
+{
     background-color: #00103f;
     color: #000;
 }
 
-#send-message {
+#send-message
+{
     position: absolute;
     bottom: 20px;
     height: 50px;
     width: 70%;
 }
 
-#message-box {
+#message-box
+{
     position: absolute;
     left: 0;
     right: 115px;
@@ -282,7 +326,8 @@ li.room:hover {
     margin: 0;
 }
 
-#new-message {
+#new-message
+{
     font-family: Trebuchet MS;
     font-size: 13px;
     padding: 5px;
@@ -293,14 +338,16 @@ li.room:hover {
     overflow: hidden;
 }
 
-#send {
+#send
+{
     padding: 5px;
     position: absolute;
     right: 0;
     width: 100px;
 }
 
-#enable-disable-toast {
+#enable-disable-toast
+{
     cursor: pointer;
     display: block;
     position: absolute;
@@ -310,7 +357,8 @@ li.room:hover {
     left: 71%;
 }
 
-#message-instruction {
+#message-instruction
+{
     color: #999;
     font-style: italic;
     position: absolute;
@@ -318,62 +366,74 @@ li.room:hover {
     width: 100%;
 }
 
-.error {
+.error
+{
     padding: 5px;
     background-color: #fddfde;
     border-bottom: 1px solid #fbc7c6;
 }
 
-.pm {
+.pm
+{
     color: Red;
     padding: 5px;
 }
 
-.notification {
+.notification
+{
     color: #bbb;
     border-bottom: 1px solid #eee;
     padding: 5px;
 }
 
-.notification .content, .pm .content {
+.notification .content, .pm .content
+{
     margin-right: 95px;
 }
 
-.notification a.info {
+.notification a.info
+{
     color: #bbb;
     font-style: italic;
     text-decoration: none;
 }
-.notification a.info:visited {
+.notification a.info:visited
+{
     color: inherit;
 }
 
-.message {
+.message
+{
     border-bottom: 1px solid #eee;
 }
 
-.message.continue {
+.message.continue
+{
     border-bottom: 1px solid #f1f1f1;
 }
 
-.message .left {
+.message .left
+{
     float: left;
     width: 170px; /* width should exclude padding */
     padding: 5px;
     margin-left: -175px;
 }
 
-.message .left .name {
+.message .left .name
+{
     font-weight: bold;
 }
 
-.message .middle {
+.message .middle
+{
     margin-right: 95px;
     padding: 5px;
     word-wrap: break-word;
 }
 
-.messages li .right {
+.messages li .right
+{
     position: absolute;
     padding: 5px;
     top: 0px;
@@ -381,43 +441,51 @@ li.room:hover {
     width: 85px;
 }
 
-.messages li .right .time {
+.messages li .right .time
+{
     color: #bbb;
 }
 
-.highlight {
+.highlight
+{
     background-color: #fff6bd;
 }
 
-.list-header {
+.list-header
+{
     padding: 5px;
     border-bottom: 1px solid #eee;
 }
 
-.list-item {
+.list-item
+{
     padding: 5px;
     padding-left: 10px;
     border-bottom: 1px solid #f1f1f1;
 }
 
 
-.list-header .content {
+.list-header .content
+{
     font-weight: bold;
 }
 
-.list-item .right {
+.list-item .right
+{
     /* hide time for list items */
     display: none;
 }
 
-.message-separator {
+.message-separator
+{
     height: 2px;
     background-color: #88b7d6;
 }
 
 /* This stuff is to support TweetContentProvider, but should be extracted out if other content providers need custom CSS */
 
-.tweet {
+.tweet
+{
     margin-left: 30px;
     margin-right: 10px;
     border: 1px solid #ccc;
@@ -425,23 +493,27 @@ li.room:hover {
     min-height: 48px;
 }
 
-.tweet img {
+.tweet img
+{
     float: left;
     margin-right: 5px;
 }
 
-.tweet .user {
+.tweet .user
+{
     margin-bottom: 5px;
 }
 
-.tweet .name {
+.tweet .name
+{
     font-weight: bold;
     font-size: 15px;
 }
 
 /* End TweetContentProvider CSS */
 
-.captureDocumentWrite_collapsible h3, h3.collapsible_title {
+.captureDocumentWrite_collapsible h3, h3.collapsible_title
+{
     color: #1c94c4;
     font-size: smaller;
     padding: 5px;
@@ -451,12 +523,14 @@ li.room:hover {
     cursor: pointer;
 }
 
-.collapsible_box {
+.collapsible_box
+{
     border: 1px solid #DDD;
     padding: 5px;
 }
 
-pre.multiline {
+pre.multiline
+{
     white-space: pre-wrap; /* css-3 */
     white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
     white-space: -pre-wrap; /* Opera 4-6 */
@@ -466,7 +540,8 @@ pre.multiline {
 }
 
 /* CLEAR FIX */
-.clearfix:after {
+.clearfix:after
+{
     clear: both;
     display: block;
     content: " ";
@@ -474,32 +549,39 @@ pre.multiline {
     visibility: hidden;
 }
 
-.clearfix {
+.clearfix
+{
     display: inline-block;
 }
 
 /* Hide these rules from IE-mac \*/
-* html .clearfix {
+* html .clearfix
+{
     height: 1%;
 }
-.clearfix {
+.clearfix
+{
     display: block;
 }
-li.clearfix {
+li.clearfix
+{
     display: list-item;
 }
 
 /* CSS for Popout Content Providers */
-.collapsible_wrapper.ui-draggable {
+.collapsible_wrapper.ui-draggable
+{
     width: 800px;
     background-color: #fff;
     position: absolute;
 }
-.collapsible_wrapper.ui-draggable h3 {
+.collapsible_wrapper.ui-draggable h3
+{
     margin-top: 0px;
 }
 
-.collapsible_pin {
+.collapsible_pin
+{
     width: 20px;
     height: 20px;
     float: right;
@@ -510,49 +592,58 @@ li.clearfix {
 }
 
 
-@media screen and (max-width:480px) {
-  .messages {
-    width: auto;
-    right: 50px;
-    left: 0px;
-  }
+@media screen and (max-width:480px)
+{
+    .messages
+    {
+        width: auto;
+        right: 50px;
+        left: 0px;
+    }
 
-  .messages li.message {
-      border-left: inherit;
-  }
+    .messages li.message
+    {
+        border-left: inherit;
+    }
 
-  .users {
-    top: 24px;
-    width: 50px;
-    right :0px;
-    left: auto;
-    bottom: 70px;
-  }
+    .users
+    {
+        top: 24px;
+        width: 50px;
+        right: 0px;
+        left: auto;
+        bottom: 70px;
+    }
 
 
-  .users span {
-    display:none;
-  }
+    .users span
+    {
+        display: none;
+    }
 
-  .message .left {
-    float: inherit;
-    width: inherit;
-    margin-left: inherit;
-  }
+    .message .left
+    {
+        float: inherit;
+        width: inherit;
+        margin-left: inherit;
+    }
 
-  .message .middle {
-    position:relative;
-    top:0.5em;
-    margin-bottom:10px;
-    margin-right: 0px;
-    padding: 5px;
-  }
+    .message .middle
+    {
+        position: relative;
+        top: 0.5em;
+        margin-bottom: 10px;
+        margin-right: 0px;
+        padding: 5px;
+    }
 
-  #message-instruction {
-    display: none;
-  }
+    #message-instruction
+    {
+        display: none;
+    }
 
-  #tabs {
-    overflow: auto;
-  }
+    #tabs
+    {
+        overflow: auto;
+    }
 }
