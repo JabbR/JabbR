@@ -38,14 +38,14 @@ namespace JabbR.ContentProviders.Core
             }
         }
 
-        protected virtual IEnumerable<string> ExtractParameters(Uri responseUri)
+        protected virtual IList<string> ExtractParameters(Uri responseUri)
         {
             return ParameterExtractionRegex.Match(responseUri.AbsoluteUri)
                                 .Groups
                                 .Cast<Group>()
                                 .Skip(1)
                                 .Select(g => g.Value)
-                                .Where(v => !String.IsNullOrEmpty(v));
+                                .Where(v => !String.IsNullOrEmpty(v)).ToList();     
 
         }
         protected abstract ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response);

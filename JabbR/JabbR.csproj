@@ -182,6 +182,8 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Chat.pinnedWindows.js" />
+    <Content Include="Chat.githubissues.js" />
+    <Content Include="Chat.githubissues.css" />
     <Content Include="favicon.ico" />
     <Content Include="Content\images\big-logo.png" />
     <Content Include="Content\images\logo32.png" />
@@ -214,6 +216,7 @@
     <Content Include="Scripts\jquery.writeCapture.js" />
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\json2.min.js" />
+    <Content Include="Scripts\Markdown.Converter.js" />
     <Content Include="Scripts\qunit.js" />
     <Content Include="Scripts\sammy-latest.min.js" />
     <Content Include="Scripts\writeCapture.js" />
@@ -231,6 +234,7 @@
   <ItemGroup>
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="ContentProviders\GitHubIssuesContentProvider.cs" />
     <Compile Include="ContentProviders\Core\CollapsibleContentProvider.cs" />
     <Compile Include="ContentProviders\Core\ContentProviderResultModel.cs" />
     <Compile Include="ContentProviders\Core\EmbedContentProvider.cs" />
