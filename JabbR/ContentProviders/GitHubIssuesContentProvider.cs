@@ -16,7 +16,7 @@ namespace JabbR.ContentProviders
 
         protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
-            var parameters = ExtractParameters(response.ResponseUri).ToArray();
+            var parameters = ExtractParameters(response.ResponseUri);
 
             return new ContentProviderResultModel()
             {
