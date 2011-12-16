@@ -632,7 +632,6 @@
                         case '@':
                             var room = getCurrentRoomElements();
                             // exclude current username from autocomplete
-                            var userName = ui.getUserName();
                             return room.users.find('li[data-name != "' + ui.getUserName() + '"]')
                                          .not('.room')
                                          .map(function () { return $(this).data('name'); });
