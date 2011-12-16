@@ -85,7 +85,8 @@
             <img src="${user.profile_image_url}" />
             <span class="name">${user.screen_name}</span> (${user.name})
         </div>
-        ${text}
+        {{html text}}
+        <time class="js-relative-date" datetime="${created_at}">${created_at}</time> 
     </script>
     <!-- /TweetContentProvider -->
     <!-- /GitHub Issues Content Provider -->

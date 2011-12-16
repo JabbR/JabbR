@@ -425,6 +425,17 @@ li.room:hover {
     min-height: 48px;
 }
 
+.tweet p
+{
+    margin:0px;
+    padding:0px;
+}
+
+.tweet time
+{
+    font-size:.8em;
+}
+
 .tweet img {
     float: left;
     margin-right: 5px;
