@@ -79,7 +79,11 @@
             while ($("#" + prefix + n.toString()).length > 0)
                 n = Math.Floor(Math.random() * 100);
             return prefix + n;
-        } 
+        },
+        markdownToHtml: function (content) {
+            var converter = new Markdown.Converter().makeHtml;
+            return(converter(content));
+        }
     };
 
     if (!window.chat) {
