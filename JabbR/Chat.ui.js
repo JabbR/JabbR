@@ -632,6 +632,7 @@
                         case '@':
                             var room = getCurrentRoomElements();
                             // exclude current username from autocomplete
+                            var userName = ui.getUserName();
                             return room.users.find('li[data-name != "' + ui.getUserName() + '"]')
                                          .not('.room')
                                          .map(function () { return $(this).data('name'); });
@@ -805,7 +806,7 @@
 
             // Update the user's name
             $user.find('.name').html(user.Name);
-            $user.attr('data-name', user.Name);
+            $user.data('name', user.Name);
         },
         changeGravatar: function (user, roomName) {
             var room = getRoomElements(roomName),
