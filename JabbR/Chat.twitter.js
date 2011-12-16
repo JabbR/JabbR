@@ -13,10 +13,10 @@
         // Add the CSS class for formatting (this is so we don't get height/border while loading).
         .addClass('tweet');
         tweet.text = chat.utility.markdownToHtml(tweet.text);
-        $("time.js-relative-date").timeago();
         // Process the template, and add it in to the div.
         $('#tweet-template').tmpl(tweet).appendTo(elements);
-
+        $("time.js-relative-date").timeago();
+       
         // If near the end, scroll.
         if (nearEnd) {
             ui.scrollToBottom();
