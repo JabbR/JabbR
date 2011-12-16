@@ -602,6 +602,11 @@
                 triggerFocus();
             });
 
+            $(window).resize(function () {
+                var room = getCurrentRoomElements();
+                room.scrollToBottom();
+            });
+
             $newMessage.keydown(function (ev) {
                 var key = ev.keyCode || ev.which;
                 switch (key) {
