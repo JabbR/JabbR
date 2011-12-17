@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JabbR.Infrastructure;
 using JabbR.Models;
@@ -233,6 +234,13 @@ namespace JabbR.Commands
 
                 return true;
             }
+            else if (commandName.Equals("note", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleNote(user, parts);
+
+                return true;
+            }
+
 
             return false;
         }
@@ -765,6 +773,26 @@ namespace JabbR.Commands
             {
                 throw new InvalidOperationException(String.Format("Room can only be nudged once every {0} seconds", betweenNudges.TotalSeconds));
             }
+        }
+
+        private void HandleNote(ChatUser user, ICollection<string> parts)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            if (parts == null)
+            {
+                throw new ArgumentNullException("parts");
+            }
+
+            // NOTE (see what i did there!): "Parts" with only 1 item means we're clearing the note.
+            user.Note = parts.Count == 1 ? null : String.Join(" ", parts.Skip(1)).Trim();
+
+            _notificationService.ChangeNote(user);
+
+            _repository.CommitChanges();
         }
     }
 }

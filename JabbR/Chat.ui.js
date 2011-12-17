@@ -1039,6 +1039,18 @@
         },
         getUserName: function () {
             return ui.name;
+        },
+        changeNote: function (user, roomName, isCleared) {
+            var room = getRoomElements(roomName),
+                $user = room.getUserReferences(user.Name),
+                src = 'http://jabbr.net/Content/images/toast-on.png';
+
+            var element = $user.find('.note');
+            if (isCleared) {
+                element.remove();
+            } else {
+                element.attr('src', src);
+            }
         }
     };
 

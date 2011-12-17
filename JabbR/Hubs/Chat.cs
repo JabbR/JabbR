@@ -159,7 +159,8 @@ namespace JabbR
                 new { Name = "allow", Description = "Type /allow [user] [room] - To give a user permission to a private room. Only works if you're an owner of that room." },
                 new { Name = "unallow", Description = "Type /unallow [user] [room] - To revoke a user's permission to a private room. Only works if you're an owner of that room." },
                 new { Name = "invitecode", Description = "Type /invitecode - To show the current invite code" },
-                new { Name = "resetinvitecode", Description = "Type /resetinvitecode - To reset the current invite code. This will render the previous invite code invalid" }
+                new { Name = "resetinvitecode", Description = "Type /resetinvitecode - To reset the current invite code. This will render the previous invite code invalid" },
+                new { Name = "note", Description = "Type /note - To set a note which will show via a tooltip over your gravatar and name"}
             };
         }
         public IEnumerable<RoomViewModel> GetRooms()
@@ -676,6 +677,23 @@ namespace JabbR
             }
         }
 
+        void INotificationService.ChangeNote(ChatUser user)
+        {
+            // Update the calling client
+            foreach (var client in user.ConnectedClients)
+            {
+                Clients[client.Id].noteChanged();
+            }
+
+            // Create the view model
+            var userViewModel = new UserViewModel(user);
+
+            // Tell all users in rooms to change the note
+            foreach (var room in user.Rooms)
+            {
+                Clients[room.Name].changeNote(userViewModel, room.Name);
+            }
+        }
 
 
         private void OnRoomChanged(ChatRoom room)

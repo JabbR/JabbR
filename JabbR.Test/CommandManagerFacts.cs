@@ -1249,6 +1249,64 @@ namespace JabbR.Test
             }
         }
 
+        public class NoteCommand
+        {
+            [Fact]
+            public void CanSetNoteWithTextSetsTheNoteProperty()
+            {
+                // Arrange.
+                const string note = "this is a test note. Pew^Pew";
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "asshat",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+                // Act.
+                bool result = commandManager.TryHandleCommand("/note " + note);
+
+                Assert.True(result);
+                Assert.Equal(note, user.Note);
+                notificationService.Verify(x => x.ChangeNote(user), Times.Once());
+            }
+
+            [Fact]
+            public void CanSetNoteWithNoTextClearsTheNoteProperty()
+            {
+                // Arrange.
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "asshat",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+                // Act.
+                bool result = commandManager.TryHandleCommand("/note ");
+
+                Assert.True(result);
+                Assert.Null(user.Note);
+                notificationService.Verify(x => x.ChangeNote(user), Times.Once());
+            }
+        }
+
         public class HelpCommand
         {
             [Fact]

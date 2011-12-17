@@ -18,6 +18,7 @@ namespace JabbR.Models
         public DateTime LastActivity { get; set; }
         public DateTime? LastNudged { get; set; }
         public int Status { get; set; }
+        public string Note { get; set; }
 
         // List of clients that are currently connected for this user
         public virtual ICollection<ChatClient> ConnectedClients { get; set; }

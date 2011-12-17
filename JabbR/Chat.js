@@ -393,6 +393,20 @@
         ui.addMessage('Your password has been changed', 'notification', this.activeRoom);
     };
 
+    // Called when you have added or cleared a note
+    chat.noteChanged = function (isCleared) {
+        ui.addMessage('Your note has been ' + (isCleared ? 'cleared' : 'set'), 'notification', this.activeRoom);
+    };
+
+    // Make sure all the people in all the rooms know that a user has changed their note.
+    chat.changeNote = function (user, room, isCleared) {
+        ui.changeNote(user, room);
+
+        if (!isSelf(user)) {
+            ui.addMessage(user.Name + "has " + (isCleared ? "cleared" : "set") + " their note", 'notification', room);
+        }
+    };
+
     chat.userNameChanged = function (user) {
         // Update the client state
         chat.name = user.Name;
