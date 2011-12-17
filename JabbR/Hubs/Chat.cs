@@ -619,6 +619,7 @@ namespace JabbR
             {
                 Name = user.Name,
                 OwnedRooms = user.OwnedRooms.Select(r => r.Name),
+                Status = user.Status,
                 LastActivity = user.LastActivity,
                 Rooms = user.Rooms.Select(r => r.Name)
             });
