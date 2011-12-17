@@ -379,10 +379,9 @@
 
     chat.showUserInfo = function (userInfo) {
         var lastActivityDate = userInfo.LastActivity.fromJsonDate();
-        var status = window.chat.utility.userStatusToString(userInfo);
+        var status = "Currently " + userInfo.Status;
         ui.addMessage('User information for ' + userInfo.Name +
             " (" + status + " - last seen " + jQuery.timeago(lastActivityDate) + ")", 'list-header');
-        chat.showUsersRoomList(userInfo.Name, userInfo.Rooms);
         chat.showUsersOwnedRoomList(userInfo.Name, userInfo.OwnedRooms);
     };
 
@@ -515,12 +514,12 @@
     };
 
     chat.showUsersRoomList = function (user, rooms) {
-        var status = window.chat.utility.userStatusToString(user);
+        var status = "Currently " + user.Status;
         if (rooms.length === 0) {
-            ui.addMessage(user + ' (' +status+ ') is not in any rooms', 'list-header');
+            ui.addMessage(user.Name + ' (' + status + ') is not in any rooms', 'list-header');
         }
         else {
-            ui.addMessage(user + ' (' + status + ') is in the following rooms', 'list-header');
+            ui.addMessage(user.Name + ' (' + status + ') is in the following rooms', 'list-header');
             ui.addMessage(rooms.join(', '), 'list-item');
         }
     };
