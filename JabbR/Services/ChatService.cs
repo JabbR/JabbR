@@ -24,6 +24,11 @@ namespace JabbR.Services
                 throw new InvalidOperationException(String.Format("'{0}' is not a valid user name.", userName));
             }
 
+            if (String.IsNullOrEmpty(password))
+            {
+                ThrowPasswordIsRequired();
+            }
+
             EnsureUserNameIsAvailable(userName);
 
             var user = new ChatUser
@@ -34,11 +39,6 @@ namespace JabbR.Services
                 Salt = _crypto.CreateSalt(),
                 LastActivity = DateTime.UtcNow
             };
-
-            if (String.IsNullOrEmpty(password))
-            {
-                throw new InvalidOperationException("A password is required.");
-            }
 
             ValidatePassword(password);
             user.HashedPassword = password.ToSha256(user.Salt);
@@ -329,6 +329,11 @@ namespace JabbR.Services
         internal static void ThrowUserExists(string userName)
         {
             throw new InvalidOperationException(String.Format("Username {0} already taken, please pick a new one using '/nick nickname'.", userName));
+        }
+
+        internal static void ThrowPasswordIsRequired()
+        {
+            throw new InvalidOperationException("A password is required.");
         }
 
         internal static bool IsUserInRoom(ChatRoom room, ChatUser user)

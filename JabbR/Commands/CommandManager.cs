@@ -650,7 +650,7 @@ namespace JabbR.Commands
                 {
                     if (String.IsNullOrEmpty(password))
                     {
-                        ChatService.ThrowUserExists(userName);
+                        ChatService.ThrowPasswordIsRequired();
                     }
                     else
                     {
