@@ -223,10 +223,8 @@
 
     function getAllRoomElements() {
         var rooms = [];
-        $("ul#tabs > li.room")  .each(function () {
-            rooms[rooms.length] = new Room($('#tabs-' + $(this).data("name")),
-                        $('#users-' + $(this).data("name")),
-                        $('#messages-' + $(this).data("name")));
+        $("ul#tabs > li.room").each(function () {
+            rooms[rooms.length] = getRoomElements($(this).data("name"));
         });
         return rooms;
     }
