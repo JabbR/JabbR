@@ -547,17 +547,17 @@ namespace JabbR
             Clients[room.Name].sendMeMessage(user.Name, content, room.Name);
         }
 
-        void INotificationService.SendPrivateMessage(ChatUser user, ChatUser toUser, string messageText)
+        void INotificationService.SendPrivateMessage(ChatUser fromUser, ChatUser toUser, string messageText)
         {
             // Send a message to the sender and the sendee
-            foreach (var client in user.ConnectedClients)
+            foreach (var client in fromUser.ConnectedClients)
             {
-                Clients[client.Id].sendPrivateMessage(user.Name, toUser.Name, messageText);
+                Clients[client.Id].sendPrivateMessage(fromUser.Name, toUser.Name, messageText);
             }
 
             foreach (var client in toUser.ConnectedClients)
             {
-                Clients[client.Id].sendPrivateMessage(user.Name, toUser.Name, messageText);
+                Clients[client.Id].sendPrivateMessage(fromUser.Name, toUser.Name, messageText);
             }
         }
 

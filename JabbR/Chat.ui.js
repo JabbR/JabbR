@@ -221,6 +221,16 @@
                         $('.messages.current'));
     }
 
+    function getAllRoomElements() {
+        var rooms = [];
+        $("ul#tabs > li.room")  .each(function () {
+            rooms[rooms.length] = new Room($('#tabs-' + $(this).data("name")),
+                        $('#users-' + $(this).data("name")),
+                        $('#messages-' + $(this).data("name")));
+        });
+        return rooms;
+    }
+
     function getLobby() {
         return getRoomElements('Lobby');
     }
@@ -948,6 +958,14 @@
 
             $message.find('.middle')
                     .append(content);
+        },
+        addPrivateMessage: function (content, type) {
+            var rooms = getAllRoomElements();
+            for (var r in rooms) {
+                if (rooms[r].getName() != undefined) {
+                    this.addMessage(content, type, rooms[r].getName());
+                }
+            }
         },
         addMessage: function (content, type, roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements(),
