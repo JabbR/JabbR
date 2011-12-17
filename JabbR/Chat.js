@@ -414,7 +414,7 @@
             ui.notify(true);
         }
 
-        ui.addMessage('<emp>*' + from + '* &raquo; *' + to + '*</emp> ' + message, 'pm');
+        ui.addPrivateMessage('<emp>*' + from + '* &raquo; *' + to + '*</emp> ' + message, 'pm');
     };
 
     chat.nudge = function (from, to) {
