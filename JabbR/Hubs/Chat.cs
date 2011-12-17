@@ -571,7 +571,8 @@ namespace JabbR
 
         void INotificationService.ListRooms(ChatUser user)
         {
-            Caller.showUsersRoomList(user.Name, user.Rooms.Select(r => r.Name));
+            var userModel = new UserViewModel(user);
+            Caller.showUsersRoomList(userModel, user.Rooms.Select(r => r.Name));
         }
 
         void INotificationService.ListUsers()
@@ -619,6 +620,7 @@ namespace JabbR
             {
                 Name = user.Name,
                 OwnedRooms = user.OwnedRooms.Select(r => r.Name),
+                Status = ((UserStatus)user.Status).ToString(),
                 LastActivity = user.LastActivity,
                 Rooms = user.Rooms.Select(r => r.Name)
             });
