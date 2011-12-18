@@ -1307,6 +1307,64 @@ namespace JabbR.Test
             }
         }
 
+        public class AfkCommand
+        {
+            [Fact]
+            public void CanSetAfkWithTextSetsTheNoteProperty()
+            {
+                // Arrange.
+                const string note = "I'll be back later!";
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "asshat",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+                // Act.
+                bool result = commandManager.TryHandleCommand("/afk " + note);
+
+                Assert.True(result);
+                Assert.Equal("Afk " + note, user.Note);
+                notificationService.Verify(x => x.ChangeNote(user, user.Note), Times.Once());
+            }
+
+            [Fact]
+            public void CanSetAfkWithNoTextSetTheNoteProperty()
+            {
+                // Arrange.
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "asshat",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+                // Act.
+                bool result = commandManager.TryHandleCommand("/afk ");
+
+                Assert.True(result);
+                Assert.Equal("Afk", user.Note);
+                notificationService.Verify(x => x.ChangeNote(user, user.Note), Times.Once());
+            }
+        }
+
         public class HelpCommand
         {
             [Fact]

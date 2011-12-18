@@ -1042,13 +1042,11 @@
         },
         changeNote: function (user, roomName, note) {
             var room = getRoomElements(roomName),
-                $user = room.getUserReferences(user.Name),
-                src = 'http://jabbr.net/Content/images/toast-on.png';
+            $user = room.getUserReferences(user.Name),
+            src = 'http://jabbr.net/Content/images/toast-on.png';
 
-            var element = $user.find('.note');
-            if (note == null && element != null) {
-                element.empty();
-            } else {
+            var element = $user.find('.note').empty();
+            if (note != null) {
                 element.append('<img src="' + src + '" alt="' + note + '" title="' + note +'" />');
             }
         }

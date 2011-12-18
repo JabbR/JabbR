@@ -240,7 +240,12 @@ namespace JabbR.Commands
 
                 return true;
             }
+            else if (commandName.Equals("afk", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleAfk(user, parts);
 
+                return true;
+            }
 
             return false;
         }
@@ -793,6 +798,26 @@ namespace JabbR.Commands
             _notificationService.ChangeNote(user, user.Note);
 
             _repository.CommitChanges();
+        }
+
+        private void HandleAfk(ChatUser user, IEnumerable<string> parts)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+
+            if (parts == null)
+            {
+                throw new ArgumentNullException("parts");
+            }
+
+            // First part is the command.
+            // Second is the AFK initial text.
+            var newParts = new List<string> {"afk", "Afk"};
+            newParts.AddRange(parts.Skip(1));
+
+            HandleNote(user, newParts);
         }
     }
 }
