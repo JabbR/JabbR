@@ -571,8 +571,10 @@ namespace JabbR
 
         void INotificationService.ListRooms(ChatUser user)
         {
+            string userId = Caller.id;
             var userModel = new UserViewModel(user);
-            Caller.showUsersRoomList(userModel, user.Rooms.Select(r => r.Name));
+
+            Caller.showUsersRoomList(userModel, user.Rooms.Allowed(userId).Select(r => r.Name));
         }
 
         void INotificationService.ListUsers()
@@ -616,13 +618,15 @@ namespace JabbR
 
         void INotificationService.ShowUserInfo(ChatUser user)
         {
+            string userId = Caller.id;
+
             Caller.showUserInfo(new
             {
                 Name = user.Name,
-                OwnedRooms = user.OwnedRooms.Select(r => r.Name),
+                OwnedRooms = user.OwnedRooms.Allowed(userId).Select(r => r.Name),
                 Status = ((UserStatus)user.Status).ToString(),
                 LastActivity = user.LastActivity,
-                Rooms = user.Rooms.Select(r => r.Name)
+                Rooms = user.Rooms.Allowed(userId).Select(r => r.Name)
             });
         }
 
@@ -677,8 +681,6 @@ namespace JabbR
                 Clients[room.Name].changeUserName(oldUserName, userViewModel, room.Name);
             }
         }
-
-
 
         private void OnRoomChanged(ChatRoom room)
         {

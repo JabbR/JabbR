@@ -17,8 +17,16 @@ namespace JabbR.Models
             return source.Where(u => u.Status != (int)UserStatus.Offline);
         }
 
+        public static IEnumerable<ChatRoom> Allowed(this IEnumerable<ChatRoom> rooms, string userId)
+        {
+            return from r in rooms
+                   where !r.Private ||
+                         r.Private && r.AllowedUsers.Any(u => u.Id == userId)
+                   select r;
+        }
+
         public static ChatRoom VerifyUserRoom(this IJabbrRepository repository, ChatUser user, string roomName)
-        {            
+        {
             if (String.IsNullOrEmpty(roomName))
             {
                 throw new InvalidOperationException("Use '/join room' to join a room.");
@@ -74,7 +82,7 @@ namespace JabbR.Models
 
         public static ChatUser VerifyUser(this IJabbrRepository repository, string userName)
         {
-            userName =  ChatService.NormalizeUserName(userName);
+            userName = ChatService.NormalizeUserName(userName);
 
             ChatUser user = repository.GetUserByName(userName);
 
