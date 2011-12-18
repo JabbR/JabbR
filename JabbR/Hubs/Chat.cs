@@ -677,12 +677,12 @@ namespace JabbR
             }
         }
 
-        void INotificationService.ChangeNote(ChatUser user)
+        void INotificationService.ChangeNote(ChatUser user, string note)
         {
             // Update the calling client
             foreach (var client in user.ConnectedClients)
             {
-                Clients[client.Id].noteChanged();
+                Clients[client.Id].noteChanged(note == null);
             }
 
             // Create the view model
@@ -691,7 +691,7 @@ namespace JabbR
             // Tell all users in rooms to change the note
             foreach (var room in user.Rooms)
             {
-                Clients[room.Name].changeNote(userViewModel, room.Name);
+                Clients[room.Name].changeNote(userViewModel, room.Name, note);
             }
         }
 

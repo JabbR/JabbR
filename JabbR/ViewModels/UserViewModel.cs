@@ -9,10 +9,12 @@ namespace JabbR.ViewModels
             Name = user.Name;
             Hash = user.Hash;
             Active = user.Status == (int)UserStatus.Active;
+            Note = user.Note;
         }
 
         public string Name { get; set; }
         public string Hash { get; set; }
         public bool Active { get; set; }
+        public string Note { get; set; }
     }
 }

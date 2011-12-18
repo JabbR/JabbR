@@ -158,11 +158,9 @@
     background: url(Content/images/lock.png) no-repeat;
 }
 
-.note {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    background: url(Content/images/lock.png) no-repeat;
+.note
+{
+    
 }
 
 #tabs {

@@ -1040,16 +1040,16 @@
         getUserName: function () {
             return ui.name;
         },
-        changeNote: function (user, roomName, isCleared) {
+        changeNote: function (user, roomName, note) {
             var room = getRoomElements(roomName),
                 $user = room.getUserReferences(user.Name),
                 src = 'http://jabbr.net/Content/images/toast-on.png';
 
             var element = $user.find('.note');
-            if (isCleared) {
-                element.remove();
+            if (note == null && element != null) {
+                element.empty();
             } else {
-                element.attr('src', src);
+                element.append('<img src="' + src + '" alt="' + note + '" title="' + note +'" />');
             }
         }
     };

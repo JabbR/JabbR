@@ -22,7 +22,7 @@ namespace JabbR.Services
 
         void ChangePassword();
         void SetPassword();
-        void ChangeNote(ChatUser user);
+        void ChangeNote(ChatUser user, string note);
 
         void PostNotification(ChatRoom room, ChatUser user, string message);
         void SendPrivateMessage(ChatUser user, ChatUser targetUser, string messageText);

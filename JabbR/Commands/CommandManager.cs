@@ -790,7 +790,7 @@ namespace JabbR.Commands
             // NOTE (see what i did there!): "Parts" with only 1 item means we're clearing the note.
             user.Note = parts.Count == 1 ? null : String.Join(" ", parts.Skip(1)).Trim();
 
-            _notificationService.ChangeNote(user);
+            _notificationService.ChangeNote(user, user.Note);
 
             _repository.CommitChanges();
         }
