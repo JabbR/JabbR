@@ -110,7 +110,6 @@
     <Content Include="Content\images\icons-18-white.png" />
     <Content Include="Content\images\icons-36-black.png" />
     <Content Include="Content\images\icons-36-white.png" />
-    <Content Include="Content\images\keyboard.png" />
     <Content Include="Content\images\lock.png" />
     <Content Include="Content\images\toast-off.png" />
     <Content Include="Content\images\toast-on.png" />
@@ -118,6 +117,7 @@
     <Content Include="Content\images\pop-out-icon.png" />
     <Content Include="Content\images\sound-off.png" />
     <Content Include="Content\images\sound-on.png" />
+    <Content Include="Content\images\typing.png" />
     <Content Include="Content\jquery.mobile-1.0rc2.css" />
     <Content Include="Content\jquery.mobile-1.0rc2.min.css" />
     <Content Include="Content\jquery.mobile.structure-1.0rc2.css" />
