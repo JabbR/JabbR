@@ -83,11 +83,6 @@
         markdownToHtml: function (content) {
             var converter = new Markdown.Converter().makeHtml;
             return (converter(content));
-        },
-        userStatusToString: function (userInfo) {
-            var ACTIVE = 0, INACTIVE = 1, OFFLINE = 2;
-            var status = userInfo.Status == ACTIVE ? "Active" : userInfo.Status == INACTIVE ? "Inactive" : "Offline";
-            return status;
         }
     };
 
