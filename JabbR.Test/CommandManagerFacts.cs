@@ -1276,7 +1276,7 @@ namespace JabbR.Test
 
                 Assert.True(result);
                 Assert.Equal(note, user.Note);
-                notificationService.Verify(x => x.ChangeNote(user), Times.Once());
+                notificationService.Verify(x => x.ChangeNote(user, user.Note), Times.Once());
             }
 
             [Fact]
@@ -1303,7 +1303,7 @@ namespace JabbR.Test
 
                 Assert.True(result);
                 Assert.Null(user.Note);
-                notificationService.Verify(x => x.ChangeNote(user), Times.Once());
+                notificationService.Verify(x => x.ChangeNote(user, user.Note), Times.Once());
             }
         }
 
