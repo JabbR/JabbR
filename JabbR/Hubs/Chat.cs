@@ -725,16 +725,21 @@ namespace JabbR
             // New client state
             var jabbrState = GetCookieValue("jabbr.state");
 
-            if (!String.IsNullOrEmpty(jabbrState))
+            ClientState clientState = null;
+
+            if (String.IsNullOrEmpty(jabbrState))
             {
-                return JsonConvert.DeserializeObject<ClientState>(jabbrState);
+                clientState = new ClientState();
+            }
+            else
+            {
+                clientState = JsonConvert.DeserializeObject<ClientState>(jabbrState);
             }
 
-            return new ClientState
-            {
-                UserId = GetCookieValue("userid"),
-                ActiveRoom = GetCookieValue("currentroom")
-            };
+            // Read the id from the caller if there's no cookie
+            clientState.UserId = clientState.UserId ?? Caller.id;
+
+            return clientState;
         }
 
         private string GetCookieValue(string key)
