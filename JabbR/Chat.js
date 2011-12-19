@@ -399,11 +399,11 @@
     };
 
     // Make sure all the people in all the rooms know that a user has changed their note.
-    chat.changeNote = function (user, room, note) {
-        ui.changeNote(user, room, note);
+    chat.changeNote = function (user, room) {
+        ui.changeNote(user, room);
 
         if (!isSelf(user)) {
-            ui.addMessage(user.Name + "has " + (note == null ? "cleared" : "set") + " their note", 'notification', room);
+            ui.addMessage(user.Name + " has " + (user.Note == null ? "cleared" : "set") + " their note", 'notification', room);
         }
     };
 

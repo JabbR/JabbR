@@ -20,6 +20,12 @@ namespace JabbR.Models
         public int Status { get; set; }
         public string Note { get; set; }
 
+        [NotMapped]
+        public bool IsAfk
+        {
+            get { return Note != null && Note.StartsWith("Afk "); }
+        }
+
         // List of clients that are currently connected for this user
         public virtual ICollection<ChatClient> ConnectedClients { get; set; }
         public virtual ICollection<ChatRoom> OwnedRooms { get; set; }

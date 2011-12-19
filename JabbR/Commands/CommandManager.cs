@@ -780,7 +780,7 @@ namespace JabbR.Commands
             }
         }
 
-        private void HandleNote(ChatUser user, ICollection<string> parts)
+        private void HandleNote(ChatUser user, string[] parts)
         {
             if (user == null)
             {
@@ -793,14 +793,14 @@ namespace JabbR.Commands
             }
 
             // NOTE (see what i did there!): "Parts" with only 1 item means we're clearing the note.
-            user.Note = parts.Count == 1 ? null : String.Join(" ", parts.Skip(1)).Trim();
+            user.Note = parts.Length == 1 ? null : String.Join(" ", parts.Skip(1)).Trim();
 
-            _notificationService.ChangeNote(user, user.Note);
+            _notificationService.ChangeNote(user);
 
             _repository.CommitChanges();
         }
 
-        private void HandleAfk(ChatUser user, IEnumerable<string> parts)
+        private void HandleAfk(ChatUser user, string[] parts)
         {
             if (user == null)
             {
@@ -817,7 +817,7 @@ namespace JabbR.Commands
             var newParts = new List<string> {"afk", "Afk"};
             newParts.AddRange(parts.Skip(1));
 
-            HandleNote(user, newParts);
+            HandleNote(user, newParts.ToArray());
         }
     }
 }

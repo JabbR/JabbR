@@ -171,6 +171,12 @@ namespace JabbR.Services
         {
             user.Status = (int)UserStatus.Active;
             user.LastActivity = DateTime.UtcNow;
+
+            // Remove any Afk notes.
+            if (user.IsAfk)
+            {
+                user.Note = null;
+            }
         }
 
         public void LeaveRoom(ChatUser user, ChatRoom room)
