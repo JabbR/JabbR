@@ -25,12 +25,9 @@ namespace JabbR.Test
                     Id = "1234",
                     Name = "John"
                 };
-                var cookies = new HttpCookieCollection
-                {
-                    new HttpCookie("userid", "1234")
-                };
 
-                TestableChat chat = GetTestableChat(clientId, clientState, user, cookies);
+                TestableChat chat = GetTestableChat(clientId, clientState, user);
+                chat.Caller.id = "1234";
 
                 bool result = chat.Join();
 
@@ -58,7 +55,7 @@ namespace JabbR.Test
                 bool result = chat.Join();
 
                 Assert.False(result);
-            } 
+            }
 
             [Fact]
             public void CanDeserializeClientState()
@@ -70,7 +67,7 @@ namespace JabbR.Test
                     Id = "1234",
                     Name = "John"
                 };
-                
+
                 var cookies = new HttpCookieCollection
                 {
                     new HttpCookie("jabbr.state", JsonConvert.SerializeObject(new ClientState { UserId = user.Id }))
@@ -83,13 +80,13 @@ namespace JabbR.Test
                 Assert.Equal("1234", clientState["id"]);
                 Assert.Equal("John", clientState["name"]);
                 Assert.True(result);
-             
+
                 chat.MockedConnection.Verify(m => m.Broadcast("Chat." + clientId, It.IsAny<object>()), Times.Once());
                 chat.MockedChatService.Verify(c => c.AddClient(user, clientId), Times.Once());
                 chat.MockedChatService.Verify(c => c.UpdateActivity(user), Times.Once());
             }
         }
-        
+
         public static TestableChat GetTestableChat(string clientId, TrackingDictionary clientState, ChatUser user)
         {
             return GetTestableChat(clientId, clientState, user, new HttpCookieCollection());
@@ -109,7 +106,7 @@ namespace JabbR.Test
             // create testable chat
             var chat = new TestableChat(resourceProcessor, chatService, repository, connection);
             var mockedConnectionObject = chat.MockedConnection.Object;
-            
+
             // setup client agent
             chat.Agent = new ClientAgent(mockedConnectionObject, "Chat");
 
@@ -122,7 +119,7 @@ namespace JabbR.Test
 
             return chat;
         }
-        
+
         public class TestableChat : Chat
         {
             public Mock<IResourceProcessor> MockedResourceProcessor { get; private set; }
