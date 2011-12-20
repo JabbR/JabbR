@@ -27,10 +27,11 @@
         chat.getRoomInfo(room)
                 .done(function (roomInfo) {
                     $.each(roomInfo.Users, function () {
+                        var noteCss = this.Note === null ? '' : this.IsAfk ? 'afk' : 'message';
                         var viewModel = {
                             name: this.Name,
                             hash: this.Hash,
-                            noteClass: this.NoteCss,
+                            noteClass: noteCss,
                             note: this.Note
                         };
 
@@ -263,11 +264,12 @@
     };
 
     chat.addUser = function (user, room, isOwner) {
+        var noteCss = this.Note === null ? '' : this.IsAfk ? 'afk' : 'message';
         var viewModel = {
             name: user.Name,
             hash: user.Hash,
             owner: isOwner,
-            noteClass: user.NoteCss,
+            noteClass: noteCss,
             note: user.Note
         };
 

@@ -686,10 +686,12 @@ namespace JabbR
 
         void INotificationService.ChangeNote(ChatUser user)
         {
+            bool isNoteCleared = user.Note == null;
+
             // Update the calling client
             foreach (var client in user.ConnectedClients)
             {
-                Clients[client.Id].noteChanged(user.IsAfk, user.Note == null);
+                Clients[client.Id].noteChanged(user.IsAfk, isNoteCleared);
             }
 
             // Create the view model

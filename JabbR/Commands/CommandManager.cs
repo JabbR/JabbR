@@ -782,8 +782,12 @@ namespace JabbR.Commands
 
         private void HandleNote(ChatUser user, string[] parts)
         {
-            // NOTE (see what i did there!): "Parts" with only 1 item means we're clearing the note.
-            user.Note = parts.Length == 1 ? null : String.Join(" ", parts.Skip(1)).Trim();
+            // We need to determine if we're either
+            // 1. Setting a new Note.
+            // 2. Clearing the existing Note.
+            // If we have no optional text, then we need to clear it. Otherwise, we're storing it.
+            bool isNoteBeingCleared = parts.Length == 1;
+            user.Note = isNoteBeingCleared ? null : String.Join(" ", parts.Skip(1)).Trim();
 
             _notificationService.ChangeNote(user);
 
@@ -792,12 +796,12 @@ namespace JabbR.Commands
 
         private void HandleAfk(ChatUser user, string[] parts)
         {
-            // First part is the command.
-            // Second is the AFK initial/prepending text.
-            var newParts = new List<string> {"afk", "Afk"};
-            newParts.AddRange(parts.Skip(1));
+            string message = String.Join(" ", parts.Skip(1)).Trim();
+            user.Note = String.Format("{0} {1}", ChatUser.AfkPrependingText, message).Trim();
 
-            HandleNote(user, newParts.ToArray());
+            _notificationService.ChangeNote(user);
+
+            _repository.CommitChanges();
         }
     }
 }

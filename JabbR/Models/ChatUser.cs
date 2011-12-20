@@ -6,6 +6,8 @@ namespace JabbR.Models
 {
     public class ChatUser
     {
+        public const string AfkPrependingText = "Afk";
+
         [Key]
         public int Key { get; set; }
 
@@ -23,7 +25,7 @@ namespace JabbR.Models
         [NotMapped]
         public bool IsAfk
         {
-            get { return Note != null && Note.StartsWith("Afk"); }
+            get { return Note != null && Note.StartsWith(AfkPrependingText, StringComparison.OrdinalIgnoreCase); }
         }
 
         // List of clients that are currently connected for this user
