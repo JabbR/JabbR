@@ -1076,12 +1076,12 @@
     };
 
     function toggleNote(user, $user) {
-        var element = $user.find('.note');
-        element.removeClass('afk message');
-        element.removeAttr('title');
+        var $note = $user.find('.note');
+        $note.removeClass('afk message');
+        $note.removeAttr('title');
         if (user.Note != null) {
-            element.addClass(user.IsAfk ? 'afk' : 'message');
-            element.attr('title', user.Note);
+            $note.addClass(user.IsAfk ? 'afk' : 'message');
+            $note.attr('title', user.Note);
         }
     }
 
