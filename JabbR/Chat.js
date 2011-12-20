@@ -405,7 +405,7 @@
     // Called when you have added or cleared a note
     chat.noteChanged = function (isAfk, isCleared) {
         var afkMessage = 'You have gone Afk';
-        var noteMessage = 'Your note has been ' + isCleared ? 'cleared' : 'set';
+        var noteMessage = 'Your note has been ' + (isCleared ? 'cleared' : 'set');
         ui.addMessage(isAfk ? afkMessage : noteMessage, 'notification', this.activeRoom);
     };
 
