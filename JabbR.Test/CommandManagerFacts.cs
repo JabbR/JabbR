@@ -1274,6 +1274,7 @@ namespace JabbR.Test
                 // Act.
                 bool result = commandManager.TryHandleCommand("/note " + note);
 
+                // Assert.
                 Assert.True(result);
                 Assert.Equal(note, user.Note);
                 notificationService.Verify(x => x.ChangeNote(user), Times.Once());
@@ -1301,6 +1302,7 @@ namespace JabbR.Test
                 // Act.
                 bool result = commandManager.TryHandleCommand("/note ");
 
+                // Assert.
                 Assert.True(result);
                 Assert.Null(user.Note);
                 notificationService.Verify(x => x.ChangeNote(user), Times.Once());
@@ -1357,7 +1359,7 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
                 // Act.
-                bool result = commandManager.TryHandleCommand("/afk ");
+                bool result = commandManager.TryHandleCommand("/afk");
 
                 Assert.True(result);
                 Assert.Equal("Afk", user.Note);

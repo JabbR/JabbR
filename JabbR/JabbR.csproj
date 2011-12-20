@@ -45,7 +45,7 @@
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.4.2.0.0\lib\net40\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.Migrations, Version=0.7.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+    <Reference Include="EntityFramework.Migrations">
       <HintPath>..\packages\EntityFramework.Migrations.0.7.0.1\lib\net40\EntityFramework.Migrations.dll</HintPath>
     </Reference>
     <Reference Include="HtmlSanitizationLibrary, Version=4.0.0.0, Culture=neutral, PublicKeyToken=d127efab8a9c114f, processorArchitecture=MSIL">
