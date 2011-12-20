@@ -1077,7 +1077,7 @@
 
     function toggleNote(user, $user) {
         var $note = $user.find('.note');
-        var noteText = $('<div/>').html(user.Note).text());
+        var noteText = $('<div/>').html(user.Note).text();
         $note.removeClass('afk message');
         $note.removeAttr('title');
         if (user.Note !== null) {
