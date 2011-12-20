@@ -175,6 +175,7 @@
 .note.message
 {
     background: url(Content/images/clippy.png) no-repeat;
+    border-bottom: none;
 }
 
 #tabs {
