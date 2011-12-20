@@ -160,7 +160,8 @@ namespace JabbR
                 new { Name = "unallow", Description = "Type /unallow [user] [room] - To revoke a user's permission to a private room. Only works if you're an owner of that room." },
                 new { Name = "invitecode", Description = "Type /invitecode - To show the current invite code" },
                 new { Name = "resetinvitecode", Description = "Type /resetinvitecode - To reset the current invite code. This will render the previous invite code invalid" },
-                new { Name = "note", Description = "Type /note - To set a note which will show via a tooltip over your gravatar and name"}
+                new { Name = "note", Description = "Type /note - To set a note shown via a paperclip icon next to your name, with the message appearing when you hover over it."},
+                new { Name = "afk", Description = "Type /afk - (aka. Away From Keyboard). To set a temporary note shown via a paperclip icon next to your name, with the message appearing when you hover over it. This note will disappear when you first resume typing."}
             };
         }
         public IEnumerable<RoomViewModel> GetRooms()
