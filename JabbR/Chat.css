@@ -160,19 +160,21 @@
 
 .note
 {
-    display: block;
+    position: absolute;
     width: 16px;
     height: 16px;
+    margin-left: 5px;
+    margin-top: 3px;
 }
 
 .note.afk
 {
-    background: url(Content/images/toast-on.png) no-repeat;
+    background: url(Content/images/stopwatch.png) no-repeat;
 }
 
 .note.message
 {
-    background: url(Content/images/toast-off.png) no-repeat;
+    background: url(Content/images/clippy.png) no-repeat;
 }
 
 #tabs {

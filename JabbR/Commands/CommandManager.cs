@@ -782,16 +782,6 @@ namespace JabbR.Commands
 
         private void HandleNote(ChatUser user, string[] parts)
         {
-            if (user == null)
-            {
-                throw new ArgumentNullException("user");
-            }
-
-            if (parts == null)
-            {
-                throw new ArgumentNullException("parts");
-            }
-
             // NOTE (see what i did there!): "Parts" with only 1 item means we're clearing the note.
             user.Note = parts.Length == 1 ? null : String.Join(" ", parts.Skip(1)).Trim();
 
