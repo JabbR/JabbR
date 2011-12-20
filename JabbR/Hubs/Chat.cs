@@ -159,7 +159,9 @@ namespace JabbR
                 new { Name = "allow", Description = "Type /allow [user] [room] - To give a user permission to a private room. Only works if you're an owner of that room." },
                 new { Name = "unallow", Description = "Type /unallow [user] [room] - To revoke a user's permission to a private room. Only works if you're an owner of that room." },
                 new { Name = "invitecode", Description = "Type /invitecode - To show the current invite code" },
-                new { Name = "resetinvitecode", Description = "Type /resetinvitecode - To reset the current invite code. This will render the previous invite code invalid" }
+                new { Name = "resetinvitecode", Description = "Type /resetinvitecode - To reset the current invite code. This will render the previous invite code invalid" },
+                new { Name = "note", Description = "Type /note - To set a note shown via a paperclip icon next to your name, with the message appearing when you hover over it."},
+                new { Name = "afk", Description = "Type /afk - (aka. Away From Keyboard). To set a temporary note shown via a paperclip icon next to your name, with the message appearing when you hover over it. This note will disappear when you first resume typing."}
             };
         }
         public IEnumerable<RoomViewModel> GetRooms()
@@ -681,6 +683,27 @@ namespace JabbR
                 Clients[room.Name].changeUserName(oldUserName, userViewModel, room.Name);
             }
         }
+
+        void INotificationService.ChangeNote(ChatUser user)
+        {
+            bool isNoteCleared = user.Note == null;
+
+            // Update the calling client
+            foreach (var client in user.ConnectedClients)
+            {
+                Clients[client.Id].noteChanged(user.IsAfk, isNoteCleared);
+            }
+
+            // Create the view model
+            var userViewModel = new UserViewModel(user);
+
+            // Tell all users in rooms to change the note
+            foreach (var room in user.Rooms)
+            {
+                Clients[room.Name].changeNote(userViewModel, room.Name);
+            }
+        }
+
 
         private void OnRoomChanged(ChatRoom room)
         {

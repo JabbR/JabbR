@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JabbR.Infrastructure;
 using JabbR.Models;
@@ -230,6 +231,18 @@ namespace JabbR.Commands
             else if (commandName.Equals("logout", StringComparison.OrdinalIgnoreCase))
             {
                 HandleLogOut(user);
+
+                return true;
+            }
+            else if (commandName.Equals("note", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleNote(user, parts);
+
+                return true;
+            }
+            else if (commandName.Equals("afk", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleAfk(user, parts);
 
                 return true;
             }
@@ -765,6 +778,30 @@ namespace JabbR.Commands
             {
                 throw new InvalidOperationException(String.Format("Room can only be nudged once every {0} seconds", betweenNudges.TotalSeconds));
             }
+        }
+
+        private void HandleNote(ChatUser user, string[] parts)
+        {
+            // We need to determine if we're either
+            // 1. Setting a new Note.
+            // 2. Clearing the existing Note.
+            // If we have no optional text, then we need to clear it. Otherwise, we're storing it.
+            bool isNoteBeingCleared = parts.Length == 1;
+            user.Note = isNoteBeingCleared ? null : String.Join(" ", parts.Skip(1)).Trim();
+
+            _notificationService.ChangeNote(user);
+
+            _repository.CommitChanges();
+        }
+
+        private void HandleAfk(ChatUser user, string[] parts)
+        {
+            string message = String.Join(" ", parts.Skip(1)).Trim();
+            user.Note = String.Format("{0} {1}", ChatUser.AfkPrependingText, message).Trim();
+
+            _notificationService.ChangeNote(user);
+
+            _repository.CommitChanges();
         }
     }
 }

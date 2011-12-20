@@ -841,10 +841,16 @@
             var room = getRoomElements(roomName),
                 $user = room.getUser(user.Name);
 
-            // do not show typing indicator for current user
+            // Hide the Afk note, if we're typing, including the current user.
+            if (isTyping) {
+                toggleNote(user, $user);
+            }
+
+            // Do not show typing indicator for current user
             if (user.Name === ui.getUserName()) {
                 return;
             }
+
             if (isTyping) {
                 $user.addClass('typing');
             }
@@ -1060,8 +1066,24 @@
         },
         getUserName: function () {
             return ui.name;
+        },
+        changeNote: function (user, roomName) {
+            var room = getRoomElements(roomName),
+                $user = room.getUser(user.Name);
+
+            toggleNote(user, $user);
         }
     };
+
+    function toggleNote(user, $user) {
+        var $note = $user.find('.note');
+        $note.removeClass('afk message');
+        $note.removeAttr('title');
+        if (user.Note !== null) {
+            $note.addClass(user.IsAfk ? 'afk' : 'message');
+            $note.attr('title', user.Note);
+        }
+    }
 
     if (!window.chat) {
         window.chat = {};

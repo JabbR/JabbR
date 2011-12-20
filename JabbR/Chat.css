@@ -158,6 +158,25 @@
     background: url(Content/images/lock.png) no-repeat;
 }
 
+.note
+{
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin-left: 5px;
+    margin-top: 3px;
+}
+
+.note.afk
+{
+    background: url(Content/images/stopwatch.png) no-repeat;
+}
+
+.note.message
+{
+    background: url(Content/images/clippy.png) no-repeat;
+}
+
 #tabs {
     padding: 0;
     margin: 0px 0px 0px 5px;

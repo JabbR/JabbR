@@ -68,6 +68,7 @@
             <img class="gravatar" src="http://www.gravatar.com/avatar/${hash}?s=16&d=mm" />
             <span class="name">${name}</span>
             <span class="owner">{{if owner}}(owner){{/if}}</span>
+            <span class="note{{if noteClass}} ${noteClass}{{/if}}" {{if note}}title="${note}"{{/if}}></span>
         </li>
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">

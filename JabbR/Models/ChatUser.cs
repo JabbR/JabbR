@@ -6,6 +6,8 @@ namespace JabbR.Models
 {
     public class ChatUser
     {
+        public const string AfkPrependingText = "Afk";
+
         [Key]
         public int Key { get; set; }
 
@@ -18,6 +20,13 @@ namespace JabbR.Models
         public DateTime LastActivity { get; set; }
         public DateTime? LastNudged { get; set; }
         public int Status { get; set; }
+        public string Note { get; set; }
+
+        [NotMapped]
+        public bool IsAfk
+        {
+            get { return Note != null && Note.StartsWith(AfkPrependingText, StringComparison.OrdinalIgnoreCase); }
+        }
 
         // List of clients that are currently connected for this user
         public virtual ICollection<ChatClient> ConnectedClients { get; set; }

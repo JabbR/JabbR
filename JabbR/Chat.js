@@ -21,15 +21,22 @@
         return chat.name === user.Name;
     }
 
+    function noteCssClass(user) {
+        return user.Note === null ? '' : user.IsAfk ? 'afk' : 'message';
+    }
+    
     function populateRoom(room) {
         var d = $.Deferred();
         // Populate the list of users rooms and messages 
         chat.getRoomInfo(room)
                 .done(function (roomInfo) {
                     $.each(roomInfo.Users, function () {
+                        var noteCss = noteCssClass(this);
                         var viewModel = {
                             name: this.Name,
-                            hash: this.Hash
+                            hash: this.Hash,
+                            noteClass: noteCss,
+                            note: this.Note
                         };
 
                         ui.addUser(viewModel, room);
@@ -264,7 +271,9 @@
         var viewModel = {
             name: user.Name,
             hash: user.Hash,
-            owner: isOwner
+            owner: isOwner,
+            noteClass: noteCssClass(user),
+            note: user.Note
         };
 
         var added = ui.addUser(viewModel, room);
@@ -391,6 +400,30 @@
 
     chat.changePassword = function () {
         ui.addMessage('Your password has been changed', 'notification', this.activeRoom);
+    };
+
+    // Called when you have added or cleared a note
+    chat.noteChanged = function (isAfk, isCleared) {
+        var afkMessage = 'You have gone Afk';
+        var noteMessage = 'Your note has been ' + isCleared ? 'cleared' : 'set';
+        ui.addMessage(isAfk ? afkMessage : noteMessage, 'notification', this.activeRoom);
+    };
+
+    // Make sure all the people in all the rooms know that a user has changed their note.
+    chat.changeNote = function (user, room) {
+        ui.changeNote(user, room);
+
+        if (!isSelf(user)) {
+            var message;
+            if (user.IsAfk) {
+                message = user.Name + ' has gone Afk';
+            }
+            else {
+                message = user.Name + ' has ' + (user.Note == null ? 'cleared' : 'set') + ' their note';    
+            }
+            
+            ui.addMessage(message, 'notification', room);
+        }
     };
 
     chat.userNameChanged = function (user) {
