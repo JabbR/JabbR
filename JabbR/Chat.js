@@ -398,8 +398,8 @@
     };
 
     // Called when you have added or cleared a note
-    chat.noteChanged = function (isCleared) {
-        ui.addMessage('Your note has been ' + (isCleared ? 'cleared' : 'set'), 'notification', this.activeRoom);
+    chat.noteChanged = function (isAfk, isCleared) {
+        ui.addMessage(isAfk ? 'You have gone Afk' : 'Your note has been ' + (isCleared ? 'cleared' : 'set'), 'notification', this.activeRoom);
     };
 
     // Make sure all the people in all the rooms know that a user has changed their note.
@@ -407,7 +407,7 @@
         ui.changeNote(user, room);
 
         if (!isSelf(user)) {
-            ui.addMessage(user.Name + " has " + (user.Note == null ? "cleared" : "set") + " their note", 'notification', room);
+            ui.addMessage(user.Name + " has " + (user.IsAfk ? "gone Afk" : (user.Note == null ? "cleared" : "set") + " their note"), 'notification', room);
         }
     };
 

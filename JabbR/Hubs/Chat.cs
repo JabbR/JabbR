@@ -689,7 +689,7 @@ namespace JabbR
             // Update the calling client
             foreach (var client in user.ConnectedClients)
             {
-                Clients[client.Id].noteChanged(user.Note == null);
+                Clients[client.Id].noteChanged(user.IsAfk, user.Note == null);
             }
 
             // Create the view model

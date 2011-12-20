@@ -23,7 +23,7 @@ namespace JabbR.Models
         [NotMapped]
         public bool IsAfk
         {
-            get { return Note != null && Note.StartsWith("Afk "); }
+            get { return Note != null && Note.StartsWith("Afk"); }
         }
 
         // List of clients that are currently connected for this user
