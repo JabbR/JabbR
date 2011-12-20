@@ -29,7 +29,9 @@
                     $.each(roomInfo.Users, function () {
                         var viewModel = {
                             name: this.Name,
-                            hash: this.Hash
+                            hash: this.Hash,
+                            noteClass: this.NoteCss,
+                            note: this.Note
                         };
 
                         ui.addUser(viewModel, room);
@@ -264,7 +266,9 @@
         var viewModel = {
             name: user.Name,
             hash: user.Hash,
-            owner: isOwner
+            owner: isOwner,
+            noteClass: user.NoteCss,
+            note: user.Note
         };
 
         var added = ui.addUser(viewModel, room);

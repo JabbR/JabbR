@@ -17,6 +17,7 @@ namespace JabbR.ViewModels
         public string Hash { get; set; }
         public bool Active { get; set; }
         public string Note { get; set; }
+        public string NoteCss { get { return Note == null ? null : IsAfk ? "afk" : "message"; } }
         public bool IsAfk { get; set; }
     }
 }
