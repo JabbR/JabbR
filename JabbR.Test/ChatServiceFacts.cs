@@ -227,7 +227,7 @@ namespace JabbR.Test
                 var repository = new InMemoryRepository();
                 repository.Add(new ChatUser
                 {
-                    Name = "foo",
+                    Name = "SomeUser",
                     Salt = "salt",
                     HashedPassword = "passwords".ToSha256("salt")
                 });
@@ -242,11 +242,11 @@ namespace JabbR.Test
                 var repository = new InMemoryRepository();
                 repository.Add(new ChatUser
                 {
-                    Name = "foo"
+                    Name = "SomeUser"
                 });
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
-                Assert.Throws<InvalidOperationException>(() => service.AuthenticateUser("SomeUser", null));
+                Assert.Throws<InvalidOperationException>(() => service.AuthenticateUser("SomeUser", "password"));
             }
 
             [Fact]
@@ -299,6 +299,7 @@ namespace JabbR.Test
 
         public class AddRoom
         {
+            [Fact]
             public void ThrowsIfRoomNameIsLobby()
             {
                 var repository = new InMemoryRepository();
@@ -313,6 +314,7 @@ namespace JabbR.Test
                 Assert.Throws<InvalidOperationException>(() => service.AddRoom(user, "LObbY"));
             }
 
+            [Fact]
             public void ThrowsIfRoomNameInvalid()
             {
                 var repository = new InMemoryRepository();
@@ -326,6 +328,7 @@ namespace JabbR.Test
                 Assert.Throws<InvalidOperationException>(() => service.AddRoom(user, "Invalid name"));
             }
 
+            [Fact]
             public void AddsUserAsCreatorAndOwner()
             {
                 var repository = new InMemoryRepository();
@@ -417,13 +420,15 @@ namespace JabbR.Test
 
         public class UpdateActivity
         {
-            public void UpdatesStatus()
+            [Fact]
+            public void CanUpdateActivity()
             {
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
                 {
                     Name = "foo",
-                    Status = (int)UserStatus.Inactive
+                    Status = (int)UserStatus.Inactive,
+                    Note = "Afknote!?"
                 };
                 repository.Add(user);
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
@@ -431,6 +436,7 @@ namespace JabbR.Test
                 service.UpdateActivity(user);
 
                 Assert.Equal((int)UserStatus.Active, user.Status);
+                Assert.Null(user.Note);
             }
         }
 
@@ -697,6 +703,38 @@ namespace JabbR.Test
             }
 
             [Fact]
+            public void ThrowsIfTargettedUserIsNotOwner()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                };
+
+                room.Creator = user;
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                room.Users.Add(user);
+                room.Users.Add(user2);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.RemoveOwner(user, user2, room));
+            }
+
+            [Fact]
             public void ThrowsIfTargetUserNotInRoom()
             {
                 var repository = new InMemoryRepository();
@@ -916,6 +954,8 @@ namespace JabbR.Test
                     Creator = user,
                     Private = true
                 };
+                room.Owners.Add(user);
+                user.OwnedRooms.Add(room);
                 room.AllowedUsers.Add(user);
                 user.AllowedRooms.Add(room);
                 user.Rooms.Add(room);
