@@ -21,13 +21,17 @@
         return chat.name === user.Name;
     }
 
+    function noteCssClass(user) {
+        return user.Note === null ? '' : user.IsAfk ? 'afk' : 'message';
+    }
+    
     function populateRoom(room) {
         var d = $.Deferred();
         // Populate the list of users rooms and messages 
         chat.getRoomInfo(room)
                 .done(function (roomInfo) {
                     $.each(roomInfo.Users, function () {
-                        var noteCss = this.Note === null ? '' : this.IsAfk ? 'afk' : 'message';
+                        var noteCss = noteCssClass(this);
                         var viewModel = {
                             name: this.Name,
                             hash: this.Hash,
@@ -264,12 +268,11 @@
     };
 
     chat.addUser = function (user, room, isOwner) {
-        var noteCss = this.Note === null ? '' : this.IsAfk ? 'afk' : 'message';
         var viewModel = {
             name: user.Name,
             hash: user.Hash,
             owner: isOwner,
-            noteClass: noteCss,
+            noteClass: noteCssClass(user),
             note: user.Note
         };
 
