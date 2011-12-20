@@ -221,6 +221,14 @@
                         $('.messages.current'));
     }
 
+    function getAllRoomElements() {
+        var rooms = [];
+        $("ul#tabs > li.room").each(function () {
+            rooms[rooms.length] = getRoomElements($(this).data("name"));
+        });
+        return rooms;
+    }
+
     function getLobby() {
         return getRoomElements('Lobby');
     }
@@ -602,6 +610,11 @@
                 triggerFocus();
             });
 
+            $(window).resize(function () {
+                var room = getCurrentRoomElements();
+                room.scrollToBottom();
+            });
+
             $newMessage.keydown(function (ev) {
                 var key = ev.keyCode || ev.which;
                 switch (key) {
@@ -805,7 +818,7 @@
 
             // Update the user's name
             $user.find('.name').html(user.Name);
-            $user.attr('data-name', user.Name);
+            $user.data('name', user.Name);
         },
         changeGravatar: function (user, roomName) {
             var room = getRoomElements(roomName),
@@ -949,6 +962,14 @@
 
             $message.find('.middle')
                     .append(content);
+        },
+        addPrivateMessage: function (content, type) {
+            var rooms = getAllRoomElements();
+            for (var r in rooms) {
+                if (rooms[r].getName() != undefined) {
+                    this.addMessage(content, type, rooms[r].getName());
+                }
+            }
         },
         addMessage: function (content, type, roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements(),

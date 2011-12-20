@@ -549,17 +549,17 @@ namespace JabbR
             Clients[room.Name].sendMeMessage(user.Name, content, room.Name);
         }
 
-        void INotificationService.SendPrivateMessage(ChatUser user, ChatUser toUser, string messageText)
+        void INotificationService.SendPrivateMessage(ChatUser fromUser, ChatUser toUser, string messageText)
         {
             // Send a message to the sender and the sendee
-            foreach (var client in user.ConnectedClients)
+            foreach (var client in fromUser.ConnectedClients)
             {
-                Clients[client.Id].sendPrivateMessage(user.Name, toUser.Name, messageText);
+                Clients[client.Id].sendPrivateMessage(fromUser.Name, toUser.Name, messageText);
             }
 
             foreach (var client in toUser.ConnectedClients)
             {
-                Clients[client.Id].sendPrivateMessage(user.Name, toUser.Name, messageText);
+                Clients[client.Id].sendPrivateMessage(fromUser.Name, toUser.Name, messageText);
             }
         }
 
@@ -573,7 +573,10 @@ namespace JabbR
 
         void INotificationService.ListRooms(ChatUser user)
         {
-            Caller.showUsersRoomList(user.Name, user.Rooms.Select(r => r.Name));
+            string userId = Caller.id;
+            var userModel = new UserViewModel(user);
+
+            Caller.showUsersRoomList(userModel, user.Rooms.Allowed(userId).Select(r => r.Name));
         }
 
         void INotificationService.ListUsers()
@@ -617,12 +620,15 @@ namespace JabbR
 
         void INotificationService.ShowUserInfo(ChatUser user)
         {
+            string userId = Caller.id;
+
             Caller.showUserInfo(new
             {
                 Name = user.Name,
-                OwnedRooms = user.OwnedRooms.Select(r => r.Name),
+                OwnedRooms = user.OwnedRooms.Allowed(userId).Select(r => r.Name),
+                Status = ((UserStatus)user.Status).ToString(),
                 LastActivity = user.LastActivity,
-                Rooms = user.Rooms.Select(r => r.Name)
+                Rooms = user.Rooms.Allowed(userId).Select(r => r.Name)
             });
         }
 
@@ -740,16 +746,21 @@ namespace JabbR
             // New client state
             var jabbrState = GetCookieValue("jabbr.state");
 
-            if (!String.IsNullOrEmpty(jabbrState))
+            ClientState clientState = null;
+
+            if (String.IsNullOrEmpty(jabbrState))
             {
-                return JsonConvert.DeserializeObject<ClientState>(jabbrState);
+                clientState = new ClientState();
+            }
+            else
+            {
+                clientState = JsonConvert.DeserializeObject<ClientState>(jabbrState);
             }
 
-            return new ClientState
-            {
-                UserId = GetCookieValue("userid"),
-                ActiveRoom = GetCookieValue("currentroom")
-            };
+            // Read the id from the caller if there's no cookie
+            clientState.UserId = clientState.UserId ?? Caller.id;
+
+            return clientState;
         }
 
         private string GetCookieValue(string key)

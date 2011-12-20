@@ -146,7 +146,7 @@
 }
 
 .users li.typing {
-    background-image: url('Content/images/keyboard.png');
+    background-image: url('Content/images/typing.png');
     background-repeat: no-repeat;
     background-position: right center;
 }
@@ -442,6 +442,17 @@ li.room:hover {
     border: 1px solid #ccc;
     padding: 6px;
     min-height: 48px;
+}
+
+.tweet p
+{
+    margin:0px;
+    padding:0px;
+}
+
+.tweet time
+{
+    font-size:.8em;
 }
 
 .tweet img {

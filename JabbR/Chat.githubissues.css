@@ -1,0 +1,274 @@
+﻿.new-comments .comment {
+    border: 1px solid #CACACA;
+    margin: 10px 0;
+}
+.new-comments .comment.adminable:hover {
+    border-color: #AAAAAA;
+}
+.new-comments .comment .cmeta {
+    background: url("../../images/modules/comments/metabar.gif") repeat-x scroll 0 0 transparent;
+    border-bottom: 1px solid #CCCCCC;
+    height: 33px;
+    padding: 0 6px;
+}
+.new-comments .commit-comment .cmeta, .new-comments .review-comment .cmeta, .new-comments .file-commit-comment .cmeta, .new-comments .gist-comment .cmeta, .new-comments .commit-list-comment .cmeta, .new-comments .issue-ref-comment .cmeta {
+    background-position: 0 -33px;
+}
+.new-comments .repo-owner-tag .cmeta, .new-comments .gist-owner-tag .cmeta {
+    background-position: 0 -66px;
+}
+.new-comments .comment .cmeta p.author {
+    float: left;
+    font-size: 12px;
+    height: 33px;
+    line-height: 33px;
+    margin: 0;
+    max-width: 600px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7);
+    white-space: nowrap;
+}
+.new-comments .comment .cmeta p.author a {
+    color: #222222;
+}
+.new-comments .comment .cmeta p.author em a, .new-comments em.date a {
+    color: #666666;
+    font-style: normal;
+}
+.new-comments h2,.new-comments a h2, .new-comments a h2:visited
+{
+    color:#111;
+    text-decoration:none;
+}
+.new-comments .comment .cmeta .gravatar {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #C8C8C8;
+    display: inline-block;
+    font-size: 1px;
+    line-height: 1px;
+    margin-right: 3px;
+    margin-top: -2px;
+    padding: 1px;
+    vertical-align: middle;
+}
+.new-comments .comment .cmeta code {
+    font-size: 11px;
+}
+.new-comments .comment .cmeta p.author em code a {
+    color: #444444;
+}
+.new-comments .comment .cmeta p.info {
+    float: right;
+    font-size: 11px;
+    height: 33px;
+    line-height: 33px;
+    margin: 0;
+}
+.new-comments .comment .cmeta p.info em.date {
+    color: #777777;
+    display: inline;
+    font-style: normal;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7);
+}
+.new-comments .comment .cmeta p.info em.date, .comment .cmeta p.info em.date abbr {
+    line-height: 33px;
+}
+.new-comments .comment .cmeta .icon {
+    background: url("../../images/modules/comments/icons.png?v3") no-repeat scroll 0 0 transparent;
+    display: inline-block;
+    height: 16px;
+    margin-left: 5px;
+    margin-top: -2px;
+    vertical-align: middle;
+    width: 16px;
+}
+.new-comments .comment .cmeta .author .icon {
+    margin-left: 0;
+}
+.new-comments .commit-comment .cmeta .icon, .new-comments .gist-comment .cmeta .icon, .new-comments .review-comment .cmeta .icon, .new-comments .gist-comment .cmeta .icon {
+    background-position: 0 -100px;
+}
+.new-comments .file-commit-comment .cmeta .icon, .new-comments .issue-ref-comment .cmeta .icon {
+    background-position: 0 -200px;
+}
+.new-comments .commit-list-comment .cmeta .icon {
+    background-position: 0 -300px;
+}
+.new-comments .tag {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 #2D90C3;
+    border-color: #26749C #2D90C3 #2D90C3 #26749C;
+    border-radius: 2px 2px 2px 2px;
+    border-style: solid;
+    border-width: 1px;
+    color: #FFFFFF;
+    font-size: 11px;
+    margin-left: 5px;
+    padding: 1px 5px;
+    position: relative;
+    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.2);
+    top: -1px;
+}
+.new-comments .repo-owner-tag .tag, .new-comments .gist-owner-tag .tag {
+    background: none repeat scroll 0 0 #2CC03E;
+    border-color: #259A33 #2CC03E #2CC03E #259A33;
+}
+.new-comments .comment .body {
+    background: none repeat scroll 0 0 #FBFBFB;
+    color: #333333;
+    font-size: 12px;
+    overflow: auto;
+    padding: 0 6px;
+    position: relative;
+}
+.new-comments .highlighted .comment .body {
+    background: none repeat scroll 0 0 #FFFFFF;
+}
+.new-comments .comment .body p {
+    margin: 10px 0;
+}
+.new-comments .comment .content-body img {
+    max-width: 100%;
+}
+.new-comments .comment .body .title {
+    border-bottom: 1px solid #DDDDDD;
+    color: #000000;
+    font-weight: bold;
+    padding: 5px 0;
+}
+.new-comments .inset {
+    -moz-border-bottom-colors: none;
+    -moz-border-image: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: none repeat scroll 0 0 #F1F1F1;
+    border-color: #CCCCCC #E5E5E5 #E5E5E5 #CCCCCC;
+    border-radius: 3px 3px 3px 3px;
+    border-style: solid;
+    border-width: 1px;
+    padding: 4px;
+}
+.new-comments .commit-inset {
+    background-color: #E3EAEE;
+    border-color: #B9C7D1 #DBE5EB #DBE5EB #B9C7D1;
+}
+.new-comments .inset.highlighted {
+    background-color: #FFFFDD;
+    border-color: #CFCFB4 #F1F1C7 #F1F1C7 #CFCFB4;
+}
+.new-comments .inset .comment {
+    margin: 5px 0;
+}
+.new-comments .inset .comment:first-child {
+    margin-top: 0;
+}
+.new-comments .inset .comment:last-child {
+    margin-bottom: 0;
+}
+.new-comments .inset h5 {
+    color: #666666;
+    font-size: 10px;
+    font-weight: normal;
+    letter-spacing: 1px;
+    margin: 0;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.7);
+    text-transform: uppercase;
+}
+.new-comments .commit-inset h5 {
+    color: #6C777F;
+}
+.new-comments .commit-list-comment .body {
+    padding: 0;
+}
+#compare .new-comments .commit-list-comment table.commits {
+    border-width: 0;
+    margin-top: 0;
+}
+.new-comments .comment ul.actions {
+    display: none;
+    margin: 0;
+    position: absolute;
+    right: 5px;
+    top: 5px;
+}
+.new-comments .adminable:hover ul.actions {
+    display: block;
+}
+.new-comments ul.actions li {
+    float: left;
+    list-style-type: none;
+    margin: 0 0 0 5px;
+}
+
+.avatar-bubble {
+    background: url("http://github.com/images/modules/comments/bubble-arrow.png") no-repeat scroll 51px 20px transparent;
+    margin: 20px 0;
+    padding-left: 60px;
+}
+.avatar-bubble .avatar {
+    float: left;
+    margin-left: -60px;
+    position: relative;
+}
+.avatar-bubble .bubble {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border-radius: 3px 3px 3px 3px;
+    padding: 3px;
+}
+.new-comments .bubble .comment {
+    margin: 0;
+}
+.view-pull-request .new-comments .bubble .commit-comment {
+    margin-top: 3px;
+}
+.new-comments .bubble .commit-comment.thread-start {
+    margin-top: 0;
+}
+.bubble .comment-form {
+    margin: 0;
+}
+.avatar-bubble .form-actions {
+    margin-top: 10px;
+}
+.bubble .file-box {
+    margin-bottom: 0;
+}
+.bubble .action-bar {
+    border-bottom: 1px solid #CCCCCC;
+    margin-left: -3px;
+    min-height: 26px;
+    padding: 2px 3px 5px;
+    text-align: right;
+    width: 100%;
+}
+.bubble .action-bar .minibutton:last-child {
+    margin-right: 2px;
+}
+.bubble .action-bar h3 {
+    float: left;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 5px 0 0 5px;
+}
+.mini-avatar-bubble {
+    background: url("http://github.com/images/modules/comments/bubble-arrow-up.png") no-repeat scroll 14px 25px transparent;
+    width: 800px;
+}
+.mini-avatar-bubble .avatar {
+    display: inline-block;
+    height: 24px;
+    margin-right: 3px;
+    position: relative;
+    top: -2px;
+}
+.mini-avatar-bubble .bubble {
+    background: none repeat scroll 0 0 #EEEEEE;
+    border-radius: 3px 3px 3px 3px;
+    padding: 3px;
+}

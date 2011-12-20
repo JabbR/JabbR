@@ -9,6 +9,7 @@ namespace JabbR.ViewModels
             Name = user.Name;
             Hash = user.Hash;
             Active = user.Status == (int)UserStatus.Active;
+            Status = ((UserStatus)user.Status).ToString();
             Note = user.Note;
             IsAfk = user.IsAfk;
         }
@@ -16,6 +17,7 @@ namespace JabbR.ViewModels
         public string Name { get; set; }
         public string Hash { get; set; }
         public bool Active { get; set; }
+        public string Status { get; set; }
         public string Note { get; set; }
         public string NoteCss { get { return Note == null ? null : IsAfk ? "afk" : "message"; } }
         public bool IsAfk { get; set; }
