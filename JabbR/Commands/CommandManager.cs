@@ -792,18 +792,8 @@ namespace JabbR.Commands
 
         private void HandleAfk(ChatUser user, string[] parts)
         {
-            if (user == null)
-            {
-                throw new ArgumentNullException("user");
-            }
-
-            if (parts == null)
-            {
-                throw new ArgumentNullException("parts");
-            }
-
             // First part is the command.
-            // Second is the AFK initial text.
+            // Second is the AFK initial/prepending text.
             var newParts = new List<string> {"afk", "Afk"};
             newParts.AddRange(parts.Skip(1));
 
