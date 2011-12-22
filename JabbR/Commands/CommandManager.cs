@@ -789,7 +789,7 @@ namespace JabbR.Commands
             bool isNoteBeingCleared = parts.Length == 1;
             user.Note = isNoteBeingCleared ? null : String.Join(" ", parts.Skip(1)).Trim();
 
-            ChatService.IsValidNote(user.Note);
+            ChatService.ValidateNote(user.Note);
 
             _notificationService.ChangeNote(user);
 
@@ -800,7 +800,7 @@ namespace JabbR.Commands
         {
             string message = String.Join(" ", parts.Skip(1)).Trim();
             
-            ChatService.IsValidNote(message);
+            ChatService.ValidateNote(message);
 
             user.Note = String.Format("{0}{1}{2}", 
                 ChatUser.AfkPrependingText, 

@@ -479,7 +479,7 @@ namespace JabbR.Services
             _repository.CommitChanges();
         }
 
-        internal static void IsValidNote(string note)
+        internal static void ValidateNote(string note)
         {
             if (!String.IsNullOrWhiteSpace(note) &&
                 note.Length > NoteMaximumLength)
