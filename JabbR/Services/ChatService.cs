@@ -11,7 +11,7 @@ namespace JabbR.Services
         private readonly IJabbrRepository _repository;
         private readonly ICryptoService _crypto;
 
-        public const int NoteMaximumLength = 140;
+        private const int NoteMaximumLength = 140;
 
         public ChatService(IJabbrRepository repository, ICryptoService crypto)
         {

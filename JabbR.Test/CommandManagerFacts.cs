@@ -1309,10 +1309,10 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void ThrowsIfNoteTextIsNotValid()
+            public void ThrowsIfNoteTextDoesNotValidate()
             {
                 // Arrange.
-                string note = new String('A', ChatService.NoteMaximumLength + 1);
+                string note = new String('A', 141);
 
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
@@ -1395,7 +1395,7 @@ namespace JabbR.Test
             public void ThrowsIfAfkTextIsNotValid()
             {
                 // Arrange.
-                string note = new String('A', ChatService.NoteMaximumLength + 1);
+                string note = new String('A', 141);
 
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
