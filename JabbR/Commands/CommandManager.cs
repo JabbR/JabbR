@@ -799,7 +799,7 @@ namespace JabbR.Commands
             string message = String.Join(" ", parts.Skip(1)).Trim();
             user.Note = String.Format("{0}{1}{2}", 
                 ChatUser.AfkPrependingText, 
-                String.IsNullOrWhiteSpace(message) ? string.Empty : " - ",
+                String.IsNullOrWhiteSpace(message) ? String.Empty : " - ",
                 message).Trim();
 
             _notificationService.ChangeNote(user);
