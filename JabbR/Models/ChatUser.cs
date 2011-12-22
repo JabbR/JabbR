@@ -20,6 +20,7 @@ namespace JabbR.Models
         public DateTime LastActivity { get; set; }
         public DateTime? LastNudged { get; set; }
         public int Status { get; set; }
+        [StringLength(200)]
         public string Note { get; set; }
 
         [NotMapped]
