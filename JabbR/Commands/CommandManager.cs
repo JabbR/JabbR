@@ -9,7 +9,6 @@ namespace JabbR.Commands
 {
     public class CommandManager
     {
-        private const int NoteMaximumLength = 200;
         private readonly string _clientId;
         private readonly string _userId;
         private readonly string _roomName;
@@ -790,14 +789,7 @@ namespace JabbR.Commands
             bool isNoteBeingCleared = parts.Length == 1;
             user.Note = isNoteBeingCleared ? null : String.Join(" ", parts.Skip(1)).Trim();
 
-            // Check to make sure the Note text is not longer than the maximum note length.
-            if (!String.IsNullOrWhiteSpace(user.Note) &&
-                user.Note.Length > NoteMaximumLength)
-            {
-                throw new InvalidOperationException(
-                    String.Format("Sorry, but your note is too long. Can please keep it under {0} characters.",
-                        NoteMaximumLength));
-            }
+            ChatService.IsValidNote(user.Note);
 
             _notificationService.ChangeNote(user);
 
@@ -807,15 +799,8 @@ namespace JabbR.Commands
         private void HandleAfk(ChatUser user, string[] parts)
         {
             string message = String.Join(" ", parts.Skip(1)).Trim();
-
-            // Check to make sure the Afk text is not longer than the maximum note length.
-            if (!String.IsNullOrWhiteSpace(message) &&
-                message.Length > NoteMaximumLength)
-            {
-                throw new InvalidOperationException(
-                    String.Format("Sorry, but your AFK note is too long. Can please keep it under {0} characters.",
-                        NoteMaximumLength));
-            }
+            
+            ChatService.IsValidNote(message);
 
             user.Note = String.Format("{0}{1}{2}", 
                 ChatUser.AfkPrependingText, 

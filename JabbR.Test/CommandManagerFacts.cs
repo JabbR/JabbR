@@ -1309,11 +1309,10 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void ThrowsIfNoteTextIsLongerThan200Characters()
+            public void ThrowsIfNoteTextIsNotValid()
             {
                 // Arrange.
-                const string note =
-                    "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890a";
+                string note = new String('A', ChatService.NoteMaximumLength + 1);
 
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
@@ -1331,7 +1330,6 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
                 // Act & Assert.
-                Assert.True(note.Length > 200); 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/note " + note));
             }
         }
@@ -1394,11 +1392,10 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void ThrowsIfAfkTextIsLongerThan200Characters()
+            public void ThrowsIfAfkTextIsNotValid()
             {
                 // Arrange.
-                const string note =
-                    "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890a";
+                string note = new String('A', ChatService.NoteMaximumLength + 1);
 
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
@@ -1416,7 +1413,6 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
                 // Act & Assert.
-                Assert.True(note.Length > 200);
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/afk " + note));
             }
         }
