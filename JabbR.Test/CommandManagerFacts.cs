@@ -1307,6 +1307,31 @@ namespace JabbR.Test
                 Assert.Null(user.Note);
                 notificationService.Verify(x => x.ChangeNote(user), Times.Once());
             }
+
+            [Fact]
+            public void ThrowsIfNoteTextDoesNotValidate()
+            {
+                // Arrange.
+                string note = new String('A', 141);
+
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "asshat",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+                // Act & Assert.
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/note " + note));
+            }
         }
 
         public class AfkCommand
@@ -1364,6 +1389,31 @@ namespace JabbR.Test
                 Assert.True(result);
                 Assert.Equal("AFK", user.Note);
                 notificationService.Verify(x => x.ChangeNote(user), Times.Once());
+            }
+
+            [Fact]
+            public void ThrowsIfAfkTextIsNotValid()
+            {
+                // Arrange.
+                string note = new String('A', 141);
+
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "asshat",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+                // Act & Assert.
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/afk " + note));
             }
         }
 

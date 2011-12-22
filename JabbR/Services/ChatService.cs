@@ -11,6 +11,8 @@ namespace JabbR.Services
         private readonly IJabbrRepository _repository;
         private readonly ICryptoService _crypto;
 
+        private const int NoteMaximumLength = 140;
+
         public ChatService(IJabbrRepository repository, ICryptoService crypto)
         {
             _repository = repository;
@@ -475,6 +477,17 @@ namespace JabbR.Services
             }
 
             _repository.CommitChanges();
+        }
+
+        internal static void ValidateNote(string note)
+        {
+            if (!String.IsNullOrWhiteSpace(note) &&
+                note.Length > NoteMaximumLength)
+            {
+                throw new InvalidOperationException(
+                    String.Format("Sorry, but your note is too long. Can please keep it under {0} characters.",
+                        NoteMaximumLength));
+            }
         }
     }
 }
