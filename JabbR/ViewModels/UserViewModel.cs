@@ -1,4 +1,5 @@
-﻿using JabbR.Models;
+﻿using System;
+using JabbR.Models;
 
 namespace JabbR.ViewModels
 {
@@ -12,6 +13,7 @@ namespace JabbR.ViewModels
             Status = ((UserStatus)user.Status).ToString();
             Note = user.Note;
             IsAfk = user.IsAfk;
+            LastActivity = user.LastActivity;
         }
 
         public string Name { get; set; }
@@ -20,5 +22,6 @@ namespace JabbR.ViewModels
         public string Status { get; set; }
         public string Note { get; set; }
         public bool IsAfk { get; set; }
+        public DateTime LastActivity { get; set; }
     }
 }

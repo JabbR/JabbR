@@ -6,7 +6,7 @@ namespace JabbR.Models
 {
     public class ChatUser
     {
-        public const string AfkPrependingText = "Afk";
+        public const string AfkPrependingText = "AFK";
 
         [Key]
         public int Key { get; set; }

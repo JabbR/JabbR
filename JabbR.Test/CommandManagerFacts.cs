@@ -1335,7 +1335,7 @@ namespace JabbR.Test
                 bool result = commandManager.TryHandleCommand("/afk " + note);
 
                 Assert.True(result);
-                Assert.Equal("Afk " + note, user.Note);
+                Assert.Equal("AFK - " + note, user.Note);
                 notificationService.Verify(x => x.ChangeNote(user), Times.Once());
             }
 
@@ -1362,7 +1362,7 @@ namespace JabbR.Test
                 bool result = commandManager.TryHandleCommand("/afk");
 
                 Assert.True(result);
-                Assert.Equal("Afk", user.Note);
+                Assert.Equal("AFK", user.Note);
                 notificationService.Verify(x => x.ChangeNote(user), Times.Once());
             }
         }
