@@ -1077,12 +1077,14 @@
 
     function toggleNote(user, $user) {
         var $note = $user.find('.note');
-        var noteText = $('<div/>').html(user.Note).text();
+        var lastActivity = user.LastActivity.fromJsonDate();
+        var noteText = user.Note + ' - ' + $.timeago(lastActivity);
+        var noteTextUencoded = $('<div/>').html(noteText).text();
         $note.removeClass('afk message');
         $note.removeAttr('title');
         if (user.Note !== null) {
             $note.addClass(user.IsAfk ? 'afk' : 'message');
-            $note.attr('title', noteText);
+            $note.attr('title', noteTextUencoded);
         }
     }
 
