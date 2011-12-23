@@ -243,20 +243,27 @@ namespace JabbR
             }
 
             ChatRoom room = _repository.VerifyUserRoom(user, roomName);
-            var userViewModel = new UserViewModel(user);
 
             if (isTyping)
             {
                 UpdateActivity(user, room);
+                var userViewModel = new UserViewModel(user);
                 Clients[room.Name].setTyping(userViewModel, room.Name, true);
             }
             else
             {
-                // Set the typing indicator off in all rooms
-                foreach (var r in user.Rooms)
-                {
-                    Clients[r.Name].setTyping(userViewModel, r.Name, false);
-                }
+                SetTypingIndicatorOff(user);
+            }
+        }
+
+        private void SetTypingIndicatorOff(ChatUser user)
+        {
+            var userViewModel = new UserViewModel(user);
+
+            // Set the typing indicator off in all rooms
+            foreach (var r in user.Rooms)
+            {
+                Clients[r.Name].setTyping(userViewModel, r.Name, false);
             }
         }
 
@@ -360,6 +367,9 @@ namespace JabbR
             {
                 return;
             }
+
+            // Turn the typing indicator off for this user (even if it's just one client)
+            SetTypingIndicatorOff(user);
 
             // The user will be marked as offline if all clients leave
             if (user.Status == (int)UserStatus.Offline)
