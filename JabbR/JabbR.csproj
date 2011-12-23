@@ -288,6 +288,10 @@
     <Compile Include="Migrations\201112220325022_MaxNoteLength.Designer.cs">
       <DependentUpon>201112220325022_MaxNoteLength.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201112221045208_SeparateAfkNote.cs" />
+    <Compile Include="Migrations\201112221045208_SeparateAfkNote.Designer.cs">
+      <DependentUpon>201112221045208_SeparateAfkNote.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ChatClient.cs" />
     <Compile Include="Models\ClientState.cs" />
     <Compile Include="Services\ChatService.cs" />

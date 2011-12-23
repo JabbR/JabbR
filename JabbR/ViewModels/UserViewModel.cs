@@ -12,6 +12,7 @@ namespace JabbR.ViewModels
             Active = user.Status == (int)UserStatus.Active;
             Status = ((UserStatus)user.Status).ToString();
             Note = user.Note;
+            AfkNote = user.AfkNote;
             IsAfk = user.IsAfk;
             LastActivity = user.LastActivity;
         }
@@ -21,6 +22,7 @@ namespace JabbR.ViewModels
         public bool Active { get; set; }
         public string Status { get; set; }
         public string Note { get; set; }
+        public string AfkNote { get; set; }
         public bool IsAfk { get; set; }
         public DateTime LastActivity { get; set; }
     }

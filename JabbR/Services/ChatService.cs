@@ -177,7 +177,8 @@ namespace JabbR.Services
             // Remove any Afk notes.
             if (user.IsAfk)
             {
-                user.Note = null;
+                user.AfkNote = null;
+                user.IsAfk = false;
             }
         }
 

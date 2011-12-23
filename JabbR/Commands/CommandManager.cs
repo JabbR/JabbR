@@ -790,7 +790,7 @@ namespace JabbR.Commands
             user.Note = isNoteBeingCleared ? null : String.Join(" ", parts.Skip(1)).Trim();
 
             ChatService.ValidateNote(user.Note);
-
+            
             _notificationService.ChangeNote(user);
 
             _repository.CommitChanges();
@@ -799,13 +799,11 @@ namespace JabbR.Commands
         private void HandleAfk(ChatUser user, string[] parts)
         {
             string message = String.Join(" ", parts.Skip(1)).Trim();
-            
+
             ChatService.ValidateNote(message);
 
-            user.Note = String.Format("{0}{1}{2}", 
-                ChatUser.AfkPrependingText, 
-                String.IsNullOrWhiteSpace(message) ? String.Empty : " - ",
-                message).Trim();
+            user.AfkNote = String.IsNullOrWhiteSpace(message) ? null : message;
+            user.IsAfk = true;
 
             _notificationService.ChangeNote(user);
 

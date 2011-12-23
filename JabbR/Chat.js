@@ -21,26 +21,37 @@
         return chat.name === user.Name;
     }
 
-    function noteCssClass(user) {
-        return user.Note === null ? '' : user.IsAfk ? 'afk' : 'message';
+    function getNoteCssClass(user) {
+        if (user.IsAfk === true) {
+            return 'afk';
+        }
+        else if (user.Note) {
+            return 'message';
+        }
+        return '';
     }
-    
+
+    function getNote(user) {
+        if (user.IsAfk === true) {
+            if (user.AfkNote) {
+                return 'AFK - ' + user.AfkNote;
+            }
+            return 'AFK';
+        }
+
+        return user.Note;
+    }
+
     function populateRoom(room) {
         var d = $.Deferred();
         // Populate the list of users rooms and messages 
         chat.getRoomInfo(room)
                 .done(function (roomInfo) {
                     $.each(roomInfo.Users, function () {
-                        var noteCss = noteCssClass(this);
-                        var viewModel = {
-                            name: this.Name,
-                            hash: this.Hash,
-                            noteClass: noteCss,
-                            note: this.Note
-                        };
+                        var viewModel = getUserViewModel(this);
 
                         ui.addUser(viewModel, room);
-                        ui.setUserActivity(this);
+                        ui.setUserActivity(viewModel);
                     });
 
                     $.each(roomInfo.Owners, function () {
@@ -82,6 +93,20 @@
         if (nearEnd) {
             ui.scrollToBottom(room);
         }
+    }
+
+    function getUserViewModel(user, isOwner) {
+        var lastActive = user.LastActivity.fromJsonDate();
+        return {
+            name: user.Name,
+            hash: user.Hash,
+            owner: isOwner,
+            active: user.Active,
+            noteClass: getNoteCssClass(user),
+            note: getNote(user),
+            lastActive: lastActive,
+            timeAgo: $.timeago(lastActive)
+        };
     }
 
     function getMessageViewModel(message) {
@@ -226,12 +251,14 @@
 
     chat.markInactive = function (users) {
         $.each(users, function () {
-            ui.setUserActivity(this);
+            var viewModel = getUserViewModel(this);
+            ui.setUserActivity(viewModel);
         });
     };
 
     chat.updateActivity = function (user) {
-        ui.setUserActivity(user);
+        var viewModel = getUserViewModel(user);
+        ui.setUserActivity(viewModel);
     };
 
     chat.addMessageContent = function (id, content, room) {
@@ -255,8 +282,8 @@
     };
 
     chat.addMessage = function (message, room) {
-
         var viewModel = getMessageViewModel(message);
+
         scrollIfNecessary(function () {
             ui.addChatMessage(viewModel, room);
 
@@ -268,13 +295,7 @@
     };
 
     chat.addUser = function (user, room, isOwner) {
-        var viewModel = {
-            name: user.Name,
-            hash: user.Hash,
-            owner: isOwner,
-            noteClass: noteCssClass(user),
-            note: user.Note
-        };
+        var viewModel = getUserViewModel(user, isOwner);
 
         var added = ui.addUser(viewModel, room);
 
@@ -390,7 +411,7 @@
         var lastActivityDate = userInfo.LastActivity.fromJsonDate();
         var status = "Currently " + userInfo.Status;
         ui.addMessage('User information for ' + userInfo.Name +
-            " (" + status + " - last seen " + jQuery.timeago(lastActivityDate) + ")", 'list-header');
+            " (" + status + " - last seen " + $.timeago(lastActivityDate) + ")", 'list-header');
         chat.showUsersOwnedRoomList(userInfo.Name, userInfo.OwnedRooms);
     };
 
@@ -411,17 +432,19 @@
 
     // Make sure all the people in all the rooms know that a user has changed their note.
     chat.changeNote = function (user, room) {
-        ui.changeNote(user, room);
+        var viewModel = getUserViewModel(user);
+
+        ui.changeNote(viewModel, room);
 
         if (!isSelf(user)) {
             var message;
-            if (user.IsAfk) {
+            if (user.IsAfk === true) {
                 message = user.Name + ' has gone AFK';
             }
             else {
-                message = user.Name + ' has ' + (user.Note == null ? 'cleared' : 'set') + ' their note';    
+                message = user.Name + ' has ' + (user.Note ? 'set' : 'cleared') + ' their note';
             }
-            
+
             ui.addMessage(message, 'notification', room);
         }
     };
@@ -434,7 +457,8 @@
     };
 
     chat.setTyping = function (user, room, isTyping) {
-        ui.setUserTyping(user, room, isTyping);
+        var viewModel = getUserViewModel(user);
+        ui.setUserTyping(viewModel, room, isTyping);
     };
 
     chat.sendMeMessage = function (name, message, room) {

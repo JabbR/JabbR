@@ -428,7 +428,8 @@ namespace JabbR.Test
                 {
                     Name = "foo",
                     Status = (int)UserStatus.Inactive,
-                    Note = "Afknote!?"
+                    IsAfk = true,
+                    AfkNote = "note!?"
                 };
                 repository.Add(user);
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
@@ -436,7 +437,8 @@ namespace JabbR.Test
                 service.UpdateActivity(user);
 
                 Assert.Equal((int)UserStatus.Active, user.Status);
-                Assert.Null(user.Note);
+                Assert.Null(user.AfkNote);
+                Assert.False(user.IsAfk);
             }
         }
 

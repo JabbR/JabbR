@@ -442,6 +442,28 @@
         room.removeSeparator();
     }
 
+    function updateNote(userViewModel, $user) {
+        var $note = $user.find('.note'),
+            noteText = userViewModel.note,
+            noteTextUencoded = null;
+
+        if (userViewModel.noteClass === 'afk') {
+            noteText = userViewModel.note + ' (' + userViewModel.timeAgo + ')';
+        }
+
+        noteTextUencoded = $('<div/>').html(noteText).text();
+
+        // Remove all classes and the text
+        $note.removeClass('afk message');
+        $note.removeAttr('title');
+
+        $note.addClass(userViewModel.noteClass);
+        if (userViewModel.note) {
+            $note.attr('title', noteTextUencoded);
+        }
+    }
+
+
     var ui = {
 
         //lets store any events to be triggered as constants here to aid intellisense and avoid
@@ -795,13 +817,14 @@
             }
 
             templates.user.tmpl(user).appendTo(room.users);
+            updateNote(user, room.getUser(user.name));
 
             return true;
         },
-        setUserActivity: function (user) {
-            var $user = $('.users').find(getUserClassName(user.Name));
+        setUserActivity: function (userViewModel) {
+            var $user = $('.users').find(getUserClassName(userViewModel.name));
 
-            if (user.Active === true) {
+            if (userViewModel.active === true) {
                 $user.fadeTo('slow', 1, function () {
                     $user.removeClass('idle');
                 });
@@ -811,6 +834,8 @@
                     $user.addClass('idle');
                 });
             }
+
+            updateNote(userViewModel, $user);
         },
         changeUserName: function (oldName, user, roomName) {
             var room = getRoomElements(roomName),
@@ -837,17 +862,12 @@
                     $(this).remove();
                 });
         },
-        setUserTyping: function (user, roomName, isTyping) {
+        setUserTyping: function (userViewModel, roomName, isTyping) {
             var room = getRoomElements(roomName),
-                $user = room.getUser(user.Name);
-
-            // Hide the Afk note, if we're typing, including the current user.
-            if (isTyping) {
-                toggleNote(user, $user);
-            }
+                $user = room.getUser(userViewModel.name);
 
             // Do not show typing indicator for current user
-            if (user.Name === ui.getUserName()) {
+            if (userViewModel.name === ui.getUserName()) {
                 return;
             }
 
@@ -1067,26 +1087,13 @@
         getUserName: function () {
             return ui.name;
         },
-        changeNote: function (user, roomName) {
+        changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
-                $user = room.getUser(user.Name);
+                $user = room.getUser(userViewModel.name);
 
-            toggleNote(user, $user);
+            updateNote(userViewModel, $user);
         }
     };
-
-    function toggleNote(user, $user) {
-        var $note = $user.find('.note');
-        var lastActivity = user.LastActivity.fromJsonDate();
-        var noteText = user.Note + ' - ' + $.timeago(lastActivity);
-        var noteTextUencoded = $('<div/>').html(noteText).text();
-        $note.removeClass('afk message');
-        $note.removeAttr('title');
-        if (user.Note !== null) {
-            $note.addClass(user.IsAfk ? 'afk' : 'message');
-            $note.attr('title', noteTextUencoded);
-        }
-    }
 
     if (!window.chat) {
         window.chat = {};
