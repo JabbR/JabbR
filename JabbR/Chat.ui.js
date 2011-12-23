@@ -702,7 +702,9 @@
         },
         setMessage: function (value) {
             $newMessage.val(value);
-            $newMessage.selectionEnd = value.length;
+            if (value) {
+                $newMessage.selectionEnd = value.length;
+            }
         },
         addRoom: addRoom,
         removeRoom: removeRoom,
