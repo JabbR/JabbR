@@ -243,14 +243,21 @@ namespace JabbR
             }
 
             ChatRoom room = _repository.VerifyUserRoom(user, roomName);
+            var userViewModel = new UserViewModel(user);
 
             if (isTyping)
             {
                 UpdateActivity(user, room);
+                Clients[room.Name].setTyping(userViewModel, room.Name, true);
             }
-
-            var userViewModel = new UserViewModel(user);
-            Clients[room.Name].setTyping(userViewModel, room.Name, isTyping);
+            else
+            {
+                // Set the typing indicator off in all rooms
+                foreach (var r in user.Rooms)
+                {
+                    Clients[r.Name].setTyping(userViewModel, r.Name, false);
+                }
+            }
         }
 
         private void LogOn(ChatUser user, string clientId)
