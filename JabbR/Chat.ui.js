@@ -685,8 +685,18 @@
                 }
             });
 
-            $newMessage.keypress(function (e) {
-                $ui.trigger(ui.events.typing);
+            $newMessage.keypress(function (ev) {
+                var key = ev.keyCode || ev.which;
+                switch (key) {
+                    case Keys.Up:
+                    case Keys.Down:
+                    case Keys.Esc:
+                    case Keys.Enter:
+                        break;
+                    default:
+                        $ui.trigger(ui.events.typing);
+                        break;
+                }
             });
 
             $newMessage.focus();
