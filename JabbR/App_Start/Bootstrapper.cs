@@ -150,11 +150,18 @@ namespace JabbR.App_Start
                 }
 
                 var elapsed = DateTime.UtcNow - user.LastActivity;
+                
+                if (!user.IsAfk && elapsed.TotalMinutes > 30)
+                {
+                    // After 30 minutes of inactivity make the user afk
+                    user.IsAfk = true;
+                }
+
                 if (elapsed.TotalMinutes > 5)
                 {
                     user.Status = (int)UserStatus.Inactive;
                     inactiveUsers.Add(user);
-                }
+                }                
             }
 
             var roomGroups = from u in inactiveUsers
