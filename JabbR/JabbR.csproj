@@ -244,6 +244,7 @@
     <Compile Include="ContentProviders\Core\IResourceProcessor.cs" />
     <Compile Include="ContentProviders\Core\ResourceProcessor.cs" />
     <Compile Include="ContentProviders\GoogleDocsPresentationsContentProvider.cs" />
+    <Compile Include="ContentProviders\GoogleMapsContentProvider.cs" />
     <Compile Include="ContentProviders\JoinMeContentProvider.cs" />
     <Compile Include="ContentProviders\NerdDinnerContentProvider.cs" />
     <Compile Include="ContentProviders\UStreamContentProvider.cs" />
