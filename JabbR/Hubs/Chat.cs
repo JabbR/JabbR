@@ -804,8 +804,8 @@ namespace JabbR
 
         private string GetCookieValue(string key)
         {
-            HttpCookie cookie = Context.Cookies[key];
-            return cookie != null ? HttpUtility.UrlDecode(cookie.Value) : null;
+            string value = Context.Cookies[key];
+            return value != null ? HttpUtility.UrlDecode(value) : null;
         }
     }
 }

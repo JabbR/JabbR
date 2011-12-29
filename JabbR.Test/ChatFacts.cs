@@ -1,5 +1,5 @@
-﻿using System.Security.Principal;
-using System.Web;
+﻿using System.Collections.Specialized;
+using System.Security.Principal;
 using JabbR.ContentProviders.Core;
 using JabbR.Models;
 using JabbR.Services;
@@ -68,10 +68,9 @@ namespace JabbR.Test
                     Name = "John"
                 };
 
-                var cookies = new HttpCookieCollection
-                {
-                    new HttpCookie("jabbr.state", JsonConvert.SerializeObject(new ClientState { UserId = user.Id }))
-                };
+                var cookies = new NameValueCollection();
+                cookies["jabbr.state"] = JsonConvert.SerializeObject(new ClientState { UserId = user.Id });
+                
 
                 TestableChat chat = GetTestableChat(clientId, clientState, user, cookies);
 
@@ -89,10 +88,10 @@ namespace JabbR.Test
 
         public static TestableChat GetTestableChat(string clientId, TrackingDictionary clientState, ChatUser user)
         {
-            return GetTestableChat(clientId, clientState, user, new HttpCookieCollection());
+            return GetTestableChat(clientId, clientState, user, new NameValueCollection());
         }
 
-        public static TestableChat GetTestableChat(string clientId, TrackingDictionary clientState, ChatUser user, HttpCookieCollection cookies)
+        public static TestableChat GetTestableChat(string clientId, TrackingDictionary clientState, ChatUser user, NameValueCollection cookies)
         {
             // setup things needed for chat
             var repository = new InMemoryRepository();
