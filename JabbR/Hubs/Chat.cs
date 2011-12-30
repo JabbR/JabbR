@@ -721,6 +721,25 @@ namespace JabbR
             }
         }
 
+        void INotificationService.ChangeFlag(ChatUser user)
+        {
+            bool isFlagCleared = String.IsNullOrWhiteSpace(user.Flag);
+
+            // Create the view model
+            var userViewModel = new UserViewModel(user);
+
+            // Update the calling client
+            foreach (var client in user.ConnectedClients)
+            {
+                Clients[client.Id].flagChanged(isFlagCleared, userViewModel.Country);
+            }
+                                    
+            // Tell all users in rooms to change the flag
+            foreach (var room in user.Rooms)
+            {
+                Clients[room.Name].changeFlag(userViewModel, room.Name);
+            }
+        }
 
         private void OnRoomChanged(ChatRoom room)
         {

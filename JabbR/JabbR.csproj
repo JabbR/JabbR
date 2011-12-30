@@ -105,6 +105,7 @@
     <Content Include="Content\images\ajax-loader.png" />
     <Content Include="Content\images\close-icon-hover.png" />
     <Content Include="Content\images\close-icon.png" />
+    <Content Include="Content\images\flags.png" />
     <Content Include="Content\images\lockwhite.png" />
     <Content Include="Content\images\icons-18-black.png" />
     <Content Include="Content\images\icons-18-white.png" />
@@ -292,6 +293,10 @@
     <Compile Include="Migrations\201112221045208_SeparateAfkNote.cs" />
     <Compile Include="Migrations\201112221045208_SeparateAfkNote.Designer.cs">
       <DependentUpon>201112221045208_SeparateAfkNote.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201112271245435_UserFlag.cs" />
+    <Compile Include="Migrations\201112271245435_UserFlag.Designer.cs">
+      <DependentUpon>201112271245435_UserFlag.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ChatClient.cs" />
     <Compile Include="Models\ClientState.cs" />

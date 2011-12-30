@@ -246,6 +246,12 @@ namespace JabbR.Commands
 
                 return true;
             }
+            else if (commandName.Equals("flag", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleFlag(user, parts);
+
+                return true;
+            }
 
             return false;
         }
@@ -806,6 +812,27 @@ namespace JabbR.Commands
             user.IsAfk = true;
 
             _notificationService.ChangeNote(user);
+
+            _repository.CommitChanges();
+        }
+
+        private void HandleFlag(ChatUser user, string[] parts)
+        {
+            string isoCode = String.Join(" ", parts.Skip(1)).Trim().ToLowerInvariant();
+
+            if (String.IsNullOrWhiteSpace(isoCode))
+            {
+                // Clear the flag.
+                user.Flag = null;
+            }
+            else
+            {
+                // Set the flag.
+                ChatService.ValidateIsoCode(isoCode);
+                user.Flag = isoCode; 
+            }
+            
+            _notificationService.ChangeFlag(user);
 
             _repository.CommitChanges();
         }

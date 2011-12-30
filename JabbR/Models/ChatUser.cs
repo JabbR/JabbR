@@ -27,6 +27,9 @@ namespace JabbR.Models
 
         public bool IsAfk { get; set; }
 
+        [StringLength(2)]
+        public string Flag { get; set; }
+
         // List of clients that are currently connected for this user
         public virtual ICollection<ChatClient> ConnectedClients { get; set; }
         public virtual ICollection<ChatRoom> OwnedRooms { get; set; }

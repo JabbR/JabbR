@@ -3111,6 +3111,140 @@ namespace JabbR.Test
             }
         }
 
+        public class FlagCommand
+        {
+            [Fact]
+            public void CanSetFlag()
+            {
+                // Arrange.
+                const string isoCode = "au";
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "asshat",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+                // Act.
+                bool result = commandManager.TryHandleCommand("/flag " + isoCode);
+
+                Assert.True(result);
+                Assert.Equal(isoCode, user.Flag);
+                notificationService.Verify(x => x.ChangeFlag(user), Times.Once());
+            }
+
+            [Fact]
+            public void CanSetFlagWithUppercaseIso()
+            {
+                // Arrange.
+                const string isoCode = "AU";
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "asshat",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+                // Act.
+                bool result = commandManager.TryHandleCommand("/flag " + isoCode);
+
+                Assert.True(result);
+                Assert.Equal(isoCode.ToLowerInvariant(), user.Flag);
+                notificationService.Verify(x => x.ChangeFlag(user), Times.Once());
+            }
+
+            [Fact]
+            public void NoIsoCodeClearsFlag()
+            {
+                // Arrange.
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "asshat",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+                // Act.
+                bool result = commandManager.TryHandleCommand("/flag");
+
+                Assert.True(result);
+                Assert.Null(user.Flag);
+                notificationService.Verify(x => x.ChangeFlag(user), Times.Once());
+            }
+
+            [Fact]
+            public void IncorrectIsoCodeThrows()
+            {
+                // Arrange.
+                const string isoCode = "xx";
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "asshat",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+                // Act and Assert
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/flag " + isoCode));
+            }
+
+            [Fact]
+            public void TooLongIsoCodeThrows()
+            {
+                // Arrange.
+                const string isoCode = "xxxxx";
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "asshat",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+                // Act and Assert
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/flag " + isoCode));
+            }
+        }
+
         public static void VerifyThrows<T>(string command) where T : Exception
         {
             var repository = new InMemoryRepository();
