@@ -116,14 +116,13 @@
 .messages li img.gravatar {
     height: 16px;
     width: 16px;
+    display: inline-block;
 }
 
 .users {
     margin-left: 0px;
     padding-left: 0px;
-    overflow: auto;
     font-size: small;
-    white-space: nowrap;
     position: absolute;
     top: 55px;
     left: 71%;
@@ -135,10 +134,12 @@
 
 .users li {
     padding: 4px;
+    list-style: none;
 }
 
 .users li .name {
     word-wrap: break-word;
+    vertical-align: middle;
 }
 
 .users li.room.locked .name {
@@ -158,23 +159,34 @@
     background: url(Content/images/lock.png) no-repeat;
 }
 
+.users .details {
+    width: 90%;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.users .owner {
+    vertical-align: middle;
+}
+
 .note
 {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    margin-left: 5px;
-    margin-top: 3px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .note.afk
 {
     background: url(Content/images/stopwatch.png) no-repeat;
+    height: 16px;
+    width: 12px;
 }
 
 .note.message
 {
     background: url(Content/images/clippy.png) no-repeat;
+    height: 16px;
+    width: 6px;
     border-bottom: none;
 }
 

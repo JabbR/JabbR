@@ -818,9 +818,7 @@ namespace JabbR.Commands
 
         private void HandleFlag(ChatUser user, string[] parts)
         {
-            string isoCode = String.Join(" ", parts.Skip(1)).Trim().ToLowerInvariant();
-
-            if (String.IsNullOrWhiteSpace(isoCode))
+            if (parts.Length <= 1)
             {
                 // Clear the flag.
                 user.Flag = null;
@@ -828,6 +826,7 @@ namespace JabbR.Commands
             else
             {
                 // Set the flag.
+                string isoCode = String.Join(" ", parts[1]).ToLowerInvariant();
                 ChatService.ValidateIsoCode(isoCode);
                 user.Flag = isoCode; 
             }

@@ -758,11 +758,13 @@ namespace JabbR.Services
 
         internal static string GetCountry(string isoCode)
         {
-            return String.IsNullOrWhiteSpace(isoCode) ||
-                   isoCode.Trim().Length != 2 ||
-                   !Countries.ContainsKey(isoCode)
-                       ? String.Empty
-                       : Countries[isoCode];
+            if (String.IsNullOrEmpty(isoCode))
+            {
+                return null;
+            }
+
+            string country;
+            return Countries.TryGetValue(isoCode, out country) ? country : null;
         }
     }
 }
