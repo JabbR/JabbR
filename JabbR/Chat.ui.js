@@ -22,7 +22,6 @@
         toast = window.chat.toast,
         preferences = null,
         name,
-        cyclingMessageHistory = false,
         lastCycledMessage = null,
         $window = $(window),
         $document = $(document);
@@ -669,17 +668,13 @@
                         triggerSend();
                         ev.preventDefault();
                         return false;
-                    default:
-                        cyclingMessageHistory = false;
-
                 }
             });
 
             function cycleMessage(messageHistoryDirection) {
                 var currentMessage = $newMessage[0].value;
-                if (cyclingMessageHistory || currentMessage.length === 0 || lastCycledMessage === currentMessage) {
+                if (currentMessage.length === 0 || lastCycledMessage === currentMessage) {
                     $ui.trigger(messageHistoryDirection);
-                    cyclingMessageHistory = true;
                 }
             }
 
