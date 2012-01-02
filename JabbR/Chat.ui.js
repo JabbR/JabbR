@@ -661,7 +661,6 @@
                         break;
                     case Keys.Down:
                         cycleMessage(ui.events.nextMessage);
-                        cyclingMessages = true;
                         break;
                     case Keys.Esc:
                         $(this).val('');
