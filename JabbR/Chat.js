@@ -42,6 +42,10 @@
         return user.Note;
     }
 
+    function getFlagCssClass(user) {
+        return (user.Flag) ? 'flag flag-' + user.Flag : '';
+    }
+
     function populateRoom(room) {
         var d = $.Deferred();
         // Populate the list of users rooms and messages 
@@ -104,6 +108,9 @@
             active: user.Active,
             noteClass: getNoteCssClass(user),
             note: getNote(user),
+            flagClass: getFlagCssClass(user),
+            flag: user.Flag,
+            country: user.Country,
             lastActive: lastActive,
             timeAgo: $.timeago(lastActive)
         };
@@ -445,6 +452,28 @@
                 message = user.Name + ' has ' + (user.Note ? 'set' : 'cleared') + ' their note';
             }
 
+            ui.addMessage(message, 'notification', room);
+        }
+    };
+
+    // Called when you have added or cleared a flag
+    chat.flagChanged = function (isCleared, country) {
+        var action = isCleared ? 'cleared' : 'set';
+        var place = country ? ' to ' + country : '';
+        var message = 'You have ' + action + ' your flag' + place;
+        ui.addMessage(message, 'notification', this.activeRoom);
+    };
+
+    // Make sure all the people in the all the rooms know that a user has changed their flag
+    chat.changeFlag = function (user, room) {
+        var viewModel = getUserViewModel(user);
+
+        ui.changeFlag(viewModel, room);
+
+        if (!isSelf(user)) {
+            var action = user.Flag ? 'set' : 'cleared';
+            var country = viewModel.country ? ' to ' + viewModel.country : '';
+            var message = user.Name + ' has ' + action + ' thier flag' + country;
             ui.addMessage(message, 'notification', room);
         }
     };

@@ -463,6 +463,17 @@
         }
     }
 
+    function updateFlag(userViewModel, $user) {
+        var $flag = $user.find('.flag');
+
+        $flag.removeClass();
+        $flag.removeAttr('title');
+
+        $flag.addClass(userViewModel.flagClass);
+        if (userViewModel.country) {
+            $flag.attr('title', userViewModel.country);
+        }
+    }
 
     var ui = {
 
@@ -830,6 +841,7 @@
 
             templates.user.tmpl(user).appendTo(room.users);
             updateNote(user, room.getUser(user.name));
+            updateFlag(user, room.getUser(user.name));
 
             return true;
         },
@@ -1104,6 +1116,12 @@
                 $user = room.getUser(userViewModel.name);
 
             updateNote(userViewModel, $user);
+        },
+        changeFlag: function (userViewModel, roomName) {
+            var room = getRoomElements(roomName),
+                $user = room.getUser(userViewModel.name);
+
+            updateFlag(userViewModel, $user);
         }
     };
 

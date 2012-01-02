@@ -1,5 +1,6 @@
 ﻿using System;
 using JabbR.Models;
+using JabbR.Services;
 
 namespace JabbR.ViewModels
 {
@@ -14,16 +15,20 @@ namespace JabbR.ViewModels
             Note = user.Note;
             AfkNote = user.AfkNote;
             IsAfk = user.IsAfk;
+            Flag = user.Flag;
+            Country = ChatService.GetCountry(user.Flag);
             LastActivity = user.LastActivity;
         }
 
-        public string Name { get; set; }
-        public string Hash { get; set; }
-        public bool Active { get; set; }
-        public string Status { get; set; }
-        public string Note { get; set; }
-        public string AfkNote { get; set; }
-        public bool IsAfk { get; set; }
-        public DateTime LastActivity { get; set; }
+        public string Name { get; private set; }
+        public string Hash { get; private set; }
+        public bool Active { get; private set; }
+        public string Status { get; private set; }
+        public string Note { get; private set; }
+        public string AfkNote { get; private set; }
+        public bool IsAfk { get; private set; }
+        public string Flag { get; private set; }
+        public string Country { get; private set; }
+        public DateTime LastActivity { get; private set; }
     }
 }
