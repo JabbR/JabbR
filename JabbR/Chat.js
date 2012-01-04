@@ -473,7 +473,7 @@
         if (!isSelf(user)) {
             var action = user.Flag ? 'set' : 'cleared';
             var country = viewModel.country ? ' to ' + viewModel.country : '';
-            var message = user.Name + ' has ' + action + ' thier flag' + country;
+            var message = user.Name + ' has ' + action + ' their flag' + country;
             ui.addMessage(message, 'notification', room);
         }
     };
