@@ -92,6 +92,11 @@
                     success: function (res) {
                         connection.appRelativeUrl = res.Url;
                         connection.id = res.ConnectionId;
+                        connection.webSocketServerUrl = res.WebSocketServerUrl;
+
+                        if (!res.ProtocolVersion || res.ProtocolVersion !== "1.0") {
+                            throw "SignalR: Incompatible protocol version.";
+                        }
 
                         $(connection).trigger("onStarting");
 
@@ -133,10 +138,13 @@
             /// <summary>Adds a callback that will be invoked before the connection is started</summary>
             /// <param name="callback" type="Function">A callback function to execute when the connection is starting</param>
             /// <returns type="signalR" />
-            var connection = this;
+            var connection = this,
+                $connection = $(connection);
 
-            $(connection).bind("onStarting", function (e, data) {
+            $connection.bind("onStarting", function (e, data) {
                 callback.call(connection);
+                // Unbind immediately, we don't want to call this callback again
+                $connection.unbind("onStarting");
             });
 
             return connection;
@@ -201,6 +209,9 @@
                 connection.transport = null;
             }
 
+            delete connection.messageId;
+            delete connection.groups;
+
             return connection;
         }
     };
@@ -244,11 +255,22 @@
         },
 
         processMessages: function (connection, data) {
+            var $connection;
+            
             if (data) {
+                if (data.Disconnect) {
+                    // Disconnected by the server, need to reconnect
+                    connection.stop()
+                        .start();
+                    return;
+                }
+
                 if (data.Messages) {
+                    $connection = $(connection);
+
                     $.each(data.Messages, function () {
                         try {
-                            $(connection).trigger("onReceived", [this]);
+                            $connection.trigger("onReceived", [this]);
                         }
                         catch (e) {
                             log('Error raising received ' + e);
@@ -290,9 +312,17 @@
                 }
 
                 if (!connection.socket) {
-                    // Build the url
-                    url = document.location.host + connection.appRelativeUrl;
+                    if (connection.webSocketServerUrl) {
+                        url = connection.webSocketServerUrl;
+                    }
+                    else {
+                        // Determine the protocol
+                        protocol = document.location.protocol === "https:" ? "wss://" : "ws://";
 
+                        url = protocol + document.location.host + connection.appRelativeUrl;
+                    }
+
+                    // Build the url
                     $(connection).trigger("onSending");
                     if (connection.data) {
                         url += "?connectionData=" + connection.data + "&transport=webSockets&connectionId=" + connection.id;
@@ -300,9 +330,7 @@
                         url += "?transport=webSockets&connectionId=" + connection.id;
                     }
 
-                    protocol = document.location.protocol === "https:" ? "wss://" : "ws://";
-
-                    connection.socket = new window.WebSocket(protocol + url);
+                    connection.socket = new window.WebSocket(url);
                     connection.socket.onopen = function () {
                         opened = true;
                         if (onSuccess) {
@@ -325,14 +353,22 @@
                     };
 
                     connection.socket.onmessage = function (event) {
-                        var data = window.JSON.parse(event.data);
+                        var data = window.JSON.parse(event.data),
+                            $connection;
                         if (data) {
+                            $connection = $(connection);
+
                             if (data.Messages) {
                                 $.each(data.Messages, function () {
-                                    $(connection).trigger("onReceived", [this]);
+                                    try {
+                                        $connection.trigger("onReceived", [this]);
+                                    }
+                                    catch (e) {
+                                        log('Error raising received ' + e);
+                                    }
                                 });
                             } else {
-                                $(connection).trigger("onReceived", [data]);
+                                $connection.trigger("onReceived", [data]);
                             }
                         }
                     };

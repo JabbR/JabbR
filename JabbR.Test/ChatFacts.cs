@@ -6,6 +6,7 @@ using JabbR.Services;
 using Moq;
 using Newtonsoft.Json;
 using SignalR;
+using SignalR.Abstractions;
 using SignalR.Hubs;
 using Xunit;
 
@@ -109,12 +110,15 @@ namespace JabbR.Test
             // setup client agent
             chat.Agent = new ClientAgent(mockedConnectionObject, "Chat");
 
+            var request = new Mock<IRequest>();
+            request.Setup(m => m.Cookies).Returns(cookies);
+
             // setup signal agent
             var prinicipal = new Mock<IPrincipal>();
             chat.Caller = new SignalAgent(mockedConnectionObject, clientId, "Chat", clientState);
 
             // setup context
-            chat.Context = new HubContext(clientId, cookies, prinicipal.Object);
+            chat.Context = new HubContext(new HostContext(request.Object, null, prinicipal.Object), clientId);
 
             return chat;
         }
