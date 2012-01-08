@@ -349,7 +349,7 @@
     }
 
     function navigateToRoom(roomName) {
-        $.history.load('rooms/' + roomName);
+        $.history.load('/rooms/' + roomName);
     }
 
     function processMessage(message) {
@@ -511,7 +511,7 @@
                 separator: $('#message-separator-template'),
                 tab: $('#new-tab-template')
             };
-            
+
             if (toast.canToast()) {
                 $toast.show();
             }
@@ -715,6 +715,10 @@
         },
         run: function () {
             $.history.init(function (hash) {
+                if (hash.length && hash[0] == '/') {
+                    hash = hash.substr(1);
+                }
+
                 var parts = hash.split('/');
                 if (parts[0] === 'rooms') {
                     var roomName = parts[1];
