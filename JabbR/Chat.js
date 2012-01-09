@@ -15,7 +15,8 @@
         focus = true,
         loadingHistory = false,
         typingTimeoutId = null,
-        $ui = $(ui);
+        $ui = $(ui),
+        initialized = false;
 
     function isSelf(user) {
         return chat.name === user.Name;
@@ -749,6 +750,12 @@
         ui.addMessage('Type /help to see the list of commands', 'notification');
 
         connection.hub.start(function () {
+            if (initialized === true) {
+                // HACK: To work around signalr bug in SSE
+                return;
+            }
+
+            initialized = true;
             chat.join()
                 .fail(function (e) {
                     ui.addMessage(e, 'error');
