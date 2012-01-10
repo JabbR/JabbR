@@ -748,7 +748,7 @@
         ui.addMessage('Welcome to ' + originalTitle, 'notification');
         ui.addMessage('Type /help to see the list of commands', 'notification');
 
-        connection.hub.start({ transport: 'longPolling' }, function () {
+        connection.hub.start(function () {
             chat.join()
                 .fail(function (e) {
                     ui.addMessage(e, 'error');
