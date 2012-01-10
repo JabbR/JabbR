@@ -27,7 +27,7 @@ namespace JabbR.App_Start
         // Background task info
         private static bool _sweeping;
         private static Timer _timer;
-        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(5);
+        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(10);
 
         private const string SqlClient = "System.Data.SqlClient";
 
@@ -65,8 +65,6 @@ namespace JabbR.App_Start
             _timer = new Timer(_ => Sweep(repositoryFactory), null, _sweepInterval, _sweepInterval);
 
             SetupErrorHandling();
-
-            Signaler.Instance.DefaultTimeout = TimeSpan.FromSeconds(25);
         }
 
         private static void DoMigrations()
