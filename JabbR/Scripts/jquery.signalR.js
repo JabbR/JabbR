@@ -199,6 +199,17 @@
             return connection;
         },
 
+        reconnect: function (callback) {
+            /// <summary>Adds a callback that will be invoked when the client reconnects after being disconnected</summary>
+            /// <param name="callback" type="Function">A callback function to execute when the connection is re-established</param>
+            /// <returns type="signalR" />
+            var connection = this;
+            $(connection).bind("onReconnect", function (e, data) {
+                callback.call(connection);
+            });
+            return connection;
+        },
+
         stop: function () {
             /// <summary>Stops listening</summary>
             /// <returns type="signalR" />
@@ -221,12 +232,24 @@
     // Transports
     var transportLogic = {
 
-        getUrl: function (connection, transport) {
+        getUrl: function (connection, transport, reconnecting) {
             /// <summary>Gets the url for making a GET based connect request</summary>
-            var url = connection.url + "/connect",
+            var url = connection.url,
                 qs = "transport=" + transport + "&connectionId=" + window.escape(connection.id);
+
             if (connection.data) {
-                qs = "connectionData=" + window.escape(connection.data) + "&" + qs;
+                qs += "&connectionData=" + window.escape(connection.data);
+            }
+
+            if (!reconnecting) {
+                url = url + "/connect";
+            } else {
+                if (connection.messageId) {
+                    qs += "&messageId=" + connection.messageId;
+                }
+                if (connection.groups) {
+                    qs += "&groups=" + window.escape(JSON.stringify(connection.groups));
+                }
             }
             url += "?" + qs;
             return url;
@@ -249,25 +272,25 @@
                     if (textStatus === "abort") {
                         return;
                     }
-                    $(connection).trigger("onError", [errData]);
+                    $(connection).trigger("onError");
                 }
             });
         },
 
         processMessages: function (connection, data) {
-            var $connection;
+            var $connection = $(connection);
 
             if (data) {
                 if (data.Disconnect) {
-                    // Disconnected by the server, need to reconnect
-                    connection.stop()
-                        .start();
+                    // Disconnected by the server
+                    connection.stop();
+
+                    // Trigger the reconnect event
+                    $connection.trigger("onReconnect");
                     return;
                 }
 
                 if (data.Messages) {
-                    $connection = $(connection);
-
                     $.each(data.Messages, function () {
                         try {
                             $connection.trigger("onReceived", [this]);
@@ -389,6 +412,7 @@
             start: function (connection, onSuccess, onFailed) {
                 var that = this,
                     opened = false,
+                    reconnecting = !onSuccess,
                     url;
 
                 if (connection.eventSource) {
@@ -402,14 +426,16 @@
 
                 $(connection).trigger("onSending");
 
-                url = transportLogic.getUrl(connection, this.name);
+                url = transportLogic.getUrl(connection, this.name, reconnecting);
 
                 connection.eventSource = new window.EventSource(url);
 
                 connection.eventSource.addEventListener("open", function (e) {
                     if (opened === false) {
                         opened = true;
-                        onSuccess();
+                        if (onSuccess) {
+                            onSuccess();
+                        }
                     }
                 }, false);
 
@@ -426,15 +452,27 @@
 
                 connection.eventSource.addEventListener("error", function (e) {
                     if (!opened) {
-                        onFailed();
+                        if (onFailed) {
+                            onFailed();
+                        }
                     }
-                    if (e.eventPhase == EventSource.CLOSED) {
-                        // connection closed
-                        log("SignalR: EventSource closed");
-                        that.stop();
+
+                    log('SignalR: EventSource readyState: ' + connection.eventSource.readyState);
+
+                    if (e.eventPhase === EventSource.CLOSED) {
+                        // connection closed                   
+                        if (connection.eventSource.readyState === window.EventSource.CONNECTING) {
+                            log('[' + new Date().toTimeString() + '] SignalR: EventSource reconnecting');
+                            that.stop(connection);
+                            that.start(connection);
+                        }
+                        else {
+                            log('[' + new Date().toTimeString() + '] SignalR: EventSource closed');
+                            that.stop(connection);
+                        }
                     } else {
                         // connection error
-                        log("SignalR: EventSource error");
+                        log('[' + new Date().toTimeString() + '] SignalR: EventSource error');
                         $(instance).trigger("onError", [data]);
                     }
                 }, false);
@@ -486,9 +524,10 @@
             },
 
             reconnect: function (connection) {
+                var that = this;
                 window.setTimeout(function () {
                     var frame = connection.frame,
-                        src = frame.src.replace("/connect", "") + "&messageId=" + connection.messageId + "&groups=" + escape(connection.groups);
+                        src = transportLogic.getUrl(connection, that.name, true) + "&frameId=" + connection.frameId;
                     frame.src = src;
                 }, 2000);
             },
@@ -513,6 +552,7 @@
             started: function (connection) {
                 if (connection.onSuccess) {
                     connection.onSuccess();
+                    delete connection.onSuccess;
                 }
             }
         },
@@ -523,6 +563,7 @@
             start: function (connection, onSuccess, onFailed) {
                 /// <summary>Starts the long polling connection</summary>
                 /// <param name="connection" type="signalR">The SignalR connection to start</param>
+                var that = this;
                 if (connection.pollXhr) {
                     connection.stop();
                 }
@@ -535,16 +576,12 @@
 
                         var messageId = instance.messageId,
                             connect = (messageId === null),
-                            url = instance.url + (connect ? "/connect" : "") +
-                                "?transport=longPolling" +
-                                "&connectionId=" + escape(instance.id) +
-                                "&messageId=" + messageId +
-                                "&groups=" + escape((instance.groups || []).toString());
+                            url = transportLogic.getUrl(instance, that.name, !connect);
 
                         instance.pollXhr = $.ajax(url, {
                             global: false,
 
-                            type: "POST",
+                            type: "GET",
 
                             data: {
                                 connectionData: instance.data
