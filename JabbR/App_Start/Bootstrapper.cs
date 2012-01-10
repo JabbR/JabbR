@@ -27,7 +27,7 @@ namespace JabbR.App_Start
         // Background task info
         private static bool _sweeping;
         private static Timer _timer;
-        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(1);
+        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(5);
 
         private const string SqlClient = "System.Data.SqlClient";
 
@@ -150,7 +150,7 @@ namespace JabbR.App_Start
                 }
 
                 var elapsed = DateTime.UtcNow - user.LastActivity;
-                
+
                 if (!user.IsAfk && elapsed.TotalMinutes > 30)
                 {
                     // After 30 minutes of inactivity make the user afk
@@ -161,7 +161,7 @@ namespace JabbR.App_Start
                 {
                     user.Status = (int)UserStatus.Inactive;
                     inactiveUsers.Add(user);
-                }                
+                }
             }
 
             var roomGroups = from u in inactiveUsers
