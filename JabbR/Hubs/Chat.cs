@@ -208,7 +208,7 @@ namespace JabbR
 
             var recentMessages = (from m in _repository.GetMessagesByRoom(roomName)
                                   orderby m.When descending
-                                  select m).Take(100);
+                                  select m).Take(30);
 
             return new RoomViewModel
             {
