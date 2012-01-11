@@ -175,7 +175,7 @@ namespace JabbR.App_Start
                     user.IsAfk = true;
                 }
 
-                if (elapsed.TotalMinutes > 5)
+                if (elapsed.TotalMinutes > 15)
                 {
                     user.Status = (int)UserStatus.Inactive;
                     inactiveUsers.Add(user);
