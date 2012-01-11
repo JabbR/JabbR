@@ -65,6 +65,26 @@ namespace JabbR.App_Start
             _timer = new Timer(_ => Sweep(repositoryFactory), null, _sweepInterval, _sweepInterval);
 
             SetupErrorHandling();
+
+            ClearConnectedClients(repositoryFactory());
+        }
+
+        private static void ClearConnectedClients(IJabbrRepository repository)
+        {
+            try
+            {
+                foreach (var u in repository.Users)
+                {
+                    u.Status = (int)UserStatus.Offline;
+                }
+
+                repository.RemoveAllClients();
+                repository.CommitChanges();
+            }
+            catch (Exception ex)
+            {
+                Elmah.ErrorLog.GetDefault(null).Log(new Error(ex));
+            }
         }
 
         private static void DoMigrations()

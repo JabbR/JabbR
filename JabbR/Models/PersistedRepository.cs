@@ -77,7 +77,7 @@ namespace JabbR.Models
                             .Include(r => r.Users)
                             .FirstOrDefault(r => r.Name == roomName);
         }
-        
+
         public IQueryable<ChatRoom> GetAllowedRooms(ChatUser user)
         {
             // All public rooms and private rooms the user can see
@@ -134,6 +134,14 @@ namespace JabbR.Models
         public ChatClient GetClientById(string clientId)
         {
             return _db.Clients.Include(c => c.User).FirstOrDefault(c => c.Id == clientId);
-        }        
+        }
+
+        public void RemoveAllClients()
+        {
+            foreach (var c in _db.Clients)
+            {
+                _db.Clients.Remove(c);
+            }
+        }
     }
 }

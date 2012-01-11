@@ -27,6 +27,7 @@ namespace JabbR.Models
         void Remove(ChatClient client);
         void Remove(ChatRoom room);
         void Remove(ChatUser user);
-        void CommitChanges();        
+        void RemoveAllClients();
+        void CommitChanges();
     }
 }

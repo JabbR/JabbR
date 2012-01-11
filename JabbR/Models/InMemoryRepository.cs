@@ -125,5 +125,11 @@ namespace JabbR.Models
                     where m.When < message.When
                     select m).AsQueryable();
         }
+
+        public void RemoveAllClients()
+        {
+            // No need to do anything here since this is only called on App_Start
+            // if we're using the in memory repository all the data has been purged anyways
+        }
     }
 }
