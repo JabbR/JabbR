@@ -1,0 +1,26 @@
+﻿.bbc_wrapper .bbc_header
+{
+    background-color: #990000;
+    background-position: top center;
+    background-image: url("/Content/images/contentproviders/bbcnews-header.png");
+    background-repeat: no-repeat;
+    color: #ffffff;
+    font-family: "Arial Black";
+    letter-spacing: -0.1em;
+    font-weight: bold;
+    padding-left: 3px;
+    padding-top: 3px;
+}
+.bbc_wrapper .bbc_newsimage
+{
+    margin-right: 5px;
+    margin-bottom: 5px;
+    margin-top: 3px;
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+.bbc_wrapper h2
+{
+    margin-top: 3px;
+}
