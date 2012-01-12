@@ -3,7 +3,7 @@
 .bbc_wrapper {
     
 }
-.bbc_wrapper .header {
+.bbc_wrapper .bbc_header {
     background-color:#990000;
     background-position: top center; 
     background-image: url("/Content/images/contentproviders/bbcnews-header.png"); 
@@ -15,7 +15,7 @@
     padding-left:3px; 
     padding-top:3px;
 }
-.bbc_wrapper .newsimage {
+.bbc_wrapper .bbc_newsimage {
     margin-right:5px;
     margin-bottom:5px;
     margin-top: 3px;
