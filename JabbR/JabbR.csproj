@@ -110,6 +110,7 @@
     <Content Include="Content\images\close-icon-hover.png" />
     <Content Include="Content\images\close-icon.png" />
     <Content Include="Content\images\contentproviders\bbcnews-header.png" />
+    <Content Include="Content\images\contentproviders\bbcnews-masthead.png" />
     <Content Include="Content\images\flags.png" />
     <Content Include="Content\images\lockwhite.png" />
     <Content Include="Content\images\icons-18-black.png" />
