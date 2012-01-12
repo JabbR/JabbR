@@ -84,7 +84,7 @@ namespace JabbR
             // If the client and server are out of sync then tell the client to refresh
             if (OutOfSync)
             {
-                throw new InvalidOperationException("Chat was just updated, please refresh you browser");
+                throw new InvalidOperationException("Chat was just updated, please refresh your browser");
             }
 
             // Sanitize the content (strip and bad html out)
