@@ -252,6 +252,7 @@
     <Compile Include="ContentProviders\GoogleMapsContentProvider.cs" />
     <Compile Include="ContentProviders\JoinMeContentProvider.cs" />
     <Compile Include="ContentProviders\NerdDinnerContentProvider.cs" />
+    <Compile Include="ContentProviders\UserVoiceContentProvider.cs" />
     <Compile Include="ContentProviders\UStreamContentProvider.cs" />
     <Compile Include="ContentProviders\VimeoContentProvider.cs" />
     <Compile Include="ContentProviders\GoogleDocsFormProvider.cs" />
