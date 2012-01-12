@@ -30,16 +30,16 @@ namespace JabbR.ContentProviders
                 using (var sr = new StreamReader(responseStream))
                 {
                     var pageContext = HttpUtility.HtmlDecode(sr.ReadToEnd());
-                    info.Title = ExtractUsingRegEx(new Regex(@"<meta\s.*property=""og:title"".*content=""(.*)"".*/>"), pageContext);
-                    info.Description = ExtractUsingRegEx(new Regex(@"<meta\s.*name=""Description"".*content=""(.*)"".*/>"), pageContext);
-                    info.ImageURL = ExtractUsingRegEx(new Regex(@"<meta.*property=""og:image"".*content=""(.*)"".*/>"), pageContext);
+                    info.Title = ExtractUsingRegex(new Regex(@"<meta\s.*property=""og:title"".*content=""(.*)"".*/>"), pageContext);
+                    info.Description = ExtractUsingRegex(new Regex(@"<meta\s.*name=""Description"".*content=""(.*)"".*/>"), pageContext);
+                    info.ImageURL = ExtractUsingRegex(new Regex(@"<meta.*property=""og:image"".*content=""(.*)"".*/>"), pageContext);
                     info.PageURL = response.ResponseUri.AbsoluteUri;
                 }
             }
             return info;
         }
 
-        private string ExtractUsingRegEx(Regex regularExpression, string content)
+        private string ExtractUsingRegex(Regex regularExpression, string content)
         {
             var matches = regularExpression.Match(content)
                 .Groups
