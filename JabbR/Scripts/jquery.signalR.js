@@ -194,17 +194,17 @@
             /// <returns type="signalR" />
             var connection = this;
             $(connection).bind("onError", function (e, data) {
-                callback.call(connection);
+                callback.call(connection, data);
             });
             return connection;
         },
 
-        reconnect: function (callback) {
-            /// <summary>Adds a callback that will be invoked when the client reconnects after being disconnected</summary>
-            /// <param name="callback" type="Function">A callback function to execute when the connection is re-established</param>
+        disconnect: function (callback) {
+            /// <summary>Adds a callback that will be invoked when the client disconnects</summary>
+            /// <param name="callback" type="Function">A callback function to execute when the connection is broken</param>
             /// <returns type="signalR" />
             var connection = this;
-            $(connection).bind("onReconnect", function (e, data) {
+            $(connection).bind("onDisconnect", function (e, data) {
                 callback.call(connection);
             });
             return connection;
@@ -272,7 +272,7 @@
                     if (textStatus === "abort") {
                         return;
                     }
-                    $(connection).trigger("onError");
+                    $(connection).trigger("onError", [errData]);
                 }
             });
         },
@@ -285,8 +285,8 @@
                     // Disconnected by the server
                     connection.stop();
 
-                    // Trigger the reconnect event
-                    $connection.trigger("onReconnect");
+                    // Trigger the disconnect event
+                    $connection.trigger("onDisconnect");
                     return;
                 }
 
@@ -409,11 +409,14 @@
         serverSentEvents: {
             name: "serverSentEvents",
 
+            timeOut: 3000,
+
             start: function (connection, onSuccess, onFailed) {
                 var that = this,
                     opened = false,
                     reconnecting = !onSuccess,
-                    url;
+                    url,
+                    connectTimeOut;
 
                 if (connection.eventSource) {
                     connection.stop();
@@ -428,11 +431,37 @@
 
                 url = transportLogic.getUrl(connection, this.name, reconnecting);
 
-                connection.eventSource = new window.EventSource(url);
+                try {
+                    connection.eventSource = new window.EventSource(url);
+                }
+                catch (e) {
+                    // If the connection failed call the failed callback
+                    if (onFailed) {
+                        onFailed();
+                    }
+                    return;
+                }
+
+                // After connecting, if after the specified timeout there's no response stop the connection
+                // and raise on failed
+                connectTimeOut = window.setTimeout(function () {
+                    if (opened === false) {
+                        that.stop(connection);
+
+                        if (onFailed) {
+                            onFailed();
+                        }
+                    }
+                },
+                that.timeOut);
 
                 connection.eventSource.addEventListener("open", function (e) {
                     if (opened === false) {
                         opened = true;
+
+                        // Clear the connectTimeOut
+                        clearTimeout(connectTimeOut);
+
                         if (onSuccess) {
                             onSuccess();
                         }
@@ -441,13 +470,11 @@
 
                 connection.eventSource.addEventListener("message", function (e) {
                     // process messages
-                    //log("SignalR: EventSource message received - " + e.data);
                     if (e.data === "initialized") {
                         return;
                     }
                     var data = window.JSON.parse(e.data);
                     transportLogic.processMessages(connection, data);
-                    // TODO: persist the groups and connection data in a cookie
                 }, false);
 
                 connection.eventSource.addEventListener("error", function (e) {
@@ -459,7 +486,7 @@
 
                     log('SignalR: EventSource readyState: ' + connection.eventSource.readyState);
 
-                    if (e.eventPhase === EventSource.CLOSED) {
+                    if (e.eventPhase === window.EventSource.CLOSED) {
                         // connection closed                   
                         if (connection.eventSource.readyState === window.EventSource.CONNECTING) {
                             log('[' + new Date().toTimeString() + '] SignalR: EventSource reconnecting');
@@ -493,10 +520,13 @@
         foreverFrame: {
             name: "foreverFrame",
 
+            timeout: 3000,
+
             start: function (connection, onSuccess, onFailed) {
                 var that = this,
                     frameId = (transportLogic.foreverFrame.count += 1),
                     url,
+                    connectTimeOut,
                     frame = $("<iframe data-signalr-connection-id='" + connection.id + "' style='position:absolute;width:0;height:0;visibility:hidden;'></iframe>");
 
                 $(connection).trigger("onSending");
@@ -521,6 +551,19 @@
                 }
 
                 $("body").append(frame);
+
+                // After connecting, if after the specified timeout there's no response stop the connection
+                // and raise on failed
+                connectTimeOut = window.setTimeout(function () {
+                    if (connection.onSuccess) {
+                        that.stop(connection);
+
+                        if (onFailed) {
+                            onFailed();
+                        }
+                    }
+                },
+                that.timeOut);
             },
 
             reconnect: function (connection) {
