@@ -156,6 +156,7 @@ namespace JabbR
                 new { Name = "addowner", Description = "Type /addowner [user] [room] - To add an owner a user as an owner to the specified room. Only works if you're an owner of that room." },
                 new { Name = "removeowner", Description = "Type /removeowner [user] [room] - To remove an owner from the specified room. Only works if you're the creator of that room." },
                 new { Name = "lock", Description = "Type /lock [room] - To make a room private. Only works if you're the creator of that room." },
+                new { Name = "close", Description = "Type /close [room] - To close a room. Only works if you're an owner of that room." },
                 new { Name = "allow", Description = "Type /allow [user] [room] - To give a user permission to a private room. Only works if you're an owner of that room." },
                 new { Name = "unallow", Description = "Type /unallow [user] [room] - To revoke a user's permission to a private room. Only works if you're an owner of that room." },
                 new { Name = "invitecode", Description = "Type /invitecode - To show the current invite code" },

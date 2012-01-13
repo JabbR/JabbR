@@ -735,6 +735,38 @@ namespace JabbR.Services
             _repository.CommitChanges();
         }
 
+        public void CloseRoom(ChatUser user, ChatRoom targetRoom)
+        {
+            EnsureOwner(user, targetRoom);
+
+            if (!targetRoom.IsOpen)
+            {
+                throw new InvalidOperationException(String.Format("{0} is already closed.", targetRoom.Name));
+            }
+
+            // Make sure there's no one in the room.
+            if (targetRoom.Users != null && targetRoom.Users.Count > 0)
+            {
+                throw new InvalidOperationException(
+                    String.Format("{0} has {1} user{2} still in it. Unable to close a room while users are still in it.",
+                        targetRoom.Name, 
+                        targetRoom.Users.Count, 
+                        targetRoom.Users.Count == 1 ? string.Empty : "s"));
+            }
+
+            // Make the room closed.
+            targetRoom.IsOpen = false;
+
+            // Make all users in the current room allowed
+            foreach (var u in targetRoom.Users.Online())
+            {
+                u.AllowedRooms.Add(targetRoom);
+                targetRoom.AllowedUsers.Add(u);
+            }
+
+            _repository.CommitChanges();
+        }
+
         internal static void ValidateNote(string note)
         {
             if (!String.IsNullOrWhiteSpace(note) &&

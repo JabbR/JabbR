@@ -216,6 +216,12 @@ namespace JabbR.Commands
 
                 return true;
             }
+            else if (commandName.Equals("close", StringComparison.OrdinalIgnoreCase))
+            {
+                CloseLock(user, parts);
+
+                return true;
+            }
             else if (commandName.Equals("allow", StringComparison.OrdinalIgnoreCase))
             {
                 HandleAllow(user, parts);
@@ -410,6 +416,21 @@ namespace JabbR.Commands
             _chatService.LockRoom(user, room);
 
             _notificationService.LockRoom(user, room);
+        }
+
+        private void HandleClose(ChatUser user, string[] parts)
+        {
+            if (parts.Length < 2)
+            {
+                throw new InvalidOperationException("Which room do you want to close?");
+            }
+
+            string roomName = parts[1];
+            ChatRoom room = _repository.VerifyRoom(roomName, true);
+
+            _chatService.CloseRoom(user, room);
+
+            _notificationService.CloseRoom(user, room);
         }
 
         private void HandleWhere(string[] parts)
