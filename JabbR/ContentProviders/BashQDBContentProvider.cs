@@ -22,6 +22,11 @@ namespace JabbR.ContentProviders
         {
             var pageInfo = ExtractFromResponse(response);
 
+            if (pageInfo == null)
+            {
+                return null;
+            }
+
             return new ContentProviderResultModel
                        {
                            Content = String.Format(ContentFormat, pageInfo.PageURL, pageInfo.QuoteNumber, pageInfo.Quote),
