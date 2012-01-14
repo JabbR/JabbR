@@ -63,11 +63,6 @@ namespace JabbR.Models
 
         public static ChatRoom VerifyRoom(this IJabbrRepository repository, string roomName)
         {
-            return VerifyRoom(repository, roomName, true);
-        }
-
-        public static ChatRoom VerifyRoom(this IJabbrRepository repository, string roomName, bool? isOpen)
-        {
             if (String.IsNullOrWhiteSpace(roomName))
             {
                 throw new InvalidOperationException("Room name cannot be blank!");
@@ -75,13 +70,16 @@ namespace JabbR.Models
 
             roomName = ChatService.NormalizeRoomName(roomName);
 
-            var room = isOpen.HasValue
-                           ? repository.GetRoomByNameAndIsOpen(roomName, isOpen.Value)
-                           : repository.GetRoomByName(roomName);
+            var room = repository.GetRoomByName(roomName);
 
             if (room == null)
             {
                 throw new InvalidOperationException(String.Format("Unable to find room '{0}'", roomName));
+            }
+
+            if (room.Closed)
+            {
+                throw new InvalidOperationException(String.Format("The room '{0}' is closed", roomName));
             }
 
             return room;

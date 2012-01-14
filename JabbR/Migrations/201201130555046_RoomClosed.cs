@@ -6,12 +6,12 @@ namespace JabbR.Models.Migrations
     {
         public override void Up()
         {
-            AddColumn("ChatRooms", "IsOpen", c => c.Boolean(nullable: false, defaultValue:true));
+            AddColumn("ChatRooms", "Closed", c => c.Boolean(nullable: false, defaultValue:false));
         }
         
         public override void Down()
         {
-            DropColumn("ChatRooms", "IsOpen");
+            DropColumn("ChatRooms", "Closed");
         }
     }
 }

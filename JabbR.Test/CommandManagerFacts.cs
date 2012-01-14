@@ -522,7 +522,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
 
-                const String roomName = "test";
+                const string roomName = "test";
                 var room = new ChatRoom
                 {
                     Name = roomName,
@@ -554,7 +554,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
 
-                const String roomName = "test";
+                const string roomName = "test";
                 var room = new ChatRoom
                 {
                     Name = roomName,
@@ -1186,11 +1186,11 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
 
-                const String roomName = "test";
+                const string roomName = "test";
                 var room = new ChatRoom
                 {
                     Name = roomName,
-                    IsOpen = false
+                    Closed = true
                 };
                 repository.Add(room);
 
@@ -1292,7 +1292,7 @@ namespace JabbR.Test
             public void CanSetNoteWithTextSetsTheNoteProperty()
             {
                 // Arrange.
-                const String note = "this is a test note. Pew^Pew";
+                const string note = "this is a test note. Pew^Pew";
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
                 {
@@ -1377,7 +1377,7 @@ namespace JabbR.Test
             public void CanSetAfkWithTextSetsTheNoteProperty()
             {
                 // Arrange.
-                const String note = "I'll be back later!";
+                const string note = "I'll be back later!";
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
                 {
@@ -3015,7 +3015,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 // Act & Assert.
-                const String roomName = "ruroh";
+                const string roomName = "ruroh";
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/close " + roomName));
                 Assert.Equal("Unable to find room '" + roomName + "'", ex.Message);
             }
@@ -3038,7 +3038,7 @@ namespace JabbR.Test
                 repository.Add(roomOwner);
                 repository.Add(randomUser);
 
-                const String roomName = "test";
+                const string roomName = "test";
                 var room = new ChatRoom
                 {
                     Name = roomName
@@ -3076,7 +3076,7 @@ namespace JabbR.Test
                 };
                 repository.Add(roomOwner);
 
-                const String roomName = "test";
+                const string roomName = "test";
                 var room = new ChatRoom
                 {
                     Name = roomName
@@ -3109,7 +3109,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
 
-                const String roomName = "test";
+                const string roomName = "test";
                 var room = new ChatRoom
                 {
                     Name = roomName
@@ -3132,7 +3132,7 @@ namespace JabbR.Test
 
                 Assert.True(result);
                 notificationService.Verify(x => x.CloseRoom(room), Times.Once());
-                Assert.False(room.IsOpen);
+                Assert.True(room.Closed);
             }
         }
 
@@ -3323,7 +3323,7 @@ namespace JabbR.Test
             public void CanSetFlag()
             {
                 // Arrange.
-                const String isoCode = "au";
+                const string isoCode = "au";
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
                 {
@@ -3351,7 +3351,7 @@ namespace JabbR.Test
             public void CanSetFlagWithUppercaseIso()
             {
                 // Arrange.
-                const String isoCode = "AU";
+                const string isoCode = "AU";
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
                 {
@@ -3406,7 +3406,7 @@ namespace JabbR.Test
             public void IncorrectIsoCodeThrows()
             {
                 // Arrange.
-                const String isoCode = "xx";
+                const string isoCode = "xx";
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
                 {
@@ -3430,7 +3430,7 @@ namespace JabbR.Test
             public void TooLongIsoCodeThrows()
             {
                 // Arrange.
-                const String isoCode = "xxxxx";
+                const string isoCode = "xxxxx";
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
                 {

@@ -739,23 +739,24 @@ namespace JabbR.Services
         {
             EnsureOwner(user, targetRoom);
 
-            if (!targetRoom.IsOpen)
+            if (targetRoom.Closed)
             {
                 throw new InvalidOperationException(String.Format("{0} is already closed.", targetRoom.Name));
             }
 
             // Make sure there's no one in the room.
-            if (targetRoom.Users != null && targetRoom.Users.Count > 0)
+            var onlineUsers = targetRoom.Users == null ? 0 : targetRoom.Users.Online().Count();
+            if (onlineUsers > 0)
             {
                 throw new InvalidOperationException(
                     String.Format("Room '{0}' has {1} user{2} still in it. Unable to close a room while users are still in it",
-                        targetRoom.Name, 
-                        targetRoom.Users.Count, 
-                        targetRoom.Users.Count == 1 ? string.Empty : "s"));
+                        targetRoom.Name,
+                        onlineUsers,
+                        onlineUsers == 1 ? String.Empty : "s"));
             }
 
             // Make the room closed.
-            targetRoom.IsOpen = false;
+            targetRoom.Closed = true;
 
             // Make all users in the current room allowed
             foreach (var u in targetRoom.Users.Online())

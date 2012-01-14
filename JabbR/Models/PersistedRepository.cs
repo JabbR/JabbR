@@ -78,22 +78,13 @@ namespace JabbR.Models
                             .FirstOrDefault(r => r.Name == roomName);
         }
 
-        public ChatRoom GetRoomByNameAndIsOpen(string roomName, bool isOpen)
-        {
-            return _db.Rooms.Include(r => r.Owners)
-                            .Include(r => r.Users)
-                            .FirstOrDefault(r => 
-                                r.Name == roomName &&
-                                r.IsOpen == isOpen);
-        }
-
         public IQueryable<ChatRoom> GetAllowedRooms(ChatUser user)
         {
             // All *open* public and private rooms the user can see.
             return _db.Rooms
                 .Where(r =>
-                       (!r.Private && r.IsOpen) ||
-                       (r.Private && r.IsOpen && r.AllowedUsers.Any(u => u.Key == user.Key)));
+                       (!r.Private && !r.Closed) ||
+                       (r.Private && !r.Closed && r.AllowedUsers.Any(u => u.Key == user.Key)));
         }
 
         public IQueryable<ChatMessage> GetMessagesByRoom(string roomName)

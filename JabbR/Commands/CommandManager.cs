@@ -426,7 +426,7 @@ namespace JabbR.Commands
             }
 
             string roomName = parts[1];
-            ChatRoom room = _repository.VerifyRoom(roomName, true);
+            ChatRoom room = _repository.VerifyRoom(roomName);
 
             _chatService.CloseRoom(user, room);
 
@@ -572,7 +572,7 @@ namespace JabbR.Commands
             {
                 throw new InvalidOperationException(String.Format("The room '{0}' already exists{1}",
                     roomName,
-                    !room.IsOpen ? " but it's closed" : String.Empty));
+                    room.Closed ? " but it's closed" : String.Empty));
             }
 
             // Create the room, then join it
