@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using Xunit;
@@ -47,7 +48,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void HashtagRegexMatchesHashtagInSubstring() 
+            public void HashtagRegexMatchesHashtagInSubstring()
             {
                 Regex hashtagRegex = HashtagRegex();
 
@@ -98,6 +99,51 @@ namespace JabbR.Test
                 string result = transform.Parse("#thisdoesnotexist");
 
                 Assert.Equal("#thisdoesnotexist", result);
+            }
+        }
+
+        public class ConvertUrlsToLinksFacts
+        {
+            [Fact]
+            public void UrlWithoutHttpIsTransformed()
+            {
+                //arrange
+                var message = "message www.jabbr.net continues on";
+                HashSet<string> extractedUrls;
+
+                //act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                //assert
+                Assert.Equal("message <a rel=\"nofollow external\" target=\"_blank\" href=\"http://www.jabbr.net\" title=\"www.jabbr.net\">www.jabbr.net</a> continues on", result);
+            }
+
+            [Fact]
+            public void UrlWithHttpIsTransformed()
+            {
+                //arrange
+                var message = "message http://www.jabbr.net continues on";
+                HashSet<string> extractedUrls;
+
+                //act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                //assert
+                Assert.Equal("message <a rel=\"nofollow external\" target=\"_blank\" href=\"http://www.jabbr.net\" title=\"http://www.jabbr.net\">http://www.jabbr.net</a> continues on", result);
+            }
+
+            [Fact]
+            public void UrlWithHttpsIsTransformed()
+            {
+                //arrange
+                var message = "message https://www.jabbr.net continues on";
+                HashSet<string> extractedUrls;
+
+                //act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                //assert
+                Assert.Equal("message <a rel=\"nofollow external\" target=\"_blank\" href=\"https://www.jabbr.net\" title=\"https://www.jabbr.net\">https://www.jabbr.net</a> continues on", result);
             }
         }
     }
