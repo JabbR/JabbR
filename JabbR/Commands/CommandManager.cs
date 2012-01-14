@@ -218,7 +218,7 @@ namespace JabbR.Commands
             }
             else if (commandName.Equals("close", StringComparison.OrdinalIgnoreCase))
             {
-                CloseLock(user, parts);
+                HandleClose(user, parts);
 
                 return true;
             }
@@ -430,7 +430,7 @@ namespace JabbR.Commands
 
             _chatService.CloseRoom(user, room);
 
-            _notificationService.CloseRoom(user, room);
+            _notificationService.CloseRoom(room);
         }
 
         private void HandleWhere(string[] parts)
@@ -570,7 +570,9 @@ namespace JabbR.Commands
 
             if (room != null)
             {
-                throw new InvalidOperationException(String.Format("The room '{0}' already exists", roomName));
+                throw new InvalidOperationException(String.Format("The room '{0}' already exists{1}",
+                    roomName,
+                    !room.IsOpen ? " but it's closed" : String.Empty));
             }
 
             // Create the room, then join it

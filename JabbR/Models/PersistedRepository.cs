@@ -89,8 +89,11 @@ namespace JabbR.Models
 
         public IQueryable<ChatRoom> GetAllowedRooms(ChatUser user)
         {
-            // All public rooms and private rooms the user can see
-            return _db.Rooms.Where(r => !r.Private || r.Private && r.AllowedUsers.Any(u => u.Key == user.Key));
+            // All *open* public and private rooms the user can see.
+            return _db.Rooms
+                .Where(r =>
+                       (!r.Private && r.IsOpen) ||
+                       (r.Private && r.IsOpen && r.AllowedUsers.Any(u => u.Key == user.Key)));
         }
 
         public IQueryable<ChatMessage> GetMessagesByRoom(string roomName)

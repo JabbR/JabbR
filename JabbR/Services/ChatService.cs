@@ -632,7 +632,7 @@ namespace JabbR.Services
         {
             if (!room.Owners.Contains(user))
             {
-                throw new InvalidOperationException("You are not an owner of " + room.Name);
+                throw new InvalidOperationException("You are not an owner of room '" + room.Name + "'");
             }
         }
 
@@ -748,7 +748,7 @@ namespace JabbR.Services
             if (targetRoom.Users != null && targetRoom.Users.Count > 0)
             {
                 throw new InvalidOperationException(
-                    String.Format("{0} has {1} user{2} still in it. Unable to close a room while users are still in it.",
+                    String.Format("Room '{0}' has {1} user{2} still in it. Unable to close a room while users are still in it",
                         targetRoom.Name, 
                         targetRoom.Users.Count, 
                         targetRoom.Users.Count == 1 ? string.Empty : "s"));

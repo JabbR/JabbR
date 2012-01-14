@@ -166,6 +166,7 @@ namespace JabbR
                 new { Name = "flag", Description = "Type /flag [Iso 3366-2 Code] - To show a small flag which represents your nationality. Eg. /flag US for a USA flag. ISO Reference Chart: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 (Apologies to people with dual citizenship). "}
             };
         }
+
         public IEnumerable<RoomViewModel> GetRooms()
         {
             string id = Caller.id;
@@ -626,6 +627,12 @@ namespace JabbR
 
             // Notify people of the change
             OnRoomChanged(room);
+        }
+
+        void INotificationService.CloseRoom(ChatRoom room)
+        {
+            // Tell the caller the room was successfully closed.
+            Caller.roomClosed(room.Name);
         }
 
         void INotificationService.LogOut(ChatUser user, string clientId)
