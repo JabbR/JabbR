@@ -42,6 +42,32 @@ namespace JabbR.Infrastructure
             return message;
         }
 
+        public static string TransformAndExtractUrls(string message, out HashSet<string> extractedUrls)
+        {
+            const string urlPattern = @"((https?|ftp)://|www\.)[\w]+(.[\w]+)([\w\-\.\[\],@?^=%&amp;:/~\+#!]*[\w\-\@?^=%&amp;/~\+#\[\]])";
+
+            var urls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            message = Regex.Replace(message, urlPattern, m =>
+            {
+                string httpPortion = String.Empty;
+                if (!m.Value.Contains("://"))
+                {
+                    httpPortion = "http://";
+                }
+
+                string url = httpPortion + m.Value;
+
+                urls.Add(HttpUtility.HtmlDecode(url));
+
+                return String.Format(CultureInfo.InvariantCulture,
+                                     "<a rel=\"nofollow external\" target=\"_blank\" href=\"{0}\" title=\"{1}\">{1}</a>",
+                                     url, m.Value);
+            });
+
+            extractedUrls = urls;
+            return message;
+        }
+
         private string ConvertHashtagsToRoomLinks(string message)
         {
             message = Regex.Replace(message, HashTagPattern, m =>
