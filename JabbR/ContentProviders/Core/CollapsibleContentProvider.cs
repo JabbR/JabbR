@@ -15,7 +15,7 @@ namespace JabbR.ContentProviders.Core
             if (IsValidContent(response))
             {
                 var result = GetCollapsibleContent(response);
-                if (IsCollapsible)
+                if (IsCollapsible && result != null)
                 {
                     result.Content = String.Format(CultureInfo.InvariantCulture,
                                                       ContentFormat,
