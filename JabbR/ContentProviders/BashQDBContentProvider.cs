@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using System.Text.RegularExpressions;
 using HtmlAgilityPack;
 using JabbR.ContentProviders.Core;
 
@@ -9,14 +8,15 @@ namespace JabbR.ContentProviders
 {
     public class BashQDBContentProvider : CollapsibleContentProvider
     {
-        private static readonly Regex QueryRegex = new Regex(@"\d+");
         private static readonly string ContentFormat = @"
 <div class=""bashqdb_wrapper"">
     <div class=""bashqdb_header"">
-        <a href=""{0}"" target=""_blank"">#{1}</a>
+        <a href=""{0}"" target=""_blank"">{1}</a>
     </div>
     <div class=""bashqdb_content"">{2}</div>
 </div>";
+
+        private static readonly string[] WhiteListHtml = new[] {"br", "#text"};
 
         protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
@@ -42,18 +42,38 @@ namespace JabbR.ContentProviders
                 var quote = htmlDocument.DocumentNode
                                         .SelectSingleNode("//body")
                                         .SelectNodes("//p").Where(a => a.Attributes.Any(x => x.Name == "class" && x.Value == "qt"))
-                                        .Single().InnerHtml;
+                                        .SingleOrDefault();
 
                 var title = htmlDocument.DocumentNode
-                                        .SelectSingleNode("//title")
-                                        .InnerText;
+                                        .SelectSingleNode("//title");
 
-                info.Quote = quote;
+                //Quote might not be found, bash.org doesn't have a 404 page
+                if (quote == null || title == null)
+                {
+                    return null;
+                }
+
+                //Strip out any HTML that isn't defined in the WhiteList
+                SanitizeHtml(quote);
+
+                info.Quote = quote.InnerHtml;
                 info.PageURL = response.ResponseUri.AbsoluteUri;
-                info.QuoteNumber = title;
+                info.QuoteNumber = title.InnerHtml;
             }
 
             return info;
+        }
+
+        private void SanitizeHtml(HtmlNode quote)
+        {
+            for (int i = quote.ChildNodes.Count - 1; i >= 0; i--)
+            {
+                var nodeName = quote.ChildNodes[i].Name;
+                if (!WhiteListHtml.Contains(nodeName))
+                {
+                    quote.ChildNodes[i].Remove();
+                }
+            }
         }
 
         private class PageInfo
