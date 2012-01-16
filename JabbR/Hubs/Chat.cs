@@ -629,8 +629,21 @@ namespace JabbR
             OnRoomChanged(room);
         }
 
-        void INotificationService.CloseRoom(ChatRoom room)
+        void INotificationService.CloseRoom(IEnumerable<ChatUser> users, ChatRoom room)
         {
+            // Kick all people from the room.
+            foreach (var user in users)
+            {
+                foreach (var client in user.ConnectedClients)
+                {
+                    // Kick the user from this room
+                    Clients[client.Id].kick(room.Name);
+
+                    // Remove the user from this the room group so he doesn't get the leave message
+                    GroupManager.RemoveFromGroup(client.Id, room.Name).Wait();
+                }
+            }
+
             // Tell the caller the room was successfully closed.
             Caller.roomClosed(room.Name);
         }
