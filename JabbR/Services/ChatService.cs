@@ -758,13 +758,6 @@ namespace JabbR.Services
             // Make the room closed.
             targetRoom.Closed = true;
 
-            // Make all users in the current room allowed
-            foreach (var u in targetRoom.Users.Online())
-            {
-                u.AllowedRooms.Add(targetRoom);
-                targetRoom.AllowedUsers.Add(u);
-            }
-
             _repository.CommitChanges();
         }
 
