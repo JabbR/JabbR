@@ -745,7 +745,7 @@ namespace JabbR.Services
             }
 
             // Make sure the (owner) user is not in the room.
-            if (targetRoom.Users.Any(x => x.Id == user.Id))
+            if (targetRoom.Users.Contains(user))
             {
                 throw new InvalidOperationException("You are trying to close a room which you are still in. Please leave the room before closing it.");
             }
