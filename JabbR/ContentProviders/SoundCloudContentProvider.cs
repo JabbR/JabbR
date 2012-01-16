@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Linq;
 using System.Text.RegularExpressions;
 using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
@@ -23,8 +24,8 @@ namespace JabbR.ContentProviders
                     return null;
                 }
 
-                var trackID = _trackIDExtractRegex.SingleOrDefault(pageContent);
-                var titleContent = _titleRegex.SingleOrDefault(pageContent);
+                var trackID = _trackIDExtractRegex.FindMatches(pageContent).SingleOrDefault();
+                var titleContent = _titleRegex.FindMatches(pageContent).SingleOrDefault();
 
                 if (trackID == null || titleContent == null)
                 {
