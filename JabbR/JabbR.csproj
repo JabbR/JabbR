@@ -48,6 +48,9 @@
     <Reference Include="EntityFramework.Migrations">
       <HintPath>..\packages\EntityFramework.Migrations.0.7.0.1\lib\net40\EntityFramework.Migrations.dll</HintPath>
     </Reference>
+    <Reference Include="HtmlAgilityPack">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.3\lib\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlSanitizationLibrary, Version=4.0.0.0, Culture=neutral, PublicKeyToken=d127efab8a9c114f, processorArchitecture=MSIL">
       <HintPath>..\packages\AntiXSS.4.0.1\lib\net35\HtmlSanitizationLibrary.dll</HintPath>
     </Reference>
@@ -245,6 +248,7 @@
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="ContentProviders\BBCNewsContentProvider.cs" />
+    <Compile Include="ContentProviders\BashQDBContentProvider.cs" />
     <Compile Include="ContentProviders\GitHubIssuesContentProvider.cs" />
     <Compile Include="ContentProviders\Core\CollapsibleContentProvider.cs" />
     <Compile Include="ContentProviders\Core\ContentProviderResultModel.cs" />
