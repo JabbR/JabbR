@@ -33,7 +33,6 @@ namespace JabbR.Models
             Messages = new HashSet<ChatMessage>();
             Users = new HashSet<ChatUser>();
             AllowedUsers = new HashSet<ChatUser>();
-            Closed = false;
         }
     }
 }
