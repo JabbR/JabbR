@@ -460,15 +460,12 @@ namespace JabbR.Commands
 
             ChatUser user = _repository.GetUserByName(name);
 
-            if (user != null)
-            {
-                _notificationService.ShowUserInfo(user);
-                return;
-            }
-            else
+            if (user == null)
             {
                 throw new InvalidOperationException(String.Format("We didn't find anyone with the username {0}", name));
             }
+
+            _notificationService.ShowUserInfo(user);
         }
 
         private void HandleList(string[] parts)

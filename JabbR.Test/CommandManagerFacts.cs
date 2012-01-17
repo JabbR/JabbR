@@ -3123,6 +3123,10 @@ namespace JabbR.Test
 
                 repository.Add(room);
 
+                // Make a copy of all the users which should be removed from the room, so we can 
+                // verify that these users we passed into the closeRoom method.
+                var users = room.Users.ToList();
+
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
@@ -3135,7 +3139,7 @@ namespace JabbR.Test
                 bool result = commandManager.TryHandleCommand("/close " + roomName);
 
                 Assert.True(result);
-                notificationService.Verify(x => x.CloseRoom(room.Users,  room), Times.Once());
+                notificationService.Verify(x => x.CloseRoom(users, room), Times.Once());
                 Assert.True(room.Closed);
             }
         }
