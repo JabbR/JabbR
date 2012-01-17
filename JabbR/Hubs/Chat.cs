@@ -58,8 +58,7 @@ namespace JabbR
             }
 
             // Update some user values
-            _service.AddClient(user, Context.ConnectionId);
-            _service.UpdateActivity(user);
+            _service.UpdateActivity(user, Context.ConnectionId);
             _repository.CommitChanges();
 
             OnUserInitialize(clientState, user);
@@ -307,7 +306,7 @@ namespace JabbR
 
         private void UpdateActivity(ChatUser user, ChatRoom room)
         {
-            _service.UpdateActivity(user);
+            _service.UpdateActivity(user, Context.ConnectionId);
 
             _repository.CommitChanges();
 

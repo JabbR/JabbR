@@ -40,8 +40,7 @@ namespace JabbR.Test
                 //Assert.Equal("1", user.ConnectedClients.First().Id);
 
                 chat.MockedConnection.Verify(m => m.Broadcast("Chat." + clientId, It.IsAny<object>()), Times.Once());
-                chat.MockedChatService.Verify(c => c.AddClient(user, clientId), Times.Once());
-                chat.MockedChatService.Verify(c => c.UpdateActivity(user), Times.Once());
+                chat.MockedChatService.Verify(c => c.UpdateActivity(user, clientId), Times.Once());
             }
 
             [Fact]
@@ -71,7 +70,7 @@ namespace JabbR.Test
 
                 var cookies = new NameValueCollection();
                 cookies["jabbr.state"] = JsonConvert.SerializeObject(new ClientState { UserId = user.Id });
-                
+
 
                 TestableChat chat = GetTestableChat(clientId, clientState, user, cookies);
 
@@ -82,8 +81,7 @@ namespace JabbR.Test
                 Assert.True(result);
 
                 chat.MockedConnection.Verify(m => m.Broadcast("Chat." + clientId, It.IsAny<object>()), Times.Once());
-                chat.MockedChatService.Verify(c => c.AddClient(user, clientId), Times.Once());
-                chat.MockedChatService.Verify(c => c.UpdateActivity(user), Times.Once());
+                chat.MockedChatService.Verify(c => c.UpdateActivity(user, clientId), Times.Once());
             }
         }
 

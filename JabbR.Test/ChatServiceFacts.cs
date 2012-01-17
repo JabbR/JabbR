@@ -434,9 +434,13 @@ namespace JabbR.Test
                 repository.Add(user);
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
-                service.UpdateActivity(user);
+                service.UpdateActivity(user, "client1");
+                var clients = user.ConnectedClients.ToList();
 
                 Assert.Equal((int)UserStatus.Active, user.Status);
+                Assert.Equal(1, clients.Count);
+                Assert.Equal("client1", clients[0].Id);
+                Assert.Same(user, clients[0].User);
                 Assert.Null(user.AfkNote);
                 Assert.False(user.IsAfk);
             }

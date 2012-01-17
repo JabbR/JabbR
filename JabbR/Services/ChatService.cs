@@ -423,11 +423,16 @@ namespace JabbR.Services
             room.InviteCode = inviteCode;
             _repository.CommitChanges();
         }
-        
-        public void UpdateActivity(ChatUser user)
+
+        public void UpdateActivity(ChatUser user, string clientId)
         {
             user.Status = (int)UserStatus.Active;
             user.LastActivity = DateTime.UtcNow;
+
+            if (!user.ConnectedClients.Any(c => c.Id == clientId))
+            {
+                AddClient(user, clientId);
+            }
 
             // Remove any Afk notes.
             if (user.IsAfk)
