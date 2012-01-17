@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Linq;
+using System.Net;
 using System.Text.RegularExpressions;
 using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
@@ -10,7 +10,6 @@ namespace JabbR.ContentProviders
 {
     public class SoundCloudContentProvider : CollapsibleContentProvider
     {
-
         private static readonly Regex _titleRegex = new Regex("<meta.*content=\"(.*)\".*property=\"og:title\".*/>");
         private static readonly Regex _trackIDExtractRegex = new Regex("<meta.*content=\"http://player\\.soundcloud\\.com/player\\.swf.*tracks%2F(.*?)&amp;.*property=\"og:video\"\\s*/>");
 
@@ -32,7 +31,8 @@ namespace JabbR.ContentProviders
                     return null;
                 }
 
-                return new ContentProviderResultModel() {
+                return new ContentProviderResultModel()
+                {
                     Title = titleContent,
                     Content = String.Format(@"<iframe width=""100%"" height=""166"" scrolling=""no"" frameborder=""no"" src=""http://w.soundcloud.com/player/?url=http%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F{0}&show_artwork=true&amp;autoplay=false&ampshow_comments=false&ampcolor=00103F""></iframe>", trackID)
                 };
@@ -43,6 +43,5 @@ namespace JabbR.ContentProviders
         {
             return response.ResponseUri.Host.IndexOf("soundcloud.com", StringComparison.OrdinalIgnoreCase) >= 0;
         }
-
     }
 }
