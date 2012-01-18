@@ -313,6 +313,10 @@
     <Compile Include="Migrations\201112271245435_UserFlag.Designer.cs">
       <DependentUpon>201112271245435_UserFlag.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201201130555046_RoomClosed.cs" />
+    <Compile Include="Migrations\201201130555046_RoomClosed.Designer.cs">
+      <DependentUpon>201201130555046_RoomClosed.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ChatClient.cs" />
     <Compile Include="Models\ClientState.cs" />
     <Compile Include="Services\ChatService.cs" />

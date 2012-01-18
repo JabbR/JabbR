@@ -637,7 +637,7 @@ namespace JabbR.Services
         {
             if (!room.Owners.Contains(user))
             {
-                throw new InvalidOperationException("You are not an owner of " + room.Name);
+                throw new InvalidOperationException("You are not an owner of room '" + room.Name + "'");
             }
         }
 
@@ -736,6 +736,33 @@ namespace JabbR.Services
                 u.AllowedRooms.Add(targetRoom);
                 targetRoom.AllowedUsers.Add(u);
             }
+
+            _repository.CommitChanges();
+        }
+
+        public void CloseRoom(ChatUser user, ChatRoom targetRoom)
+        {
+            EnsureOwner(user, targetRoom);
+
+            if (targetRoom.Closed)
+            {
+                throw new InvalidOperationException(String.Format("{0} is already closed.", targetRoom.Name));
+            }
+
+            // Make sure the (owner) user is not in the room.
+            if (targetRoom.Users.Contains(user))
+            {
+                throw new InvalidOperationException("You are trying to close a room which you are still in. Please leave the room before closing it.");
+            }
+
+            // Kick all existing users in the room.
+            foreach (var targetUser in targetRoom.Users.ToList())
+            {
+                LeaveRoom(targetUser, targetRoom);
+            }
+
+            // Make the room closed.
+            targetRoom.Closed = true;
 
             _repository.CommitChanges();
         }

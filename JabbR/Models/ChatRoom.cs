@@ -11,7 +11,8 @@ namespace JabbR.Models
 
         public DateTime? LastNudged { get; set; }
         public string Name { get; set; }
-        
+        public bool Closed { get; set; }
+
         // Private rooms
         public bool Private { get; set; }
         public virtual ICollection<ChatUser> AllowedUsers { get; set; }

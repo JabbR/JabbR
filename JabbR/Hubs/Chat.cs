@@ -155,6 +155,7 @@ namespace JabbR
                 new { Name = "addowner", Description = "Type /addowner [user] [room] - To add an owner a user as an owner to the specified room. Only works if you're an owner of that room." },
                 new { Name = "removeowner", Description = "Type /removeowner [user] [room] - To remove an owner from the specified room. Only works if you're the creator of that room." },
                 new { Name = "lock", Description = "Type /lock [room] - To make a room private. Only works if you're the creator of that room." },
+                new { Name = "close", Description = "Type /close [room] - To close a room. Only works if you're an owner of that room." },
                 new { Name = "allow", Description = "Type /allow [user] [room] - To give a user permission to a private room. Only works if you're an owner of that room." },
                 new { Name = "unallow", Description = "Type /unallow [user] [room] - To revoke a user's permission to a private room. Only works if you're an owner of that room." },
                 new { Name = "invitecode", Description = "Type /invitecode - To show the current invite code" },
@@ -164,6 +165,7 @@ namespace JabbR
                 new { Name = "flag", Description = "Type /flag [Iso 3366-2 Code] - To show a small flag which represents your nationality. Eg. /flag US for a USA flag. ISO Reference Chart: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 (Apologies to people with dual citizenship). "}
             };
         }
+
         public IEnumerable<RoomViewModel> GetRooms()
         {
             string id = Caller.id;
@@ -626,6 +628,25 @@ namespace JabbR
             OnRoomChanged(room);
         }
 
+        void INotificationService.CloseRoom(IEnumerable<ChatUser> users, ChatRoom room)
+        {
+            // Kick all people from the room.
+            foreach (var user in users)
+            {
+                foreach (var client in user.ConnectedClients)
+                {
+                    // Kick the user from this room
+                    Clients[client.Id].kick(room.Name);
+
+                    // Remove the user from this the room group so he doesn't get the leave message
+                    GroupManager.RemoveFromGroup(client.Id, room.Name).Wait();
+                }
+            }
+
+            // Tell the caller the room was successfully closed.
+            Caller.roomClosed(room.Name);
+        }
+
         void INotificationService.LogOut(ChatUser user, string clientId)
         {
             DisconnectClient(clientId);
@@ -642,7 +663,10 @@ namespace JabbR
             Caller.showUserInfo(new
             {
                 Name = user.Name,
-                OwnedRooms = user.OwnedRooms.Allowed(userId).Select(r => r.Name),
+                OwnedRooms = user.OwnedRooms
+                    .Allowed(userId)
+                    .Where(r => !r.Closed)
+                    .Select(r => r.Name),
                 Status = ((UserStatus)user.Status).ToString(),
                 LastActivity = user.LastActivity,
                 Rooms = user.Rooms.Allowed(userId).Select(r => r.Name)

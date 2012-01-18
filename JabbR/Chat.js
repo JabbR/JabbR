@@ -244,6 +244,11 @@
         ui.addMessage(room + ' is now locked.', 'notification', this.activeRoom);
     };
 
+    chat.roomClosed = function (room) {
+        populateLobbyRooms();
+        ui.addMessage('Room \'' + room + '\' is now closed', 'notification', this.activeRoom);
+    };
+
     chat.addOwner = function (user, room) {
         ui.setRoomOwner(user.Name, room);
     };

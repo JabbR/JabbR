@@ -216,6 +216,12 @@ namespace JabbR.Commands
 
                 return true;
             }
+            else if (commandName.Equals("close", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleClose(user, parts);
+
+                return true;
+            }
             else if (commandName.Equals("allow", StringComparison.OrdinalIgnoreCase))
             {
                 HandleAllow(user, parts);
@@ -412,6 +418,25 @@ namespace JabbR.Commands
             _notificationService.LockRoom(user, room);
         }
 
+        private void HandleClose(ChatUser user, string[] parts)
+        {
+            if (parts.Length < 2)
+            {
+                throw new InvalidOperationException("Which room do you want to close?");
+            }
+
+            string roomName = parts[1];
+            ChatRoom room = _repository.VerifyRoom(roomName);
+
+            // Before I close the room, I need to grab a copy of -all- the users in that room.
+            // Otherwise, I can't send any notifications to the room users, because they
+            // have already been kicked.
+            var users = room.Users.ToList();
+            _chatService.CloseRoom(user, room);
+
+            _notificationService.CloseRoom(users, room);
+        }
+
         private void HandleWhere(string[] parts)
         {
             if (parts.Length == 1)
@@ -435,15 +460,12 @@ namespace JabbR.Commands
 
             ChatUser user = _repository.GetUserByName(name);
 
-            if (user != null)
-            {
-                _notificationService.ShowUserInfo(user);
-                return;
-            }
-            else
+            if (user == null)
             {
                 throw new InvalidOperationException(String.Format("We didn't find anyone with the username {0}", name));
             }
+
+            _notificationService.ShowUserInfo(user);
         }
 
         private void HandleList(string[] parts)
@@ -552,7 +574,9 @@ namespace JabbR.Commands
 
             if (room != null)
             {
-                throw new InvalidOperationException(String.Format("The room '{0}' already exists", roomName));
+                throw new InvalidOperationException(String.Format("The room '{0}' already exists{1}",
+                    roomName,
+                    room.Closed ? " but it's closed" : String.Empty));
             }
 
             // Create the room, then join it
