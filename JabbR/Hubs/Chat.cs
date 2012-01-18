@@ -666,7 +666,7 @@ namespace JabbR
                 Name = user.Name,
                 OwnedRooms = user.OwnedRooms
                     .Allowed(userId)
-                    .Where(x => !x.Closed)
+                    .Where(r => !r.Closed)
                     .Select(r => r.Name),
                 Status = ((UserStatus)user.Status).ToString(),
                 LastActivity = user.LastActivity,
