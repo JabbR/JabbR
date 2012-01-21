@@ -15,6 +15,9 @@
             links.remove();
             $('head').append(links);
 
+            // Remove the target off any existing anchor tags, then re-add target as _blank so it opens new tab (or window)
+            $('a', collapsible).removeAttr('target').attr('target', '_blank');
+
             elementToAppendTo.append(collapsible);
 
             if (nearEnd) {

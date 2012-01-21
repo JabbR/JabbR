@@ -41,7 +41,6 @@ namespace JabbR.ContentProviders
 <div id='{0}'></div>
 <script type='text/javascript'>
     captureDocumentWrite('http://pastie.org/{{0}}.js', 'http://pastie.org/{{0}}', $('#{0}'));
-</script>
-";
+</script>";
     }
 }
