@@ -109,7 +109,7 @@
                                 <a href="#" class='github-issue-user-${user.login}' target="_blank">${user.login}</a> opened this issue
                                 <time class="js-relative-date" datetime="${created_at}">${created_at}</time>
                             </p>
-                            <a href="${html_url}"><h2 class="content-title">${title}</h2></a>
+                            <a href="${html_url}" target="_blank"><h2 class="content-title">${title}</h2></a>
                             <div class="infobar clearfix">
                                 <p class="milestone js-milestone-infobar-item-wrapper">No milestone</p>
                                 {{if assignee}}
@@ -118,7 +118,7 @@
                                             <img height="20" width="20" src="${assignee.avatar_url}">
                                             <span class="overlay size-20"></span>
                                         </span>
-                                        <a href="#" class="github-issue-user-${assignee.login}">${assignee.login}</a> is assigned
+                                        <a href="#" class="github-issue-user-${assignee.login}" target="_blank">${assignee.login}</a> is assigned
                                     </p>
                                 {{/if}}
                             </div>
