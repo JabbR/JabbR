@@ -68,8 +68,8 @@
     <Reference Include="SignalR">
       <HintPath>..\lib\SignalR.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR.AspNet">
-      <HintPath>..\lib\SignalR.AspNet.dll</HintPath>
+    <Reference Include="SignalR.Hosting.AspNet">
+      <HintPath>..\lib\SignalR.Hosting.AspNet.dll</HintPath>
     </Reference>
     <Reference Include="SignalR.Ninject">
       <HintPath>..\packages\SignalR.Ninject.0.3.3\lib\net40\SignalR.Ninject.dll</HintPath>
