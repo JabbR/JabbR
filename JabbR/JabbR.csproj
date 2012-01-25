@@ -249,6 +249,7 @@
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="ContentProviders\BBCNewsContentProvider.cs" />
     <Compile Include="ContentProviders\BashQDBContentProvider.cs" />
+    <Compile Include="ContentProviders\AudioContentProvider.cs" />
     <Compile Include="ContentProviders\GitHubIssuesContentProvider.cs" />
     <Compile Include="ContentProviders\Core\CollapsibleContentProvider.cs" />
     <Compile Include="ContentProviders\Core\ContentProviderResultModel.cs" />
