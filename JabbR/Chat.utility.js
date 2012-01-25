@@ -55,9 +55,9 @@
     };
 
     // returns the date portion only (strips time)
-    Date.prototype.toDate = function () {
+    Date.prototype.toDate = function() {
         return new Date(this.getFullYear(), this.getMonth(), this.getDate());
-    }
+    };
 
     // returns difference (this - d) in days
     Date.prototype.diffDays = function (d) {
