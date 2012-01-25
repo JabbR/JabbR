@@ -40,7 +40,7 @@ namespace JabbR.Test
                 //Assert.Equal("1", user.ConnectedClients.First().Id);
 
                 chat.MockedConnection.Verify(m => m.Broadcast("Chat." + clientId, It.IsAny<object>()), Times.Once());
-                chat.MockedChatService.Verify(c => c.UpdateActivity(user, clientId), Times.Once());
+                chat.MockedChatService.Verify(c => c.UpdateActivity(user, clientId, null), Times.Once());
             }
 
             [Fact]
@@ -81,7 +81,7 @@ namespace JabbR.Test
                 Assert.True(result);
 
                 chat.MockedConnection.Verify(m => m.Broadcast("Chat." + clientId, It.IsAny<object>()), Times.Once());
-                chat.MockedChatService.Verify(c => c.UpdateActivity(user, clientId), Times.Once());
+                chat.MockedChatService.Verify(c => c.UpdateActivity(user, clientId, null), Times.Once());
             }
         }
 

@@ -10,6 +10,7 @@ namespace JabbR.Commands
     public class CommandManager
     {
         private readonly string _clientId;
+        private readonly string _userAgent;
         private readonly string _userId;
         private readonly string _roomName;
         private readonly INotificationService _notificationService;
@@ -22,8 +23,20 @@ namespace JabbR.Commands
                               IChatService service,
                               IJabbrRepository repository,
                               INotificationService notificationService)
+            : this(clientId, null, userId, roomName, service, repository, notificationService)
+        {
+        }
+
+        public CommandManager(string clientId,
+                              string userAgent,
+                              string userId,
+                              string roomName,
+                              IChatService service,
+                              IJabbrRepository repository,
+                              INotificationService notificationService)
         {
             _clientId = clientId;
+            _userAgent = userAgent;
             _userId = userId;
             _roomName = roomName;
             _chatService = service;
@@ -704,7 +717,7 @@ namespace JabbR.Commands
                         _chatService.AuthenticateUser(userName, password);
 
                         // Add this client to the list of clients for this user
-                        _chatService.AddClient(user, _clientId);
+                        _chatService.AddClient(user, _clientId, _userAgent);
 
                         // Initialize the returning user
                         _notificationService.LogOn(user, _clientId);
@@ -713,7 +726,7 @@ namespace JabbR.Commands
                 else
                 {
                     // If there's no user add a new one
-                    user = _chatService.AddUser(userName, _clientId, password);
+                    user = _chatService.AddUser(userName, _clientId, _userAgent, password);
 
                     // Notify the user that they're good to go!
                     _notificationService.OnUserCreated(user);
@@ -823,7 +836,7 @@ namespace JabbR.Commands
             user.Note = isNoteBeingCleared ? null : String.Join(" ", parts.Skip(1)).Trim();
 
             ChatService.ValidateNote(user.Note);
-            
+
             _notificationService.ChangeNote(user);
 
             _repository.CommitChanges();
@@ -855,9 +868,9 @@ namespace JabbR.Commands
                 // Set the flag.
                 string isoCode = String.Join(" ", parts[1]).ToLowerInvariant();
                 ChatService.ValidateIsoCode(isoCode);
-                user.Flag = isoCode; 
+                user.Flag = isoCode;
             }
-            
+
             _notificationService.ChangeFlag(user);
 
             _repository.CommitChanges();

@@ -30,7 +30,19 @@ namespace JabbR
             _repository = repository;
         }
 
-        public bool OutOfSync
+        private string UserAgent
+        {
+            get
+            {
+                if (Context.Headers != null)
+                {
+                    return Context.Headers["User-Agent"];
+                }
+                return null;
+            }
+        }
+
+        private bool OutOfSync
         {
             get
             {
@@ -58,7 +70,7 @@ namespace JabbR
             }
 
             // Update some user values
-            _service.UpdateActivity(user, Context.ConnectionId);
+            _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
             _repository.CommitChanges();
 
             OnUserInitialize(clientState, user);
@@ -308,7 +320,7 @@ namespace JabbR
 
         private void UpdateActivity(ChatUser user, ChatRoom room)
         {
-            _service.UpdateActivity(user, Context.ConnectionId);
+            _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
 
             _repository.CommitChanges();
 
@@ -356,7 +368,7 @@ namespace JabbR
             string userId = Caller.id;
             string room = Caller.activeRoom;
 
-            var commandManager = new CommandManager(clientId, userId, room, _service, _repository, this);
+            var commandManager = new CommandManager(clientId, UserAgent, userId, room, _service, _repository, this);
             return commandManager.TryHandleCommand(command);
         }
 

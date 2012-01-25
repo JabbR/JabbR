@@ -274,7 +274,7 @@ namespace JabbR.Services
             _crypto = crypto;
         }
 
-        public ChatUser AddUser(string userName, string clientId, string password)
+        public ChatUser AddUser(string userName, string clientId, string userAgent, string password)
         {
             if (!IsValidUserName(userName))
             {
@@ -302,7 +302,7 @@ namespace JabbR.Services
 
             _repository.Add(user);
 
-            AddClient(user, clientId);
+            AddClient(user, clientId, userAgent);
 
             return user;
         }
@@ -424,14 +424,20 @@ namespace JabbR.Services
             _repository.CommitChanges();
         }
 
-        public void UpdateActivity(ChatUser user, string clientId)
+        public void UpdateActivity(ChatUser user, string clientId, string userAgent)
         {
             user.Status = (int)UserStatus.Active;
             user.LastActivity = DateTime.UtcNow;
 
-            if (!user.ConnectedClients.Any(c => c.Id == clientId))
+            var client = user.ConnectedClients.FirstOrDefault(c => c.Id == clientId);
+            if (client == null)
             {
-                AddClient(user, clientId);
+                AddClient(user, clientId, userAgent);
+            }
+            else
+            {
+                client.UserAgent = userAgent;
+                client.LastActivity = DateTimeOffset.UtcNow;
             }
 
             // Remove any Afk notes.
@@ -532,12 +538,14 @@ namespace JabbR.Services
             LeaveRoom(targetUser, targetRoom);
         }
 
-        public void AddClient(ChatUser user, string clientId)
+        public void AddClient(ChatUser user, string clientId, string userAgent)
         {
             var client = new ChatClient
             {
                 Id = clientId,
-                User = user
+                User = user,
+                UserAgent = userAgent,
+                LastActivity = DateTimeOffset.UtcNow
             };
 
             _repository.Add(client);
