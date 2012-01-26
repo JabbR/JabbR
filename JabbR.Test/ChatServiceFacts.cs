@@ -104,7 +104,7 @@ namespace JabbR.Test
                 Assert.NotNull(user);
                 Assert.Equal("david1", user.Name);
                 Assert.Equal("idenity", user.Identity);
-                Assert.Equal("email", user.Email);
+                Assert.Null(user.Email);
                 Assert.Null(user.Hash);
             }
         }
