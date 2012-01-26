@@ -20,6 +20,7 @@
         scrollTopThreshold = 75,
         toast = window.chat.toast,
         preferences = null,
+        $login = null,
         name,
         lastCycledMessage = null,
         $window = $(window),
@@ -425,10 +426,15 @@
     }
 
     function triggerSend() {
-        var msg = $newMessage.val();
+        var msg = $.trim($newMessage.val());
 
-        if ($.trim(msg)) {
-            $ui.trigger(ui.events.sendMessage, [msg]);
+        if (msg) {
+            if (msg.toLowerCase() == '/login') {
+                ui.showLogin();
+            }
+            else {
+                $ui.trigger(ui.events.sendMessage, [msg]);
+            }
         }
 
         $newMessage.val('');
@@ -503,6 +509,7 @@
             $newMessage = $('#new-message');
             $toast = $('#preferences .toast');
             $sound = $('#preferences .sound');
+            $login = $('.janrainEngage');
             focus = true;
             templates = {
                 user: $('#new-user-template'),
@@ -1120,6 +1127,9 @@
         },
         getUserName: function () {
             return ui.name;
+        },
+        showLogin: function () {
+            $login.click();
         },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
