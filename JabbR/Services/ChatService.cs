@@ -274,6 +274,37 @@ namespace JabbR.Services
             _crypto = crypto;
         }
 
+        public ChatUser AddUser(string userName, string identity, string email)
+        {
+            if (!IsValidUserName(userName))
+            {
+                throw new InvalidOperationException(String.Format("'{0}' is not a valid user name.", userName));
+            }
+
+            // This method is used in the auth workflow. If the username is taken it will add a number
+            // to the user name.
+            if (UserExists(userName))
+            {
+                var usersWithNameLikeMine = _repository.Users.Count(u => u.Name.StartsWith(userName));
+                userName += usersWithNameLikeMine;
+            }
+
+            var user = new ChatUser
+            {
+                Name = userName,
+                Status = (int)UserStatus.Active,
+                Email = email,
+                Identity = identity,
+                Id = Guid.NewGuid().ToString("d"),
+                LastActivity = DateTime.UtcNow
+            };
+
+            _repository.Add(user);
+            _repository.CommitChanges();
+
+            return user;
+        }
+
         public ChatUser AddUser(string userName, string clientId, string userAgent, string password)
         {
             if (!IsValidUserName(userName))
@@ -585,12 +616,15 @@ namespace JabbR.Services
 
         private void EnsureUserNameIsAvailable(string userName)
         {
-            var userExists = _repository.Users.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
-
-            if (userExists)
+            if (UserExists(userName))
             {
                 ThrowUserExists(userName);
             }
+        }
+
+        private bool UserExists(string userName)
+        {
+            return _repository.Users.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
         }
 
         internal static string NormalizeUserName(string userName)

@@ -246,6 +246,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\Bootstrapper.cs" />
+    <Compile Include="Auth\Login.ashx.cs">
+      <DependentUpon>Login.ashx</DependentUpon>
+    </Compile>
     <Compile Include="Commands\CommandManager.cs" />
     <Compile Include="ContentProviders\BBCNewsContentProvider.cs" />
     <Compile Include="ContentProviders\BashQDBContentProvider.cs" />
@@ -322,6 +325,10 @@
     <Compile Include="Migrations\201201251113371_ClientInfo.Designer.cs">
       <DependentUpon>201201251113371_ClientInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201201260920567_Auth.cs" />
+    <Compile Include="Migrations\201201260920567_Auth.Designer.cs">
+      <DependentUpon>201201260920567_Auth.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ChatClient.cs" />
     <Compile Include="Models\ClientState.cs" />
     <Compile Include="Services\ChatService.cs" />
@@ -368,7 +375,9 @@
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Auth\Login.ashx" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <ProjectExtensions>

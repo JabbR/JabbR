@@ -130,18 +130,12 @@
 
     // Save some state in a cookie
     function updateCookie() {
-        var legacyCookies = ['userid', 'username', 'userroom', 'userhash', 'currentroom'],
-            state = {
-                userId: chat.id,
-                activeRoom: chat.activeRoom,
-                preferences: ui.getState()
-            },
-            jsonState = window.JSON.stringify(state);
-
-        // Clear the legacy cookies
-        $.each(legacyCookies, function () {
-            $.cookie(this, null);
-        });
+        var state = {
+            userId: chat.id,
+            activeRoom: chat.activeRoom,
+            preferences: ui.getState()
+        },
+        jsonState = window.JSON.stringify(state);
 
         $.cookie('jabbr.state', jsonState, { path: '/', expires: 30 });
     }

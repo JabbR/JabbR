@@ -31,6 +31,38 @@
     <script src="Chat.pinnedWindows.js" type="text/javascript"></script>
     <script src="Chat.githubissues.js" type="text/javascript"></script>
     <script src="Chat.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        (function () {
+            if (typeof window.janrain !== 'object') window.janrain = {};
+            window.janrain.settings = {};
+
+            var url = document.location.href;
+            var nav = url.indexOf('#');
+            url = nav > 0 ? url.substring(0, nav) : url;
+            url = url.replace('index.htm', '');
+            janrain.settings.tokenUrl = url + 'Auth/Login.ashx';
+
+            function isReady() { janrain.ready = true; };
+            if (document.addEventListener) {
+                document.addEventListener("DOMContentLoaded", isReady, false);
+            } else {
+                window.attachEvent('onload', isReady);
+            }
+
+            var e = document.createElement('script');
+            e.type = 'text/javascript';
+            e.id = 'janrainAuthWidget';
+
+            if (document.location.protocol === 'https:') {
+                e.src = 'https://rpxnow.com/js/lib/jabbr/engage.js';
+            } else {
+                e.src = 'http://widget-cdn.rpxnow.com/js/lib/jabbr/engage.js';
+            }
+
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(e, s);
+        })();
+    </script>
     <script id="new-message-template" type="text/x-jquery-tmpl">
         <li class="message ${highlight} clearfix" id="m-${id}" data-name="${name}" data-timestamp="${date}">
             <div class="left">
@@ -58,12 +90,10 @@
             </div>
         </li>
     </script>
-
     <script id="message-separator-template" type="text/x-jquery-tmpl">
         <li class="message-separator">
         </li>
     </script>
-
     <script id="new-user-template" type="text/x-jquery-tmpl">
         <li class="user" data-name="${name}">
             <img class="gravatar" src="http://www.gravatar.com/avatar/${hash}?s=16&d=mm" />
@@ -136,42 +166,53 @@
            
         </div>   
     </script>
-<!-- /Github Issus Content Provider -->
+    <!-- /Github Issus Content Provider -->
 </head>
 <body>
     <div id="page">
-        <a href="https://github.com/davidfowl/JabbR" target="_blank"><img style="position: absolute; top: 0; right: 0; border: 0; z-index:1000" src="https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub"></a>
+        <a href="https://github.com/davidfowl/JabbR" target="_blank">
+            <img style="position: absolute; top: 0; right: 0; border: 0; z-index: 1000" src="https://a248.e.akamai.net/assets.github.com/img/7afbc8b248c68eb468279e8c17986ad46549fb71/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f6461726b626c75655f3132313632312e706e67"
+                alt="Fork me on GitHub">
+        </a>
         <div id="heading">
             <div class="banner">
-                <h1>Jabb</h1>
+                <h1>
+                    Jabb</h1>
                 <img alt="logo" src="Content/images/logo32.png" id="logo" />
-                <div>Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a></div>
+                <div>
+                    Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a></div>
             </div>
-            <div style="clear:both">
+            <a class="janrainEngage" href="#">Sign-In</a>
+            <div style="clear: both">
             </div>
             <ul id="tabs">
                 <li id="tabs-lobby" class="current lobby" data-name="Lobby">
-                    <button accesskey="l"><span class="content">Lobby</span></button>
+                    <button accesskey="l">
+                        <span class="content">Lobby</span></button>
                 </li>
             </ul>
         </div>
-
-    <div id="chat-area">
-        <ul id="messages-lobby" class="messages current"></ul>
-        <ul id="users-lobby" class="users current"></ul>
-        <div id="preferences">
-            <a class="sound" title="audible notifications"></a>
-            <a class="toast" title="popup notifications"></a>
+        <div id="janrainEngageEmbed">
         </div>
-        <form id="send-message" action="#">
+        <div id="chat-area">
+            <ul id="messages-lobby" class="messages current">
+            </ul>
+            <ul id="users-lobby" class="users current">
+            </ul>
+            <div id="preferences">
+                <a class="sound" title="audible notifications"></a><a class="toast" title="popup notifications">
+                </a>
+            </div>
+            <form id="send-message" action="#">
             <div id="message-box">
                 <textarea id="new-message" autocomplete="off" accesskey="m"></textarea>
             </div>
             <input type="submit" id="send" value="Send" class="send" />
-            <div id="message-instruction">Type @ then press TAB to auto-complete nicknames</div>
-        </form>
-    </div>
-    <audio src="Content/sounds/notification.wav" id="noftificationSound" hidden="hidden" />
+            <div id="message-instruction">
+                Type @ then press TAB to auto-complete nicknames</div>
+            </form>
+        </div>
+        <audio src="Content/sounds/notification.wav" id="noftificationSound" hidden="hidden" />
     </div>
 </body>
 </html>

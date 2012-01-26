@@ -31,6 +31,8 @@ namespace JabbR.App_Start
 
         private const string SqlClient = "System.Data.SqlClient";
 
+        internal static IKernel Kernel = null;
+
         public static void PreAppStart()
         {
             var kernel = new StandardKernel();
@@ -54,6 +56,8 @@ namespace JabbR.App_Start
             kernel.Bind<IResourceProcessor>()
                 .To<ResourceProcessor>()
                 .InSingletonScope();
+
+            Kernel = kernel;
 
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
 

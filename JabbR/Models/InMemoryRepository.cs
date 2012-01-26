@@ -113,6 +113,11 @@ namespace JabbR.Models
             return _users.FirstOrDefault(u => u.ConnectedClients.Any(c => c.Id == clientId));
         }
 
+        public ChatUser GetUserByIdentity(string userIdentity)
+        {
+            return _users.FirstOrDefault(u => u.Identity == userIdentity);
+        }
+
         public ChatClient GetClientById(string clientId)
         {
             return _users.SelectMany(u => u.ConnectedClients).FirstOrDefault(c => c.Id == clientId);
