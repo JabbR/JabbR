@@ -7,7 +7,7 @@ namespace JabbR.ContentProviders
 {
     public class GistContentProvider : EmbedContentProvider
     {
-        private static readonly Regex _gistIdRegex = new Regex(@"(\d+)");
+        private static readonly Regex _gistIdRegex = new Regex(@"(\w+)");
 
         public override IEnumerable<string> Domains
         {
