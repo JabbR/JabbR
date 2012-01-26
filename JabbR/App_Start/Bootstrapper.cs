@@ -123,8 +123,18 @@ namespace JabbR.App_Start
 
             TaskScheduler.UnobservedTaskException += (sender, e) =>
             {
-                Elmah.ErrorLog.GetDefault(null).Log(new Error(e.Exception.GetBaseException()));
-                e.SetObserved();
+                try
+                {
+                    Elmah.ErrorLog.GetDefault(null).Log(new Error(e.Exception.GetBaseException()));
+                }
+                catch
+                {
+                    // Swallow!
+                }
+                finally
+                {
+                    e.SetObserved();
+                }
             };
         }
 
