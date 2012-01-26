@@ -88,6 +88,13 @@ namespace JabbR.Auth
                     user = chatService.AddUser(username, userIdentity, email);
                 }
             }
+            else
+            {
+                // Update email and gravatar
+                user.Email = email;
+                user.Hash = email.ToMD5();
+                repository.CommitChanges();
+            }
 
             // Save the cokie state
             var state = JsonConvert.SerializeObject(new { userId = user.Id });
