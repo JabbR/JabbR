@@ -294,6 +294,7 @@ namespace JabbR.Services
                 Name = userName,
                 Status = (int)UserStatus.Active,
                 Email = email,
+                Hash = email.ToMD5(),
                 Identity = identity,
                 Id = Guid.NewGuid().ToString("d"),
                 LastActivity = DateTime.UtcNow

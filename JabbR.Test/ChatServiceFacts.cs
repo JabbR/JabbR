@@ -83,6 +83,7 @@ namespace JabbR.Test
                 Assert.Equal("SomeUser", user.Name);
                 Assert.Equal("identity", user.Identity);
                 Assert.Equal("email", user.Email);
+                Assert.Equal("0c83f57c786a0b4a39efab23731c7ebc", user.Hash);
             }
 
             [Fact]
@@ -97,13 +98,14 @@ namespace JabbR.Test
 
                 var service = new ChatService(repository, null);
 
-                service.AddUser("david", "idenity", "email");
+                service.AddUser("david", "idenity", null);
 
                 var user = repository.GetUserByIdentity("idenity");
                 Assert.NotNull(user);
                 Assert.Equal("david1", user.Name);
                 Assert.Equal("idenity", user.Identity);
                 Assert.Equal("email", user.Email);
+                Assert.Null(user.Hash);
             }
         }
 

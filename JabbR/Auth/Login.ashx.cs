@@ -5,6 +5,7 @@ using System.Web;
 using JabbR.App_Start;
 using JabbR.Models;
 using JabbR.Services;
+using JabbR.Infrastructure;
 using Newtonsoft.Json;
 using Ninject;
 
@@ -75,6 +76,7 @@ namespace JabbR.Auth
                     // If they are logged in then assocate the identity
                     user.Identity = userIdentity;
                     user.Email = email;
+                    user.Hash = email.ToMD5();
                     repository.CommitChanges();
                     context.Response.Redirect("~/", false);
                     context.ApplicationInstance.CompleteRequest();
