@@ -55,7 +55,8 @@ namespace JabbR.Models
 
             if (user == null)
             {
-                throw new InvalidOperationException("You don't have a name. Pick a name using '/nick nickname'.");
+                // The user isn't logged in 
+                throw new InvalidOperationException("You're not logged in.");
             }
 
             return user;

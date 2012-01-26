@@ -754,7 +754,7 @@
                 })
                 .done(function (success) {
                     if (success === false) {
-                        ui.addMessage('Choose a name using "/nick nickname password".', 'notification');
+                        $('.janrainEngage').click();
                     }
                     // get list of available commands
                     chat.getCommands()
