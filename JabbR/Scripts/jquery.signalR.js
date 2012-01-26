@@ -13,10 +13,20 @@
         throw "SignalR: No JSON parser found. Please ensure json2.js is referenced before the SignalR.js file if you need to support clients without native JSON parsing support, e.g. IE<8.";
     }
 
-    var signalR, _connection,
-        log = (typeof (console) !== "undefined" && console && console.debug)
-            ? function (msg) { console.debug("[" + new Date().toTimeString() + "] SignalR: " + msg); }
-            : $.noop;
+    var signalR,
+        _connection,
+        log = function (msg) {
+            var m;
+            if (typeof (window.console) === "undefined") {
+                return;
+            }
+            m = "[" + new Date().toTimeString() + "] SignalR: " + msg;
+            if (window.console.debug) {
+                window.console.debug(m);
+            } else if (window.console.log) {
+                window.console.log(m);
+            }
+        };
 
     signalR = function (url, qs) {
         /// <summary>Creates a new SignalR connection for the given url</summary>
@@ -36,6 +46,8 @@
             this.url = url;
             this.qs = qs;
         },
+
+        reconnectDelay: 2000,
 
         start: function (options, callback) {
             /// <summary>Starts the connection</summary>
@@ -467,12 +479,18 @@
                     connection.eventSource = new window.EventSource(url);
                 }
                 catch (e) {
-                    // If the connection failed call the failed callback
+                    log("EventSource failed trying to connect with error " + e.Message);
                     if (onFailed) {
+                        // The connection failed, call the failed callback
                         onFailed();
                     }
                     else {
                         $connection.trigger("onError", [e]);
+                        if (reconnecting) {
+                            // If we were reconnecting, rather than doing initial connect, then try reconnect again
+                            log("EventSource reconnecting");
+                            that.reconnect(connection);
+                        }
                     }
                     return;
                 }
@@ -481,12 +499,18 @@
                 // and raise on failed
                 connectTimeOut = window.setTimeout(function () {
                     if (opened === false) {
-                        that.stop(connection);
-
                         log("EventSource timed out trying to connect");
 
                         if (onFailed) {
                             onFailed();
+                        }
+
+                        if (reconnecting) {
+                            // If we were reconnecting, rather than doing initial connect, then try reconnect again
+                            log("EventSource reconnecting");
+                            that.reconnect(connection);
+                        } else {
+                            that.stop(connection);
                         }
                     }
                 },
@@ -495,11 +519,12 @@
                 connection.eventSource.addEventListener("open", function (e) {
                     log("EventSource connected");
 
+                    if (connectTimeOut) {
+                        window.clearTimeout(connectTimeOut);
+                    }
+
                     if (opened === false) {
                         opened = true;
-
-                        // Clear the connectTimeOut
-                        clearTimeout(connectTimeOut);
 
                         if (onSuccess) {
                             onSuccess();
@@ -512,8 +537,7 @@
                     if (e.data === "initialized") {
                         return;
                     }
-                    var data = window.JSON.parse(e.data);
-                    transportLogic.processMessages(connection, data);
+                    transportLogic.processMessages(connection, window.JSON.parse(e.data));
                 }, false);
 
                 connection.eventSource.addEventListener("error", function (e) {
@@ -521,6 +545,7 @@
                         if (onFailed) {
                             onFailed();
                         }
+                        return;
                     }
 
                     log("EventSource readyState: " + connection.eventSource.readyState);
@@ -528,11 +553,16 @@
                     if (e.eventPhase === window.EventSource.CLOSED) {
                         // connection closed
                         if (connection.eventSource.readyState === window.EventSource.CONNECTING) {
-                            log("EventSource reconnecting");
-                            that.stop(connection);
-                            that.start(connection);
+                            // We don't use the EventSource's native reconnect function as it
+                            // doesn't allow us to change the URL when reconnecting. We need
+                            // to change the URL to not include the /connect suffix, and pass
+                            // the last message id we received.
+                            log("EventSource reconnecting due to the server connection ending");
+                            that.reconnect(connection);
                         }
                         else {
+                            // The EventSource has closed, either because its close() method was called,
+                            // or the server sent down a "don't reconnect" frame.
                             log("EventSource closed");
                             that.stop(connection);
                         }
@@ -544,6 +574,14 @@
                 }, false);
             },
 
+            reconnect: function (connection) {
+                var that = this;
+                window.setTimeout(function () {
+                    that.stop(connection);
+                    that.start(connection);
+                }, connection.reconnectDelay);
+            },
+
             send: function (connection, data) {
                 transportLogic.ajaxSend(connection, data);
             },
@@ -552,6 +590,7 @@
                 if (connection && connection.eventSource) {
                     connection.eventSource.close();
                     connection.eventSource = null;
+                    delete connection.eventSource;
                 }
             }
         },
@@ -589,7 +628,7 @@
                     log("Forever frame iframe load event fired, reconnecting");
                     that.reconnect(connection);
                 }).bind("readystatechange", function () {
-                    if ($.inArray(this.readyState, ["loaded", "complete"])) {
+                    if ($.inArray(this.readyState, ["loaded", "complete"]) >= 0) {
                         log("Forever frame iframe readyState changed to " + this.readyState + ", reconnecting");
                         that.reconnect(connection);
                     }
@@ -623,7 +662,7 @@
                     var frame = connection.frame,
                         src = transportLogic.getUrl(connection, that.name, true) + "&frameId=" + connection.frameId;
                     frame.src = src;
-                }, 2000);
+                }, connection.reconnectDelay);
             },
 
             send: function (connection, data) {
@@ -636,6 +675,10 @@
                 if (connection.frame) {
                     $(connection.frame).remove();
                     delete transportLogic.foreverFrame.connections[connection.frameId];
+                    connection.frame = null;
+                    connection.frameId = null;
+                    delete connection.frame;
+                    delete connection.frameId;
                 }
             },
 
@@ -646,6 +689,7 @@
             started: function (connection) {
                 if (connection.onSuccess) {
                     connection.onSuccess();
+                    connection.onSuccess = null;
                     delete connection.onSuccess;
                 }
             }
@@ -703,7 +747,7 @@
 
                                 window.setTimeout(function () {
                                     poll(instance);
-                                }, 2000);
+                                }, connection.reconnectDelay);
                             }
                         });
                     } (connection));
@@ -725,6 +769,7 @@
                 /// <param name="connection" type="signalR">The SignalR connection to stop</param>
                 if (connection.pollXhr) {
                     connection.pollXhr.abort();
+                    connection.pollXhr = null;
                     delete connection.pollXhr;
                 }
             }
