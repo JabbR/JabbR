@@ -17,7 +17,7 @@ namespace JabbR.Test
         public class Join
         {
             [Fact]
-            public void CanJoinChat()
+            public void CannotJoinChat()
             {
                 var clientState = new TrackingDictionary();
                 string clientId = "1";
@@ -25,6 +25,26 @@ namespace JabbR.Test
                 {
                     Id = "1234",
                     Name = "John"
+                };
+
+                TestableChat chat = GetTestableChat(clientId, clientState, user);
+                chat.Caller.id = "1234";
+
+                bool result = chat.Join();
+
+                Assert.False(result);
+            }
+
+            [Fact]
+            public void CanJoinChatIfIdentitySet()
+            {
+                var clientState = new TrackingDictionary();
+                string clientId = "1";
+                var user = new ChatUser
+                {
+                    Id = "1234",
+                    Name = "John",
+                    Identity = "foo"
                 };
 
                 TestableChat chat = GetTestableChat(clientId, clientState, user);
@@ -65,7 +85,8 @@ namespace JabbR.Test
                 var user = new ChatUser
                 {
                     Id = "1234",
-                    Name = "John"
+                    Name = "John",
+                    Identity = "foo"
                 };
 
                 var cookies = new NameValueCollection();
