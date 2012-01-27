@@ -24,8 +24,10 @@ namespace JabbR.Auth
 
             if (String.IsNullOrEmpty(apiKey))
             {
-                // REVIEW: This is the correct status code
-                throw new InvalidOperationException("API key isn't set. Auth is not enabled.");
+                // Do nothing
+                context.Response.Redirect("~/", false);
+                context.ApplicationInstance.CompleteRequest();
+                return;
             }
 
             string token = context.Request.Form["token"];
