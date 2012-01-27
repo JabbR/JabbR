@@ -22,9 +22,11 @@ namespace JabbR
         private readonly IJabbrRepository _repository;
         private readonly IChatService _service;
         private readonly IResourceProcessor _resourceProcessor;
+        private readonly IApplicationSettings _settings;
 
-        public Chat(IResourceProcessor resourceProcessor, IChatService service, IJabbrRepository repository)
+        public Chat(IApplicationSettings settings, IResourceProcessor resourceProcessor, IChatService service, IJabbrRepository repository)
         {
+            _settings = settings;
             _resourceProcessor = resourceProcessor;
             _service = service;
             _repository = repository;
@@ -70,7 +72,8 @@ namespace JabbR
             }
 
             // Migrate all users to use new auth
-            if (String.IsNullOrEmpty(user.Identity))
+            if (!String.IsNullOrEmpty(_settings.AuthApiKey) && 
+                String.IsNullOrEmpty(user.Identity))
             {
                 return false;
             }
@@ -306,9 +309,6 @@ namespace JabbR
                 // Update the room count
                 OnRoomChanged(room);
 
-                // Update activity
-                UpdateActivity(user, room);
-
                 // Add the caller to the group so they receive messages
                 GroupManager.AddToGroup(clientId, room.Name).Wait();
 
@@ -326,11 +326,16 @@ namespace JabbR
 
         private void UpdateActivity(ChatUser user, ChatRoom room)
         {
+            UpdateActivity(user);
+
+            OnUpdateActivity(user, room);
+        }
+
+        private void UpdateActivity(ChatUser user)
+        {
             _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
 
             _repository.CommitChanges();
-
-            OnUpdateActivity(user, room);
         }
 
         private void ProcessUrls(IEnumerable<string> links, ChatRoom room, ChatMessage chatMessage)

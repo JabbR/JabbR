@@ -331,8 +331,10 @@
     </Compile>
     <Compile Include="Models\ChatClient.cs" />
     <Compile Include="Models\ClientState.cs" />
+    <Compile Include="Services\ApplicationSettings.cs" />
     <Compile Include="Services\ChatService.cs" />
     <Compile Include="Services\CryptoService.cs" />
+    <Compile Include="Services\IApplicationSettings.cs" />
     <Compile Include="Services\IChatService.cs" />
     <Compile Include="Services\ICryptoService.cs" />
     <Compile Include="Services\INotificationService.cs" />

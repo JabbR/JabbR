@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Configuration;
 using System.Net;
 using System.Web;
 using JabbR.App_Start;
+using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
-using JabbR.Infrastructure;
 using Newtonsoft.Json;
 using Ninject;
 
@@ -20,7 +19,8 @@ namespace JabbR.Auth
 
         public void ProcessRequest(HttpContext context)
         {
-            string apiKey = ConfigurationManager.AppSettings["auth.apiKey"];
+            var settings = Bootstrapper.Kernel.Get<IApplicationSettings>();
+            string apiKey = settings.AuthApiKey;
 
             if (String.IsNullOrEmpty(apiKey))
             {

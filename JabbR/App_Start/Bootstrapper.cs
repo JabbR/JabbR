@@ -57,6 +57,10 @@ namespace JabbR.App_Start
                 .To<ResourceProcessor>()
                 .InSingletonScope();
 
+            kernel.Bind<IApplicationSettings>()
+                  .To<ApplicationSettings>()
+                  .InSingletonScope();
+
             Kernel = kernel;
 
             DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
