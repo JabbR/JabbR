@@ -282,6 +282,7 @@
     <Compile Include="ContentProviders\YoutubeContentProvider.cs" />
     <Compile Include="Infrastructure\RandomUtils.cs" />
     <Compile Include="Infrastructure\RegexExtensions.cs" />
+    <Compile Include="Infrastructure\SafeCollection.cs" />
     <Compile Include="Infrastructure\TextTransform.cs" />
     <Compile Include="Migrations\201111290920351_Passwords.cs" />
     <Compile Include="Migrations\201111290920351_Passwords.Designer.cs">

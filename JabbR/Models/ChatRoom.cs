@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using JabbR.Infrastructure;
 
 namespace JabbR.Models
 {
@@ -29,10 +30,10 @@ namespace JabbR.Models
 
         public ChatRoom()
         {
-            Owners = new HashSet<ChatUser>();
-            Messages = new HashSet<ChatMessage>();
-            Users = new HashSet<ChatUser>();
-            AllowedUsers = new HashSet<ChatUser>();
+            Owners = new SafeCollection<ChatUser>();
+            Messages = new SafeCollection<ChatMessage>();
+            Users = new SafeCollection<ChatUser>();
+            AllowedUsers = new SafeCollection<ChatUser>();
         }
     }
 }
