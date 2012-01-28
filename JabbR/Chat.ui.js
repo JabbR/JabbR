@@ -682,7 +682,7 @@
                             // exclude current username from autocomplete
                             return room.users.find('li[data-name != "' + ui.getUserName() + '"]')
                                          .not('.room')
-                                         .map(function () { return $(this).data('name'); });
+                                         .map(function () { return $(this).data('name').toString(); });
                         case '#':
                             var lobby = getLobby();
                             return lobby.users.find('li')
