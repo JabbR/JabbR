@@ -367,6 +367,20 @@ namespace JabbR.Test
             }
 
             [Fact]
+            public void ThrowsIfRoomNameContainsPeriod()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.AddRoom(user, "Invalid.name"));
+            }
+
+            [Fact]
             public void AddsUserAsCreatorAndOwner()
             {
                 var repository = new InMemoryRepository();
