@@ -5,6 +5,7 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Hosting;
 using Elmah;
 using JabbR.ContentProviders.Core;
 using JabbR.Migrations;
@@ -13,7 +14,6 @@ using JabbR.Services;
 using JabbR.ViewModels;
 using Microsoft.CSharp.RuntimeBinder;
 using Ninject;
-using SignalR;
 using SignalR.Hubs;
 using SignalR.Infrastructure;
 using SignalR.Ninject;
@@ -35,6 +35,12 @@ namespace JabbR.App_Start
 
         public static void PreAppStart()
         {
+            if (HostingEnvironment.InClientBuildManager)
+            {
+                // If we're in the VS app domain then do nothing
+                return;
+            }
+
             var kernel = new StandardKernel();
 
             kernel.Bind<JabbrContext>()
@@ -120,8 +126,7 @@ namespace JabbR.App_Start
             AppDomain.CurrentDomain.FirstChanceException += (sender, e) =>
             {
                 var ex = e.Exception.GetBaseException();
-                if (!(ex is InvalidOperationException) &&
-                    !(ex is RuntimeBinderException) &&
+                if (!(ex is RuntimeBinderException) &&
                     !(ex is MissingMethodException) &&
                     !(ex is ThreadAbortException))
                 {

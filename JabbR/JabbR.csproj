@@ -39,8 +39,9 @@
     <Reference Include="AntiXSSLibrary, Version=4.0.0.0, Culture=neutral, PublicKeyToken=d127efab8a9c114f, processorArchitecture=MSIL">
       <HintPath>..\packages\AntiXSS.4.0.1\lib\net35\AntiXSSLibrary.dll</HintPath>
     </Reference>
-    <Reference Include="Elmah">
-      <HintPath>..\packages\elmah.corelibrary.1.2\lib\Elmah.dll</HintPath>
+    <Reference Include="Elmah, Version=1.2.14318.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\elmah.corelibrary.1.2.1\lib\Elmah.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.4.2.0.0\lib\net40\EntityFramework.dll</HintPath>
@@ -101,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="apple-touch-icon.png" />
+    <EmbeddedResource Include="Elmah\Elmah.SqlServer.sql" />
     <Content Include="Chat.bbcnews.css" />
     <Content Include="Chat.css" />
     <Content Include="Chat.documentOnWrite.js" />
@@ -328,6 +330,10 @@
     <Compile Include="Migrations\201201260920567_Auth.cs" />
     <Compile Include="Migrations\201201260920567_Auth.Designer.cs">
       <DependentUpon>201201260920567_Auth.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201201280922163_ElmahInSql.cs" />
+    <Compile Include="Migrations\201201280922163_ElmahInSql.Designer.cs">
+      <DependentUpon>201201280922163_ElmahInSql.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ChatClient.cs" />
     <Compile Include="Models\ClientState.cs" />
