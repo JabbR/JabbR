@@ -10,7 +10,7 @@ namespace JabbR.ContentProviders
         private const string _domain = "http://dictionary.reference.com";
         private static readonly string ContentFormat = "<div class='dictionary_wrapper'>" +
                                                        "    <div class=\"dictionary_header\">" +
-                                                       "        <img src=\"/Content/images/contentproviders/dictionary_logo.png\" alt=\"\" width=\"64\" height=\"64\">" +
+                                                       "        <img src=\"{2}\" alt=\"\" width=\"64\" height=\"64\">" +
                                                        "        <h2>{0}</h2>" +
                                                        "    </div>" +
                                                        "    <div>{1}</div>" +
@@ -21,7 +21,7 @@ namespace JabbR.ContentProviders
             var pageInfo = ExtractFromResponse(response);
             return new ContentProviderResultModel()
             {
-                Content = String.Format(ContentFormat, pageInfo.Title, pageInfo.WordDefinition),
+                Content = String.Format(ContentFormat, pageInfo.Title, pageInfo.WordDefinition, pageInfo.ImageURL),
                 Title = pageInfo.Title
             };
         }
@@ -41,7 +41,9 @@ namespace JabbR.ContentProviders
                 htmlDocument.Load(responseStream);
 
                 var title = htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:title']");
+                var imageURL = htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:image']");
                 pageInfo.Title = title != null ? title.Attributes["content"].Value : string.Empty;
+                pageInfo.ImageURL = imageURL != null ? imageURL.Attributes["content"].Value : string.Empty;
                 pageInfo.WordDefinition = GetWordDefinition(htmlDocument);
             }
 
@@ -88,6 +90,7 @@ namespace JabbR.ContentProviders
         private class PageInfo
         {
             public string Title { get; set; }
+            public string ImageURL { get; set; }
             public string WordDefinition { get; set; }
         }
     }
