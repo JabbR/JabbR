@@ -165,6 +165,10 @@
             var currUnread = this.getUnread(),
                 lastUnread = this.messages.find('.message-separator').data('unread') || 0;
 
+            if (!utility.isMobile) {
+                $newMessage.focus();
+            }
+
             this.tab.addClass('current')
                     .removeClass('unread')
                     .stop(true, true)
