@@ -165,7 +165,7 @@
             var currUnread = this.getUnread(),
                 lastUnread = this.messages.find('.message-separator').data('unread') || 0;
 
-            if (utility.isMobile) {
+            if (!utility.isMobile) {
                 $newMessage.focus();
             }
 
