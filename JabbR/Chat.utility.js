@@ -93,6 +93,10 @@
             return (converter(content));
         },
         isMobile: isMobile
+        parseEmojis: function (content) {
+            var parser = new Emoji.Parser().parse;
+            return (parser(content));
+        }
     };
 
     if (!window.chat) {

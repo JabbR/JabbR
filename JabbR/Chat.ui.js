@@ -358,9 +358,10 @@
     }
 
     function processMessage(message) {
+        message.message = utility.parseEmojis(message.message);
         message.trimmedName = utility.trim(message.name, 21);
         message.when = message.date.formatTime(true);
-        message.fulldate = message.date.toLocaleString()
+        message.fulldate = message.date.toLocaleString();
     }
 
     function triggerFocus() {
@@ -686,7 +687,7 @@
                             // exclude current username from autocomplete
                             return room.users.find('li[data-name != "' + ui.getUserName() + '"]')
                                          .not('.room')
-                                         .map(function () { return $(this).data('name'); });
+                                         .map(function () { return $(this).data('name').toString(); });
                         case '#':
                             var lobby = getLobby();
                             return lobby.users.find('li')
