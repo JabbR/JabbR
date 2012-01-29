@@ -1,0 +1,54 @@
+﻿.dictionary_wrapper
+{
+    margin: 5px;
+    padding: 5px;
+}
+.dictionary_header
+{
+    background-color: #03426F;
+    height: 64px;
+    line-height: 64px;
+    margin-bottom: 5px;
+}
+.dictionary_header img
+{
+    float: right;
+}
+.dictionary_header h2
+{
+    display: inline;
+    color: #fff;
+    text-transform: capitalize;
+    margin-left: 10px;
+}
+.dictionary_wrapper .pbk
+{
+    margin: 15px 0;
+}
+.dictionary_wrapper .pbk .pg, .dictionary_wrapper .sectionLabel
+{
+    text-transform: uppercase;
+    font-weight: bold;
+    padding: 3px 0;    
+}
+.dictionary_wrapper .pbk .pg:not(:first-child)
+{
+    margin-top: 8px;
+}
+.dictionary_wrapper .dnindex
+{
+    font-weight: bold;
+    color: #7B7B7B;
+    display: block;
+    float: left;
+    width: 28px;
+}
+.dictionary_wrapper .dndata
+{
+    display: block;
+    padding-left: 37px;
+}
+.dictionary_wrapper #fcrds, .dictionary_wrapper .less, .dictionary_wrapper .more, .dictionary_wrapper .header, .dictionary_wrapper .tail, .dictionary_wrapper .spl_unshd
+{
+    display: none;
+}
