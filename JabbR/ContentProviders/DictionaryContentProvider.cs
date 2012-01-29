@@ -63,31 +63,24 @@ namespace JabbR.ContentProviders
 
             // fix relative url
             var links = wordDefinition.SelectNodes("//a");
-            try
+
+            foreach (var link in links)
             {
-                foreach (var link in links)
+                var href = link.Attributes["href"];
+                if (href != null && href.Value.StartsWith("/"))
                 {
-                    var href = link.Attributes["href"];
-                    if (href != null && href.Value.StartsWith("/"))
-                    {
-                        href.Value = string.Format("{0}{1}", _domain, href.Value);
+                    href.Value = string.Format("{0}{1}", _domain, href.Value);
 
-                        if (link.Attributes["style"] != null)
-                            link.Attributes["style"].Value = string.Empty;
+                    if (link.Attributes["style"] != null)
+                        link.Attributes["style"].Value = string.Empty;
 
-                        link.SetAttributeValue("target", "_blank");
-                    }
-                    else
-                    {
-                        link.Remove();
-                    }
+                    link.SetAttributeValue("target", "_blank");
+                }
+                else
+                {
+                    link.Remove();
                 }
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-
 
             return wordDefinition.InnerHtml;
         }
