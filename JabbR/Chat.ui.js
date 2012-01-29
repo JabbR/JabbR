@@ -354,9 +354,10 @@
     }
 
     function processMessage(message) {
+        message.message = utility.parseEmojis(message.message);
         message.trimmedName = utility.trim(message.name, 21);
         message.when = message.date.formatTime(true);
-        message.fulldate = message.date.toLocaleString()
+        message.fulldate = message.date.toLocaleString();
     }
 
     function triggerFocus() {
