@@ -85,8 +85,8 @@
             return (converter(content));
         },
         parseEmojis: function (content) {
-            var converter = new Emoji.Parser().parse;
-            return (converter(content));
+            var parser = new Emoji.Parser().parse;
+            return (parser(content));
         }
     };
 
