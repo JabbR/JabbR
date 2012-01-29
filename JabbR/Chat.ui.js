@@ -165,6 +165,10 @@
             var currUnread = this.getUnread(),
                 lastUnread = this.messages.find('.message-separator').data('unread') || 0;
 
+            if (!utility.isMobile) {
+                $newMessage.focus();
+            }
+
             this.tab.addClass('current')
                     .removeClass('unread')
                     .stop(true, true)
@@ -354,9 +358,10 @@
     }
 
     function processMessage(message) {
+        message.message = utility.parseEmojis(message.message);
         message.trimmedName = utility.trim(message.name, 21);
         message.when = message.date.formatTime(true);
-        message.fulldate = message.date.toLocaleString()
+        message.fulldate = message.date.toLocaleString();
     }
 
     function triggerFocus() {
