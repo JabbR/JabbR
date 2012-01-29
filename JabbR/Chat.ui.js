@@ -25,8 +25,8 @@
         lastCycledMessage = null,
         $window = $(window),
         $document = $(document),
-        roomFilter = null,
-        roomFilterInput = null;
+        $roomFilter = null,
+        $roomFilterInput = null;
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -163,7 +163,7 @@
                       .hide();
 
             if (this.isLobby()) {
-                roomFilterInput.hide();
+                $roomFilterInput.hide();
             }
         };
 
@@ -192,7 +192,7 @@
                       .show();
 
             if (this.isLobby()) {
-                roomFilterInput.show();
+                $roomFilterInput.show();
             }
             // if no unread since last separator
             // remove previous separator
@@ -525,8 +525,8 @@
             $sound = $('#preferences .sound');
             $login = $('.janrainEngage');
             focus = true;
-            roomFilter = null;
-            roomFilterInput = $('#users-filter');
+            $roomFilter = null;
+            $roomFilterInput = $('#users-filter');
             templates = {
                 user: $('#new-user-template'),
                 message: $('#new-message-template'),
@@ -752,7 +752,7 @@
                 }
             },
             { unescape: ',/' });
-            ui.roomFilter = roomFilterInput.liveUpdate('#users-lobby', true);
+            ui.$roomFilter = $roomFilterInput.liveUpdate('#users-lobby', true);
         },
         setMessage: function (value) {
             $newMessage.val(value);
@@ -858,8 +858,8 @@
                     $li.addClass('locked');
                 }
             });
-            ui.roomFilter.update();
-            roomFilterInput.val('');
+            ui.$roomFilter.update();
+            $roomFilterInput.val('');
         },
         addUser: function (user, roomName) {
             var room = getRoomElements(roomName),
