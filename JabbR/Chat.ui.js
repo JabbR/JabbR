@@ -25,7 +25,6 @@
         lastCycledMessage = null,
         $window = $(window),
         $document = $(document),
-        $roomFilter = null,
         $roomFilterInput = null;
 
     function getRoomId(roomName) {
@@ -525,7 +524,6 @@
             $sound = $('#preferences .sound');
             $login = $('.janrainEngage');
             focus = true;
-            $roomFilter = null;
             $roomFilterInput = $('#users-filter');
             templates = {
                 user: $('#new-user-template'),
