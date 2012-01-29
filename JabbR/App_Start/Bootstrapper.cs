@@ -14,6 +14,7 @@ using JabbR.Services;
 using JabbR.ViewModels;
 using Microsoft.CSharp.RuntimeBinder;
 using Ninject;
+using SignalR.Hosting.AspNet;
 using SignalR.Hubs;
 using SignalR.Infrastructure;
 using SignalR.Ninject;
@@ -69,14 +70,16 @@ namespace JabbR.App_Start
 
             Kernel = kernel;
 
-            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
+            IDependencyResolver resolver = new NinjectDependencyResolver(kernel);
+
+            AspNetBootstrapper.SetResolver(resolver);
 
             // Perform the required migrations
             DoMigrations();
 
             // Start the sweeper
             var repositoryFactory = new Func<IJabbrRepository>(() => kernel.Get<IJabbrRepository>());
-            _timer = new Timer(_ => Sweep(repositoryFactory), null, _sweepInterval, _sweepInterval);
+            _timer = new Timer(_ => Sweep(repositoryFactory, resolver), null, _sweepInterval, _sweepInterval);
 
             SetupErrorHandling();
 
@@ -151,7 +154,7 @@ namespace JabbR.App_Start
             };
         }
 
-        private static void Sweep(Func<IJabbrRepository> repositoryFactory)
+        private static void Sweep(Func<IJabbrRepository> repositoryFactory, IDependencyResolver resolver)
         {
             if (_sweeping)
             {
@@ -164,7 +167,7 @@ namespace JabbR.App_Start
             {
                 using (IJabbrRepository repo = repositoryFactory())
                 {
-                    MarkInactiveUsers(repo);
+                    MarkInactiveUsers(repo, resolver);
 
                     repo.CommitChanges();
                 }
@@ -179,9 +182,9 @@ namespace JabbR.App_Start
             }
         }
 
-        private static void MarkInactiveUsers(IJabbrRepository repo)
+        private static void MarkInactiveUsers(IJabbrRepository repo, IDependencyResolver resolver)
         {
-            var clients = Hub.GetClients<Chat>();
+            var clients = Hub.GetClients<Chat>(resolver);
             var inactiveUsers = new List<ChatUser>();
 
             foreach (var user in repo.Users)

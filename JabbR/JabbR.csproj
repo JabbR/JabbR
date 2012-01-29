@@ -73,7 +73,7 @@
       <HintPath>..\lib\SignalR.Hosting.AspNet.dll</HintPath>
     </Reference>
     <Reference Include="SignalR.Ninject">
-      <HintPath>..\packages\SignalR.Ninject.0.3.3\lib\net40\SignalR.Ninject.dll</HintPath>
+      <HintPath>..\..\SignalR.Ninject\SignalR.Ninject\bin\Debug\SignalR.Ninject.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
