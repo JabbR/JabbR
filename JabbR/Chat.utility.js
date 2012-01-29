@@ -83,6 +83,10 @@
         markdownToHtml: function (content) {
             var converter = new Markdown.Converter().makeHtml;
             return (converter(content));
+        },
+        parseEmojis: function (content) {
+            var parser = new Emoji.Parser().parse;
+            return (parser(content));
         }
     };
 
