@@ -63,7 +63,7 @@
     };
 
     // returns the date portion only (strips time)
-    Date.prototype.toDate = function () {
+    Date.prototype.toDate = function() {
         return new Date(this.getFullYear(), this.getMonth(), this.getDate());
     };
 
@@ -74,7 +74,7 @@
 
         return parseInt((t1 - t2) / (24 * 3600 * 1000));
     };
-    
+
     var utility = {
         trim: function (value, length) {
             if (value.length > length) {
