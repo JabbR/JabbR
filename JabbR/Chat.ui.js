@@ -679,7 +679,7 @@
 
             // Auto-complete for user names
             $newMessage.autoTabComplete({
-                prefixMatch: '[@#/]',
+                prefixMatch: '[@#/\:]',
                 get: function (prefix) {
                     switch (prefix) {
                         case '@':
@@ -697,6 +697,9 @@
                             var commands = ui.getCommands();
                             return ui.getCommands()
                                          .map(function (cmd) { return cmd.Name; });
+
+                        case ':':
+                            return Emoji.getIcons();
                         default:
                             return [];
                     }
