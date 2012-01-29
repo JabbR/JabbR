@@ -92,7 +92,7 @@
             var converter = new Markdown.Converter().makeHtml;
             return (converter(content));
         },
-        isMobile: isMobile
+        isMobile: isMobile,
         parseEmojis: function (content) {
             var parser = new Emoji.Parser().parse;
             return (parser(content));
