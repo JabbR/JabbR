@@ -11,7 +11,7 @@ jQuery.fn.liveUpdate = function (list) {
             });
         }
     }
-    this.update();
+
     this
 			.keyup(filter).keyup()
 			.parents('form').submit(function () {
