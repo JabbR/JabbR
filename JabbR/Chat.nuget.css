@@ -4,7 +4,7 @@
 }
 
 .nuget-badge code {
-    margin-top: -60px;
+    margin-top: -35px;
     background-color: #202020;
     border: 4px solid #c0c0c0;
     border-radius: 5px;
@@ -29,7 +29,7 @@
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
     box-shadow: 2px 2px 3px #6e6e6e;
-    margin-top: 60px;
+    margin-top: 35px;
     margin-left: 10px;
     margin-right: 10px;
     z-index: 2;
@@ -43,7 +43,9 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6e2e2e2', endColorstr='#00000000', GradientType=1); /* IE6-9 fallback on horizontal gradient */
 }
 
-.nuget-title {
+.nuget-title 
+{
+    margin-top: 30px;
     padding: 5px;
     font-weight: bold;
 }
