@@ -696,6 +696,7 @@
     <Content Include="Chat.pinnedWindows.js" />
     <Content Include="Chat.githubissues.js" />
     <Content Include="Chat.githubissues.css" />
+    <Content Include="Chat.nuget.css" />
     <Content Include="favicon.ico" />
     <Content Include="Content\images\big-logo.png" />
     <Content Include="Content\images\logo32.png" />
@@ -764,6 +765,7 @@
     <Compile Include="ContentProviders\GoogleMapsContentProvider.cs" />
     <Compile Include="ContentProviders\JoinMeContentProvider.cs" />
     <Compile Include="ContentProviders\NerdDinnerContentProvider.cs" />
+    <Compile Include="ContentProviders\NugetNuggetContentProvider.cs" />
     <Compile Include="ContentProviders\SoundCloudContentProvider.cs" />
     <Compile Include="ContentProviders\UserVoiceContentProvider.cs" />
     <Compile Include="ContentProviders\UStreamContentProvider.cs" />
