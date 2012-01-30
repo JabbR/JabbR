@@ -19,7 +19,7 @@ namespace JabbR.ContentProviders
         protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
             var pageInfo = ExtractFromResponse(response);
-            return new ContentProviderResultModel()
+            return new ContentProviderResultModel
             {
                 Content = String.Format(ContentFormat, pageInfo.Title, pageInfo.WordDefinition, pageInfo.ImageURL),
                 Title = pageInfo.Title
@@ -29,7 +29,7 @@ namespace JabbR.ContentProviders
         protected override bool IsValidContent(HttpWebResponse response)
         {
             return response.ResponseUri.AbsoluteUri.StartsWith("http://dictionary.reference.com", StringComparison.OrdinalIgnoreCase) ||
-            response.ResponseUri.AbsoluteUri.StartsWith("http://dictionary.com", StringComparison.OrdinalIgnoreCase); ;
+            response.ResponseUri.AbsoluteUri.StartsWith("http://dictionary.com", StringComparison.OrdinalIgnoreCase);
         }
 
         private PageInfo ExtractFromResponse(HttpWebResponse response)
@@ -42,8 +42,8 @@ namespace JabbR.ContentProviders
 
                 var title = htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:title']");
                 var imageURL = htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:image']");
-                pageInfo.Title = title != null ? title.Attributes["content"].Value : string.Empty;
-                pageInfo.ImageURL = imageURL != null ? imageURL.Attributes["content"].Value : string.Empty;
+                pageInfo.Title = title != null ? title.Attributes["content"].Value : String.Empty;
+                pageInfo.ImageURL = imageURL != null ? imageURL.Attributes["content"].Value : String.Empty;
                 pageInfo.WordDefinition = GetWordDefinition(htmlDocument);
             }
 
@@ -54,7 +54,9 @@ namespace JabbR.ContentProviders
         {
             var wordDefinition = htmlDocument.DocumentNode.SelectSingleNode("//div[@class=\"body\"]");
             if (wordDefinition == null)
-                return string.Empty;
+            {
+                return String.Empty;
+            }
 
             //remove stylesheet links
             var stylesheets = wordDefinition.SelectNodes("//link");
@@ -74,7 +76,7 @@ namespace JabbR.ContentProviders
                     href.Value = string.Format("{0}{1}", _domain, href.Value);
 
                     if (link.Attributes["style"] != null)
-                        link.Attributes["style"].Value = string.Empty;
+                        link.Attributes["style"].Value = String.Empty;
 
                     link.SetAttributeValue("target", "_blank");
                 }
