@@ -15,7 +15,6 @@ using JabbR.ViewModels;
 using Microsoft.CSharp.RuntimeBinder;
 using Ninject;
 using SignalR.Hosting.AspNet;
-using SignalR.Hubs;
 using SignalR.Infrastructure;
 using SignalR.Ninject;
 
@@ -72,7 +71,7 @@ namespace JabbR.App_Start
 
             IDependencyResolver resolver = new NinjectDependencyResolver(kernel);
 
-            AspNetBootstrapper.SetResolver(resolver);
+            AspNetHost.SetResolver(resolver);
 
             // Perform the required migrations
             DoMigrations();
@@ -184,7 +183,7 @@ namespace JabbR.App_Start
 
         private static void MarkInactiveUsers(IJabbrRepository repo, IDependencyResolver resolver)
         {
-            var clients = Hub.GetClients<Chat>(resolver);
+            var clients = resolver.GetClients<Chat>();
             var inactiveUsers = new List<ChatUser>();
 
             foreach (var user in repo.Users)
