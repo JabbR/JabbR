@@ -1,0 +1,41 @@
+﻿.nuget-badge { }
+
+.nuget-badge code {
+    background-color: #202020;
+    border: 4px solid #c0c0c0;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    box-shadow: 2px 2px 3px #6e6e6e;
+    color: #e2e2e2;
+    display: block;
+    font: 1.5em 'andale mono', 'lucida console', monospace;
+    line-height: 1.5em;
+    overflow: auto;
+    padding: 15px;
+}
+
+.nuget-projectinfo { font-size: 80%; }
+
+.nuget-description { padding: 5px; }
+
+.nuget-projecticon {
+    float: left;
+    width: 32px;
+    height: 32px;
+    margin: 5px;
+}
+
+.nuget-authors, .nuget-downloads {
+    float: left;
+    width: 25%;
+    display: block;
+}
+
+.nuget-ProjectUrl {
+    float: left;
+    width: 50%;
+    text-align: right
+}
+
+.nuget-badge span { font-weight: bold; }
