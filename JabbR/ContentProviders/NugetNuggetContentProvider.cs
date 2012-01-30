@@ -21,8 +21,8 @@ namespace JabbR.ContentProviders
             string packageName = ExtractPackageName(response.ResponseUri);
             if (!String.IsNullOrEmpty(packageName))
             {
-                var package = FetchPackage(packageName);
-                if (package != null && (((Newtonsoft.Json.Linq.JContainer) (package.d.results))).Count > 0)
+                dynamic package = FetchPackage(packageName);
+                if (package != null && package.d.results.Count > 0)
                 {
                     var packageInfo = package.d.results[0];
                     var projectIcon = String.Empty;
