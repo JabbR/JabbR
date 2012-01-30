@@ -513,7 +513,7 @@ namespace JabbR.Services
             if (targetRoom.Owners.Contains(targetUser))
             {
                 // If the target user is already an owner, then throw
-                throw new InvalidOperationException(String.Format("'{0}' is already and owner of '{1}'.", targetUser.Name, targetRoom.Name));
+                throw new InvalidOperationException(String.Format("'{0}' is already an owner of '{1}'.", targetUser.Name, targetRoom.Name));
             }
 
             // Make the user an owner
