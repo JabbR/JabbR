@@ -13,8 +13,8 @@ namespace JabbR.ContentProviders
     public class NugetNuggetContentProvider : CollapsibleContentProvider
     {
         private static readonly Regex _nugetURLRegex = new Regex(@"nuget\.org/packages/(.*)");
-        private static readonly string _nugetFeedURL = "http://packages.nuget.org/v1/FeedService.svc/Packages()?$filter=Title eq '{0}'&$orderby=Created desc";
-        private static readonly string _nugetBadgeFormat = "<div class=\"nuget-badge\"><code>PM> Install-Package {0}</code><div class=\"nuget-projectinfo\"><div class=\"nuget-title\">{1}</div><div class=\"nuget-summary\">{2}</div><div class=\"nuget-description\">{3}{4}</div>{5}<div style=\"clear:both\"></div></div></div>";
+        private static readonly string _nugetFeedURL = "http://packages.nuget.org/v1/FeedService.svc/Packages()?$filter=Id eq '{0}'&$orderby=Created desc";
+        private static readonly string _nugetBadgeFormat = "<div class=\"nuget-badge\"><div class=\"nuget-pm\">PM></div><code>Install-Package {0}</code><div class=\"nuget-projectinfo\"><div class=\"nuget-title\">{1}</div><div class=\"nuget-summary\">{2}</div><div class=\"nuget-description\">{3}{4}</div>{5}<div style=\"clear:both\"></div></div></div>";
 
         protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
@@ -33,9 +33,9 @@ namespace JabbR.ContentProviders
                     }
 
                     var projectInfo = new StringBuilder();
-                    projectInfo.AppendFormat("<div class=\"nuget-authors\" ><span>Authors: </span>{0}</div>",
+                    projectInfo.AppendFormat("<div class=\"nuget-authors\" ><span>Authors: </span><div class=\"nuget-authors-entry\">{0}</div></div>",
                                              packageInfo.Authors);
-                    projectInfo.AppendFormat("<div class=\"nuget-downloads\" ><span>Download Count:</span> {0}</div>",
+                    projectInfo.AppendFormat("<div class=\"nuget-downloads\" ><span># Downloads:</span> {0}</div>",
                                              packageInfo.DownloadCount);
                     if (packageInfo.ProjectUrl != null)
                     {
