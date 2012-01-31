@@ -1,18 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System;
+using JabbR.Infrastructure;
 
 namespace JabbR.Models
 {
     public class InMemoryRepository : IJabbrRepository
     {
-        private readonly HashSet<ChatUser> _users;
-        private readonly HashSet<ChatRoom> _rooms;
+        private readonly ICollection<ChatUser> _users;
+        private readonly ICollection<ChatRoom> _rooms;
 
         public InMemoryRepository()
         {
-            _users = new HashSet<ChatUser>();
-            _rooms = new HashSet<ChatRoom>();
+            _users = new SafeCollection<ChatUser>();
+            _rooms = new SafeCollection<ChatRoom>();
         }
 
         public IQueryable<ChatRoom> Rooms { get { return _rooms.AsQueryable(); } }
@@ -85,8 +86,8 @@ namespace JabbR.Models
         public IQueryable<ChatRoom> GetAllowedRooms(ChatUser user)
         {
             return _rooms
-                .Where(r => 
-                    (!r.Private && !r.Closed) || 
+                .Where(r =>
+                    (!r.Private && !r.Closed) ||
                     (r.Private && !r.Closed && r.AllowedUsers.Contains(user)))
                 .AsQueryable();
         }
@@ -111,6 +112,11 @@ namespace JabbR.Models
         public ChatUser GetUserByClientId(string clientId)
         {
             return _users.FirstOrDefault(u => u.ConnectedClients.Any(c => c.Id == clientId));
+        }
+
+        public ChatUser GetUserByIdentity(string userIdentity)
+        {
+            return _users.FirstOrDefault(u => u.Identity == userIdentity);
         }
 
         public ChatClient GetClientById(string clientId)

@@ -22,15 +22,29 @@ namespace JabbR
         private readonly IJabbrRepository _repository;
         private readonly IChatService _service;
         private readonly IResourceProcessor _resourceProcessor;
+        private readonly IApplicationSettings _settings;
 
-        public Chat(IResourceProcessor resourceProcessor, IChatService service, IJabbrRepository repository)
+        public Chat(IApplicationSettings settings, IResourceProcessor resourceProcessor, IChatService service, IJabbrRepository repository)
         {
+            _settings = settings;
             _resourceProcessor = resourceProcessor;
             _service = service;
             _repository = repository;
         }
 
-        public bool OutOfSync
+        private string UserAgent
+        {
+            get
+            {
+                if (Context.Headers != null)
+                {
+                    return Context.Headers["User-Agent"];
+                }
+                return null;
+            }
+        }
+
+        private bool OutOfSync
         {
             get
             {
@@ -57,9 +71,15 @@ namespace JabbR
                 return false;
             }
 
+            // Migrate all users to use new auth
+            if (!String.IsNullOrEmpty(_settings.AuthApiKey) && 
+                String.IsNullOrEmpty(user.Identity))
+            {
+                return false;
+            }
+
             // Update some user values
-            _service.AddClient(user, Context.ConnectionId);
-            _service.UpdateActivity(user);
+            _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
             _repository.CommitChanges();
 
             OnUserInitialize(clientState, user);
@@ -289,9 +309,6 @@ namespace JabbR
                 // Update the room count
                 OnRoomChanged(room);
 
-                // Update activity
-                UpdateActivity(user, room);
-
                 // Add the caller to the group so they receive messages
                 GroupManager.AddToGroup(clientId, room.Name).Wait();
 
@@ -309,11 +326,16 @@ namespace JabbR
 
         private void UpdateActivity(ChatUser user, ChatRoom room)
         {
-            _service.UpdateActivity(user);
-
-            _repository.CommitChanges();
+            UpdateActivity(user);
 
             OnUpdateActivity(user, room);
+        }
+
+        private void UpdateActivity(ChatUser user)
+        {
+            _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
+
+            _repository.CommitChanges();
         }
 
         private void ProcessUrls(IEnumerable<string> links, ChatRoom room, ChatMessage chatMessage)
@@ -357,7 +379,7 @@ namespace JabbR
             string userId = Caller.id;
             string room = Caller.activeRoom;
 
-            var commandManager = new CommandManager(clientId, userId, room, _service, _repository, this);
+            var commandManager = new CommandManager(clientId, UserAgent, userId, room, _service, _repository, this);
             return commandManager.TryHandleCommand(command);
         }
 
@@ -629,8 +651,21 @@ namespace JabbR
             OnRoomChanged(room);
         }
 
-        void INotificationService.CloseRoom(ChatRoom room)
+        void INotificationService.CloseRoom(IEnumerable<ChatUser> users, ChatRoom room)
         {
+            // Kick all people from the room.
+            foreach (var user in users)
+            {
+                foreach (var client in user.ConnectedClients)
+                {
+                    // Kick the user from this room
+                    Clients[client.Id].kick(room.Name);
+
+                    // Remove the user from this the room group so he doesn't get the leave message
+                    GroupManager.RemoveFromGroup(client.Id, room.Name).Wait();
+                }
+            }
+
             // Tell the caller the room was successfully closed.
             Caller.roomClosed(room.Name);
         }
@@ -651,7 +686,10 @@ namespace JabbR
             Caller.showUserInfo(new
             {
                 Name = user.Name,
-                OwnedRooms = user.OwnedRooms.Allowed(userId).Select(r => r.Name),
+                OwnedRooms = user.OwnedRooms
+                    .Allowed(userId)
+                    .Where(r => !r.Closed)
+                    .Select(r => r.Name),
                 Status = ((UserStatus)user.Status).ToString(),
                 LastActivity = user.LastActivity,
                 Rooms = user.Rooms.Allowed(userId).Select(r => r.Name)

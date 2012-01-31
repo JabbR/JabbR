@@ -5,6 +5,7 @@ using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Hosting;
 using Elmah;
 using JabbR.ContentProviders.Core;
 using JabbR.Migrations;
@@ -14,7 +15,7 @@ using JabbR.ViewModels;
 using Microsoft.CSharp.RuntimeBinder;
 using Ninject;
 using SignalR;
-using SignalR.Hubs;
+using SignalR.Hosting.AspNet;
 using SignalR.Infrastructure;
 using SignalR.Ninject;
 
@@ -31,8 +32,16 @@ namespace JabbR.App_Start
 
         private const string SqlClient = "System.Data.SqlClient";
 
+        internal static IKernel Kernel = null;
+
         public static void PreAppStart()
         {
+            if (HostingEnvironment.InClientBuildManager)
+            {
+                // If we're in the VS app domain then do nothing
+                return;
+            }
+
             var kernel = new StandardKernel();
 
             kernel.Bind<JabbrContext>()
@@ -55,14 +64,22 @@ namespace JabbR.App_Start
                 .To<ResourceProcessor>()
                 .InSingletonScope();
 
-            DependencyResolver.SetResolver(new NinjectDependencyResolver(kernel));
+            kernel.Bind<IApplicationSettings>()
+                  .To<ApplicationSettings>()
+                  .InSingletonScope();
+
+            Kernel = kernel;
+
+            var resolver = new NinjectDependencyResolver(kernel);
+
+            AspNetHost.SetResolver(resolver);
 
             // Perform the required migrations
             DoMigrations();
 
             // Start the sweeper
             var repositoryFactory = new Func<IJabbrRepository>(() => kernel.Get<IJabbrRepository>());
-            _timer = new Timer(_ => Sweep(repositoryFactory), null, _sweepInterval, _sweepInterval);
+            _timer = new Timer(_ => Sweep(repositoryFactory, resolver), null, _sweepInterval, _sweepInterval);
 
             SetupErrorHandling();
 
@@ -75,7 +92,10 @@ namespace JabbR.App_Start
             {
                 foreach (var u in repository.Users)
                 {
-                    u.Status = (int)UserStatus.Offline;
+                    if (u.IsAfk)
+                    {
+                        u.Status = (int)UserStatus.Offline;
+                    }
                 }
 
                 repository.RemoveAllClients();
@@ -109,8 +129,7 @@ namespace JabbR.App_Start
             AppDomain.CurrentDomain.FirstChanceException += (sender, e) =>
             {
                 var ex = e.Exception.GetBaseException();
-                if (!(ex is InvalidOperationException) &&
-                    !(ex is RuntimeBinderException) &&
+                if (!(ex is RuntimeBinderException) &&
                     !(ex is MissingMethodException) &&
                     !(ex is ThreadAbortException))
                 {
@@ -120,12 +139,22 @@ namespace JabbR.App_Start
 
             TaskScheduler.UnobservedTaskException += (sender, e) =>
             {
-                Elmah.ErrorLog.GetDefault(null).Log(new Error(e.Exception.GetBaseException()));
-                e.SetObserved();
+                try
+                {
+                    Elmah.ErrorLog.GetDefault(null).Log(new Error(e.Exception.GetBaseException()));
+                }
+                catch
+                {
+                    // Swallow!
+                }
+                finally
+                {
+                    e.SetObserved();
+                }
             };
         }
 
-        private static void Sweep(Func<IJabbrRepository> repositoryFactory)
+        private static void Sweep(Func<IJabbrRepository> repositoryFactory, IDependencyResolver resolver)
         {
             if (_sweeping)
             {
@@ -138,7 +167,7 @@ namespace JabbR.App_Start
             {
                 using (IJabbrRepository repo = repositoryFactory())
                 {
-                    MarkInactiveUsers(repo);
+                    MarkInactiveUsers(repo, resolver);
 
                     repo.CommitChanges();
                 }
@@ -153,9 +182,10 @@ namespace JabbR.App_Start
             }
         }
 
-        private static void MarkInactiveUsers(IJabbrRepository repo)
+        private static void MarkInactiveUsers(IJabbrRepository repo, IDependencyResolver resolver)
         {
-            var clients = Hub.GetClients<Chat>();
+            var connectionManager = resolver.Resolve<IConnectionManager>();
+            var clients = connectionManager.GetClients<Chat>();
             var inactiveUsers = new List<ChatUser>();
 
             foreach (var user in repo.Users)

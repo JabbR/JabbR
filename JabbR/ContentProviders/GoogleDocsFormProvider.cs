@@ -1,18 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Web;
 using JabbR.ContentProviders.Core;
 
 namespace JabbR.ContentProviders
 {
     public class GoogleDocsFormProvider : EmbedContentProvider
     {
-        private static readonly Regex _formIdExtractRegex = new Regex(@".*formkey=(.+)#|^");
-
         public override string MediaFormatString
         {
             get
             {
-                return @"<iframe src='https://docs.google.com/spreadsheet/embeddedform?formkey={0}' width='500' height='500' frameborder='0' marginheight='0' marginwidth='0'>Loading...</iframe>";
+                return @"<iframe src=""https://docs.google.com/spreadsheet/embeddedform?formkey={0}"" style=""width:100%;height:500px;"" frameborder=""0"" marginheight=""0"" marginwidth=""0"">Loading...</iframe>";
             }
         }
 
@@ -25,12 +24,16 @@ namespace JabbR.ContentProviders
             }
         }
 
-        protected override Regex ParameterExtractionRegex
+        protected override IList<string> ExtractParameters(Uri responseUri)
         {
-            get
+            var queryString = HttpUtility.ParseQueryString(responseUri.Query);
+            string formKey = queryString["formkey"];
+            
+            if (!String.IsNullOrEmpty(formKey))
             {
-                return _formIdExtractRegex;
+                return new [] { formKey };
             }
+            return null;
         }
     }
 }

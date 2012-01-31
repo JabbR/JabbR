@@ -130,18 +130,12 @@
 
     // Save some state in a cookie
     function updateCookie() {
-        var legacyCookies = ['userid', 'username', 'userroom', 'userhash', 'currentroom'],
-            state = {
-                userId: chat.id,
-                activeRoom: chat.activeRoom,
-                preferences: ui.getState()
-            },
-            jsonState = window.JSON.stringify(state);
-
-        // Clear the legacy cookies
-        $.each(legacyCookies, function () {
-            $.cookie(this, null);
-        });
+        var state = {
+            userId: chat.id,
+            activeRoom: chat.activeRoom,
+            preferences: ui.getState()
+        },
+        jsonState = window.JSON.stringify(state);
 
         $.cookie('jabbr.state', jsonState, { path: '/', expires: 30 });
     }
@@ -212,6 +206,7 @@
         ui.addMessage('Welcome back ' + chat.name, 'notification', 'lobby');
         ui.addMessage('You can join any of the rooms on the right', 'notification', 'lobby');
         ui.addMessage('Type /rooms to list all available rooms', 'notification', 'lobby');
+        ui.addMessage('Type /logout to log out of chat', 'notification', 'lobby');
 
         // Process any urls that may contain room names
         ui.run();
@@ -414,9 +409,8 @@
 
         updateCookie();
 
-        // Restart the connection
-        connection.stop();
-        connection.start();
+        // Reload the page
+        document.location = document.location.pathname;
     };
 
     chat.showUserInfo = function (userInfo) {
@@ -760,7 +754,8 @@
                 })
                 .done(function (success) {
                     if (success === false) {
-                        ui.addMessage('Choose a name using "/nick nickname password".', 'notification');
+                        ui.showLogin();
+                        ui.addMessage('Type /login to show the login screen', 'notification');
                     }
                     // get list of available commands
                     chat.getCommands()

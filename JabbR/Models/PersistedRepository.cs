@@ -134,6 +134,11 @@ namespace JabbR.Models
             return null;
         }
 
+        public ChatUser GetUserByIdentity(string userIdentity)
+        {
+            return _db.Users.FirstOrDefault(u => u.Identity == userIdentity);
+        }
+
         public ChatClient GetClientById(string clientId)
         {
             return _db.Clients.Include(c => c.User).FirstOrDefault(c => c.Id == clientId);

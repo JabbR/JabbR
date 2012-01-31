@@ -2012,6 +2012,13 @@ namespace JabbR.Test
                 repository.Add(room);
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
+                var userList = new List<string>();
+                notificationService.Setup(m => m.ListUsers(It.IsAny<ChatRoom>(), It.IsAny<IEnumerable<string>>()))
+                                   .Callback<ChatRoom, IEnumerable<string>>((_, names) =>
+                                   {
+                                       userList.AddRange(names);
+                                   });
+
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
@@ -2021,12 +2028,10 @@ namespace JabbR.Test
 
                 bool result = commandManager.TryHandleCommand("/list room");
 
-                var userList = new List<String>();
-                userList.Add(user.Name);
-                userList.Add(user2.Name);
-
                 Assert.True(result);
-                notificationService.Verify(x => x.ListUsers(room, userList), Times.Once());
+                Assert.Equal(2, userList.Count);
+                Assert.True(userList.Contains("dfowler2"));
+                Assert.True(userList.Contains("dfowler"));
             }
         }
 
@@ -2999,7 +3004,7 @@ namespace JabbR.Test
 
         public class CloseCommand
         {
-            [Fact]    
+            [Fact]
             public void MissingRoomNameThrows()
             {
                 // Arrange.
@@ -3052,50 +3057,6 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void PeopleInRoomThrows()
-            {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var roomOwner = new ChatUser
-                {
-                    Name = "dfowler",
-                    Id = "1"
-                };
-                var randomUser = new ChatUser
-                {
-                    Name = "dfowler2",
-                    Id = "2"
-                };
-                repository.Add(roomOwner);
-                repository.Add(randomUser);
-
-                const string roomName = "test";
-                var room = new ChatRoom
-                {
-                    Name = roomName
-                };
-                // Add a room owner (but the owner is not INSIDE the room).
-                room.Owners.Add(roomOwner);
-                
-                // Add a random user (which will block the closing of the room).
-                room.Users.Add(randomUser);
-                randomUser.Rooms.Add(room);
-                repository.Add(room);
-
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        notificationService.Object);
-
-                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/close " + roomName));
-                Assert.Equal("Room '" + roomName + "' has 1 user still in it. Unable to close a room while users are still in it", ex.Message);
-            }
-
-            [Fact]
             public void CannotCloseARoomIfTheUserIsNotAnOwner()
             {
                 // Arrange.
@@ -3129,7 +3090,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void CanCloseRoom()
+            public void CanCloseRoomWithNoPeople()
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
@@ -3147,7 +3108,7 @@ namespace JabbR.Test
                 };
                 // Add a room owner.
                 room.Owners.Add(user);
-                
+
                 repository.Add(room);
 
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
@@ -3162,7 +3123,59 @@ namespace JabbR.Test
                 bool result = commandManager.TryHandleCommand("/close " + roomName);
 
                 Assert.True(result);
-                notificationService.Verify(x => x.CloseRoom(room), Times.Once());
+                notificationService.Verify(x => x.CloseRoom(room.Users, room), Times.Once());
+                Assert.True(room.Closed);
+            }
+
+            [Fact]
+            public void CanCloseRoomWithPeopleAndOwnerNotInTheRoom()
+            {
+                // Arrange.
+                var repository = new InMemoryRepository();
+                var roomOwner = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                var randomUser = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(roomOwner);
+                repository.Add(randomUser);
+
+                const string roomName = "test";
+                var room = new ChatRoom
+                {
+                    Name = roomName
+                };
+                // Add a room owner (but the owner is not INSIDE the room).
+                room.Owners.Add(roomOwner);
+
+                // Add a random user.
+                room.Users.Add(randomUser);
+                randomUser.Rooms.Add(room);
+
+                repository.Add(room);
+
+                // Make a copy of all the users which should be removed from the room, so we can 
+                // verify that these users we passed into the closeRoom method.
+                var users = room.Users.ToList();
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/close " + roomName);
+
+                Assert.True(result);
+                notificationService.Verify(x => x.CloseRoom(users, room), Times.Once());
                 Assert.True(room.Closed);
             }
         }

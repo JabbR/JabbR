@@ -20,10 +20,12 @@
         scrollTopThreshold = 75,
         toast = window.chat.toast,
         preferences = null,
+        $login = null,
         name,
         lastCycledMessage = null,
         $window = $(window),
-        $document = $(document);
+        $document = $(document),
+        $roomFilterInput = null;
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -158,11 +160,19 @@
 
             this.users.removeClass('current')
                       .hide();
+
+            if (this.isLobby()) {
+                $roomFilterInput.hide();
+            }
         };
 
         this.makeActive = function () {
             var currUnread = this.getUnread(),
                 lastUnread = this.messages.find('.message-separator').data('unread') || 0;
+
+            if (!utility.isMobile) {
+                $newMessage.focus();
+            }
 
             this.tab.addClass('current')
                     .removeClass('unread')
@@ -180,6 +190,9 @@
             this.users.addClass('current')
                       .show();
 
+            if (this.isLobby()) {
+                $roomFilterInput.show();
+            }
             // if no unread since last separator
             // remove previous separator
             if (currUnread <= lastUnread) {
@@ -353,9 +366,10 @@
     }
 
     function processMessage(message) {
+        message.message = utility.parseEmojis(message.message);
         message.trimmedName = utility.trim(message.name, 21);
         message.when = message.date.formatTime(true);
-        message.fulldate = message.date.toLocaleString()
+        message.fulldate = message.date.toLocaleString();
     }
 
     function triggerFocus() {
@@ -425,10 +439,15 @@
     }
 
     function triggerSend() {
-        var msg = $newMessage.val();
+        var msg = $.trim($newMessage.val());
 
-        if ($.trim(msg)) {
-            $ui.trigger(ui.events.sendMessage, [msg]);
+        if (msg) {
+            if (msg.toLowerCase() == '/login') {
+                ui.showLogin();
+            }
+            else {
+                $ui.trigger(ui.events.sendMessage, [msg]);
+            }
         }
 
         $newMessage.val('');
@@ -503,7 +522,9 @@
             $newMessage = $('#new-message');
             $toast = $('#preferences .toast');
             $sound = $('#preferences .sound');
+            $login = $('.janrainEngage');
             focus = true;
+            $roomFilterInput = $('#users-filter');
             templates = {
                 user: $('#new-user-template'),
                 message: $('#new-message-template'),
@@ -667,7 +688,7 @@
 
             // Auto-complete for user names
             $newMessage.autoTabComplete({
-                prefixMatch: '[@#/]',
+                prefixMatch: '[@#/\:]',
                 get: function (prefix) {
                     switch (prefix) {
                         case '@':
@@ -675,7 +696,7 @@
                             // exclude current username from autocomplete
                             return room.users.find('li[data-name != "' + ui.getUserName() + '"]')
                                          .not('.room')
-                                         .map(function () { return $(this).data('name'); });
+                                         .map(function () { return $(this).data('name').toString(); });
                         case '#':
                             var lobby = getLobby();
                             return lobby.users.find('li')
@@ -685,6 +706,9 @@
                             var commands = ui.getCommands();
                             return ui.getCommands()
                                          .map(function (cmd) { return cmd.Name; });
+
+                        case ':':
+                            return Emoji.getIcons();
                         default:
                             return [];
                     }
@@ -712,6 +736,9 @@
 
             // Load preferences
             loadPreferences();
+
+            // Initilize liveUpdate plugin for room search
+            ui.$roomFilter = $roomFilterInput.liveUpdate('#users-lobby', true);
         },
         run: function () {
             $.history.init(function (hash) {
@@ -834,6 +861,14 @@
                     $li.addClass('locked');
                 }
             });
+
+            if (lobby.isActive()) {
+                // update cache of room names
+                $roomFilterInput.show();
+            }
+
+            ui.$roomFilter.update();
+            $roomFilterInput.val('');
         },
         addUser: function (user, roomName) {
             var room = getRoomElements(roomName),
@@ -1120,6 +1155,9 @@
         },
         getUserName: function () {
             return ui.name;
+        },
+        showLogin: function () {
+            $login.click();
         },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),

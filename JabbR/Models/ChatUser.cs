@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using JabbR.Infrastructure;
 
 namespace JabbR.Models
 {
@@ -30,6 +31,10 @@ namespace JabbR.Models
         [StringLength(2)]
         public string Flag { get; set; }
 
+        public string Identity { get; set; }
+
+        public string Email { get; set; }
+
         // List of clients that are currently connected for this user
         public virtual ICollection<ChatClient> ConnectedClients { get; set; }
         public virtual ICollection<ChatRoom> OwnedRooms { get; set; }
@@ -40,10 +45,10 @@ namespace JabbR.Models
 
         public ChatUser()
         {
-            ConnectedClients = new HashSet<ChatClient>();
-            OwnedRooms = new HashSet<ChatRoom>();
-            Rooms = new HashSet<ChatRoom>();
-            AllowedRooms = new HashSet<ChatRoom>();
+            ConnectedClients = new SafeCollection<ChatClient>();
+            OwnedRooms = new SafeCollection<ChatRoom>();
+            Rooms = new SafeCollection<ChatRoom>();
+            AllowedRooms = new SafeCollection<ChatRoom>();
         }
     }
 }

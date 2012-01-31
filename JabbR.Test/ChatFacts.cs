@@ -6,7 +6,7 @@ using JabbR.Services;
 using Moq;
 using Newtonsoft.Json;
 using SignalR;
-using SignalR.Abstractions;
+using SignalR.Hosting;
 using SignalR.Hubs;
 using Xunit;
 
@@ -17,7 +17,7 @@ namespace JabbR.Test
         public class Join
         {
             [Fact]
-            public void CanJoinChat()
+            public void CannotJoinChat()
             {
                 var clientState = new TrackingDictionary();
                 string clientId = "1";
@@ -25,6 +25,26 @@ namespace JabbR.Test
                 {
                     Id = "1234",
                     Name = "John"
+                };
+
+                TestableChat chat = GetTestableChat(clientId, clientState, user);
+                chat.Caller.id = "1234";
+
+                bool result = chat.Join();
+
+                Assert.False(result);
+            }
+
+            [Fact]
+            public void CanJoinChatIfIdentitySet()
+            {
+                var clientState = new TrackingDictionary();
+                string clientId = "1";
+                var user = new ChatUser
+                {
+                    Id = "1234",
+                    Name = "John",
+                    Identity = "foo"
                 };
 
                 TestableChat chat = GetTestableChat(clientId, clientState, user);
@@ -40,8 +60,6 @@ namespace JabbR.Test
                 //Assert.Equal("1", user.ConnectedClients.First().Id);
 
                 chat.MockedConnection.Verify(m => m.Broadcast("Chat." + clientId, It.IsAny<object>()), Times.Once());
-                chat.MockedChatService.Verify(c => c.AddClient(user, clientId), Times.Once());
-                chat.MockedChatService.Verify(c => c.UpdateActivity(user), Times.Once());
             }
 
             [Fact]
@@ -66,12 +84,13 @@ namespace JabbR.Test
                 var user = new ChatUser
                 {
                     Id = "1234",
-                    Name = "John"
+                    Name = "John",
+                    Identity = "foo"
                 };
 
                 var cookies = new NameValueCollection();
                 cookies["jabbr.state"] = JsonConvert.SerializeObject(new ClientState { UserId = user.Id });
-                
+
 
                 TestableChat chat = GetTestableChat(clientId, clientState, user, cookies);
 
@@ -82,8 +101,6 @@ namespace JabbR.Test
                 Assert.True(result);
 
                 chat.MockedConnection.Verify(m => m.Broadcast("Chat." + clientId, It.IsAny<object>()), Times.Once());
-                chat.MockedChatService.Verify(c => c.AddClient(user, clientId), Times.Once());
-                chat.MockedChatService.Verify(c => c.UpdateActivity(user), Times.Once());
             }
         }
 
@@ -99,12 +116,15 @@ namespace JabbR.Test
             var resourceProcessor = new Mock<IResourceProcessor>();
             var chatService = new Mock<IChatService>();
             var connection = new Mock<IConnection>();
+            var settings = new Mock<IApplicationSettings>();
+
+            settings.Setup(m => m.AuthApiKey).Returns("key");
 
             // add user to repository
             repository.Add(user);
 
             // create testable chat
-            var chat = new TestableChat(resourceProcessor, chatService, repository, connection);
+            var chat = new TestableChat(settings, resourceProcessor, chatService, repository, connection);
             var mockedConnectionObject = chat.MockedConnection.Object;
 
             // setup client agent
@@ -129,12 +149,14 @@ namespace JabbR.Test
             public Mock<IChatService> MockedChatService { get; private set; }
             public IJabbrRepository Repository { get; private set; }
             public Mock<IConnection> MockedConnection { get; private set; }
+            public Mock<IApplicationSettings> MockSettings { get; set; }
 
-            public TestableChat(Mock<IResourceProcessor> mockedResourceProcessor, Mock<IChatService> mockedChatService, IJabbrRepository repository, Mock<IConnection> connection)
-                : base(mockedResourceProcessor.Object, mockedChatService.Object, repository)
+            public TestableChat(Mock<IApplicationSettings> mockSettings, Mock<IResourceProcessor> mockedResourceProcessor, Mock<IChatService> mockedChatService, IJabbrRepository repository, Mock<IConnection> connection)
+                : base(mockSettings.Object, mockedResourceProcessor.Object, mockedChatService.Object, repository)
             {
                 MockedResourceProcessor = mockedResourceProcessor;
                 MockedChatService = mockedChatService;
+                MockSettings = mockSettings;
                 Repository = repository;
                 MockedConnection = connection;
             }

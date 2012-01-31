@@ -15,6 +15,9 @@
         // Process the template, and add it in to the div.
         $('#github-issues-template').tmpl(issue.data).appendTo(elements);
 
+        // After the string has been added to the template etc, remove any existing targets and re-add with _blank
+        $('a', elements).removeAttr('target').attr('target', '_blank');
+
         $('.js-relative-date').timeago();
         // If near the end, scroll.
         if (nearEnd) {
