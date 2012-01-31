@@ -24,7 +24,8 @@
         name,
         lastCycledMessage = null,
         $window = $(window),
-        $document = $(document);
+        $document = $(document),
+        $roomFilterInput = null;
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -159,6 +160,10 @@
 
             this.users.removeClass('current')
                       .hide();
+
+            if (this.isLobby()) {
+                $roomFilterInput.hide();
+            }
         };
 
         this.makeActive = function () {
@@ -185,6 +190,9 @@
             this.users.addClass('current')
                       .show();
 
+            if (this.isLobby()) {
+                $roomFilterInput.show();
+            }
             // if no unread since last separator
             // remove previous separator
             if (currUnread <= lastUnread) {
@@ -516,6 +524,7 @@
             $sound = $('#preferences .sound');
             $login = $('.janrainEngage');
             focus = true;
+            $roomFilterInput = $('#users-filter');
             templates = {
                 user: $('#new-user-template'),
                 message: $('#new-message-template'),
@@ -727,6 +736,9 @@
 
             // Load preferences
             loadPreferences();
+			
+			// Initilize liveUpdate plugin for room search
+			ui.$roomFilter = $roomFilterInput.liveUpdate('#users-lobby', true);
         },
         run: function () {
             $.history.init(function (hash) {
@@ -849,6 +861,9 @@
                     $li.addClass('locked');
                 }
             });
+            // update cache of room names
+            ui.$roomFilter.update();
+            $roomFilterInput.val('');
         },
         addUser: function (user, roomName) {
             var room = getRoomElements(roomName),

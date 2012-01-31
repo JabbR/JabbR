@@ -23,6 +23,8 @@
     <script src="Scripts/jquery.timeago.0.10.js" type="text/javascript"></script>
     <script src="Scripts/jquery.captureDocumentWrite.min.js" type="text/javascript"></script>
     <script src="Scripts/jquery.sortElements.js" type="text/javascript"></script>
+    <script src="Scripts/quicksilver.js" type="text/javascript"></script>
+    <script src="Scripts/jquery.livesearch.js" type="text/javascript"></script>
     <script src="Scripts/Markdown.Converter.js" type="text/javascript"></script>
     <script src="Scripts/jquery.history.js" type="text/javascript"></script>
     <script src="Chat.utility.js" type="text/javascript"></script>
@@ -200,6 +202,9 @@
         <div id="chat-area">
             <ul id="messages-lobby" class="messages current">
             </ul>
+            <form id="users-filter-form" action="#">
+            <input id="users-filter" class="filter" type="text" />
+            </form>
             <ul id="users-lobby" class="users current">
             </ul>
             <div id="preferences">
