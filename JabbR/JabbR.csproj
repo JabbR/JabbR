@@ -735,6 +735,7 @@
     <Content Include="Scripts\sammy-latest.min.js" />
     <Content Include="Scripts\writeCapture.js" />
     <Content Include="Test\index.html" />
+    <Content Include="Chat.dictionary.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -754,6 +755,7 @@
     <Compile Include="ContentProviders\BBCNewsContentProvider.cs" />
     <Compile Include="ContentProviders\BashQDBContentProvider.cs" />
     <Compile Include="ContentProviders\AudioContentProvider.cs" />
+    <Compile Include="ContentProviders\DictionaryContentProvider.cs" />
     <Compile Include="ContentProviders\GitHubIssuesContentProvider.cs" />
     <Compile Include="ContentProviders\Core\CollapsibleContentProvider.cs" />
     <Compile Include="ContentProviders\Core\ContentProviderResultModel.cs" />
