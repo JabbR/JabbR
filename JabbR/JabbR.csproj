@@ -771,6 +771,7 @@
     <Compile Include="ContentProviders\NerdDinnerContentProvider.cs" />
     <Compile Include="ContentProviders\NugetNuggetContentProvider.cs" />
     <Compile Include="ContentProviders\SoundCloudContentProvider.cs" />
+    <Compile Include="ContentProviders\TwitPicContentProvider.cs" />
     <Compile Include="ContentProviders\UserVoiceContentProvider.cs" />
     <Compile Include="ContentProviders\UStreamContentProvider.cs" />
     <Compile Include="ContentProviders\VimeoContentProvider.cs" />
