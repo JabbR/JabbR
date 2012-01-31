@@ -70,12 +70,7 @@ namespace JabbR.App_Start
 
             Kernel = kernel;
 
-            IDependencyResolver resolver = new NinjectDependencyResolver(kernel);
-
-            var configurationManager = resolver.Resolve<IConfigurationManager>();
-
-            // Make the timeout one minute
-            configurationManager.ReconnectionTimeout = TimeSpan.FromMinutes(1);
+            var resolver = new NinjectDependencyResolver(kernel);
 
             AspNetHost.SetResolver(resolver);
 
