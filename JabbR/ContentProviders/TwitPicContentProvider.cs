@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using JabbR.ContentProviders.Core;
-using System.Text.RegularExpressions;
 using System.Net;
+using System.Text.RegularExpressions;
+using JabbR.ContentProviders.Core;
 
 namespace JabbR.ContentProviders
 {
