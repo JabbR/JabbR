@@ -73,7 +73,7 @@ namespace JabbR.ContentProviders
                 var href = link.Attributes["href"];
                 if (href != null && href.Value.StartsWith("/"))
                 {
-                    href.Value = string.Format("{0}{1}", _domain, href.Value);
+                    href.Value = String.Format("{0}{1}", _domain, href.Value);
 
                     if (link.Attributes["style"] != null)
                     {
