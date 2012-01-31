@@ -6,7 +6,7 @@ using JabbR.Services;
 using Moq;
 using Newtonsoft.Json;
 using SignalR;
-using SignalR.Abstractions;
+using SignalR.Hosting;
 using SignalR.Hubs;
 using Xunit;
 
