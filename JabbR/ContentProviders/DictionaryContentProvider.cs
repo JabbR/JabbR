@@ -76,7 +76,9 @@ namespace JabbR.ContentProviders
                     href.Value = string.Format("{0}{1}", _domain, href.Value);
 
                     if (link.Attributes["style"] != null)
-                        link.Attributes["style"].Value = String.Empty;
+                    {
+                        link.Attributes["style"].Value = String.Empty;   
+                    }                        
 
                     link.SetAttributeValue("target", "_blank");
                 }
