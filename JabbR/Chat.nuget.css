@@ -1,17 +1,17 @@
 ﻿.nuget-badge {
     height: auto;
-	position: relative;
+    position: relative;
 }
 
 .nuget-badge .nuget-pm {
-	color: #A0A0A0;
-	float: left;
-	font: 1.2em 'andale mono', 'lucida console', monospace;
-	line-height: 1.5em;
-	margin-top: -32px;
-	padding: 15px;
-	position: absolute;
-	z-index: 4;
+    color: #A0A0A0;
+    float: left;
+    font: 1.2em 'andale mono', 'lucida console', monospace;
+    line-height: 1.5em;
+    margin-top: -32px;
+    padding: 15px;
+    position: absolute;
+    z-index: 4;
 }
 
 .nuget-badge code {
@@ -20,43 +20,43 @@
     color: #e2e2e2;
     display: block;
     font: 1.2em 'andale mono', 'lucida console', monospace;
-	height: 25px;
+    height: 25px;
     line-height: 1.5em;
-	margin-top: -35px;
-	overflow: overlay;
-	overflow: overlay;
-	padding-bottom: 10px;
-	padding-left: 50px;
-	padding-right: 15px;
-	padding-top: 15px;
-	position: absolute;
-	width: auto;
+    margin-top: -35px;
+    overflow: overlay;
+    overflow: overlay;
+    padding-bottom: 10px;
+    padding-left: 50px;
+    padding-right: 15px;
+    padding-top: 15px;
+    position: absolute;
+    width: auto;
     z-index: 3;
 }
 
 .borderradius .nuget-badge code {
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .boxshadow .nuget-badge code { box-shadow: 2px 2px 3px #6e6e6e; }
 
 .nuget-projectinfo {
-	border-bottom: 2px solid #c0c0c0;
+    border-bottom: 2px solid #c0c0c0;
     border-left: 2px solid #c0c0c0;
     border-right: 2px solid #c0c0c0;
     margin-left: 10px;
     margin-right: 10px;
-	margin-top: 35px;
+    margin-top: 35px;
     padding: 5px;
-	z-index: 2;
+    z-index: 2;
 }
 
 .borderradius .nuget-projectinfo {
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
 }
 
 .boxshadow .nuget-projectinfo { box-shadow: 2px 2px 3px #6e6e6e; }
@@ -73,15 +73,15 @@
 
 .nuget-title {
     font-weight: bold;
-	margin-top: 20px;
-	padding: 5px;
+    margin-top: 20px;
+    padding: 5px;
 }
 
 .nuget-summary {
-	font-size: 85%;
+    font-size: 85%;
     font-style: oblique;
     font-variant: small-caps;
-	padding-left: 5px;
+    padding-left: 5px;
 }
 
 .nuget-description { padding: 5px; }
@@ -89,31 +89,31 @@
 .nuget-projecticon {
     float: left;
     height: 32px;
-	margin: 10px;
-	width: 32px;
+    margin: 10px;
+    width: 32px;
 }
 
 .nuget-authors {
-	display: block;
+    display: block;
     float: left;
-	font-size: 80%;
+    font-size: 80%;
     width: 25%;
 }
 
 .nuget-downloads {
     display: block;
     font-size: 80%;
-	margin-left: auto;
-	margin-right: auto;
-	white-space: nowrap;
-	width: 25%;
+    margin-left: auto;
+    margin-right: auto;
+    white-space: nowrap;
+    width: 25%;
 }
 
 .nuget-authors-entry { float: right; }
 
 .nuget-ProjectUrl {
     font-size: 80%;
-	text-align: right;
+    text-align: right;
 }
 
 .nuget-badge span { font-weight: bold; }
