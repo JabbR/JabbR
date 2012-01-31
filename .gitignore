@@ -10,4 +10,4 @@ deploy/*
 *.cache
 packages/
 msbuild.log
-_Resharper*
+_Resharper*/
