@@ -34,9 +34,10 @@
 }
 
 #users-filter {
+    display: none;
     position: absolute;
     top: 55px;
-    width:25%;
+    width:15%;
     left: 71%;
     margin-top: 4px;
 }
@@ -132,13 +133,17 @@
     padding-left: 0px;
     font-size: small;
     position: absolute;
-    top: 85px;
+    top: 55px;
     left: 71%;
     width: 25%;
     bottom: 70px;
     margin-left: 2px; /* for #messages border */
     margin-top: 0px;
     overflow: auto;
+}
+
+#users-lobby {
+    top: 85px;
 }
 
 .users li {

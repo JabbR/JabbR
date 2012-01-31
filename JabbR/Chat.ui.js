@@ -736,9 +736,9 @@
 
             // Load preferences
             loadPreferences();
-			
-			// Initilize liveUpdate plugin for room search
-			ui.$roomFilter = $roomFilterInput.liveUpdate('#users-lobby', true);
+
+            // Initilize liveUpdate plugin for room search
+            ui.$roomFilter = $roomFilterInput.liveUpdate('#users-lobby', true);
         },
         run: function () {
             $.history.init(function (hash) {
@@ -861,7 +861,12 @@
                     $li.addClass('locked');
                 }
             });
-            // update cache of room names
+
+            if (lobby.isActive()) {
+                // update cache of room names
+                $roomFilterInput.show();
+            }
+
             ui.$roomFilter.update();
             $roomFilterInput.val('');
         },
