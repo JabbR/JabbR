@@ -14,6 +14,7 @@ using JabbR.Services;
 using JabbR.ViewModels;
 using Microsoft.CSharp.RuntimeBinder;
 using Ninject;
+using SignalR.Configuration;
 using SignalR.Hosting.AspNet;
 using SignalR.Infrastructure;
 using SignalR.Ninject;
@@ -70,6 +71,11 @@ namespace JabbR.App_Start
             Kernel = kernel;
 
             IDependencyResolver resolver = new NinjectDependencyResolver(kernel);
+
+            var configurationManager = resolver.Resolve<IConfigurationManager>();
+
+            // Make the timeout one minute
+            configurationManager.ReconnectionTimeout = TimeSpan.FromMinutes(1);
 
             AspNetHost.SetResolver(resolver);
 
