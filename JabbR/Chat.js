@@ -15,6 +15,7 @@
         focus = true,
         loadingHistory = false,
         checkingStatus = false,
+        typing = false,
         typingTimeoutId = null,
         $ui = $(ui);
 
@@ -638,7 +639,16 @@
             return;
         }
 
-        chat.typing();
+        if (checkingStatus === false && typing === false) {
+            typing = true;
+
+            chat.typing();
+
+            window.setTimeout(function () {
+                typing = false;
+            },
+            2500);
+        }
     });
 
     $ui.bind(ui.events.sendMessage, function (ev, msg) {
