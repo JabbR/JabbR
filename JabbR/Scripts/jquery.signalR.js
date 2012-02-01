@@ -542,15 +542,16 @@
                         if (onSuccess) {
                             onSuccess();
                         }
+
+                        if (reconnecting) {
+                            $connection.trigger("onReconnect");
+                        }
                     }
                 }, false);
 
                 connection.eventSource.addEventListener("message", function (e) {
                     // process messages
                     if (e.data === "initialized") {
-                        if (reconnecting) {
-                            $connection.trigger("onReconnect");
-                        }
                         return;
                     }
                     transportLogic.processMessages(connection, window.JSON.parse(e.data));
@@ -709,6 +710,7 @@
                     delete connection.onSuccess;
                 }
                 else {
+                    // If there's no onSuccess handler we assume this is a reconnect
                     $(connection).trigger("onReconnect");
                 }
             }
