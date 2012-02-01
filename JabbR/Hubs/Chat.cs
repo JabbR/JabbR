@@ -100,16 +100,16 @@ namespace JabbR
 
             string id = Caller.id;
 
-            ChatUser user = _repository.VerifyUserId(id);
-
-            var currentStatus = (UserStatus)user.Status;
-            
-            // Make sure this client is being tracked
+            ChatUser user = _repository.VerifyUserId(id);            
+                        
             var client = user.ConnectedClients.FirstOrDefault(c => c.Id == Context.ConnectionId);
             if (client == null)
             {
+                // Make sure this client is being tracked
                 _service.AddClient(user, Context.ConnectionId, UserAgent);
             }
+            
+            var currentStatus = (UserStatus)user.Status;
 
             if (currentStatus == UserStatus.Offline)
             {
