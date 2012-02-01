@@ -802,7 +802,7 @@
         });
 
         connection.hub.disconnect(function () {
-            connection.start();
+            connection.hub.start();
         });
 
     });
