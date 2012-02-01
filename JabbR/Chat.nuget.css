@@ -87,12 +87,23 @@
 .nuget-description { padding: 5px; }
 
 .nuget-projecticon {
-    float: left;
+    float: right;
     height: 32px;
-    margin: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
     width: 32px;
+    padding: 10px;
+    border: 1px dotted #909090;
 }
-
+.cssgradients .nuget-projecticon {
+    background: -moz-linear-gradient(-45deg, rgba(226, 226, 226, 0.65) 0%, rgba(226, 226, 226, 0.64) 1%, rgba(0, 0, 0, 0) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%, rgba(226, 226, 226, 0.65)), color-stop(1%, rgba(226, 226, 226, 0.64)), color-stop(100%, rgba(0, 0, 0, 0))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg, rgba(226, 226, 226, 0.65) 0%, rgba(226, 226, 226, 0.64) 1%, rgba(0, 0, 0, 0) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(-45deg, rgba(226, 226, 226, 0.65) 0%, rgba(226, 226, 226, 0.64) 1%, rgba(0, 0, 0, 0) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(-45deg, rgba(226, 226, 226, 0.65) 0%, rgba(226, 226, 226, 0.64) 1%, rgba(0, 0, 0, 0) 100%); /* IE10+ */
+    background: linear-gradient(-45deg, rgba(226, 226, 226, 0.65) 0%, rgba(226, 226, 226, 0.64) 1%, rgba(0, 0, 0, 0) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#a6e2e2e2', endColorstr='#00000000', GradientType=1); /* IE6-9 fallback on horizontal gradient */
+}
 .nuget-authors {
     display: block;
     float: left;
@@ -113,7 +124,7 @@
 
 .nuget-ProjectUrl {
     font-size: 80%;
-    text-align: right;
+    text-align: left;
 }
 
 .nuget-badge span { font-weight: bold; }
