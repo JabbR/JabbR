@@ -23,7 +23,7 @@ jQuery.fn.liveUpdate = function (list) {
 
     function filter() {
         var term = jQuery.trim(jQuery(this).val().toLowerCase()), scores = [];
-
+        list.scrollTop(0);
         if (!term) {
             $(rows).show();
         } else {
