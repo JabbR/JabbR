@@ -771,6 +771,7 @@
     <Compile Include="ContentProviders\GoogleDocsPresentationsContentProvider.cs" />
     <Compile Include="ContentProviders\GoogleMapsContentProvider.cs" />
     <Compile Include="ContentProviders\JoinMeContentProvider.cs" />
+    <Compile Include="ContentProviders\MixcloudContentProvider.cs" />
     <Compile Include="ContentProviders\NerdDinnerContentProvider.cs" />
     <Compile Include="ContentProviders\NugetNuggetContentProvider.cs" />
     <Compile Include="ContentProviders\SoundCloudContentProvider.cs" />
