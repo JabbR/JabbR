@@ -497,9 +497,9 @@
         ui.addMessage('Your name is now ' + user.Name, 'notification', this.activeRoom);
     };
 
-    chat.setTyping = function (user, room, isTyping) {
+    chat.setTyping = function (user, room) {
         var viewModel = getUserViewModel(user);
-        ui.setUserTyping(viewModel, room, isTyping);
+        ui.setUserTyping(viewModel, room);
     };
 
     chat.sendMeMessage = function (name, message, room) {
@@ -638,20 +638,7 @@
             return;
         }
 
-        // Clear any previous timeout
-        if (typingTimeoutId) {
-            clearTimeout(typingTimeoutId);
-        }
-        else {
-            // Otherwise, mark as typing
-            chat.typing(true);
-        }
-
-        // Set timeout to turn off
-        typingTimeoutId = window.setTimeout(function () {
-            typingTimeoutId = 0;
-            chat.typing(false);
-        }, 3000);
+        chat.typing();
     });
 
     $ui.bind(ui.events.sendMessage, function (ev, msg) {
@@ -664,10 +651,6 @@
             .fail(function (e) {
                 ui.addMessage(e, 'error');
             });
-
-        clearTimeout(typingTimeoutId);
-        typingTimeoutId = 0;
-        chat.typing(false);
 
         // Store message history
         messageHistory.push(msg);

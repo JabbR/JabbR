@@ -102,12 +102,23 @@ namespace JabbR
 
             ChatUser user = _repository.VerifyUserId(id);
 
-            var wasOffline = user.Status == (int)UserStatus.Offline;
-
-            UpdateActivity(user);
-
-            if (wasOffline)
+            var currentStatus = (UserStatus)user.Status;
+            
+            // Make sure this client is being tracked
+            var client = user.ConnectedClients.FirstOrDefault(c => c.Id == Context.ConnectionId);
+            if (client == null)
             {
+                _service.AddClient(user, Context.ConnectionId, UserAgent);
+            }
+
+            if (currentStatus == UserStatus.Offline)
+            {
+                // Mark the user as inactive
+                user.Status = (int)UserStatus.Inactive;
+                _repository.CommitChanges();
+
+                // If the user was offline that means they are not in the user list so we need to tell
+                // everyone the user is really in the room
                 var userViewModel = new UserViewModel(user);
 
                 foreach (var room in user.Rooms)
@@ -293,13 +304,8 @@ namespace JabbR
             };
         }
 
-        public void Typing(bool isTyping)
+        public void Typing()
         {
-            if (OutOfSync)
-            {
-                return;
-            }
-
             string id = Caller.id;
             string roomName = Caller.activeRoom;
 
@@ -317,27 +323,9 @@ namespace JabbR
 
             ChatRoom room = _repository.VerifyUserRoom(user, roomName);
 
-            if (isTyping)
-            {
-                UpdateActivity(user, room);
-                var userViewModel = new UserViewModel(user);
-                Clients[room.Name].setTyping(userViewModel, room.Name, true);
-            }
-            else
-            {
-                SetTypingIndicatorOff(user);
-            }
-        }
-
-        private void SetTypingIndicatorOff(ChatUser user)
-        {
+            UpdateActivity(user, room);
             var userViewModel = new UserViewModel(user);
-
-            // Set the typing indicator off in all rooms
-            foreach (var r in user.Rooms)
-            {
-                Clients[r.Name].setTyping(userViewModel, r.Name, false);
-            }
+            Clients[room.Name].setTyping(userViewModel, room.Name);
         }
 
         private void LogOn(ChatUser user, string clientId)
@@ -442,9 +430,6 @@ namespace JabbR
             {
                 return;
             }
-
-            // Turn the typing indicator off for this user (even if it's just one client)
-            SetTypingIndicatorOff(user);
 
             // The user will be marked as offline if all clients leave
             if (user.Status == (int)UserStatus.Offline)

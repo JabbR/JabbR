@@ -933,21 +933,30 @@
                     $(this).remove();
                 });
         },
-        setUserTyping: function (userViewModel, roomName, isTyping) {
+        setUserTyping: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
-                $user = room.getUser(userViewModel.name);
+                $user = room.getUser(userViewModel.name),
+                timeout = null;
 
             // Do not show typing indicator for current user
             if (userViewModel.name === ui.getUserName()) {
                 return;
             }
 
-            if (isTyping) {
-                $user.addClass('typing');
+            // Mark the user as typing
+            $user.addClass('typing');
+            var oldTimeout = $user.data('typing');
+
+            if (oldTimeout) {
+                clearTimeout(oldTimeout);
             }
-            else {
+
+            timeout = window.setTimeout(function () {
                 $user.removeClass('typing');
-            }
+            },
+            3000);
+
+            $user.data('typing', timeout);
         },
         prependChatMessages: function (messages, roomName) {
             var room = getRoomElements(roomName),
