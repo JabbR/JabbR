@@ -734,6 +734,7 @@
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\json2.min.js" />
     <Content Include="Scripts\Markdown.Converter.js" />
+    <Content Include="Scripts\modernizr.js" />
     <Content Include="Scripts\quicksilver.js" />
     <Content Include="Scripts\qunit.js" />
     <Content Include="Scripts\sammy-latest.min.js" />
