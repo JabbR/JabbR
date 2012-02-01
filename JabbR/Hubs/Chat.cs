@@ -692,6 +692,9 @@ namespace JabbR
                     .Select(r => r.Name),
                 Status = ((UserStatus)user.Status).ToString(),
                 LastActivity = user.LastActivity,
+                IsAfk = user.IsAfk,
+                AfkNote = user.AfkNote,
+                Note = user.Note,
                 Rooms = user.Rooms.Allowed(userId).Select(r => r.Name)
             });
         }
