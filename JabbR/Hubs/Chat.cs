@@ -56,8 +56,7 @@ namespace JabbR
 
         public bool Join()
         {
-            // Set the version on the client
-            Caller.version = typeof(Chat).Assembly.GetName().Version.ToString();
+            SetVersion();
 
             // Get the client state
             ClientState clientState = GetClientState();
@@ -72,7 +71,7 @@ namespace JabbR
             }
 
             // Migrate all users to use new auth
-            if (!String.IsNullOrEmpty(_settings.AuthApiKey) && 
+            if (!String.IsNullOrEmpty(_settings.AuthApiKey) &&
                 String.IsNullOrEmpty(user.Identity))
             {
                 return false;
@@ -87,6 +86,48 @@ namespace JabbR
             return true;
         }
 
+        private void SetVersion()
+        {
+            // Set the version on the client
+            Caller.version = typeof(Chat).Assembly.GetName().Version.ToString();
+        }
+
+        public bool CheckStatus()
+        {
+            bool outOfSync = OutOfSync;
+
+            SetVersion();
+
+            string id = Caller.id;
+
+            ChatUser user = _repository.VerifyUserId(id);
+
+            var wasOffline = user.Status == (int)UserStatus.Offline;
+
+            UpdateActivity(user);
+
+            if (wasOffline)
+            {
+                var userViewModel = new UserViewModel(user);
+
+                foreach (var room in user.Rooms)
+                {
+                    var isOwner = user.OwnedRooms.Contains(room);
+
+                    // Tell the people in this room that you've joined
+                    Clients[room.Name].addUser(userViewModel, room.Name, isOwner).Wait();
+
+                    // Update the room count
+                    OnRoomChanged(room);
+
+                    // Add the caller to the group so they receive messages
+                    GroupManager.AddToGroup(Context.ConnectionId, room.Name).Wait();
+                }
+            }
+
+            return outOfSync;
+        }
+
         private void OnUserInitialize(ClientState clientState, ChatUser user)
         {
             // Update the active room on the client (only if it's still a valid room)
@@ -99,13 +140,11 @@ namespace JabbR
             LogOn(user, Context.ConnectionId);
         }
 
-        public void Send(string content)
+        public bool Send(string content)
         {
-            // If the client and server are out of sync then tell the client to refresh
-            if (OutOfSync)
-            {
-                throw new InvalidOperationException("Chat was just updated, please refresh your browser");
-            }
+            bool outOfSync = OutOfSync;
+
+            SetVersion();
 
             // Sanitize the content (strip and bad html out)
             content = HttpUtility.HtmlEncode(content);
@@ -113,7 +152,7 @@ namespace JabbR
             // See if this is a valid command (starts with /)
             if (TryHandleCommand(content))
             {
-                return;
+                return outOfSync;
             }
 
             string roomName = Caller.activeRoom;
@@ -137,10 +176,12 @@ namespace JabbR
 
             if (!links.Any())
             {
-                return;
+                return outOfSync;
             }
 
             ProcessUrls(links, room, chatMessage);
+
+            return outOfSync;
         }
 
         private string ParseChatMessageText(string content, out HashSet<string> links)
@@ -783,7 +824,7 @@ namespace JabbR
             {
                 Clients[client.Id].flagChanged(isFlagCleared, userViewModel.Country);
             }
-                                    
+
             // Tell all users in rooms to change the flag
             foreach (var room in user.Rooms)
             {

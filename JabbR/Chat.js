@@ -14,6 +14,7 @@
         isUnreadMessageForUser = false,
         focus = true,
         loadingHistory = false,
+        checkingStatus = false,
         typingTimeoutId = null,
         $ui = $(ui);
 
@@ -655,6 +656,11 @@
 
     $ui.bind(ui.events.sendMessage, function (ev, msg) {
         chat.send(msg)
+            .done(function (requiresUpdate) {
+                if (requiresUpdate === true) {
+                    ui.showUpdateUI();
+                }
+            })
             .fail(function (e) {
                 ui.addMessage(e, 'error');
             });
@@ -776,6 +782,29 @@
                         });
                 });
         });
+
+        connection.hub.reconnect(function () {
+            if (checkingStatus === true) {
+                return;
+            }
+
+            checkingStatus = true;
+
+            chat.checkStatus()
+                .done(function (requiresUpdate) {
+                    if (requiresUpdate === true) {
+                        ui.showUpdateUI();
+                    }
+                })
+                .always(function () {
+                    checkingStatus = false;
+                });
+        });
+
+        connection.hub.disconnect(function () {
+            connection.start();
+        });
+
     });
 
 })(jQuery, $.connection, window, window.chat.ui);

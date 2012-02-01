@@ -1159,6 +1159,9 @@
         showLogin: function () {
             $login.click();
         },
+        showUpdateUI: function () {
+            alert('JabbR was just updated. Refresh your browser to get the latest and greatest.');
+        },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
                 $user = room.getUser(userViewModel.name);

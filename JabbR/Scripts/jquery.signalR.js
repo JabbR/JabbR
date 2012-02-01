@@ -228,6 +228,17 @@
             return connection;
         },
 
+        reconnect: function (callback) {
+            /// <summary>Adds a callback that will be invoked when the underlying transport reconnects</summary>
+            /// <param name="callback" type="Function">A callback function to execute when the connection is restored</param>
+            /// <returns type="signalR" />
+            var connection = this;
+            $(connection).bind("onReconnect", function (e, data) {
+                callback.call(connection);
+            });
+            return connection;
+        },
+
         stop: function () {
             /// <summary>Stops listening</summary>
             /// <returns type="signalR" />
@@ -537,6 +548,9 @@
                 connection.eventSource.addEventListener("message", function (e) {
                     // process messages
                     if (e.data === "initialized") {
+                        if (reconnecting) {
+                            $connection.trigger("onReconnect");
+                        }
                         return;
                     }
                     transportLogic.processMessages(connection, window.JSON.parse(e.data));
@@ -694,6 +708,9 @@
                     connection.onSuccess = null;
                     delete connection.onSuccess;
                 }
+                else {
+                    $(connection).trigger("onReconnect");
+                }
             }
         },
 
@@ -717,6 +734,12 @@
                         var messageId = instance.messageId,
                             connect = (messageId === null),
                             url = transportLogic.getUrl(instance, that.name, !connect);
+
+                        if (!connect) {
+                            window.setTimeout(function () {
+                                $(instance).trigger("onReconnect");
+                            }, 100);
+                        }
 
                         instance.pollXhr = $.ajax(url, {
                             global: false,
