@@ -191,6 +191,15 @@ namespace JabbR
             return TextTransform.TransformAndExtractUrls(message, out links);
         }
 
+        public UserViewModel GetUserInfo()
+        {
+            string id = Caller.id;
+
+            ChatUser user = _repository.VerifyUserId(id);
+
+            return new UserViewModel(user);
+        }
+
         public void Disconnect()
         {
             DisconnectClient(Context.ConnectionId);
