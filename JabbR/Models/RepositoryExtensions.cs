@@ -62,7 +62,7 @@ namespace JabbR.Models
             return user;
         }
 
-        public static ChatRoom VerifyRoom(this IJabbrRepository repository, string roomName)
+        public static ChatRoom VerifyRoom(this IJabbrRepository repository, string roomName, bool mustBeOpen = true)
         {
             if (String.IsNullOrWhiteSpace(roomName))
             {
@@ -78,7 +78,7 @@ namespace JabbR.Models
                 throw new InvalidOperationException(String.Format("Unable to find room '{0}'", roomName));
             }
 
-            if (room.Closed)
+            if (room.Closed && mustBeOpen)
             {
                 throw new InvalidOperationException(String.Format("The room '{0}' is closed", roomName));
             }

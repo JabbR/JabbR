@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -808,6 +808,11 @@ namespace JabbR.Services
             targetRoom.Closed = true;
 
             _repository.CommitChanges();
+        }
+
+        public void HandleOpen(ChatUser user, ChatRoom targetRoom)
+        {
+            EnsureOwner(user, targetRoom);
         }
 
         internal static void ValidateNote(string note)
