@@ -111,6 +111,7 @@
     <Content Include="Chat.twitter.js" />
     <Content Include="Chat.ui.js" />
     <Content Include="Chat.utility.js" />
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\images\ajax-loader.png" />
     <Content Include="Content\images\close-icon-hover.png" />
     <Content Include="Content\images\close-icon.png" />
@@ -705,6 +706,7 @@
     <Content Include="Mobile.css" />
     <Content Include="mobile.htm" />
     <Content Include="Content\sounds\notification.wav" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\jquery.history.js" />
     <Content Include="Scripts\jquery-1.7-vsdoc.js" />
