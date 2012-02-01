@@ -23,6 +23,7 @@
         $login = null,
         name,
         lastCycledMessage = null,
+        $updatePopup = null,
         $window = $(window),
         $document = $(document),
         $roomFilterInput = null;
@@ -523,6 +524,7 @@
             $toast = $('#preferences .toast');
             $sound = $('#preferences .sound');
             $login = $('.janrainEngage');
+            $updatePopup = $('#jabbr-update');
             focus = true;
             $roomFilterInput = $('#users-filter');
             templates = {
@@ -1160,7 +1162,7 @@
             $login.click();
         },
         showUpdateUI: function () {
-            alert('JabbR was just updated. Refresh your browser to get the latest and greatest.');
+            $updatePopup.modal();
         },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
