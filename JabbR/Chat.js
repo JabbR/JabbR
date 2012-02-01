@@ -416,8 +416,20 @@
     chat.showUserInfo = function (userInfo) {
         var lastActivityDate = userInfo.LastActivity.fromJsonDate();
         var status = "Currently " + userInfo.Status;
+        if (userInfo.IsAfk) {
+            status += userInfo.Status == 'Active' ? ' but ' : ' and ';
+            status += ' is Afk';
+        }
         ui.addMessage('User information for ' + userInfo.Name +
             " (" + status + " - last seen " + $.timeago(lastActivityDate) + ")", 'list-header');
+
+        if (userInfo.AfkNote) {
+            ui.addMessage('Afk: ' + userInfo.AfkNote, 'list-item');
+        }
+        else if (userInfo.Note) {
+            ui.addMessage('Note: ' + userInfo.Note, 'list-item');
+        }
+
         chat.showUsersOwnedRoomList(userInfo.Name, userInfo.OwnedRooms);
     };
 
