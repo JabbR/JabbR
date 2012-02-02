@@ -6,7 +6,7 @@
     Emoji.getIcons = function() {
         var icons = [];
         for(var key in validEmoji) {
-            icons.push(key);
+            icons.push(key + ':');
         }
         return icons;
     };
@@ -18,7 +18,7 @@
 
         function emojiReplacer(str, match) {
             if (validEmoji[match]) {
-                return '<img src="/Content/images/emojis/' + match + '.png" alt="' + match + '" title="' + match + '" height="20" width="20" align="absmiddle" />';
+                return '<img src="Content/images/emojis/' + match + '.png" alt="' + match + '" title="' + match + '" height="20" width="20" align="absmiddle" />';
             } else {
                 return ':' + match + ':';
             }
