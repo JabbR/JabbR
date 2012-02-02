@@ -26,7 +26,8 @@
         $updatePopup = null,
         $window = $(window),
         $document = $(document),
-        $roomFilterInput = null;
+        $roomFilterInput = null,
+        updateTimeout = 150000;
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -1172,6 +1173,12 @@
         },
         showUpdateUI: function () {
             $updatePopup.modal();
+
+            window.setTimeout(function () {
+                // Reload the page
+                document.location = document.location.pathname;
+            }, 
+            updateTimeout);
         },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
