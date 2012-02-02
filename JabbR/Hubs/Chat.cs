@@ -102,7 +102,8 @@ namespace JabbR
 
             ChatUser user = _repository.VerifyUserId(id);
 
-            var client = user.ConnectedClients.FirstOrDefault(c => c.Id == Context.ConnectionId);
+            ChatClient client = _repository.GetClientById(Context.ConnectionId);
+
             if (client == null)
             {
                 // Make sure this client is being tracked
