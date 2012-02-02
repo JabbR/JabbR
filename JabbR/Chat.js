@@ -642,7 +642,7 @@
         if (checkingStatus === false && typing === false) {
             typing = true;
 
-            chat.typing();
+            chat.typing(chat.activeRoom);
 
             window.setTimeout(function () {
                 typing = false;
@@ -652,7 +652,7 @@
     });
 
     $ui.bind(ui.events.sendMessage, function (ev, msg) {
-        chat.send(msg)
+        chat.send(msg, chat.activeRoom)
             .done(function (requiresUpdate) {
                 if (requiresUpdate === true) {
                     ui.showUpdateUI();
@@ -682,7 +682,7 @@
     });
 
     $ui.bind(ui.events.openRoom, function (ev, room) {
-        chat.send('/join ' + room)
+        chat.send('/join ' + room, chat.activeRoom)
             .fail(function (e) {
                 ui.setActiveRoom('Lobby');
                 ui.addMessage(e, 'error');
@@ -690,7 +690,7 @@
     });
 
     $ui.bind(ui.events.closeRoom, function (ev, room) {
-        chat.send('/leave ' + room)
+        chat.send('/leave ' + room, chat.activeRoom)
             .fail(function (e) {
                 ui.addMessage(e, 'error');
             });

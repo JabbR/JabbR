@@ -100,15 +100,15 @@ namespace JabbR
 
             string id = Caller.id;
 
-            ChatUser user = _repository.VerifyUserId(id);            
-                        
+            ChatUser user = _repository.VerifyUserId(id);
+
             var client = user.ConnectedClients.FirstOrDefault(c => c.Id == Context.ConnectionId);
             if (client == null)
             {
                 // Make sure this client is being tracked
                 _service.AddClient(user, Context.ConnectionId, UserAgent);
             }
-            
+
             var currentStatus = (UserStatus)user.Status;
 
             if (currentStatus == UserStatus.Offline)
@@ -151,7 +151,7 @@ namespace JabbR
             LogOn(user, Context.ConnectionId);
         }
 
-        public bool Send(string content)
+        public bool Send(string content, string roomName)
         {
             bool outOfSync = OutOfSync;
 
@@ -161,12 +161,11 @@ namespace JabbR
             content = HttpUtility.HtmlEncode(content);
 
             // See if this is a valid command (starts with /)
-            if (TryHandleCommand(content))
+            if (TryHandleCommand(content, roomName))
             {
                 return outOfSync;
             }
 
-            string roomName = Caller.activeRoom;
             string id = Caller.id;
 
             ChatUser user = _repository.VerifyUserId(id);
@@ -193,6 +192,13 @@ namespace JabbR
             ProcessUrls(links, room, chatMessage);
 
             return outOfSync;
+        }
+
+        // TODO: Deprecate
+        public bool Send(string content)
+        {
+            string roomName = Caller.activeRoom;
+            return Send(content, roomName);
         }
 
         private string ParseChatMessageText(string content, out HashSet<string> links)
@@ -304,16 +310,17 @@ namespace JabbR
             };
         }
 
+        // TODO: Deprecate
         public void Typing()
         {
-            string id = Caller.id;
             string roomName = Caller.activeRoom;
 
-            if (String.IsNullOrEmpty(id))
-            {
-                return;
-            }
+            Typing(roomName);
+        }
 
+        public void Typing(string roomName)
+        {
+            string id = Caller.id;
             ChatUser user = _repository.GetUserById(id);
 
             if (user == null)
@@ -411,11 +418,10 @@ namespace JabbR
             });
         }
 
-        private bool TryHandleCommand(string command)
+        private bool TryHandleCommand(string command, string room)
         {
             string clientId = Context.ConnectionId;
             string userId = Caller.id;
-            string room = Caller.activeRoom;
 
             var commandManager = new CommandManager(clientId, UserAgent, userId, room, _service, _repository, this);
             return commandManager.TryHandleCommand(command);
