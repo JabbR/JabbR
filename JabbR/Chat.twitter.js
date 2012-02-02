@@ -16,7 +16,10 @@
         // Process the template, and add it in to the div.
         $('#tweet-template').tmpl(tweet).appendTo(elements);
         $("time.js-relative-date").timeago();
-       
+
+        // After the string has been added to the template etc, remove any existing targets and re-add with _blank
+        $('a', elements).removeAttr('target').attr('target', '_blank');
+        
         // If near the end, scroll.
         if (nearEnd) {
             ui.scrollToBottom();
