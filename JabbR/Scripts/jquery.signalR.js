@@ -506,6 +506,10 @@
                             log("EventSource reconnecting");
                             that.reconnect(connection);
                         }
+                        else {
+                            // Trigger the disconnect event
+                            $connection.trigger("onDisconnect");
+                        }
                     }
                     return;
                 }
@@ -589,6 +593,9 @@
                         // connection error
                         log("EventSource error");
                         $connection.trigger("onError");
+
+                        // Trigger the disconnect event
+                        $connection.trigger("onDisconnect");
                     }
                 }, false);
             },
