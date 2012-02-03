@@ -461,16 +461,9 @@ namespace JabbR.Services
             user.Status = (int)UserStatus.Active;
             user.LastActivity = DateTime.UtcNow;
 
-            ChatClient client = _repository.GetClientById(clientId);
-            if (client == null)
-            {
-                AddClient(user, clientId, userAgent);
-            }
-            else
-            {
-                client.UserAgent = userAgent;
-                client.LastActivity = DateTimeOffset.UtcNow;
-            }
+            ChatClient client = AddClient(user, clientId, userAgent);
+            client.UserAgent = userAgent;
+            client.LastActivity = DateTimeOffset.UtcNow;
 
             // Remove any Afk notes.
             if (user.IsAfk)
@@ -570,9 +563,15 @@ namespace JabbR.Services
             LeaveRoom(targetUser, targetRoom);
         }
 
-        public void AddClient(ChatUser user, string clientId, string userAgent)
+        public ChatClient AddClient(ChatUser user, string clientId, string userAgent)
         {
-            var client = new ChatClient
+            ChatClient client = _repository.GetClientById(clientId);
+            if (client != null)
+            {
+                return client;
+            }
+
+            client = new ChatClient
             {
                 Id = clientId,
                 User = user,
@@ -582,6 +581,8 @@ namespace JabbR.Services
 
             _repository.Add(client);
             _repository.CommitChanges();
+
+            return client;
         }
 
         public ChatUser DisconnectClient(string clientId)

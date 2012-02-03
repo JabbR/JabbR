@@ -8,7 +8,7 @@ namespace JabbR.Services
         ChatUser AddUser(string userName, string clientId, string userAgent, string password);
         ChatUser AddUser(string userName, string identity, string email);
 
-        void AddClient(ChatUser user, string clientId, string userAgent);
+        ChatClient AddClient(ChatUser user, string clientId, string userAgent);
         void AuthenticateUser(string userName, string password);
         void ChangeUserName(ChatUser user, string newUserName);
         void ChangeUserPassword(ChatUser user, string oldPassword, string newPassword);
