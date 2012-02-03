@@ -218,9 +218,11 @@ namespace JabbR
             return new UserViewModel(user);
         }
 
-        public void Disconnect()
+        public Task Disconnect()
         {
             DisconnectClient(Context.ConnectionId);
+
+            return null;
         }
 
         public object GetCommands()
