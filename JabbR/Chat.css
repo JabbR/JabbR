@@ -145,10 +145,20 @@
 #users-lobby {
     top: 85px;
 }
-
+.users ul
+{
+    margin-left: 0px;
+    padding-left: 0px;
+    margin-top: 0px;
+}
 .users li {
     padding: 4px;
     list-style: none;
+}
+.users li.empty
+{
+    color: #909090;
+    font-style: italic;
 }
 
 .users li .name {
