@@ -27,7 +27,7 @@
         $window = $(window),
         $document = $(document),
         $roomFilterInput = null,
-        updateTimeout = 150000;
+        updateTimeout = 15000;
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
