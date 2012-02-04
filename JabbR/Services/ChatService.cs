@@ -813,6 +813,15 @@ namespace JabbR.Services
         public void HandleOpen(ChatUser user, ChatRoom targetRoom)
         {
             EnsureOwner(user, targetRoom);
+
+            if (targetRoom.Closed == false)
+            {
+                throw new InvalidOperationException(string.Format("{0} is already open.", targetRoom.Name));
+            }
+
+            // Open the room
+            targetRoom.Closed = false;
+            _repository.CommitChanges();
         }
 
         internal static void ValidateNote(string note)

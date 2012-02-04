@@ -705,6 +705,11 @@ namespace JabbR
             Caller.roomClosed(room.Name);
         }
 
+        void INotificationService.OpenRoom(ChatRoom room)
+        {
+            Caller.roomOpened(room.Name);
+        }
+
         void INotificationService.LogOut(ChatUser user, string clientId)
         {
             DisconnectClient(clientId);

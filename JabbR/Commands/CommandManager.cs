@@ -291,12 +291,8 @@ namespace JabbR.Commands
             string roomName = parts[1];
             ChatRoom room = _repository.VerifyRoom(roomName, mustBeOpen: false);
 
-            if (room.Closed == false)
-            {
-                throw new InvalidOperationException("Room '" + roomName + "' is already open.");
-            }
-
             _chatService.HandleOpen(user, room);
+            _notificationService.OpenRoom(room);
         }
 
         private void HandleInviteCode(ChatUser user, ChatRoom room, bool forceReset)
