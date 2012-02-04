@@ -405,8 +405,8 @@
             });
         } else {
             $('<ul/>').attr('id', 'userlist-' + roomId)
-                      .addClass('users')
-                      .appendTo($chatArea).hide();
+                .addClass('users')
+                .appendTo($chatArea).hide();
         }
 
         $tabs.find('li')
@@ -537,7 +537,6 @@
 
     function getActiveRoomPreference(name) {
         var room = getCurrentRoomElements();
-
         return getRoomPreference(room.getName(), name);
     }
 
@@ -924,7 +923,6 @@
             var currentRoom = getCurrentRoomElements();
 
             if (room.exists() && currentRoom.exists()) {
-                var hasUnread = room.hasUnread();
                 currentRoom.makeInactive();
                 triggerFocus();
                 room.makeActive();
@@ -966,9 +964,9 @@
         populateLobbyRooms: function (rooms) {
             var lobby = getLobby(),
             // sort lobby by room count descending
-                sorted = rooms.sort(function (a, b) {
-                    return a.Count > b.Count ? -1 : 1;
-                });
+            sorted = rooms.sort(function (a, b) {
+                return a.Count > b.Count ? -1 : 1;
+            });
 
             lobby.users.empty();
 
