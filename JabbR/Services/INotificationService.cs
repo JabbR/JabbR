@@ -46,6 +46,5 @@ namespace JabbR.Services
 
         void LockRoom(ChatUser targetUser, ChatRoom room);
         void CloseRoom(IEnumerable<ChatUser> users, ChatRoom room);
-        void OpenRoom(ChatRoom room);
     }
 }

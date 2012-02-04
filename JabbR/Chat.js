@@ -246,11 +246,6 @@
         ui.addMessage('Room \'' + room + '\' is now closed', 'notification', this.activeRoom);
     };
 
-    chat.roomOpened = function (room) {
-        populateLobbyRooms();
-        ui.addMessage('Room \'' + room + '\' is now open', 'notification', this.activeRoom);
-    };
-
     chat.addOwner = function (user, room) {
         ui.setRoomOwner(user.Name, room);
     };

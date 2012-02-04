@@ -3635,7 +3635,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void RoomOpensIfUserIsOwner()
+            public void RoomOpensAndOwnerJoinedAutomaticallyIfUserIsOwner()
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
@@ -3667,8 +3667,8 @@ namespace JabbR.Test
                 var result = commandManager.TryHandleCommand("/open " + roomName);
 
                 Assert.True(result);
-                notificationService.Verify(x => x.OpenRoom(room), Times.Once());
                 Assert.False(room.Closed);
+                Assert.True(roomOwner.Rooms.Any(x => x.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase)));
             }
         }
 
