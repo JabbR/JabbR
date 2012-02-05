@@ -775,7 +775,7 @@
                 });
         });
 
-        connection.hub.reconnect(function () {
+        connection.hub.reconnected(function () {
             if (checkingStatus === true) {
                 return;
             }
@@ -793,7 +793,7 @@
                 });
         });
 
-        connection.hub.disconnect(function () {
+        connection.hub.disconnected(function () {
             connection.hub.start();
         });
 

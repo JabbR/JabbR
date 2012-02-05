@@ -228,7 +228,7 @@
         this.setLocked = function () {
             this.tab.addClass('locked');
         };
-        
+
         this.setListState = function (list) {
             if (list.children('li').length > 0) {
                 var roomEmptyStatus = list.children('li.empty');
@@ -386,7 +386,7 @@
                               .appendTo($chatArea)
                               .hide();
 
-        if (roomName !== "lobby"){
+        if (roomName !== "lobby") {
             userContainer = $('<div/>').attr('id', 'userlist-' + roomId)
                 .addClass('users')
                 .appendTo($chatArea).hide();
@@ -581,8 +581,12 @@
         if (userViewModel.noteClass === 'afk') {
             noteText = userViewModel.note + ' (' + userViewModel.timeAgo + ')';
             requireRoomUpdate = ui.setUserInActive($user);
-        } else {
+        }
+        else if (userViewModel.active) {
             requireRoomUpdate = ui.setUserActive($user);
+        }
+        else {
+            requireRoomUpdate = ui.setUserInActive($user);
         }
 
         noteTextEncoded = $('<div/>').html(noteText).text();
@@ -1020,8 +1024,10 @@
             return true;
         },
         setUserActivity: function (userViewModel) {
-            var $user = $('.users').find(getUserClassName(userViewModel.name));
-            if (userViewModel.active !== $user.data('active')) {
+            var $user = $('.users').find(getUserClassName(userViewModel.name)),
+                active = $user.data('active');
+
+            if (userViewModel.active !== active) {
                 if (userViewModel.active === true) {
                     $user.fadeTo('slow', 1, function () {
                         $user.removeClass('idle');
@@ -1032,6 +1038,9 @@
                     });
                 }
             }
+
+            $user.data('active', userViewModel.active);
+
             updateNote(userViewModel, $user);
         },
         setUserActive: function ($user) {
@@ -1323,7 +1332,7 @@
             window.setTimeout(function () {
                 // Reload the page
                 document.location = document.location.pathname;
-            }, 
+            },
             updateTimeout);
         },
         changeNote: function (userViewModel, roomName) {
