@@ -54,10 +54,9 @@
         chat.getRoomInfo(room)
                 .done(function (roomInfo) {
                     $.each(roomInfo.Users, function () {
-                        var viewModel = getUserViewModel(this);
-
-                        ui.addUser(viewModel, room);
-                        ui.setUserActivity(viewModel);
+                        var userViewModel = getUserViewModel(this);
+                        ui.addUser(userViewModel, room);
+                        ui.setUserActivity(userViewModel);
                     });
 
                     $.each(roomInfo.Owners, function () {
@@ -577,7 +576,7 @@
                 return a.Count > b.Count ? -1 : 1;
             });
 
-            $.each(rooms, function () {
+            $.each(sorted, function () {
                 ui.addMessage(this.Name + ' (' + this.Count + ')', 'list-item');
             });
         }

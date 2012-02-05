@@ -41,9 +41,12 @@
         return '_room_' + roomName;
     }
 
-    function Room($tab, $users, $messages) {
+    function Room($tab, $usersContainer, $usersOwners, $usersActive, $usersIdle, $messages) {
         this.tab = $tab;
-        this.users = $users;
+        this.users = $usersContainer;
+        this.owners = $usersOwners;
+        this.activeUsers = $usersActive;
+        this.idleUsers = $usersIdle;
         this.messages = $messages;
 
         function glowTab() {
@@ -151,7 +154,9 @@
 
         this.clear = function () {
             this.messages.empty();
-            this.users.empty();
+            this.owners.empty();
+            this.activeUsers.empty();
+            this.idleUsers.empty();
         };
 
         this.makeInactive = function () {
@@ -223,19 +228,105 @@
         this.setLocked = function () {
             this.tab.addClass('locked');
         };
+        
+        this.setListState = function (list) {
+            if (list.children('li').length > 0) {
+                var roomEmptyStatus = list.children('li.empty');
+                if (roomEmptyStatus.length == 0) {
+                    return;
+                } else {
+                    roomEmptyStatus.remove();
+                    return;
+                }
+            }
+            list.append($('<li class="empty">No users</li>'));
+        };
+
+        this.addUser = function (userViewModel, $user) {
+            if (userViewModel.active) {
+                this.addUserToList($user, this.activeUsers);
+            } else {
+                this.addUserToList($user, this.idleUsers);
+            }
+        };
+
+        this.addUserToList = function ($user, list) {
+            var oldParentList = $user.parent('ul');
+            $user.appendTo(list);
+            this.setListState(list);
+            if (typeof oldParentList != undefined) {
+                this.setListState(oldParentList);
+            }
+        };
+
+        this.appearsInList = function ($user, list) {
+            return $user.parent('ul').attr('id') == list.attr('id');
+        };
+
+        this.updateUserStatus = function ($user) {
+            var owner = $user.attr('data-owner');
+            if (typeof owner != "undefined") {
+                if (owner === "true") {
+                    if (!this.appearsInList($user, this.owners)) {
+                        this.addUserToList($user, this.owners);
+                    }
+                } else {
+                    if (!this.appearsInList($user, this.activeUsers)) {
+                        this.addUserToList($user, this.activeUsers);
+                    }
+                }
+                return;
+            }
+            var status = $user.attr('data-active');
+            if (typeof status === "undefined") {
+                return;
+            }
+            if (status === "true") {
+                if (!this.appearsInList($user, this.activeUsers)) {
+                    this.addUserToList($user, this.activeUsers);
+                }
+            } else {
+                if (!this.appearsInList($user, this.idleUsers)) {
+                    this.addUserToList($user, this.idleUsers);
+                }
+            }
+        };
+
+        this.sortLists = function () {
+            this.sortList(this.activeUsers);
+            this.sortList(this.idleUsers);
+        };
+
+        this.sortList = function (listToSort) {
+            var listItems = listToSort.children('li').get();
+            listItems.sort(function (a, b) {
+                var compA = $(a).data('name').toUpperCase();
+                var compB = $(b).data('name').toUpperCase();
+                return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
+            })
+            $.each(listItems, function (index, item) { listToSort.append(item); });
+        };
     }
 
     function getRoomElements(roomName) {
         var roomId = getRoomId(roomName);
-        return new Room($('#tabs-' + roomId),
-                        $('#users-' + roomId),
+        var room = new Room($('#tabs-' + roomId),
+                        $('#userlist-' + roomId),
+                        $('#userlist-' + roomId + '-owners'),
+                        $('#userlist-' + roomId + '-active'),
+                        $('#userlist-' + roomId + '-idle'),
                         $('#messages-' + roomId));
+        return room;
     }
 
     function getCurrentRoomElements() {
-        return new Room($tabs.find('li.current'),
+        var room = new Room($tabs.find('li.current'),
                         $('.users.current'),
+                        $('.userlist.current .owners'),
+                        $('.userlist.current .active'),
+                        $('.userlist.current .idle'),
                         $('.messages.current'));
+        return room;
     }
 
     function getAllRoomElements() {
@@ -273,7 +364,8 @@
             roomId = null,
             viewModel = null,
             $messages = null,
-            scrollHandler = null;
+            scrollHandler = null,
+            userContainer = null;
 
         if (room.exists()) {
             return false;
@@ -294,10 +386,28 @@
                               .appendTo($chatArea)
                               .hide();
 
-
-        $('<ul/>').attr('id', 'users-' + roomId)
-                  .addClass('users')
-                  .appendTo($chatArea).hide();
+        if (roomName !== "lobby"){
+            userContainer = $('<div/>').attr('id', 'userlist-' + roomId)
+                .addClass('users')
+                .appendTo($chatArea).hide();
+            templates.userlist.tmpl({ listname: 'Room Owners', id: 'userlist-' + roomId + '-owners' })
+                .addClass('owners')
+                .appendTo(userContainer);
+            templates.userlist.tmpl({ listname: 'Online', id: 'userlist-' + roomId + '-active' })
+                .addClass('active')
+                .appendTo(userContainer);
+            templates.userlist.tmpl({ listname: 'Away', id: 'userlist-' + roomId + '-idle' })
+                .addClass('idle')
+                .appendTo(userContainer);
+            userContainer.find('h3').click(function () {
+                $(this).next().toggle(0);
+                return false;
+            });
+        } else {
+            $('<ul/>').attr('id', 'userlist-' + roomId)
+                .addClass('users')
+                .appendTo($chatArea).hide();
+        }
 
         $tabs.find('li')
             .not('.lobby')
@@ -427,7 +537,6 @@
 
     function getActiveRoomPreference(name) {
         var room = getCurrentRoomElements();
-
         return getRoomPreference(room.getName(), name);
     }
 
@@ -466,13 +575,17 @@
     function updateNote(userViewModel, $user) {
         var $note = $user.find('.note'),
             noteText = userViewModel.note,
-            noteTextUencoded = null;
+            noteTextEncoded = null,
+            requireRoomUpdate = false;
 
         if (userViewModel.noteClass === 'afk') {
             noteText = userViewModel.note + ' (' + userViewModel.timeAgo + ')';
+            requireRoomUpdate = ui.setUserInActive($user);
+        } else {
+            requireRoomUpdate = ui.setUserActive($user);
         }
 
-        noteTextUencoded = $('<div/>').html(noteText).text();
+        noteTextEncoded = $('<div/>').html(noteText).text();
 
         // Remove all classes and the text
         $note.removeClass('afk message');
@@ -480,7 +593,15 @@
 
         $note.addClass(userViewModel.noteClass);
         if (userViewModel.note) {
-            $note.attr('title', noteTextUencoded);
+            $note.attr('title', noteTextEncoded);
+        }
+
+        if (requireRoomUpdate) {
+            $user.each(function () {
+                var room = getRoomElements($(this).data('inroom'));
+                room.updateUserStatus($(this));
+                room.sortLists();
+            });
         }
     }
 
@@ -529,6 +650,7 @@
             focus = true;
             $roomFilterInput = $('#users-filter');
             templates = {
+                userlist: $('#new-userlist-template'),
                 user: $('#new-user-template'),
                 message: $('#new-message-template'),
                 notification: $('#new-notification-template'),
@@ -772,16 +894,20 @@
         setRoomOwner: function (ownerName, roomName) {
             var room = getRoomElements(roomName),
                 $user = room.getUser(ownerName);
-
-            $user.find('.owner')
-                 .text('(owner)');
+            $user
+                .attr('data-owner', true)
+                .find('.owner')
+                .text('(owner)');
+            room.updateUserStatus($user);
         },
         clearRoomOwner: function (ownerName, roomName) {
             var room = getRoomElements(roomName),
                 $user = room.getUser(ownerName);
-
-            $user.find('.owner')
+            $user
+                 .removeAttr('data-owner')
+                 .find('.owner')
                  .text('');
+            room.updateUserStatus($user);
         },
         setActiveRoom: function (roomName) {
             var room = getRoomElements(roomName);
@@ -797,7 +923,6 @@
             var currentRoom = getCurrentRoomElements();
 
             if (room.exists() && currentRoom.exists()) {
-                var hasUnread = room.hasUnread();
                 currentRoom.makeInactive();
                 triggerFocus();
                 room.makeActive();
@@ -839,9 +964,9 @@
         populateLobbyRooms: function (rooms) {
             var lobby = getLobby(),
             // sort lobby by room count descending
-                sorted = rooms.sort(function (a, b) {
-                    return a.Count > b.Count ? -1 : 1;
-                });
+            sorted = rooms.sort(function (a, b) {
+                return a.Count > b.Count ? -1 : 1;
+            });
 
             lobby.users.empty();
 
@@ -873,7 +998,7 @@
             ui.$roomFilter.update();
             $roomFilterInput.val('');
         },
-        addUser: function (user, roomName) {
+        addUser: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
                 $user = null;
 
@@ -881,41 +1006,62 @@
             room.users.find('.removing').remove();
 
             // Get the user element
-            $user = room.getUser(user.name);
+            $user = room.getUser(userViewModel.name);
 
             if ($user.length) {
                 return false;
             }
-
-            templates.user.tmpl(user).appendTo(room.users);
-            updateNote(user, room.getUser(user.name));
-            updateFlag(user, room.getUser(user.name));
+            $user = templates.user.tmpl(userViewModel);
+            $user.data('inroom', roomName);
+            room.addUser(userViewModel, $user);
+            updateNote(userViewModel, room.getUser(userViewModel.name));
+            updateFlag(userViewModel, room.getUser(userViewModel.name));
 
             return true;
         },
         setUserActivity: function (userViewModel) {
             var $user = $('.users').find(getUserClassName(userViewModel.name));
-
-            if (userViewModel.active === true) {
-                $user.fadeTo('slow', 1, function () {
-                    $user.removeClass('idle');
-                });
+            if (userViewModel.active !== $user.data('active')) {
+                if (userViewModel.active === true) {
+                    $user.fadeTo('slow', 1, function () {
+                        $user.removeClass('idle');
+                    });
+                } else {
+                    $user.fadeTo('slow', 0.5, function () {
+                        $user.addClass('idle');
+                    });
+                }
             }
-            else {
-                $user.fadeTo('slow', 0.5, function () {
-                    $user.addClass('idle');
-                });
-            }
-
             updateNote(userViewModel, $user);
+        },
+        setUserActive: function ($user) {
+            if ($user.data('active') === true) {
+                return false;
+            }
+            $user.attr('data-active', true);
+            $user.data('active', true);
+            return true;
+        },
+        setUserInActive: function ($user) {
+            if ($user.data('active') === false) {
+                return false;
+            }
+            $user.attr('data-active', false);
+            $user.data('active', false);
+            return true;
         },
         changeUserName: function (oldName, user, roomName) {
             var room = getRoomElements(roomName),
                 $user = room.getUserReferences(oldName);
 
             // Update the user's name
-            $user.find('.name').html(user.Name);
+            $user.find('.name').fadeOut('normal', function () {
+                $(this).html(user.Name);
+                $(this).fadeIn('normal');
+            });
             $user.data('name', user.Name);
+            $user.attr('data-name', user.Name);
+            room.sortLists();
         },
         changeGravatar: function (user, roomName) {
             var room = getRoomElements(roomName),

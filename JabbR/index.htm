@@ -16,7 +16,7 @@
     <script src="Scripts/jquery-1.7.min.js" type="text/javascript"></script>
     <script src="Scripts/bootstrap.min.js" type="text/javascript"></script>
     <script src="Scripts/jquery.KeyTips.js" type="text/javascript"></script>
-    <script src="Scripts/jquery-ui-1.8.16.min.js" type="text/javascript"></script>
+    <script src="Scripts/jquery-ui-1.8.17.min.js" type="text/javascript"></script>
     <script src="Scripts/jquery.signalR.js" type="text/javascript"></script>
     <script src="signalr/hubs" type="text/javascript"></script>
     <script src="Scripts/modernizr.js" type="text/javascript"></script>
@@ -112,6 +112,14 @@
                 <span class="flag{{if flagClass}} ${flagClass}{{/if}}" {{if flag}}title="${country}"{{/if}}></span>
             </div>
         </li>
+    </script>
+    <script id="new-userlist-template" type="text/x-jquery-tmpl">
+        <h3 class="userlist-header nav-header">
+            ${listname}
+        </h3>
+        <div>
+            <ul id="${id}" />
+        </div>
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">
         <li id="tabs-${id}" class="room" data-name="${name}">
@@ -218,7 +226,7 @@
             <form id="users-filter-form" action="#">
                 <input id="users-filter" class="filter" type="text" />
             </form>
-            <ul id="users-lobby" class="users current">
+            <ul id="userlist-lobby" class="users current">
             </ul>
             <div id="preferences">
                 <a class="sound" title="audible notifications"></a><a class="toast" title="popup notifications">
