@@ -652,10 +652,10 @@ namespace JabbR.Commands
         private void JoinRoom(ChatUser user, ChatRoom room, string inviteCode)
         {
             _chatService.JoinRoom(user, room, inviteCode);
+            
+            _repository.CommitChanges();
 
             _notificationService.JoinRoom(user, room);
-
-            _repository.CommitChanges();
         }
 
         private void HandleGravatar(ChatUser user, string[] parts)
