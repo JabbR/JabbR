@@ -867,7 +867,7 @@
             loadPreferences();
 
             // Initilize liveUpdate plugin for room search
-            ui.$roomFilter = $roomFilterInput.liveUpdate('#users-lobby', true);
+            ui.$roomFilter = $roomFilterInput.liveUpdate('#userlist-lobby', true);
         },
         run: function () {
             $.history.init(function (hash) {
