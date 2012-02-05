@@ -45,8 +45,8 @@
         this.tab = $tab;
         this.users = $usersContainer;
         this.owners = $usersOwners;
-        this.activeusers = $usersActive;
-        this.idleusers = $usersIdle;
+        this.activeUsers = $usersActive;
+        this.idleUsers = $usersIdle;
         this.messages = $messages;
 
         function glowTab() {
@@ -155,8 +155,8 @@
         this.clear = function () {
             this.messages.empty();
             this.owners.empty();
-            this.activeusers.empty();
-            this.idleusers.empty();
+            this.activeUsers.empty();
+            this.idleUsers.empty();
         };
 
         this.makeInactive = function () {
@@ -244,9 +244,9 @@
 
         this.addUser = function (userViewModel, $user) {
             if (userViewModel.active) {
-                this.addUserToList($user, this.activeusers);
+                this.addUserToList($user, this.activeUsers);
             } else {
-                this.addUserToList($user, this.idleusers);
+                this.addUserToList($user, this.idleUsers);
             }
         };
 
@@ -271,8 +271,8 @@
                         this.addUserToList($user, this.owners);
                     }
                 } else {
-                    if (!this.appearsInList($user, this.activeusers)) {
-                        this.addUserToList($user, this.activeusers);
+                    if (!this.appearsInList($user, this.activeUsers)) {
+                        this.addUserToList($user, this.activeUsers);
                     }
                 }
                 return;
@@ -282,29 +282,29 @@
                 return;
             }
             if (status === "true") {
-                if (!this.appearsInList($user, this.activeusers)) {
-                    this.addUserToList($user, this.activeusers);
+                if (!this.appearsInList($user, this.activeUsers)) {
+                    this.addUserToList($user, this.activeUsers);
                 }
             } else {
-                if (!this.appearsInList($user, this.idleusers)) {
-                    this.addUserToList($user, this.idleusers);
+                if (!this.appearsInList($user, this.idleUsers)) {
+                    this.addUserToList($user, this.idleUsers);
                 }
             }
         };
 
         this.sortLists = function () {
-            this.sortList(this.activeusers);
-            this.sortList(this.idleusers);
+            this.sortList(this.activeUsers);
+            this.sortList(this.idleUsers);
         };
 
         this.sortList = function (listToSort) {
-            var listitems = listToSort.children('li').get();
-            listitems.sort(function (a, b) {
+            var listItems = listToSort.children('li').get();
+            listItems.sort(function (a, b) {
                 var compA = $(a).data('name').toUpperCase();
                 var compB = $(b).data('name').toUpperCase();
                 return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
             })
-            $.each(listitems, function (idx, itm) { listToSort.append(itm); });
+            $.each(listItems, function (index, item) { listToSort.append(item); });
         };
     }
 
@@ -386,7 +386,7 @@
                               .appendTo($chatArea)
                               .hide();
 
-        if (roomName != "lobby"){
+        if (roomName !== "lobby"){
             userContainer = $('<div/>').attr('id', 'userlist-' + roomId)
                 .addClass('users')
                 .appendTo($chatArea).hide();
@@ -575,7 +575,7 @@
     function updateNote(userViewModel, $user) {
         var $note = $user.find('.note'),
             noteText = userViewModel.note,
-            noteTextUencoded = null,
+            noteTextEnCoded = null,
             requireroomUpdate = false;
 
         if (userViewModel.noteClass === 'afk') {
@@ -585,7 +585,7 @@
             requireroomUpdate = ui.setUserActive($user);
         }
 
-        noteTextUencoded = $('<div/>').html(noteText).text();
+        noteTextEnCoded = $('<div/>').html(noteText).text();
 
         // Remove all classes and the text
         $note.removeClass('afk message');
@@ -593,7 +593,7 @@
 
         $note.addClass(userViewModel.noteClass);
         if (userViewModel.note) {
-            $note.attr('title', noteTextUencoded);
+            $note.attr('title', noteTextEnCoded);
         }
 
         if (requireroomUpdate) {
