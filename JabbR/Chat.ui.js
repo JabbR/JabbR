@@ -245,7 +245,10 @@
         this.addUser = function (userViewModel, $user) {
             if (userViewModel.active) {
                 this.addUserToList($user, this.activeUsers);
-            } else {
+            } else if (userViewModel.owner) {
+                this.addUserToList($user, this.owners);
+            }
+            else {
                 this.addUserToList($user, this.idleUsers);
             }
         };
@@ -264,23 +267,20 @@
         };
 
         this.updateUserStatus = function ($user) {
-            var owner = $user.attr('data-owner');
-            if (typeof owner != "undefined") {
-                if (owner === "true") {
-                    if (!this.appearsInList($user, this.owners)) {
-                        this.addUserToList($user, this.owners);
-                    }
-                } else {
-                    if (!this.appearsInList($user, this.activeUsers)) {
-                        this.addUserToList($user, this.activeUsers);
-                    }
+            var owner = $user.data('owner') || false;
+
+            if (owner === true) {
+                if (!this.appearsInList($user, this.owners)) {
+                    this.addUserToList($user, this.owners);
                 }
                 return;
             }
+
             var status = $user.data('active');
             if (typeof status === "undefined") {
                 return;
             }
+
             if (status === true) {
                 if (!this.appearsInList($user, this.activeUsers)) {
                     this.addUserToList($user, this.activeUsers);
@@ -825,7 +825,7 @@
                             // exclude current username from autocomplete
                             return room.users.find('li[data-name != "' + ui.getUserName() + '"]')
                                          .not('.room')
-                                         .map(function () { return $(this).data('name').toString(); });
+                                         .map(function () { return ($(this).data('name') || "").toString(); });
                         case '#':
                             var lobby = getLobby();
                             return lobby.users.find('li')
@@ -900,6 +900,7 @@
                 $user = room.getUser(ownerName);
             $user
                 .attr('data-owner', true)
+                .data('owner', true)
                 .find('.owner')
                 .text('(owner)');
             room.updateUserStatus($user);
@@ -909,6 +910,7 @@
                 $user = room.getUser(ownerName);
             $user
                  .removeAttr('data-owner')
+                 .data('owner', false)
                  .find('.owner')
                  .text('');
             room.updateUserStatus($user);
@@ -1015,11 +1017,14 @@
             if ($user.length) {
                 return false;
             }
+
             $user = templates.user.tmpl(userViewModel);
             $user.data('inroom', roomName);
+            $user.data('owner', userViewModel.owner);
+
             room.addUser(userViewModel, $user);
-            updateNote(userViewModel, room.getUser(userViewModel.name));
-            updateFlag(userViewModel, room.getUser(userViewModel.name));
+            updateNote(userViewModel, $user);
+            updateFlag(userViewModel, $user);
 
             return true;
         },
