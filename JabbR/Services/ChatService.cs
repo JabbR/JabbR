@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -808,6 +808,20 @@ namespace JabbR.Services
             // Make the room closed.
             targetRoom.Closed = true;
 
+            _repository.CommitChanges();
+        }
+
+        public void OpenRoom(ChatUser user, ChatRoom targetRoom)
+        {
+            EnsureOwner(user, targetRoom);
+
+            if (!targetRoom.Closed)
+            {
+                throw new InvalidOperationException(string.Format("{0} is already open.", targetRoom.Name));
+            }
+
+            // Open the room
+            targetRoom.Closed = false;
             _repository.CommitChanges();
         }
 

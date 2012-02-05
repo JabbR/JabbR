@@ -271,8 +271,29 @@ namespace JabbR.Commands
 
                 return true;
             }
+            else if (commandName.Equals("open", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleOpen(user, parts);
+
+                return true;
+            }
 
             return false;
+        }
+
+        private void HandleOpen(ChatUser user, string[] parts)
+        {
+            if (parts.Length < 2)
+            {
+                throw new InvalidOperationException("Which room do you want to open?");
+            }
+
+            string roomName = parts[1];
+            ChatRoom room = _repository.VerifyRoom(roomName, mustBeOpen: false);
+
+            _chatService.OpenRoom(user, room);
+            // Automatically join user to newly opened room
+            JoinRoom(user, room, null);
         }
 
         private void HandleInviteCode(ChatUser user, ChatRoom room, bool forceReset)

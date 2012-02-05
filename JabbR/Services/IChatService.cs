@@ -33,5 +33,6 @@ namespace JabbR.Services
         void UnallowUser(ChatUser user, ChatUser targetUser, ChatRoom targetRoom);
         void LockRoom(ChatUser user, ChatRoom targetRoom);
         void CloseRoom(ChatUser user, ChatRoom targetRoom);
+        void OpenRoom(ChatUser user, ChatRoom targetRoom);
     }
 }

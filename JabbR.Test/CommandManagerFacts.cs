@@ -3495,6 +3495,186 @@ namespace JabbR.Test
             }
         }
 
+        public class OpenCommand
+        {
+            [Fact]
+            public void NotLoggedInThrows()
+            {
+                // Arrange.
+                var repository = new InMemoryRepository();
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        null,
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                // Act & Assert.
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/open"));
+                Assert.Equal("You're not logged in.", ex.Message);
+            }
+
+            [Fact]
+            public void MissingRoomNameThrows()
+            {
+                // Arrange.
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                // Act & Assert.
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/open"));
+                Assert.Equal("Which room do you want to open?", ex.Message);
+
+            }
+
+            [Fact]
+            public void NotExistingRoomNameThrows()
+            {
+                // Arrange.
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                // Act & Assert.
+                const string roomName = "ruroh";
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/open " + roomName));
+                Assert.Equal("Unable to find room '" + roomName + "'", ex.Message);
+            }
+
+            [Fact]
+            public void CannotOpenAnAlreadyOpenRoom()
+            {
+                // Arrange.
+                var repository = new InMemoryRepository();
+                var roomOwner = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(roomOwner);
+
+                const string roomName = "test";
+                var room = new ChatRoom
+                {
+                    Name = roomName
+                };
+                room.Owners.Add(roomOwner);
+                repository.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/open " + roomName));
+                Assert.Equal(roomName + " is already open.", ex.Message);
+            }
+
+            [Fact]
+            public void CannotOpenARoomIfTheUserIsNotAnOwner()
+            {
+                // Arrange.
+                var repository = new InMemoryRepository();
+                var roomOwner = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(roomOwner);
+
+                const string roomName = "test";
+                var room = new ChatRoom
+                {
+                    Name = roomName,
+                    Closed = true
+                };
+                repository.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/open " + roomName));
+                Assert.Equal("You are not an owner of room '" + roomName + "'", ex.Message);
+            }
+
+            [Fact]
+            public void RoomOpensAndOwnerJoinedAutomaticallyIfUserIsOwner()
+            {
+                // Arrange.
+                var repository = new InMemoryRepository();
+                var roomOwner = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(roomOwner);
+
+                const string roomName = "test";
+                var room = new ChatRoom
+                {
+                    Name = roomName,
+                    Closed = true
+                };
+                // Add a room owner
+                room.Owners.Add(roomOwner);
+                repository.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+                var result = commandManager.TryHandleCommand("/open " + roomName);
+
+                Assert.True(result);
+                Assert.False(room.Closed);
+                Assert.True(roomOwner.Rooms.Any(x => x.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase)));
+            }
+        }
+
+
+       
+
         public static void VerifyThrows<T>(string command) where T : Exception
         {
             var repository = new InMemoryRepository();
