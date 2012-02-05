@@ -814,7 +814,7 @@ namespace JabbR.Services
         {
             EnsureOwner(user, targetRoom);
 
-            if (targetRoom.Closed == false)
+            if (!targetRoom.Closed)
             {
                 throw new InvalidOperationException(string.Format("{0} is already open.", targetRoom.Name));
             }
