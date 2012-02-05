@@ -646,7 +646,7 @@
             window.setTimeout(function () {
                 typing = false;
             },
-            2500);
+            3000);
         }
     });
 
