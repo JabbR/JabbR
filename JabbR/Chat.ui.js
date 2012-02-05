@@ -251,11 +251,11 @@
         };
 
         this.addUserToList = function ($user, list) {
-            var oldparentList = $user.parent('ul');
+            var oldParentList = $user.parent('ul');
             $user.appendTo(list);
             this.setListState(list);
-            if (typeof oldparentList != undefined) {
-                this.setListState(oldparentList);
+            if (typeof oldParentList != undefined) {
+                this.setListState(oldParentList);
             }
         };
 
@@ -576,13 +576,13 @@
         var $note = $user.find('.note'),
             noteText = userViewModel.note,
             noteTextEncoded = null,
-            requireroomUpdate = false;
+            requireRoomUpdate = false;
 
         if (userViewModel.noteClass === 'afk') {
             noteText = userViewModel.note + ' (' + userViewModel.timeAgo + ')';
-            requireroomUpdate = ui.setUserInActive($user);
+            requireRoomUpdate = ui.setUserInActive($user);
         } else {
-            requireroomUpdate = ui.setUserActive($user);
+            requireRoomUpdate = ui.setUserActive($user);
         }
 
         noteTextEncoded = $('<div/>').html(noteText).text();
@@ -596,7 +596,7 @@
             $note.attr('title', noteTextEncoded);
         }
 
-        if (requireroomUpdate) {
+        if (requireRoomUpdate) {
             $user.each(function () {
                 var room = getRoomElements($(this).data('inroom'));
                 room.updateUserStatus($(this));
