@@ -810,7 +810,7 @@ namespace JabbR.Services
             _repository.CommitChanges();
         }
 
-        public void HandleOpen(ChatUser user, ChatRoom targetRoom)
+        public void OpenRoom(ChatUser user, ChatRoom targetRoom)
         {
             EnsureOwner(user, targetRoom);
 

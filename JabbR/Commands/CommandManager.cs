@@ -291,7 +291,7 @@ namespace JabbR.Commands
             string roomName = parts[1];
             ChatRoom room = _repository.VerifyRoom(roomName, mustBeOpen: false);
 
-            _chatService.HandleOpen(user, room);
+            _chatService.OpenRoom(user, room);
             // Automatically join user to newly opened room
             JoinRoom(user, room, null);
         }
