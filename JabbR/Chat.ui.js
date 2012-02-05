@@ -277,11 +277,11 @@
                 }
                 return;
             }
-            var status = $user.attr('data-active');
+            var status = $user.data('active');
             if (typeof status === "undefined") {
                 return;
             }
-            if (status === "true") {
+            if (status === true) {
                 if (!this.appearsInList($user, this.activeUsers)) {
                     this.addUserToList($user, this.activeUsers);
                 }
@@ -1038,8 +1038,6 @@
                     });
                 }
             }
-
-            $user.data('active', userViewModel.active);
 
             updateNote(userViewModel, $user);
         },
