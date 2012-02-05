@@ -575,7 +575,7 @@
     function updateNote(userViewModel, $user) {
         var $note = $user.find('.note'),
             noteText = userViewModel.note,
-            noteTextEnCoded = null,
+            noteTextEncoded = null,
             requireroomUpdate = false;
 
         if (userViewModel.noteClass === 'afk') {
@@ -585,7 +585,7 @@
             requireroomUpdate = ui.setUserActive($user);
         }
 
-        noteTextEnCoded = $('<div/>').html(noteText).text();
+        noteTextEncoded = $('<div/>').html(noteText).text();
 
         // Remove all classes and the text
         $note.removeClass('afk message');
@@ -593,7 +593,7 @@
 
         $note.addClass(userViewModel.noteClass);
         if (userViewModel.note) {
-            $note.attr('title', noteTextEnCoded);
+            $note.attr('title', noteTextEncoded);
         }
 
         if (requireroomUpdate) {
