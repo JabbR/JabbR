@@ -23,7 +23,11 @@
 
         function emojiReplacer(str, match) {
             if (validEmoji[match]) {
-                return '<img src="Content/images/emojis/' + match + '.png" alt="' + match + '" title="' + match + '" height="20" width="20" align="absmiddle" />';
+                var css = match;
+                if (css === '+1') {
+                    css = 'plus1';    // +1 not valid CSS class
+                }
+                return '<span class="emoji20 emoji20-' + css + '" alt="' + match + '" title="' + match + '" />';
             } else {
                 return ':' + match + ':';
             }
