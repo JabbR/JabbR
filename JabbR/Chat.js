@@ -125,7 +125,8 @@
             message: message.Content,
             id: message.Id,
             date: message.When.fromJsonDate(),
-            highlight: re.test(message.Content) ? 'highlight' : ''
+            highlight: re.test(message.Content) ? 'highlight' : '',
+            isOwn: re.test(chat.name)
         };
     }
 
@@ -298,6 +299,11 @@
         }, room);
 
         var isMentioned = viewModel.highlight === 'highlight';
+
+        // Fix #369 - do not update unread count if own message
+        if (viewModel.isOwn) {
+            return;
+        }
 
         updateUnread(room, isMentioned);
     };
