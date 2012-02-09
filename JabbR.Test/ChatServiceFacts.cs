@@ -22,6 +22,17 @@ namespace JabbR.Test
             }
 
             [Fact]
+            public void UnicodeNameIsValid()
+            {
+                // Fix issue #370
+                var repository = new InMemoryRepository();
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var user = service.AddUser("ТарасБуга", clientId: null, userAgent: null, password: "password");
+
+                Assert.Equal("ТарасБуга", user.Name);
+            }
+
+            [Fact]
             public void ThrowsIfNameInUse()
             {
                 var repository = new InMemoryRepository();

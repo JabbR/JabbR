@@ -669,12 +669,12 @@ namespace JabbR.Services
 
         private static bool IsValidUserName(string name)
         {
-            return !String.IsNullOrEmpty(name) && Regex.IsMatch(name, "^[A-Za-z0-9-_.]{1,30}$");
+            return !String.IsNullOrEmpty(name) && Regex.IsMatch(name, "^[\\w-_.]{1,30}$");
         }
 
         private static bool IsValidRoomName(string name)
         {
-            return !String.IsNullOrEmpty(name) && Regex.IsMatch(name, "^[A-Za-z0-9-_]{1,30}$");
+            return !String.IsNullOrEmpty(name) && Regex.IsMatch(name, "^[\\w-_]{1,30}$");
         }
 
         private static void EnsureOwner(ChatUser user, ChatRoom room)
