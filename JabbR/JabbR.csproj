@@ -113,6 +113,7 @@
     <Content Include="Chat.ui.js" />
     <Content Include="Chat.utility.js" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\emoji20.css" />
     <Content Include="Content\images\ajax-loader.png" />
     <Content Include="Content\images\close-icon-hover.png" />
     <Content Include="Content\images\close-icon.png" />
