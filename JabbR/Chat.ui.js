@@ -11,6 +11,10 @@
         $submitButton = null,
         $newMessage = null,
         $toast = null,
+        $downloadIcon = null,
+        $downloadDialog = null,
+        $downloadDialogButton = null,
+        $downloadRange = null,
         $ui = null,
         $sound = null,
         templates = null,
@@ -69,6 +73,10 @@
                 });
             });
         }
+
+        this.isLocked = function () {
+            return this.tab.hasClass('locked');
+        };
 
         this.isLobby = function () {
             return this.tab.hasClass('lobby');
@@ -649,6 +657,10 @@
             $newMessage = $('#new-message');
             $toast = $('#preferences .toast');
             $sound = $('#preferences .sound');
+            $downloadIcon = $('#preferences .download');
+            $downloadDialog = $('#download-dialog');
+            $downloadDialogButton = $('#download-dialog-button');
+            $downloadRange = $('#download-range');
             $login = $('.janrainEngage');
             $updatePopup = $('#jabbr-update');
             focus = true;
@@ -770,6 +782,30 @@
                 if (room) {
                     ui.setActiveRoom(room);
                 }
+            });
+
+            $downloadIcon.click(function () {
+                var room = getCurrentRoomElements();
+
+                if (room.isLobby()) {
+                    return; //Show a message?
+                }
+
+                if (room.isLocked()) {
+                    return; //Show a message?
+                }
+
+                $downloadDialog.modal({ backdrop: true, keyboard: true });
+            });
+
+            $downloadDialogButton.click(function () {
+                var room = getCurrentRoomElements();
+
+                var url = '/download/' + encodeURI(room.getName()) + '?download=true&range=' + encodeURIComponent($downloadRange.val());
+
+                $('<iframe style="display:none">').attr('src', url).appendTo(document.body);
+
+                $downloadDialog.modal('hide');
             });
 
             $window.blur(function () {

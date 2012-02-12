@@ -71,6 +71,14 @@
     background: url('Content/images/toast-off.png') no-repeat;
 }
 
+#preferences .download {
+	background: url('Content/images/download-icon.png') no-repeat;
+	width: 16px;
+    height: 20px;
+    left: 52px;
+    position: absolute;
+}
+
 #logo {
     margin-top: 10px;
     margin-left: 0px;

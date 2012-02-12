@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Hosting;
+using System.Web.Routing;
 using Elmah;
 using JabbR.ContentProviders.Core;
 using JabbR.Migrations;
@@ -14,10 +15,12 @@ using JabbR.Services;
 using JabbR.ViewModels;
 using Microsoft.CSharp.RuntimeBinder;
 using Ninject;
+using RouteMagic;
 using SignalR;
 using SignalR.Hosting.AspNet;
 using SignalR.Infrastructure;
 using SignalR.Ninject;
+using JabbR.Handlers;
 
 [assembly: WebActivator.PreApplicationStartMethod(typeof(JabbR.App_Start.Bootstrapper), "PreAppStart")]
 
@@ -84,6 +87,13 @@ namespace JabbR.App_Start
             SetupErrorHandling();
 
             ClearConnectedClients(repositoryFactory());
+
+            SetupRoutes(kernel);
+        }
+
+        private static void SetupRoutes(IKernel kernel)
+        {
+            RouteTable.Routes.MapHttpHandler("Download", "download/{room}/{format}", new { format = "json" }, new { format = "json" }, ctx => kernel.Get<DownloadHandler>());
         }
 
         private static void ClearConnectedClients(IJabbrRepository repository)
