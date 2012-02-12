@@ -106,7 +106,7 @@
     margin-top: 0px;
     padding-left: 0px;
     position: absolute;
-    top: 24px;
+    top: 55px;
     bottom: 70px;
     background-color: #fff;
 }
@@ -126,6 +126,11 @@
     height: 16px;
     width: 16px;
     display: inline-block;
+}
+
+.topicBanner {
+    position:absolute;
+    top:25px;
 }
 
 .users {

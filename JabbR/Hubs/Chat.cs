@@ -304,7 +304,8 @@ namespace JabbR
                         select new UserViewModel(u),
                 Owners = from u in room.Owners.Online()
                          select u.Name,
-                RecentMessages = recentMessages.AsEnumerable().Reverse().Select(m => new MessageViewModel(m))
+                RecentMessages = recentMessages.AsEnumerable().Reverse().Select(m => new MessageViewModel(m)),
+                Topic = room.Topic ?? ""
             };
         }
 
@@ -828,6 +829,17 @@ namespace JabbR
             {
                 Clients[room.Name].changeFlag(userViewModel, room.Name);
             }
+        }
+
+        void INotificationService.ChangeTopic(ChatRoom room)
+        { 
+            // Create the view model
+            var roomViewModel = new RoomViewModel 
+            {
+                Name = room.Name,
+                Topic = room.Topic ?? ""
+            };
+            Clients[room.Name].changeTopic(roomViewModel);
         }
 
         private void OnRoomChanged(ChatRoom room)

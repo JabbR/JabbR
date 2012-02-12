@@ -13,6 +13,8 @@ namespace JabbR.Models
         public DateTime? LastNudged { get; set; }
         public string Name { get; set; }
         public bool Closed { get; set; }
+        [StringLength(80)]
+        public string Topic { get; set; }
 
         // Private rooms
         public bool Private { get; set; }

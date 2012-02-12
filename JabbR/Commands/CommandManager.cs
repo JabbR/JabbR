@@ -127,6 +127,11 @@ namespace JabbR.Commands
                 HandleInviteCode(user, room, forceReset: true);
                 return true;
             }
+            else if (commandName.Equals("changetopic", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleChangeTopic(user, room, parts);
+                return true;
+            }
 
             return false;
         }
@@ -294,6 +299,15 @@ namespace JabbR.Commands
             _chatService.OpenRoom(user, room);
             // Automatically join user to newly opened room
             JoinRoom(user, room, null);
+        }
+
+        private void HandleChangeTopic(ChatUser user, ChatRoom room, string[] parts)
+        {
+            string newTopic = string.Join(" ", parts.Skip(1)).Trim();
+            ChatService.ValidateNote(newTopic, noteTypeName: "topic");
+            newTopic = string.IsNullOrWhiteSpace(newTopic) ? null : newTopic;
+            _chatService.ChangeTopic(user, room, newTopic);
+            _notificationService.ChangeTopic(room);
         }
 
         private void HandleInviteCode(ChatUser user, ChatRoom room, bool forceReset)

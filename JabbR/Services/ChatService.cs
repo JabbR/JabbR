@@ -825,14 +825,21 @@ namespace JabbR.Services
             _repository.CommitChanges();
         }
 
-        internal static void ValidateNote(string note)
+        public void ChangeTopic(ChatUser user, ChatRoom room, string newTopic)
+        {
+            EnsureOwner(user, room);
+            room.Topic = newTopic;
+            _repository.CommitChanges();
+        }
+
+        internal static void ValidateNote(string note, string noteTypeName = "note")
         {
             if (!String.IsNullOrWhiteSpace(note) &&
                 note.Length > NoteMaximumLength)
             {
                 throw new InvalidOperationException(
-                    String.Format("Sorry, but your note is too long. Can please keep it under {0} characters.",
-                        NoteMaximumLength));
+                    String.Format("Sorry, but your {1} is too long. Can please keep it under {0} characters.",
+                        NoteMaximumLength, noteTypeName));
             }
         }
 
