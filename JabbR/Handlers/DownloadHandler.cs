@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Text;
 using System.Web;
-using System.Web.Script.Serialization;
 using JabbR.Models;
+using Newtonsoft.Json;
 
 namespace JabbR.Handlers
 {
@@ -15,6 +15,7 @@ namespace JabbR.Handlers
         {
             _repository = repository;
         }
+
         public bool IsReusable
         {
             get { return false; }
@@ -29,7 +30,10 @@ namespace JabbR.Handlers
             var formatName = (string)routeData["format"];
             var range = request["range"];
 
-            if (string.IsNullOrWhiteSpace(range)) range = "last-hour";
+            if (String.IsNullOrWhiteSpace(range))
+            {
+                range = "last-hour";
+            }
 
             var end = DateTime.Now;
             DateTime start;
@@ -55,9 +59,12 @@ namespace JabbR.Handlers
                     throw new InvalidOperationException("Range value not recognized");
             }
 
-            var room = _repository.VerifyRoom(roomName, false);
+            var room = _repository.VerifyRoom(roomName, mustBeOpen: false);
 
-            if (room.Private) throw new InvalidOperationException("Private room history download is not yet supported.");
+            if (room.Private)
+            {
+                throw new InvalidOperationException("Private room history download is not yet supported.");
+            }
 
             var messages = _repository.GetMessagesByRoom(roomName)
                 .Where(msg => msg.When <= end && msg.When >= start)
@@ -70,17 +77,18 @@ namespace JabbR.Handlers
             switch (formatName)
             {
                 case "json":
-                    var serializer = new JavaScriptSerializer();
-
-                    var json = serializer.Serialize(messages);
+                    var json = JsonConvert.SerializeObject(messages);
                     var data = Encoding.UTF8.GetBytes(json);
 
                     response.ContentType = "application/json";
                     response.ContentEncoding = Encoding.UTF8;
 
-                    if (downloadFile) response.Headers["Content-Disposition"] = "attachment; filename=\"" + roomName + ".json\"";
+                    if (downloadFile)
+                    {
+                        response.Headers["Content-Disposition"] = "attachment; filename=\"" + roomName + "." + range + ".json\"";
+                    }
 
-                    response.OutputStream.Write(data, 0, data.Length);
+                    response.BinaryWrite(data);
                     break;
                 default:
                     throw new NotSupportedException("Format value not recognized.");
