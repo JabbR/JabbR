@@ -9,6 +9,7 @@ using System.Web.Hosting;
 using System.Web.Routing;
 using Elmah;
 using JabbR.ContentProviders.Core;
+using JabbR.Handlers;
 using JabbR.Migrations;
 using JabbR.Models;
 using JabbR.Services;
@@ -20,7 +21,6 @@ using SignalR;
 using SignalR.Hosting.AspNet;
 using SignalR.Infrastructure;
 using SignalR.Ninject;
-using JabbR.Handlers;
 
 [assembly: WebActivator.PreApplicationStartMethod(typeof(JabbR.App_Start.Bootstrapper), "PreAppStart")]
 
