@@ -474,6 +474,13 @@
         ui.changeRoomTopic(room);
     };
 
+    chat.topicChanged = function (isCleared, topic) {
+        var action = isCleared ? 'cleared' : 'set';
+        var to = topic ? ' to ' + '"' + topic + '"' : '';
+        var message = 'You have ' + action + ' the room topic' + to;
+        ui.addMessage(message, 'notification', this.activeRoom);
+    };
+
     // Called when you have added or cleared a flag
     chat.flagChanged = function (isCleared, country) {
         var action = isCleared ? 'cleared' : 'set';

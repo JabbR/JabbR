@@ -41,14 +41,14 @@
         return '_room_' + roomName;
     }
 
-    function Room($tab, $usersContainer, $usersOwners, $usersActive, $usersIdle, $messages, $topicBanner) {
+    function Room($tab, $usersContainer, $usersOwners, $usersActive, $usersIdle, $messages, $roomTopic) {
         this.tab = $tab;
         this.users = $usersContainer;
         this.owners = $usersOwners;
         this.activeUsers = $usersActive;
         this.idleUsers = $usersIdle;
         this.messages = $messages;
-        this.topicBanner = $topicBanner;
+        this.roomTopic = $roomTopic;
 
         function glowTab() {
             // Stop if we're not unread anymore
@@ -169,7 +169,7 @@
             this.users.removeClass('current')
                       .hide();
 
-            this.topicBanner.removeClass('current')
+            this.roomTopic.removeClass('current')
                       .hide();
 
             if (this.isLobby()) {
@@ -201,7 +201,7 @@
             this.users.addClass('current')
                       .show();
 
-            this.topicBanner.addClass('current')
+            this.roomTopic.addClass('current')
                       .show();
 
             if (this.isLobby()) {
@@ -323,7 +323,7 @@
                         $('#userlist-' + roomId + '-active'),
                         $('#userlist-' + roomId + '-idle'),
                         $('#messages-' + roomId),
-                        $('#topicBanner-' + roomId));
+                        $('#roomTopic-' + roomId));
         return room;
     }
 
@@ -334,7 +334,7 @@
                         $('.userlist.current .active'),
                         $('.userlist.current .idle'),
                         $('.messages.current'),
-                        $('.topicBanner.current'));
+                        $('.roomTopic.current'));
         return room;
     }
 
@@ -373,7 +373,7 @@
             roomId = null,
             viewModel = null,
             $messages = null,
-            $topicBanner = null,
+            $roomTopic = null,
             scrollHandler = null,
             userContainer = null;
 
@@ -396,8 +396,8 @@
                               .appendTo($chatArea)
                               .hide();
 
-        $topicBanner = $('<div/>').attr('id', 'topicBanner-' + roomId)
-                              .addClass('topicBanner')
+        $roomTopic = $('<div/>').attr('id', 'roomTopic-' + roomId)
+                              .addClass('roomTopic')
                               .appendTo($chatArea)
                               .hide();
 
@@ -637,9 +637,11 @@
         }
     }
 
-    function updateTopicBanner(roomViewModel) {
+    function updateRoomTopic(roomViewModel) {
         var room = getRoomElements(roomViewModel.Name);
-        room.topicBanner.text(roomViewModel.Topic);
+        var topic = roomViewModel.Topic;
+        var topicHtml = topic == '' ? '' : '<strong>Topic: </strong>' + topic;
+        room.roomTopic.html(topicHtml);
     }
 
     var ui = {
@@ -1371,7 +1373,7 @@
             updateFlag(userViewModel, $user);
         },
         changeRoomTopic: function (roomViewModel) {
-            updateTopicBanner(roomViewModel);
+            updateRoomTopic(roomViewModel);
         }
     };
 

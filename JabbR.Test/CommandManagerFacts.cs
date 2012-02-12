@@ -3672,7 +3672,7 @@ namespace JabbR.Test
             }
         }
 
-        public class ChangeTopicCommand
+        public class TopicCommand
         {
             [Fact]
             public void UserMustBeOwner()
@@ -3699,7 +3699,7 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
                 string topicLine = "This is the room's topic";
-                var exception = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/changeTopic " + topicLine));
+                var exception = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/topic " + topicLine));
 
                 Assert.Equal("You are not an owner of room 'room'", exception.Message);    
             }
@@ -3730,11 +3730,11 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
                 string topicLine = "This is the room's topic";
-                bool result = commandManager.TryHandleCommand("/changeTopic " + topicLine);
+                bool result = commandManager.TryHandleCommand("/topic " + topicLine);
 
                 Assert.True(result);
                 Assert.Equal(topicLine, room.Topic);
-                notificationService.Verify(x => x.ChangeTopic(room), Times.Once());     
+                notificationService.Verify(x => x.ChangeTopic(roomOwner, room), Times.Once());     
             }
 
             [Fact]
@@ -3762,10 +3762,10 @@ namespace JabbR.Test
                                                         service,
                                                         repository,
                                                         notificationService.Object);
-                string topicLine = new String('A', 141);
-                var exception = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/changeTopic " + topicLine));
+                string topicLine = new String('A', 81);
+                var exception = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/topic " + topicLine));
 
-                Assert.Equal("Sorry, but your topic is too long. Can please keep it under 140 characters.", exception.Message);    
+                Assert.Equal("Sorry, but your topic is too long. Can please keep it under 80 characters.", exception.Message);    
             }
 
             [Fact]
@@ -3794,11 +3794,11 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
 
-                bool result = commandManager.TryHandleCommand("/changeTopic");
+                bool result = commandManager.TryHandleCommand("/topic");
 
                 Assert.True(result);
                 Assert.Equal(null, room.Topic);
-                notificationService.Verify(x => x.ChangeTopic(room), Times.Once());
+                notificationService.Verify(x => x.ChangeTopic(roomOwner, room), Times.Once());
             }
         }
 

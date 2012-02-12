@@ -127,9 +127,9 @@ namespace JabbR.Commands
                 HandleInviteCode(user, room, forceReset: true);
                 return true;
             }
-            else if (commandName.Equals("changetopic", StringComparison.OrdinalIgnoreCase))
+            else if (commandName.Equals("topic", StringComparison.OrdinalIgnoreCase))
             {
-                HandleChangeTopic(user, room, parts);
+                HandleTopic(user, room, parts);
                 return true;
             }
 
@@ -301,13 +301,13 @@ namespace JabbR.Commands
             JoinRoom(user, room, null);
         }
 
-        private void HandleChangeTopic(ChatUser user, ChatRoom room, string[] parts)
+        private void HandleTopic(ChatUser user, ChatRoom room, string[] parts)
         {
             string newTopic = string.Join(" ", parts.Skip(1)).Trim();
-            ChatService.ValidateNote(newTopic, noteTypeName: "topic");
+            ChatService.ValidateTopic(newTopic);
             newTopic = string.IsNullOrWhiteSpace(newTopic) ? null : newTopic;
             _chatService.ChangeTopic(user, room, newTopic);
-            _notificationService.ChangeTopic(room);
+            _notificationService.ChangeTopic(user, room);
         }
 
         private void HandleInviteCode(ChatUser user, ChatRoom room, bool forceReset)

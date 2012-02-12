@@ -111,6 +111,10 @@
     background-color: #fff;
 }
 
+#messages-lobby {
+    top: 24px;
+}
+
 .messages li {
     list-style-type: none;
     position: relative;
@@ -128,7 +132,7 @@
     display: inline-block;
 }
 
-.topicBanner {
+.roomTopic {
     position:absolute;
     top:25px;
 }
