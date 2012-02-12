@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.Routing;
-using JabbR.Models;
-using JabbR.Services;
-using System.Web.Script.Serialization;
 using System.Text;
+using System.Web;
+using System.Web.Script.Serialization;
+using JabbR.Models;
 
 namespace JabbR.Handlers
 {
