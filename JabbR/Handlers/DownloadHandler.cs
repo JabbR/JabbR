@@ -4,11 +4,14 @@ using System.Text;
 using System.Web;
 using JabbR.Models;
 using Newtonsoft.Json;
+using System.Globalization;
 
 namespace JabbR.Handlers
 {
     public class DownloadHandler : IHttpHandler
     {
+        const string FilenameDateFormat = "yyyy-MM-dd.HHmmsszz";
+
         IJabbrRepository _repository;
 
         public DownloadHandler(IJabbrRepository repository)
@@ -24,6 +27,7 @@ namespace JabbR.Handlers
         public void ProcessRequest(HttpContext context)
         {
             var request = context.Request;
+            var response = context.Response;
             var routeData = request.RequestContext.RouteData.Values;
 
             var roomName = (string)routeData["room"];
@@ -69,10 +73,18 @@ namespace JabbR.Handlers
             var messages = _repository.GetMessagesByRoom(roomName)
                 .Where(msg => msg.When <= end && msg.When >= start)
                 .Select(msg => new DownloadMessage() { Content = msg.Content, Username = msg.User.Name, When = msg.When } );
-
-            var response = context.Response;
+            
             bool downloadFile = false;
             Boolean.TryParse(request["download"], out downloadFile);
+            
+            var filenamePrefix = roomName + ".";
+
+            if (start != DateTime.MinValue)
+            {
+                filenamePrefix += start.ToString(FilenameDateFormat, CultureInfo.InvariantCulture) + ".";
+            }
+
+            filenamePrefix += end.ToString(FilenameDateFormat, CultureInfo.InvariantCulture);
 
             switch (formatName)
             {
@@ -85,7 +97,7 @@ namespace JabbR.Handlers
 
                     if (downloadFile)
                     {
-                        response.Headers["Content-Disposition"] = "attachment; filename=\"" + roomName + "." + range + ".json\"";
+                        response.Headers["Content-Disposition"] = "attachment; filename=\"" + filenamePrefix + ".json\"";
                     }
 
                     response.BinaryWrite(data);
