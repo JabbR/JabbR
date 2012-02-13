@@ -5,6 +5,7 @@ using System.Text;
 using System.Web;
 using JabbR.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
 namespace JabbR.Handlers
@@ -152,6 +153,8 @@ namespace JabbR.Handlers
             {
                 ContractResolver = resolver
             };
+
+            settings.Converters.Add(new IsoDateTimeConverter());
 
             return JsonConvert.SerializeObject(value, Formatting.Indented, settings);
         }
