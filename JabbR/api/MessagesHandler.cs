@@ -5,16 +5,17 @@ using System.Text;
 using System.Web;
 using JabbR.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace JabbR.Handlers
 {
-    public class HistoryHandler : IHttpHandler
+    public class MessagesHandler : IHttpHandler
     {
         const string FilenameDateFormat = "yyyy-MM-dd.HHmmsszz";
 
         IJabbrRepository _repository;
 
-        public HistoryHandler(IJabbrRepository repository)
+        public MessagesHandler(IJabbrRepository repository)
         {
             _repository = repository;
         }
@@ -60,21 +61,44 @@ namespace JabbR.Handlers
                     start = DateTime.MinValue;
                     break;
                 default:
-                    throw new InvalidOperationException("Range value not recognized");
+
+                    response.StatusCode = 400;
+                    response.StatusDescription = "Bad Request";
+                    response.Write(Serialize(new ClientError { Message = "Range value not recognized" }));
+                    return;
             }
 
-            var room = _repository.VerifyRoom(roomName, mustBeOpen: false);
+            ChatRoom room = null;
 
-            if (room.Private)
+            try
+            {
+                room = _repository.VerifyRoom(roomName, mustBeOpen: false);
+            }
+            catch (Exception ex)
             {
                 response.StatusCode = 404;
                 response.StatusDescription = "Not found";
+                response.Write(Serialize(new ClientError { Message = ex.Message }));
+                return;
+            }
+
+            if (room.Private)
+            {
+                // TODO: Allow viewing messages using auth token
+                response.StatusCode = 404;
+                response.StatusDescription = "Not found";
+                response.Write(Serialize(new ClientError { Message = "Unable to locate room {0}." }));
                 return;
             }
 
             var messages = _repository.GetMessagesByRoom(roomName)
                 .Where(msg => msg.When <= end && msg.When >= start)
-                .Select(msg => new DownloadMessage() { Content = msg.Content, Username = msg.User.Name, When = msg.When });
+                .Select(msg => new
+                {
+                    Content = msg.Content,
+                    Username = msg.User.Name,
+                    When = msg.When
+                });
 
             bool downloadFile = false;
             Boolean.TryParse(request["download"], out downloadFile);
@@ -91,7 +115,7 @@ namespace JabbR.Handlers
             switch (formatName)
             {
                 case "json":
-                    var json = JsonConvert.SerializeObject(messages);
+                    var json = Serialize(messages);
                     var data = Encoding.UTF8.GetBytes(json);
 
                     response.ContentType = "application/json";
@@ -109,11 +133,20 @@ namespace JabbR.Handlers
             }
         }
 
-        class DownloadMessage
+        private string Serialize(object value)
         {
-            public string Content { get; set; }
-            public string Username { get; set; }
-            public DateTimeOffset When { get; set; }
+            var resolver = new CamelCasePropertyNamesContractResolver();
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = resolver
+            };
+
+            return JsonConvert.SerializeObject(value, Formatting.Indented, settings);
+        }
+
+        private class ClientError
+        {
+            public string Message { get; set; }
         }
     }
 }
