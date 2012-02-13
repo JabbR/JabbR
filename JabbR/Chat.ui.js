@@ -828,7 +828,7 @@
                 var nav = url.indexOf('#');
                 url = nav > 0 ? url.substring(0, nav) : url;
                 url = url.replace('index.htm', '');
-                url += '/download/' + 
+                url += '/history/' + 
                        encodeURI(room.getName()) +
                        '?download=true&range=' + 
                        encodeURIComponent($downloadRange.val());

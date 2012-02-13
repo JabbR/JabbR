@@ -93,10 +93,10 @@ namespace JabbR.App_Start
 
         private static void SetupRoutes(IKernel kernel)
         {
-            RouteTable.Routes.MapHttpHandler("Download", "download/{room}/{format}", 
+            RouteTable.Routes.MapHttpHandler("Download", "history/{room}/{format}", 
                                              new { format = "json" },
                                              new { }, 
-                                             ctx => kernel.Get<DownloadHandler>());
+                                             ctx => kernel.Get<HistoryHandler>());
         }
 
         private static void ClearConnectedClients(IJabbrRepository repository)

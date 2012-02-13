@@ -8,13 +8,13 @@ using Newtonsoft.Json;
 
 namespace JabbR.Handlers
 {
-    public class DownloadHandler : IHttpHandler
+    public class HistoryHandler : IHttpHandler
     {
         const string FilenameDateFormat = "yyyy-MM-dd.HHmmsszz";
 
         IJabbrRepository _repository;
 
-        public DownloadHandler(IJabbrRepository repository)
+        public HistoryHandler(IJabbrRepository repository)
         {
             _repository = repository;
         }
