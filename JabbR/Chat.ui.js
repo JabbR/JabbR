@@ -315,8 +315,8 @@
         this.sortList = function (listToSort) {
             var listItems = listToSort.children('li').get();
             listItems.sort(function (a, b) {
-                var compA = $(a).data('name').toUpperCase();
-                var compB = $(b).data('name').toUpperCase();
+                var compA = $(a).data('name').toString().toUpperCase();
+                var compB = $(b).data('name').toString().toUpperCase();
                 return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
             })
             $.each(listItems, function (index, item) { listToSort.append(item); });
