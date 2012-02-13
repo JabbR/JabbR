@@ -61,10 +61,7 @@ namespace JabbR.Handlers
                     start = DateTime.MinValue;
                     break;
                 default:
-
-                    response.StatusCode = 400;
-                    response.StatusDescription = "Bad Request";
-                    response.Write(Serialize(new ClientError { Message = "Range value not recognized" }));
+                    WriteBadRequest(response, "range value not recognized");
                     return;
             }
 
@@ -76,18 +73,14 @@ namespace JabbR.Handlers
             }
             catch (Exception ex)
             {
-                response.StatusCode = 404;
-                response.StatusDescription = "Not found";
-                response.Write(Serialize(new ClientError { Message = ex.Message }));
+                WriteNotFound(response, ex.Message);
                 return;
             }
 
             if (room.Private)
             {
                 // TODO: Allow viewing messages using auth token
-                response.StatusCode = 404;
-                response.StatusDescription = "Not found";
-                response.Write(Serialize(new ClientError { Message = "Unable to locate room {0}." }));
+                WriteNotFound(response, String.Format("Unable to locate room {0}.", room.Name));
                 return;
             }
 
@@ -129,8 +122,27 @@ namespace JabbR.Handlers
                     response.BinaryWrite(data);
                     break;
                 default:
-                    throw new NotSupportedException("Format value not recognized.");
+                    WriteBadRequest(response, "format not supported.");
+                    return;
             }
+        }
+
+        private void WriteBadRequest(HttpResponse response, string message)
+        {
+            WriteError(response, 400, "Bad request", message);
+        }
+
+        private void WriteNotFound(HttpResponse response, string message)
+        {
+            WriteError(response, 404, "Not found", message);
+        }
+
+        private void WriteError(HttpResponse response, int statusCode, string description, string message)
+        {
+            response.TrySkipIisCustomErrors = true;
+            response.StatusCode = statusCode;
+            response.StatusDescription = description;
+            response.Write(Serialize(new ClientError { Message = message }));
         }
 
         private string Serialize(object value)
