@@ -847,6 +847,10 @@
     <Compile Include="Migrations\201201280922163_ElmahInSql.Designer.cs">
       <DependentUpon>201201280922163_ElmahInSql.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201202122252259_RoomTopic.cs" />
+    <Compile Include="Migrations\201202122252259_RoomTopic.Designer.cs">
+      <DependentUpon>201202122252259_RoomTopic.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ChatClient.cs" />
     <Compile Include="Models\ClientState.cs" />
     <Compile Include="Services\ApplicationSettings.cs" />

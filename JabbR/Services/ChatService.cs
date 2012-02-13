@@ -13,6 +13,7 @@ namespace JabbR.Services
         private readonly ICryptoService _crypto;
 
         private const int NoteMaximumLength = 140;
+        private const int TopicMaximumLength = 80;
 
         // Iso reference: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
         private static readonly IDictionary<string, string> Countries = new Dictionary<string, string>
@@ -825,15 +826,28 @@ namespace JabbR.Services
             _repository.CommitChanges();
         }
 
-        internal static void ValidateNote(string note)
+        public void ChangeTopic(ChatUser user, ChatRoom room, string newTopic)
         {
+            EnsureOwner(user, room);
+            room.Topic = newTopic;
+            _repository.CommitChanges();
+        }
+
+        internal static void ValidateNote(string note, string noteTypeName = "note", int? maxLength = null)
+        {
+            var lengthToValidateFor = (maxLength ?? NoteMaximumLength);
             if (!String.IsNullOrWhiteSpace(note) &&
-                note.Length > NoteMaximumLength)
+                note.Length > lengthToValidateFor)
             {
                 throw new InvalidOperationException(
-                    String.Format("Sorry, but your note is too long. Can please keep it under {0} characters.",
-                        NoteMaximumLength));
+                    String.Format("Sorry, but your {1} is too long. Can please keep it under {0} characters.",
+                        lengthToValidateFor, noteTypeName));
             }
+        }
+
+        internal static void ValidateTopic(string topic)
+        {
+            ValidateNote(topic, noteTypeName: "topic", maxLength: TopicMaximumLength);
         }
 
         internal static void ValidateIsoCode(string isoCode)

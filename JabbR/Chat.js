@@ -68,6 +68,8 @@
 
                         ui.addChatMessage(viewModel, room);
                     });
+
+                    ui.changeRoomTopic(roomInfo);
                     // mark room as initialized to differentiate messages
                     // that are added after initial population
                     ui.setInitialized(room);
@@ -472,6 +474,17 @@
 
             ui.addMessage(message, 'notification', room);
         }
+    };
+
+    chat.changeTopic = function (room) {
+        ui.changeRoomTopic(room);
+    };
+
+    chat.topicChanged = function (isCleared, topic) {
+        var action = isCleared ? 'cleared' : 'set';
+        var to = topic ? ' to ' + '"' + topic + '"' : '';
+        var message = 'You have ' + action + ' the room topic' + to;
+        ui.addMessage(message, 'notification', this.activeRoom);
     };
 
     // Called when you have added or cleared a flag
