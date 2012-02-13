@@ -187,6 +187,27 @@
 </head>
 <body>
     <div id="page">
+        <div id="download-dialog" class="modal hide fade">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">&times;</a>
+                <h3>Download Messages</h3>
+            </div>
+            <div class="modal-body">
+                <p>Select date range for messages:</p>
+                <p>
+                    <select id="download-range">
+                        <option value="last-hour">Last hour</option>
+                        <option value="last-day">Last day</option>
+                        <option value="last-week">Last week</option>
+                        <option value="last-month">Last month</option>
+                        <option value="all">All</option>
+                    </select>
+                </p>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-primary" id="download-dialog-button">Download</a>
+            </div>
+        </div>
         <div id="jabbr-update" class="modal hide fade">
             <div class="modal-header">
               <a class="close" data-dismiss="modal" >&times;</a>
@@ -230,8 +251,9 @@
             <ul id="userlist-lobby" class="users current">
             </ul>
             <div id="preferences">
-                <a class="sound" title="audible notifications"></a><a class="toast" title="popup notifications">
-                </a>
+                <a class="sound" title="audible notifications"></a>
+                <a class="toast" title="popup notifications"></a>
+                <a class="download" title="download messages"></a>
             </div>
             <form id="send-message" action="#">
             <div id="message-box">

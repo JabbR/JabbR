@@ -66,6 +66,9 @@
     <Reference Include="Ninject, Version=2.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.2.2.1.4\lib\net40-Full\Ninject.dll</HintPath>
     </Reference>
+    <Reference Include="RouteMagic">
+      <HintPath>..\packages\RouteMagic.1.2\lib\net40\RouteMagic.dll</HintPath>
+    </Reference>
     <Reference Include="SignalR, Version=0.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\SignalR.Server.0.4.0.0\lib\net40\SignalR.dll</HintPath>
     </Reference>
@@ -120,6 +123,7 @@
     <Content Include="Content\images\contentproviders\bbcnews-header.png" />
     <Content Include="Content\images\contentproviders\bbcnews-masthead.png" />
     <Content Include="Content\images\emoji20.png" />
+    <Content Include="Content\images\download-icon.png" />
     <Content Include="Content\images\emojis\+1.png" />
     <Content Include="Content\images\emojis\-1.png" />
     <Content Include="Content\images\emojis\0.png" />
@@ -784,6 +788,7 @@
     <Compile Include="ContentProviders\GoogleDocsFormProvider.cs" />
     <Compile Include="ContentProviders\SlideshareContentProvider.cs" />
     <Compile Include="ContentProviders\GistContentProvider.cs" />
+    <Compile Include="Handlers\DownloadHandler.cs" />
     <Compile Include="Hubs\Chat.cs" />
     <Compile Include="ContentProviders\CollegeHumorContentProvider.cs" />
     <Compile Include="ContentProviders\ImgurContentProvider.cs" />
