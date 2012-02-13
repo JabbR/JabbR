@@ -75,7 +75,8 @@
     background: url('Content/images/download-icon.png') no-repeat;
     width: 16px;
     height: 20px;
-    left: 52px;
+    left: 55px;
+    top: 3px;
     position: absolute;
 }
 

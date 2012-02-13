@@ -700,6 +700,7 @@
                 $toast.show();
             }
             else {
+                $downloadIcon.css({ left: '26px' });
                 // We need to set the toast setting to false
                 preferences.canToast = false;
             }
@@ -823,7 +824,10 @@
             $downloadDialogButton.click(function () {
                 var room = getCurrentRoomElements();
 
-                var url = '/download/' + encodeURI(room.getName()) + '?download=true&range=' + encodeURIComponent($downloadRange.val());
+                var url = document.location.pathname +
+                          '/download/' +
+                          encodeURI(room.getName()) +
+                          '?download=true&range=' + encodeURIComponent($downloadRange.val());
 
                 $('<iframe style="display:none">').attr('src', url).appendTo(document.body);
 

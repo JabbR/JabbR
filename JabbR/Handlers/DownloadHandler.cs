@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Web;
 using JabbR.Models;
 using Newtonsoft.Json;
-using System.Globalization;
 
 namespace JabbR.Handlers
 {
@@ -42,7 +42,7 @@ namespace JabbR.Handlers
             var end = DateTime.Now;
             DateTime start;
 
-            switch(range)
+            switch (range)
             {
                 case "last-hour":
                     start = end.AddHours(-1);
@@ -67,16 +67,18 @@ namespace JabbR.Handlers
 
             if (room.Private)
             {
-                throw new InvalidOperationException("Private room history download is not yet supported.");
+                response.StatusCode = 404;
+                response.StatusDescription = "Not found";
+                return;
             }
 
             var messages = _repository.GetMessagesByRoom(roomName)
                 .Where(msg => msg.When <= end && msg.When >= start)
-                .Select(msg => new DownloadMessage() { Content = msg.Content, Username = msg.User.Name, When = msg.When } );
-            
+                .Select(msg => new DownloadMessage() { Content = msg.Content, Username = msg.User.Name, When = msg.When });
+
             bool downloadFile = false;
             Boolean.TryParse(request["download"], out downloadFile);
-            
+
             var filenamePrefix = roomName + ".";
 
             if (start != DateTime.MinValue)
