@@ -9,14 +9,6 @@ namespace JabbR.ContentProviders
 {
     public class SoundCloudContentProvider : CollapsibleContentProvider
     {
-        private sealed class SoundCloudResponse
-        {
-            [JsonProperty(PropertyName = "title")]
-            public string Title { get; set; }
-            [JsonProperty(PropertyName = "html")]
-            public string FrameMarkup { get; set; }
-        }
-
         protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
             SoundCloudResponse widgetInfo = null;
@@ -40,7 +32,9 @@ namespace JabbR.ContentProviders
                                     using (var stream = tr.Result.GetResponseStream())
                                     {
                                         if (stream == null)
+                                        {
                                             return;
+                                        }
 
                                         using (var reader = new StreamReader(stream))
                                         {
@@ -53,12 +47,24 @@ namespace JabbR.ContentProviders
 
             parentTask.RunSynchronously();
 
-            return new ContentProviderResultModel {Title = widgetInfo.Title, Content = widgetInfo.FrameMarkup};
+            return new ContentProviderResultModel
+            {
+                Title = widgetInfo.Title,
+                Content = widgetInfo.FrameMarkup
+            };
         }
 
         protected override bool IsValidContent(HttpWebResponse response)
         {
             return response.ResponseUri.Host.IndexOf("soundcloud.com", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private sealed class SoundCloudResponse
+        {
+            [JsonProperty(PropertyName = "title")]
+            public string Title { get; set; }
+            [JsonProperty(PropertyName = "html")]
+            public string FrameMarkup { get; set; }
         }
     }
 }
