@@ -303,9 +303,9 @@ namespace JabbR.Commands
 
         private void HandleTopic(ChatUser user, ChatRoom room, string[] parts)
         {
-            string newTopic = string.Join(" ", parts.Skip(1)).Trim();
+            string newTopic = String.Join(" ", parts.Skip(1)).Trim();
             ChatService.ValidateTopic(newTopic);
-            newTopic = string.IsNullOrWhiteSpace(newTopic) ? null : newTopic;
+            newTopic = String.IsNullOrWhiteSpace(newTopic) ? null : newTopic;
             _chatService.ChangeTopic(user, room, newTopic);
             _notificationService.ChangeTopic(user, room);
         }
