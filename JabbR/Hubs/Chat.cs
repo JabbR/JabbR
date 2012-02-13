@@ -306,8 +306,16 @@ namespace JabbR
                 Owners = from u in room.Owners.Online()
                          select u.Name,
                 RecentMessages = recentMessages.AsEnumerable().Reverse().Select(m => new MessageViewModel(m)),
-                Topic = TextTransform.TransformAndParseUrls(_repository, room.Topic ?? "")
+                Topic = ConvertUrlsAndRoomLinks(room.Topic ?? "")
             };
+        }
+
+        private string ConvertUrlsAndRoomLinks(string message)
+        {
+            TextTransform textTransform = new TextTransform(_repository);
+            message = textTransform.ConvertHashtagsToRoomLinks(message);
+            HashSet<string> urls;
+            return TextTransform.TransformAndExtractUrls(message, out urls);
         }
 
         // TODO: Deprecate
@@ -835,7 +843,7 @@ namespace JabbR
         void INotificationService.ChangeTopic(ChatUser user, ChatRoom room)
         {
             bool isTopicCleared = String.IsNullOrWhiteSpace(room.Topic);
-            var parsedTopic = TextTransform.TransformAndParseUrls(_repository, room.Topic ?? "");
+            var parsedTopic = ConvertUrlsAndRoomLinks(room.Topic ?? "");
             foreach (var client in user.ConnectedClients)
             {
                 Clients[client.Id].topicChanged(isTopicCleared, parsedTopic);
