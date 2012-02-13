@@ -824,10 +824,14 @@
             $downloadDialogButton.click(function () {
                 var room = getCurrentRoomElements();
 
-                var url = document.location.pathname +
-                          '/download/' +
-                          encodeURI(room.getName()) +
-                          '?download=true&range=' + encodeURIComponent($downloadRange.val());
+                var url = document.location.href;
+                var nav = url.indexOf('#');
+                url = nav > 0 ? url.substring(0, nav) : url;
+                url = url.replace('index.htm', '');
+                url += '/download/' + 
+                       encodeURI(room.getName()) +
+                       '?download=true&range=' + 
+                       encodeURIComponent($downloadRange.val());
 
                 $('<iframe style="display:none">').attr('src', url).appendTo(document.body);
 
