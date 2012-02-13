@@ -91,5 +91,14 @@ namespace JabbR.Infrastructure
             return message;
         }
 
+        public static string TransformAndParseUrls(IJabbrRepository repository, string text)
+        {
+            HashSet<string> urls;
+            var transform = new TextTransform(repository);
+            var parsedText = transform.Parse(text);
+
+            return TextTransform.TransformAndExtractUrls(parsedText, out urls);
+        }
+
     }
 }

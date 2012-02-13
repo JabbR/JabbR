@@ -306,7 +306,7 @@ namespace JabbR
                 Owners = from u in room.Owners.Online()
                          select u.Name,
                 RecentMessages = recentMessages.AsEnumerable().Reverse().Select(m => new MessageViewModel(m)),
-                Topic = room.Topic ?? ""
+                Topic = TextTransform.TransformAndParseUrls(_repository, room.Topic ?? "")
             };
         }
 
@@ -835,16 +835,16 @@ namespace JabbR
         void INotificationService.ChangeTopic(ChatUser user, ChatRoom room)
         {
             bool isTopicCleared = String.IsNullOrWhiteSpace(room.Topic);
-
+            var parsedTopic = TextTransform.TransformAndParseUrls(_repository, room.Topic ?? "");
             foreach (var client in user.ConnectedClients)
             {
-                Clients[client.Id].topicChanged(isTopicCleared, room.Topic);
+                Clients[client.Id].topicChanged(isTopicCleared, parsedTopic);
             }
             // Create the view model
             var roomViewModel = new RoomViewModel 
             {
                 Name = room.Name,
-                Topic = room.Topic ?? ""
+                Topic = parsedTopic
             };
             Clients[room.Name].changeTopic(roomViewModel);
         }

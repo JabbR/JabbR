@@ -640,7 +640,7 @@
     function updateRoomTopic(roomViewModel) {
         var room = getRoomElements(roomViewModel.Name);
         var topic = roomViewModel.Topic;
-        var topicHtml = topic == '' ? roomViewModel.Name : '<strong>Topic: </strong>' + topic;
+        var topicHtml = topic === '' ? 'You\'re chatting in ' + roomViewModel.Name : '<strong>Topic: </strong>' + topic;
         room.roomTopic.html(topicHtml);
     }
 
