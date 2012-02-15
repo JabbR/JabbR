@@ -68,7 +68,7 @@ namespace JabbR.Infrastructure
             return message;
         }
 
-        private string ConvertHashtagsToRoomLinks(string message)
+        public string ConvertHashtagsToRoomLinks(string message)
         {
             message = Regex.Replace(message, HashTagPattern, m =>
             {

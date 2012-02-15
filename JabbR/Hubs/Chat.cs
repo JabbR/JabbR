@@ -248,7 +248,8 @@ namespace JabbR
                 new { Name = "resetinvitecode", Description = "Type /resetinvitecode - To reset the current invite code. This will render the previous invite code invalid" },
                 new { Name = "note", Description = "Type /note - To set a note shown via a paperclip icon next to your name, with the message appearing when you hover over it."},
                 new { Name = "afk", Description = "Type /afk - (aka. Away From Keyboard). To set a temporary note shown via a paperclip icon next to your name, with the message appearing when you hover over it. This note will disappear when you first resume typing."},
-                new { Name = "flag", Description = "Type /flag [Iso 3366-2 Code] - To show a small flag which represents your nationality. Eg. /flag US for a USA flag. ISO Reference Chart: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 (Apologies to people with dual citizenship). "}
+                new { Name = "flag", Description = "Type /flag [Iso 3366-2 Code] - To show a small flag which represents your nationality. Eg. /flag US for a USA flag. ISO Reference Chart: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 (Apologies to people with dual citizenship). "},
+                new { Name = "topic", Description = "Type /topic [topic] to set the room topic. Type /topic to clear the room's topic." }
             };
         }
 
@@ -304,8 +305,17 @@ namespace JabbR
                         select new UserViewModel(u),
                 Owners = from u in room.Owners.Online()
                          select u.Name,
-                RecentMessages = recentMessages.AsEnumerable().Reverse().Select(m => new MessageViewModel(m))
+                RecentMessages = recentMessages.AsEnumerable().Reverse().Select(m => new MessageViewModel(m)),
+                Topic = ConvertUrlsAndRoomLinks(room.Topic ?? "")
             };
+        }
+
+        private string ConvertUrlsAndRoomLinks(string message)
+        {
+            TextTransform textTransform = new TextTransform(_repository);
+            message = textTransform.ConvertHashtagsToRoomLinks(message);
+            HashSet<string> urls;
+            return TextTransform.TransformAndExtractUrls(message, out urls);
         }
 
         // TODO: Deprecate
@@ -828,6 +838,23 @@ namespace JabbR
             {
                 Clients[room.Name].changeFlag(userViewModel, room.Name);
             }
+        }
+
+        void INotificationService.ChangeTopic(ChatUser user, ChatRoom room)
+        {
+            bool isTopicCleared = String.IsNullOrWhiteSpace(room.Topic);
+            var parsedTopic = ConvertUrlsAndRoomLinks(room.Topic ?? "");
+            foreach (var client in user.ConnectedClients)
+            {
+                Clients[client.Id].topicChanged(isTopicCleared, parsedTopic);
+            }
+            // Create the view model
+            var roomViewModel = new RoomViewModel 
+            {
+                Name = room.Name,
+                Topic = parsedTopic
+            };
+            Clients[room.Name].changeTopic(roomViewModel);
         }
 
         private void OnRoomChanged(ChatRoom room)

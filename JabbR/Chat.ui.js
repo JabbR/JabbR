@@ -11,6 +11,11 @@
         $submitButton = null,
         $newMessage = null,
         $toast = null,
+        $disconnectDialog = null,
+        $downloadIcon = null,
+        $downloadDialog = null,
+        $downloadDialogButton = null,
+        $downloadRange = null,
         $ui = null,
         $sound = null,
         templates = null,
@@ -41,13 +46,14 @@
         return '_room_' + roomName;
     }
 
-    function Room($tab, $usersContainer, $usersOwners, $usersActive, $usersIdle, $messages) {
+    function Room($tab, $usersContainer, $usersOwners, $usersActive, $usersIdle, $messages, $roomTopic) {
         this.tab = $tab;
         this.users = $usersContainer;
         this.owners = $usersOwners;
         this.activeUsers = $usersActive;
         this.idleUsers = $usersIdle;
         this.messages = $messages;
+        this.roomTopic = $roomTopic;
 
         function glowTab() {
             // Stop if we're not unread anymore
@@ -69,6 +75,10 @@
                 });
             });
         }
+
+        this.isLocked = function () {
+            return this.tab.hasClass('locked');
+        };
 
         this.isLobby = function () {
             return this.tab.hasClass('lobby');
@@ -168,6 +178,9 @@
             this.users.removeClass('current')
                       .hide();
 
+            this.roomTopic.removeClass('current')
+                      .hide();
+
             if (this.isLobby()) {
                 $roomFilterInput.hide();
             }
@@ -195,6 +208,9 @@
                          .show();
 
             this.users.addClass('current')
+                      .show();
+
+            this.roomTopic.addClass('current')
                       .show();
 
             if (this.isLobby()) {
@@ -300,8 +316,8 @@
         this.sortList = function (listToSort) {
             var listItems = listToSort.children('li').get();
             listItems.sort(function (a, b) {
-                var compA = $(a).data('name').toUpperCase();
-                var compB = $(b).data('name').toUpperCase();
+                var compA = $(a).data('name').toString().toUpperCase();
+                var compB = $(b).data('name').toString().toUpperCase();
                 return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
             })
             $.each(listItems, function (index, item) { listToSort.append(item); });
@@ -315,7 +331,8 @@
                         $('#userlist-' + roomId + '-owners'),
                         $('#userlist-' + roomId + '-active'),
                         $('#userlist-' + roomId + '-idle'),
-                        $('#messages-' + roomId));
+                        $('#messages-' + roomId),
+                        $('#roomTopic-' + roomId));
         return room;
     }
 
@@ -325,7 +342,8 @@
                         $('.userlist.current .owners'),
                         $('.userlist.current .active'),
                         $('.userlist.current .idle'),
-                        $('.messages.current'));
+                        $('.messages.current'),
+                        $('.roomTopic.current'));
         return room;
     }
 
@@ -364,6 +382,7 @@
             roomId = null,
             viewModel = null,
             $messages = null,
+            $roomTopic = null,
             scrollHandler = null,
             userContainer = null;
 
@@ -383,6 +402,11 @@
 
         $messages = $('<ul/>').attr('id', 'messages-' + roomId)
                               .addClass('messages')
+                              .appendTo($chatArea)
+                              .hide();
+
+        $roomTopic = $('<div/>').attr('id', 'roomTopic-' + roomId)
+                              .addClass('roomTopic')
                               .appendTo($chatArea)
                               .hide();
 
@@ -622,6 +646,13 @@
         }
     }
 
+    function updateRoomTopic(roomViewModel) {
+        var room = getRoomElements(roomViewModel.Name);
+        var topic = roomViewModel.Topic;
+        var topicHtml = topic === '' ? 'You\'re chatting in ' + roomViewModel.Name : '<strong>Topic: </strong>' + topic;
+        room.roomTopic.html(topicHtml);
+    }
+
     var ui = {
 
         //lets store any events to be triggered as constants here to aid intellisense and avoid
@@ -649,6 +680,11 @@
             $newMessage = $('#new-message');
             $toast = $('#preferences .toast');
             $sound = $('#preferences .sound');
+            $downloadIcon = $('#preferences .download');
+            $downloadDialog = $('#download-dialog');
+            $downloadDialogButton = $('#download-dialog-button');
+            $downloadRange = $('#download-range');
+            $disconnectDialog = $('#disconnect-dialog');
             $login = $('.janrainEngage');
             $updatePopup = $('#jabbr-update');
             focus = true;
@@ -666,6 +702,7 @@
                 $toast.show();
             }
             else {
+                $downloadIcon.css({ left: '26px' });
                 // We need to set the toast setting to false
                 preferences.canToast = false;
             }
@@ -770,6 +807,37 @@
                 if (room) {
                     ui.setActiveRoom(room);
                 }
+            });
+
+            $downloadIcon.click(function () {
+                var room = getCurrentRoomElements();
+
+                if (room.isLobby()) {
+                    return; //Show a message?
+                }
+
+                if (room.isLocked()) {
+                    return; //Show a message?
+                }
+
+                $downloadDialog.modal({ backdrop: true, keyboard: true });
+            });
+
+            $downloadDialogButton.click(function () {
+                var room = getCurrentRoomElements();
+
+                var url = document.location.href;
+                var nav = url.indexOf('#');
+                url = nav > 0 ? url.substring(0, nav) : url;
+                url = url.replace('index.htm', '');
+                url += 'api/v1/messages/' +
+                       encodeURI(room.getName()) +
+                       '?download=true&range=' +
+                       encodeURIComponent($downloadRange.val());
+
+                $('<iframe style="display:none">').attr('src', url).appendTo(document.body);
+
+                $downloadDialog.modal('hide');
             });
 
             $window.blur(function () {
@@ -1329,6 +1397,9 @@
         showLogin: function () {
             $login.click();
         },
+        showDisconnectUI: function () {
+            $disconnectDialog.modal();
+        },
         showUpdateUI: function () {
             $updatePopup.modal();
 
@@ -1349,6 +1420,9 @@
                 $user = room.getUser(userViewModel.name);
 
             updateFlag(userViewModel, $user);
+        },
+        changeRoomTopic: function (roomViewModel) {
+            updateRoomTopic(roomViewModel);
         }
     };
 

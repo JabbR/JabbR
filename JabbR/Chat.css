@@ -37,7 +37,7 @@
     display: none;
     position: absolute;
     top: 55px;
-    width:15%;
+    width: 15%;
     left: 71%;
     margin-top: 4px;
 }
@@ -69,6 +69,15 @@
 
 #preferences .toast.off {
     background: url('Content/images/toast-off.png') no-repeat;
+}
+
+#preferences .download {
+    background: url('Content/images/download-icon.png') no-repeat;
+    width: 16px;
+    height: 20px;
+    left: 55px;
+    top: 3px;
+    position: absolute;
 }
 
 #logo {
@@ -106,7 +115,7 @@
     margin-top: 0px;
     padding-left: 0px;
     position: absolute;
-    top: 24px;
+    top: 55px;
     bottom: 70px;
     background-color: #fff;
 }
@@ -128,6 +137,11 @@
     display: inline-block;
 }
 
+.roomTopic {
+    position:absolute;
+    top:25px;
+}
+
 .users {
     margin-left: 0px;
     padding-left: 0px;
@@ -145,8 +159,7 @@
 #userlist-lobby {
     top: 85px;
 }
-.users ul
-{
+.users ul {
     margin-left: 0px;
     padding-left: 0px;
     margin-top: 0px;
@@ -155,8 +168,7 @@
     padding: 4px;
     list-style: none;
 }
-.users li.empty
-{
+.users li.empty {
     color: #909090;
     font-style: italic;
 }
@@ -519,7 +531,7 @@ li.room:hover {
 }
 
 .collapsible_box img, .collapsible_box embed {
-	max-width:100%;
+    max-width: 100%;
 }
 
 pre.multiline {

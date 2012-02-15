@@ -3672,6 +3672,136 @@ namespace JabbR.Test
             }
         }
 
+        public class TopicCommand
+        {
+            [Fact]
+            public void UserMustBeOwner()
+            {
+                var repository = new InMemoryRepository();
+                var roomOwner = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(roomOwner);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(roomOwner);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+                string topicLine = "This is the room's topic";
+                var exception = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/topic " + topicLine));
+
+                Assert.Equal("You are not an owner of room 'room'", exception.Message);    
+            }
+
+            [Fact]
+            public void CommandSucceeds()
+            {
+                var repository = new InMemoryRepository();
+                var roomOwner = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(roomOwner);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Owners.Add(roomOwner);
+                room.Users.Add(roomOwner);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+                string topicLine = "This is the room's topic";
+                bool result = commandManager.TryHandleCommand("/topic " + topicLine);
+
+                Assert.True(result);
+                Assert.Equal(topicLine, room.Topic);
+                notificationService.Verify(x => x.ChangeTopic(roomOwner, room), Times.Once());     
+            }
+
+            [Fact]
+            public void ThrowsIfTopicExceedsMaxLength()
+            {
+                var repository = new InMemoryRepository();
+                var roomOwner = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(roomOwner);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Owners.Add(roomOwner);
+                room.Users.Add(roomOwner);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+                string topicLine = new String('A', 81);
+                var exception = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/topic " + topicLine));
+
+                Assert.Equal("Sorry, but your topic is too long. Can please keep it under 80 characters.", exception.Message);    
+            }
+
+            [Fact]
+            public void CommandClearsTopicIfNoTextProvided()
+            {
+                var repository = new InMemoryRepository();
+                var roomOwner = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(roomOwner);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Owners.Add(roomOwner);
+                room.Users.Add(roomOwner);
+                repository.Add(room);
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/topic");
+
+                Assert.True(result);
+                Assert.Equal(null, room.Topic);
+                notificationService.Verify(x => x.ChangeTopic(roomOwner, room), Times.Once());
+            }
+        }
+
 
        
 
