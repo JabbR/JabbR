@@ -813,7 +813,7 @@
         });
 
         connection.hub.disconnected(function () {
-            connection.hub.start();
+            ui.showDisconnectUI();
         });
 
     });

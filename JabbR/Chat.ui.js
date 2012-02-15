@@ -11,6 +11,7 @@
         $submitButton = null,
         $newMessage = null,
         $toast = null,
+        $disconnectDialog = null,
         $downloadIcon = null,
         $downloadDialog = null,
         $downloadDialogButton = null,
@@ -683,6 +684,7 @@
             $downloadDialog = $('#download-dialog');
             $downloadDialogButton = $('#download-dialog-button');
             $downloadRange = $('#download-range');
+            $disconnectDialog = $('#disconnect-dialog');
             $login = $('.janrainEngage');
             $updatePopup = $('#jabbr-update');
             focus = true;
@@ -828,9 +830,9 @@
                 var nav = url.indexOf('#');
                 url = nav > 0 ? url.substring(0, nav) : url;
                 url = url.replace('index.htm', '');
-                url += 'api/v1/messages/' + 
+                url += 'api/v1/messages/' +
                        encodeURI(room.getName()) +
-                       '?download=true&range=' + 
+                       '?download=true&range=' +
                        encodeURIComponent($downloadRange.val());
 
                 $('<iframe style="display:none">').attr('src', url).appendTo(document.body);
@@ -1394,6 +1396,9 @@
         },
         showLogin: function () {
             $login.click();
+        },
+        showDisconnectUI: function () {
+            $disconnectDialog.modal();
         },
         showUpdateUI: function () {
             $updatePopup.modal();
