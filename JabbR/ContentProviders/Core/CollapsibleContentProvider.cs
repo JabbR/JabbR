@@ -10,11 +10,11 @@ namespace JabbR.ContentProviders.Core
     public abstract class CollapsibleContentProvider : IContentProvider
     {
 
-        public virtual ContentProviderResultModel GetContent(HttpWebResponse response)
+        public virtual ContentProviderResultModel GetContent(Uri uri)
         {
-            if (IsValidContent(response))
+            if (IsValidContent(uri))
             {
-                var result = GetCollapsibleContent(response);
+                var result = GetCollapsibleContent(uri);
                 if (IsCollapsible && result != null)
                 {
                     result.Content = String.Format(CultureInfo.InvariantCulture,
@@ -38,6 +38,14 @@ namespace JabbR.ContentProviders.Core
             }
         }
 
+        protected virtual HttpWebResponse MakeRequest(Uri url)
+        {
+            const string _userAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; MAAU)";
+            var request = (HttpWebRequest)HttpWebRequest.Create(url);
+            request.UserAgent = _userAgent;
+            return (HttpWebResponse) request.GetResponse();
+        }
+
         protected virtual IList<string> ExtractParameters(Uri responseUri)
         {
             return ParameterExtractionRegex.Match(responseUri.AbsoluteUri)
@@ -48,9 +56,9 @@ namespace JabbR.ContentProviders.Core
                                 .Where(v => !String.IsNullOrEmpty(v)).ToList();     
 
         }
-        protected abstract ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response);
+        protected abstract ContentProviderResultModel GetCollapsibleContent(Uri uri);
 
-        protected abstract bool IsValidContent(HttpWebResponse response);
+        protected abstract bool IsValidContent(Uri uri);
 
         protected virtual bool IsCollapsible { get { return true; } }
         protected virtual bool IsPopOut { get { return true; } }

@@ -16,9 +16,9 @@ namespace JabbR.ContentProviders
         private static readonly string _nugetFeedURL = "http://packages.nuget.org/v1/FeedService.svc/Packages()?$filter=Id eq '{0}'&$orderby=Created desc";
         private static readonly string _nugetBadgeFormat = "<div class=\"nuget-badge\"><div class=\"nuget-pm\">PM></div><code>Install-Package {0}</code><div class=\"nuget-projectinfo\"><div class=\"nuget-title\">{1}</div><div class=\"nuget-summary\">{2}</div><div class=\"nuget-description\">{3}{4}</div>{5}<div style=\"clear:both\"></div></div></div>";
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
         {
-            string packageName = ExtractPackageName(response.ResponseUri);
+            string packageName = ExtractPackageName(uri);
             if (!String.IsNullOrEmpty(packageName))
             {
                 dynamic package = FetchPackage(packageName);
@@ -85,11 +85,11 @@ namespace JabbR.ContentProviders
             return null;
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        protected override bool IsValidContent(Uri uri)
         {
             return
-                response.ResponseUri.AbsoluteUri.StartsWith("http://nuget.org", StringComparison.OrdinalIgnoreCase) ||
-                response.ResponseUri.AbsoluteUri.StartsWith("http://www.nuget.org", StringComparison.OrdinalIgnoreCase);
+                uri.AbsoluteUri.StartsWith("http://nuget.org", StringComparison.OrdinalIgnoreCase) ||
+                uri.AbsoluteUri.StartsWith("http://www.nuget.org", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

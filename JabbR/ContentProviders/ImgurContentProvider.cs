@@ -7,20 +7,20 @@ namespace JabbR.ContentProviders
 {
     public class ImgurContentProvider : CollapsibleContentProvider
     {        
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
         {
-            string id = response.ResponseUri.AbsoluteUri.Split('/').Last();
+            string id = uri.AbsoluteUri.Split('/').Last();
 
             return new ContentProviderResultModel()
             {
                 Content = string.Format(@"<img src=""http://i.imgur.com/{0}.jpg"" />", id),
-                Title = response.ResponseUri.AbsoluteUri.ToString()
+                Title = uri.AbsoluteUri
             };
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        protected override bool IsValidContent(Uri uri)
         {
-            return response.ResponseUri.AbsoluteUri.StartsWith("http://imgur.com/", StringComparison.OrdinalIgnoreCase);
+            return uri.AbsoluteUri.StartsWith("http://imgur.com/", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

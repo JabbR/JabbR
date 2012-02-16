@@ -14,9 +14,9 @@ namespace JabbR.ContentProviders
         private static readonly string _gitHubIssuesApiFormat = "https://api.github.com/repos{0}/issues/{1}?callback=addGitHubIssue";
         private static readonly string _gitHubIssuesContentFormat = "<div class='git-hub-issue git-hub-issue-{0}'></div><script src='{1}'></script>";
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
         {
-            var parameters = ExtractParameters(response.ResponseUri);
+            var parameters = ExtractParameters(uri);
 
             return new ContentProviderResultModel()
             {
@@ -24,22 +24,8 @@ namespace JabbR.ContentProviders
                         parameters[1],
                     String.Format(_gitHubIssuesApiFormat, parameters[0], parameters[1])
                 ),
-                Title = response.ResponseUri.AbsoluteUri
+                Title = uri.AbsoluteUri
             };
-        }
-
-        private static dynamic FetchIssue(string path)
-        {
-            var webRequest = (HttpWebRequest)WebRequest.Create(
-                String.Format(_gitHubIssuesApiFormat, path));
-            webRequest.Accept = "application/json";
-            using (var webResponse = webRequest.GetResponse())
-            {
-                using (var sr = new StreamReader(webResponse.GetResponseStream()))
-                {
-                    return JsonConvert.DeserializeObject(sr.ReadToEnd());
-                }
-            }
         }
 
         protected override Regex ParameterExtractionRegex
@@ -50,9 +36,9 @@ namespace JabbR.ContentProviders
             }
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        protected override bool IsValidContent(Uri uri)
         {
-            return ExtractParameters(response.ResponseUri).Count == 2;
+            return ExtractParameters(uri).Count == 2;
         }
     }
 }

@@ -16,14 +16,14 @@ namespace JabbR.ContentProviders
         private static readonly String _oEmbedUrl = "http://www.slideshare.net/api/oembed/2?url={0}&format=json";
 
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
         {
             // We have to make a call to the SlideShare api because
             // their embed code request the unique ID of the slide deck
             // where we will only have the url -- this call gets the json information
             // on the slide deck and that package happens to already contain the embed code (.html)
             var webRequest = (HttpWebRequest)HttpWebRequest.Create(
-                    String.Format(_oEmbedUrl, response.ResponseUri.AbsoluteUri));
+                    String.Format(_oEmbedUrl, uri.AbsoluteUri));
 
             using (var webResponse = webRequest.GetResponse())
             {
@@ -39,10 +39,10 @@ namespace JabbR.ContentProviders
             }
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        protected override bool IsValidContent(Uri uri)
         {
-            return response.ResponseUri.AbsoluteUri.StartsWith("http://slideshare.net/", StringComparison.OrdinalIgnoreCase)
-               || response.ResponseUri.AbsoluteUri.StartsWith("http://www.slideshare.net/", StringComparison.OrdinalIgnoreCase);
+            return uri.AbsoluteUri.StartsWith("http://slideshare.net/", StringComparison.OrdinalIgnoreCase)
+               || uri.AbsoluteUri.StartsWith("http://www.slideshare.net/", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

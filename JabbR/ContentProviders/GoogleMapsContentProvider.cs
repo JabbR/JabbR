@@ -44,10 +44,10 @@ namespace JabbR.ContentProviders
         }
 
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
         {
-            ContentProviderResultModel content = base.GetCollapsibleContent(response);
-            var queryString = HttpUtility.ParseQueryString(response.ResponseUri.Query);
+            ContentProviderResultModel content = base.GetCollapsibleContent(uri);
+            var queryString = HttpUtility.ParseQueryString(uri.Query);
             content.Title = queryString["q"] ?? "Google Maps";
             return content;
         }

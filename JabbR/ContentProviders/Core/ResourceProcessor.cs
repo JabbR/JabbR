@@ -10,19 +10,16 @@ namespace JabbR.ContentProviders.Core
     public class ResourceProcessor : IResourceProcessor
     {
         private readonly Lazy<IList<IContentProvider>> _contentProviders = new Lazy<IList<IContentProvider>>(GetContentProviders);
-        private const string _userAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; MAAU)";
 
         public Task<ContentProviderResultModel> ExtractResource(string url)
         {
-            var request = (HttpWebRequest)HttpWebRequest.Create(url);
-            request.UserAgent = _userAgent;
-            var requestTask = Task.Factory.FromAsync((cb, state) => request.BeginGetResponse(cb, state), ar => request.EndGetResponse(ar), null);
-            return requestTask.ContinueWith(task => ExtractContent((HttpWebResponse)task.Result));
+            var uri = new Uri(url);
+            return Task.Factory.StartNew(() => ExtractContent(uri));
         }
 
-        private ContentProviderResultModel ExtractContent(HttpWebResponse response)
+        private ContentProviderResultModel ExtractContent(Uri uri)
         {
-            return _contentProviders.Value.Select(c => c.GetContent(response))
+            return _contentProviders.Value.Select(c => c.GetContent(uri))
                                           .FirstOrDefault(content => content != null);
         }
 
