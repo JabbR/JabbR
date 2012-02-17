@@ -1,7 +1,7 @@
 ﻿$ScriptRoot = (Split-Path -parent $MyInvocation.MyCommand.Definition)
 . $ScriptRoot\_Common.ps1
 
- & "..\Build.cmd"
+ & "$ScriptRoot\..\Build.cmd"
 if($LastExitCode -ne 0) {
     print-error("=================================================")
     print-error("            Error building project.              ")
