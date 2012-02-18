@@ -139,17 +139,6 @@ namespace JabbR.App_Start
 
         private static void SetupErrorHandling()
         {
-            AppDomain.CurrentDomain.FirstChanceException += (sender, e) =>
-            {
-                var ex = e.Exception.GetBaseException();
-                if (!(ex is RuntimeBinderException) &&
-                    !(ex is MissingMethodException) &&
-                    !(ex is ThreadAbortException))
-                {
-                    Elmah.ErrorLog.GetDefault(null).Log(new Error(ex));
-                }
-            };
-
             TaskScheduler.UnobservedTaskException += (sender, e) =>
             {
                 try
