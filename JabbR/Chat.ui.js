@@ -502,8 +502,8 @@
     }
 
     function processMessage(message) {
-        var isPastie = $(message.message).find('.collapsible_box').length > 0;
-        message.message = isPastie ? message.message : utility.parseEmojis(message.message);
+        var isFromCollapibleContentProvider = message.message.indexOf('class="collapsible_box"') > -1;
+        message.message = isFromCollapibleContentProvider ? message.message : utility.parseEmojis(message.message);        
         message.trimmedName = utility.trim(message.name, 21);
         message.when = message.date.formatTime(true);
         message.fulldate = message.date.toLocaleString();
