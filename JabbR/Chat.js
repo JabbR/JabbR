@@ -128,7 +128,7 @@
             id: message.Id,
             date: message.When.fromJsonDate(),
             highlight: re.test(message.Content) ? 'highlight' : '',
-            isOwn: re.test(chat.name)
+            isOwn: re.test(message.User.name)
         };
     }
 

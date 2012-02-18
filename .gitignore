@@ -8,6 +8,8 @@ deploy
 deploy/*
 *.suo
 *.cache
+*.bak
 packages/
 msbuild.log
 _Resharper*/
+_AzurePackage/
