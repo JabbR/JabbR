@@ -1285,6 +1285,10 @@
                 }
             }
         },
+        replaceMessage: function (message) {
+            $('#m-' + message.Id).find('.middle')
+                                 .html(message.Content);
+        },
         addChatMessageContent: function (id, content, roomName) {
             var $message = $('#m-' + id);
 

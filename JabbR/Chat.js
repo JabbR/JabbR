@@ -297,6 +297,7 @@
     chat.addMessage = function (message, room) {
         // Ignore messages from yourself
         if (message.User.Name === chat.name) {
+            ui.replaceMessage(message);
             return;
         }
 
@@ -685,7 +686,7 @@
             var viewModel = {
                 name: chat.name,
                 hash: chat.hash,
-                message: clientMessage.content,
+                message: $('<div/>').text(clientMessage.content).html(),
                 id: clientMessage.id,
                 date: new Date(),
                 highlight: ''
