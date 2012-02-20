@@ -21,6 +21,13 @@
         return s;
     }
 
+    function guidGenerator() {
+        var S4 = function () {
+            return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+        };
+        return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+    }
+
     $.fn.isNearTheEnd = function () {
         return this[0].scrollTop + this.height() >= this[0].scrollHeight;
     };
@@ -63,7 +70,7 @@
     };
 
     // returns the date portion only (strips time)
-    Date.prototype.toDate = function() {
+    Date.prototype.toDate = function () {
         return new Date(this.getFullYear(), this.getMonth(), this.getDate());
     };
 
@@ -96,7 +103,8 @@
         parseEmojis: function (content) {
             var parser = new Emoji.Parser().parse;
             return (parser(content));
-        }
+        },
+        newId: guidGenerator
     };
 
     if (!window.chat) {

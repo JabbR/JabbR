@@ -503,7 +503,7 @@
 
     function processMessage(message) {
         var isFromCollapibleContentProvider = message.message.indexOf('class="collapsible_box"') > -1;
-        message.message = isFromCollapibleContentProvider ? message.message : utility.parseEmojis(message.message);        
+        message.message = isFromCollapibleContentProvider ? message.message : utility.parseEmojis(message.message);
         message.trimmedName = utility.trim(message.name, 21);
         message.when = message.date.formatTime(true);
         message.fulldate = message.date.toLocaleString();
@@ -1424,6 +1424,21 @@
         },
         changeRoomTopic: function (roomViewModel) {
             updateRoomTopic(roomViewModel);
+        },
+        confirmMessage: function (id) {
+            $('#m-' + id).removeClass('failed')
+                         .removeClass('loading');
+        },
+        failMessage: function (id) {
+            $('#m-' + id).removeClass('loading')
+                         .addClass('failed');
+        },
+        markMessagePending: function (id) {
+            var $message = $('#m-' + id);
+
+            if ($message.hasClass('failed') === false) {
+                $message.addClass('loading');
+            }
         }
     };
 

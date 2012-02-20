@@ -483,11 +483,11 @@ namespace JabbR.Services
             user.Rooms.Remove(room);
         }
 
-        public ChatMessage AddMessage(ChatUser user, ChatRoom room, string content)
+        public ChatMessage AddMessage(ChatUser user, ChatRoom room, string id, string content)
         {
             var chatMessage = new ChatMessage
             {
-                Id = Guid.NewGuid().ToString("d"),
+                Id = id,
                 User = user,
                 Content = content,
                 When = DateTimeOffset.UtcNow,

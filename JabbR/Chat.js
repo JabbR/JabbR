@@ -3,7 +3,7 @@
 /// <reference path="Scripts/jquery.cookie.js" />
 /// <reference path="Chat.ui.js" />
 
-(function ($, connection, window, ui) {
+(function ($, connection, window, ui, utility) {
     "use strict";
 
     var chat = connection.chat,
@@ -17,7 +17,9 @@
         checkingStatus = false,
         typing = false,
         typingTimeoutId = null,
-        $ui = $(ui);
+        $ui = $(ui),
+        messageSendingDelay = 1500,
+        pendingMessages = {};
 
     function isSelf(user) {
         return chat.name === user.Name;
@@ -293,19 +295,18 @@
     };
 
     chat.addMessage = function (message, room) {
+        // Ignore messages from yourself
+        if (message.User.Name === chat.name) {
+            return;
+        }
+
         var viewModel = getMessageViewModel(message);
 
         scrollIfNecessary(function () {
             ui.addChatMessage(viewModel, room);
-
         }, room);
 
         var isMentioned = viewModel.highlight === 'highlight';
-
-        // Fix #369 - do not update unread count if own message
-        if (viewModel.isOwn) {
-            return;
-        }
 
         updateUnread(room, isMentioned);
     };
@@ -670,11 +671,51 @@
     });
 
     $ui.bind(ui.events.sendMessage, function (ev, msg) {
-        chat.send(msg, chat.activeRoom)
+        var id = utility.newId(),
+            clientMessage = {
+                id: id,
+                content: msg,
+                room: chat.activeRoom
+            },
+            messageCompleteTimeout = null;
+
+
+        if (msg[0] !== '/') {
+            // Added the message to the ui first
+            var viewModel = {
+                name: chat.name,
+                hash: chat.hash,
+                message: clientMessage.content,
+                id: clientMessage.id,
+                date: new Date(),
+                highlight: ''
+            };
+
+            ui.addChatMessage(viewModel, clientMessage.room);
+
+            // If there's a significant delay in getting the message sent
+            // mark it as pending
+            messageCompleteTimeout = window.setTimeout(function () {
+                // If after a second
+                ui.markMessagePending(id);
+            },
+            messageSendingDelay);
+
+            pendingMessages[id] = messageCompleteTimeout;
+        }
+
+        chat.send(clientMessage)
             .done(function (requiresUpdate) {
                 if (requiresUpdate === true) {
                     ui.showUpdateUI();
                 }
+
+                if (messageCompleteTimeout) {
+                    clearTimeout(messageCompleteTimeout);
+                    delete pendingMessages[id];
+                }
+
+                ui.confirmMessage(id);
             })
             .fail(function (e) {
                 ui.addMessage(e, 'error');
@@ -816,6 +857,15 @@
             ui.showDisconnectUI();
         });
 
+        connection.hub.error(function (err) {
+            // Make all pening messages failed if there's an error
+            for (var id in pendingMessages) {
+                clearTimeout(pendingMessages[id]);
+                ui.failMessage(id);
+                delete pendingMessages[id];
+            }
+        });
+
     });
 
-})(jQuery, $.connection, window, window.chat.ui);
+})(jQuery, $.connection, window, window.chat.ui, window.chat.utility);

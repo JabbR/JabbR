@@ -149,15 +149,27 @@ namespace JabbR
 
         public bool Send(string content, string roomName)
         {
+            var message = new ClientMessage
+            {
+                Content = content,
+                Id = Guid.NewGuid().ToString("d"),
+                Room = roomName
+            };
+
+            return Send(message);
+        }
+
+        public bool Send(ClientMessage message)
+        {
             bool outOfSync = OutOfSync;
 
             SetVersion();
 
             // Sanitize the content (strip and bad html out)
-            content = HttpUtility.HtmlEncode(content);
+            message.Content = HttpUtility.HtmlEncode(message.Content);
 
             // See if this is a valid command (starts with /)
-            if (TryHandleCommand(content, roomName))
+            if (TryHandleCommand(message.Content, message.Room))
             {
                 return outOfSync;
             }
@@ -165,18 +177,19 @@ namespace JabbR
             string id = Caller.id;
 
             ChatUser user = _repository.VerifyUserId(id);
-            ChatRoom room = _repository.VerifyUserRoom(user, roomName);
+            ChatRoom room = _repository.VerifyUserRoom(user, message.Room);
 
             // Update activity *after* ensuring the user, this forces them to be active
             UpdateActivity(user, room);
 
             HashSet<string> links;
-            var messageText = ParseChatMessageText(content, out links);
+            var messageText = ParseChatMessageText(message.Content, out links);
 
-            ChatMessage chatMessage = _service.AddMessage(user, room, messageText);
+            ChatMessage chatMessage = _service.AddMessage(user, room, message.Id, messageText);
+
 
             var messageViewModel = new MessageViewModel(chatMessage);
-            Clients[room.Name].addMessage(messageViewModel, room.Name);
+            Clients[room.Name].addMessage(messageViewModel, room.Name, Context.ConnectionId);
 
             _repository.CommitChanges();
 
@@ -187,15 +200,19 @@ namespace JabbR
 
             ProcessUrls(links, room, chatMessage);
 
+            // Update the id on the message
+            chatMessage.Id = Guid.NewGuid().ToString("d");
+            _repository.CommitChanges();
+
             return outOfSync;
         }
 
-        // TODO: Deprecate
-        public bool Send(string content)
-        {
-            string roomName = Caller.activeRoom;
-            return Send(content, roomName);
-        }
+        //// TODO: Deprecate
+        //public bool Send(string content)
+        //{
+        //    string roomName = Caller.activeRoom;
+        //    return Send(content, roomName);
+        //}
 
         private string ParseChatMessageText(string content, out HashSet<string> links)
         {
@@ -348,6 +365,7 @@ namespace JabbR
             // Update the client state
             Caller.id = user.Id;
             Caller.name = user.Name;
+            Caller.hash = user.Hash;
 
             var userViewModel = new UserViewModel(user);
             var rooms = new List<RoomViewModel>();
@@ -393,6 +411,9 @@ namespace JabbR
 
         private void ProcessUrls(IEnumerable<string> links, ChatRoom room, ChatMessage chatMessage)
         {
+            // Use this id when talking to the client to update the message content
+            string id = chatMessage.Id;
+
             // REVIEW: is this safe to do? We're holding on to this instance 
             // when this should really be a fire and forget.
             var contentTasks = links.Select(_resourceProcessor.ExtractResource).ToArray();
@@ -418,7 +439,7 @@ namespace JabbR
                     chatMessage.Content += extractedContent;
 
                     // Notify the room
-                    Clients[room.Name].addMessageContent(chatMessage.Id, extractedContent, room.Name);
+                    Clients[room.Name].addMessageContent(id, extractedContent, room.Name);
 
                     // Commit the changes
                     _repository.CommitChanges();
@@ -513,6 +534,7 @@ namespace JabbR
             // Set some client state
             Caller.name = user.Name;
             Caller.id = user.Id;
+            Caller.hash = user.Hash;
 
             // Tell the client a user was created
             Caller.userCreated();
@@ -619,6 +641,8 @@ namespace JabbR
 
         void INotificationService.ChangeGravatar(ChatUser user)
         {
+            Caller.hash = user.Hash;
+
             // Update the calling client
             foreach (var client in user.ConnectedClients)
             {
@@ -849,7 +873,7 @@ namespace JabbR
                 Clients[client.Id].topicChanged(isTopicCleared, parsedTopic);
             }
             // Create the view model
-            var roomViewModel = new RoomViewModel 
+            var roomViewModel = new RoomViewModel
             {
                 Name = room.Name,
                 Topic = parsedTopic

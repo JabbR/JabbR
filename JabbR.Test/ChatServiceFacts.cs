@@ -556,7 +556,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
 
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
-                ChatMessage message = service.AddMessage(user, room, "Content");
+                ChatMessage message = service.AddMessage(user, room, Guid.NewGuid().ToString(), "Content");
 
                 Assert.NotNull(message);
                 Assert.Same(message, room.Messages.First());

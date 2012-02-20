@@ -622,7 +622,9 @@
     <Content Include="Content\images\emojis\yellow_heart.png" />
     <Content Include="Content\images\emojis\zap.png" />
     <Content Include="Content\images\emojis\zzz.png" />
+    <Content Include="Content\images\error.png" />
     <Content Include="Content\images\flags.png" />
+    <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\lockwhite.png" />
     <Content Include="Content\images\icons-18-black.png" />
     <Content Include="Content\images\icons-18-white.png" />
@@ -858,6 +860,7 @@
     </Compile>
     <Compile Include="Models\ChatClient.cs" />
     <Compile Include="Models\ClientState.cs" />
+    <Compile Include="Models\ClientMessage.cs" />
     <Compile Include="Services\ApplicationSettings.cs" />
     <Compile Include="Services\ChatService.cs" />
     <Compile Include="Services\CryptoService.cs" />

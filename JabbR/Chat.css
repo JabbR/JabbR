@@ -432,6 +432,22 @@ li.room:hover {
     font-weight: bold;
 }
 
+.message.failed .left .state {
+    width: 20px;
+    height: 20px;
+    float: right;
+    background-image: url('Content/images/error.png');
+    background-repeat: no-repeat;
+}
+
+.message.loading .left .state {
+    width: 20px;
+    height: 20px;
+    float: right;
+    background-image: url('Content/images/loading.gif');
+    background-repeat: no-repeat;
+}
+
 .message .middle {
     margin-right: 95px;
     padding: 5px;

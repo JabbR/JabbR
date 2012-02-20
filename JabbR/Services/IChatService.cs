@@ -23,7 +23,7 @@ namespace JabbR.Services
         void SetInviteCode(ChatUser user, ChatRoom room, string inviteCode);
 
         // Messages
-        ChatMessage AddMessage(ChatUser user, ChatRoom room, string content);
+        ChatMessage AddMessage(ChatUser user, ChatRoom room, string id, string content);
 
         // Owner commands
         void AddOwner(ChatUser user, ChatUser targetUser, ChatRoom targetRoom);
