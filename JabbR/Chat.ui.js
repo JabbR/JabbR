@@ -1291,6 +1291,9 @@
             $('#m-' + message.id).find('.middle')
                                  .html(message.message);
         },
+        messageExists: function (id) {
+            return $('#m-' + id).length > 0;
+        },
         addChatMessageContent: function (id, content, roomName) {
             var $message = $('#m-' + id);
 

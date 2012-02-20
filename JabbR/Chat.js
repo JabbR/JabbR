@@ -298,7 +298,7 @@
         var viewModel = getMessageViewModel(message);
 
         // Update your message when it comes from the server
-        if (message.User.Name === chat.name) {
+        if (ui.messageExists(viewModel.id)) {
             ui.replaceMessage(viewModel);
             return;
         }
