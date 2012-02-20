@@ -295,13 +295,13 @@
     };
 
     chat.addMessage = function (message, room) {
-        // Ignore messages from yourself
+        var viewModel = getMessageViewModel(message);
+
+        // Update your message when it comes from the server
         if (message.User.Name === chat.name) {
-            ui.replaceMessage(message);
+            ui.replaceMessage(viewModel);
             return;
         }
-
-        var viewModel = getMessageViewModel(message);
 
         scrollIfNecessary(function () {
             ui.addChatMessage(viewModel, room);
