@@ -78,7 +78,10 @@ namespace JabbR.Auth
                     // If they are logged in then assocate the identity
                     user.Identity = userIdentity;
                     user.Email = email;
-                    user.Hash = email.ToMD5();
+                    if (!String.IsNullOrEmpty(email))
+                    {
+                        user.Hash = email.ToMD5();
+                    }
                     repository.CommitChanges();
                     context.Response.Redirect("~/", false);
                     context.ApplicationInstance.CompleteRequest();
@@ -94,7 +97,10 @@ namespace JabbR.Auth
             {
                 // Update email and gravatar
                 user.Email = email;
-                user.Hash = email.ToMD5();
+                if (!String.IsNullOrEmpty(email))
+                {
+                    user.Hash = email.ToMD5();
+                }
                 repository.CommitChanges();
             }
 
