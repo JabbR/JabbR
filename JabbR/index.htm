@@ -45,7 +45,7 @@
             s.parentNode.insertBefore(e, s);
 
             // Rotating Tips.
-            var cycleMessages = [
+            var messages = [
                 'Type @ then press TAB to auto-complete nicknames',
                 'Type /help to see the list of commands',
                 'Type /rooms to list all available rooms',
@@ -54,23 +54,23 @@
             ];
 
             var cycleTimeInMilliseconds = 60 * 1000; // 1 minute.
-            var cycleMessageIndex = 0;
-            
-            function recursiveTimeout() {
+            var messageIndex = 0;
+
+            function cycleMessages() {
                 setTimeout(function () {
-                    cycleMessageIndex++;
-                    if (cycleMessageIndex >= cycleMessages.length) {
-                        cycleMessageIndex = 0;
+                    messageIndex++;
+                    if (messageIndex >= messages.length) {
+                        messageIndex = 0;
                     }
                     $('#message-instruction').fadeOut(2000, function () {
-                        $('#message-instruction').html(cycleMessages[cycleMessageIndex]);
+                        $('#message-instruction').html(messages[messageIndex]);
                     });
 
-                    $('#message-instruction').fadeIn(2000, recursiveTimeout());
+                    $('#message-instruction').fadeIn(2000, cycleMessages());
                 }, cycleTimeInMilliseconds);
 
             };
-            recursiveTimeout();
+            cycleMessages();
         })();
     </script>
     <script id="new-message-template" type="text/x-jquery-tmpl">
