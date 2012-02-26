@@ -676,12 +676,9 @@
                 $('#message-instruction').html(messages[messageIndex]);
             });
 
-            $('#message-instruction').fadeIn(2000, cycleMessages());
+            $('#message-instruction').fadeIn(2000, cycleMessages);
         }, cycleTimeInMilliseconds);
     };
-
-    // Start cycling the messages once the document has finished loading.
-    $(document).ready(cycleMessages());
 
     var ui = {
 
@@ -966,6 +963,9 @@
 
             // Initilize liveUpdate plugin for room search
             ui.$roomFilter = $roomFilterInput.liveUpdate('#userlist-lobby', true);
+
+            // Start cycling the messages once the document has finished loading.
+            cycleMessages();
         },
         run: function () {
             $.history.init(function (hash) {
