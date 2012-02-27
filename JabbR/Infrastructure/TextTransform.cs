@@ -44,7 +44,7 @@ namespace JabbR.Infrastructure
 
         public static string TransformAndExtractUrls(string message, out HashSet<string> extractedUrls)
         {
-            const string urlPattern = @"((https?|ftp)://|www\.)[\w]+(.[\w]+)([\w\-\.\[\],@?^=%&amp;:/~\+#!]*[\w\-\@?^=%&amp;/~\+#\[\]])";
+            const string urlPattern = @"(?i)(?<s>(?:https?|ftp)://|www\.)?(?:\S+(?::\S*)?@)?(?:(?:[\w\p{S}][\w\p{S}@-]*[.:])+\w+)(?(s)/?|/)(?:(?:[^\s()<>.,\u0022'”]+|[.,\u0022'”][^\s()<>.,\u0022]|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\))*)";
 
             var urls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             message = Regex.Replace(message, urlPattern, m =>
