@@ -654,6 +654,32 @@
         room.roomTopic.html(topicHtml);
     }
 
+    // Rotating Tips.
+    var messages = [
+                'Type @ then press TAB to auto-complete nicknames',
+                'Type /help to see the list of commands',
+                'Type /rooms to list all available rooms',
+                'Type : then press TAB to auto-complete emoji icons',
+                'You can create your own private rooms. Type /help for more info'
+            ];
+
+    var cycleTimeInMilliseconds = 60 * 1000; // 1 minute.
+    var messageIndex = 0;
+
+    function cycleMessages() {
+        setTimeout(function () {
+            messageIndex++;
+            if (messageIndex >= messages.length) {
+                messageIndex = 0;
+            }
+            $('#message-instruction').fadeOut(2000, function () {
+                $('#message-instruction').html(messages[messageIndex]);
+            });
+
+            $('#message-instruction').fadeIn(2000, cycleMessages);
+        }, cycleTimeInMilliseconds);
+    };
+
     var ui = {
 
         //lets store any events to be triggered as constants here to aid intellisense and avoid
@@ -937,6 +963,9 @@
 
             // Initilize liveUpdate plugin for room search
             ui.$roomFilter = $roomFilterInput.liveUpdate('#userlist-lobby', true);
+
+            // Start cycling the messages once the document has finished loading.
+            cycleMessages();
         },
         run: function () {
             $.history.init(function (hash) {
