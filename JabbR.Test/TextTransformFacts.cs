@@ -133,6 +133,20 @@ namespace JabbR.Test
             }
 
             [Fact]
+            public void UrlWithCapitalizedHttpIsTransformed()
+            {
+                //arrange
+                var message = "message HTTP://www.jabbr.net continues on";
+                HashSet<string> extractedUrls;
+
+                //act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                //assert
+                Assert.Equal("message <a rel=\"nofollow external\" target=\"_blank\" href=\"HTTP://www.jabbr.net\" title=\"HTTP://www.jabbr.net\">HTTP://www.jabbr.net</a> continues on", result);
+            }
+
+            [Fact]
             public void UrlWithHttpsIsTransformed()
             {
                 //arrange
@@ -144,6 +158,34 @@ namespace JabbR.Test
 
                 //assert
                 Assert.Equal("message <a rel=\"nofollow external\" target=\"_blank\" href=\"https://www.jabbr.net\" title=\"https://www.jabbr.net\">https://www.jabbr.net</a> continues on", result);
+            }
+
+            [Fact]
+            public void UrlWithParenthesesIsTransformed()
+            {
+                //arrange
+                var message = "message http://www.jabbr.net/jab(br) continues on";
+                HashSet<string> extractedUrls;
+
+                //act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                //assert
+                Assert.Equal("message <a rel=\"nofollow external\" target=\"_blank\" href=\"http://www.jabbr.net/jab(br)\" title=\"http://www.jabbr.net/jab(br)\">http://www.jabbr.net/jab(br)</a> continues on", result);
+            }
+
+            [Fact]
+            public void UrlWithUnicodeIsTransformed()
+            { 
+                //arrange
+                var message = "message http://➡.ws/䨹 continues on";
+                HashSet<string> extractedUrls;
+
+                //act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                //assert
+                Assert.Equal("message <a rel=\"nofollow external\" target=\"_blank\" href=\"http://➡.ws/䨹\" title=\"http://➡.ws/䨹\">http://➡.ws/䨹</a> continues on", result);
             }
         }
     }
