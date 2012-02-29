@@ -1434,7 +1434,14 @@
             return ui.name;
         },
         showLogin: function () {
-            $login.click();
+            if (janrain.ready === false) {
+                window.setTimeout(function () {
+                    janrain.engage.signin.modal.init();
+                }, 1000);
+            }
+            else {
+                janrain.engage.signin.modal.init();
+            }
         },
         showDisconnectUI: function () {
             $disconnectDialog.modal();
