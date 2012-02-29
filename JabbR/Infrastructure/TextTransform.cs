@@ -58,13 +58,6 @@ namespace JabbR.Infrastructure
 
                 string url = httpPortion + m.Value;
 
-                Uri result;
-                if (!Uri.TryCreate(url, UriKind.Absolute, out result))
-                {
-                    return m.Value;
-                }
-
-
                 urls.Add(HttpUtility.HtmlDecode(url));
 
                 return String.Format(CultureInfo.InvariantCulture,
