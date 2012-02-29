@@ -8,18 +8,18 @@ namespace JabbR.ContentProviders
     {
         private static readonly string _iframedMeetingFormat = "<iframe src=\"{0}\" width=\"700\" height=\"400\"></iframe>";
 
-        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
+        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
             return new ContentProviderResultModel()
             {
-                Content = String.Format(_iframedMeetingFormat, uri.AbsoluteUri),
-                Title = "Join Me Meeting: " + uri.AbsoluteUri
+                Content = String.Format(_iframedMeetingFormat, response.ResponseUri.AbsoluteUri),
+                Title = "Join Me Meeting: " + response.ResponseUri.AbsoluteUri.ToString()
             };
         }
 
-        protected override bool IsValidContent(Uri uri)
+        protected override bool IsValidContent(HttpWebResponse response)
         {
-            return uri.AbsoluteUri.StartsWith("https://join.me/", StringComparison.OrdinalIgnoreCase);
+            return response.ResponseUri.AbsoluteUri.StartsWith("https://join.me/", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

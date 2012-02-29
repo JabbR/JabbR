@@ -10,9 +10,9 @@ namespace JabbR.ContentProviders
     {
         private static readonly string _uservoiceAPIURL = "http://{0}/api/v1/oembed.json?url={1}";
 
-        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
+        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
-            var article = FetchArticle(uri);
+            var article = FetchArticle(response.ResponseUri);
             return new ContentProviderResultModel()
                        {
                            Title = article.title,
@@ -33,9 +33,9 @@ namespace JabbR.ContentProviders
             }
         }
 
-        protected override bool IsValidContent(Uri uri)
+        protected override bool IsValidContent(HttpWebResponse response)
         {
-            return uri.Host.IndexOf("uservoice.com", StringComparison.OrdinalIgnoreCase) >= 0;
+            return response.ResponseUri.Host.IndexOf("uservoice.com", StringComparison.OrdinalIgnoreCase) >= 0;
         }
     }
 }

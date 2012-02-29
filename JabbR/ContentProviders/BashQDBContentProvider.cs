@@ -18,9 +18,9 @@ namespace JabbR.ContentProviders
 
         private static readonly string[] WhiteListHtml = new[] {"br", "#text"};
 
-        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
+        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
-            var pageInfo = ExtractFromResponse(MakeRequest(uri));
+            var pageInfo = ExtractFromResponse(response);
 
             if (pageInfo == null)
             {
@@ -88,12 +88,12 @@ namespace JabbR.ContentProviders
             public string QuoteNumber { get; set; }
         }
 
-        protected override bool IsValidContent(Uri uri)
+        protected override bool IsValidContent(HttpWebResponse response)
         {
-            var x = uri.AbsolutePath;
+            var uri = response.ResponseUri.AbsoluteUri;
 
-            return x.StartsWith("http://www.bash.org/?", StringComparison.OrdinalIgnoreCase)
-                   || x.StartsWith("http://bash.org/?", StringComparison.OrdinalIgnoreCase);
+            return uri.StartsWith("http://www.bash.org/?", StringComparison.OrdinalIgnoreCase)
+                   || uri.StartsWith("http://bash.org/?", StringComparison.OrdinalIgnoreCase);
 
         }
     }

@@ -28,11 +28,11 @@ namespace JabbR.ContentProviders
             HttpUtility.HtmlEncode("http://api.twitter.com/1/statuses/show/{0}.json?include_entities=false&callback=addTweet")
         );
 
-        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
+        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
 
             // Extract the status id from the URL.
-            var status = _tweetRegex.Match(uri.AbsoluteUri)
+            var status = _tweetRegex.Match(response.ResponseUri.AbsoluteUri)
                                 .Groups
                                 .Cast<Group>()
                                 .Skip(1)
@@ -45,16 +45,16 @@ namespace JabbR.ContentProviders
                 return new ContentProviderResultModel()
                 {
                     Content = String.Format(tweetScript, status),
-                    Title = uri.AbsoluteUri
+                    Title = response.ResponseUri.AbsoluteUri
                 };
             }
             return null;
         }
 
-        protected override bool IsValidContent(Uri uri)
+        protected override bool IsValidContent(HttpWebResponse response)
         {
-            return uri.AbsoluteUri.StartsWith("http://twitter.com/", StringComparison.OrdinalIgnoreCase)
-                || uri.AbsoluteUri.StartsWith("https://twitter.com/", StringComparison.OrdinalIgnoreCase);
+            return response.ResponseUri.AbsoluteUri.StartsWith("http://twitter.com/", StringComparison.OrdinalIgnoreCase)
+                || response.ResponseUri.AbsoluteUri.StartsWith("https://twitter.com/", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

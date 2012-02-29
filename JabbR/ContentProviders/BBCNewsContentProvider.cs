@@ -12,9 +12,9 @@ namespace JabbR.ContentProviders
     {
         private static readonly string ContentFormat = "<div class='bbc_wrapper'><div class=\"bbc_header\"><img src=\"/Content/images/contentproviders/bbcnews-masthead.png\" alt=\"\" width=\"84\" height=\"24\"></div><img src=\"{1}\" title=\"{2}\" alt=\"{3}\" class=\"bbc_newsimage\" /><h2>{0}</h2><div>{4}</div><div><a href=\"{5}\" target=\"_blank\">View article</a></div></div>";
 
-        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
+        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
-            var pageInfo = ExtractFromResponse(MakeRequest(uri));
+            var pageInfo = ExtractFromResponse(response);
             return new ContentProviderResultModel()
                        {
                            Content = String.Format(ContentFormat, pageInfo.Title, pageInfo.ImageURL, pageInfo.Title, pageInfo.Title, pageInfo.Description, pageInfo.PageURL),
@@ -59,9 +59,9 @@ namespace JabbR.ContentProviders
             public string PageURL { get; set; }
         }
 
-        protected override bool IsValidContent(Uri uri)
+        protected override bool IsValidContent(HttpWebResponse response)
         {
-            return uri.AbsoluteUri.StartsWith("http://www.bbc.co.uk/news", StringComparison.OrdinalIgnoreCase);
+            return response.ResponseUri.AbsoluteUri.StartsWith("http://www.bbc.co.uk/news", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

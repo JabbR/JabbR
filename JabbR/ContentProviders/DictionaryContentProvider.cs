@@ -16,9 +16,9 @@ namespace JabbR.ContentProviders
                                                        "    <div>{1}</div>" +
                                                        "</div>";
 
-        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
+        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
         {
-            var pageInfo = ExtractFromResponse(MakeRequest(uri));
+            var pageInfo = ExtractFromResponse(response);
             return new ContentProviderResultModel
             {
                 Content = String.Format(ContentFormat, pageInfo.Title, pageInfo.WordDefinition, pageInfo.ImageURL),
@@ -26,10 +26,10 @@ namespace JabbR.ContentProviders
             };
         }
 
-        protected override bool IsValidContent(Uri uri)
+        protected override bool IsValidContent(HttpWebResponse response)
         {
-            return uri.AbsoluteUri.StartsWith("http://dictionary.reference.com", StringComparison.OrdinalIgnoreCase) ||
-            uri.AbsoluteUri.StartsWith("http://dictionary.com", StringComparison.OrdinalIgnoreCase);
+            return response.ResponseUri.AbsoluteUri.StartsWith("http://dictionary.reference.com", StringComparison.OrdinalIgnoreCase) ||
+            response.ResponseUri.AbsoluteUri.StartsWith("http://dictionary.com", StringComparison.OrdinalIgnoreCase);
         }
 
         private PageInfo ExtractFromResponse(HttpWebResponse response)
