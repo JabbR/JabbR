@@ -141,5 +141,13 @@ namespace JabbR.Models
             // No need to do anything here since this is only called on App_Start
             // if we're using the in memory repository all the data has been purged anyways
         }
+
+        public ChatMessage GetMessagesById(string id)
+        {
+            return (from r in _rooms
+                    let message = r.Messages.FirstOrDefault(m => m.Id == id)
+                    where message != null
+                    select message).FirstOrDefault();
+        }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
-using Newtonsoft.Json;
+using JabbR.Infrastructure;
 
 namespace JabbR.ContentProviders
 {
@@ -17,49 +16,45 @@ namespace JabbR.ContentProviders
         private static readonly string _nerdDinnerInfoContentFormat = "<h2>{0}</h2><p><strong>When: </strong>{1} @ {2}</p><p><strong>Where: </strong>{3}</p><p><strong>Description: </strong>{4}</p><p><div id='rsvpmsg'><strong>RSVP for this event:</strong><a href='http://nerddinner.com/RSVP/RsvpTwitterBegin/{5}'><img alt='Twitter' src='http://nerddinner.com/Content/Img/icon-twitter.png' border='0' style='padding:3px;' align='absmiddle'></a><a href='http://nerddinner.com/RSVP/RsvpBegin/{5}?identifier=https%3A%2F%2Fwww.google.com%2Faccounts%2Fo8%2Fid'><img alt='Google' src='http://nerddinner.com/Content/Img/icon-google.png' border='0'  style='padding:3px;' align='absmiddle'></a><a href='http://nerddinner.com/RSVP/RsvpBegin/{5}?identifier=https%3A%2F%2Fme.yahoo.com%2F'><img alt='Yahoo!' src='http://nerddinner.com/Content/Img/icon-yahoo.png' border='0'  style='padding:3px;' align='absmiddle'></a></p></div>";
         private static readonly string _nerdDinnerODdataFeedServiceDinnerQueryFormat = "http://nerddinner.com/Services/OData.svc/Dinners({0})";
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
-            string strDinnerId = ExtractParameter(response.ResponseUri);
+            string strDinnerId = ExtractParameter(request.RequestUri);
             int dinnerId = 0;
             if (!String.IsNullOrEmpty(strDinnerId) && Int32.TryParse(strDinnerId, out dinnerId))
             {
-                var dinner = FetchDinner(dinnerId);
-
-                if (dinner != null && dinner.d != null)
+                return FetchDinner(dinnerId).Then(dinner =>
                 {
-                    return new ContentProviderResultModel()
+                    if (dinner != null && dinner.d != null)
                     {
-                        Content = String.Format(_nerdDinnerContentFormat,
-                        dinner.d.Latitude,
-                        dinner.d.Longitude,
-                        dinner.d.Address,
-                        String.Format(
-                        _nerdDinnerInfoContentFormat,
-                        dinner.d.Title,
-                        dinner.d.EventDate.Value.Date.ToLongDateString(),
-                        dinner.d.EventDate.Value.ToLongTimeString(),
-                        dinner.d.Address,
-                        dinner.d.Description,
-                        dinner.d.DinnerID)),
-                        Title = dinner.d.Title
-                    };
-                }
+                        return new ContentProviderResult()
+                        {
+                            Content = String.Format(_nerdDinnerContentFormat,
+                            dinner.d.Latitude,
+                            dinner.d.Longitude,
+                            dinner.d.Address,
+                            String.Format(
+                            _nerdDinnerInfoContentFormat,
+                            dinner.d.Title,
+                            dinner.d.EventDate.Value.Date.ToLongDateString(),
+                            dinner.d.EventDate.Value.ToLongTimeString(),
+                            dinner.d.Address,
+                            dinner.d.Description,
+                            dinner.d.DinnerID)),
+                            Title = dinner.d.Title
+                        };
+                    }
+
+                    return null;
+                });
             }
-            return null;
+
+            return TaskAsyncHelper.FromResult<ContentProviderResult>(null);
         }
 
-        private static dynamic FetchDinner(int dinnerId)
+        private static Task<dynamic> FetchDinner(int dinnerId)
         {
-            var webRequest = (HttpWebRequest)WebRequest.Create(
-                String.Format(_nerdDinnerODdataFeedServiceDinnerQueryFormat, dinnerId));
-            webRequest.Accept = "application/json";
-            using (var webResponse = webRequest.GetResponse())
-            {
-                using (var sr = new StreamReader(webResponse.GetResponseStream()))
-                {
-                    return JsonConvert.DeserializeObject(sr.ReadToEnd());
-                }
-            }
+            string url = String.Format(_nerdDinnerODdataFeedServiceDinnerQueryFormat, dinnerId);
+            return Http.GetJsonAsync(url);
         }
 
         protected string ExtractParameter(Uri responseUri)
@@ -73,12 +68,12 @@ namespace JabbR.ContentProviders
                                 .FirstOrDefault();
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        public override bool IsValidContent(Uri uri)
         {
-            return response.ResponseUri.AbsoluteUri.StartsWith("http://nerddinner.com/", StringComparison.OrdinalIgnoreCase)
-               || response.ResponseUri.AbsoluteUri.StartsWith("http://www.nerddinner.com/", StringComparison.OrdinalIgnoreCase)
-               || response.ResponseUri.AbsoluteUri.StartsWith("http://nrddnr.com/", StringComparison.OrdinalIgnoreCase)
-               || response.ResponseUri.AbsoluteUri.StartsWith("http://www.nrddnr.com/", StringComparison.OrdinalIgnoreCase);
+            return uri.AbsoluteUri.StartsWith("http://nerddinner.com/", StringComparison.OrdinalIgnoreCase)
+               || uri.AbsoluteUri.StartsWith("http://www.nerddinner.com/", StringComparison.OrdinalIgnoreCase)
+               || uri.AbsoluteUri.StartsWith("http://nrddnr.com/", StringComparison.OrdinalIgnoreCase)
+               || uri.AbsoluteUri.StartsWith("http://www.nrddnr.com/", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
+using System.Threading.Tasks;
 using HtmlAgilityPack;
 using JabbR.ContentProviders.Core;
+using JabbR.Infrastructure;
 
 namespace JabbR.ContentProviders
 {
@@ -16,57 +17,61 @@ namespace JabbR.ContentProviders
     <div class=""bashqdb_content"">{2}</div>
 </div>";
 
-        private static readonly string[] WhiteListHtml = new[] {"br", "#text"};
+        private static readonly string[] WhiteListHtml = new[] { "br", "#text" };
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
-            var pageInfo = ExtractFromResponse(response);
-
-            if (pageInfo == null)
+            return ExtractFromResponse(request).Then(pageInfo =>
             {
-                return null;
-            }
-
-            return new ContentProviderResultModel
-                       {
-                           Content = String.Format(ContentFormat, pageInfo.PageURL, pageInfo.QuoteNumber, pageInfo.Quote),
-                           Title = pageInfo.PageURL
-                       };
-        }
-
-        private PageInfo ExtractFromResponse(HttpWebResponse response)
-        {
-            var info = new PageInfo();
-            
-            using (var responseStream = response.GetResponseStream())
-            {
-                var htmlDocument = new HtmlDocument();
-                htmlDocument.Load(responseStream);
-                htmlDocument.OptionFixNestedTags = true;
-
-                var quote = htmlDocument.DocumentNode
-                                        .SelectSingleNode("//body")
-                                        .SelectNodes("//p").Where(a => a.Attributes.Any(x => x.Name == "class" && x.Value == "qt"))
-                                        .SingleOrDefault();
-
-                var title = htmlDocument.DocumentNode
-                                        .SelectSingleNode("//title");
-
-                //Quote might not be found, bash.org doesn't have a 404 page
-                if (quote == null || title == null)
+                if (pageInfo == null)
                 {
                     return null;
                 }
 
-                //Strip out any HTML that isn't defined in the WhiteList
-                SanitizeHtml(quote);
+                return new ContentProviderResult
+                {
+                    Content = String.Format(ContentFormat, pageInfo.PageURL, pageInfo.QuoteNumber, pageInfo.Quote),
+                    Title = pageInfo.PageURL
+                };
+            });
+        }
 
-                info.Quote = quote.InnerHtml;
-                info.PageURL = response.ResponseUri.AbsoluteUri;
-                info.QuoteNumber = title.InnerHtml;
-            }
+        private Task<PageInfo> ExtractFromResponse(ContentProviderHttpRequest request)
+        {
+            return Http.GetAsync(request.RequestUri).Then(response =>
+            {
+                var info = new PageInfo();
 
-            return info;
+                using (var responseStream = response.GetResponseStream())
+                {
+                    var htmlDocument = new HtmlDocument();
+                    htmlDocument.Load(responseStream);
+                    htmlDocument.OptionFixNestedTags = true;
+
+                    var quote = htmlDocument.DocumentNode
+                                            .SelectSingleNode("//body")
+                                            .SelectNodes("//p").Where(a => a.Attributes.Any(x => x.Name == "class" && x.Value == "qt"))
+                                            .SingleOrDefault();
+
+                    var title = htmlDocument.DocumentNode
+                                            .SelectSingleNode("//title");
+
+                    //Quote might not be found, bash.org doesn't have a 404 page
+                    if (quote == null || title == null)
+                    {
+                        return null;
+                    }
+
+                    //Strip out any HTML that isn't defined in the WhiteList
+                    SanitizeHtml(quote);
+
+                    info.Quote = quote.InnerHtml;
+                    info.PageURL = response.ResponseUri.AbsoluteUri;
+                    info.QuoteNumber = title.InnerHtml;
+                }
+
+                return info;
+            });
         }
 
         private void SanitizeHtml(HtmlNode quote)
@@ -88,12 +93,10 @@ namespace JabbR.ContentProviders
             public string QuoteNumber { get; set; }
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        public override bool IsValidContent(Uri uri)
         {
-            var uri = response.ResponseUri.AbsoluteUri;
-
-            return uri.StartsWith("http://www.bash.org/?", StringComparison.OrdinalIgnoreCase)
-                   || uri.StartsWith("http://bash.org/?", StringComparison.OrdinalIgnoreCase);
+            return uri.AbsoluteUri.StartsWith("http://www.bash.org/?", StringComparison.OrdinalIgnoreCase)
+                   || uri.AbsoluteUri.StartsWith("http://bash.org/?", StringComparison.OrdinalIgnoreCase);
 
         }
     }

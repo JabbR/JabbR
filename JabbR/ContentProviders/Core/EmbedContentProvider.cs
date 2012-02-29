@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace JabbR.ContentProviders.Core
 {
@@ -10,25 +11,25 @@ namespace JabbR.ContentProviders.Core
         public abstract IEnumerable<string> Domains { get; }
         public abstract string MediaFormatString { get; }
 
-       
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+
+        protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
-            var args = ExtractParameters(response.ResponseUri);
+            var args = ExtractParameters(request.RequestUri);
             if (args == null || !args.Any())
             {
-                return null;
+                return TaskAsyncHelper.FromResult<ContentProviderResult>(null);
             }
 
-            return new ContentProviderResultModel()
-            {
-                Content = String.Format(MediaFormatString, args.ToArray()),
-                Title = response.ResponseUri.AbsoluteUri.ToString()
-            };
+            return TaskAsyncHelper.FromResult(new ContentProviderResult()
+             {
+                 Content = String.Format(MediaFormatString, args.ToArray()),
+                 Title = request.RequestUri.AbsoluteUri.ToString()
+             });
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        public override bool IsValidContent(Uri uri)
         {
-            return Domains.Any(d => response.ResponseUri.AbsoluteUri.StartsWith(d, StringComparison.OrdinalIgnoreCase));
+            return Domains.Any(d => uri.AbsoluteUri.StartsWith(d, StringComparison.OrdinalIgnoreCase));
         }
     }
 }

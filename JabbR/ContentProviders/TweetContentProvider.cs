@@ -4,6 +4,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using JabbR.ContentProviders.Core;
+using System.Threading.Tasks;
 
 namespace JabbR.ContentProviders
 {
@@ -28,11 +29,11 @@ namespace JabbR.ContentProviders
             HttpUtility.HtmlEncode("http://api.twitter.com/1/statuses/show/{0}.json?include_entities=false&callback=addTweet")
         );
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
 
             // Extract the status id from the URL.
-            var status = _tweetRegex.Match(response.ResponseUri.AbsoluteUri)
+            var status = _tweetRegex.Match(request.RequestUri.AbsoluteUri)
                                 .Groups
                                 .Cast<Group>()
                                 .Skip(1)
@@ -42,19 +43,20 @@ namespace JabbR.ContentProviders
             // It's possible the link didn't have a status, so only process it if there was a match.
             if (!String.IsNullOrWhiteSpace(status))
             {
-                return new ContentProviderResultModel()
+                return TaskAsyncHelper.FromResult(new ContentProviderResult()
                 {
                     Content = String.Format(tweetScript, status),
-                    Title = response.ResponseUri.AbsoluteUri
-                };
+                    Title = request.RequestUri.AbsoluteUri
+                });
             }
-            return null;
+
+            return TaskAsyncHelper.FromResult<ContentProviderResult>(null);
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        public override bool IsValidContent(Uri uri)
         {
-            return response.ResponseUri.AbsoluteUri.StartsWith("http://twitter.com/", StringComparison.OrdinalIgnoreCase)
-                || response.ResponseUri.AbsoluteUri.StartsWith("https://twitter.com/", StringComparison.OrdinalIgnoreCase);
+            return uri.AbsoluteUri.StartsWith("http://twitter.com/", StringComparison.OrdinalIgnoreCase)
+                || uri.AbsoluteUri.StartsWith("https://twitter.com/", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

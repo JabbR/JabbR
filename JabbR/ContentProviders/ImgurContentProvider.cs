@@ -1,26 +1,26 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
+using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
 
 namespace JabbR.ContentProviders
 {
     public class ImgurContentProvider : CollapsibleContentProvider
-    {        
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+    {
+        protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
-            string id = response.ResponseUri.AbsoluteUri.Split('/').Last();
+            string id = request.RequestUri.AbsoluteUri.Split('/').Last();
 
-            return new ContentProviderResultModel()
+            return TaskAsyncHelper.FromResult(new ContentProviderResult()
             {
                 Content = string.Format(@"<img src=""http://i.imgur.com/{0}.jpg"" />", id),
-                Title = response.ResponseUri.AbsoluteUri.ToString()
-            };
+                Title = request.RequestUri.AbsoluteUri.ToString()
+            });
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        public override bool IsValidContent(Uri uri)
         {
-            return response.ResponseUri.AbsoluteUri.StartsWith("http://imgur.com/", StringComparison.OrdinalIgnoreCase);
+            return uri.AbsoluteUri.StartsWith("http://imgur.com/", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

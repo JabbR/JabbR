@@ -1,8 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Net;
+using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
-using Newtonsoft.Json;
+using JabbR.Infrastructure;
 
 namespace JabbR.ContentProviders
 {
@@ -10,32 +9,26 @@ namespace JabbR.ContentProviders
     {
         private static readonly string _uservoiceAPIURL = "http://{0}/api/v1/oembed.json?url={1}";
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
-            var article = FetchArticle(response.ResponseUri);
-            return new ContentProviderResultModel()
-                       {
-                           Title = article.title,
-                           Content = article.html
-                       };
-        }
-
-        private static dynamic FetchArticle(Uri url)
-        {
-            var webRequest = (HttpWebRequest) WebRequest.Create(String.Format(_uservoiceAPIURL, url.Host, url.AbsoluteUri));
-            webRequest.Accept = "application/json";
-            using (var webResponse = webRequest.GetResponse())
+            return FetchArticle(request.RequestUri).Then(article =>
             {
-                using (var sr = new StreamReader(webResponse.GetResponseStream()))
+                return new ContentProviderResult()
                 {
-                    return JsonConvert.DeserializeObject(sr.ReadToEnd());
-                }
-            }
+                    Title = article.title,
+                    Content = article.html
+                };
+            });
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        private static Task<dynamic> FetchArticle(Uri url)
         {
-            return response.ResponseUri.Host.IndexOf("uservoice.com", StringComparison.OrdinalIgnoreCase) >= 0;
+            return Http.GetJsonAsync(String.Format(_uservoiceAPIURL, url.Host, url.AbsoluteUri));
+        }
+
+        public override bool IsValidContent(Uri uri)
+        {
+            return uri.Host.IndexOf("uservoice.com", StringComparison.OrdinalIgnoreCase) >= 0;
         }
     }
 }

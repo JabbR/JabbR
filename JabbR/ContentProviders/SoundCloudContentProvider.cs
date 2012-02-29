@@ -1,62 +1,31 @@
 ﻿using System;
 using System.IO;
-using System.Net;
 using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
 using Newtonsoft.Json;
+using JabbR.Infrastructure;
 
 namespace JabbR.ContentProviders
 {
     public class SoundCloudContentProvider : CollapsibleContentProvider
     {
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
-        {
-            SoundCloudResponse widgetInfo = null;
+        protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
+        {            
+            var url = String.Format(@"http://soundcloud.com/oembed?format=json&iframe=true&show_comments=false&url={0}", request.RequestUri.AbsoluteUri);
 
-            var parentTask = new Task(
-                () =>
-                    {
-                        var webRequest =
-                            WebRequest.Create(
-                                string.Format(
-                                    @"http://soundcloud.com/oembed?format=json&iframe=true&show_comments=false&url={0}",
-                                    response.ResponseUri.AbsoluteUri));
-
-                        var task = Task<WebResponse>.Factory.FromAsync(
-                            webRequest.BeginGetResponse, webRequest.EndGetResponse,
-                            TaskCreationOptions.AttachedToParent);
-
-                        task.ContinueWith(
-                            tr =>
-                                {
-                                    using (var stream = tr.Result.GetResponseStream())
-                                    {
-                                        if (stream == null)
-                                        {
-                                            return;
-                                        }
-
-                                        using (var reader = new StreamReader(stream))
-                                        {
-                                            var json = reader.ReadToEnd();
-                                            widgetInfo = JsonConvert.DeserializeObject<SoundCloudResponse>(json);
-                                        }
-                                    }
-                                }, TaskContinuationOptions.AttachedToParent);
-                    });
-
-            parentTask.RunSynchronously();
-
-            return new ContentProviderResultModel
+            return Http.GetJsonAsync<SoundCloudResponse>(url).Then(widgetInfo =>
             {
-                Title = widgetInfo.Title,
-                Content = widgetInfo.FrameMarkup
-            };
+                return new ContentProviderResult
+                {
+                    Title = widgetInfo.Title,
+                    Content = widgetInfo.FrameMarkup
+                };
+            });
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        public override bool IsValidContent(Uri uri)
         {
-            return response.ResponseUri.Host.IndexOf("soundcloud.com", StringComparison.OrdinalIgnoreCase) >= 0;
+            return uri.Host.IndexOf("soundcloud.com", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private sealed class SoundCloudResponse

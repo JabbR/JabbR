@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using JabbR.ContentProviders.Core;
 
@@ -44,12 +44,14 @@ namespace JabbR.ContentProviders
         }
 
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
-            ContentProviderResultModel content = base.GetCollapsibleContent(response);
-            var queryString = HttpUtility.ParseQueryString(response.ResponseUri.Query);
-            content.Title = queryString["q"] ?? "Google Maps";
-            return content;
+            return base.GetCollapsibleContent(request).Then(content =>
+            {
+                var queryString = HttpUtility.ParseQueryString(request.RequestUri.Query);
+                content.Title = queryString["q"] ?? "Google Maps";
+                return content;
+            });
         }
     }
 }

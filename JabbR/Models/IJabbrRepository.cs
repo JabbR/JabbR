@@ -12,6 +12,7 @@ namespace JabbR.Models
         IQueryable<ChatMessage> GetMessagesByRoom(string roomName);
         IQueryable<ChatMessage> GetPreviousMessages(string messageId);
         IQueryable<ChatRoom> GetAllowedRooms(ChatUser user);
+        ChatMessage GetMessagesById(string id);
 
         ChatUser GetUserById(string userId);
         ChatRoom GetRoomByName(string roomName);

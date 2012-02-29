@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Net;
+using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
 
 namespace JabbR.ContentProviders
@@ -8,18 +8,18 @@ namespace JabbR.ContentProviders
     {
         private static readonly string _iframedMeetingFormat = "<iframe src=\"{0}\" width=\"700\" height=\"400\"></iframe>";
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
-            return new ContentProviderResultModel()
+            return TaskAsyncHelper.FromResult(new ContentProviderResult()
             {
-                Content = String.Format(_iframedMeetingFormat, response.ResponseUri.AbsoluteUri),
-                Title = "Join Me Meeting: " + response.ResponseUri.AbsoluteUri.ToString()
-            };
+                Content = String.Format(_iframedMeetingFormat, request.RequestUri.AbsoluteUri),
+                Title = "Join Me Meeting: " + request.RequestUri.AbsoluteUri.ToString()
+            });
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        public override bool IsValidContent(Uri uri)
         {
-            return response.ResponseUri.AbsoluteUri.StartsWith("https://join.me/", StringComparison.OrdinalIgnoreCase);
+            return uri.AbsoluteUri.StartsWith("https://join.me/", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

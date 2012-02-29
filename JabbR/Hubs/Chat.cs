@@ -193,16 +193,18 @@ namespace JabbR
 
             _repository.CommitChanges();
 
+            string clientMessageId = chatMessage.Id;
+
+            // Update the id on the message
+            chatMessage.Id = Guid.NewGuid().ToString("d");
+            _repository.CommitChanges();
+
             if (!links.Any())
             {
                 return outOfSync;
             }
 
-            ProcessUrls(links, room, chatMessage);
-
-            // Update the id on the message
-            chatMessage.Id = Guid.NewGuid().ToString("d");
-            _repository.CommitChanges();
+            ProcessUrls(links, room.Name, clientMessageId, chatMessage.Id);
 
             return outOfSync;
         }
@@ -409,13 +411,8 @@ namespace JabbR
             _repository.CommitChanges();
         }
 
-        private void ProcessUrls(IEnumerable<string> links, ChatRoom room, ChatMessage chatMessage)
+        private void ProcessUrls(IEnumerable<string> links, string roomName, string clientMessageId, string messageId)
         {
-            // Use this id when talking to the client to update the message content
-            string id = chatMessage.Id;
-
-            // REVIEW: is this safe to do? We're holding on to this instance 
-            // when this should really be a fire and forget.
             var contentTasks = links.Select(_resourceProcessor.ExtractResource).ToArray();
             Task.Factory.ContinueWhenAll(contentTasks, tasks =>
             {
@@ -435,14 +432,10 @@ namespace JabbR
                     // Try to get content from each url we're resolved in the query
                     string extractedContent = "<p>" + task.Result.Content + "</p>";
 
-                    // If we did get something, update the message and notify all clients
-                    chatMessage.Content += extractedContent;
-
                     // Notify the room
-                    Clients[room.Name].addMessageContent(id, extractedContent, room.Name);
+                    Clients[roomName].addMessageContent(clientMessageId, extractedContent, roomName);
 
-                    // Commit the changes
-                    _repository.CommitChanges();
+                    _service.AppendMessage(messageId, extractedContent);
                 }
             });
         }

@@ -4,17 +4,16 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace JabbR.ContentProviders.Core
 {
     public abstract class CollapsibleContentProvider : IContentProvider
     {
-
-        public virtual ContentProviderResultModel GetContent(HttpWebResponse response)
+        public virtual Task<ContentProviderResult> GetContent(ContentProviderHttpRequest request)
         {
-            if (IsValidContent(response))
+            return GetCollapsibleContent(request).Then(result =>
             {
-                var result = GetCollapsibleContent(response);
                 if (IsCollapsible && result != null)
                 {
                     result.Content = String.Format(CultureInfo.InvariantCulture,
@@ -23,10 +22,9 @@ namespace JabbR.ContentProviders.Core
                                                       result.Title,
                                                       result.Content);
                 }
-                return result;
-            }
 
-            return null;
+                return result;
+            });
         }
 
         protected virtual Regex ParameterExtractionRegex
@@ -45,12 +43,15 @@ namespace JabbR.ContentProviders.Core
                                 .Cast<Group>()
                                 .Skip(1)
                                 .Select(g => g.Value)
-                                .Where(v => !String.IsNullOrEmpty(v)).ToList();     
+                                .Where(v => !String.IsNullOrEmpty(v)).ToList();
 
         }
-        protected abstract ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response);
+        protected abstract Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request);
 
-        protected abstract bool IsValidContent(HttpWebResponse response);
+        public virtual bool IsValidContent(Uri uri)
+        {
+            return false;
+        }
 
         protected virtual bool IsCollapsible { get { return true; } }
         protected virtual bool IsPopOut { get { return true; } }

@@ -1,33 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net;
+using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
 
 namespace JabbR.ContentProviders
 {
     public class ImageContentProvider : CollapsibleContentProvider
     {
-        private static readonly HashSet<string> _imageMimeTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
-            "image/png",
-            "image/jpg",
-            "image/jpeg",
-            "image/bmp",
-            "image/gif",
-        };
-
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
-            return new ContentProviderResultModel()
+            return TaskAsyncHelper.FromResult(new ContentProviderResult()
              {
-                 Content = String.Format(@"<img src=""{0}"" />", response.ResponseUri),
-                 Title = response.ResponseUri.AbsoluteUri.ToString()
-             };
+                 Content = String.Format(@"<img src=""{0}"" />", request.RequestUri),
+                 Title = request.RequestUri.AbsoluteUri.ToString()
+             });
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        public override bool IsValidContent(Uri uri)
         {
-            return !String.IsNullOrEmpty(response.ContentType) &&
-                    _imageMimeTypes.Contains(response.ContentType);
+            string path = uri.AbsolutePath.ToLower();
+
+            return path.EndsWith(".png") ||
+                   path.EndsWith(".bmp") ||
+                   path.EndsWith(".jpg") ||
+                   path.EndsWith(".jpeg") ||
+                   path.EndsWith(".gif");
 
         }
     }

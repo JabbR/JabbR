@@ -1,11 +1,13 @@
-﻿using System.ComponentModel.Composition;
-using System.Net;
+﻿using System;
+using System.ComponentModel.Composition;
+using System.Threading.Tasks;
 
 namespace JabbR.ContentProviders.Core
 {
     [InheritedExport]
     public interface IContentProvider
     {
-        ContentProviderResultModel GetContent(HttpWebResponse response);
+        Task<ContentProviderResult> GetContent(ContentProviderHttpRequest request);
+        bool IsValidContent(Uri uri);
     }
 }

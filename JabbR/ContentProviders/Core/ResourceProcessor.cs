@@ -10,20 +10,49 @@ namespace JabbR.ContentProviders.Core
     public class ResourceProcessor : IResourceProcessor
     {
         private readonly Lazy<IList<IContentProvider>> _contentProviders = new Lazy<IList<IContentProvider>>(GetContentProviders);
-        private const string _userAgent = "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0; MAAU)";
 
-        public Task<ContentProviderResultModel> ExtractResource(string url)
+        public Task<ContentProviderResult> ExtractResource(string url)
         {
-            var request = (HttpWebRequest)HttpWebRequest.Create(url);
-            request.UserAgent = _userAgent;
-            var requestTask = Task.Factory.FromAsync((cb, state) => request.BeginGetResponse(cb, state), ar => request.EndGetResponse(ar), null);
-            return requestTask.ContinueWith(task => ExtractContent((HttpWebResponse)task.Result));
+            var request = new ContentProviderHttpRequest(url);
+            return ExtractContent(request);
         }
 
-        private ContentProviderResultModel ExtractContent(HttpWebResponse response)
+        private Task<ContentProviderResult> ExtractContent(ContentProviderHttpRequest request)
         {
-            return _contentProviders.Value.Select(c => c.GetContent(response))
-                                          .FirstOrDefault(content => content != null);
+            var contentProviders = _contentProviders.Value;
+
+            var validProviders = contentProviders.Where(c => c.IsValidContent(request.RequestUri))
+                                                 .ToList();
+
+            if (validProviders.Count == 0)
+            {
+                return TaskAsyncHelper.FromResult<ContentProviderResult>(null);
+            }
+
+            var tasks = validProviders.Select(c => c.GetContent(request)).ToArray();
+
+            var tcs = new TaskCompletionSource<ContentProviderResult>();
+
+            Task.Factory.ContinueWhenAll(tasks, completedTasks =>
+            {
+                var faulted = completedTasks.FirstOrDefault(t => t.IsFaulted);
+                if (faulted != null)
+                {
+                    tcs.SetException(faulted.Exception);
+                }
+                else if (completedTasks.Any(t => t.IsCanceled))
+                {
+                    tcs.SetCanceled();
+                }
+                else
+                {
+                    ContentProviderResult result = completedTasks.Select(t => t.Result)
+                                                                 .FirstOrDefault(content => content != null);
+                    tcs.SetResult(result);
+                }
+            });
+
+            return tcs.Task;
         }
 
 

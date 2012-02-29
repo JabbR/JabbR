@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using JabbR.ContentProviders.Core;
+using JabbR.Infrastructure;
 
 namespace JabbR.ContentProviders
 {
@@ -12,40 +13,46 @@ namespace JabbR.ContentProviders
     {
         private static readonly Regex _extractEmbedCodeRegex = new Regex(@"<textarea\s.*class=""embedCode"".*>(.*)</textarea>");
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
-            var iframeHtml = HttpUtility.HtmlDecode(ExtractIFrameCode(response));
-            return new ContentProviderResultModel()
+            return ExtractIFrameCode(request).Then(result =>
             {
-                Content = iframeHtml,
-                Title = response.ResponseUri.AbsoluteUri.ToString()
-            };
-        }
-
-        private string ExtractIFrameCode(HttpWebResponse response)
-        {
-            using (var responseStream = response.GetResponseStream())
-            {
-                using (var sr = new StreamReader(responseStream))
+                var iframeHtml = HttpUtility.HtmlDecode(result);
+                return new ContentProviderResult()
                 {
-                    var iframeStr = sr.ReadToEnd();
-
-                    var matches = _extractEmbedCodeRegex.Match(iframeStr)
-                                        .Groups
-                                        .Cast<Group>()
-                                        .Skip(1)
-                                        .Select(g => g.Value)
-                                        .Where(v => !String.IsNullOrEmpty(v));
-
-                    return matches.FirstOrDefault() ?? String.Empty;
-                }
-            }
+                    Content = iframeHtml,
+                    Title = request.RequestUri.AbsoluteUri.ToString()
+                };
+            });
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        private Task<string> ExtractIFrameCode(ContentProviderHttpRequest request)
         {
-            return response.ResponseUri.AbsoluteUri.StartsWith("http://ustream.tv/", StringComparison.OrdinalIgnoreCase)
-               || response.ResponseUri.AbsoluteUri.StartsWith("http://www.ustream.tv/", StringComparison.OrdinalIgnoreCase);
+            return Http.GetAsync(request.RequestUri).Then(response =>
+            {
+                using (var responseStream = response.GetResponseStream())
+                {
+                    using (var sr = new StreamReader(responseStream))
+                    {
+                        var iframeStr = sr.ReadToEnd();
+
+                        var matches = _extractEmbedCodeRegex.Match(iframeStr)
+                                            .Groups
+                                            .Cast<Group>()
+                                            .Skip(1)
+                                            .Select(g => g.Value)
+                                            .Where(v => !String.IsNullOrEmpty(v));
+
+                        return matches.FirstOrDefault() ?? String.Empty;
+                    }
+                }
+            });
+        }
+
+        public override bool IsValidContent(Uri uri)
+        {
+            return uri.AbsoluteUri.StartsWith("http://ustream.tv/", StringComparison.OrdinalIgnoreCase)
+               || uri.AbsoluteUri.StartsWith("http://www.ustream.tv/", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

@@ -1,8 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Net;
+using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
-using Newtonsoft.Json;
+using JabbR.Infrastructure;
 
 namespace JabbR.ContentProviders
 {
@@ -16,33 +15,27 @@ namespace JabbR.ContentProviders
         private static readonly String _oEmbedUrl = "http://www.slideshare.net/api/oembed/2?url={0}&format=json";
 
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
             // We have to make a call to the SlideShare api because
             // their embed code request the unique ID of the slide deck
             // where we will only have the url -- this call gets the json information
             // on the slide deck and that package happens to already contain the embed code (.html)
-            var webRequest = (HttpWebRequest)HttpWebRequest.Create(
-                    String.Format(_oEmbedUrl, response.ResponseUri.AbsoluteUri));
-
-            using (var webResponse = webRequest.GetResponse())
+            var url = String.Format(_oEmbedUrl, request.RequestUri.AbsoluteUri);
+            return Http.GetJsonAsync(url).Then(slideShareData =>
             {
-                using (var reader = new StreamReader(webResponse.GetResponseStream()))
+                return new ContentProviderResult()
                 {
-                    dynamic slideShareData = JsonConvert.DeserializeObject(reader.ReadToEnd());
-                    return new ContentProviderResultModel()
-                    {
-                        Content = slideShareData.html,
-                        Title = slideShareData.title
-                    };
-                }
-            }
+                    Content = slideShareData.html,
+                    Title = slideShareData.title
+                };
+            });
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        public override bool IsValidContent(Uri uri)
         {
-            return response.ResponseUri.AbsoluteUri.StartsWith("http://slideshare.net/", StringComparison.OrdinalIgnoreCase)
-               || response.ResponseUri.AbsoluteUri.StartsWith("http://www.slideshare.net/", StringComparison.OrdinalIgnoreCase);
+            return uri.AbsoluteUri.StartsWith("http://slideshare.net/", StringComparison.OrdinalIgnoreCase)
+               || uri.AbsoluteUri.StartsWith("http://www.slideshare.net/", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

@@ -768,10 +768,11 @@
     <Compile Include="ContentProviders\BBCNewsContentProvider.cs" />
     <Compile Include="ContentProviders\BashQDBContentProvider.cs" />
     <Compile Include="ContentProviders\AudioContentProvider.cs" />
+    <Compile Include="ContentProviders\Core\ContentProviderHttpRequest.cs" />
     <Compile Include="ContentProviders\DictionaryContentProvider.cs" />
     <Compile Include="ContentProviders\GitHubIssuesContentProvider.cs" />
     <Compile Include="ContentProviders\Core\CollapsibleContentProvider.cs" />
-    <Compile Include="ContentProviders\Core\ContentProviderResultModel.cs" />
+    <Compile Include="ContentProviders\Core\ContentProviderResult.cs" />
     <Compile Include="ContentProviders\Core\EmbedContentProvider.cs" />
     <Compile Include="ContentProviders\Core\IContentProvider.cs" />
     <Compile Include="ContentProviders\Core\IResourceProcessor.cs" />
@@ -798,9 +799,11 @@
     <Compile Include="ContentProviders\TweetContentProvider.cs" />
     <Compile Include="ContentProviders\ImageContentProvider.cs" />
     <Compile Include="ContentProviders\YoutubeContentProvider.cs" />
+    <Compile Include="Infrastructure\Http.cs" />
     <Compile Include="Infrastructure\RandomUtils.cs" />
     <Compile Include="Infrastructure\RegexExtensions.cs" />
     <Compile Include="Infrastructure\SafeCollection.cs" />
+    <Compile Include="Infrastructure\TaskAsyncHelper.cs" />
     <Compile Include="Infrastructure\TextTransform.cs" />
     <Compile Include="Migrations\201111290920351_Passwords.cs" />
     <Compile Include="Migrations\201111290920351_Passwords.Designer.cs">

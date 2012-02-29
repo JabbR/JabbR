@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Net;
+using System.Threading.Tasks;
 using HtmlAgilityPack;
 using JabbR.ContentProviders.Core;
+using JabbR.Infrastructure;
 
 namespace JabbR.ContentProviders
 {
@@ -16,38 +17,43 @@ namespace JabbR.ContentProviders
                                                        "    <div>{1}</div>" +
                                                        "</div>";
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
-            var pageInfo = ExtractFromResponse(response);
-            return new ContentProviderResultModel
+            return ExtractFromResponse(request).Then(pageInfo =>
             {
-                Content = String.Format(ContentFormat, pageInfo.Title, pageInfo.WordDefinition, pageInfo.ImageURL),
-                Title = pageInfo.Title
-            };
+                return new ContentProviderResult
+                {
+                    Content = String.Format(ContentFormat, pageInfo.Title, pageInfo.WordDefinition, pageInfo.ImageURL),
+                    Title = pageInfo.Title
+                };
+            });
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        public override bool IsValidContent(Uri uri)
         {
-            return response.ResponseUri.AbsoluteUri.StartsWith("http://dictionary.reference.com", StringComparison.OrdinalIgnoreCase) ||
-            response.ResponseUri.AbsoluteUri.StartsWith("http://dictionary.com", StringComparison.OrdinalIgnoreCase);
+            return uri.AbsoluteUri.StartsWith("http://dictionary.reference.com", StringComparison.OrdinalIgnoreCase) ||
+                   uri.AbsoluteUri.StartsWith("http://dictionary.com", StringComparison.OrdinalIgnoreCase);
         }
 
-        private PageInfo ExtractFromResponse(HttpWebResponse response)
+        private Task<PageInfo> ExtractFromResponse(ContentProviderHttpRequest request)
         {
-            var pageInfo = new PageInfo();
-            using (var responseStream = response.GetResponseStream())
+            return Http.GetAsync(request.RequestUri).Then(response =>
             {
-                var htmlDocument = new HtmlDocument();
-                htmlDocument.Load(responseStream);
+                var pageInfo = new PageInfo();
+                using (var responseStream = response.GetResponseStream())
+                {
+                    var htmlDocument = new HtmlDocument();
+                    htmlDocument.Load(responseStream);
 
-                var title = htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:title']");
-                var imageURL = htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:image']");
-                pageInfo.Title = title != null ? title.Attributes["content"].Value : String.Empty;
-                pageInfo.ImageURL = imageURL != null ? imageURL.Attributes["content"].Value : String.Empty;
-                pageInfo.WordDefinition = GetWordDefinition(htmlDocument);
-            }
+                    var title = htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:title']");
+                    var imageURL = htmlDocument.DocumentNode.SelectSingleNode("//meta[@property='og:image']");
+                    pageInfo.Title = title != null ? title.Attributes["content"].Value : String.Empty;
+                    pageInfo.ImageURL = imageURL != null ? imageURL.Attributes["content"].Value : String.Empty;
+                    pageInfo.WordDefinition = GetWordDefinition(htmlDocument);
+                }
 
-            return pageInfo;
+                return pageInfo;
+            });
         }
 
         private string GetWordDefinition(HtmlDocument htmlDocument)
@@ -77,8 +83,8 @@ namespace JabbR.ContentProviders
 
                     if (link.Attributes["style"] != null)
                     {
-                        link.Attributes["style"].Value = String.Empty;   
-                    }                        
+                        link.Attributes["style"].Value = String.Empty;
+                    }
 
                     link.SetAttributeValue("target", "_blank");
                 }

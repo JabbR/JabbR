@@ -5,6 +5,8 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
 using JabbR.ContentProviders.Core;
+using System.Threading.Tasks;
+using JabbR.Infrastructure;
 
 namespace JabbR.ContentProviders
 {
@@ -12,31 +14,37 @@ namespace JabbR.ContentProviders
     {
         private static readonly string ContentFormat = "<div class='bbc_wrapper'><div class=\"bbc_header\"><img src=\"/Content/images/contentproviders/bbcnews-masthead.png\" alt=\"\" width=\"84\" height=\"24\"></div><img src=\"{1}\" title=\"{2}\" alt=\"{3}\" class=\"bbc_newsimage\" /><h2>{0}</h2><div>{4}</div><div><a href=\"{5}\" target=\"_blank\">View article</a></div></div>";
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
-            var pageInfo = ExtractFromResponse(response);
-            return new ContentProviderResultModel()
-                       {
-                           Content = String.Format(ContentFormat, pageInfo.Title, pageInfo.ImageURL, pageInfo.Title, pageInfo.Title, pageInfo.Description, pageInfo.PageURL),
-                           Title = pageInfo.Title
-                       };
+            return ExtractFromResponse(request).Then(pageInfo =>
+            {
+                return new ContentProviderResult()
+                {
+                    Content = String.Format(ContentFormat, pageInfo.Title, pageInfo.ImageURL, pageInfo.Title, pageInfo.Title, pageInfo.Description, pageInfo.PageURL),
+                    Title = pageInfo.Title
+                };
+            });
         }
 
-        private PageInfo ExtractFromResponse(HttpWebResponse response)
+        private Task<PageInfo> ExtractFromResponse(ContentProviderHttpRequest request)
         {
-            var info = new PageInfo();
-            using (var responseStream = response.GetResponseStream())
+            return Http.GetAsync(request.RequestUri).Then(response =>
             {
-                using (var sr = new StreamReader(responseStream))
+                var info = new PageInfo();
+                using (var responseStream = response.GetResponseStream())
                 {
-                    var pageContext = HttpUtility.HtmlDecode(sr.ReadToEnd());
-                    info.Title = ExtractUsingRegex(new Regex(@"<meta\s.*property=""og:title"".*content=""(.*)"".*/>"), pageContext);
-                    info.Description = ExtractUsingRegex(new Regex(@"<meta\s.*name=""Description"".*content=""(.*)"".*/>"), pageContext);
-                    info.ImageURL = ExtractUsingRegex(new Regex(@"<meta.*property=""og:image"".*content=""(.*)"".*/>"), pageContext);
-                    info.PageURL = response.ResponseUri.AbsoluteUri;
+                    using (var sr = new StreamReader(responseStream))
+                    {
+                        var pageContext = HttpUtility.HtmlDecode(sr.ReadToEnd());
+                        info.Title = ExtractUsingRegex(new Regex(@"<meta\s.*property=""og:title"".*content=""(.*)"".*/>"), pageContext);
+                        info.Description = ExtractUsingRegex(new Regex(@"<meta\s.*name=""Description"".*content=""(.*)"".*/>"), pageContext);
+                        info.ImageURL = ExtractUsingRegex(new Regex(@"<meta.*property=""og:image"".*content=""(.*)"".*/>"), pageContext);
+                        info.PageURL = request.RequestUri.AbsoluteUri;
+                    }
                 }
-            }
-            return info;
+
+                return info;
+            });
         }
 
         private string ExtractUsingRegex(Regex regularExpression, string content)
@@ -59,9 +67,9 @@ namespace JabbR.ContentProviders
             public string PageURL { get; set; }
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        public override bool IsValidContent(Uri uri)
         {
-            return response.ResponseUri.AbsoluteUri.StartsWith("http://www.bbc.co.uk/news", StringComparison.OrdinalIgnoreCase);
+            return uri.AbsoluteUri.StartsWith("http://www.bbc.co.uk/news", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

@@ -499,6 +499,15 @@ namespace JabbR.Services
             return chatMessage;
         }
 
+        public void AppendMessage(string id, string content)
+        {
+            ChatMessage message = _repository.GetMessagesById(id);
+
+            message.Content += content;
+
+            _repository.CommitChanges();
+        }
+
         public void AddOwner(ChatUser ownerOrCreator, ChatUser targetUser, ChatRoom targetRoom)
         {
             // Ensure the user is owner of the target room
