@@ -49,6 +49,7 @@ namespace JabbR.Infrastructure
             var urls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             message = Regex.Replace(message, urlPattern, m =>
             {
+
                 string httpPortion = String.Empty;
                 if (!m.Value.Contains("://"))
                 {
@@ -56,6 +57,13 @@ namespace JabbR.Infrastructure
                 }
 
                 string url = httpPortion + m.Value;
+
+                Uri result;
+                if (!Uri.TryCreate(url, UriKind.Absolute, out result))
+                {
+                    return m.Value;
+                }
+
 
                 urls.Add(HttpUtility.HtmlDecode(url));
 

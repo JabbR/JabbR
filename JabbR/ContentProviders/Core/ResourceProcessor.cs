@@ -13,8 +13,14 @@ namespace JabbR.ContentProviders.Core
 
         public Task<ContentProviderResult> ExtractResource(string url)
         {
-            var request = new ContentProviderHttpRequest(url);
-            return ExtractContent(request);
+            Uri resultUrl;
+            if (Uri.TryCreate(url, UriKind.Absolute, out resultUrl))
+            {
+                var request = new ContentProviderHttpRequest(resultUrl);
+                return ExtractContent(request);
+            }
+
+            return TaskAsyncHelper.FromResult<ContentProviderResult>(null);
         }
 
         private Task<ContentProviderResult> ExtractContent(ContentProviderHttpRequest request)

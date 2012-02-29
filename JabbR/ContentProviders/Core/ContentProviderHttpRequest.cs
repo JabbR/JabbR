@@ -7,9 +7,9 @@ namespace JabbR.ContentProviders.Core
 {
     public class ContentProviderHttpRequest
     {        
-        public ContentProviderHttpRequest(string url)
+        public ContentProviderHttpRequest(Uri url)
         {
-            RequestUri = new Uri(url);
+            RequestUri = url;
         }
 
         public Uri RequestUri { get; private set; }
