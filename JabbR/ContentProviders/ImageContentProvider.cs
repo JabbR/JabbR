@@ -7,28 +7,23 @@ namespace JabbR.ContentProviders
 {
     public class ImageContentProvider : CollapsibleContentProvider
     {
-        private static readonly HashSet<string> _imageMimeTypes = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
-            "image/png",
-            "image/jpg",
-            "image/jpeg",
-            "image/bmp",
-            "image/gif",
-        };
-
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
         {
             return new ContentProviderResultModel()
              {
-                 Content = String.Format(@"<img src=""{0}"" />", response.ResponseUri),
-                 Title = response.ResponseUri.AbsoluteUri.ToString()
+                 Content = String.Format(@"<img src=""{0}"" />", uri),
+                 Title = uri.AbsoluteUri
              };
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        protected override bool IsValidContent(Uri uri)
         {
-            return !String.IsNullOrEmpty(response.ContentType) &&
-                    _imageMimeTypes.Contains(response.ContentType);
-
+            string path = uri.AbsolutePath.ToLower();
+            return path.EndsWith(".png") ||
+                   path.EndsWith(".bmp") ||
+                   path.EndsWith(".jpg") ||
+                   path.EndsWith(".jpeg") ||
+                   path.EndsWith(".gif");
         }
     }
 }

@@ -12,8 +12,9 @@ namespace JabbR.ContentProviders
     {
         private static readonly Regex _extractEmbedCodeRegex = new Regex(@"<textarea\s.*class=""embedCode"".*>(.*)</textarea>");
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
         {
+            var response = MakeRequest(uri);
             var iframeHtml = HttpUtility.HtmlDecode(ExtractIFrameCode(response));
             return new ContentProviderResultModel()
             {
@@ -42,10 +43,10 @@ namespace JabbR.ContentProviders
             }
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        protected override bool IsValidContent(Uri uri)
         {
-            return response.ResponseUri.AbsoluteUri.StartsWith("http://ustream.tv/", StringComparison.OrdinalIgnoreCase)
-               || response.ResponseUri.AbsoluteUri.StartsWith("http://www.ustream.tv/", StringComparison.OrdinalIgnoreCase);
+            return uri.AbsoluteUri.StartsWith("http://ustream.tv/", StringComparison.OrdinalIgnoreCase)
+               || uri.AbsoluteUri.StartsWith("http://www.ustream.tv/", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

@@ -13,21 +13,21 @@ namespace JabbR.ContentProviders
             "aduio/ogg"
         };
 
-        protected bool IsValidContent(HttpWebResponse response)
+        protected bool IsValidContent(Uri uri)
         {
-            return !String.IsNullOrEmpty(response.ContentType) &&
-                    _audioMimeTypes.Contains(response.ContentType);
+            return uri.AbsolutePath.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase) || uri.AbsolutePath.EndsWith(".wav", StringComparison.OrdinalIgnoreCase) ||
+                   uri.AbsolutePath.EndsWith(".ogg", StringComparison.OrdinalIgnoreCase);
 
         }
 
-        public ContentProviderResultModel GetContent(HttpWebResponse response)
+        public ContentProviderResultModel GetContent(Uri uri)
         {
-            if (IsValidContent(response))
+            if (IsValidContent(uri))
             {
                 return new ContentProviderResultModel()
                 {
-                    Content = String.Format(@"<audio controls=""controls"" src=""{0}"">Your browser does not support the audio tag.</audio>", response.ResponseUri),
-                    Title = response.ResponseUri.AbsoluteUri.ToString()
+                    Content = String.Format(@"<audio controls=""controls"" src=""{0}"">Your browser does not support the audio tag.</audio>", uri),
+                    Title = uri.AbsoluteUri
                 };
             }
             return null;

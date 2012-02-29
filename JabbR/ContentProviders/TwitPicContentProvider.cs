@@ -11,9 +11,9 @@ namespace JabbR.ContentProviders
 
         private readonly string _twitPicFormatString = @"<a href=""http://twitpic.com/{0}""> <img src=""http://twitpic.com/show/large/{0}""></a>";
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
         {
-            var match = TwitPicUrlRegex.Match(response.ResponseUri.AbsoluteUri);
+            var match = TwitPicUrlRegex.Match(uri.AbsoluteUri);
 
             if (match.Success)
             {
@@ -21,15 +21,15 @@ namespace JabbR.ContentProviders
                 return new ContentProviderResultModel()
                 {
                     Content = String.Format(_twitPicFormatString, id),
-                    Title = response.ResponseUri.AbsoluteUri
+                    Title = uri.AbsoluteUri
                 };
             }
             return null;
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        protected override bool IsValidContent(Uri uri)
         {
-            return TwitPicUrlRegex.IsMatch(response.ResponseUri.AbsoluteUri);
+            return TwitPicUrlRegex.IsMatch(uri.AbsoluteUri);
         }
     }
 }

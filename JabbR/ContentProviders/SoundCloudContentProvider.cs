@@ -9,7 +9,7 @@ namespace JabbR.ContentProviders
 {
     public class SoundCloudContentProvider : CollapsibleContentProvider
     {
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
         {
             SoundCloudResponse widgetInfo = null;
 
@@ -20,7 +20,7 @@ namespace JabbR.ContentProviders
                             WebRequest.Create(
                                 string.Format(
                                     @"http://soundcloud.com/oembed?format=json&iframe=true&show_comments=false&url={0}",
-                                    response.ResponseUri.AbsoluteUri));
+                                    uri.AbsoluteUri));
 
                         var task = Task<WebResponse>.Factory.FromAsync(
                             webRequest.BeginGetResponse, webRequest.EndGetResponse,
@@ -54,9 +54,9 @@ namespace JabbR.ContentProviders
             };
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        protected override bool IsValidContent(Uri uri)
         {
-            return response.ResponseUri.Host.IndexOf("soundcloud.com", StringComparison.OrdinalIgnoreCase) >= 0;
+            return uri.Host.IndexOf("soundcloud.com", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private sealed class SoundCloudResponse

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -35,16 +36,16 @@ namespace JabbR.ContentProviders
             }
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        protected override bool IsValidContent(Uri uri)
         {
-            if (!base.IsValidContent(response))
+            if (!base.IsValidContent(uri))
             {
                 // Someone may have pasted a link requiring a login --
                 // We can handle that here
-                if (response.ResponseUri.AbsoluteUri.StartsWith("https://accounts.google.com/ServiceLogin") ||
-                    response.ResponseUri.AbsoluteUri.StartsWith("http://accounts.google.com/ServiceLogin"))
+                if (uri.AbsoluteUri.StartsWith("https://accounts.google.com/ServiceLogin") ||
+                    uri.AbsoluteUri.StartsWith("http://accounts.google.com/ServiceLogin"))
                 {
-                    var qs = HttpUtility.ParseQueryString(response.ResponseUri.Query);
+                    var qs = HttpUtility.ParseQueryString(uri.Query);
                     if (qs.AllKeys.Contains("continue"))
                     {
                         return Domains.Any(d => qs["continue"].StartsWith(d));

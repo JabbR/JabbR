@@ -17,9 +17,9 @@ namespace JabbR.ContentProviders
         private static readonly string _nerdDinnerInfoContentFormat = "<h2>{0}</h2><p><strong>When: </strong>{1} @ {2}</p><p><strong>Where: </strong>{3}</p><p><strong>Description: </strong>{4}</p><p><div id='rsvpmsg'><strong>RSVP for this event:</strong><a href='http://nerddinner.com/RSVP/RsvpTwitterBegin/{5}'><img alt='Twitter' src='http://nerddinner.com/Content/Img/icon-twitter.png' border='0' style='padding:3px;' align='absmiddle'></a><a href='http://nerddinner.com/RSVP/RsvpBegin/{5}?identifier=https%3A%2F%2Fwww.google.com%2Faccounts%2Fo8%2Fid'><img alt='Google' src='http://nerddinner.com/Content/Img/icon-google.png' border='0'  style='padding:3px;' align='absmiddle'></a><a href='http://nerddinner.com/RSVP/RsvpBegin/{5}?identifier=https%3A%2F%2Fme.yahoo.com%2F'><img alt='Yahoo!' src='http://nerddinner.com/Content/Img/icon-yahoo.png' border='0'  style='padding:3px;' align='absmiddle'></a></p></div>";
         private static readonly string _nerdDinnerODdataFeedServiceDinnerQueryFormat = "http://nerddinner.com/Services/OData.svc/Dinners({0})";
 
-        protected override ContentProviderResultModel GetCollapsibleContent(HttpWebResponse response)
+        protected override ContentProviderResultModel GetCollapsibleContent(Uri uri)
         {
-            string strDinnerId = ExtractParameter(response.ResponseUri);
+            string strDinnerId = ExtractParameter(uri);
             int dinnerId = 0;
             if (!String.IsNullOrEmpty(strDinnerId) && Int32.TryParse(strDinnerId, out dinnerId))
             {
@@ -73,12 +73,12 @@ namespace JabbR.ContentProviders
                                 .FirstOrDefault();
         }
 
-        protected override bool IsValidContent(HttpWebResponse response)
+        protected override bool IsValidContent(Uri uri)
         {
-            return response.ResponseUri.AbsoluteUri.StartsWith("http://nerddinner.com/", StringComparison.OrdinalIgnoreCase)
-               || response.ResponseUri.AbsoluteUri.StartsWith("http://www.nerddinner.com/", StringComparison.OrdinalIgnoreCase)
-               || response.ResponseUri.AbsoluteUri.StartsWith("http://nrddnr.com/", StringComparison.OrdinalIgnoreCase)
-               || response.ResponseUri.AbsoluteUri.StartsWith("http://www.nrddnr.com/", StringComparison.OrdinalIgnoreCase);
+            return uri.AbsoluteUri.StartsWith("http://nerddinner.com/", StringComparison.OrdinalIgnoreCase)
+               || uri.AbsoluteUri.StartsWith("http://www.nerddinner.com/", StringComparison.OrdinalIgnoreCase)
+               || uri.AbsoluteUri.StartsWith("http://nrddnr.com/", StringComparison.OrdinalIgnoreCase)
+               || uri.AbsoluteUri.StartsWith("http://www.nrddnr.com/", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
