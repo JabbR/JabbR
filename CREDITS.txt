@@ -1,2 +1,24 @@
-This application uses these sounds from freesound:
+JabbR uses these sounds from freesound:
+
 S: Wood019.wav by HardPCM (http://www.freesound.org/people/HardPCM/sounds/35978/) (notification.wav)
+
+JabbR uses icons from http://thenounproject.com/.
+
+http://thenounproject.com/noun/speaker/#icon-No100
+- /content/images/sound-on.png
+- /content/images/sound-off.png
+http://thenounproject.com/noun/lock/#icon-No823
+- /content/images/lock.png
+http://thenounproject.com/noun/idea/#icon-No762
+- /content/images/toast-on.png
+- /content/images/toast-off.png
+http://thenounproject.com/noun/blog/#icon-No460
+- /content/images/typing.png
+http://thenounproject.com/noun/stopwatch/#icon-No839
+- /content/images/stopwatch.png
+http://thenounproject.com/noun/paper-clip/#icon-No286
+- /content/images/clippy.png
+http://thenounproject.com/noun/download/#icon-No435
+- /content/images/download-icon.png
+
+All symbols included above are by Joe Smith, from The Noun Project collection.
