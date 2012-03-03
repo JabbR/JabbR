@@ -189,7 +189,7 @@ namespace JabbR
 
 
             var messageViewModel = new MessageViewModel(chatMessage);
-            Clients[room.Name].addMessage(messageViewModel, room.Name, Context.ConnectionId);
+            Clients[room.Name].addMessage(messageViewModel, room.Name);
 
             _repository.CommitChanges();
 
