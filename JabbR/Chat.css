@@ -413,6 +413,10 @@ li.room:hover {
     color: inherit;
 }
 
+.notification .emoji20 {
+    opacity: 0.4;
+}
+
 .message {
     border-bottom: 1px solid #eee;
 }
