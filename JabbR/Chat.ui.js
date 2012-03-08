@@ -414,16 +414,21 @@
             userContainer = $('<div/>').attr('id', 'userlist-' + roomId)
                 .addClass('users')
                 .appendTo($chatArea).hide();
-            templates.userlist.tmpl({ listname: 'Room Owners', id: 'userlist-' + roomId + '-owners' })
+            templates.userlist.tmpl({ listname: '- Room Owners', id: 'userlist-' + roomId + '-owners' })
                 .addClass('owners')
                 .appendTo(userContainer);
-            templates.userlist.tmpl({ listname: 'Online', id: 'userlist-' + roomId + '-active' })
+            templates.userlist.tmpl({ listname: '- Online', id: 'userlist-' + roomId + '-active' })
                 .addClass('active')
                 .appendTo(userContainer);
-            templates.userlist.tmpl({ listname: 'Away', id: 'userlist-' + roomId + '-idle' })
+            templates.userlist.tmpl({ listname: '- Away', id: 'userlist-' + roomId + '-idle' })
                 .addClass('idle')
                 .appendTo(userContainer);
             userContainer.find('h3').click(function () {
+                if ($.trim($(this).text())[0] === '-') {
+                    $(this).text($(this).text().replace('-','+'));
+                } else {
+                    $(this).text($(this).text().replace('+','-'));
+                }
                 $(this).next().toggle(0);
                 return false;
             });
