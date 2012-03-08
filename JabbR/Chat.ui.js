@@ -424,11 +424,11 @@
                 .addClass('idle')
                 .appendTo(userContainer);
             userContainer.find('h3').click(function () {
-                if($(this).text().indexOf('+') == -1){
+                if ($.trim($(this).text())[0] === '-') {
                     $(this).text($(this).text().replace('-','+'));
-                }else{
+                } else {
                     $(this).text($(this).text().replace('+','-'));
-                };
+                }
                 $(this).next().toggle(0);
                 return false;
             });
