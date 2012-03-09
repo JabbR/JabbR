@@ -1348,7 +1348,7 @@
                 $element = null,
                 now = new Date(),
                 message = {
-                    message: content,
+                    message: utility.parseEmojis(content),
                     type: type,
                     date: now,
                     when: now.formatTime(true),
