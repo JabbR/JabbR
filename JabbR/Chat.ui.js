@@ -946,7 +946,9 @@
 
             $newMessage.keypress(function (ev) {
                 var key = ev.keyCode || ev.which;
-                if ($newMessage.val()[0] === '/' || key === Keys.Slash) return;
+                if ($newMessage.val()[0] === '/' || key === Keys.Slash) {
+                    return;
+                }
                 switch (key) {
                     case Keys.Up:
                     case Keys.Down:
