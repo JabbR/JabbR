@@ -21,7 +21,7 @@
         templates = null,
         focus = true,
         commands = [],
-        Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13 },
+        Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13, Slash: 47 },
         scrollTopThreshold = 75,
         toast = window.chat.toast,
         preferences = null,
@@ -425,9 +425,9 @@
                 .appendTo(userContainer);
             userContainer.find('h3').click(function () {
                 if ($.trim($(this).text())[0] === '-') {
-                    $(this).text($(this).text().replace('-','+'));
+                    $(this).text($(this).text().replace('-', '+'));
                 } else {
-                    $(this).text($(this).text().replace('+','-'));
+                    $(this).text($(this).text().replace('+', '-'));
                 }
                 $(this).next().toggle(0);
                 return false;
@@ -946,6 +946,7 @@
 
             $newMessage.keypress(function (ev) {
                 var key = ev.keyCode || ev.which;
+                if ($newMessage.val()[0] === '/' || key === Keys.Slash) return;
                 switch (key) {
                     case Keys.Up:
                     case Keys.Down:
