@@ -400,7 +400,7 @@ li.room:hover {
     padding: 5px;
 }
 
-.notification .content, .pm .content {
+.notification .content, .pm .content, .error .content {
     margin-right: 95px;
 }
 
