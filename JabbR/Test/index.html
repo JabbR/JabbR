@@ -7,6 +7,7 @@
     <script src="../Scripts/qunit.js"></script>
     <script src="../Scripts/jQuery.tmpl.js"></script>
     <script src="../Scripts/jquery.cookie.js"></script>
+    <script src="../Scripts/jquery.timeago.0.10.js"></script>
     <script src="/signalr/hubs"></script>
     <script src="../Chat.utility.js"></script>
     <script>
@@ -54,6 +55,7 @@
                 ui.setActiveRoom = function () { };
                 ui.setInitialized = function () { };
                 ui.scrollToBottom = function () { };
+                ui.changeRoomTopic = function () { };
                 var message = null;
                 ui.addMessage = function (msg) { message = msg; };
                 var roomInfoGotten = false;
@@ -66,8 +68,11 @@
                     Owners: [],
                     RecentMessages: [],
                 };
+                var room = {
+                    Name: 'SmangIt',
+                };
 
-                chat.joinRoom('SmangIt');
+                chat.joinRoom(room);
                 deferred.resolve(roomInfo);
 
                 equals(message, 'You just entered SmangIt');
@@ -82,18 +87,22 @@
                 ui.setActiveRoom = function () { };
                 ui.setInitialized = function () { };
                 ui.scrollToBottom = function () { };
+                ui.changeRoomTopic = function () { };
                 ui.addMessage = function (msg) { };
                 var deferred = $.Deferred();
                 chat.getRoomInfo = function (room) {
                     return deferred;
                 };
                 var roomInfo = {
-                    Users: [{Name: 'David', Hash: 'fried'}],
+                    Users: [{Name: 'David', Hash: 'fried', LastActivity: '/Date(1331530924800-0400)/'}],
                     Owners: [],
                     RecentMessages: [],
                 };
+                var room = {
+                    Name: 'SmangIt',
+                };
 
-                chat.joinRoom('SmangIt');
+                chat.joinRoom(room);
                 deferred.resolve(roomInfo);
 
                 ok(userActivitySet);
@@ -108,6 +117,7 @@
                 chat.activeRoom = {};
                 ui.addMessage = function () { };
                 ui.run = function () { };
+                ui.setUserName = function () { };
                 var activeRoomSet = false;
                 ui.setActiveRoom = function (room) { activeRoomSet = true; };
                 var roomInfoGotten = false;
@@ -125,6 +135,7 @@
             test("does not set active room if it changed", function () {
                 var rooms = [];
                 chat.activeRoom = {};
+                ui.setUserName = function () { };
                 ui.run = function () { chat.activeRoom = { id: 2 }; };
                 ui.setActiveRoom = function (room) { throw 'setActiveRoom should not be called'; };
                 var roomInfoGotten = false;
@@ -146,6 +157,7 @@
                 chat.getRooms = function () { getRoomsCalled = true; return deferred; };
                 ui.setActiveRoom = function () { };
                 ui.run = function () { };
+                ui.setUserName = function () { };
                 var lobbyPopulated = false;
                 ui.populateLobbyRooms = function () { lobbyPopulated = true; };
                 var roomInfoGotten = false;
