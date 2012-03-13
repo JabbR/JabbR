@@ -102,6 +102,10 @@
         isMobile: isMobile,
         parseEmojis: function (content) {
             var parser = new Emoji.Parser().parse;
+            // should we strip tags before running this?
+            // obligatory link to SO http://stackoverflow.com/questions/1147359/how-to-decode-html-entities-using-jquery
+            // is it safe to assume bad html has been removed before we've reached this function call?
+            var decodedContent = $("<div/>").html(content).text();
             return (parser(content));
         },
         newId: guidGenerator
