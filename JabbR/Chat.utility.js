@@ -32,6 +32,10 @@
         return this[0].scrollTop + this.height() >= this[0].scrollHeight;
     };
 
+    function decodeHtml(html) {
+        return $("<div/>").html(content).text();
+    }
+
     String.prototype.fromJsonDate = function () {
         return eval(this.replace(/\/Date\((\d+)(\+|\-)?.*\)\//gi, "new Date($1)"))
     };
@@ -105,9 +109,10 @@
             // should we strip tags before running this?
             // obligatory link to SO http://stackoverflow.com/questions/1147359/how-to-decode-html-entities-using-jquery
             // is it safe to assume bad html has been removed before we've reached this function call?
-            var decodedContent = $("<div/>").html(content).text();
-            return (parser(content));
+            var decodedContent = decodeHtml(content);
+            return (parser(decodedContent));
         },
+        /* decodeHtml: decodeHtml, */ /* optionally expose decodeHtml helper from utility? */
         newId: guidGenerator
     };
 
