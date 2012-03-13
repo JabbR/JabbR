@@ -37,7 +37,11 @@
         // should we strip tags before running this?
         // obligatory link to SO http://stackoverflow.com/questions/1147359/how-to-decode-html-entities-using-jquery
         // is it safe to assume bad html has been removed before we've reached this function call?
-        return $("<div/>").html(content).text();
+        return $("<div/>").html(html).text();
+    }
+
+    function encodeHtml(html) {
+        return $("<div/>").text(html).html();
     }
 
     String.prototype.fromJsonDate = function () {
@@ -110,10 +114,11 @@
         isMobile: isMobile,
         parseEmojis: function (content) {
             var parser = new Emoji.Parser().parse;
-            var decodedContent = decodeHtml(content);
+            var decodedContent = encodeHtml(decodeHtml(content));
             return (parser(decodedContent));
         },
-        /* decodeHtml: decodeHtml, */ /* optionally expose decodeHtml helper from utility? */
+        /* decodeHtml: decodeHtml, */ /* optionally expose decodeHtml/encodeHtml helpers from utility? */
+        /* encodeHtml: encodeHtml, */
         newId: guidGenerator
     };
 
