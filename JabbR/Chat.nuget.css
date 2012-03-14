@@ -108,23 +108,24 @@
     display: block;
     float: left;
     font-size: 80%;
-    width: 25%;
+    width: 50%;
 }
 
 .nuget-downloads {
     display: block;
     font-size: 80%;
-    margin-left: auto;
-    margin-right: auto;
     white-space: nowrap;
-    width: 25%;
+    width: 50%;
 }
 
-.nuget-authors-entry { float: right; }
+.nuget-authors-entry { 
+	float: left; 
+}
 
 .nuget-ProjectUrl {
     font-size: 80%;
     text-align: left;
+	float: left;
 }
 
 .nuget-badge span { font-weight: bold; }
