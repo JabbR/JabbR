@@ -40,7 +40,7 @@ namespace JabbR.ContentProviders
                         if (packageInfo.ProjectUrl != null)
                         {
                             projectInfo.AppendFormat(
-                                "<div class=\"nuget-ProjectUrl\" ><a href=\"_blank\" src=\"{0}\">{0}</a></div>",
+                                "<div class=\"nuget-ProjectUrl\" ><a target=\"_blank\" href=\"{0}\">{0}</a></div>",
                                 packageInfo.ProjectUrl);
                         }
 
