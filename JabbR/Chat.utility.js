@@ -114,11 +114,10 @@
         isMobile: isMobile,
         parseEmojis: function (content) {
             var parser = new Emoji.Parser().parse;
-            var decodedContent = encodeHtml(decodeHtml(content));
-            return (parser(decodedContent));
+            return (parser(content));
         },
-        /* decodeHtml: decodeHtml, */ /* optionally expose decodeHtml/encodeHtml helpers from utility? */
-        /* encodeHtml: encodeHtml, */
+        decodeHtml: decodeHtml,
+        encodeHtml: encodeHtml,
         newId: guidGenerator
     };
 
