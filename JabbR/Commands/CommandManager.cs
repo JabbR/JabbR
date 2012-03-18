@@ -751,8 +751,8 @@ namespace JabbR.Commands
                         // If there's no user but there's a password then authenticate the user
                         _chatService.AuthenticateUser(userName, password);
 
-                        // Add this client to the list of clients for this user
-                        _chatService.AddClient(user, _clientId, _userAgent);
+                        // update user's activity and add client to list of clients
+                        _chatService.UpdateActivity(user, _clientId, _userAgent);
 
                         // Initialize the returning user
                         _notificationService.LogOn(user, _clientId);
