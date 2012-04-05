@@ -87,6 +87,7 @@ namespace JabbR.Handlers
 
             var messages = _repository.GetMessagesByRoom(roomName)
                 .Where(msg => msg.When <= end && msg.When >= start)
+                .OrderBy(msg => msg.When)
                 .Select(msg => new
                 {
                     Content = msg.Content,

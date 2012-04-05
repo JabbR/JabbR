@@ -90,6 +90,8 @@ namespace JabbR.Auth
                 else
                 {
                     // There's no logged in user so create a new user with the associated credentials
+                    // but first, let's clean up that username!
+                    username = FixUserName(username);
                     user = chatService.AddUser(username, userIdentity, email);
                 }
             }
@@ -111,6 +113,11 @@ namespace JabbR.Auth
             context.Response.Cookies.Add(cookie);
             context.Response.Redirect("~/", false);
             context.ApplicationInstance.CompleteRequest();
+        }
+
+        private string FixUserName(string username) {
+            // simple for now, translate spaces to underscores
+            return username.Replace(' ', '_');
         }
 
         private ClientState GetClientState(HttpContext context)
