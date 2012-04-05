@@ -117,7 +117,7 @@ namespace JabbR.Auth
 
         private string FixUserName(string username) {
             // simple for now, translate spaces to underscores
-            return username = username.Replace(' ', '_');
+            return username.Replace(' ', '_');
         }
 
         private ClientState GetClientState(HttpContext context)
