@@ -91,7 +91,7 @@ namespace JabbR.Auth
                 {
                     // There's no logged in user so create a new user with the associated credentials
                     // but first, let's clean up that username!
-                    username = CleanUpOpenIDUsername(username);
+                    username = FixUserName(username);
                     user = chatService.AddUser(username, userIdentity, email);
                 }
             }
@@ -115,7 +115,7 @@ namespace JabbR.Auth
             context.ApplicationInstance.CompleteRequest();
         }
 
-        private string CleanUpOpenIDUsername(string username) {
+        private string FixUserName(string username) {
             // simple for now, translate spaces to underscores
             return username = username.Replace(' ', '_');
         }
