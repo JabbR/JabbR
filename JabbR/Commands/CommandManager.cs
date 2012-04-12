@@ -792,7 +792,7 @@ namespace JabbR.Commands
                     // Make sure the current user and target user are the same
                     if (user != targetUser)
                     {
-                        throw new InvalidOperationException("You can't set/change the password for a nickname you down own.");
+                        throw new InvalidOperationException("You can't set/change the password for a nickname you don't own.");
                     }
 
                     if (String.IsNullOrEmpty(newPassword))
