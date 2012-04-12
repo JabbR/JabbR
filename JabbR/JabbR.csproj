@@ -711,7 +711,7 @@
     <Content Include="Content\images\big-logo.png" />
     <Content Include="Content\images\logo32.png" />
     <Content Include="Content\images\small-logo.png" />
-    <Content Include="index.htm" />
+    <Content Include="default.aspx" />
     <Content Include="Mobile.css" />
     <Content Include="mobile.htm" />
     <Content Include="Content\sounds\notification.wav" />

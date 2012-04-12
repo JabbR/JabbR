@@ -861,7 +861,7 @@
                 var url = document.location.href;
                 var nav = url.indexOf('#');
                 url = nav > 0 ? url.substring(0, nav) : url;
-                url = url.replace('index.htm', '');
+                url = url.replace('default.aspx', '');
                 url += 'api/v1/messages/' +
                        encodeURI(room.getName()) +
                        '?download=true&range=' +
