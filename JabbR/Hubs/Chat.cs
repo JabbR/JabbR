@@ -254,6 +254,7 @@ namespace JabbR
                 new { Name = "who", Description = "Type /who to show a list of all users, /who [name] to show specific information about that user" },
                 new { Name = "list", Description = "Type /list (room) to show a list of users in the room" },
                 new { Name = "gravatar", Description = "Type /gravatar [email] to set your gravatar." },
+                new { Name = "invite", Description = "Type /invite [user] [room] - To invite a user to join a room." },
                 new { Name = "nudge", Description = "Type /nudge to send a nudge to the whole room, or \"/nudge @nickname\" to nudge a particular user. @ is optional." },
                 new { Name = "kick", Description = "Type /kick [user] to kick a user from the room. Note, this is only valid for owners of the room." },
                 new { Name = "logout", Description = "Type /logout - To logout from this client (chat cookie will be removed)." },
@@ -773,6 +774,24 @@ namespace JabbR
         void INotificationService.ShowRooms()
         {
             Caller.showRooms(GetRooms());
+        }
+
+        void INotificationService.Invite(ChatUser user, ChatUser targetUser, ChatRoom targetRoom)
+        {
+            var transform = new TextTransform(_repository);
+            string roomLink = transform.ConvertHashtagsToRoomLinks("#" + targetRoom.Name);
+
+            // Send the invite message to the sendee
+            foreach (var client in targetUser.ConnectedClients)
+            {
+                Clients[client.Id].sendInvite(user.Name, targetUser.Name, roomLink);
+            }
+
+            // Send the invite notification to the sender
+            foreach (var client in user.ConnectedClients)
+            {
+                Clients[client.Id].sendInvite(user.Name, targetUser.Name, roomLink);
+            }
         }
 
         void INotificationService.NugeUser(ChatUser user, ChatUser targetUser)

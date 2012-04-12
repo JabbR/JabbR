@@ -17,6 +17,7 @@ namespace JabbR.Services
         void ListRooms(ChatUser user);
         void ListUsers(IEnumerable<ChatUser> users);
 
+        void Invite(ChatUser user, ChatUser targetUser, ChatRoom targetRoom);
         void NudgeRoom(ChatRoom room, ChatUser user);
         void NugeUser(ChatUser user, ChatUser targetUser);
 

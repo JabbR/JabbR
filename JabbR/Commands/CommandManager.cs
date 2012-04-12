@@ -210,6 +210,12 @@ namespace JabbR.Commands
 
                 return true;
             }
+            else if (commandName.Equals("invite", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleInvite(user, parts);
+
+                return true;
+            }
             else if (commandName.Equals("nudge", StringComparison.OrdinalIgnoreCase) && parts.Length == 2)
             {
                 HandleNudge(user, parts);
@@ -813,6 +819,33 @@ namespace JabbR.Commands
 
             // Commit the changes
             _repository.CommitChanges();
+        }
+
+        private void HandleInvite(ChatUser user, string[] parts)
+        {
+            if (parts.Length == 1)
+            {
+                throw new InvalidOperationException("Who do you want to invite?");
+            }
+
+            string targetUserName = parts[1];
+
+            ChatUser targetUser = _repository.VerifyUser(targetUserName);
+
+            if (targetUser == user)
+            {
+                throw new InvalidOperationException("You can't invite yourself!");
+            }
+
+            if (parts.Length == 2)
+            {
+                throw new InvalidOperationException("Invite them to which room?");
+            }
+
+            string roomName = parts[2];
+            ChatRoom targetRoom = _repository.VerifyRoom(roomName);
+
+            _notificationService.Invite(user, targetUser, targetRoom);
         }
 
         private void HandleNudge(ChatUser user, string[] parts)
