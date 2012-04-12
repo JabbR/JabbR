@@ -68,6 +68,27 @@ namespace JabbR.Test
             }
 
             [Fact]
+            public void HashtagRegexMatchesHashtagAtEndOfSentence()
+            {
+                Regex hashtagRegex = HashtagRegex();
+
+                var result = hashtagRegex.IsMatch("this hashtag is at the end of a sentance, #hashtag.");
+
+                Assert.True(result);
+            }
+
+            [Fact]
+            public void HashtagRegexMatchDoesNotIncludePeriod()
+            {
+                Regex hashtagRegex = HashtagRegex();
+
+                var result = hashtagRegex.Matches("this hashtag is at the end of a sentance, #hashtag.");
+
+                Assert.Equal(result.Count, 1);
+                Assert.Equal(result[0].Value,"#hashtag");
+            }
+
+            [Fact]
             public void HashtagRegexParts()
             {
                 Regex hashtagRegex = HashtagRegex();
