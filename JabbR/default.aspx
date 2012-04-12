@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿<%@ Page Language="C#" %>
+<!DOCTYPE html>
 <html>
 <head>
     <title>JabbR</title>
@@ -21,7 +22,7 @@
             var url = document.location.href;
             var nav = url.indexOf('#');
             url = nav > 0 ? url.substring(0, nav) : url;
-            url = url.replace('index.htm', '');
+            url = url.replace('default.aspx', '');
             janrain.settings.tokenUrl = url + 'Auth/Login.ashx';
 
             function isReady() { janrain.ready = true; };
@@ -36,9 +37,9 @@
             e.id = 'janrainAuthWidget';
 
             if (document.location.protocol === 'https:') {
-                e.src = 'https://rpxnow.com/js/lib/jabbr/engage.js';
+            	e.src = 'https://rpxnow.com/js/lib/<%:System.Configuration.ConfigurationManager.AppSettings["auth.appId"]%>/engage.js';
             } else {
-                e.src = 'http://widget-cdn.rpxnow.com/js/lib/jabbr/engage.js';
+            	e.src = 'http://widget-cdn.rpxnow.com/js/lib/<%:System.Configuration.ConfigurationManager.AppSettings["auth.appId"]%>/engage.js';
             }
 
             var s = document.getElementsByTagName('script')[0];
