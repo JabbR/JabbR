@@ -2483,7 +2483,7 @@ namespace JabbR.Test
                                                         repository,
                                                         notificationService.Object);
 
-                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nudge dfowler"));
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invite dfowler"));
             }
         }
 
