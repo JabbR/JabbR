@@ -1444,10 +1444,12 @@
         showLogin: function () {
             if (janrain.ready === false) {
                 window.setTimeout(function () {
+                    $login.show();
                     janrain.engage.signin.modal.init();
                 }, 1000);
             }
             else {
+                $login.show();
                 janrain.engage.signin.modal.init();
             }
         },
