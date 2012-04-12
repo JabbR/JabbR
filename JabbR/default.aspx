@@ -1,4 +1,5 @@
 ﻿<%@ Page Language="C#" %>
+<%@ Import namespace="System.Configuration" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,9 +38,9 @@
             e.id = 'janrainAuthWidget';
 
             if (document.location.protocol === 'https:') {
-            	e.src = 'https://rpxnow.com/js/lib/<%:System.Configuration.ConfigurationManager.AppSettings["auth.appId"]%>/engage.js';
+            	e.src = 'https://rpxnow.com/js/lib/<%:ConfigurationManager.AppSettings["auth.appId"]%>/engage.js';
             } else {
-            	e.src = 'http://widget-cdn.rpxnow.com/js/lib/<%:System.Configuration.ConfigurationManager.AppSettings["auth.appId"]%>/engage.js';
+            	e.src = 'http://widget-cdn.rpxnow.com/js/lib/<%:ConfigurationManager.AppSettings["auth.appId"]%>/engage.js';
             }
 
             var s = document.getElementsByTagName('script')[0];
