@@ -542,7 +542,7 @@
             ui.addPrivateMessage('*' + from + '* has invited you to ' + roomLink + '. Click the room name to join.', 'pm');
         }
         else {
-            ui.addPrivateMessage('Invitation to *' + to + '* sent.', 'pm');
+            ui.addPrivateMessage('Invitation to *' + to + '* to join ' + roomLink  + ' has been sent.', 'pm');
         }
     };
 
