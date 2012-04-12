@@ -536,6 +536,16 @@
         ui.addPrivateMessage('<emp>*' + from + '* &raquo; *' + to + '*</emp> ' + message, 'pm');
     };
 
+    chat.sendInvite = function (from, to, roomLink) {
+        if (isSelf({ Name: to })) {
+            ui.notify(true);
+            ui.addPrivateMessage('*' + from + '* has invited you to ' + roomLink + '. Click the room name to join.', 'pm');
+        }
+        else {
+            ui.addPrivateMessage('Invitation to *' + to + '* sent.', 'pm');
+        }
+    };
+
     chat.nudge = function (from, to) {
         function shake(n) {
             var move = function (x, y) {
