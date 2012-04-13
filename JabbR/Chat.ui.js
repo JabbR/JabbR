@@ -717,7 +717,7 @@
             $downloadDialogButton = $('#download-dialog-button');
             $downloadRange = $('#download-range');
             $disconnectDialog = $('#disconnect-dialog');
-            $login = $('.janrainEngage');
+            $login = $('#jabbr-login');
             $updatePopup = $('#jabbr-update');
             focus = true;
             $roomFilterInput = $('#users-filter');
@@ -1445,13 +1445,11 @@
             if (typeof (janrain) !== 'undefined') {
                 if (janrain.ready === false) {
                     window.setTimeout(function () {
-                        $login.show();
-                        janrain.engage.signin.modal.init();
+                        $login.modal({ backdrop: true, keyboard: true });
                     }, 1000);
                 }
                 else {
-                    $login.show();
-                    janrain.engage.signin.modal.init();
+                    $login.modal({ backdrop: true, keyboard: true });
                 }
 
                 return true;

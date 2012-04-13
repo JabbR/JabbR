@@ -1399,3 +1399,7 @@ li.clearfix {
         overflow: auto;
     }
 }
+
+#janrainEngageEmbed > div {
+    margin: 0 auto;
+}
