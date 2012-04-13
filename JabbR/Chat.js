@@ -542,7 +542,7 @@
             ui.addPrivateMessage('*' + from + '* has invited you to ' + roomLink + '. Click the room name to join.', 'pm');
         }
         else {
-            ui.addPrivateMessage('Invitation to *' + to + '* to join ' + roomLink  + ' has been sent.', 'pm');
+            ui.addPrivateMessage('Invitation to *' + to + '* to join ' + roomLink + ' has been sent.', 'pm');
         }
     };
 
@@ -692,6 +692,13 @@
 
 
         if (msg[0] !== '/') {
+
+            // if you're in the lobby, you can't send mesages (only commands)
+            if (chat.activeRoom === undefined) {
+                ui.addMessage("You cannot send messages within the Lobby", 'error');
+                return false;
+            }
+
             // Added the message to the ui first
             var viewModel = {
                 name: chat.name,
