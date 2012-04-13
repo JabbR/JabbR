@@ -233,7 +233,15 @@
                 </li>
             </ul>
         </div>
-        <div id="janrainEngageEmbed" style="display: none;">
+        <div id="jabbr-login" class="modal hide fade">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">&times;</a>
+                <h3>JabbR Login</h3>
+            </div>
+            <div class="modal-body">
+                <div id="janrainEngageEmbed">
+                </div>
+            </div>
         </div>
         <div id="chat-area">
             <ul id="messages-lobby" class="messages current">
