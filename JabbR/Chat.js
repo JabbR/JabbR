@@ -695,7 +695,7 @@
 
             // if you're in the lobby, you can't send mesages (only commands)
             if (chat.activeRoom === undefined) {
-                ui.addMessage("You cannot send messages within the Lobby", 'error');
+                ui.addMessage('You cannot send messages within the Lobby', 'error');
                 return false;
             }
 
