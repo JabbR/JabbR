@@ -692,6 +692,13 @@
 
 
         if (msg[0] !== '/') {
+
+            // if you're in the lobby, you can't send mesages (only commands)
+            if (chat.activeRoom === undefined) {
+                ui.addMessage('You cannot send messages within the Lobby', 'error');
+                return false;
+            }
+
             // Added the message to the ui first
             var viewModel = {
                 name: chat.name,
