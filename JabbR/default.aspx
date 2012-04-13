@@ -1,5 +1,11 @@
 ﻿<%@ Page Language="C#" %>
 <%@ Import namespace="System.Configuration" %>
+
+<%
+    string appName = ConfigurationManager.AppSettings["auth.appName"];
+    string apiKey = ConfigurationManager.AppSettings["auth.apiKey"];
+%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -15,6 +21,7 @@
     <link href="Content/KeyTips.css" rel="stylesheet" type="text/css" />
     <link href="Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="Content/emoji20.css" rel="stylesheet" type="text/css" />
+    <% if (!String.IsNullOrEmpty(apiKey)) { %>
     <script type="text/javascript">
         (function () {
             if (typeof window.janrain !== 'object') window.janrain = {};
@@ -38,15 +45,16 @@
             e.id = 'janrainAuthWidget';
 
             if (document.location.protocol === 'https:') {
-            	e.src = 'https://rpxnow.com/js/lib/<%:ConfigurationManager.AppSettings["auth.appName"]%>/engage.js';
+                e.src = 'https://rpxnow.com/js/lib/<%:appName %>/engage.js';
             } else {
-            	e.src = 'http://widget-cdn.rpxnow.com/js/lib/<%:ConfigurationManager.AppSettings["auth.appName"]%>/engage.js';
+                e.src = 'http://widget-cdn.rpxnow.com/js/lib/<%:appName %>/engage.js';
             }
 
             var s = document.getElementsByTagName('script')[0];
             s.parentNode.insertBefore(e, s);
         })();
     </script>
+    <% } %>
     <script id="new-message-template" type="text/x-jquery-tmpl">
         <li class="message ${highlight} clearfix" id="m-${id}" data-name="${name}" data-timestamp="${date}">
             <div class="left">

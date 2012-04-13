@@ -1442,16 +1442,22 @@
             return ui.name;
         },
         showLogin: function () {
-            if (janrain.ready === false) {
-                window.setTimeout(function () {
+            if (typeof (janrain) !== 'undefined') {
+                if (janrain.ready === false) {
+                    window.setTimeout(function () {
+                        $login.show();
+                        janrain.engage.signin.modal.init();
+                    }, 1000);
+                }
+                else {
                     $login.show();
                     janrain.engage.signin.modal.init();
-                }, 1000);
+                }
+
+                return true;
             }
-            else {
-                $login.show();
-                janrain.engage.signin.modal.init();
-            }
+
+            return false;
         },
         showDisconnectUI: function () {
             $disconnectDialog.modal();
