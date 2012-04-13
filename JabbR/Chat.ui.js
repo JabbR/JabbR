@@ -1446,12 +1446,10 @@
                 if (janrain.ready === false) {
                     window.setTimeout(function () {
                         $login.modal({ backdrop: true, keyboard: true });
-                        //janrain.engage.signin.modal.init();
                     }, 1000);
                 }
                 else {
                     $login.modal({ backdrop: true, keyboard: true });
-                    //janrain.engage.signin.modal.init();
                 }
 
                 return true;
