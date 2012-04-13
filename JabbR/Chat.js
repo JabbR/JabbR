@@ -6,6 +6,15 @@
 (function ($, connection, window, ui, utility) {
     "use strict";
 
+    window.onerror = function () {
+        if (typeof (console) !== 'undefined') {
+            console.log('ERROR!!');
+            for (var i = 0; i < arguments.length; i++) {
+                console.log(arguments[i]);
+            }
+        }
+    };
+
     var chat = connection.chat,
         messageHistory = [],
         historyLocation = 0,
@@ -847,7 +856,7 @@
                         }
                         else {
                             ui.addMessage('Use /nick user password to log in with jabbr', 'notification');
-                            ui.addMessage('To enable janrain login, setup the missing values in web.config', 'notification');                            
+                            ui.addMessage('To enable janrain login, setup the missing values in web.config', 'notification');
                         }
                     }
                     // get list of available commands
