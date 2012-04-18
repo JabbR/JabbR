@@ -156,14 +156,17 @@
     }
 
     function updateTitle() {
-        if (unread === 0) {
-            document.title = originalTitle;
-        }
-        else {
-            document.title =
+        // ugly hack via http://stackoverflow.com/a/2952386/188039
+        window.setTimeout(function () {
+            if (unread === 0) {
+                document.title = originalTitle;
+            }
+            else {
+                document.title =
                 (isUnreadMessageForUser ? '*' : '')
                 + '(' + unread + ') ' + originalTitle;
-        }
+            }
+        }, 200);
     }
 
     function updateUnread(room, isMentioned) {
