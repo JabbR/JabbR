@@ -269,7 +269,8 @@ namespace JabbR
                 new { Name = "note", Description = "Type /note - To set a note shown via a paperclip icon next to your name, with the message appearing when you hover over it."},
                 new { Name = "afk", Description = "Type /afk - (aka. Away From Keyboard). To set a temporary note shown via a paperclip icon next to your name, with the message appearing when you hover over it. This note will disappear when you first resume typing."},
                 new { Name = "flag", Description = "Type /flag [Iso 3366-2 Code] - To show a small flag which represents your nationality. Eg. /flag US for a USA flag. ISO Reference Chart: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 (Apologies to people with dual citizenship). "},
-                new { Name = "topic", Description = "Type /topic [topic] to set the room topic. Type /topic to clear the room's topic." }
+                new { Name = "topic", Description = "Type /topic [topic] to set the room topic. Type /topic to clear the room's topic." },
+                new { Name = "roomname", Description = "Type #roomname to add a link to that room in your message. Eg. If you add \"#meta\" to your message it will be replaced with a link to /#/rooms/meta." }
             };
         }
 
