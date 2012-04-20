@@ -12,5 +12,7 @@ namespace JabbR.Models
         public ChatUser User { get; set; }
         public string UserAgent { get; set; }
         public DateTimeOffset LastActivity { get; set; }
+
+        public int UserKey { get; set; }
     }
 }

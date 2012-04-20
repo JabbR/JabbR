@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using JabbR.Models.Mapping;
 
 namespace JabbR.Models
 {
@@ -7,33 +8,18 @@ namespace JabbR.Models
         public JabbrContext()
             : base("Jabbr")
         {
+            Database.SetInitializer<JabbrContext>(null);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ChatRoom>()
-                        .HasOptional(r => r.Creator);
+            modelBuilder.Configurations.Add(new ChatClientMap());
 
-            modelBuilder.Entity<ChatRoom>()
-                        .HasMany(r => r.Owners)
-                        .WithMany(u => u.OwnedRooms)
-                        .Map(c => c.ToTable("ChatRoomChatUsers"));
+            modelBuilder.Configurations.Add(new ChatMessageMap());
 
-            modelBuilder.Entity<ChatRoom>()
-                        .HasMany(r => r.AllowedUsers)
-                        .WithMany(u => u.AllowedRooms)
-                        .Map(c => c.ToTable("ChatRoomChatUser1")); 
-            
-            modelBuilder.Entity<ChatUser>()
-                        .HasMany(u => u.Rooms)
-                        .WithMany(r => r.Users)
-                        .Map(c => c.ToTable("ChatUserChatRooms"));
+            modelBuilder.Configurations.Add(new ChatRoomMap());
 
-            modelBuilder.Entity<ChatUser>()
-                        .HasMany(u => u.ConnectedClients);
-
-            modelBuilder.Entity<ChatClient>()
-                        .HasRequired(c => c.User);
+            modelBuilder.Configurations.Add(new ChatUserMap());
 
             base.OnModelCreating(modelBuilder);
         }

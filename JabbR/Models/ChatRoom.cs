@@ -23,6 +23,7 @@ namespace JabbR.Models
 
         // Creator of the room
         public virtual ChatUser Creator { get; set; }
+        public int? CreatorKey { get; set; }
 
         // Creator and owners
         public virtual ICollection<ChatUser> Owners { get; set; } 
