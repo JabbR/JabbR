@@ -8,7 +8,6 @@ namespace JabbR.Models
         public JabbrContext()
             : base("Jabbr")
         {
-            Database.SetInitializer<JabbrContext>(null);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
