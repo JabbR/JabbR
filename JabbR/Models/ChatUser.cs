@@ -10,6 +10,7 @@ namespace JabbR.Models
         [Key]
         public int Key { get; set; }
 
+        [MaxLength(200)]
         public string Id { get; set; }
         public string Name { get; set; }
         // MD5 email hash for gravatar

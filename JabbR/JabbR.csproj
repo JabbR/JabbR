@@ -861,6 +861,10 @@
     <Compile Include="Migrations\201202122252259_RoomTopic.Designer.cs">
       <DependentUpon>201202122252259_RoomTopic.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201204231611225_Indexes.cs" />
+    <Compile Include="Migrations\201204231611225_Indexes.Designer.cs">
+      <DependentUpon>201204231611225_Indexes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ChatClient.cs">
       <SubType>Code</SubType>
     </Compile>
