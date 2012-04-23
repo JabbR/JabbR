@@ -16,7 +16,7 @@ namespace JabbR.Models.Migrations
         {
             DropIndex("ChatRooms", "Name");
             DropIndex("ChatUsers", "Id");
-            ChangeColumn("ChatRooms", "InviteCode", c => c.String());
+            ChangeColumn("ChatUsers", "Id", c => c.String());
             ChangeColumn("ChatRooms", "Name", c => c.String());
         }
     }
