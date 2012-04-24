@@ -45,7 +45,7 @@
     }
 
     String.prototype.fromJsonDate = function () {
-        return eval(this.replace(/\/Date\((\d+)(\+|\-)?.*\)\//gi, "new Date($1)"))
+        return new Date(this);
     };
 
     Date.prototype.formatDate = function () {
