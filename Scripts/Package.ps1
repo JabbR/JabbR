@@ -1,5 +1,6 @@
 ﻿param(
   $authKey                            = $env:JABBR_AUTH_KEY,
+  $googleAnalyticsToken               = $env:JABBR_GOOGLE_ANALYTICS,
   $remoteDesktopAccountExpiration     = $env:JABBR_REMOTE_DESKTOP_ACCOUNT_EXPIRATION,
   $remoteDesktopCertificateThumbprint = $env:JABBR_REMOTE_DESKTOP_CERTIFICATE_THUMBPRINT,
   $remoteDesktopEnctyptedPassword     = $env:JABBR_REMOTE_DESKTOP_ENCRYPTED_PASSWORD,
@@ -114,6 +115,7 @@ cp $webConfigPath $webConfigBakPath
 cp $cscfgPath $cscfgBakPath
 
 set-appsetting -path $webConfigPath -name "auth.apiKey" -value $authKey
+set-appsetting -path $webConfigPath -name "googleAnalytics" -value $googleAnalyticsToken
 set-configurationsetting -path $cscfgPath -name "Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" -value $remoteDesktopAccountExpiration
 set-certificatethumbprint -path $cscfgPath -name "Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" -value $remoteDesktopCertificateThumbprint
 set-configurationsetting -path $cscfgPath -name "Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" -value $remoteDesktopEnctyptedPassword
