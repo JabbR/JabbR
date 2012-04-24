@@ -863,6 +863,10 @@
     <Compile Include="Migrations\201204231611225_Indexes.Designer.cs">
       <DependentUpon>201204231611225_Indexes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201204241402266_UpgradeToEF431.cs" />
+    <Compile Include="Migrations\201204241402266_UpgradeToEF431.Designer.cs">
+      <DependentUpon>201204241402266_UpgradeToEF431.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ChatClient.cs">
       <SubType>Code</SubType>
     </Compile>
