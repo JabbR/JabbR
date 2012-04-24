@@ -58,8 +58,6 @@ namespace JabbR.Test
                 // TODO: find out why these don't work
                 //Assert.Equal(1, user.ConnectedClients.Count);
                 //Assert.Equal("1", user.ConnectedClients.First().Id);
-
-                chat.MockedConnection.Verify(m => m.Broadcast("Chat." + clientId, It.IsAny<object>()), Times.Once());
             }
 
             [Fact]
@@ -99,8 +97,6 @@ namespace JabbR.Test
                 Assert.Equal("1234", clientState["id"]);
                 Assert.Equal("John", clientState["name"]);
                 Assert.True(result);
-
-                chat.MockedConnection.Verify(m => m.Broadcast("Chat." + clientId, It.IsAny<object>()), Times.Once());
             }
         }
 
@@ -131,7 +127,7 @@ namespace JabbR.Test
             chat.Agent = new ClientAgent(mockedConnectionObject, "Chat");
 
             var request = new Mock<IRequest>();
-            request.Setup(m => m.Cookies).Returns(cookies);
+            //request.Setup(m => m.Cookies).Returns(cookies);
 
             // setup signal agent
             var prinicipal = new Mock<IPrincipal>();

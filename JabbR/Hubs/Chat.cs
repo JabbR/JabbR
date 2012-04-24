@@ -930,7 +930,8 @@ namespace JabbR
 
         private string GetCookieValue(string key)
         {
-            string value = Context.Cookies[key];
+            var cookie = Context.RequestCookies[key];
+            string value = cookie != null ? cookie.Value : null;
             return value != null ? HttpUtility.UrlDecode(value) : null;
         }
     }

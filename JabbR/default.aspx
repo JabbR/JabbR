@@ -288,7 +288,7 @@
     <script src="Scripts/bootstrap.min.js" type="text/javascript"></script>
     <script src="Scripts/jquery.KeyTips.js" type="text/javascript"></script>
     <script src="Scripts/jquery-ui-1.8.17.min.js" type="text/javascript"></script>
-    <script src="Scripts/jquery.signalR.js" type="text/javascript"></script>
+    <script src="Scripts/jquery.signalR-0.5pre.js" type="text/javascript"></script>
     <script src="signalr/hubs" type="text/javascript"></script>
     <script src="Scripts/modernizr.js" type="text/javascript"></script>
     <script src="Scripts/jQuery.tmpl.min.js" type="text/javascript"></script>

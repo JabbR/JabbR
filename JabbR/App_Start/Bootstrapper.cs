@@ -74,7 +74,7 @@ namespace JabbR.App_Start
 
             var resolver = new NinjectDependencyResolver(kernel);
 
-            AspNetHost.SetResolver(resolver);
+            GlobalHost.SetResolver(resolver);
 
             // Perform the required migrations
             DoMigrations();
