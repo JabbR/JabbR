@@ -127,7 +127,7 @@ namespace JabbR.Test
             chat.Agent = new ClientAgent(mockedConnectionObject, "Chat");
 
             var request = new Mock<IRequest>();
-            //request.Setup(m => m.Cookies).Returns(cookies);
+            request.Setup(m => m.Cookies).Returns(new Cookies(cookies));
 
             // setup signal agent
             var prinicipal = new Mock<IPrincipal>();
@@ -155,6 +155,31 @@ namespace JabbR.Test
                 MockSettings = mockSettings;
                 Repository = repository;
                 MockedConnection = connection;
+            }
+        }
+
+        private class Cookies : IRequestCookieCollection
+        {
+            private readonly NameValueCollection _nvc;
+            public Cookies(NameValueCollection nvc)
+            {
+                _nvc = nvc;
+            }
+
+            public int Count
+            {
+                get
+                {
+                    return _nvc.Count;
+                }
+            }
+
+            public Cookie this[string name]
+            {
+                get
+                {
+                    return new Cookie(name, _nvc[name]);
+                }
             }
         }
     }
