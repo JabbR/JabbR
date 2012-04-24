@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -16,6 +17,10 @@
     <UseIISExpress>true</UseIISExpress>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>4.0</OldToolsVersion>
+    <UpgradeBackupLocation />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -68,16 +73,17 @@
     <Reference Include="RouteMagic">
       <HintPath>..\packages\RouteMagic.1.2\lib\net40\RouteMagic.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR, Version=0.5.51.10422, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SignalR, Version=0.5.52.10424, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Server.0.5.51-pre\lib\net40\SignalR.dll</HintPath>
+      <HintPath>..\packages\SignalR.Server.0.5.52-pre\lib\net40\SignalR.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR.Hosting.AspNet, Version=0.5.51.10422, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SignalR.Hosting.AspNet, Version=0.5.52.10424, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Hosting.AspNet.0.5.51-pre\lib\net40\SignalR.Hosting.AspNet.dll</HintPath>
+      <HintPath>..\packages\SignalR.Hosting.AspNet.0.5.52-pre\lib\net40\SignalR.Hosting.AspNet.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR.Hosting.Common">
-      <HintPath>..\packages\SignalR.Hosting.Common.0.5.51-pre\lib\net40\SignalR.Hosting.Common.dll</HintPath>
+    <Reference Include="SignalR.Hosting.Common, Version=0.5.52.10424, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\SignalR.Hosting.Common.0.5.52-pre\lib\net40\SignalR.Hosting.Common.dll</HintPath>
     </Reference>
     <Reference Include="SignalR.Ninject, Version=0.5.1.10421, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -957,8 +963,13 @@
   <ItemGroup>
     <Content Include="Chat.emoji.js" />
   </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">

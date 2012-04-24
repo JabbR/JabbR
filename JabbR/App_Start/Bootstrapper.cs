@@ -71,7 +71,7 @@ namespace JabbR.App_Start
 
             var resolver = new NinjectDependencyResolver(kernel);
 
-            RouteTable.Routes.MapHubs("~/signalr", resolver);
+            RouteTable.Routes.MapHubs(resolver);
 
             // Perform the required migrations
             DoMigrations();

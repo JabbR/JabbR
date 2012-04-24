@@ -41,9 +41,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.4.5.3\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR, Version=0.5.51.10422, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SignalR, Version=0.5.52.10424, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Server.0.5.51-pre\lib\net40\SignalR.dll</HintPath>
+      <HintPath>..\packages\SignalR.Server.0.5.52-pre\lib\net40\SignalR.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
