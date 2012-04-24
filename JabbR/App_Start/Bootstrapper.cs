@@ -10,7 +10,6 @@ using System.Web.Routing;
 using Elmah;
 using JabbR.ContentProviders.Core;
 using JabbR.Handlers;
-using JabbR.Migrations;
 using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
@@ -132,7 +131,7 @@ namespace JabbR.App_Start
             }
 
             // Only run migrations for SQL server (Sql ce not supported as yet)
-            var settings = new Settings();
+            var settings = new JabbR.Models.Migrations.MigrationsConfiguration();
             var migrator = new DbMigrator(settings);
             migrator.Update();
         }

@@ -6,12 +6,12 @@ namespace JabbR.Models.Migrations
     {
         public override void Up()
         {
-            ChangeColumn("ChatUsers", "Note", c => c.String(maxLength: 200));
+            AlterColumn("ChatUsers", "Note", c => c.String(maxLength: 200));
         }
         
         public override void Down()
         {
-            ChangeColumn("ChatUsers", "Note", c => c.String());
+            AlterColumn("ChatUsers", "Note", c => c.String());
         }
     }
 }

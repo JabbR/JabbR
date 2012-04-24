@@ -7,12 +7,12 @@ namespace JabbR.Models.Migrations
         public override void Up()
         {
             AddColumn("ChatUsers", "Salt", c => c.String());
-            ChangeColumn("ChatClients", "User_Key", c => c.Int(nullable: false));
+            AlterColumn("ChatClients", "User_Key", c => c.Int(nullable: false));
         }
         
         public override void Down()
         {
-            ChangeColumn("ChatClients", "User_Key", c => c.Int());
+            AlterColumn("ChatClients", "User_Key", c => c.Int());
             DropColumn("ChatUsers", "Salt");
         }
     }

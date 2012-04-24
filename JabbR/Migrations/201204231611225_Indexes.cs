@@ -6,8 +6,8 @@ namespace JabbR.Models.Migrations
     {
         public override void Up()
         {
-            ChangeColumn("ChatUsers", "Id", c => c.String(maxLength: 200));
-            ChangeColumn("ChatRooms", "Name", c => c.String(maxLength: 200));
+            AlterColumn("ChatUsers", "Id", c => c.String(maxLength: 200));
+            AlterColumn("ChatRooms", "Name", c => c.String(maxLength: 200));
             CreateIndex("ChatUsers", "Id", unique: true);
             CreateIndex("ChatRooms", "Name", unique: true);
         }
@@ -16,8 +16,8 @@ namespace JabbR.Models.Migrations
         {
             DropIndex("ChatRooms", "Name");
             DropIndex("ChatUsers", "Id");
-            ChangeColumn("ChatUsers", "Id", c => c.String());
-            ChangeColumn("ChatRooms", "Name", c => c.String());
+            AlterColumn("ChatUsers", "Id", c => c.String());
+            AlterColumn("ChatRooms", "Name", c => c.String());
         }
     }
 }
