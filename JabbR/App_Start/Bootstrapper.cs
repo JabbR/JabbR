@@ -16,6 +16,7 @@ using JabbR.ViewModels;
 using Ninject;
 using RouteMagic;
 using SignalR;
+using SignalR.Hosting.Common;
 using SignalR.Ninject;
 
 [assembly: WebActivator.PostApplicationStartMethod(typeof(JabbR.App_Start.Bootstrapper), "PreAppStart")]
@@ -70,6 +71,9 @@ namespace JabbR.App_Start
             Kernel = kernel;
 
             var resolver = new NinjectDependencyResolver(kernel);
+
+            var host = new Host(resolver);
+            host.Configuration.KeepAlive = TimeSpan.FromMinutes(1);
 
             RouteTable.Routes.MapHubs(resolver);
 
