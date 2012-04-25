@@ -73,7 +73,7 @@ namespace JabbR.App_Start
             var resolver = new NinjectDependencyResolver(kernel);
 
             var host = new Host(resolver);
-            host.Configuration.KeepAlive = TimeSpan.FromMinutes(1);
+            host.Configuration.KeepAlive = TimeSpan.FromSeconds(30);
 
             RouteTable.Routes.MapHubs(resolver);
 
