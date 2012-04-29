@@ -128,7 +128,7 @@ namespace JabbR
                     OnRoomChanged(room);
 
                     // Add the caller to the group so they receive messages
-                    GroupManager.AddToGroup(Context.ConnectionId, room.Name).Wait();
+                    Groups.Add(Context.ConnectionId, room.Name).Wait();
                 }
             }
 
@@ -385,7 +385,7 @@ namespace JabbR
                 OnRoomChanged(room);
 
                 // Add the caller to the group so they receive messages
-                GroupManager.AddToGroup(clientId, room.Name).Wait();
+                Groups.Add(clientId, room.Name).Wait();
 
                 // Add to the list of room names
                 rooms.Add(new RoomViewModel
@@ -488,7 +488,7 @@ namespace JabbR
 
             foreach (var client in user.ConnectedClients)
             {
-                GroupManager.RemoveFromGroup(client.Id, room.Name).Wait();
+                Groups.Remove(client.Id, room.Name).Wait();
             }
 
             OnRoomChanged(room);
@@ -517,7 +517,7 @@ namespace JabbR
                 Clients[client.Id].kick(room.Name);
 
                 // Remove the user from this the room group so he doesn't get the leave message
-                GroupManager.RemoveFromGroup(client.Id, room.Name).Wait();
+                Groups.Remove(client.Id, room.Name).Wait();
             }
 
             // Tell the room the user left
@@ -561,7 +561,7 @@ namespace JabbR
             foreach (var client in user.ConnectedClients)
             {
                 // Add the caller to the group so they receive messages
-                GroupManager.AddToGroup(client.Id, room.Name).Wait();
+                Groups.Add(client.Id, room.Name).Wait();
             }
         }
 
@@ -730,7 +730,7 @@ namespace JabbR
                     Clients[client.Id].kick(room.Name);
 
                     // Remove the user from this the room group so he doesn't get the leave message
-                    GroupManager.RemoveFromGroup(client.Id, room.Name).Wait();
+                    Groups.Remove(client.Id, room.Name).Wait();
                 }
             }
 

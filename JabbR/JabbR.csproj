@@ -72,21 +72,21 @@
     <Reference Include="RouteMagic">
       <HintPath>..\packages\RouteMagic.1.2\lib\net40\RouteMagic.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR, Version=0.5.54.10424, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SignalR, Version=0.5.72.10428, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Server.0.5.54-pre\lib\net40\SignalR.dll</HintPath>
+      <HintPath>..\packages\SignalR.Server.0.5.72-pre\lib\net40\SignalR.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR.Hosting.AspNet, Version=0.5.54.10424, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SignalR.Hosting.AspNet, Version=0.5.72.10428, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Hosting.AspNet.0.5.54-pre\lib\net40\SignalR.Hosting.AspNet.dll</HintPath>
+      <HintPath>..\packages\SignalR.Hosting.AspNet.0.5.72-pre\lib\net40\SignalR.Hosting.AspNet.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR.Hosting.Common, Version=0.5.54.10424, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SignalR.Hosting.Common, Version=0.5.72.10428, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Hosting.Common.0.5.54-pre\lib\net40\SignalR.Hosting.Common.dll</HintPath>
+      <HintPath>..\packages\SignalR.Hosting.Common.0.5.72-pre\lib\net40\SignalR.Hosting.Common.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR.Ninject, Version=0.5.1.10421, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SignalR.Ninject, Version=0.5.2.10428, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Ninject.0.5.1-pre\lib\net40\SignalR.Ninject.dll</HintPath>
+      <HintPath>..\packages\SignalR.Ninject.0.5.2-pre\lib\net40\SignalR.Ninject.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />

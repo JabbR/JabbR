@@ -187,7 +187,7 @@ namespace JabbR.App_Start
         private static void MarkInactiveUsers(IJabbrRepository repo, IDependencyResolver resolver)
         {
             var connectionManager = resolver.Resolve<IConnectionManager>();
-            var clients = connectionManager.GetClients<Chat>();
+            var clients = connectionManager.GetHubContext<Chat>().Clients;
             var inactiveUsers = new List<ChatUser>();
 
             foreach (var user in repo.Users)
