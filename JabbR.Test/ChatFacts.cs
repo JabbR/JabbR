@@ -124,17 +124,17 @@ namespace JabbR.Test
             var mockedConnectionObject = chat.MockedConnection.Object;
 
             // setup client agent
-            chat.Agent = new ClientAgent(mockedConnectionObject, "Chat");
+            chat.Clients = new ClientAgent(mockedConnectionObject, "Chat");
 
             var request = new Mock<IRequest>();
             request.Setup(m => m.Cookies).Returns(new Cookies(cookies));
 
             // setup signal agent
             var prinicipal = new Mock<IPrincipal>();
-            chat.Caller = new SignalAgent(mockedConnectionObject, clientId, "Chat", clientState);
+            chat.Caller = new StatefulSignalAgent(mockedConnectionObject, clientId, "Chat", clientState);
 
             // setup context
-            chat.Context = new HubContext(new HostContext(request.Object, null, prinicipal.Object), clientId);
+            chat.Context = new HubCallerContext(new HostContext(request.Object, null, prinicipal.Object), clientId);
 
             return chat;
         }
