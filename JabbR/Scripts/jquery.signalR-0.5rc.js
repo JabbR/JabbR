@@ -1,5 +1,5 @@
 /*!
-* SignalR JavaScript Library v0.5.53-pre
+* SignalR JavaScript Library v0.5.84-rc
 * http://signalr.net/
 *
 * Copyright David Fowler and Damian Edwards 2012
@@ -138,8 +138,11 @@
             };
 
             window.setTimeout(function () {
-                $.ajax(connection.url + "/negotiate", {
+                var url = connection.url + "/negotiate";
+                $.ajax({
+                    url: url,
                     global: false,
+                    cache: false,
                     type: "GET",
                     data: {},
                     dataType: connection.ajaxDataType,
@@ -357,7 +360,8 @@
 
             var url = connection.url + "/send" + "?transport=" + connection.transport.name + "&connectionId=" + window.escape(connection.id);
             url = this.addQs(url, connection);
-            $.ajax(url, {
+            $.ajax({
+                url: url,
                 global: false,
                 type: "POST",
                 dataType: connection.ajaxDataType,
@@ -803,13 +807,11 @@
                             reconnectTimeOut = null,
                             reconnectFired = false;
 
-                        instance.pollXhr = $.ajax(url, {
+                        instance.pollXhr = $.ajax({
+                            url: url,
                             global: false,
-
                             type: "GET",
-
                             dataType: connection.ajaxDataType,
-
                             success: function (data) {
                                 var delay = 0,
                                     timedOutReceived = false;

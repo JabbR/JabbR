@@ -72,17 +72,17 @@
     <Reference Include="RouteMagic">
       <HintPath>..\packages\RouteMagic.1.2\lib\net40\RouteMagic.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR, Version=0.5.72.10428, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SignalR, Version=0.5.84.10501, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Server.0.5.72-pre\lib\net40\SignalR.dll</HintPath>
+      <HintPath>..\packages\SignalR.Server.0.5.84-rc\lib\net40\SignalR.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR.Hosting.AspNet, Version=0.5.72.10428, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SignalR.Hosting.AspNet, Version=0.5.84.10501, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Hosting.AspNet.0.5.72-pre\lib\net40\SignalR.Hosting.AspNet.dll</HintPath>
+      <HintPath>..\packages\SignalR.Hosting.AspNet.0.5.84-rc\lib\net40\SignalR.Hosting.AspNet.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR.Hosting.Common, Version=0.5.72.10428, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SignalR.Hosting.Common, Version=0.5.84.10501, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Hosting.Common.0.5.72-pre\lib\net40\SignalR.Hosting.Common.dll</HintPath>
+      <HintPath>..\packages\SignalR.Hosting.Common.0.5.84-rc\lib\net40\SignalR.Hosting.Common.dll</HintPath>
     </Reference>
     <Reference Include="SignalR.Ninject, Version=0.5.2.10428, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -742,8 +742,8 @@
     <Content Include="Scripts\jquery.livesearch.js" />
     <Content Include="Scripts\jquery.mobile-1.0rc2.js" />
     <Content Include="Scripts\jquery.mobile-1.0rc2.min.js" />
-    <Content Include="Scripts\jquery.signalR-0.5pre.js" />
-    <Content Include="Scripts\jquery.signalR-0.5pre.min.js" />
+    <Content Include="Scripts\jquery.signalR-0.5rc.js" />
+    <Content Include="Scripts\jquery.signalR-0.5rc.min.js" />
     <Content Include="Scripts\jquery.sortElements.js" />
     <Content Include="Scripts\jquery.timeago.0.10.js" />
     <Content Include="Scripts\jQuery.tmpl.js" />
