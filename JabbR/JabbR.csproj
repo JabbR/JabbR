@@ -72,9 +72,9 @@
     <Reference Include="RouteMagic">
       <HintPath>..\packages\RouteMagic.1.2\lib\net40\RouteMagic.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR, Version=0.5.84.10501, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SignalR, Version=0.5.86.10502, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Server.0.5.84-rc\lib\net40\SignalR.dll</HintPath>
+      <HintPath>..\packages\SignalR.Server.0.5.86-rc\lib\net40\SignalR.dll</HintPath>
     </Reference>
     <Reference Include="SignalR.Hosting.AspNet, Version=0.5.84.10501, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
