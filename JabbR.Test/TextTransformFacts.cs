@@ -208,6 +208,19 @@ namespace JabbR.Test
                 //assert
                 Assert.Equal("message <a rel=\"nofollow external\" target=\"_blank\" href=\"http://➡.ws/䨹\" title=\"http://➡.ws/䨹\">http://➡.ws/䨹</a> continues on", result);
             }
+
+            [Fact]
+            public void UrlWithEllipsisIsTransformed() {
+                //arrange
+                var message = "message https://github.com/NuGet/NuGetGallery/compare/345ea25491...90a05bc3e0 continues on";
+                HashSet<string> extractedUrls;
+
+                //act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                //assert
+                Assert.Equal("message <a rel=\"nofollow external\" target=\"_blank\" href=\"https://github.com/NuGet/NuGetGallery/compare/345ea25491...90a05bc3e0\" title=\"https://github.com/NuGet/NuGetGallery/compare/345ea25491...90a05bc3e0\">https://github.com/NuGet/NuGetGallery/compare/345ea25491...90a05bc3e0</a> continues on", result);
+            }
         }
     }
 }
