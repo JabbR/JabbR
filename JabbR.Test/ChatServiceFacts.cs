@@ -461,6 +461,27 @@ namespace JabbR.Test
             }
 
             [Fact]
+            public void AddsUserToRoomIfUserIsAdminAndRoomIsPrivate() {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser {
+                    Name = "foo",
+                    IsAdmin = true
+                };
+                repository.Add(user);
+                var room = new ChatRoom {
+                    Name = "Room",
+                    Private = true
+                };
+                
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                service.JoinRoom(user, room, null);
+
+                Assert.True(user.Rooms.Contains(room));
+                Assert.True(room.Users.Contains(user));
+            }
+
+            [Fact]
             public void ThrowsIfRoomIsPrivateAndNotAllowed()
             {
                 var repository = new InMemoryRepository();
@@ -479,6 +500,8 @@ namespace JabbR.Test
 
                 Assert.Throws<InvalidOperationException>(() => service.JoinRoom(user, room, null));
             }
+
+            // TODO: admin can join private room // DONE 
         }
 
         public class UpdateActivity
@@ -712,6 +735,9 @@ namespace JabbR.Test
                 Assert.True(room.Owners.Contains(user2));
                 Assert.True(user2.OwnedRooms.Contains(room));
             }
+
+            // TODO: admin can add self as owner
+            // TODO: admin can add non-owner as owner
         }
 
         public class KickUser
@@ -741,7 +767,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void ThrowsIfUserIsNotOwner()
+            public void ThrowsIfUserIsNotOwnerAndNotAdmin()
             {
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
@@ -769,6 +795,37 @@ namespace JabbR.Test
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
+            }
+
+            [Fact]
+            public void AdminCanKickUser() {
+                var repository = new InMemoryRepository();
+                var admin = new ChatUser {
+                    Name = "foo",
+                    IsAdmin = true
+                };
+
+                var user2 = new ChatUser {
+                    Name = "foo2"
+                };
+
+                repository.Add(admin);
+                repository.Add(user2);
+                var room = new ChatRoom {
+                    Name = "Room",
+                };
+
+                admin.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                room.Users.Add(admin);
+                room.Users.Add(user2);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                service.KickUser(admin, user2, room);
+
+                Assert.False(user2.Rooms.Contains(room));
+                Assert.False(room.Users.Contains(user2));
             }
 
             [Fact]
@@ -909,6 +966,47 @@ namespace JabbR.Test
                 Assert.False(user2.Rooms.Contains(room));
                 Assert.False(room.Users.Contains(user2));
             }
+
+            [Fact]
+            public void DoesNotThrowIfAdminKicksOwner()
+            {
+                var repository = new InMemoryRepository();
+                var admin = new ChatUser {
+                    Name = "foo",
+                    IsAdmin = true
+                };
+
+                var user2 = new ChatUser {
+                    Name = "foo2"
+                };
+
+                repository.Add(admin);
+                repository.Add(user2);
+                var room = new ChatRoom {
+                    Name = "Room"
+                };
+
+                user2.OwnedRooms.Add(room);
+                room.Owners.Add(user2);
+
+                admin.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                room.Users.Add(admin);
+                room.Users.Add(user2);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                service.KickUser(admin, user2, room);
+
+                Assert.False(user2.Rooms.Contains(room));
+                Assert.False(room.Users.Contains(user2));
+            }
+
+            // TODO: admin can kick user // DONE 
+            // TODO: admin can kick owner
+            // TODO: admin can kick creator
+            // TODO: owner cannot kick admin
+            // TODO: creator cannot kick admin
         }
 
         public class DisconnectClient
@@ -1006,6 +1104,30 @@ namespace JabbR.Test
                 Assert.True(room.Private);
                 Assert.True(user.AllowedRooms.Contains(room));
                 Assert.True(room.AllowedUsers.Contains(user));
+            }
+
+            [Fact]
+            public void LocksRoomIfAdmin()
+            {
+                var repository = new InMemoryRepository();
+                var admin = new ChatUser {
+                    Name = "foo",
+                    IsAdmin = true
+                };
+                repository.Add(admin);
+                var room = new ChatRoom {
+                    Name = "Room"
+                };
+                room.Users.Add(admin);
+                admin.Rooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                service.LockRoom(admin, room);
+
+                Assert.True(room.Private);
+                Assert.True(admin.AllowedRooms.Contains(room));
+                Assert.True(room.AllowedUsers.Contains(admin));
             }
 
             [Fact]
@@ -1118,6 +1240,8 @@ namespace JabbR.Test
                     Assert.False(room.AllowedUsers.Contains(u));
                 }
             }
+
+            // TODO: admin can lock room
         }
 
         public class AllowUser
@@ -1172,6 +1296,30 @@ namespace JabbR.Test
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.AllowUser(user, user, room));
+            }
+
+            [Fact]
+            public void DoesNotThrowIfUserIsAdminButIsNotOwner()
+            {
+                var repository = new InMemoryRepository();
+                var admin = new ChatUser {
+                    Name = "foo",
+                    IsAdmin = true
+                };
+                repository.Add(admin);
+                var room = new ChatRoom {
+                    Name = "Room",
+                    Private = true
+                };
+                room.Users.Add(admin);
+                admin.Rooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                service.AllowUser(admin, admin, room);
+
+                Assert.True(room.AllowedUsers.Contains(admin));
+                Assert.True(admin.AllowedRooms.Contains(room));
             }
 
             [Fact]
@@ -1236,6 +1384,8 @@ namespace JabbR.Test
                 Assert.True(room.AllowedUsers.Contains(user2));
                 Assert.True(user2.AllowedRooms.Contains(room));
             }
+
+            // TODO: admin can allow user
         }
 
         public class UnallowUser
@@ -1271,7 +1421,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void ThrowsIfUserIsCreator()
+            public void ThrowsIfTargetUserIsCreator()
             {
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
@@ -1295,6 +1445,46 @@ namespace JabbR.Test
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.UnallowUser(user, user, room));
+            }
+
+            [Fact]
+            public void AdminCanUnallowCreator()
+            {
+                var repository = new InMemoryRepository();
+                var admin = new ChatUser {
+                    Name = "foo",
+                    IsAdmin = true
+                };
+                var creator = new ChatUser {
+                    Name = "foo"
+                };
+                repository.Add(admin);
+                var room = new ChatRoom {
+                    Name = "Room",
+                    Private = true,
+                    Creator = creator
+                };
+                room.Users.Add(admin);
+                admin.Rooms.Add(room);
+
+                room.Owners.Add(admin);
+                admin.OwnedRooms.Add(room);
+                room.Owners.Add(creator);
+                creator.OwnedRooms.Add(room);
+                
+                room.AllowedUsers.Add(admin);
+                admin.AllowedRooms.Add(room);
+                room.AllowedUsers.Add(creator);
+                creator.AllowedRooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                service.UnallowUser(admin, creator, room);
+
+                Assert.False(room.Users.Contains(creator));
+                Assert.False(creator.Rooms.Contains(room));
+                Assert.False(room.AllowedUsers.Contains(creator));
+                Assert.False(creator.AllowedRooms.Contains(room));
             }
 
             [Fact]
@@ -1322,6 +1512,38 @@ namespace JabbR.Test
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.UnallowUser(user, user2, room));
+            }
+
+            [Fact]
+            public void DoesNotThrowIfUserIsAdminButIsNotOwner()
+            {
+                var repository = new InMemoryRepository();
+                var admin = new ChatUser {
+                    Name = "foo",
+                    IsAdmin = true
+                };
+                var user2 = new ChatUser {
+                    Name = "foo2"
+                };
+                repository.Add(admin);
+                repository.Add(user2);
+                var room = new ChatRoom {
+                    Name = "Room",
+                    Private = true
+                };
+                room.AllowedUsers.Add(user2);
+                room.Users.Add(admin);
+                admin.Rooms.Add(room);
+                user2.AllowedRooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                service.UnallowUser(admin, user2, room);
+
+                Assert.False(room.Users.Contains(user2));
+                Assert.False(user2.Rooms.Contains(room));
+                Assert.False(room.AllowedUsers.Contains(user2));
+                Assert.False(user2.AllowedRooms.Contains(room));
             }
 
             [Fact]
@@ -1429,6 +1651,21 @@ namespace JabbR.Test
                 Assert.False(room.AllowedUsers.Contains(user2));
                 Assert.False(user2.AllowedRooms.Contains(room));
             }
+
+            // TODO: admin can unallow user
+            // TODO: admin can unallow owner
+            // TODO: admin can unallow creator
+            // TODO: owner cannot unallow admin
+            // TODO: creator cannot unallow admin
+            // TODO: admin CAN unallow admin
         }
+
+        // TODO: new command, addadmin
+        // TODO: admin can grant admin access
+        // TODO: throws if user is not admin
+
+        // TODO: new command, removeadmin
+        // TODO: admin can revoke admin access
+        // TODO: throws if user is not admin
     }
 }
