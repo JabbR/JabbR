@@ -36,6 +36,8 @@ namespace JabbR.Models
 
         public string Email { get; set; }
 
+        public bool IsAdmin { get; set; }
+
         // List of clients that are currently connected for this user
         public virtual ICollection<ChatClient> ConnectedClients { get; set; }
         public virtual ICollection<ChatRoom> OwnedRooms { get; set; }
