@@ -564,6 +564,12 @@ namespace JabbR.Services
                 throw new InvalidOperationException(String.Format("'{0}' isn't in '{1}'.", targetUser.Name, targetRoom.Name));
             }
 
+            // only admin can kick admin
+            if (!user.IsAdmin && targetUser.IsAdmin)
+            {
+                throw new InvalidOperationException("You cannot kick an admin. Only admin can kick admin.");
+            }
+
             // If this user isn't the creator/admin AND the target user is an owner then throw
             if (targetRoom.Creator != user && targetRoom.Owners.Contains(targetUser) && !user.IsAdmin)
             {
@@ -766,6 +772,12 @@ namespace JabbR.Services
                 throw new InvalidOperationException(String.Format("{0} isn't allowed to access {1}.", targetUser.Name, targetRoom.Name));
             }
 
+            // only admin can unallow admin
+            if (!user.IsAdmin && targetUser.IsAdmin)
+            {
+                throw new InvalidOperationException("You cannot unallow an admin. Only admin can unallow admin.");
+            }
+
             // If this user isn't the creator and the target user is an owner then throw
             if (targetRoom.Creator != user && targetRoom.Owners.Contains(targetUser) && !user.IsAdmin)
             {
@@ -856,6 +868,39 @@ namespace JabbR.Services
             room.Topic = newTopic;
             _repository.CommitChanges();
         }
+
+        public void AddAdmin(ChatUser admin, ChatUser targetUser)
+        {
+            // Ensure the user is admin
+            EnsureAdmin(admin);
+
+            if (targetUser.IsAdmin)
+            {
+                // If the target user is already an admin, then throw
+                throw new InvalidOperationException(String.Format("'{0}' is already an admin.", targetUser.Name));
+            }
+
+            // Make the user an admin
+            targetUser.IsAdmin = true;
+            _repository.CommitChanges();
+        }
+
+        public void RemoveAdmin(ChatUser admin, ChatUser targetUser)
+        {
+            // Ensure the user is admin
+            EnsureAdmin(admin);
+
+            if (!targetUser.IsAdmin)
+            {
+                // If the target user is NOT an admin, then throw
+                throw new InvalidOperationException(String.Format("'{0}' is not an admin.", targetUser.Name));
+            }
+
+            // Make the user an admin
+            targetUser.IsAdmin = false;
+            _repository.CommitChanges();
+        }
+
 
         internal static void ValidateNote(string note, string noteTypeName = "note", int? maxLength = null)
         {

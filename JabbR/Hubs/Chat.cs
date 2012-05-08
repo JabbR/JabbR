@@ -894,6 +894,34 @@ namespace JabbR
             Clients[room.Name].changeTopic(roomViewModel);
         }
 
+        void INotificationService.AddAdmin(ChatUser targetUser)
+        {
+            foreach (var client in targetUser.ConnectedClients)
+            {
+                // Tell this client it's an owner
+                Clients[client.Id].makeAdmin();
+            }
+
+            var userViewModel = new UserViewModel(targetUser);
+
+            // Tell the calling client the granting of adminship was successful
+            Caller.adminMade(targetUser.Name);
+        }
+
+        void INotificationService.RemoveAdmin(ChatUser targetUser)
+        {
+            foreach (var client in targetUser.ConnectedClients)
+            {
+                // Tell this client it's no longer an owner
+                Clients[client.Id].demoteAdmin();
+            }
+
+            var userViewModel = new UserViewModel(targetUser);
+            
+            // Tell the calling client the removal of ownership was successful
+            Caller.adminRemoved(targetUser.Name);
+        }
+
         private void OnRoomChanged(ChatRoom room)
         {
             var roomViewModel = new RoomViewModel

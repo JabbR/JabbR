@@ -288,6 +288,18 @@ namespace JabbR.Commands
 
                 return true;
             }
+            else if (commandName.Equals("addadmin", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleAddAdmin(user, parts);
+
+                return true;
+            }
+            else if (commandName.Equals("removeadmin", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleRemoveAdmin(user, parts);
+
+                return true;
+            }
 
             return false;
         }
@@ -943,5 +955,42 @@ namespace JabbR.Commands
 
             _repository.CommitChanges();
         }
+
+        private void HandleAddAdmin(ChatUser user, string[] parts)
+        {
+            if (parts.Length == 1)
+            {
+                throw new InvalidOperationException("Who do you want to make an admin?");
+            }
+
+            string targetUserName = parts[1];
+
+            ChatUser targetUser = _repository.VerifyUser(targetUserName);
+            
+            _chatService.AddAdmin(user, targetUser);
+
+            _notificationService.AddAdmin(targetUser);
+
+            _repository.CommitChanges();
+        }
+
+        private void HandleRemoveAdmin(ChatUser user, string[] parts)
+        {
+            if (parts.Length == 1)
+            {
+                throw new InvalidOperationException("Which admin do you want to remove?");
+            }
+
+            string targetUserName = parts[1];
+
+            ChatUser targetUser = _repository.VerifyUser(targetUserName);
+                        
+            _chatService.RemoveAdmin(user, targetUser);
+
+            _notificationService.RemoveAdmin(targetUser);
+
+            _repository.CommitChanges();
+        }
+
     }
 }
