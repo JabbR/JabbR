@@ -11,5 +11,21 @@ namespace JabbR.Services
                 return ConfigurationManager.AppSettings["auth.apiKey"];
             }
         }
+
+        public string DefaultAdminUserName
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["defaultAdminUserName"];
+            }
+        }
+
+        public string DefaultAdminPassword
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["defaultAdminPassword"];
+            }
+        }
     }
 }

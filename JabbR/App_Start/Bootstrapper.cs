@@ -96,11 +96,12 @@ namespace JabbR.App_Start
         {
             var repository = kernel.Get<IJabbrRepository>();
             var chatService = kernel.Get<IChatService>();
+            var settings = kernel.Get<IApplicationSettings>();
 
             if (!repository.Users.Any(u => u.IsAdmin))
             {
-                string defaultAdminUserName = ConfigurationManager.AppSettings["defaultAdminUserName"];
-                string defaultAdminPassword = ConfigurationManager.AppSettings["defaultAdminPassword"];
+                string defaultAdminUserName = settings.DefaultAdminUserName;
+                string defaultAdminPassword = settings.DefaultAdminPassword;
 
                 if (String.IsNullOrWhiteSpace(defaultAdminUserName) || String.IsNullOrWhiteSpace(defaultAdminPassword))
                 {

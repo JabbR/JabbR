@@ -903,8 +903,14 @@ namespace JabbR
             }
 
             var userViewModel = new UserViewModel(targetUser);
+            
+            // Tell all users in rooms to change the gravatar
+            foreach (var room in targetUser.Rooms)
+            {
+                Clients[room.Name].addAdmin(userViewModel, room.Name);
+            }
 
-            // Tell the calling client the granting of adminship was successful
+            // Tell the calling client the granting of admin status was successful
             Caller.adminMade(targetUser.Name);
         }
 
@@ -917,8 +923,14 @@ namespace JabbR
             }
 
             var userViewModel = new UserViewModel(targetUser);
-            
-            // Tell the calling client the removal of ownership was successful
+
+            // Tell all users in rooms to change the gravatar
+            foreach (var room in targetUser.Rooms)
+            {
+                Clients[room.Name].removeAdmin(userViewModel, room.Name);
+            }
+
+            // Tell the calling client the removal of admin status was successful
             Caller.adminRemoved(targetUser.Name);
         }
 

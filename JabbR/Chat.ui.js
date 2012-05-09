@@ -1127,6 +1127,7 @@
             $user = templates.user.tmpl(userViewModel);
             $user.data('inroom', roomName);
             $user.data('owner', userViewModel.owner);
+            $user.data('admin', userViewModel.admin);
 
             room.addUser(userViewModel, $user);
             updateNote(userViewModel, $user);
@@ -1498,6 +1499,26 @@
             if ($message.hasClass('failed') === false) {
                 $message.addClass('loading');
             }
+        },
+        setRoomAdmin: function (adminName, roomName) {
+            var room = getRoomElements(roomName),
+                $user = room.getUser(adminName);
+            $user
+                .attr('data-admin', true)
+                .data('admin', true)
+                .find('.admin')
+                .text('(admin)');
+            room.updateUserStatus($user);
+        },
+        clearRoomAdmin: function (adminName, roomName) {
+            var room = getRoomElements(roomName),
+                $user = room.getUser(adminName);
+            $user
+                 .removeAttr('data-admin')
+                 .data('admin', false)
+                 .find('.admin')
+                 .text('');
+            room.updateUserStatus($user);
         }
     };
 
