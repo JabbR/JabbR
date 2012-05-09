@@ -536,8 +536,8 @@ namespace JabbR.Services
 
         public void RemoveOwner(ChatUser creator, ChatUser targetUser, ChatRoom targetRoom)
         {
-            // Ensure the user is creator of the target room
-            EnsureCreator(creator, targetRoom);
+            // must be admin OR creator
+            EnsureOwnerOrAdmin(creator, targetRoom);
 
             if (!targetRoom.Owners.Contains(targetUser))
             {
@@ -721,6 +721,14 @@ namespace JabbR.Services
             if (user != room.Creator)
             {
                 throw new InvalidOperationException("You are not the creator of " + room.Name);
+            }
+        }
+
+        private static void EnsureCreatorOrAdmin(ChatUser user, ChatRoom room)
+        {
+            if (user != room.Creator && !user.IsAdmin)
+            {
+                throw new InvalidOperationException("You are not an owner of room '" + room.Name + "'");
             }
         }
 

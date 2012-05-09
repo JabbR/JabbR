@@ -806,6 +806,75 @@ namespace JabbR.Test
                 Assert.Throws<InvalidOperationException>(() => service.RemoveOwner(user, user2, room));
             }
 
+            [Fact]
+            public void ThrowsIfActingUserIsNotCreatorOrAdmin() {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser {
+                    Name = "foo"
+                };
+
+                var user2 = new ChatUser {
+                    Name = "foo2"
+                };
+
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom {
+                    Name = "Room",
+                };
+
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+
+                room.Users.Add(user);
+                room.Users.Add(user2);
+
+                room.Owners.Add(user2);
+                user2.OwnedRooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.RemoveOwner(user, user2, room));
+            }
+
+            [Fact]
+            public void RemovesOwnerIfActingUserIsAdmin()
+            {
+                var repository = new InMemoryRepository();
+                var admin = new ChatUser
+                {
+                    Name = "foo",
+                    IsAdmin = true
+                };
+
+                var user2 = new ChatUser
+                {
+                    Name = "foo2"
+                };
+
+                repository.Add(admin);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "Room",
+                };
+
+                admin.Rooms.Add(room);
+                user2.Rooms.Add(room);
+
+                room.Users.Add(admin);
+                room.Users.Add(user2);
+
+                room.Owners.Add(user2);
+                user2.OwnedRooms.Add(room);
+
+                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+
+                service.RemoveOwner(admin, user2, room);
+
+                Assert.False(room.Owners.Contains(user2));
+                Assert.False(user2.OwnedRooms.Contains(room));
+            }
         }
 
         public class KickUser
