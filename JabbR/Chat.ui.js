@@ -1006,9 +1006,7 @@
                 $user = room.getUser(ownerName);
             $user
                 .attr('data-owner', true)
-                .data('owner', true)
-                .find('.owner')
-                .text('(owner)');
+                .data('owner', true);
             room.updateUserStatus($user);
         },
         clearRoomOwner: function (ownerName, roomName) {
@@ -1016,9 +1014,7 @@
                 $user = room.getUser(ownerName);
             $user
                  .removeAttr('data-owner')
-                 .data('owner', false)
-                 .find('.owner')
-                 .text('');
+                 .data('owner', false);
             room.updateUserStatus($user);
         },
         setActiveRoom: function (roomName) {
