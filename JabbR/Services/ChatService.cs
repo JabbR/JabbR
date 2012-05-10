@@ -728,7 +728,7 @@ namespace JabbR.Services
         {
             if (user != room.Creator && !user.IsAdmin)
             {
-                throw new InvalidOperationException("You are not an owner of room '" + room.Name + "'");
+                throw new InvalidOperationException("You are not the creator of room '" + room.Name + "'");
             }
         }
 

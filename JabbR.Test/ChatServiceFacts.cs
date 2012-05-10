@@ -829,9 +829,12 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.Users.Add(user2);
 
+                room.Owners.Add(user);
+                user.OwnedRooms.Add(room);
+
                 room.Owners.Add(user2);
                 user2.OwnedRooms.Add(room);
-
+                
                 var service = new ChatService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.RemoveOwner(user, user2, room));
