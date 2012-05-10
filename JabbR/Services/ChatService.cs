@@ -537,7 +537,7 @@ namespace JabbR.Services
         public void RemoveOwner(ChatUser creator, ChatUser targetUser, ChatRoom targetRoom)
         {
             // must be admin OR creator
-            EnsureOwnerOrAdmin(creator, targetRoom);
+            EnsureCreatorOrAdmin(creator, targetRoom);
 
             if (!targetRoom.Owners.Contains(targetUser))
             {
