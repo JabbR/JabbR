@@ -539,6 +539,9 @@ namespace JabbR.Services
             // must be admin OR creator
             EnsureCreatorOrAdmin(creator, targetRoom);
 
+            // ensure acting user is owner
+            EnsureOwnerOrAdmin(creator, targetRoom);
+
             if (!targetRoom.Owners.Contains(targetUser))
             {
                 // If the target user is not an owner, then throw
