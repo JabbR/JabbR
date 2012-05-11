@@ -106,7 +106,9 @@ namespace JabbR.App_Start
 
                 if (String.IsNullOrWhiteSpace(defaultAdminUserName) || String.IsNullOrWhiteSpace(defaultAdminPassword))
                 {
-                    throw new InvalidOperationException("You have not provided a default admin username and/or password");
+                    // No admin so no-op, will require the database flag to be set.
+                    // In the future, this should be UI driven. Defaulting to admin/admin is unsafe :).
+                    return;
                 }
 
                 ChatUser defaultAdmin = repository.GetUserByName(defaultAdminUserName);
@@ -119,14 +121,14 @@ namespace JabbR.App_Start
                 defaultAdmin.IsAdmin = true;
                 repository.CommitChanges();
             }
-            
+
         }
 
         private static void SetupRoutes(IKernel kernel)
         {
-            RouteTable.Routes.MapHttpHandler("Download", "api/v1/messages/{room}/{format}", 
+            RouteTable.Routes.MapHttpHandler("Download", "api/v1/messages/{room}/{format}",
                                              new { format = "json" },
-                                             new { }, 
+                                             new { },
                                              ctx => kernel.Get<MessagesHandler>());
         }
 
