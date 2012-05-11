@@ -4,10 +4,10 @@ using System;
 namespace JabbR.Models
 {
     public interface IJabbrRepository : IDisposable
-    {        
+    {
         IQueryable<ChatRoom> Rooms { get; }
         IQueryable<ChatUser> Users { get; }
-        
+
         IQueryable<ChatUser> SearchUsers(string name);
         IQueryable<ChatMessage> GetMessagesByRoom(string roomName);
         IQueryable<ChatMessage> GetPreviousMessages(string messageId);
@@ -15,8 +15,8 @@ namespace JabbR.Models
         ChatMessage GetMessagesById(string id);
 
         ChatUser GetUserById(string userId);
-        ChatRoom GetRoomAndRelatedByName(string roomName);
-        ChatRoom GetRoomByName(string roomName);
+        ChatRoom GetRoomByName(string roomName, bool includeUsers = false, bool includeOwners = false);
+
         ChatUser GetUserByName(string userName);
         ChatUser GetUserByClientId(string clientId);
         ChatUser GetUserByIdentity(string userIdentity);

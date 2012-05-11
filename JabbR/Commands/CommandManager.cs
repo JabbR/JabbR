@@ -624,7 +624,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("No room specified.");
             }
 
-            ChatRoom room = _repository.GetRoomAndRelatedByName(roomName);
+            ChatRoom room = _repository.GetRoomByName(roomName);
 
             if (room != null)
             {

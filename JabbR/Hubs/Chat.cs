@@ -1,9 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using JabbR.Commands;
@@ -123,9 +121,6 @@ namespace JabbR
 
                     // Tell the people in this room that you've joined
                     Clients[room.Name].addUser(userViewModel, room.Name, isOwner).Wait();
-
-                    // Update the room count
-                    OnRoomChanged(room);
 
                     // Add the caller to the group so they receive messages
                     Groups.Add(Context.ConnectionId, room.Name).Wait();
@@ -308,7 +303,7 @@ namespace JabbR
                 return null;
             }
 
-            ChatRoom room = _repository.GetRoomAndRelatedByName(roomName);
+            ChatRoom room = _repository.GetRoomByName(roomName);
 
             if (room == null)
             {
@@ -374,15 +369,14 @@ namespace JabbR
             var userViewModel = new UserViewModel(user);
             var rooms = new List<RoomViewModel>();
 
+            var ownedRooms = user.OwnedRooms.Select(r => r.Key);
+
             foreach (var room in user.Rooms)
             {
-                var isOwner = user.OwnedRooms.Contains(room);
+                var isOwner = ownedRooms.Contains(room.Key);
 
                 // Tell the people in this room that you've joined
                 Clients[room.Name].addUser(userViewModel, room.Name, isOwner).Wait();
-
-                // Update the room count
-                OnRoomChanged(room);
 
                 // Add the caller to the group so they receive messages
                 Groups.Add(clientId, room.Name).Wait();
@@ -469,8 +463,6 @@ namespace JabbR
                     var userViewModel = new UserViewModel(user);
 
                     Clients[room.Name].leave(userViewModel, room.Name).Wait();
-
-                    OnRoomChanged(room);
                 }
             }
         }
