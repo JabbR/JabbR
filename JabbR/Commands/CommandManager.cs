@@ -300,6 +300,12 @@ namespace JabbR.Commands
 
                 return true;
             }
+            else if (commandName.Equals("broadcast", StringComparison.OrdinalIgnoreCase))
+            {
+                HandleBroadcast(user, parts);
+
+                return true;
+            }
 
             return false;
         }
@@ -606,7 +612,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(messageText))
             {
-                throw new InvalidOperationException(String.Format("What did you want to say to '{0}'.", toUser.Name));
+                throw new InvalidOperationException(String.Format("What did you want to say to '{0}'?", toUser.Name));
             }
 
             HashSet<string> urls;
@@ -992,5 +998,27 @@ namespace JabbR.Commands
             _repository.CommitChanges();
         }
 
+        private void HandleBroadcast(ChatUser user, string[] parts)
+        {
+            if (!user.IsAdmin)
+            {
+                throw new InvalidOperationException("You are not an admin.");
+            }
+
+            string messageText = String.Join(" ", parts.Skip(1)).Trim();
+
+            if (String.IsNullOrEmpty(messageText))
+            {
+                throw new InvalidOperationException("What did you want to broadcast?");
+            }
+            
+            HashSet<string> urls;
+            var transform = new TextTransform(_repository);
+            messageText = transform.Parse(messageText);
+
+            messageText = TextTransform.TransformAndExtractUrls(messageText, out urls);
+
+            _notificationService.BroadcastMessage(user, messageText);
+        }
     }
 }

@@ -904,7 +904,7 @@ namespace JabbR
 
             var userViewModel = new UserViewModel(targetUser);
             
-            // Tell all users in rooms to change the gravatar
+            // Tell all users in rooms to change the admin status
             foreach (var room in targetUser.Rooms)
             {
                 Clients[room.Name].addAdmin(userViewModel, room.Name);
@@ -924,7 +924,7 @@ namespace JabbR
 
             var userViewModel = new UserViewModel(targetUser);
 
-            // Tell all users in rooms to change the gravatar
+            // Tell all users in rooms to change the admin status
             foreach (var room in targetUser.Rooms)
             {
                 Clients[room.Name].removeAdmin(userViewModel, room.Name);
@@ -932,6 +932,15 @@ namespace JabbR
 
             // Tell the calling client the removal of admin status was successful
             Caller.adminRemoved(targetUser.Name);
+        }
+
+        void INotificationService.BroadcastMessage(ChatUser user, string messageText)
+        {
+            // Tell all users in all rooms about this message
+            foreach (var room in _repository.Rooms)
+            {
+                Clients[room.Name].broadcastMessage(messageText, room.Name);
+            }
         }
 
         private void OnRoomChanged(ChatRoom room)

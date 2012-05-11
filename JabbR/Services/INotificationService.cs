@@ -51,5 +51,6 @@ namespace JabbR.Services
 
         void AddAdmin(ChatUser targetUser);
         void RemoveAdmin(ChatUser targetUser);
+        void BroadcastMessage(ChatUser user, string messageText);
     }
 }

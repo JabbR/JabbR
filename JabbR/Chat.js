@@ -703,6 +703,10 @@
         ui.addMessage('You are no longer an admin', 'notification', this.activeRoom);
     };
 
+    chat.broadcastMessage = function (message, room) {
+        ui.addMessage(message, 'notification highlight', room);
+    };
+
     $ui.bind(ui.events.typing, function () {
         // If not in a room, don't try to send typing notifications
         if (!chat.activeRoom) {
