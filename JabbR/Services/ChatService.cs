@@ -598,7 +598,7 @@ namespace JabbR.Services
         public ChatUser DisconnectClient(string clientId)
         {
             // Remove this client from the list of user's clients
-            ChatClient client = _repository.GetClientById(clientId);
+            ChatClient client = _repository.GetClientById(clientId, includeUser: true);
 
             // No client tracking this user
             if (client == null)

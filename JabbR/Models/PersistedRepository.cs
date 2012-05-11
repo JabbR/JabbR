@@ -153,7 +153,7 @@ namespace JabbR.Models
 
         public ChatUser GetUserByClientId(string clientId)
         {
-            var client = GetClientById(clientId);
+            var client = GetClientById(clientId, includeUser: true);
             if (client != null)
             {
                 return client.User;
@@ -166,9 +166,16 @@ namespace JabbR.Models
             return _db.Users.FirstOrDefault(u => u.Identity == userIdentity);
         }
 
-        public ChatClient GetClientById(string clientId)
+        public ChatClient GetClientById(string clientId, bool includeUser = false)
         {
-            return _db.Clients.Include(c => c.User).FirstOrDefault(c => c.Id == clientId);
+            IQueryable<ChatClient> clients = _db.Clients;
+
+            if (includeUser)
+            {
+                clients = clients.Include(c => c.User);
+            }
+
+            return clients.FirstOrDefault(c => c.Id == clientId);
         }
 
         public void RemoveAllClients()

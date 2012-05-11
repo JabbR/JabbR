@@ -129,7 +129,7 @@ namespace JabbR.Models
             return _users.FirstOrDefault(u => u.Identity == userIdentity);
         }
 
-        public ChatClient GetClientById(string clientId)
+        public ChatClient GetClientById(string clientId, bool includeUser = false)
         {
             return _users.SelectMany(u => u.ConnectedClients).FirstOrDefault(c => c.Id == clientId);
         }

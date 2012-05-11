@@ -21,7 +21,7 @@ namespace JabbR.Models
         ChatUser GetUserByClientId(string clientId);
         ChatUser GetUserByIdentity(string userIdentity);
 
-        ChatClient GetClientById(string clientId);
+        ChatClient GetClientById(string clientId, bool includeUser = false);
 
         void Add(ChatClient client);
         void Add(ChatMessage message);
