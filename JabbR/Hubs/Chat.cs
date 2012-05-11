@@ -308,7 +308,7 @@ namespace JabbR
                 return null;
             }
 
-            ChatRoom room = _repository.GetRoomByName(roomName);
+            ChatRoom room = _repository.GetRoomAndRelatedByName(roomName);
 
             if (room == null)
             {

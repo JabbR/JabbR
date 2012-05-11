@@ -34,7 +34,7 @@ namespace JabbR.Models
 
             roomName = ChatService.NormalizeRoomName(roomName);
 
-            ChatRoom room = repository.GetRoomByName(roomName);
+            ChatRoom room = repository.GetRoomAndRelatedByName(roomName);
 
             if (room == null)
             {

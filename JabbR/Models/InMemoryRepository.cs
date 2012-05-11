@@ -78,9 +78,14 @@ namespace JabbR.Models
             return _users.FirstOrDefault(u => u.Name != null && u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
         }
 
-        public ChatRoom GetRoomByName(string roomName)
+        public ChatRoom GetRoomAndRelatedByName(string roomName)
         {
             return _rooms.FirstOrDefault(r => r.Name != null && r.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public ChatRoom GetRoomByName(string roomName)
+        {
+            return GetRoomAndRelatedByName(roomName);
         }
 
         public IQueryable<ChatRoom> GetAllowedRooms(ChatUser user)
@@ -94,7 +99,7 @@ namespace JabbR.Models
 
         public IQueryable<ChatMessage> GetMessagesByRoom(string roomName)
         {
-            var room = GetRoomByName(roomName);
+            var room = GetRoomAndRelatedByName(roomName);
             if (room == null)
             {
                 return Enumerable.Empty<ChatMessage>().AsQueryable();

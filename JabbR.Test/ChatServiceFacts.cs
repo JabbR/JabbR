@@ -406,7 +406,7 @@ namespace JabbR.Test
 
                 Assert.NotNull(room);
                 Assert.Equal("NewRoom", room.Name);
-                Assert.Same(room, repository.GetRoomByName("NewRoom"));
+                Assert.Same(room, repository.GetRoomAndRelatedByName("NewRoom"));
                 Assert.True(room.Owners.Contains(user));
                 Assert.Same(room.Creator, user);
                 Assert.True(user.OwnedRooms.Contains(room));

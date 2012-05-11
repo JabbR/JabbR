@@ -15,6 +15,7 @@ namespace JabbR.Models
         ChatMessage GetMessagesById(string id);
 
         ChatUser GetUserById(string userId);
+        ChatRoom GetRoomAndRelatedByName(string roomName);
         ChatRoom GetRoomByName(string roomName);
         ChatUser GetUserByName(string userName);
         ChatUser GetUserByClientId(string clientId);
