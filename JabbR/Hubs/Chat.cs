@@ -279,7 +279,7 @@ namespace JabbR
                 Name = r.Name,
                 Count = r.Users.Count(u => u.Status != (int)UserStatus.Offline),
                 Private = r.Private
-            });
+            }).ToList();
 
             return rooms;
         }
