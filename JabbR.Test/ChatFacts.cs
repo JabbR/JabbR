@@ -105,7 +105,7 @@ namespace JabbR.Test
             return GetTestableChat(clientId, clientState, user, new NameValueCollection());
         }
 
-        public static TestableChat GetTestableChat(string clientId, TrackingDictionary clientState, ChatUser user, NameValueCollection cookies)
+        public static TestableChat GetTestableChat(string connectionId, TrackingDictionary clientState, ChatUser user, NameValueCollection cookies)
         {
             // setup things needed for chat
             var repository = new InMemoryRepository();
@@ -126,15 +126,18 @@ namespace JabbR.Test
             // setup client agent
             chat.Clients = new ClientAgent(mockedConnectionObject, "Chat");
 
-            var request = new Mock<IRequest>();
-            request.Setup(m => m.Cookies).Returns(new Cookies(cookies));
-
             // setup signal agent
             var prinicipal = new Mock<IPrincipal>();
-            chat.Caller = new StatefulSignalAgent(mockedConnectionObject, clientId, "Chat", clientState);
+
+            var request = new Mock<IRequest>();
+            request.Setup(m => m.Cookies).Returns(new Cookies(cookies));
+            request.Setup(m => m.User).Returns(prinicipal.Object);
+
+
+            chat.Caller = new StatefulSignalAgent(mockedConnectionObject, connectionId, "Chat", clientState);
 
             // setup context
-            chat.Context = new HubCallerContext(new HostContext(request.Object, null, prinicipal.Object), clientId);
+            chat.Context = new HubCallerContext(request.Object, connectionId);
 
             return chat;
         }
