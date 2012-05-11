@@ -126,7 +126,8 @@
             flag: user.Flag,
             country: user.Country,
             lastActive: lastActive,
-            timeAgo: $.timeago(lastActive)
+            timeAgo: $.timeago(lastActive),
+            admin: user.IsAdmin
         };
     }
 
@@ -673,6 +674,37 @@
             ui.addMessage(user + ' owns the following rooms', 'list-header');
             ui.addMessage(rooms.join(', '), 'list-item');
         }
+    };
+
+    chat.addAdmin = function (user, room) {
+        ui.setRoomAdmin(user.Name, room);
+    };
+
+    chat.removeAdmin = function (user, room) {
+        ui.clearRoomAdmin(user.Name, room);
+    };
+
+    // Called when you make someone an admin
+    chat.adminMade = function (user) {
+        ui.addMessage(user + ' is now an admin', 'notification', this.activeRoom);
+    };
+
+    chat.adminRemoved = function (user) {
+        ui.addMessage(user + ' is no longer an admin', 'notification', this.activeRoom);
+    };
+
+    // Called when you've been made an admin
+    chat.makeAdmin = function () {
+        ui.addMessage('You are now an admin', 'notification', this.activeRoom);
+    };
+
+    // Called when you've been removed as an admin
+    chat.demoteAdmin = function () {
+        ui.addMessage('You are no longer an admin', 'notification', this.activeRoom);
+    };
+
+    chat.broadcastMessage = function (message, room) {
+        ui.addMessage(message, 'notification highlight', room);
     };
 
     $ui.bind(ui.events.typing, function () {

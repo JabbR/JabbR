@@ -86,9 +86,40 @@ namespace JabbR.App_Start
 
             SetupErrorHandling();
 
+            SetupAdminUsers(kernel);
+
             ClearConnectedClients(repositoryFactory());
 
             SetupRoutes(kernel);
+        }
+
+        private static void SetupAdminUsers(IKernel kernel)
+        {
+            var repository = kernel.Get<IJabbrRepository>();
+            var chatService = kernel.Get<IChatService>();
+            var settings = kernel.Get<IApplicationSettings>();
+
+            if (!repository.Users.Any(u => u.IsAdmin))
+            {
+                string defaultAdminUserName = settings.DefaultAdminUserName;
+                string defaultAdminPassword = settings.DefaultAdminPassword;
+
+                if (String.IsNullOrWhiteSpace(defaultAdminUserName) || String.IsNullOrWhiteSpace(defaultAdminPassword))
+                {
+                    throw new InvalidOperationException("You have not provided a default admin username and/or password");
+                }
+
+                ChatUser defaultAdmin = repository.GetUserByName(defaultAdminUserName);
+
+                if (defaultAdmin == null)
+                {
+                    defaultAdmin = chatService.AddUser(defaultAdminUserName, null, null, defaultAdminPassword);
+                }
+
+                defaultAdmin.IsAdmin = true;
+                repository.CommitChanges();
+            }
+            
         }
 
         private static void SetupRoutes(IKernel kernel)

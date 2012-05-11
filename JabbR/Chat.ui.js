@@ -1006,9 +1006,7 @@
                 $user = room.getUser(ownerName);
             $user
                 .attr('data-owner', true)
-                .data('owner', true)
-                .find('.owner')
-                .text('(owner)');
+                .data('owner', true);
             room.updateUserStatus($user);
         },
         clearRoomOwner: function (ownerName, roomName) {
@@ -1016,9 +1014,7 @@
                 $user = room.getUser(ownerName);
             $user
                  .removeAttr('data-owner')
-                 .data('owner', false)
-                 .find('.owner')
-                 .text('');
+                 .data('owner', false);
             room.updateUserStatus($user);
         },
         setActiveRoom: function (roomName) {
@@ -1127,6 +1123,7 @@
             $user = templates.user.tmpl(userViewModel);
             $user.data('inroom', roomName);
             $user.data('owner', userViewModel.owner);
+            $user.data('admin', userViewModel.admin);
 
             room.addUser(userViewModel, $user);
             updateNote(userViewModel, $user);
@@ -1498,6 +1495,26 @@
             if ($message.hasClass('failed') === false) {
                 $message.addClass('loading');
             }
+        },
+        setRoomAdmin: function (adminName, roomName) {
+            var room = getRoomElements(roomName),
+                $user = room.getUser(adminName);
+            $user
+                .attr('data-admin', true)
+                .data('admin', true)
+                .find('.admin')
+                .text('(admin)');
+            room.updateUserStatus($user);
+        },
+        clearRoomAdmin: function (adminName, roomName) {
+            var room = getRoomElements(roomName),
+                $user = room.getUser(adminName);
+            $user
+                 .removeAttr('data-admin')
+                 .data('admin', false)
+                 .find('.admin')
+                 .text('');
+            room.updateUserStatus($user);
         }
     };
 

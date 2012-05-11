@@ -446,7 +446,7 @@ namespace JabbR.Services
 
         public void SetInviteCode(ChatUser user, ChatRoom room, string inviteCode)
         {
-            EnsureOwner(user, room);
+            EnsureOwnerOrAdmin(user, room);
             if (!room.Private)
             {
                 throw new InvalidOperationException("Only private rooms can have invite codes");
@@ -511,7 +511,7 @@ namespace JabbR.Services
         public void AddOwner(ChatUser ownerOrCreator, ChatUser targetUser, ChatRoom targetRoom)
         {
             // Ensure the user is owner of the target room
-            EnsureOwner(ownerOrCreator, targetRoom);
+            EnsureOwnerOrAdmin(ownerOrCreator, targetRoom);
 
             if (targetRoom.Owners.Contains(targetUser))
             {
@@ -536,8 +536,11 @@ namespace JabbR.Services
 
         public void RemoveOwner(ChatUser creator, ChatUser targetUser, ChatRoom targetRoom)
         {
-            // Ensure the user is creator of the target room
-            EnsureCreator(creator, targetRoom);
+            // must be admin OR creator
+            EnsureCreatorOrAdmin(creator, targetRoom);
+
+            // ensure acting user is owner
+            EnsureOwnerOrAdmin(creator, targetRoom);
 
             if (!targetRoom.Owners.Contains(targetUser))
             {
@@ -552,7 +555,7 @@ namespace JabbR.Services
 
         public void KickUser(ChatUser user, ChatUser targetUser, ChatRoom targetRoom)
         {
-            EnsureOwner(user, targetRoom);
+            EnsureOwnerOrAdmin(user, targetRoom);
 
             if (targetUser == user)
             {
@@ -564,10 +567,16 @@ namespace JabbR.Services
                 throw new InvalidOperationException(String.Format("'{0}' isn't in '{1}'.", targetUser.Name, targetRoom.Name));
             }
 
-            // If this user isnt' the creator and the target user is an owner then throw
-            if (targetRoom.Creator != user && targetRoom.Owners.Contains(targetUser))
+            // only admin can kick admin
+            if (!user.IsAdmin && targetUser.IsAdmin)
             {
-                throw new InvalidOperationException("Owners cannot kick other owners. Only the room creator and kick an owner.");
+                throw new InvalidOperationException("You cannot kick an admin. Only admin can kick admin.");
+            }
+
+            // If this user isn't the creator/admin AND the target user is an owner then throw
+            if (targetRoom.Creator != user && targetRoom.Owners.Contains(targetUser) && !user.IsAdmin)
+            {
+                throw new InvalidOperationException("Owners cannot kick other owners. Only the room creator can kick an owner.");
             }
 
             LeaveRoom(targetUser, targetRoom);
@@ -666,7 +675,7 @@ namespace JabbR.Services
 
         private bool IsUserAllowed(ChatRoom room, ChatUser user)
         {
-            return room.AllowedUsers.Contains(user);
+            return room.AllowedUsers.Contains(user) || user.IsAdmin;
         }
 
         private static void ValidatePassword(string password)
@@ -687,6 +696,21 @@ namespace JabbR.Services
             return !String.IsNullOrEmpty(name) && Regex.IsMatch(name, "^[\\w-_]{1,30}$");
         }
 
+        private static void EnsureAdmin(ChatUser user)
+        {
+            if (!user.IsAdmin) {
+                throw new InvalidOperationException("You are not an admin");
+            }
+        }
+
+        private static void EnsureOwnerOrAdmin(ChatUser user, ChatRoom room)
+        {
+            if (!room.Owners.Contains(user) && !user.IsAdmin)
+            {
+                throw new InvalidOperationException("You are not an owner of room '" + room.Name + "'");
+            }
+        }
+
         private static void EnsureOwner(ChatUser user, ChatRoom room)
         {
             if (!room.Owners.Contains(user))
@@ -703,6 +727,14 @@ namespace JabbR.Services
             }
         }
 
+        private static void EnsureCreatorOrAdmin(ChatUser user, ChatRoom room)
+        {
+            if (user != room.Creator && !user.IsAdmin)
+            {
+                throw new InvalidOperationException("You are not the creator of room '" + room.Name + "'");
+            }
+        }
+
         private void EnsureSaltedPassword(ChatUser user, string password)
         {
             if (String.IsNullOrEmpty(user.Salt))
@@ -714,7 +746,7 @@ namespace JabbR.Services
 
         public void AllowUser(ChatUser user, ChatUser targetUser, ChatRoom targetRoom)
         {
-            EnsureOwner(user, targetRoom);
+            EnsureOwnerOrAdmin(user, targetRoom);
 
             if (!targetRoom.Private)
             {
@@ -734,7 +766,7 @@ namespace JabbR.Services
 
         public void UnallowUser(ChatUser user, ChatUser targetUser, ChatRoom targetRoom)
         {
-            EnsureOwner(user, targetRoom);
+            EnsureOwnerOrAdmin(user, targetRoom);
 
             if (targetUser == user)
             {
@@ -751,10 +783,16 @@ namespace JabbR.Services
                 throw new InvalidOperationException(String.Format("{0} isn't allowed to access {1}.", targetUser.Name, targetRoom.Name));
             }
 
-            // If this user isn't the creator and the target user is an owner then throw
-            if (targetRoom.Creator != user && targetRoom.Owners.Contains(targetUser))
+            // only admin can unallow admin
+            if (!user.IsAdmin && targetUser.IsAdmin)
             {
-                throw new InvalidOperationException("Owners cannot unallow other owners. Only the room creator and unallow an owner.");
+                throw new InvalidOperationException("You cannot unallow an admin. Only admin can unallow admin.");
+            }
+
+            // If this user isn't the creator and the target user is an owner then throw
+            if (targetRoom.Creator != user && targetRoom.Owners.Contains(targetUser) && !user.IsAdmin)
+            {
+                throw new InvalidOperationException("Owners cannot unallow other owners. Only the room creator can unallow an owner.");
             }
 
             targetRoom.AllowedUsers.Remove(targetUser);
@@ -768,7 +806,7 @@ namespace JabbR.Services
 
         public void LockRoom(ChatUser user, ChatRoom targetRoom)
         {
-            EnsureOwner(user, targetRoom);
+            EnsureOwnerOrAdmin(user, targetRoom);
 
             if (targetRoom.Private)
             {
@@ -796,7 +834,7 @@ namespace JabbR.Services
 
         public void CloseRoom(ChatUser user, ChatRoom targetRoom)
         {
-            EnsureOwner(user, targetRoom);
+            EnsureOwnerOrAdmin(user, targetRoom);
 
             if (targetRoom.Closed)
             {
@@ -823,7 +861,7 @@ namespace JabbR.Services
 
         public void OpenRoom(ChatUser user, ChatRoom targetRoom)
         {
-            EnsureOwner(user, targetRoom);
+            EnsureOwnerOrAdmin(user, targetRoom);
 
             if (!targetRoom.Closed)
             {
@@ -837,10 +875,43 @@ namespace JabbR.Services
 
         public void ChangeTopic(ChatUser user, ChatRoom room, string newTopic)
         {
-            EnsureOwner(user, room);
+            EnsureOwnerOrAdmin(user, room);
             room.Topic = newTopic;
             _repository.CommitChanges();
         }
+
+        public void AddAdmin(ChatUser admin, ChatUser targetUser)
+        {
+            // Ensure the user is admin
+            EnsureAdmin(admin);
+
+            if (targetUser.IsAdmin)
+            {
+                // If the target user is already an admin, then throw
+                throw new InvalidOperationException(String.Format("'{0}' is already an admin.", targetUser.Name));
+            }
+
+            // Make the user an admin
+            targetUser.IsAdmin = true;
+            _repository.CommitChanges();
+        }
+
+        public void RemoveAdmin(ChatUser admin, ChatUser targetUser)
+        {
+            // Ensure the user is admin
+            EnsureAdmin(admin);
+
+            if (!targetUser.IsAdmin)
+            {
+                // If the target user is NOT an admin, then throw
+                throw new InvalidOperationException(String.Format("'{0}' is not an admin.", targetUser.Name));
+            }
+
+            // Make the user an admin
+            targetUser.IsAdmin = false;
+            _repository.CommitChanges();
+        }
+
 
         internal static void ValidateNote(string note, string noteTypeName = "note", int? maxLength = null)
         {

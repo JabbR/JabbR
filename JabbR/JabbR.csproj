@@ -881,6 +881,10 @@
     <Compile Include="Migrations\201204241402266_UpgradeToEF431.Designer.cs">
       <DependentUpon>201204241402266_UpgradeToEF431.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201205081819121_AdminUser.cs" />
+    <Compile Include="Migrations\201205081819121_AdminUser.Designer.cs">
+      <DependentUpon>201205081819121_AdminUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ChatClient.cs">
       <SubType>Code</SubType>
     </Compile>

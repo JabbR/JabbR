@@ -108,7 +108,7 @@
             <img class="gravatar" src="http://www.gravatar.com/avatar/${hash}?s=16&d=mm" />
             <div class="details">
                 <span class="name">${name}</span>
-                <span class="owner">{{if owner}}(owner){{/if}}</span>
+                <span class="admin">{{if admin}}(admin){{/if}}</span>
                 <span class="note{{if noteClass}} ${noteClass}{{/if}}" {{if note}}title="${note}"{{/if}}></span>
                 <span class="flag{{if flagClass}} ${flagClass}{{/if}}" {{if flag}}title="${country}"{{/if}}></span>
             </div>
