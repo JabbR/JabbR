@@ -10,6 +10,7 @@ using System.Web.Routing;
 using Elmah;
 using JabbR.ContentProviders.Core;
 using JabbR.Handlers;
+using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
@@ -66,6 +67,10 @@ namespace JabbR.App_Start
 
             kernel.Bind<IApplicationSettings>()
                   .To<ApplicationSettings>()
+                  .InSingletonScope();
+
+            kernel.Bind<IJavaScriptMinifier>()
+                  .To<AjaxMinMinifier>()
                   .InSingletonScope();
 
             Kernel = kernel;

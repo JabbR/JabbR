@@ -841,6 +841,7 @@
     <Compile Include="ContentProviders\TweetContentProvider.cs" />
     <Compile Include="ContentProviders\ImageContentProvider.cs" />
     <Compile Include="ContentProviders\YoutubeContentProvider.cs" />
+    <Compile Include="Infrastructure\AjaxMinMinifier.cs" />
     <Compile Include="Infrastructure\Http.cs" />
     <Compile Include="Infrastructure\RandomUtils.cs" />
     <Compile Include="Infrastructure\RegexExtensions.cs" />
