@@ -91,42 +91,9 @@ namespace JabbR.App_Start
 
             SetupErrorHandling();
 
-            SetupAdminUsers(kernel);
-
             ClearConnectedClients(repositoryFactory());
 
             SetupRoutes(kernel);
-        }
-
-        private static void SetupAdminUsers(IKernel kernel)
-        {
-            var repository = kernel.Get<IJabbrRepository>();
-            var chatService = kernel.Get<IChatService>();
-            var settings = kernel.Get<IApplicationSettings>();
-
-            if (!repository.Users.Any(u => u.IsAdmin))
-            {
-                string defaultAdminUserName = settings.DefaultAdminUserName;
-                string defaultAdminPassword = settings.DefaultAdminPassword;
-
-                if (String.IsNullOrWhiteSpace(defaultAdminUserName) || String.IsNullOrWhiteSpace(defaultAdminPassword))
-                {
-                    // No admin so no-op, will require the database flag to be set.
-                    // In the future, this should be UI driven. Defaulting to admin/admin is unsafe :).
-                    return;
-                }
-
-                ChatUser defaultAdmin = repository.GetUserByName(defaultAdminUserName);
-
-                if (defaultAdmin == null)
-                {
-                    defaultAdmin = chatService.AddUser(defaultAdminUserName, null, null, defaultAdminPassword);
-                }
-
-                defaultAdmin.IsAdmin = true;
-                repository.CommitChanges();
-            }
-
         }
 
         private static void SetupRoutes(IKernel kernel)
