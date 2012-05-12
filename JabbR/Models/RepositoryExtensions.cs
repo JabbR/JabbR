@@ -25,7 +25,7 @@ namespace JabbR.Models
                    select r;
         }
 
-        public static ChatRoom VerifyUserRoom(this IJabbrRepository repository, ChatUser user, string roomName, bool includeUsers = false, bool includeOwners = false)
+        public static ChatRoom VerifyUserRoom(this IJabbrRepository repository, ChatUser user, string roomName)
         {
             if (String.IsNullOrEmpty(roomName))
             {
@@ -34,7 +34,7 @@ namespace JabbR.Models
 
             roomName = ChatService.NormalizeRoomName(roomName);
 
-            ChatRoom room = repository.GetRoomByName(roomName, includeUsers, includeOwners);
+            ChatRoom room = repository.GetRoomByName(roomName);
 
             if (room == null)
             {
