@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
@@ -321,7 +322,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which room do you want to open?");
             }
 
-            string roomName = parts[1];
+            string roomName = HttpUtility.HtmlDecode(parts[1]);
             ChatRoom room = _repository.VerifyRoom(roomName, mustBeOpen: false);
 
             _chatService.OpenRoom(user, room);
@@ -359,7 +360,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which user to you want to revoke persmissions from?");
             }
 
-            string targetUserName = parts[1];
+            string targetUserName = HttpUtility.HtmlDecode(parts[1]);
 
             ChatUser targetUser = _repository.VerifyUser(targetUserName);
 
@@ -368,7 +369,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which room?");
             }
 
-            string roomName = parts[2];
+            string roomName = HttpUtility.HtmlDecode(parts[2]);
             ChatRoom targetRoom = _repository.VerifyRoom(roomName);
 
             _chatService.UnallowUser(user, targetUser, targetRoom);
@@ -385,7 +386,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Who do you want to allow?");
             }
 
-            string targetUserName = parts[1];
+            string targetUserName = HttpUtility.HtmlDecode(parts[1]);
 
             ChatUser targetUser = _repository.VerifyUser(targetUserName);
 
@@ -394,7 +395,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which room?");
             }
 
-            string roomName = parts[2];
+            string roomName = HttpUtility.HtmlDecode(parts[2]);
             ChatRoom targetRoom = _repository.VerifyRoom(roomName);
 
             _chatService.AllowUser(user, targetUser, targetRoom);
@@ -411,7 +412,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Who do you want to make an owner?");
             }
 
-            string targetUserName = parts[1];
+            string targetUserName = HttpUtility.HtmlDecode(parts[1]);
 
             ChatUser targetUser = _repository.VerifyUser(targetUserName);
 
@@ -420,7 +421,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which room?");
             }
 
-            string roomName = parts[2];
+            string roomName = HttpUtility.HtmlDecode(parts[2]);
             ChatRoom targetRoom = _repository.VerifyRoom(roomName);
 
             _chatService.AddOwner(user, targetUser, targetRoom);
@@ -437,7 +438,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which owner do you want to remove?");
             }
 
-            string targetUserName = parts[1];
+            string targetUserName = HttpUtility.HtmlDecode(parts[1]);
 
             ChatUser targetUser = _repository.VerifyUser(targetUserName);
 
@@ -446,7 +447,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which room?");
             }
 
-            string roomName = parts[2];
+            string roomName = HttpUtility.HtmlDecode(parts[2]);
             ChatRoom targetRoom = _repository.VerifyRoom(roomName);
 
             _chatService.RemoveOwner(user, targetUser, targetRoom);
@@ -468,7 +469,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("You're the only person in here...");
             }
 
-            string targetUserName = parts[1];
+            string targetUserName = HttpUtility.HtmlDecode(parts[1]);
 
             ChatUser targetUser = _repository.VerifyUser(targetUserName);
 
@@ -486,7 +487,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which room do you want to lock?");
             }
 
-            string roomName = parts[1];
+            string roomName = HttpUtility.HtmlDecode(parts[1]);
             ChatRoom room = _repository.VerifyRoom(roomName);
 
             _chatService.LockRoom(user, room);
@@ -501,7 +502,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which room do you want to close?");
             }
 
-            string roomName = parts[1];
+            string roomName = HttpUtility.HtmlDecode(parts[1]);
             ChatRoom room = _repository.VerifyRoom(roomName);
 
             // Before I close the room, I need to grab a copy of -all- the users in that room.
@@ -520,7 +521,9 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Who are you trying to locate?");
             }
 
-            ChatUser user = _repository.VerifyUser(parts[1]);
+            string targetUserName = HttpUtility.HtmlDecode(parts[1]);
+
+            ChatUser user = _repository.VerifyUser(targetUserName);
             _notificationService.ListRooms(user);
         }
 
@@ -551,7 +554,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("List users in which room?");
             }
 
-            string roomName = parts[1];
+            string roomName = HttpUtility.HtmlDecode(parts[1]);
             ChatRoom room = _repository.VerifyRoom(roomName);
 
             var names = room.Users.Online().Select(s => s.Name);
@@ -566,7 +569,7 @@ namespace JabbR.Commands
 
         private void HandleLeave(ChatUser user, string[] parts)
         {
-            string roomName = parts[1];
+            string roomName = HttpUtility.HtmlDecode(parts[1]);
             ChatRoom room = _repository.VerifyRoom(roomName);
 
             HandleLeave(room, user);
@@ -604,7 +607,7 @@ namespace JabbR.Commands
             {
                 throw new InvalidOperationException("Who are you trying send a private message to?");
             }
-            var toUserName = parts[1];
+            var toUserName = HttpUtility.HtmlDecode(parts[1]);
             ChatUser toUser = _repository.VerifyUser(toUserName);
 
             if (toUser == user)
@@ -640,7 +643,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("No room specified.");
             }
 
-            string roomName = parts[1];
+            string roomName = HttpUtility.HtmlDecode(parts[1]);
             if (String.IsNullOrWhiteSpace(roomName))
             {
                 throw new InvalidOperationException("No room specified.");
@@ -671,7 +674,7 @@ namespace JabbR.Commands
             }
 
             // Extract arguments
-            string roomName = parts[1];
+            string roomName = HttpUtility.HtmlDecode(parts[1]);
             string inviteCode = null;
             if (parts.Length > 2)
             {
@@ -742,7 +745,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("No nick specified!");
             }
 
-            string userName = parts[1];
+            string userName = HttpUtility.HtmlDecode(parts[1]);
             if (String.IsNullOrWhiteSpace(userName))
             {
                 throw new InvalidOperationException("No nick specified!");
@@ -850,7 +853,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Who do you want to invite?");
             }
 
-            string targetUserName = parts[1];
+            string targetUserName = HttpUtility.HtmlDecode(parts[1]);
 
             ChatUser targetUser = _repository.VerifyUser(targetUserName);
 
@@ -864,7 +867,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Invite them to which room?");
             }
 
-            string roomName = parts[2];
+            string roomName = HttpUtility.HtmlDecode(parts[2]);
             ChatRoom targetRoom = _repository.VerifyRoom(roomName);
 
             _notificationService.Invite(user, targetUser, targetRoom);
@@ -877,7 +880,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("You're the only person in here...");
             }
 
-            var toUserName = parts[1];
+            var toUserName = HttpUtility.HtmlDecode(parts[1]);
 
             ChatUser toUser = _repository.VerifyUser(toUserName);
 
@@ -973,7 +976,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Who do you want to make an admin?");
             }
 
-            string targetUserName = parts[1];
+            string targetUserName = HttpUtility.HtmlDecode(parts[1]);
 
             ChatUser targetUser = _repository.VerifyUser(targetUserName);
 
@@ -991,7 +994,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which admin do you want to remove?");
             }
 
-            string targetUserName = parts[1];
+            string targetUserName = HttpUtility.HtmlDecode(parts[1]);
 
             ChatUser targetUser = _repository.VerifyUser(targetUserName);
 
