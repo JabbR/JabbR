@@ -74,13 +74,13 @@ namespace JabbR
             {
                 return false;
             }
-            
-            OnUserInitialize(clientState, user);
 
             // Update some user values
             _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
             _repository.CommitChanges();
-
+            
+            OnUserInitialize(clientState, user);
+            
             return true;
         }
 
@@ -174,6 +174,10 @@ namespace JabbR
             ChatUser user = _repository.VerifyUserId(id);
             ChatRoom room = _repository.VerifyUserRoom(user, message.Room);
 
+            // Update activity *after* ensuring the user, this forces them to be active
+            UpdateActivity(user, room);
+
+
             HashSet<string> links;
             var messageText = ParseChatMessageText(message.Content, out links);
 
@@ -190,9 +194,6 @@ namespace JabbR
             // Update the id on the message
             chatMessage.Id = Guid.NewGuid().ToString("d");
             _repository.CommitChanges();
-
-            // Update activity *after* ensuring the user, this forces them to be active
-            UpdateActivity(user, room);
 
             if (!links.Any())
             {
@@ -354,10 +355,10 @@ namespace JabbR
 
             ChatRoom room = _repository.VerifyUserRoom(user, roomName);
 
+            UpdateActivity(user, room);
+
             var userViewModel = new UserViewModel(user);
             Clients[room.Name].setTyping(userViewModel, room.Name);
-
-            UpdateActivity(user, room);
         }
 
         private void LogOn(ChatUser user, string clientId)
