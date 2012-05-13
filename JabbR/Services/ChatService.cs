@@ -444,6 +444,9 @@ namespace JabbR.Services
 
             // Add this user to the list of room's users
             room.Users.Add(user);
+
+            // Clear the cache
+            _cache.RemoveUserInRoom(user, room);
         }
 
         public void SetInviteCode(ChatUser user, ChatRoom room, string inviteCode)
@@ -479,7 +482,7 @@ namespace JabbR.Services
         public void LeaveRoom(ChatUser user, ChatRoom room)
         {
             // Update the cache
-            _cache.SetUserInRoom(user, room, false);
+            _cache.RemoveUserInRoom(user, room);
 
             // Remove the user from the room
             room.Users.Remove(user);
