@@ -122,12 +122,10 @@ namespace JabbR.App_Start
         {
             try
             {
-                foreach (var u in repository.Users)
+                var afkUsers = repository.Users.Online().Where(u => u.IsAfk);
+                foreach (var u in afkUsers)
                 {
-                    if (u.IsAfk)
-                    {
-                        u.Status = (int)UserStatus.Offline;
-                    }
+                    u.Status = (int)UserStatus.Offline;
                 }
 
                 repository.RemoveAllClients();
