@@ -41,7 +41,7 @@ namespace JabbR.Models
                 throw new InvalidOperationException(String.Format("You're in '{0}' but it doesn't exist.", roomName));
             }
 
-            if (!room.Users.Any(u => u.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase)))
+            if (!repository.IsUserInRoom(room, user))
             {
                 throw new InvalidOperationException(String.Format("You're not in '{0}'. Use '/join {0}' to join it.", roomName));
             }

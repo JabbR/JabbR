@@ -185,5 +185,10 @@ namespace JabbR.Models
                 _db.Clients.Remove(c);
             }
         }
+
+        public bool IsUserInRoom(ChatRoom room, ChatUser user)
+        {
+            return user.Rooms.Contains(room);
+        }
     }
 }

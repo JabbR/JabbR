@@ -562,7 +562,7 @@ namespace JabbR.Services
                 throw new InvalidOperationException("Why would you want to kick yourself?");
             }
 
-            if (!IsUserInRoom(targetRoom, targetUser))
+            if (!_repository.IsUserInRoom(targetRoom, targetUser))
             {
                 throw new InvalidOperationException(String.Format("'{0}' isn't in '{1}'.", targetUser.Name, targetRoom.Name));
             }
@@ -667,12 +667,7 @@ namespace JabbR.Services
         {
             throw new InvalidOperationException("A password is required.");
         }
-
-        internal static bool IsUserInRoom(ChatRoom room, ChatUser user)
-        {
-            return room.Users.Any(r => r.Name.Equals(user.Name, StringComparison.OrdinalIgnoreCase));
-        }
-
+        
         private bool IsUserAllowed(ChatRoom room, ChatUser user)
         {
             return room.AllowedUsers.Contains(user) || user.IsAdmin;
