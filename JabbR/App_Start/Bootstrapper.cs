@@ -195,15 +195,9 @@ namespace JabbR.App_Start
             var clients = connectionManager.GetHubContext<Chat>().Clients;
             var inactiveUsers = new List<ChatUser>();
 
-            foreach (var user in repo.Users)
+            foreach (var user in repo.Users.Online())
             {
                 var status = (UserStatus)user.Status;
-                if (status == UserStatus.Offline)
-                {
-                    // Skip offline users
-                    continue;
-                }
-
                 var elapsed = DateTime.UtcNow - user.LastActivity;
 
                 if (!user.IsAfk && elapsed.TotalMinutes > 30)
