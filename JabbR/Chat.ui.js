@@ -689,7 +689,10 @@
         var room = getRoomElements(roomViewModel.Name);
         var topic = roomViewModel.Topic;
         var topicHtml = topic === '' ? 'You\'re chatting in ' + roomViewModel.Name : '<strong>Topic: </strong>' + topic;
-        room.roomTopic.html(topicHtml);
+        var roomTopic = room.roomTopic;
+        roomTopic.hide();
+        roomTopic.html(topicHtml);
+        roomTopic.slideDown('slow');
     }
 
     // Rotating Tips.
