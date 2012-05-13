@@ -14,6 +14,7 @@ using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
+using Newtonsoft.Json;
 using Ninject;
 using RouteMagic;
 using SignalR;
@@ -76,6 +77,15 @@ namespace JabbR.App_Start
             kernel.Bind<ICache>()
                   .To<AspNetCache>()
                   .InSingletonScope();
+
+            var serializer = new JsonNetSerializer(new JsonSerializerSettings
+            {
+                DateFormatHandling = DateFormatHandling.MicrosoftDateFormat
+            });
+
+            kernel.Bind<IJsonSerializer>()
+                  .ToConstant(serializer);
+
 
             Kernel = kernel;
 
