@@ -128,7 +128,7 @@
         </div>
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">
-        <li id="tabs-${id}" class="room" data-name="${name}">
+        <li id="tabs-${id}" class="room" data-name="${name}" role="tab">
             <span class="lock"></span>
             <button> 
                 <span class="content">${name}</span>
@@ -191,101 +191,111 @@
     <!-- /Github Issus Content Provider -->
 </head>
 <body>
-    <div id="page">
-        <div id="disconnect-dialog" class="modal hide fade">
-            <div class="modal-header">
-              <a class="close" data-dismiss="modal" >&times;</a>
-              <div class="jabbrLogo" id="logo"></div><h3>JabbR Error</h3>
-            </div>
-            <div class="modal-body">
-              <p>There was an error contacting the server, please refresh in a few minutes.</p>
-            </div>
+  <section id="page" role="application">
+    <header id="heading" role="heading">
+      <div class="banner" role="banner">
+        <h1>Jabb</h1>
+        <div class="jabbrLogo" id="logo"></div>
+        <div>
+          Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a>
         </div>
-
-        <div id="download-dialog" class="modal hide fade">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">&times;</a>
-                <h3>Download Messages</h3>
-            </div>
-            <div class="modal-body">
-                <p>Select date range for messages:</p>
-                <p>
-                    <select id="download-range">
-                        <option value="last-hour">Last hour</option>
-                        <option value="last-day">Last day</option>
-                        <option value="last-week">Last week</option>
-                        <option value="last-month">Last month</option>
-                        <option value="all">All</option>
-                    </select>
-                </p>
-            </div>
-            <div class="modal-footer">
-                <a href="#" class="btn btn-primary" id="download-dialog-button">Download</a>
-            </div>
-        </div>
-        <div id="jabbr-update" class="modal hide fade">
-            <div class="modal-header">
-              <a class="close" data-dismiss="modal" >&times;</a>
-              <div class="jabbrLogo" id="logo"></div><h3>JabbR Update</h3>
-            </div>
-            <div class="modal-body">
-              <p>Refresh your browser to get the latest. Auto update will take place in 15 seconds.</p>
-            </div>
-          </div>
-
-        <a href="https://github.com/davidfowl/JabbR" class="forkme" target="_blank">
+      </div>
+      <a href="https://github.com/davidfowl/JabbR" class="forkme" target="_blank">
         </a>
-        <div id="heading">
-            <div class="banner">
-                <h1>
-                    Jabb</h1>
-                <div class="jabbrLogo" id="logo"></div>
-                <div>
-                    Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a></div>
-            </div>
-            <div style="clear: both">
-            </div>
-            <ul id="tabs">
-                <li id="tabs-lobby" class="current lobby" data-name="Lobby">
-                    <button accesskey="l">
-                        <span class="content">Lobby</span></button>
-                </li>
-            </ul>
-        </div>
-        <div id="jabbr-login" class="modal hide fade">
-            <div class="modal-header">
-                <a class="close" data-dismiss="modal">&times;</a>
-                <h3>JabbR Login</h3>
-            </div>
-            <div class="modal-body">
-                <div id="janrainEngageEmbed">
-                </div>
-            </div>
-        </div>
-        <div id="chat-area">
-            <ul id="messages-lobby" class="messages current">
-            </ul>
-            <form id="users-filter-form" action="#">
-                <input id="users-filter" class="filter" type="text" />
-            </form>
-            <ul id="userlist-lobby" class="users current">
-            </ul>
-            <div id="preferences">
-                <a class="sound" title="audible notifications"></a>
-                <a class="toast" title="popup notifications"></a>
-                <a class="download" title="download messages"></a>
-            </div>
-            <form id="send-message" action="#">
-            <div id="message-box">
-                <textarea id="new-message" autocomplete="off" accesskey="m"></textarea>
-            </div>
-            <input type="submit" id="send" value="Send" class="send" />
-            <div id="message-instruction">Type @ then press TAB to auto-complete nicknames</div>
-            </form>
-        </div>
-        <audio src="Content/sounds/notification.wav" id="noftificationSound" hidden="hidden" />
-
+          <div style="clear: both">
     </div>
+    <nav>
+      <ul id="tabs" role="tablist">
+        <li id="tabs-lobby" class="current lobby" data-name="Lobby" role="tab">
+          <button accesskey="l">
+            <span class="content">Lobby</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+    </header>
+    <div id="chat-area" role="tabpanel">
+      <ul id="messages-lobby" class="messages current" role="log">
+      </ul>
+      <form id="users-filter-form" action="#">
+      <input id="users-filter" class="filter" type="text" />
+      </form>
+      <ul id="userlist-lobby" class="users current">
+      </ul>
+      <div id="preferences">
+        <a class="sound" title="audible notifications"></a><a class="toast" title="popup notifications" aria-haspopup="true">
+        </a><a class="download" title="download messages"></a>
+      </div>
+      <form id="send-message" action="#">
+      <div id="message-box">
+        <textarea id="new-message" autocomplete="off" aria-autocomplete="none" accesskey="m"></textarea>
+      </div>
+      <input type="submit" id="send" value="Send" class="send" />
+      <div id="message-instruction">
+        Type @ then press TAB to auto-complete nicknames
+      </div>
+      </form>
+    </div>
+    <audio src="Content/sounds/notification.wav" id="noftificationSound" hidden="hidden" aria-hidden="true">
+    </audio>
+    <section aria-hidden="true" aria-haspopup="true">
+      <div id="disconnect-dialog" class="modal hide fade">
+        <div class="modal-header">
+          <a class="close" data-dismiss="modal">&times;</a>
+          <div class="jabbrLogo" id="logo"></div><h3>JabbR Error</h3>
+        </div>
+        <div class="modal-body">
+          <p>
+            There was an error contacting the server, please refresh in a few minutes.
+          </p>
+        </div>
+      </div>
+      <div id="download-dialog" class="modal hide fade">
+        <div class="modal-header">
+          <a class="close" data-dismiss="modal">&times;</a>
+          <h3>Download Messages</h3>
+        </div>
+        <div class="modal-body">
+          <p>
+            Select date range for messages:
+          </p>
+          <p>
+            <select id="download-range">
+              <option value="last-hour">Last hour</option>
+              <option value="last-day">Last day</option>
+              <option value="last-week">Last week</option>
+              <option value="last-month">Last month</option>
+              <option value="all">All</option>
+            </select>
+          </p>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn btn-primary" id="download-dialog-button">Download</a>
+        </div>
+      </div>
+      <div id="jabbr-update" class="modal hide fade">
+        <div class="modal-header">
+          <a class="close" data-dismiss="modal">&times;</a>
+          <div class="jabbrLogo" id="logo"></div><h3>JabbR Update</h3>
+        </div>
+        <div class="modal-body">
+          <p>
+            Refresh your browser to get the latest. Auto update will take place in 15 seconds.
+          </p>
+        </div>
+      </div>
+      <div id="jabbr-login" class="modal hide fade">
+        <div class="modal-header">
+          <a class="close" data-dismiss="modal">&times;</a>
+          <h3>JabbR Login</h3>
+        </div>
+        <div class="modal-body">
+          <div id="janrainEngageEmbed">
+          </div>
+        </div>
+      </div>
+    </section>
+  </section> 
   <%= Bundle.JavaScript()
             .Add("~/Scripts/jquery-1.7.min.js",
             "~/Scripts/json2.min.js",
