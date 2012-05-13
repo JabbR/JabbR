@@ -791,6 +791,7 @@
     });
 
     $ui.bind(ui.events.focusit, function () {
+        isUnreadMessageForUser = false;
         focus = true;
         unread = 0;
         updateTitle();
