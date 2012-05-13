@@ -23,6 +23,9 @@ namespace JabbR
         private readonly IResourceProcessor _resourceProcessor;
         private readonly IApplicationSettings _settings;
 
+        private static readonly Version _version = typeof(Chat).Assembly.GetName().Version;
+        private static readonly string _versionString = _version.ToString();
+
         public Chat(IApplicationSettings settings, IResourceProcessor resourceProcessor, IChatService service, IJabbrRepository repository, ICache cache)
         {
             _settings = settings;
@@ -50,7 +53,7 @@ namespace JabbR
             {
                 string version = Caller.version;
                 return String.IsNullOrEmpty(version) ||
-                        new Version(version) != typeof(Chat).Assembly.GetName().Version;
+                        new Version(version) != _version;
             }
         }
 
@@ -89,7 +92,7 @@ namespace JabbR
         private void SetVersion()
         {
             // Set the version on the client
-            Caller.version = typeof(Chat).Assembly.GetName().Version.ToString();
+            Caller.version = _versionString;
         }
 
         public bool CheckStatus()
@@ -320,7 +323,7 @@ namespace JabbR
 
             // Reverse them since we want to get them in chronological order
             recentMessages.Reverse();
-            
+
             return new RoomViewModel
             {
                 Name = room.Name,
