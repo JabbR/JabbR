@@ -10,6 +10,7 @@ namespace JabbR.Services
     public class ChatService : IChatService
     {
         private readonly IJabbrRepository _repository;
+        private readonly ICache _cache;
         private readonly ICryptoService _crypto;
 
         private const int NoteMaximumLength = 140;
@@ -269,8 +270,9 @@ namespace JabbR.Services
                                                                                 {"zw", "Zimbabwe"}
                                                   };
 
-        public ChatService(IJabbrRepository repository, ICryptoService crypto)
+        public ChatService(ICache cache, IJabbrRepository repository, ICryptoService crypto)
         {
+            _cache = cache;
             _repository = repository;
             _crypto = crypto;
         }
@@ -476,6 +478,9 @@ namespace JabbR.Services
 
         public void LeaveRoom(ChatUser user, ChatRoom room)
         {
+            // Update the cache
+            _cache.SetUserInRoom(user, room, false);
+
             // Remove the user from the room
             room.Users.Remove(user);
 

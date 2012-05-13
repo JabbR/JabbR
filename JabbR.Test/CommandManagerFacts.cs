@@ -18,9 +18,10 @@ namespace JabbR.Test
             public void ReturnsFalseIfCommandDoesntStartWithSlash()
             {
                 var repository = new InMemoryRepository();
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var cache = new Mock<ICache>().Object;
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("id", "id", "name", service, repository, notificationService.Object);
+                var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("foo");
 
@@ -31,9 +32,10 @@ namespace JabbR.Test
             public void ReturnsFalseIfCommandStartsWithSlash()
             {
                 var repository = new InMemoryRepository();
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var cache = new Mock<ICache>().Object;
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("id", "id", "name", service, repository, notificationService.Object);
+                var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/foo", new string[] { });
 
@@ -44,7 +46,8 @@ namespace JabbR.Test
             public void ThrowsIfCommandDoesntExists()
             {
                 var repository = new InMemoryRepository();
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var cache = new Mock<ICache>().Object;
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var user = new ChatUser
                 {
@@ -61,7 +64,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 repository.Add(room);
-                var commandManager = new CommandManager("1", "1", "room", service, repository, notificationService.Object);
+                var commandManager = new CommandManager("1", "1", "room", service, repository, cache, notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/foo"));
             }
@@ -86,13 +89,15 @@ namespace JabbR.Test
             public void ThrowsIfNickIsEmpty()
             {
                 var repository = new InMemoryRepository();
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var cache = new Mock<ICache>().Object;
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         null,
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("nick", new string[] { "", "" }));
@@ -102,13 +107,15 @@ namespace JabbR.Test
             public void CreatesNewUserIfPasswordSpecified()
             {
                 var repository = new InMemoryRepository();
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var cache = new Mock<ICache>().Object;
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         null,
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/nick dfowler password");
@@ -126,6 +133,7 @@ namespace JabbR.Test
             public void ChangeNick()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -133,13 +141,14 @@ namespace JabbR.Test
                     HashedPassword = "password".ToSha256(null)
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/nick dfowler2");
@@ -154,13 +163,15 @@ namespace JabbR.Test
             public void CreatesNewUserWithPassword()
             {
                 var repository = new InMemoryRepository();
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var cache = new Mock<ICache>().Object;
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         null,
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/nick dfowler password");
@@ -178,6 +189,7 @@ namespace JabbR.Test
             public void SetPasswordForExistingUser()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -185,13 +197,14 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/nick dfowler password");
@@ -207,6 +220,7 @@ namespace JabbR.Test
             public void CanChangePasswordIfNewPasswordIsEmpty()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -215,13 +229,14 @@ namespace JabbR.Test
                     HashedPassword = ""
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("nick", new string[] { "/nick", "dfowler", "password", "" }));
@@ -231,6 +246,7 @@ namespace JabbR.Test
             public void ThrowsIfTryingToClaimExistingUserName()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -239,13 +255,14 @@ namespace JabbR.Test
 
                 repository.Add(user);
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "2",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nick dfowler"));
@@ -255,6 +272,7 @@ namespace JabbR.Test
             public void ClaimUserName()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -263,13 +281,14 @@ namespace JabbR.Test
                     HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         null,
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/nick dfowler password");
@@ -285,6 +304,7 @@ namespace JabbR.Test
             public void ChangePassword()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -293,13 +313,14 @@ namespace JabbR.Test
                     HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/nick dfowler password newpassword");
@@ -315,6 +336,7 @@ namespace JabbR.Test
             public void ChangePasswordOfExistingUser()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -323,13 +345,14 @@ namespace JabbR.Test
                     HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         null,
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nick dfowler password newpassword"));
@@ -349,6 +372,7 @@ namespace JabbR.Test
             public void LogOut()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -357,13 +381,14 @@ namespace JabbR.Test
                     HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/logout");
@@ -379,6 +404,7 @@ namespace JabbR.Test
             public void InviteCodeShowsErrorForPublicRoom()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -392,13 +418,14 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         room.Name,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invitecode"));
@@ -409,6 +436,7 @@ namespace JabbR.Test
             public void InviteCodeSetsCodeIfNoCodeAndCurrentUserOwner()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -423,13 +451,14 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         room.Name,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/invitecode");
@@ -445,6 +474,7 @@ namespace JabbR.Test
             public void InviteCodeDisplaysCodeIfCodeSet()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -459,13 +489,14 @@ namespace JabbR.Test
                 };
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         room.Name,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/invitecode");
@@ -481,6 +512,7 @@ namespace JabbR.Test
             public void InviteCodeResetCodeWhenResetInviteCodeCalled()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -496,13 +528,14 @@ namespace JabbR.Test
                 room.Owners.Add(user);
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         room.Name,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/resetinvitecode");
@@ -515,6 +548,7 @@ namespace JabbR.Test
             public void ThrowsIfNonOwnerRequestsInviteCodeWhenNoneSet()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -530,13 +564,14 @@ namespace JabbR.Test
                 };
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         room.Name,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invitecode"));
@@ -547,6 +582,7 @@ namespace JabbR.Test
             public void ThrowsIfNonOwnerRequestsResetInviteCode()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -563,13 +599,14 @@ namespace JabbR.Test
                 };
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         room.Name,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/resetinvitecode"));
@@ -583,6 +620,7 @@ namespace JabbR.Test
             public void DoesNotThrowIfUserAlreadyInRoom()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -598,13 +636,14 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/join room");
@@ -617,6 +656,7 @@ namespace JabbR.Test
             public void CanJoinRoom()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -628,13 +668,14 @@ namespace JabbR.Test
                     Name = "room"
                 };
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/join room");
@@ -647,6 +688,7 @@ namespace JabbR.Test
             public void ThrowIfRoomIsEmpty()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -660,13 +702,14 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
 
@@ -677,6 +720,7 @@ namespace JabbR.Test
             public void ThrowIfUserNotAllowedAndNoInviteCodeProvided()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "anurse",
@@ -690,13 +734,14 @@ namespace JabbR.Test
                 };
                 repository.Add(room);
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join room"));
@@ -708,6 +753,7 @@ namespace JabbR.Test
             public void ThrowIfUserNotAllowedAndInviteCodeIncorrect()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "anurse",
@@ -722,13 +768,14 @@ namespace JabbR.Test
                 };
                 repository.Add(room);
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join room 789012"));
@@ -740,6 +787,7 @@ namespace JabbR.Test
             public void ThrowIfUserNotAllowedAndNoInviteCodeSet()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "anurse",
@@ -753,13 +801,14 @@ namespace JabbR.Test
                 };
                 repository.Add(room);
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join room 789012"));
@@ -771,6 +820,7 @@ namespace JabbR.Test
             public void JoinIfInviteCodeIsCorrect()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "anurse",
@@ -785,13 +835,14 @@ namespace JabbR.Test
                 };
                 repository.Add(room);
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 commandManager.TryHandleCommand("/join room 123456");
@@ -802,6 +853,7 @@ namespace JabbR.Test
             public void JoinIfUserIsAllowed()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "anurse",
@@ -816,13 +868,14 @@ namespace JabbR.Test
                 room.AllowedUsers.Add(user);
                 repository.Add(room);
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 commandManager.TryHandleCommand("/join room");
@@ -833,6 +886,7 @@ namespace JabbR.Test
             public void ThrowIfUserNotAllowedToJoinPrivateRoom()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "anurse",
@@ -846,13 +900,14 @@ namespace JabbR.Test
                 };
                 repository.Add(room);
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join room"));
@@ -867,19 +922,21 @@ namespace JabbR.Test
             public void MissingUserNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/addowner "));
@@ -889,19 +946,21 @@ namespace JabbR.Test
             public void MissingRoomNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/addowner dfowler"));
@@ -911,6 +970,7 @@ namespace JabbR.Test
             public void CanAddOwnerToRoom()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var roomOwnerUser = new ChatUser
                 {
                     Name = "dfowler",
@@ -931,13 +991,14 @@ namespace JabbR.Test
                 roomOwnerUser.Rooms.Add(room);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 var result = commandManager.TryHandleCommand("/addowner dfowler2 test");
@@ -956,19 +1017,21 @@ namespace JabbR.Test
             public void MissingUserNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/removeowner "));
@@ -978,19 +1041,21 @@ namespace JabbR.Test
             public void MissingRoomNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/removeowner dfowler"));
@@ -1000,6 +1065,7 @@ namespace JabbR.Test
             public void CreatorCanRemoveOwnerFromRoom()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var roomCreator = new ChatUser
                 {
                     Name = "dfowler",
@@ -1023,13 +1089,14 @@ namespace JabbR.Test
                 room.Owners.Add(targetUser);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 var result = commandManager.TryHandleCommand("/removeowner dfowler2 test");
@@ -1044,6 +1111,7 @@ namespace JabbR.Test
             public void NonCreatorsCannotRemoveOwnerFromRoom()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
@@ -1066,13 +1134,14 @@ namespace JabbR.Test
                 room.Owners.Add(targetUser);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/removeowner dfowler2 test"));
@@ -1085,19 +1154,21 @@ namespace JabbR.Test
             public void MissingRoomNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/create "));
@@ -1107,19 +1178,21 @@ namespace JabbR.Test
             public void ThrowsIfRoomNameIsEmpty()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("create", new string[] { "", "" }));
@@ -1129,6 +1202,7 @@ namespace JabbR.Test
             public void CreateRoomFailsIfRoomAlreadyExists()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -1140,13 +1214,14 @@ namespace JabbR.Test
                     Name = "Test"
                 };
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/create Test"));
@@ -1156,19 +1231,21 @@ namespace JabbR.Test
             public void CreateRoomFailsIfRoomNameContainsSpaces()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/create Test Room"));
@@ -1179,6 +1256,7 @@ namespace JabbR.Test
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -1194,13 +1272,14 @@ namespace JabbR.Test
                 };
                 repository.Add(room);
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 // Act & Assert.
@@ -1212,19 +1291,21 @@ namespace JabbR.Test
             public void CanCreateRoomAndJoinsAutomaticly()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/create Test");
@@ -1241,19 +1322,21 @@ namespace JabbR.Test
             public void MissingEmailThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/gravatar "));
@@ -1263,19 +1346,21 @@ namespace JabbR.Test
             public void CanSetGravatar()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/gravatar test@jabbR.net");
@@ -1294,19 +1379,21 @@ namespace JabbR.Test
                 // Arrange.
                 const string note = "this is a test note. Pew^Pew";
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "asshat",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
                 // Act.
                 bool result = commandManager.TryHandleCommand("/note " + note);
@@ -1322,19 +1409,21 @@ namespace JabbR.Test
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "asshat",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
                 // Act.
                 bool result = commandManager.TryHandleCommand("/note ");
@@ -1352,19 +1441,21 @@ namespace JabbR.Test
                 String note = new String('A', 141);
 
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "asshat",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
                 // Act & Assert.
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/note " + note));
@@ -1379,19 +1470,21 @@ namespace JabbR.Test
                 // Arrange.
                 const string note = "I'll be back later!";
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "asshat",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
                 // Act.
                 bool result = commandManager.TryHandleCommand("/afk " + note);
@@ -1406,19 +1499,21 @@ namespace JabbR.Test
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "asshat",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
                 // Act.
                 bool result = commandManager.TryHandleCommand("/afk");
@@ -1435,19 +1530,21 @@ namespace JabbR.Test
                 String note = new String('A', 141);
 
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "asshat",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
                 // Act & Assert.
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/afk " + note));
@@ -1460,19 +1557,21 @@ namespace JabbR.Test
             public void CanShowHelp()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/help");
@@ -1488,6 +1587,7 @@ namespace JabbR.Test
             public void MissingUserNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -1502,13 +1602,14 @@ namespace JabbR.Test
                 room.Owners.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/kick"));
@@ -1518,6 +1619,7 @@ namespace JabbR.Test
             public void CannotKickUserIfUserIsOnlyOneInRoom()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -1532,13 +1634,14 @@ namespace JabbR.Test
                 room.Owners.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/kick fowler2"));
@@ -1548,6 +1651,7 @@ namespace JabbR.Test
             public void CannotKickUserIfNotExists()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -1570,13 +1674,14 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/kick fowler3"));
@@ -1586,6 +1691,7 @@ namespace JabbR.Test
             public void CannotKickUserIfUserIsNotInRoom()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -1614,13 +1720,14 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/kick dfowler3"));
@@ -1630,6 +1737,7 @@ namespace JabbR.Test
             public void CanKickUser()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -1660,13 +1768,14 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 user3.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/kick dfowler3");
@@ -1681,6 +1790,7 @@ namespace JabbR.Test
             public void CannotKickUrSelf()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -1703,13 +1813,14 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/kick dfowler"));
@@ -1719,6 +1830,7 @@ namespace JabbR.Test
             public void CannotKickIfUserIsNotOwner()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -1741,13 +1853,14 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "2",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/kick dfowler"));
@@ -1757,6 +1870,7 @@ namespace JabbR.Test
             public void IfNotRoomCreatorCannotKickOwners()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -1781,13 +1895,14 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "2",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/kick dfowler"));
@@ -1797,6 +1912,7 @@ namespace JabbR.Test
             public void RoomCreatorCanKickOwners()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -1821,13 +1937,14 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 var result = commandManager.TryHandleCommand("/kick dfowler2");
@@ -1845,6 +1962,7 @@ namespace JabbR.Test
             public void CanLeaveRoom()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -1858,13 +1976,14 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/leave");
@@ -1879,6 +1998,7 @@ namespace JabbR.Test
             public void CanLeaveRoomByGivingRoomName()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -1892,13 +2012,14 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/leave room");
@@ -1913,6 +2034,7 @@ namespace JabbR.Test
             public void CannotLeaveRoomIfNotImRoom()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -1926,13 +2048,14 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/leave"));
@@ -1945,19 +2068,21 @@ namespace JabbR.Test
             public void MissingRoomThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/list"));
@@ -1967,19 +2092,21 @@ namespace JabbR.Test
             public void NotExistingRoomThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/list test"));
@@ -1989,6 +2116,7 @@ namespace JabbR.Test
             public void CanShowUserList()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2010,7 +2138,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var userList = new List<string>();
                 notificationService.Setup(m => m.ListUsers(It.IsAny<ChatRoom>(), It.IsAny<IEnumerable<string>>()))
@@ -2024,6 +2152,7 @@ namespace JabbR.Test
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/list room");
@@ -2041,6 +2170,7 @@ namespace JabbR.Test
             public void MissingContentThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2054,13 +2184,14 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/me"));
@@ -2070,6 +2201,7 @@ namespace JabbR.Test
             public void MissingRoomThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2083,13 +2215,14 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/me is testing"));
@@ -2099,6 +2232,7 @@ namespace JabbR.Test
             public void CanUseMeCommand()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2112,13 +2246,14 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/me is testing");
@@ -2134,19 +2269,21 @@ namespace JabbR.Test
             public void ThrowsIfThereIsOnlyOneUser()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/msg"));
@@ -2156,6 +2293,8 @@ namespace JabbR.Test
             public void MissingUserNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2168,13 +2307,14 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/msg"));
@@ -2184,6 +2324,7 @@ namespace JabbR.Test
             public void ThrowsIfUserDoesntExists()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2196,13 +2337,14 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/msg dfowler3"));
@@ -2212,6 +2354,7 @@ namespace JabbR.Test
             public void CannotMessageOwnUser()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2224,13 +2367,14 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/msg dfowler"));
@@ -2240,6 +2384,7 @@ namespace JabbR.Test
             public void MissingMessageTextThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2252,13 +2397,14 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/msg dfowler2 "));
@@ -2268,6 +2414,7 @@ namespace JabbR.Test
             public void CanSendMessage()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2280,13 +2427,14 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/msg dfowler2 what is up?");
@@ -2299,6 +2447,7 @@ namespace JabbR.Test
             public void UrlsInMessageIsTransformed()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2311,13 +2460,14 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/msg dfowler2 check out www.jabbr.net");
@@ -2333,19 +2483,21 @@ namespace JabbR.Test
             public void MissingUserNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invite"));
@@ -2355,19 +2507,21 @@ namespace JabbR.Test
             public void NotExistingUserNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invite dfowler2"));
@@ -2377,6 +2531,7 @@ namespace JabbR.Test
             public void MissingRoomThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2389,13 +2544,14 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invite dfowler2"));
@@ -2405,6 +2561,7 @@ namespace JabbR.Test
             public void NotExistingRoomThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2417,13 +2574,14 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invite dfowler2 asfasfdsad"));
@@ -2433,6 +2591,7 @@ namespace JabbR.Test
             public void ThrowsIfThereIsOnlyOneUser()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2446,13 +2605,14 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invite void"));
@@ -2462,6 +2622,7 @@ namespace JabbR.Test
             public void CannotInviteOwnUser()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2474,13 +2635,14 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invite dfowler"));
@@ -2493,6 +2655,7 @@ namespace JabbR.Test
             public void ThrowsIfThereIsOnlyOneUser()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2506,13 +2669,14 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nudge void"));
@@ -2522,6 +2686,7 @@ namespace JabbR.Test
             public void ThrowsIfUserDoesntExists()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2534,13 +2699,14 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nudge void"));
@@ -2550,6 +2716,7 @@ namespace JabbR.Test
             public void CannotNudgeOwnUser()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2562,13 +2729,14 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nudge dfowler"));
@@ -2578,6 +2746,7 @@ namespace JabbR.Test
             public void NudgingTwiceWithin60SecondsThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2590,13 +2759,14 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/nudge dfowler2");
@@ -2610,6 +2780,7 @@ namespace JabbR.Test
             public void CanNudge()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2622,13 +2793,14 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/nudge dfowler2");
@@ -2642,6 +2814,7 @@ namespace JabbR.Test
             public void CanNudgeRoom()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2664,13 +2837,14 @@ namespace JabbR.Test
                 room.Users.Add(user2);
                 repository.Add(room);
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/nudge");
@@ -2684,6 +2858,7 @@ namespace JabbR.Test
             public void CannotNudgeRoomTwiceWithin60Seconds()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2706,13 +2881,14 @@ namespace JabbR.Test
                 room.Users.Add(user2);
                 repository.Add(room);
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/nudge");
@@ -2732,19 +2908,21 @@ namespace JabbR.Test
             public void CanShowRooms()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/rooms");
@@ -2760,19 +2938,21 @@ namespace JabbR.Test
             public void CanGetUserList()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/who");
@@ -2785,19 +2965,21 @@ namespace JabbR.Test
             public void CanGetUserInfo()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/who dfowler");
@@ -2810,19 +2992,21 @@ namespace JabbR.Test
             public void CannotGetInfoForInvalidUser()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/who sethwebster"));
@@ -2835,19 +3019,21 @@ namespace JabbR.Test
             public void MissingUserNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/where"));
@@ -2857,19 +3043,21 @@ namespace JabbR.Test
             public void CannotShowUserRoomsWhenEnteringPartOfName()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/where dfow"));
@@ -2879,19 +3067,21 @@ namespace JabbR.Test
             public void CanShowUserRooms()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/where dfowler");
@@ -2908,19 +3098,21 @@ namespace JabbR.Test
             public void MissingUserNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/allow"));
@@ -2930,19 +3122,21 @@ namespace JabbR.Test
             public void NotExistingUserNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/allow dfowler2"));
@@ -2952,6 +3146,7 @@ namespace JabbR.Test
             public void MissingRoomThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2964,13 +3159,14 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/allow dfowler2"));
@@ -2980,6 +3176,7 @@ namespace JabbR.Test
             public void NotExistingRoomThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -2992,13 +3189,14 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/allow dfowler2 asfasfdsad"));
@@ -3008,6 +3206,7 @@ namespace JabbR.Test
             public void CannotAllowUserToRoomIfNotPrivate()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -3027,13 +3226,14 @@ namespace JabbR.Test
                 user.OwnedRooms.Add(room);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/allow dfowler2 room"));
@@ -3043,6 +3243,7 @@ namespace JabbR.Test
             public void CanAllowUserToRoom()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -3063,13 +3264,14 @@ namespace JabbR.Test
                 user.OwnedRooms.Add(room);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/allow dfowler2 room");
@@ -3086,19 +3288,21 @@ namespace JabbR.Test
             public void MissingRoomNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/lock"));
@@ -3108,19 +3312,21 @@ namespace JabbR.Test
             public void NotExistingRoomNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/lock room"));
@@ -3130,6 +3336,7 @@ namespace JabbR.Test
             public void CanLockRoom()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -3145,13 +3352,14 @@ namespace JabbR.Test
                 room.Owners.Add(user);
                 user.OwnedRooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/lock room");
@@ -3169,19 +3377,21 @@ namespace JabbR.Test
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 // Act & Assert.
@@ -3195,19 +3405,21 @@ namespace JabbR.Test
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 // Act & Assert.
@@ -3221,6 +3433,7 @@ namespace JabbR.Test
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
@@ -3236,13 +3449,14 @@ namespace JabbR.Test
                 // Add a room owner.
                 repository.Add(room);
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/close " + roomName));
@@ -3254,6 +3468,7 @@ namespace JabbR.Test
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -3271,13 +3486,14 @@ namespace JabbR.Test
 
                 repository.Add(room);
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/close " + roomName);
@@ -3292,6 +3508,7 @@ namespace JabbR.Test
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
@@ -3323,13 +3540,14 @@ namespace JabbR.Test
                 // verify that these users we passed into the closeRoom method.
                 var users = room.Users.ToList();
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/close " + roomName);
@@ -3346,19 +3564,21 @@ namespace JabbR.Test
             public void MissingUserNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/unallow"));
@@ -3368,19 +3588,21 @@ namespace JabbR.Test
             public void NotExistingUserNameThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/unallow dfowler2"));
@@ -3390,6 +3612,7 @@ namespace JabbR.Test
             public void MissingRoomThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -3402,13 +3625,14 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/unallow dfowler2"));
@@ -3418,6 +3642,7 @@ namespace JabbR.Test
             public void NotExistingRoomThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -3430,13 +3655,14 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/unallow dfowler2 asfasfdsad"));
@@ -3445,6 +3671,7 @@ namespace JabbR.Test
             public void CannotUnAllowUserToRoomIfNotPrivate()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -3466,13 +3693,14 @@ namespace JabbR.Test
                 user2.AllowedRooms.Add(room);
                 room.AllowedUsers.Add(user2);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/unallow dfowler2 room"));
@@ -3482,6 +3710,7 @@ namespace JabbR.Test
             public void CanUnAllowUserToRoom()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -3504,13 +3733,14 @@ namespace JabbR.Test
                 user2.AllowedRooms.Add(room);
                 room.AllowedUsers.Add(user2);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/unallow dfowler2 room");
@@ -3529,19 +3759,21 @@ namespace JabbR.Test
                 // Arrange.
                 const string isoCode = "au";
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "asshat",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
                 // Act.
                 bool result = commandManager.TryHandleCommand("/flag " + isoCode);
@@ -3557,19 +3789,21 @@ namespace JabbR.Test
                 // Arrange.
                 const string isoCode = "AU";
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "asshat",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
                 // Act.
                 bool result = commandManager.TryHandleCommand("/flag " + isoCode);
@@ -3584,19 +3818,21 @@ namespace JabbR.Test
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "asshat",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
                 // Act.
                 bool result = commandManager.TryHandleCommand("/flag");
@@ -3612,19 +3848,21 @@ namespace JabbR.Test
                 // Arrange.
                 const string isoCode = "xx";
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "asshat",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
                 // Act and Assert
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/flag " + isoCode));
@@ -3636,19 +3874,21 @@ namespace JabbR.Test
                 // Arrange.
                 const string isoCode = "xxxxx";
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "asshat",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
                 // Act and Assert
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/flag " + isoCode));
@@ -3662,13 +3902,15 @@ namespace JabbR.Test
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var cache = new Mock<ICache>().Object;
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         null,
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 // Act & Assert.
@@ -3681,19 +3923,21 @@ namespace JabbR.Test
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 // Act & Assert.
@@ -3707,19 +3951,21 @@ namespace JabbR.Test
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 // Act & Assert.
@@ -3733,6 +3979,7 @@ namespace JabbR.Test
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
@@ -3748,13 +3995,14 @@ namespace JabbR.Test
                 room.Owners.Add(roomOwner);
                 repository.Add(room);
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/open " + roomName));
@@ -3766,6 +4014,7 @@ namespace JabbR.Test
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
@@ -3781,13 +4030,14 @@ namespace JabbR.Test
                 };
                 repository.Add(room);
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/open " + roomName));
@@ -3799,6 +4049,7 @@ namespace JabbR.Test
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
@@ -3816,13 +4067,14 @@ namespace JabbR.Test
                 room.Owners.Add(roomOwner);
                 repository.Add(room);
 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
                 var result = commandManager.TryHandleCommand("/open " + roomName);
 
@@ -3838,6 +4090,7 @@ namespace JabbR.Test
             public void UserMustBeOwner()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
@@ -3850,13 +4103,14 @@ namespace JabbR.Test
                 };
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
                 string topicLine = "This is the room's topic";
                 var exception = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/topic " + topicLine));
@@ -3868,6 +4122,7 @@ namespace JabbR.Test
             public void CommandSucceeds()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
@@ -3881,13 +4136,14 @@ namespace JabbR.Test
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
                 string topicLine = "This is the room's topic";
                 bool result = commandManager.TryHandleCommand("/topic " + topicLine);
@@ -3901,6 +4157,7 @@ namespace JabbR.Test
             public void ThrowsIfTopicExceedsMaxLength()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
@@ -3914,13 +4171,14 @@ namespace JabbR.Test
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository, new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
                 string topicLine = new String('A', 81);
                 var exception = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/topic " + topicLine));
@@ -3932,6 +4190,7 @@ namespace JabbR.Test
             public void CommandClearsTopicIfNoTextProvided()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
@@ -3945,13 +4204,14 @@ namespace JabbR.Test
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         "room",
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/topic");
@@ -3968,19 +4228,21 @@ namespace JabbR.Test
             public void ThrowsIfUserIsNotAdmin()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/broadcast something"));
@@ -3991,6 +4253,7 @@ namespace JabbR.Test
             public void MissingMessageTextThrows()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -3999,13 +4262,14 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/broadcast"));
@@ -4016,6 +4280,7 @@ namespace JabbR.Test
             public void CanBroadcastMessage()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -4024,13 +4289,14 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/broadcast what is up?");
@@ -4043,6 +4309,7 @@ namespace JabbR.Test
             public void UrlsInMessageIsTransformed()
             {
                 var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "dfowler",
@@ -4050,13 +4317,14 @@ namespace JabbR.Test
                     IsAdmin = true
                 };
                 repository.Add(user);
-                var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
                                                         null,
                                                         service,
                                                         repository,
+                                                        cache,
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/broadcast check out www.jabbr.net");
@@ -4070,13 +4338,15 @@ namespace JabbR.Test
         public static void VerifyThrows<T>(string command) where T : Exception
         {
             var repository = new InMemoryRepository();
-            var service = new ChatService(repository, new Mock<ICryptoService>().Object);
+            var cache = new Mock<ICache>().Object;
+            var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
             var notificationService = new Mock<INotificationService>();
             var commandManager = new CommandManager("clientid",
                                                     null,
                                                     null,
                                                     service,
                                                     repository,
+                                                    cache,
                                                     notificationService.Object);
 
             Assert.Throws<T>(() => commandManager.TryHandleCommand(command));

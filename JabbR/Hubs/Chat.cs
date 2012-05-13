@@ -19,15 +19,17 @@ namespace JabbR
     {
         private readonly IJabbrRepository _repository;
         private readonly IChatService _service;
+        private readonly ICache _cache;
         private readonly IResourceProcessor _resourceProcessor;
         private readonly IApplicationSettings _settings;
 
-        public Chat(IApplicationSettings settings, IResourceProcessor resourceProcessor, IChatService service, IJabbrRepository repository)
+        public Chat(IApplicationSettings settings, IResourceProcessor resourceProcessor, IChatService service, IJabbrRepository repository, ICache cache)
         {
             _settings = settings;
             _resourceProcessor = resourceProcessor;
             _service = service;
             _repository = repository;
+            _cache = cache;
         }
 
         private string UserAgent
@@ -78,9 +80,9 @@ namespace JabbR
             // Update some user values
             _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
             _repository.CommitChanges();
-            
+
             OnUserInitialize(clientState, user);
-            
+
             return true;
         }
 
@@ -172,7 +174,7 @@ namespace JabbR
             string id = Caller.id;
 
             ChatUser user = _repository.VerifyUserId(id);
-            ChatRoom room = _repository.VerifyUserRoom(user, message.Room);
+            ChatRoom room = _repository.VerifyUserRoom(_cache, user, message.Room);
 
             // Update activity *after* ensuring the user, this forces them to be active
             UpdateActivity(user, room);
@@ -353,7 +355,7 @@ namespace JabbR
                 return;
             }
 
-            ChatRoom room = _repository.VerifyUserRoom(user, roomName);
+            ChatRoom room = _repository.VerifyUserRoom(_cache, user, roomName);
 
             UpdateActivity(user, room);
 
@@ -443,7 +445,7 @@ namespace JabbR
             string clientId = Context.ConnectionId;
             string userId = Caller.id;
 
-            var commandManager = new CommandManager(clientId, UserAgent, userId, room, _service, _repository, this);
+            var commandManager = new CommandManager(clientId, UserAgent, userId, room, _service, _repository, _cache, this);
             return commandManager.TryHandleCommand(command);
         }
 
@@ -897,7 +899,7 @@ namespace JabbR
             }
 
             var userViewModel = new UserViewModel(targetUser);
-            
+
             // Tell all users in rooms to change the admin status
             foreach (var room in targetUser.Rooms)
             {

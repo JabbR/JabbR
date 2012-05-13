@@ -15,6 +15,7 @@ namespace JabbR.Commands
         private readonly string _roomName;
         private readonly INotificationService _notificationService;
         private readonly IChatService _chatService;
+        private readonly ICache _cache;
         private readonly IJabbrRepository _repository;
 
         public CommandManager(string clientId,
@@ -22,8 +23,9 @@ namespace JabbR.Commands
                               string roomName,
                               IChatService service,
                               IJabbrRepository repository,
+                              ICache cache,
                               INotificationService notificationService)
-            : this(clientId, null, userId, roomName, service, repository, notificationService)
+            : this(clientId, null, userId, roomName, service, repository, cache, notificationService)
         {
         }
 
@@ -33,6 +35,7 @@ namespace JabbR.Commands
                               string roomName,
                               IChatService service,
                               IJabbrRepository repository,
+                              ICache cache,
                               INotificationService notificationService)
         {
             _clientId = clientId;
@@ -41,6 +44,7 @@ namespace JabbR.Commands
             _roomName = roomName;
             _chatService = service;
             _repository = repository;
+            _cache = cache;
             _notificationService = notificationService;
         }
 
@@ -81,7 +85,7 @@ namespace JabbR.Commands
         private bool TryHandleRoomCommand(string commandName, string[] parts)
         {
             ChatUser user = _repository.VerifyUserId(_userId);
-            ChatRoom room = _repository.VerifyUserRoom(user, _roomName);
+            ChatRoom room = _repository.VerifyUserRoom(_cache, user, _roomName);
 
             if (commandName.Equals("me", StringComparison.OrdinalIgnoreCase))
             {
@@ -690,7 +694,7 @@ namespace JabbR.Commands
         private void JoinRoom(ChatUser user, ChatRoom room, string inviteCode)
         {
             _chatService.JoinRoom(user, room, inviteCode);
-            
+
             _repository.CommitChanges();
 
             _notificationService.JoinRoom(user, room);
@@ -972,7 +976,7 @@ namespace JabbR.Commands
             string targetUserName = parts[1];
 
             ChatUser targetUser = _repository.VerifyUser(targetUserName);
-            
+
             _chatService.AddAdmin(user, targetUser);
 
             _notificationService.AddAdmin(targetUser);
@@ -990,7 +994,7 @@ namespace JabbR.Commands
             string targetUserName = parts[1];
 
             ChatUser targetUser = _repository.VerifyUser(targetUserName);
-                        
+
             _chatService.RemoveAdmin(user, targetUser);
 
             _notificationService.RemoveAdmin(targetUser);
@@ -1011,7 +1015,7 @@ namespace JabbR.Commands
             {
                 throw new InvalidOperationException("What did you want to broadcast?");
             }
-            
+
             HashSet<string> urls;
             var transform = new TextTransform(_repository);
             messageText = transform.Parse(messageText);

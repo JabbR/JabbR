@@ -73,6 +73,10 @@ namespace JabbR.App_Start
                   .To<AjaxMinMinifier>()
                   .InSingletonScope();
 
+            kernel.Bind<ICache>()
+                  .To<AspNetCache>()
+                  .InSingletonScope();
+
             Kernel = kernel;
 
             var resolver = new NinjectDependencyResolver(kernel);

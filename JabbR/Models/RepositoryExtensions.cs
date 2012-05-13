@@ -25,7 +25,7 @@ namespace JabbR.Models
                    select r;
         }
 
-        public static ChatRoom VerifyUserRoom(this IJabbrRepository repository, ChatUser user, string roomName)
+        public static ChatRoom VerifyUserRoom(this IJabbrRepository repository, ICache cache, ChatUser user, string roomName)
         {
             if (String.IsNullOrEmpty(roomName))
             {
@@ -41,7 +41,15 @@ namespace JabbR.Models
                 throw new InvalidOperationException(String.Format("You're in '{0}' but it doesn't exist.", roomName));
             }
 
-            if (!repository.IsUserInRoom(room, user))
+            bool? cached = cache.IsUserInRoom(user, room);
+
+            if (cached == null)
+            {
+                cached = repository.IsUserInRoom(room, user);
+                cache.SetUserInRoom(user, room, cached.Value);
+            }
+
+            if (!cached.Value)
             {
                 throw new InvalidOperationException(String.Format("You're not in '{0}'. Use '/join {0}' to join it.", roomName));
             }

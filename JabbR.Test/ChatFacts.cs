@@ -151,7 +151,7 @@ namespace JabbR.Test
             public Mock<IApplicationSettings> MockSettings { get; set; }
 
             public TestableChat(Mock<IApplicationSettings> mockSettings, Mock<IResourceProcessor> mockedResourceProcessor, Mock<IChatService> mockedChatService, IJabbrRepository repository, Mock<IConnection> connection)
-                : base(mockSettings.Object, mockedResourceProcessor.Object, mockedChatService.Object, repository)
+                : base(mockSettings.Object, mockedResourceProcessor.Object, mockedChatService.Object, repository, new Mock<ICache>().Object)
             {
                 MockedResourceProcessor = mockedResourceProcessor;
                 MockedChatService = mockedChatService;

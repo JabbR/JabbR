@@ -916,6 +916,7 @@
     <Compile Include="Migrations\201205081819121_AdminUser.Designer.cs">
       <DependentUpon>201205081819121_AdminUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\CacheExtensions.cs" />
     <Compile Include="Models\ChatClient.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -934,6 +935,8 @@
     <Compile Include="Models\ClientState.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\AspNetCache.cs" />
+    <Compile Include="Models\ICache.cs" />
     <Compile Include="Models\IJabbrRepository.cs">
       <SubType>Code</SubType>
     </Compile>
