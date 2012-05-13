@@ -667,7 +667,7 @@ namespace JabbR.Services
         {
             throw new InvalidOperationException("A password is required.");
         }
-        
+
         private bool IsUserAllowed(ChatRoom room, ChatUser user)
         {
             return room.AllowedUsers.Contains(user) || user.IsAdmin;
@@ -693,7 +693,8 @@ namespace JabbR.Services
 
         private static void EnsureAdmin(ChatUser user)
         {
-            if (!user.IsAdmin) {
+            if (!user.IsAdmin)
+            {
                 throw new InvalidOperationException("You are not an admin");
             }
         }
