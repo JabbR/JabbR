@@ -85,7 +85,7 @@ namespace JabbR.Handlers
                 return;
             }
 
-            var messages = _repository.GetMessagesByRoom(roomName)
+            var messages = _repository.GetMessagesByRoom(room)
                 .Where(msg => msg.When <= end && msg.When >= start)
                 .OrderBy(msg => msg.When)
                 .Select(msg => new

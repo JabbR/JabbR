@@ -314,10 +314,13 @@ namespace JabbR
                 return null;
             }
 
-            var recentMessages = (from m in _repository.GetMessagesByRoom(roomName)
+            var recentMessages = (from m in _repository.GetMessagesByRoom(room)
                                   orderby m.When descending
-                                  select m).Take(30);
+                                  select m).Take(30).ToList();
 
+            // Reverse them since we want to get them in chronological order
+            recentMessages.Reverse();
+            
             return new RoomViewModel
             {
                 Name = room.Name,
@@ -325,7 +328,7 @@ namespace JabbR
                         select new UserViewModel(u),
                 Owners = from u in room.Owners.Online()
                          select u.Name,
-                RecentMessages = recentMessages.AsEnumerable().Reverse().Select(m => new MessageViewModel(m)),
+                RecentMessages = recentMessages.Select(m => new MessageViewModel(m)),
                 Topic = ConvertUrlsAndRoomLinks(room.Topic ?? "")
             };
         }

@@ -102,13 +102,8 @@ namespace JabbR.Models
                 .AsQueryable();
         }
 
-        public IQueryable<ChatMessage> GetMessagesByRoom(string roomName)
+        public IQueryable<ChatMessage> GetMessagesByRoom(ChatRoom room)
         {
-            var room = GetRoomByName(roomName);
-            if (room == null)
-            {
-                return Enumerable.Empty<ChatMessage>().AsQueryable();
-            }
             return room.Messages.AsQueryable();
         }
 

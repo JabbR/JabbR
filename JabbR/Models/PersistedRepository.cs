@@ -90,9 +90,14 @@ namespace JabbR.Models
                        (r.Private && !r.Closed && r.AllowedUsers.Any(u => u.Key == user.Key)));
         }
 
-        public IQueryable<ChatMessage> GetMessagesByRoom(string roomName)
+        private IQueryable<ChatMessage> GetMessagesByRoom(string roomName)
         {
             return _db.Messages.Include(r => r.Room).Where(r => r.Room.Name == roomName);
+        }
+
+        public IQueryable<ChatMessage> GetMessagesByRoom(ChatRoom room)
+        {
+            return _db.Messages.Where(r => r.RoomKey == room.Key);
         }
 
         public IQueryable<ChatMessage> GetPreviousMessages(string messageId)
@@ -109,7 +114,7 @@ namespace JabbR.Models
                    where m.When < info.When
                    select m;
         }
-
+        
         public IQueryable<ChatUser> SearchUsers(string name)
         {
             return _db.Users.Online().Where(u => u.Name.Contains(name));
