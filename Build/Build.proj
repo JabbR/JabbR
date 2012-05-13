@@ -5,6 +5,8 @@
         <ProjectRoot>$(MSBuildProjectDirectory)\..</ProjectRoot>
         <ToolsPath>$(ProjectRoot)\tools\</ToolsPath>
         <XunitPath>$(ToolsPath)xunit\</XunitPath>
+        <ArtifactsPath>$(ProjectRoot)\target</ArtifactsPath>
+        <SiteArtifactsPath>$(ArtifactsPath)\site</SiteArtifactsPath>
     </PropertyGroup>
     
     <ItemGroup>
@@ -14,7 +16,11 @@
     <UsingTask AssemblyFile="$(XunitPath)xunit.runner.msbuild.dll"
                TaskName="Xunit.Runner.MSBuild.xunit" />
     
-    <Target Name="RunAll" DependsOnTargets="Build; RunTests" />
+    <Target Name="RunAll" DependsOnTargets="Build; RunTests; Package" />
+    
+    <Target Name="MakeArtifactsPath">
+        <MakeDir Directories="$(SiteArtifactsPath)" Condition="!Exists('$(SiteArtifactsPath)')" />
+    </Target>
     
     <Target Name="RunTests">
         <xunit Assembly="%(TestProjects.FullPath)" />
@@ -24,5 +30,13 @@
         <MSBuild Projects="$(ProjectRoot)\JabbR.sln" 
                  Targets="Build" 
                  Properties="Configuration=$(Configuration)" />
+    </Target>
+    
+    <Target Name="Package" DependsOnTargets="MakeArtifactsPath">
+        <MSBuild Projects="$(ProjectRoot)\JabbR\JabbR.csproj" 
+                 Targets="pipelinePreDeployCopyAllFilesToOneFolder" 
+                 Properties="_PackageTempDir=$(SiteArtifactsPath);
+                             AutoParameterizationWebConfigConnectionStrings=false;
+                             SolutionDir=$(ProjectRoot)\;" />
     </Target>
 </Project>
