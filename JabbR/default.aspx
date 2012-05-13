@@ -37,7 +37,7 @@
             var nav = url.indexOf('#');
             url = nav > 0 ? url.substring(0, nav) : url;
             url = url.replace('default.aspx', '');
-            janrain.settings.tokenUrl = url + 'Auth/Login.ashx';
+            janrain.settings.tokenUrl = url + 'Auth/Login.ashx?hash=' + escape(document.location.hash);
             janrain.settings.type = 'embed';
 
             function isReady() { janrain.ready = true; };
