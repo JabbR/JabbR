@@ -57,10 +57,6 @@
                 _index = getNextIndex(_index, offset, values.length);
 
                 var initialLen = _initial.length;
-                // sort values if there's a prefix
-                if (initialLen > 0) {
-                    values = values.sort(sortInsensitive);
-                }
 
                 // loop through values (ring buffer) for match 
                 var i = _index;
