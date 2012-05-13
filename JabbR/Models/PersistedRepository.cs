@@ -167,7 +167,7 @@ namespace JabbR.Models
             }
         }
 
-        public bool IsUserInRoom(ChatRoom room, ChatUser user)
+        public bool IsUserInRoom(ChatUser user, ChatRoom room)
         {
             return user.Rooms.Contains(room);
         }

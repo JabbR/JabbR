@@ -570,7 +570,7 @@ namespace JabbR.Services
                 throw new InvalidOperationException("Why would you want to kick yourself?");
             }
 
-            if (!_repository.IsUserInRoom(targetRoom, targetUser))
+            if (!_repository.IsUserInRoom(targetUser, targetRoom))
             {
                 throw new InvalidOperationException(String.Format("'{0}' isn't in '{1}'.", targetUser.Name, targetRoom.Name));
             }

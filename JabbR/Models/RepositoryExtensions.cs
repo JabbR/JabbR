@@ -45,7 +45,7 @@ namespace JabbR.Models
 
             if (cached == null)
             {
-                cached = repository.IsUserInRoom(room, user);
+                cached = repository.IsUserInRoom(user, room);
                 cache.SetUserInRoom(user, room, cached.Value);
             }
 

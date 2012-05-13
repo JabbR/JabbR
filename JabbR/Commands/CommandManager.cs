@@ -681,7 +681,7 @@ namespace JabbR.Commands
             // Locate the room
             ChatRoom room = _repository.VerifyRoom(roomName);
 
-            if (_repository.IsUserInRoom(room, user))
+            if (_repository.IsUserInRoom(user, room))
             {
                 _notificationService.JoinRoom(user, room);
             }

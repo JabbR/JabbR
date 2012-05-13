@@ -33,6 +33,6 @@ namespace JabbR.Models
         void RemoveAllClients();
         void CommitChanges();
 
-        bool IsUserInRoom(ChatRoom room, ChatUser user);
+        bool IsUserInRoom(ChatUser user, ChatRoom room);
     }
 }

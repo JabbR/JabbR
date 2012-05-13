@@ -155,7 +155,7 @@ namespace JabbR.Models
                     select message).FirstOrDefault();
         }
 
-        public bool IsUserInRoom(ChatRoom room, ChatUser user)
+        public bool IsUserInRoom(ChatUser user, ChatRoom room)
         {
             // REVIEW: Inefficient, bu only users for unit tests right now
             return room.Users.Any(u => u.Name == user.Name);
