@@ -55,9 +55,9 @@
         this.messages = $messages;
         this.roomTopic = $roomTopic;
 
-        function glowTab() {
+        function glowTab(n) {
             // Stop if we're not unread anymore
-            if (!$tab.hasClass('unread')) {
+            if (!$tab.hasClass('unread') || n === 0) {
                 return;
             }
 
@@ -71,7 +71,7 @@
                 // Go dark
                 $tab.animate({ backgroundColor: '#164C85', color: '#ffffff' }, 800, function () {
                     // Glow the tab again
-                    glowTab();
+                    glowTab(n - 1);
                 });
             });
         }
@@ -138,7 +138,7 @@
             if (!this.isActive() && unread === 1) {
                 // If this room isn't active then we're going to glow the tab
                 // to get the user's attention
-                glowTab();
+                glowTab(6);
             }
         };
 
