@@ -485,6 +485,14 @@ li.room
   padding: 5px;
 }
 
+.broadcast 
+{
+    color: #c09853;
+    padding: 5px;
+    background-color: #fff6bd;
+    font-weight: bold;
+}
+
 .notification
 {
   color: #bbb;

@@ -704,7 +704,7 @@
     };
 
     chat.broadcastMessage = function (message, room) {
-        ui.addMessage(message, 'notification highlight', room);
+        ui.addMessage('ADMIN: ' + message, 'broadcast', room);
     };
 
     $ui.bind(ui.events.typing, function () {
