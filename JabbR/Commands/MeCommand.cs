@@ -11,12 +11,12 @@ namespace JabbR.Commands
         {
             ChatRoom room = context.Repository.VerifyUserRoom(context.Cache, callingUser, callerContext.RoomName);
 
-            if (args.Length < 2)
+            if (args.Length  == 0)
             {
                 throw new InvalidOperationException("You what?");
             }
 
-            var content = String.Join(" ", args.Skip(1));
+            var content = String.Join(" ", args);
 
             context.NotificationService.OnSelfMessage(room, callingUser, content);
         }

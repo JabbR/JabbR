@@ -12,27 +12,27 @@ namespace JabbR.Commands
     {
         public void Execute(CommandContext context, CallerContext callerContext, string[] args)
         {
-            if (args.Length == 1)
+            if (args.Length == 0)
             {
                 throw new InvalidOperationException("No nick specified!");
             }
 
-            string userName = HttpUtility.HtmlDecode(args[1]);
+            string userName = HttpUtility.HtmlDecode(args[0]);
             if (String.IsNullOrWhiteSpace(userName))
             {
                 throw new InvalidOperationException("No nick specified!");
             }
 
             string password = null;
-            if (args.Length > 2)
+            if (args.Length > 1)
             {
-                password = args[2];
+                password = args[1];
             }
 
             string newPassword = null;
-            if (args.Length > 3)
+            if (args.Length > 2)
             {
-                newPassword = args[3];
+                newPassword = args[2];
             }
 
             // See if there is a current user

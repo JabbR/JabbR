@@ -10,7 +10,7 @@ namespace JabbR.Commands
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
-            string message = String.Join(" ", args.Skip(1)).Trim();
+            string message = String.Join(" ", args).Trim();
 
             ChatService.ValidateNote(message);
 

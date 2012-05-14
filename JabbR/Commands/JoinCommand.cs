@@ -9,17 +9,17 @@ namespace JabbR.Commands
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
-            if (args.Length < 2)
+            if (args.Length == 0)
             {
                 throw new InvalidOperationException("Join which room?");
             }
 
             // Extract arguments
-            string roomName = HttpUtility.HtmlDecode(args[1]);
+            string roomName = HttpUtility.HtmlDecode(args[0]);
             string inviteCode = null;
-            if (args.Length > 2)
+            if (args.Length > 1)
             {
-                inviteCode = args[2];
+                inviteCode = args[1];
             }
 
             // Locate the room

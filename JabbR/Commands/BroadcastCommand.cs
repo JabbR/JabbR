@@ -10,7 +10,7 @@ namespace JabbR.Commands
     {
         public override void ExecuteAdminOperation(CommandContext context, CallerContext callerContext, Models.ChatUser callingUser, string[] args)
         {
-            string messageText = String.Join(" ", args.Skip(1)).Trim();
+            string messageText = String.Join(" ", args).Trim();
 
             if (String.IsNullOrEmpty(messageText))
             {

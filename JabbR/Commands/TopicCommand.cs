@@ -10,7 +10,7 @@ namespace JabbR.Commands
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
-            string newTopic = String.Join(" ", args.Skip(1)).Trim();
+            string newTopic = String.Join(" ", args).Trim();
             ChatService.ValidateTopic(newTopic);
 
             newTopic = String.IsNullOrWhiteSpace(newTopic) ? null : newTopic;

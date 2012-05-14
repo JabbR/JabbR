@@ -62,7 +62,7 @@ namespace JabbR.Commands
             string[] args = command.Substring(1).Split(' ');
             string commandName = args[0];
 
-            return TryHandleCommand(commandName, args);
+            return TryHandleCommand(commandName, args.Skip(1).ToArray());
         }
 
         public bool TryHandleCommand(string commandName, string[] args)

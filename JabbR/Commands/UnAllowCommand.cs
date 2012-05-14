@@ -9,21 +9,21 @@ namespace JabbR.Commands
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
-            if (args.Length == 1)
+            if (args.Length == 0)
             {
                 throw new InvalidOperationException("Which user to you want to revoke persmissions from?");
             }
 
-            string targetUserName = HttpUtility.HtmlDecode(args[1]);
+            string targetUserName = HttpUtility.HtmlDecode(args[0]);
 
             ChatUser targetUser = context.Repository.VerifyUser(targetUserName);
 
-            if (args.Length == 2)
+            if (args.Length == 1)
             {
                 throw new InvalidOperationException("Which room?");
             }
 
-            string roomName = HttpUtility.HtmlDecode(args[2]);
+            string roomName = HttpUtility.HtmlDecode(args[1]);
             ChatRoom targetRoom = context.Repository.VerifyRoom(roomName);
 
             context.Service.UnallowUser(callingUser, targetUser, targetRoom);

@@ -9,15 +9,15 @@ namespace JabbR.Commands
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
             ChatRoom room = null;
-            if (args.Length > 1)
+            if (args.Length  == 0)
             {
-                string roomName = HttpUtility.HtmlDecode(args[1]);
-
-                room = context.Repository.VerifyRoom(roomName);
+                room = context.Repository.VerifyUserRoom(context.Cache, callingUser, callerContext.RoomName);                
             }
             else
             {
-                room = context.Repository.VerifyUserRoom(context.Cache, callingUser, callerContext.RoomName);
+                string roomName = HttpUtility.HtmlDecode(args[0]);
+
+                room = context.Repository.VerifyRoom(roomName);
             }
 
             context.Service.LeaveRoom(callingUser, room);

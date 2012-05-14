@@ -9,13 +9,13 @@ namespace JabbR.Commands
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
-            if (args.Length == 1)
+            if (args.Length == 0)
             {
                 context.NotificationService.ListUsers();
                 return;
             }
 
-            var name = ChatService.NormalizeUserName(args[1]);
+            var name = ChatService.NormalizeUserName(args[0]);
 
             ChatUser user = context.Repository.GetUserByName(name);
 

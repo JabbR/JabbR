@@ -17,11 +17,11 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("You're the only person in here...");
             }
 
-            if (args.Length < 2 || String.IsNullOrWhiteSpace(args[1]))
+            if (args.Length == 0 || String.IsNullOrWhiteSpace(args[0]))
             {
                 throw new InvalidOperationException("Who are you trying send a private message to?");
             }
-            var toUserName = HttpUtility.HtmlDecode(args[1]);
+            var toUserName = HttpUtility.HtmlDecode(args[0]);
             ChatUser toUser = context.Repository.VerifyUser(toUserName);
 
             if (toUser == callingUser)
@@ -29,7 +29,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("You can't private message yourself!");
             }
 
-            string messageText = String.Join(" ", args.Skip(2)).Trim();
+            string messageText = String.Join(" ", args.Skip(1)).Trim();
 
             if (String.IsNullOrEmpty(messageText))
             {

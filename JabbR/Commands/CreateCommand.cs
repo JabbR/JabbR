@@ -9,17 +9,17 @@ namespace JabbR.Commands
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
-            if (args.Length > 2)
+            if (args.Length > 1)
             {
                 throw new InvalidOperationException("Room name cannot contain spaces.");
             }
 
-            if (args.Length == 1)
+            if (args.Length == 0)
             {
                 throw new InvalidOperationException("No room specified.");
             }
 
-            string roomName = HttpUtility.HtmlDecode(args[1]);
+            string roomName = HttpUtility.HtmlDecode(args[0]);
             if (String.IsNullOrWhiteSpace(roomName))
             {
                 throw new InvalidOperationException("No room specified.");

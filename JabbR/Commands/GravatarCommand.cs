@@ -10,7 +10,7 @@ namespace JabbR.Commands
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
-            string email = String.Join(" ", args.Skip(1));
+            string email = String.Join(" ", args);
 
             if (String.IsNullOrWhiteSpace(email))
             {

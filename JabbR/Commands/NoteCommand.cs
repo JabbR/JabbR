@@ -14,8 +14,8 @@ namespace JabbR.Commands
             // 1. Setting a new Note.
             // 2. Clearing the existing Note.
             // If we have no optional text, then we need to clear it. Otherwise, we're storing it.
-            bool isNoteBeingCleared = args.Length == 1;
-            callingUser.Note = isNoteBeingCleared ? null : String.Join(" ", args.Skip(1)).Trim();
+            bool isNoteBeingCleared = args.Length == 0;
+            callingUser.Note = isNoteBeingCleared ? null : String.Join(" ", args).Trim();
 
             ChatService.ValidateNote(callingUser.Note);
 
