@@ -1,12 +1,35 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Web;
+using System.Text.RegularExpressions;
 using JabbR.ContentProviders.Core;
 
 namespace JabbR.ContentProviders
 {
     public class YouTubeContentProvider : EmbedContentProvider
     {
+        // Regex taken from this SO answer: http://stackoverflow.com/a/5831191
+        private static readonly Regex YoutubeRegex = new Regex(
+            @"# Match non-linked youtube URL in the wild. (Rev:20111012)
+            https?://         # Required scheme. Either http or https.
+            (?:[0-9A-Z-]+\.)? # Optional subdomain.
+            (?:               # Group host alternatives.
+              youtu\.be/      # Either youtu.be,
+            | youtube\.com    # or youtube.com followed by
+              \S*             # Allow anything up to VIDEO_ID,
+              [^\w\-\s]       # but char before ID is non-ID char.
+            )                 # End host alternatives.
+            ([\w\-]{11})      # $1: VIDEO_ID is exactly 11 chars.
+            (?=[^\w\-]|$)     # Assert next char is non-ID or EOS.
+            (?!               # Assert URL is not pre-linked.
+              [?=&+%\w]*      # Allow URL (query) remainder.
+              (?:             # Group pre-linked alternatives.
+                [\'""][^<>]*> # Either inside a start tag,
+              | </a>          # or inside <a> element text contents.
+              )               # End recognized pre-linked alts.
+            )                 # End negative lookahead assertion.
+            [?=&+%\w-]*       # Consume any URL (query) remainder.",
+            RegexOptions.IgnoreCase | RegexOptions.IgnorePatternWhitespace);
+
         public override string MediaFormatString
         {
             get
@@ -20,19 +43,20 @@ namespace JabbR.ContentProviders
             get
             {
                 yield return "http://www.youtube.com";
+                yield return "http://youtu.be";
             }
         }
 
         protected override IList<string> ExtractParameters(Uri responseUri)
         {
-            var queryString = HttpUtility.ParseQueryString(responseUri.Query);
-            string videoId = queryString["v"];
-            
-            if (!String.IsNullOrEmpty(videoId))
+            Match match = YoutubeRegex.Match(responseUri.ToString());
+            if (match.Groups.Count < 2 || String.IsNullOrEmpty(match.Groups[1].Value))
             {
-                return new List<string>() { videoId };
+                return null;
             }
-            return null;
+
+            string videoId = match.Groups[1].Value;
+            return new List<string> { videoId };
         }
     }
 }
