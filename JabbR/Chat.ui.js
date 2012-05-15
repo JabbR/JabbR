@@ -1349,9 +1349,8 @@
                 }
             }
         },
-        addMessageBeforeTarget: function (content, type, $target) {
-            var $element = null,
-                now = new Date(),
+        prepareMessage: function (content, type) {
+            var now = new Date(),
                 message = {
                     message: utility.parseEmojis(content),
                     type: type,
@@ -1359,6 +1358,12 @@
                     when: now.formatTime(true),
                     fulldate: now.toLocaleString()
                 };
+
+            return message;
+        },
+        addMessageBeforeTarget: function (content, type, $target) {
+            var $element = null,
+                message = ui.prepareMessage(content, type);
 
             $element = templates.notification.tmpl(message);
 
@@ -1370,14 +1375,7 @@
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements(),
                 nearEnd = room.isNearTheEnd(),
                 $element = null,
-                now = new Date(),
-                message = {
-                    message: utility.parseEmojis(content),
-                    type: type,
-                    date: now,
-                    when: now.formatTime(true),
-                    fulldate: now.toLocaleString()
-                };
+                message = ui.prepareMessage(content, type);
 
             $element = templates.notification.tmpl(message).appendTo(room.messages);
 
