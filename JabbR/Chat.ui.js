@@ -508,21 +508,32 @@
     }
 
     function processMessage(message, roomName) {
-        var isFromCollapibleContentProvider = message.message.indexOf('class="collapsible_box"') > -1,
-            collapseContent = roomName ? getRoomPreference(roomName, 'blockRichness') : getActiveRoomPreference('blockRichness');
+        var isFromCollapibleContentProvider = isFromCollapsibleContentProvider(message.message),
+            collapseContent = shouldCollapseContent(message.message, roomName);
 
         message.message = isFromCollapibleContentProvider ? message.message : utility.parseEmojis(message.message);
         message.trimmedName = utility.trim(message.name, 21);
         message.when = message.date.formatTime(true);
         message.fulldate = message.date.toLocaleString();
 
-        if (isFromCollapibleContentProvider && collapseContent) {
+        if (collapseContent) {
             message.message = collapseRichContent(message.message);
         }
     }
 
+    function isFromCollapsibleContentProvider(content) {
+        return content.indexOf('class="collapsible_box') > -1; // leaving off trailing " purposefully
+    }
+
+    function shouldCollapseContent(content, roomName) {
+        var collapsible = isFromCollapsibleContentProvider(content),
+            collapseForRoom = roomName ? getRoomPreference(roomName, 'blockRichness') : getActiveRoomPreference('blockRichness');
+
+        return collapsible && collapseForRoom;
+    }
+
     function collapseRichContent(content) {
-        content = content.replace('class="collapsible_box"', 'class="collapsible_box" style="display: none;"');
+        content = content.replace('class="collapsible_box', 'style="display: none;" class="collapsible_box');
         return content.replace('class="collapsible_title"', 'class="collapsible_title" title="Content collapsed because you have Rich-Content disabled"');
     }
 
@@ -1377,10 +1388,9 @@
             return $('#m-' + id).length > 0;
         },
         addChatMessageContent: function (id, content, roomName) {
-            var $message = $('#m-' + id),
-                isFromCollapibleContentProvider = content.indexOf('class="collapsible_box"') > -1;
+            var $message = $('#m-' + id);
 
-            if (isFromCollapibleContentProvider && getRoomPreference(roomName, 'blockRichness')) {
+            if (shouldCollapseContent(content, roomName)) {
                 content = collapseRichContent(content);
             }
 
@@ -1582,7 +1592,9 @@
                  .find('.admin')
                  .text('');
             room.updateUserStatus($user);
-        }
+        },
+        shouldCollapseContent: shouldCollapseContent,
+        collapseRichContent: collapseRichContent
     };
 
     if (!window.chat) {
