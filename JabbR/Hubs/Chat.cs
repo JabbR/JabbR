@@ -325,10 +325,13 @@ namespace JabbR
             // Reverse them since we want to get them in chronological order
             recentMessages.Reverse();
 
+            // Get online users through the repository
+            IEnumerable<ChatUser> onlineUsers = _repository.GetOnlineUsers(room).ToList();
+
             return new RoomViewModel
             {
                 Name = room.Name,
-                Users = from u in room.Users.Online()
+                Users = from u in onlineUsers
                         select new UserViewModel(u),
                 Owners = from u in room.Owners.Online()
                          select u.Name,

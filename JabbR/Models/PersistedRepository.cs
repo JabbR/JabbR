@@ -97,7 +97,7 @@ namespace JabbR.Models
 
         public IQueryable<ChatMessage> GetMessagesByRoom(ChatRoom room)
         {
-            return _db.Messages.Where(r => r.RoomKey == room.Key);
+            return _db.Messages.Include(r => r.User).Where(r => r.RoomKey == room.Key);
         }
 
         public IQueryable<ChatMessage> GetPreviousMessages(string messageId)
@@ -114,7 +114,15 @@ namespace JabbR.Models
                    where m.When < info.When
                    select m;
         }
-        
+
+        public IQueryable<ChatUser> GetOnlineUsers(ChatRoom room)
+        {
+            return _db.Entry(room)
+                      .Collection(r => r.Users)
+                      .Query()
+                      .Online();
+        }
+
         public IQueryable<ChatUser> SearchUsers(string name)
         {
             return _db.Users.Online().Where(u => u.Name.Contains(name));
@@ -169,7 +177,12 @@ namespace JabbR.Models
 
         public bool IsUserInRoom(ChatUser user, ChatRoom room)
         {
-            return user.Rooms.Contains(room);
+            return _db.Entry(user)
+                      .Collection(r => r.Rooms)
+                      .Query()
+                      .Where(r => r.Key == room.Key)
+                      .Select(r => r.Name)
+                      .FirstOrDefault() != null;
         }
     }
 }

@@ -18,7 +18,7 @@ namespace JabbR.Commands
             string roomName = HttpUtility.HtmlDecode(args[0]);
             ChatRoom room = context.Repository.VerifyRoom(roomName);
 
-            var names = room.Users.Online().Select(s => s.Name);
+            var names = context.Repository.GetOnlineUsers(room).Select(s => s.Name);
 
             context.NotificationService.ListUsers(room, names);
         }
