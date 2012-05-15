@@ -925,16 +925,16 @@
                             // exclude current username from autocomplete
                             return room.users.find('li[data-name != "' + ui.getUserName() + '"]')
                                          .not('.room')
-                                         .map(function () { return ($(this).data('name') || "").toString(); });
+                                         .map(function () { return ($(this).data('name') + ' ' || "").toString(); });
                         case '#':
                             var lobby = getLobby();
                             return lobby.users.find('li')
-                                         .map(function () { return $(this).data('name'); });
+                                         .map(function () { return $(this).data('name') + ' '; });
 
                         case '/':
                             var commands = ui.getCommands();
                             return ui.getCommands()
-                                         .map(function (cmd) { return cmd.Name; });
+                                         .map(function (cmd) { return cmd.Name + ' '; });
 
                         case ':':
                             return Emoji.getIcons();
