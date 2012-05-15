@@ -1226,7 +1226,8 @@
                 $target = $messages.children().first(),
                 $previousMessage = null,
                 $current = null,
-                previousUser = null;
+                previousUser = null,
+                previousTimestamp = new Date();
 
             if (messages.length === 0) {
                 // Mark this list as full
@@ -1240,6 +1241,12 @@
 
                 if ($previousMessage) {
                     previousUser = $previousMessage.data('name');
+                    previousTimestamp = new Date($previousMessage.data('timestamp') || new Date());
+                }
+
+                if (this.date.toDate().diffDays(previousTimestamp.toDate())) {
+                    ui.addMessageBeforeTarget(this.date.toLocaleDateString(), 'list-header', $target)
+                      .find('.right').remove(); // remove timestamp on date indicator
                 }
 
                 // Determine if we need to show the user
@@ -1341,6 +1348,23 @@
                     this.addMessage(content, type, rooms[r].getName());
                 }
             }
+        },
+        addMessageBeforeTarget: function (content, type, $target) {
+            var $element = null,
+                now = new Date(),
+                message = {
+                    message: utility.parseEmojis(content),
+                    type: type,
+                    date: now,
+                    when: now.formatTime(true),
+                    fulldate: now.toLocaleString()
+                };
+
+            $element = templates.notification.tmpl(message);
+
+            $target.before($element);
+
+            return $element;
         },
         addMessage: function (content, type, roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements(),
