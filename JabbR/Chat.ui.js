@@ -1349,7 +1349,7 @@
                 }
             }
         },
-        prepareMessage: function (content, type) {
+        prepareNotificationMessage: function (content, type) {
             var now = new Date(),
                 message = {
                     message: utility.parseEmojis(content),
@@ -1359,13 +1359,12 @@
                     fulldate: now.toLocaleString()
                 };
 
-            return message;
+            return templates.notification.tmpl(message);
         },
         addMessageBeforeTarget: function (content, type, $target) {
-            var $element = null,
-                message = ui.prepareMessage(content, type);
+            var $element = null;
 
-            $element = templates.notification.tmpl(message);
+            $element = ui.prepareNotificationMessage(content, type);
 
             $target.before($element);
 
@@ -1374,10 +1373,10 @@
         addMessage: function (content, type, roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements(),
                 nearEnd = room.isNearTheEnd(),
-                $element = null,
-                message = ui.prepareMessage(content, type);
+                $element = null;
 
-            $element = templates.notification.tmpl(message).appendTo(room.messages);
+            $element = ui.prepareNotificationMessage(content, type)
+                         .appendTo(room.messages);
 
             if (type === 'notification' && room.isLobby() === false) {
                 ui.collapseNotifications($element);
