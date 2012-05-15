@@ -514,13 +514,14 @@
         message.when = message.date.formatTime(true);
         message.fulldate = message.date.toLocaleString();
 
-        if (isFromCollapibleContentProvider && !getActiveRoomPreference('hasRichness')) {
+        if (isFromCollapibleContentProvider && getActiveRoomPreference('blockRichness')) {
             message.message = collapseRichContent(message.message);
         }
     }
 
     function collapseRichContent(content) {
-        return content.replace('class="collapsible_box"', 'class="collapsible_box" style="display: none;"');
+        content = content.replace('class="collapsible_box"', 'class="collapsible_box" style="display: none;"');
+        return content.replace('class="collapsible_title"', 'class="collapsible_title" title="Content collapsed because you have Rich-Content disabled"');
     }
 
     function triggerFocus() {
@@ -549,7 +550,7 @@
         // Placeholder for room level preferences
         toggleElement($sound, 'hasSound', roomName);
         toggleElement($toast, 'canToast', roomName);
-        toggleElement($richness, 'hasRichness', roomName);
+        toggleElement($richness, 'blockRichness', roomName);
     }
 
     function setPreference(name, value) {
@@ -819,7 +820,8 @@
             });
 
             $richness.click(function () {
-                var room = getCurrentRoomElements();
+                var room = getCurrentRoomElements(),
+                    $richContentMessages = room.messages.find('h3.collapsible_title');
 
                 if (room.isLobby()) {
                     return;
@@ -830,10 +832,17 @@
                 var enabled = !$(this).hasClass('off');
 
                 // Store the preference
-                setRoomPreference(room.getName(), 'hasRichness', enabled);
+                setRoomPreference(room.getName(), 'blockRichness', enabled);
 
                 // toggle all rich-content for current room
-                room.messages.find('h3.collapsible_title').trigger('click');
+                $richContentMessages.each(function (index) {
+                    if (enabled) {
+                        $(this).attr("title", "Content collapsed because you have Rich-Content disabled");
+                    } else {
+                        $(this).removeAttr("title");
+                    }
+                    $(this).trigger('click');
+                });
             });
 
             $toast.click(function () {
@@ -1369,7 +1378,7 @@
             var $message = $('#m-' + id),
                 isFromCollapibleContentProvider = content.indexOf('class="collapsible_box"') > -1;
 
-            if (isFromCollapibleContentProvider && !getActiveRoomPreference('hasRichness')) {
+            if (isFromCollapibleContentProvider && getActiveRoomPreference('blockRichness')) {
                 content = collapseRichContent(content);
             }
 
