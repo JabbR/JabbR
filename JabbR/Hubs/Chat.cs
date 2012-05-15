@@ -611,7 +611,7 @@ namespace JabbR
 
             // If the target user is in the target room.
             // Tell everyone in the target room that a new owner was added
-            if (_repository.IsUserInRoom(targetUser, targetRoom))
+            if (_repository.IsUserInRoom(_cache, targetUser, targetRoom))
             {
                 Clients[targetRoom.Name].addOwner(userViewModel, targetRoom.Name);
             }
@@ -632,7 +632,7 @@ namespace JabbR
 
             // If the target user is in the target room.
             // Tell everyone in the target room that the owner was removed
-            if (_repository.IsUserInRoom(targetUser, targetRoom))
+            if (_repository.IsUserInRoom(_cache, targetUser, targetRoom))
             {
                 Clients[targetRoom.Name].removeOwner(userViewModel, targetRoom.Name);
             }

@@ -25,7 +25,7 @@ namespace JabbR.Commands
             // Locate the room
             ChatRoom room = context.Repository.VerifyRoom(roomName);
 
-            if (!context.Repository.IsUserInRoom(callingUser, room))
+            if (!context.Repository.IsUserInRoom(context.Cache, callingUser, room))
             {
                 // Join the room
                 context.Service.JoinRoom(callingUser, room, inviteCode);
