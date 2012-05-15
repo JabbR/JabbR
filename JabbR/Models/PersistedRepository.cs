@@ -1,4 +1,8 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Objects;
+using System.Data.Objects.DataClasses;
 using System.Linq;
 
 namespace JabbR.Models
@@ -126,6 +130,39 @@ namespace JabbR.Models
         public IQueryable<ChatUser> SearchUsers(string name)
         {
             return _db.Users.Online().Where(u => u.Name.Contains(name));
+        }
+
+        public void AddUserRoom(ChatUser user, ChatRoom room)
+        {
+            RunNonLazy(() => room.Users.Add(user));
+        }
+
+        public void RemoveUserRoom(ChatUser user, ChatRoom room)
+        {
+            RunNonLazy(() =>
+            {
+                // The hack from hell to attach the user to room.Users so delete is tracked
+                ObjectContext context = ((IObjectContextAdapter)_db).ObjectContext;
+                RelationshipManager manger = context.ObjectStateManager.GetRelationshipManager(room);
+                IRelatedEnd end = manger.GetRelatedEnd("JabbR.Models.ChatRoom_Users", "ChatRoom_Users_Target");
+                end.Attach(user);
+
+                room.Users.Remove(user);
+            });
+        }
+
+        private void RunNonLazy(Action action)
+        {
+            bool old = _db.Configuration.LazyLoadingEnabled;
+            try
+            {
+                _db.Configuration.LazyLoadingEnabled = false;
+                action();
+            }
+            finally
+            {
+                _db.Configuration.LazyLoadingEnabled = old;
+            }
         }
 
         public void Add(ChatClient client)

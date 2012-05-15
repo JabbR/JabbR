@@ -165,5 +165,19 @@ namespace JabbR.Models
             // REVIEW: Inefficient, bu only users for unit tests right now
             return room.Users.Any(u => u.Name == user.Name);
         }
+
+        public void AddUserRoom(ChatUser user, ChatRoom room)
+        {
+            user.Rooms.Add(room);
+
+            room.Users.Add(user);
+        }
+
+        public void RemoveUserRoom(ChatUser user, ChatRoom room)
+        {
+            user.Rooms.Remove(room);
+
+            room.Users.Remove(user);
+        }
     }
 }

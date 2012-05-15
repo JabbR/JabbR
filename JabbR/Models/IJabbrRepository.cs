@@ -25,6 +25,9 @@ namespace JabbR.Models
 
         ChatClient GetClientById(string clientId, bool includeUser = false);
 
+        void AddUserRoom(ChatUser user, ChatRoom room);
+        void RemoveUserRoom(ChatUser user, ChatRoom room);
+
         void Add(ChatClient client);
         void Add(ChatMessage message);
         void Add(ChatRoom room);

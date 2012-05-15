@@ -959,7 +959,7 @@ namespace JabbR
             };
 
             // Update the room count
-            Clients.updateRoomCount(roomViewModel, room.Users.Online().Count());
+            Clients.updateRoomCount(roomViewModel, _repository.GetOnlineUsers(room).Count());
         }
 
         private ClientState GetClientState()

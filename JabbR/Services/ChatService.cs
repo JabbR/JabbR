@@ -439,11 +439,8 @@ namespace JabbR.Services
                 }
             }
 
-            // Add this room to the user's list of rooms
-            user.Rooms.Add(room);
-
-            // Add this user to the list of room's users
-            room.Users.Add(user);
+            // Add this user to the room
+            _repository.AddUserRoom(user, room);
 
             // Clear the cache
             _cache.RemoveUserInRoom(user, room);
@@ -484,11 +481,8 @@ namespace JabbR.Services
             // Update the cache
             _cache.RemoveUserInRoom(user, room);
 
-            // Remove the user from the room
-            room.Users.Remove(user);
-
-            // Remove this room from the users' list
-            user.Rooms.Remove(room);
+            // Remove the user from this room
+            _repository.RemoveUserRoom(user, room);
         }
 
         public ChatMessage AddMessage(ChatUser user, ChatRoom room, string id, string content)
