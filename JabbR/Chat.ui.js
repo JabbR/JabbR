@@ -32,7 +32,8 @@
         $window = $(window),
         $document = $(document),
         $roomFilterInput = null,
-        updateTimeout = 15000;
+        updateTimeout = 15000,
+        $richness = null;
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -512,6 +513,14 @@
         message.trimmedName = utility.trim(message.name, 21);
         message.when = message.date.formatTime(true);
         message.fulldate = message.date.toLocaleString();
+
+        if (isFromCollapibleContentProvider && !getActiveRoomPreference('hasRichness')) {
+            message.message = collapseRichContent(message.message);
+        }
+    }
+
+    function collapseRichContent(content) {
+        return content.replace('class="collapsible_box"', 'class="collapsible_box" style="display: none;"');
     }
 
     function triggerFocus() {
@@ -540,6 +549,7 @@
         // Placeholder for room level preferences
         toggleElement($sound, 'hasSound', roomName);
         toggleElement($toast, 'canToast', roomName);
+        toggleElement($richness, 'hasRichness', roomName);
     }
 
     function setPreference(name, value) {
@@ -712,6 +722,7 @@
             $newMessage = $('#new-message');
             $toast = $('#preferences .toast');
             $sound = $('#preferences .sound');
+            $richness = $('#preferences .richness');
             $downloadIcon = $('#preferences .download');
             $downloadDialog = $('#download-dialog');
             $downloadDialogButton = $('#download-dialog-button');
@@ -734,7 +745,8 @@
                 $toast.show();
             }
             else {
-                $downloadIcon.css({ left: '26px' });
+                $richness.css({ left: '26px' });
+                $downloadIcon.css({ left: '62px' });
                 // We need to set the toast setting to false
                 preferences.canToast = false;
             }
@@ -804,6 +816,24 @@
 
                 // Store the preference
                 setRoomPreference(room.getName(), 'hasSound', enabled);
+            });
+
+            $richness.click(function () {
+                var room = getCurrentRoomElements();
+
+                if (room.isLobby()) {
+                    return;
+                }
+
+                $(this).toggleClass('off');
+
+                var enabled = !$(this).hasClass('off');
+
+                // Store the preference
+                setRoomPreference(room.getName(), 'hasRichness', enabled);
+
+                // toggle all rich-content for current room
+                room.messages.find('h3.collapsible_title').trigger('click');
             });
 
             $toast.click(function () {
@@ -1336,7 +1366,12 @@
             return $('#m-' + id).length > 0;
         },
         addChatMessageContent: function (id, content, roomName) {
-            var $message = $('#m-' + id);
+            var $message = $('#m-' + id),
+                isFromCollapibleContentProvider = content.indexOf('class="collapsible_box"') > -1;
+
+            if (isFromCollapibleContentProvider && !getActiveRoomPreference('hasRichness')) {
+                content = collapseRichContent(content);
+            }
 
             $message.find('.middle')
                     .append(content);

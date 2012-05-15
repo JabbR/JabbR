@@ -223,8 +223,10 @@
       <ul id="userlist-lobby" class="users current">
       </ul>
       <div id="preferences">
-        <a class="sound" title="audible notifications"></a><a class="toast" title="popup notifications" aria-haspopup="true">
-        </a><a class="download" title="download messages"></a>
+        <a class="sound" title="audible notifications"></a>
+        <a class="richness" title="toggle rich-content"></a>
+        <a class="toast" title="popup notifications" aria-haspopup="true"></a>
+        <a class="download" title="download messages" aria-haspopup="true"></a>
       </div>
       <form id="send-message" action="#">
       <div id="message-box">
