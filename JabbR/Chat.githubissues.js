@@ -10,7 +10,7 @@
             .removeClass('git-hub-issue-' + issue.data.number);
 
 
-        issue.data.body = chat.utility.markdownToHtml(issue.data.body);
+        issue.data.body = chat.utility.markdownToHtml(chat.utility.encodeHtml(issue.data.body));
 
         // Process the template, and add it in to the div.
         $('#github-issues-template').tmpl(issue.data).appendTo(elements);
