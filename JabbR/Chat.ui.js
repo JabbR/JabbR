@@ -507,14 +507,16 @@
         $.history.load('/rooms/' + roomName);
     }
 
-    function processMessage(message) {
-        var isFromCollapibleContentProvider = message.message.indexOf('class="collapsible_box"') > -1;
+    function processMessage(message, roomName) {
+        var isFromCollapibleContentProvider = message.message.indexOf('class="collapsible_box"') > -1,
+            collapseContent = roomName ? getRoomPreference(roomName, 'blockRichness') : getActiveRoomPreference('blockRichness');
+
         message.message = isFromCollapibleContentProvider ? message.message : utility.parseEmojis(message.message);
         message.trimmedName = utility.trim(message.name, 21);
         message.when = message.date.formatTime(true);
         message.fulldate = message.date.toLocaleString();
 
-        if (isFromCollapibleContentProvider && getActiveRoomPreference('blockRichness')) {
+        if (isFromCollapibleContentProvider && collapseContent) {
             message.message = collapseRichContent(message.message);
         }
     }
@@ -1276,7 +1278,7 @@
 
             // Populate the old messages
             $.each(messages, function (index) {
-                processMessage(this);
+                processMessage(this, roomName);
 
                 if ($previousMessage) {
                     previousUser = $previousMessage.data('name');
@@ -1322,7 +1324,7 @@
             showUserName = previousUser !== message.name;
             message.showUser = showUserName;
 
-            processMessage(message);
+            processMessage(message, roomName);
 
             if (showUserName === false) {
                 $previousMessage.addClass('continue');
@@ -1378,7 +1380,7 @@
             var $message = $('#m-' + id),
                 isFromCollapibleContentProvider = content.indexOf('class="collapsible_box"') > -1;
 
-            if (isFromCollapibleContentProvider && getActiveRoomPreference('blockRichness')) {
+            if (isFromCollapibleContentProvider && getRoomPreference(roomName, 'blockRichness')) {
                 content = collapseRichContent(content);
             }
 
