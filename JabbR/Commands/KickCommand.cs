@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web;
 using JabbR.Models;
 
@@ -16,7 +17,7 @@ namespace JabbR.Commands
 
             ChatRoom room = context.Repository.VerifyUserRoom(context.Cache, callingUser, callerContext.RoomName);
 
-            if (room.Users.Count == 1)
+            if (context.Repository.GetOnlineUsers(room).Count() == 1)
             {
                 throw new InvalidOperationException("You're the only person in here...");
             }
