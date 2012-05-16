@@ -840,7 +840,6 @@
     <Compile Include="Commands\RemoveAdminCommand.cs" />
     <Compile Include="Commands\RemoveOwnerCommand.cs" />
     <Compile Include="Commands\ResetInviteCodeCommand.cs" />
-    <Compile Include="Commands\RoomsCommand.cs" />
     <Compile Include="Commands\NickCommand.cs" />
     <Compile Include="Commands\TopicCommand.cs" />
     <Compile Include="Commands\UnAllowCommand.cs" />

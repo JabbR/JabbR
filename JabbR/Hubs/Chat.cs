@@ -250,7 +250,6 @@ namespace JabbR
                 new { Name = "me", Description = "Type /me 'does anything'" },
                 new { Name = "msg", Description = "Type /msg @nickname (message) to send a private message to nickname. @ is optional." },
                 new { Name = "leave", Description = "Type /leave to leave the current room. Type /leave [room name] to leave a specific room." },
-                new { Name = "rooms", Description = "Type /rooms to show the list of rooms" },
                 new { Name = "where", Description = "Type /where [name] to list the rooms that user is in" },
                 new { Name = "who", Description = "Type /who to show a list of all users, /who [name] to show specific information about that user" },
                 new { Name = "list", Description = "Type /list (room) to show a list of users in the room" },
@@ -777,11 +776,6 @@ namespace JabbR
         void INotificationService.ShowHelp()
         {
             Caller.showCommands();
-        }
-
-        void INotificationService.ShowRooms()
-        {
-            Caller.showRooms(GetRooms());
         }
 
         void INotificationService.Invite(ChatUser user, ChatUser targetUser, ChatRoom targetRoom)

@@ -2902,36 +2902,6 @@ namespace JabbR.Test
 
         }
 
-        public class RoomsCommand
-        {
-            [Fact]
-            public void CanShowRooms()
-            {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var user = new ChatUser
-                {
-                    Name = "dfowler",
-                    Id = "1"
-                };
-                repository.Add(user);
-                var service = new ChatService(cache, repository,new Mock<ICryptoService>().Object);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                bool result = commandManager.TryHandleCommand("/rooms");
-
-                Assert.True(result);
-                notificationService.Verify(x => x.ShowRooms(), Times.Once());
-            }
-        }
-
         public class WhoCommand
         {
             [Fact]
