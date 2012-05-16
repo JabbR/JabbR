@@ -13,8 +13,9 @@ namespace JabbR.Models
 
         private static readonly Func<JabbrContext, string, ChatUser> getUserByName = (db, userName) => db.Users.FirstOrDefault(u => u.Name == userName);
         private static readonly Func<JabbrContext, string, ChatUser> getUserById = (db, userId) => db.Users.FirstOrDefault(u => u.Id == userId);
-        private static readonly Func<JabbrContext, string, ChatRoom> getRoomByName = (db, roomName) => db.Rooms.FirstOrDefault(u => u.Name == roomName);
-        private static readonly Func<JabbrContext, string, ChatClient> getClientById = (db, clientId) => db.Clients.FirstOrDefault(u => u.Id == clientId);
+        private static readonly Func<JabbrContext, string, ChatUser> getUserByIdentity = (db, userIdentity) => db.Users.FirstOrDefault(u => u.Identity == userIdentity);
+        private static readonly Func<JabbrContext, string, ChatRoom> getRoomByName = (db, roomName) => db.Rooms.FirstOrDefault(r => r.Name == roomName);
+        private static readonly Func<JabbrContext, string, ChatClient> getClientById = (db, clientId) => db.Clients.FirstOrDefault(c => c.Id == clientId);
         private static readonly Func<JabbrContext, string, ChatClient> getClientByIdWithUser = (db, clientId) => db.Clients.Include(c => c.User).FirstOrDefault(u => u.Id == clientId);
 
         public PersistedRepository(JabbrContext db)
@@ -195,7 +196,7 @@ namespace JabbR.Models
 
         public ChatUser GetUserByIdentity(string userIdentity)
         {
-            return _db.Users.FirstOrDefault(u => u.Identity == userIdentity);
+            return getUserByIdentity(_db, userIdentity);
         }
 
         public ChatClient GetClientById(string clientId, bool includeUser = false)
