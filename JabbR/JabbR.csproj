@@ -89,9 +89,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Ninject.2.2.1.4\lib\net40-Full\Ninject.dll</HintPath>
     </Reference>
-    <Reference Include="RouteMagic">
-      <HintPath>..\packages\RouteMagic.1.2\lib\net40\RouteMagic.dll</HintPath>
-    </Reference>
     <Reference Include="SignalR, Version=0.5.96.10509, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\SignalR.Server.0.5.0\lib\net40\SignalR.dll</HintPath>
@@ -115,6 +112,15 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.Net.Http">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20515.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20515.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20515.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.DynamicData" />
@@ -125,6 +131,12 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Http">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20515.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.20515.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
@@ -804,6 +816,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\MessagesController.cs" />
+    <Compile Include="Api\Model\MessageApiModel.cs" />
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="Auth\Login.ashx.cs">
       <DependentUpon>Login.ashx</DependentUpon>
@@ -872,7 +886,6 @@
     <Compile Include="ContentProviders\GoogleDocsFormProvider.cs" />
     <Compile Include="ContentProviders\SlideshareContentProvider.cs" />
     <Compile Include="ContentProviders\GistContentProvider.cs" />
-    <Compile Include="api\MessagesHandler.cs" />
     <Compile Include="Hubs\Chat.cs" />
     <Compile Include="ContentProviders\CollegeHumorContentProvider.cs" />
     <Compile Include="ContentProviders\ImgurContentProvider.cs" />
@@ -883,6 +896,7 @@
     <Compile Include="Infrastructure\AjaxMinMinifier.cs" />
     <Compile Include="Infrastructure\Http.cs" />
     <Compile Include="Infrastructure\JsonNetSerializer.cs" />
+    <Compile Include="Infrastructure\NinjectWebApiDependencyResolver.cs" />
     <Compile Include="Infrastructure\RandomUtils.cs" />
     <Compile Include="Infrastructure\RegexExtensions.cs" />
     <Compile Include="Infrastructure\SafeCollection.cs" />

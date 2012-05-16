@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Hosting;
+using System.Web.Http;
 using System.Web.Routing;
 using Elmah;
 using JabbR.ContentProviders.Core;
-using JabbR.Handlers;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
 using Newtonsoft.Json;
 using Ninject;
-using RouteMagic;
 using SignalR;
 using SignalR.Hosting.Common;
 using SignalR.Ninject;
@@ -108,14 +108,22 @@ namespace JabbR.App_Start
             ClearConnectedClients(repositoryFactory());
 
             SetupRoutes(kernel);
+            SetupWebApi(kernel);
+        }
+
+        private static void SetupWebApi(IKernel kernel)
+        {
+            GlobalConfiguration.Configuration.Formatters.Clear();
+            GlobalConfiguration.Configuration.Formatters.Add(new JsonMediaTypeFormatter());
+            GlobalConfiguration.Configuration.DependencyResolver = new NinjectWebApiDependencyResolver(kernel);
         }
 
         private static void SetupRoutes(IKernel kernel)
         {
-            RouteTable.Routes.MapHttpHandler("Download", "api/v1/messages/{room}/{format}",
-                                             new { format = "json" },
-                                             new { },
-                                             ctx => kernel.Get<MessagesHandler>());
+            RouteTable.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api/v1/{controller}/{room}"
+            );
         }
 
         private static void ClearConnectedClients(IJabbrRepository repository)
