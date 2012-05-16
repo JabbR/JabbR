@@ -11,6 +11,12 @@ namespace JabbR.Models
     {
         private readonly JabbrContext _db;
 
+        private static readonly Func<JabbrContext, string, ChatUser> getUserByName = (db, userName) => db.Users.FirstOrDefault(u => u.Name == userName);
+        private static readonly Func<JabbrContext, string, ChatUser> getUserById = (db, userId) => db.Users.FirstOrDefault(u => u.Id == userId);
+        private static readonly Func<JabbrContext, string, ChatRoom> getRoomByName = (db, roomName) => db.Rooms.FirstOrDefault(u => u.Name == roomName);
+        private static readonly Func<JabbrContext, string, ChatClient> getClientById = (db, clientId) => db.Clients.FirstOrDefault(u => u.Id == clientId);
+        private static readonly Func<JabbrContext, string, ChatClient> getClientByIdWithUser = (db, clientId) => db.Clients.Include(c => c.User).FirstOrDefault(u => u.Id == clientId);
+
         public PersistedRepository(JabbrContext db)
         {
             _db = db;
@@ -67,17 +73,17 @@ namespace JabbR.Models
 
         public ChatUser GetUserById(string userId)
         {
-            return _db.Users.FirstOrDefault(u => u.Id == userId);
+            return getUserById(_db, userId);
         }
 
         public ChatUser GetUserByName(string userName)
         {
-            return _db.Users.FirstOrDefault(u => u.Name == userName);
+            return getUserByName(_db, userName);
         }
 
         public ChatRoom GetRoomByName(string roomName)
         {
-            return _db.Rooms.FirstOrDefault(r => r.Name == roomName);
+            return getRoomByName(_db, roomName);
         }
 
         public ChatMessage GetMessagesById(string id)
@@ -194,14 +200,12 @@ namespace JabbR.Models
 
         public ChatClient GetClientById(string clientId, bool includeUser = false)
         {
-            IQueryable<ChatClient> clients = _db.Clients;
-
             if (includeUser)
             {
-                clients = clients.Include(c => c.User);
+                return getClientByIdWithUser(_db, clientId);
             }
 
-            return clients.FirstOrDefault(c => c.Id == clientId);
+            return getClientById(_db, clientId);
         }
 
         public void RemoveAllClients()
