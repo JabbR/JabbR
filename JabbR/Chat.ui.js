@@ -542,8 +542,8 @@
     }
 
     function collapseRichContent(content) {
-        content = content.replace('class="collapsible_box', 'style="display: none;" class="collapsible_box');
-        return content.replace('class="collapsible_title"', 'class="collapsible_title" title="Content collapsed because you have Rich-Content disabled"');
+        content = content.replace(/class="collapsible_box/g, 'style="display: none;" class="collapsible_box');
+        return content.replace(/class="collapsible_title"/g, 'class="collapsible_title" title="Content collapsed because you have Rich-Content disabled"');
     }
 
     function triggerFocus() {
