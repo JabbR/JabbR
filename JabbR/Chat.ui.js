@@ -32,7 +32,8 @@
         $window = $(window),
         $document = $(document),
         $roomFilterInput = null,
-        updateTimeout = 15000;
+        updateTimeout = 15000,
+        $richness = null;
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -515,12 +516,34 @@
         $.history.load('/rooms/' + roomName);
     }
 
-    function processMessage(message) {
-        var isFromCollapibleContentProvider = message.message.indexOf('class="collapsible_box"') > -1;
+    function processMessage(message, roomName) {
+        var isFromCollapibleContentProvider = isFromCollapsibleContentProvider(message.message),
+            collapseContent = shouldCollapseContent(message.message, roomName);
+
         message.message = isFromCollapibleContentProvider ? message.message : utility.parseEmojis(message.message);
         message.trimmedName = utility.trim(message.name, 21);
         message.when = message.date.formatTime(true);
         message.fulldate = message.date.toLocaleString();
+
+        if (collapseContent) {
+            message.message = collapseRichContent(message.message);
+        }
+    }
+
+    function isFromCollapsibleContentProvider(content) {
+        return content.indexOf('class="collapsible_box') > -1; // leaving off trailing " purposefully
+    }
+
+    function shouldCollapseContent(content, roomName) {
+        var collapsible = isFromCollapsibleContentProvider(content),
+            collapseForRoom = roomName ? getRoomPreference(roomName, 'blockRichness') : getActiveRoomPreference('blockRichness');
+
+        return collapsible && collapseForRoom;
+    }
+
+    function collapseRichContent(content) {
+        content = content.replace('class="collapsible_box', 'style="display: none;" class="collapsible_box');
+        return content.replace('class="collapsible_title"', 'class="collapsible_title" title="Content collapsed because you have Rich-Content disabled"');
     }
 
     function triggerFocus() {
@@ -549,6 +572,7 @@
         // Placeholder for room level preferences
         toggleElement($sound, 'hasSound', roomName);
         toggleElement($toast, 'canToast', roomName);
+        toggleElement($richness, 'blockRichness', roomName);
     }
 
     function setPreference(name, value) {
@@ -721,6 +745,7 @@
             $newMessage = $('#new-message');
             $toast = $('#preferences .toast');
             $sound = $('#preferences .sound');
+            $richness = $('#preferences .richness');
             $downloadIcon = $('#preferences .download');
             $downloadDialog = $('#download-dialog');
             $downloadDialogButton = $('#download-dialog-button');
@@ -743,7 +768,8 @@
                 $toast.show();
             }
             else {
-                $downloadIcon.css({ left: '26px' });
+                $richness.css({ left: '26px' });
+                $downloadIcon.css({ left: '62px' });
                 // We need to set the toast setting to false
                 preferences.canToast = false;
             }
@@ -813,6 +839,32 @@
 
                 // Store the preference
                 setRoomPreference(room.getName(), 'hasSound', enabled);
+            });
+
+            $richness.click(function () {
+                var room = getCurrentRoomElements(),
+                    $richContentMessages = room.messages.find('h3.collapsible_title');
+
+                if (room.isLobby()) {
+                    return;
+                }
+
+                $(this).toggleClass('off');
+
+                var enabled = !$(this).hasClass('off');
+
+                // Store the preference
+                setRoomPreference(room.getName(), 'blockRichness', enabled);
+
+                // toggle all rich-content for current room
+                $richContentMessages.each(function (index) {
+                    if (enabled) {
+                        $(this).attr("title", "Content collapsed because you have Rich-Content disabled");
+                    } else {
+                        $(this).removeAttr("title");
+                    }
+                    $(this).trigger('click');
+                });
             });
 
             $toast.click(function () {
@@ -1246,7 +1298,7 @@
 
             // Populate the old messages
             $.each(messages, function (index) {
-                processMessage(this);
+                processMessage(this, roomName);
 
                 if ($previousMessage) {
                     previousUser = $previousMessage.data('name');
@@ -1292,7 +1344,7 @@
             showUserName = previousUser !== message.name;
             message.showUser = showUserName;
 
-            processMessage(message);
+            processMessage(message, roomName);
 
             if (showUserName === false) {
                 $previousMessage.addClass('continue');
@@ -1346,6 +1398,10 @@
         },
         addChatMessageContent: function (id, content, roomName) {
             var $message = $('#m-' + id);
+
+            if (shouldCollapseContent(content, roomName)) {
+                content = collapseRichContent(content);
+            }
 
             $message.find('.middle')
                     .append(content);
@@ -1545,7 +1601,9 @@
                  .find('.admin')
                  .text('');
             room.updateUserStatus($user);
-        }
+        },
+        shouldCollapseContent: shouldCollapseContent,
+        collapseRichContent: collapseRichContent
     };
 
     if (!window.chat) {

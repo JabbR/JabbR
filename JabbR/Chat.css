@@ -102,13 +102,28 @@
   {
     background: url('Content/images/toast-off.png') no-repeat;
   }
+  
+#preferences .richness
+{
+  width: 20px;
+  height: 20px;
+  left: 55px;
+  position: absolute;
+  background: url('Content/images/richness-off.png') no-repeat;
+  margin-top: 3px;
+}
+
+  #preferences .richness.off
+  {
+    background: url('Content/images/richness-on.png') no-repeat;
+  }
 
 #preferences .download
 {
   background: url('Content/images/download-icon.png') no-repeat;
   width: 16px;
   height: 20px;
-  left: 55px;
+  left: 90px;
   top: 3px;
   position: absolute;
 }
