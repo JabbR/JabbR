@@ -81,7 +81,7 @@
                 }
                 else {
                     // Leave the tab highlighted
-                    $tab.animate({ backgroundColor: '#4B4D96', color: '#ffffff' }, 800);
+                    $tab.animate({ backgroundColor: '#043C4C', color: '#ffffff' }, 800);
                 }
             });
         }
