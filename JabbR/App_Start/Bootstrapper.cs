@@ -20,6 +20,7 @@ using Ninject;
 using SignalR;
 using SignalR.Hosting.Common;
 using SignalR.Ninject;
+using Newtonsoft.Json.Serialization;
 
 [assembly: WebActivator.PostApplicationStartMethod(typeof(JabbR.App_Start.Bootstrapper), "PreAppStart")]
 
@@ -114,7 +115,9 @@ namespace JabbR.App_Start
         private static void SetupWebApi(IKernel kernel)
         {
             GlobalConfiguration.Configuration.Formatters.Clear();
-            GlobalConfiguration.Configuration.Formatters.Add(new JsonMediaTypeFormatter());
+            JsonMediaTypeFormatter jsonFormatter = new JsonMediaTypeFormatter();
+            jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            GlobalConfiguration.Configuration.Formatters.Add(jsonFormatter);
             GlobalConfiguration.Configuration.DependencyResolver = new NinjectWebApiDependencyResolver(kernel);
         }
 
