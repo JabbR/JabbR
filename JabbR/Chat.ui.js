@@ -862,9 +862,9 @@
                         isCurrentlyVisible = $this.next().is(":visible");
 
                     if (enabled) {
-                        $this.attr("title", "Content collapsed because you have Rich-Content disabled");
+                        $this.attr('title', 'Content collapsed because you have Rich-Content disabled');
                     } else {
-                        $this.removeAttr("title");
+                        $this.removeAttr('title');
                     }
 
                     if (!(isCurrentlyVisible ^ enabled)) {
