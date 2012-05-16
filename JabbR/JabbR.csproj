@@ -672,6 +672,8 @@
     <Content Include="Content\images\icons-36-black.png" />
     <Content Include="Content\images\icons-36-white.png" />
     <Content Include="Content\images\lock.png" />
+    <Content Include="Content\images\richness-off.png" />
+    <Content Include="Content\images\richness-on.png" />
     <Content Include="Content\images\toast-off.png" />
     <Content Include="Content\images\toast-on.png" />
     <Content Include="Content\images\pop-in-icon.png" />
