@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using JabbR.Api.Model;
 using JabbR.Models;
+using JabbR.Infrastructure;
 
 namespace JabbR.api
 {
@@ -20,7 +21,7 @@ namespace JabbR.api
             _repository = repository;
         }
 
-        public HttpResponseMessage GetAllMessages(string room, string range, bool download = false)
+        public HttpResponseMessage GetAllMessages(string room, string range)
         {
             if (String.IsNullOrWhiteSpace(range))
             {
@@ -48,9 +49,18 @@ namespace JabbR.api
                     start = DateTime.MinValue;
                     break;
                 default:
-                    return Request.CreateErrorResponse(HttpStatusCode.BadRequest, "range value not recognized");
-
+                    return Request.CreateJabbrErrorMessage(HttpStatusCode.BadRequest, "range value not recognized");
             }
+
+            var filenamePrefix = room + ".";
+
+            if (start != DateTime.MinValue)
+            {
+                filenamePrefix += start.ToString(FilenameDateFormat, CultureInfo.InvariantCulture) + ".";
+            }
+
+            filenamePrefix += end.ToString(FilenameDateFormat, CultureInfo.InvariantCulture);
+
 
             ChatRoom chatRoom = null;
 
@@ -60,13 +70,13 @@ namespace JabbR.api
             }
             catch (Exception ex)
             {
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, ex.Message);
+                return Request.CreateJabbrErrorMessage(HttpStatusCode.NotFound, ex.Message, filenamePrefix);
             }
 
             if (chatRoom.Private)
             {
                 // TODO: Allow viewing messages using auth token
-                return Request.CreateErrorResponse(HttpStatusCode.NotFound, String.Format("Unable to locate room {0}.", chatRoom.Name));
+                return Request.CreateJabbrErrorMessage(HttpStatusCode.NotFound, String.Format("Unable to locate room {0}.", chatRoom.Name), filenamePrefix);
             }
 
             var messages = _repository.GetMessagesByRoom(chatRoom)
@@ -79,23 +89,8 @@ namespace JabbR.api
                     When = msg.When
                 });
 
-            var filenamePrefix = room + ".";
 
-            if (start != DateTime.MinValue)
-            {
-                filenamePrefix += start.ToString(FilenameDateFormat, CultureInfo.InvariantCulture) + ".";
-            }
-
-            filenamePrefix += end.ToString(FilenameDateFormat, CultureInfo.InvariantCulture);
-
-            var response = Request.CreateResponse(HttpStatusCode.OK, messages);
-
-            if (download)
-            {
-                response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment") { FileName = filenamePrefix + ".json" };
-            }
-
-            return response;
+            return Request.CreateJabbrSuccessMessage(HttpStatusCode.OK, messages, filenamePrefix);
         }
     }
 }
