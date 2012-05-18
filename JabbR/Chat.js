@@ -224,7 +224,6 @@
         ui.setUserName(chat.name);
         ui.addMessage('Welcome back ' + chat.name, 'notification', 'lobby');
         ui.addMessage('You can join any of the rooms on the right', 'notification', 'lobby');
-        ui.addMessage('Type /rooms to list all available rooms', 'notification', 'lobby');
         ui.addMessage('Type /logout to log out of chat', 'notification', 'lobby');
 
         // Process any urls that may contain room names
