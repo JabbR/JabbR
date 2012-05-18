@@ -696,7 +696,6 @@
     var messages = [
                 'Type @ then press TAB to auto-complete nicknames',
                 'Type /help to see the list of commands',
-                'Type /rooms to list all available rooms',
                 'Type : then press TAB to auto-complete emoji icons',
                 'You can create your own private rooms. Type /help for more info'
             ];
