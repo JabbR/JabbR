@@ -6,6 +6,7 @@
   $remoteDesktopEnctyptedPassword     = $env:JABBR_REMOTE_DESKTOP_ENCRYPTED_PASSWORD,
   $remoteDesktopUsername              = $env:JABBR_REMOTE_DESKTOP_USERNAME,
   $sqlAzureConnectionString           = $env:JABBR_SQL_AZURE_CONNECTION_STRING,
+  $sslCertificateThumbprint           = $env:JABBR_SSL_CERTIFICATE_THUMBPRINT,
   $commitSha,
   $commitBranch
 )
@@ -123,6 +124,10 @@ set-configurationsetting -path $cscfgPath -name "Microsoft.WindowsAzure.Plugins.
 set-connectionstring -path $webConfigPath -name "JabbR" -value $sqlAzureConnectionString
 set-releasemode $webConfigPath
 set-machinekey $webConfigPath
+
+if($sslCertificateThumbprint) {
+  set-certificatethumbprint -path $cscfgPath -name "*.jabbr.net" -value $sslCertificateThumbprint
+}
 
 & 'C:\Program Files\Windows Azure SDK\v1.6\bin\cspack.exe' "$csdefFile" /out:"$cspkgFile" /role:"Website;$websitePath" /sites:"Website;Web;$websitePath" /rolePropertiesFile:"Website;$rolePropertiesPath"
 
