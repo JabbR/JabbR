@@ -139,7 +139,7 @@
     <!-- TweetContentProvider: Should be extracted out if other content providers need templates -->
     <script id="tweet-template" type="text/x-jquery-tmpl">
         <div class="user">
-            <img src="${user.profile_image_url}" />
+            <img src="${user.profile_image_url_https}" />
             <span class="name">${user.screen_name}</span> (${user.name})
         </div>
         {{html text}}
