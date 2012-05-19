@@ -126,7 +126,7 @@ set-releasemode $webConfigPath
 set-machinekey $webConfigPath
 
 if($sslCertificateThumbprint) {
-  set-certificatethumbprint -path $cscfgPath -name "*.jabbr.net" -value $sslCertificateThumbprint
+  set-certificatethumbprint -path $cscfgPath -name "jabbr" -value $sslCertificateThumbprint
 }
 
 & 'C:\Program Files\Windows Azure SDK\v1.6\bin\cspack.exe' "$csdefFile" /out:"$cspkgFile" /role:"Website;$websitePath" /sites:"Website;Web;$websitePath" /rolePropertiesFile:"Website;$rolePropertiesPath"

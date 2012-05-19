@@ -12,7 +12,7 @@
     </ConfigurationSettings>
     <Certificates>
       <Certificate name="Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" thumbprint="" thumbprintAlgorithm="sha1" />
-      <Certificate name="*.jabbr.net" thumbprint="?" thumbprintAlgorithm="sha1" />
+      <Certificate name="jabbr" thumbprint="?" thumbprintAlgorithm="sha1" />
     </Certificates>
   </Role>
 </ServiceConfiguration>

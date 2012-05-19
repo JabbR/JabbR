@@ -11,7 +11,7 @@
     </Sites>
     <Endpoints>
       <InputEndpoint name="Non-SSL" protocol="http" port="80" />
-      <InputEndpoint name="SSL" protocol="https" port="443" certificate="*.jabbr.net" />
+      <InputEndpoint name="SSL" protocol="https" port="443" certificate="jabbr" />
     </Endpoints>
     <Imports>
       <Import moduleName="Diagnostics" />
