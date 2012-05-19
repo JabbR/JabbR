@@ -10,7 +10,7 @@ namespace JabbR.ContentProviders
         {
             return TaskAsyncHelper.FromResult(new ContentProviderResult()
              {
-                 Content = String.Format(@"<img src=""{0}"" />", request.RequestUri),
+                 Content = String.Format(@"<img src=""proxy.ashx?url={0}"" />", request.RequestUri),
                  Title = request.RequestUri.AbsoluteUri.ToString()
              });
         }
@@ -19,12 +19,16 @@ namespace JabbR.ContentProviders
         {
             string path = uri.AbsolutePath.ToLower();
 
+            return IsValidImagePath(path);
+        }
+
+        public static bool IsValidImagePath(string path)
+        {
             return path.EndsWith(".png") ||
                    path.EndsWith(".bmp") ||
                    path.EndsWith(".jpg") ||
                    path.EndsWith(".jpeg") ||
                    path.EndsWith(".gif");
-
         }
     }
 }

@@ -822,6 +822,9 @@
     <Compile Include="Auth\Login.ashx.cs">
       <DependentUpon>Login.ashx</DependentUpon>
     </Compile>
+    <Compile Include="Proxy.ashx.cs">
+      <DependentUpon>Proxy.ashx</DependentUpon>
+    </Compile>
     <Compile Include="Commands\AddAdminCommand.cs" />
     <Compile Include="Commands\AddOwnerCommand.cs" />
     <Compile Include="Commands\AdminCommand.cs" />
@@ -1055,6 +1058,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Chat.emoji.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Proxy.ashx" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
