@@ -10,17 +10,19 @@ using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Routing;
 using Elmah;
+using JabbR.Auth;
 using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using Ninject;
+using RouteMagic;
 using SignalR;
 using SignalR.Hosting.Common;
 using SignalR.Ninject;
-using Newtonsoft.Json.Serialization;
 
 [assembly: WebActivator.PostApplicationStartMethod(typeof(JabbR.App_Start.Bootstrapper), "PreAppStart")]
 
@@ -127,6 +129,8 @@ namespace JabbR.App_Start
                 name: "DefaultApi",
                 routeTemplate: "api/v1/{controller}/{room}"
             );
+
+            RouteTable.Routes.MapHttpHandler<ProxyHandler>("proxy", "proxy/{*path}");
         }
 
         private static void ClearConnectedClients(IJabbrRepository repository)
