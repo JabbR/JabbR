@@ -16,7 +16,7 @@ namespace JabbR.Infrastructure
     /// <returns>A dictionary of URL parameter name values</returns>
     public class QueryStringCollection : IEnumerable<KeyValuePair<string,string>>
     {
-        private Dictionary<string, string> _QuerystringDictionary;
+        private Dictionary<string, string> _queryStringDictionary;
 
         public QueryStringCollection(Uri requestUri)
         {
@@ -27,7 +27,7 @@ namespace JabbR.Infrastructure
 
             var query = requestUri.Query;
             var parameters = query.TrimStart(new char[] { '?' }).Split(new char[] { '&' });
-            _QuerystringDictionary = new Dictionary<string, string>();
+            _queryStringDictionary = new Dictionary<string, string>();
 
             foreach (var param in parameters)
             {
@@ -46,7 +46,7 @@ namespace JabbR.Infrastructure
                 {
                     value = nv[1];
                 }
-                _QuerystringDictionary[name] = value;
+                _queryStringDictionary[name] = value;
             }
         }
 
@@ -65,7 +65,7 @@ namespace JabbR.Infrastructure
             string valueStr;
             var type = typeof(T);
 
-            if (_QuerystringDictionary.TryGetValue(key, out valueStr))
+            if (_queryStringDictionary.TryGetValue(key, out valueStr))
             {
                 if (String.IsNullOrEmpty(valueStr))
                 {
@@ -95,7 +95,7 @@ namespace JabbR.Infrastructure
         /// <summary>
         /// Gets the number of query string parameters.
         /// </summary>
-        public int Count { get { return _QuerystringDictionary.Count; } }
+        public int Count { get { return _queryStringDictionary.Count; } }
 
         /// <summary>
         /// Gets the value of a query string parameter with the name specified by key. Returns the value if it exists in the URI, null otherwise
@@ -105,19 +105,19 @@ namespace JabbR.Infrastructure
             get
             {
                 string value = null;
-                _QuerystringDictionary.TryGetValue(key, out value);
+                _queryStringDictionary.TryGetValue(key, out value);
                 return value;
             }
         }
 
         public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
         {
-            return _QuerystringDictionary.GetEnumerator();
+            return _queryStringDictionary.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return _QuerystringDictionary.GetEnumerator();
+            return _queryStringDictionary.GetEnumerator();
         }
     }
 }

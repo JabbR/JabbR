@@ -57,12 +57,12 @@ namespace JabbR.Tests
             [Fact]
             public void ShouldOutputValueForString()
             {
-                var _QueryStringCollection = new QueryStringCollection(
+                var queryStringCollection = new QueryStringCollection(
                     new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
                     );
 
                 string output;
-                var result = _QueryStringCollection.TryGetAndConvert<string>("stringvalue", out output);
+                var result = queryStringCollection.TryGetAndConvert<string>("stringvalue", out output);
 
                 Assert.True(result);
                 Assert.Equal("str", output); 
@@ -72,12 +72,12 @@ namespace JabbR.Tests
             [Fact]
             public void ShouldOutputValueForInt()
             {
-                var _QueryStringCollection = new QueryStringCollection(
+                var queryStringCollection = new QueryStringCollection(
                     new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
                     );
 
                 int output;
-                var result = _QueryStringCollection.TryGetAndConvert<int>("intvalue", out output);
+                var result = queryStringCollection.TryGetAndConvert<int>("intvalue", out output);
 
                 Assert.True(result);
                 Assert.Equal(1, output);
@@ -86,12 +86,12 @@ namespace JabbR.Tests
             [Fact]
             public void ShouldOutputValueForBool()
             {
-                var _QueryStringCollection = new QueryStringCollection(
+                var queryStringCollection = new QueryStringCollection(
                     new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
                     );
 
                 bool output;
-                var result = _QueryStringCollection.TryGetAndConvert<bool>("boolvalue", out output);
+                var result = queryStringCollection.TryGetAndConvert<bool>("boolvalue", out output);
 
                 Assert.True(result);
                 Assert.Equal(true, output);
@@ -100,12 +100,12 @@ namespace JabbR.Tests
             [Fact]
             public void ShouldOutputNullForNonexistantString()
             {
-                var _QueryStringCollection = new QueryStringCollection(
+                var queryStringCollection = new QueryStringCollection(
                     new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
                     );
 
                 string output;
-                var result = _QueryStringCollection.TryGetAndConvert<string>("stringvalue1", out output);
+                var result = queryStringCollection.TryGetAndConvert<string>("stringvalue1", out output);
 
                 Assert.True(result);
                 Assert.Equal(null, output);
@@ -114,12 +114,12 @@ namespace JabbR.Tests
             [Fact]
             public void ShouldOutputZeroForNonexistantInt()
             {
-                var _QueryStringCollection = new QueryStringCollection(
+                var queryStringCollection = new QueryStringCollection(
                     new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
                     );
 
                 int output;
-                var result = _QueryStringCollection.TryGetAndConvert<int>("nonexistant", out output);
+                var result = queryStringCollection.TryGetAndConvert<int>("nonexistant", out output);
 
                 Assert.True(result);
                 Assert.Equal(0, output);
@@ -127,36 +127,36 @@ namespace JabbR.Tests
             [Fact]
             public void ShouldReturnFalseForEmptyValueType()
             {
-                var _QueryStringCollection = new QueryStringCollection(
+                var queryStringCollection = new QueryStringCollection(
                     new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
                     );
 
                 int output;
-                var result = _QueryStringCollection.TryGetAndConvert<int>("empty", out output);
+                var result = queryStringCollection.TryGetAndConvert<int>("empty", out output);
 
                 Assert.False(result);
             }
             [Fact]
             public void ShouldReturnTrueForEmptyReferenceType()
             {
-                var _QueryStringCollection = new QueryStringCollection(
+                var queryStringCollection = new QueryStringCollection(
                     new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
                     );
 
                 string output;
-                var result = _QueryStringCollection.TryGetAndConvert<string>("empty", out output);
+                var result = queryStringCollection.TryGetAndConvert<string>("empty", out output);
 
                 Assert.True(result);
             }
             [Fact]
             public void ShouldReturnTrueForEmptyNullableType()
             {
-                var _QueryStringCollection = new QueryStringCollection(
+                var queryStringCollection = new QueryStringCollection(
                     new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
                     );
 
                 bool? output;
-                var result = _QueryStringCollection.TryGetAndConvert<bool?>("empty", out output);
+                var result = queryStringCollection.TryGetAndConvert<bool?>("empty", out output);
 
                 Assert.True(result);
             }
@@ -166,11 +166,11 @@ namespace JabbR.Tests
             [Fact]
             public void ShouldReturnNullForNonExistantEntry()
             {
-                var _QueryStringCollection = new QueryStringCollection(
+                var queryStringCollection = new QueryStringCollection(
                     new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
                     );
 
-                Assert.Null(_QueryStringCollection["nonexistant"]);
+                Assert.Null(queryStringCollection["nonexistant"]);
             }
         }
     }
