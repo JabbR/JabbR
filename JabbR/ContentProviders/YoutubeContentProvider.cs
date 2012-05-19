@@ -34,7 +34,7 @@ namespace JabbR.ContentProviders
         {
             get
             {
-                return @"<object width=""425"" height=""344""><param name=""WMode"" value=""transparent""></param><param name=""movie"" value=""http://www.youtube.com/v/{0}fs=1""></param><param name=""allowFullScreen"" value=""true""></param><param name=""allowScriptAccess"" value=""always""></param><embed src=""http://www.youtube.com/v/{0}?fs=1"" wmode=""transparent"" type=""application/x-shockwave-flash"" allowfullscreen=""true"" allowscriptaccess=""always"" width=""425"" height=""344B""></embed></object>";
+                return @"<object width=""425"" height=""344""><param name=""WMode"" value=""transparent""></param><param name=""movie"" value=""https://www.youtube.com/v/{0}fs=1""></param><param name=""allowFullScreen"" value=""true""></param><param name=""allowScriptAccess"" value=""always""></param><embed src=""https://www.youtube.com/v/{0}?fs=1"" wmode=""transparent"" type=""application/x-shockwave-flash"" allowfullscreen=""true"" allowscriptaccess=""always"" width=""425"" height=""344B""></embed></object>";
             }
         }
 
