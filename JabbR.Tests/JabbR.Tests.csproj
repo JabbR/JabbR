@@ -75,7 +75,7 @@
     <Compile Include="CommandManagerFacts.cs" />
     <Compile Include="TextTransformFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DictionaryExtensionsTests.cs" />
+    <Compile Include="QueryStringCollectionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JabbR\JabbR.csproj">

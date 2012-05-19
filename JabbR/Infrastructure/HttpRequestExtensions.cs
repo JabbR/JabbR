@@ -73,7 +73,7 @@ namespace JabbR.api
         }
         private static HttpResponseMessage AddDownloadHeader(HttpRequestMessage request, HttpResponseMessage responseMessage, string filenamePrefix)
         {
-            var queryString = request.RequestUri.QueryString();
+            var queryString = new QueryStringCollection(request.RequestUri);
             bool download;
             if (queryString.TryGetAndConvert<bool>("download", out download))
             {
