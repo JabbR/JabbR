@@ -14,16 +14,12 @@ namespace JabbR.Tests
     {
         public class Constructor
         {
-            private Uri MakeUri(string parameters)
-            {
-                return new Uri("http://example.com?" + parameters);
-            }
-
             [Fact]
             public void ShouldReturnFirstAndSecondParameter()
             {
-                var uri = MakeUri("first=value1&second=value2");
-                var collection = new QueryStringCollection(uri);
+                var collection = new QueryStringCollection(
+                    new Uri("http://example.com?first=value1&second=value2")
+                    );
 
                 Assert.Equal("value1", collection["first"]);
                 Assert.Equal("value2", collection["second"]);
@@ -31,16 +27,18 @@ namespace JabbR.Tests
             [Fact]
             public void ShouldHandleNameOnlyParameters()
             {
-                var uri = MakeUri("first=value1&second");
-                var collection = new QueryStringCollection(uri);
+                var collection = new QueryStringCollection(
+                    new Uri("http://example.com?first=value1&second")
+                    );
 
                 Assert.Equal(null, collection["second"]);
             }
             [Fact]
             public void ShouldHandleMultipleAmpersands()
             {
-                var uri = MakeUri("first=value1&second&&");
-                var collection = new QueryStringCollection(uri);
+                var collection = new QueryStringCollection(
+                    new Uri("http://example.com?first=value1&second=value2&&")
+                    );
 
                 Assert.Equal(2, collection.Count);
             }
@@ -56,14 +54,13 @@ namespace JabbR.Tests
         }
         public class TryGetAndConvert
         {
-            QueryStringCollection _QueryStringCollection;
-            public TryGetAndConvert()
-            {
-                _QueryStringCollection = new QueryStringCollection(new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty"));
-            }
             [Fact]
             public void ShouldOutputValueForString()
             {
+                var _QueryStringCollection = new QueryStringCollection(
+                    new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
+                    );
+
                 string output;
                 var result = _QueryStringCollection.TryGetAndConvert<string>("stringvalue", out output);
 
@@ -75,6 +72,10 @@ namespace JabbR.Tests
             [Fact]
             public void ShouldOutputValueForInt()
             {
+                var _QueryStringCollection = new QueryStringCollection(
+                    new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
+                    );
+
                 int output;
                 var result = _QueryStringCollection.TryGetAndConvert<int>("intvalue", out output);
 
@@ -85,6 +86,10 @@ namespace JabbR.Tests
             [Fact]
             public void ShouldOutputValueForBool()
             {
+                var _QueryStringCollection = new QueryStringCollection(
+                    new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
+                    );
+
                 bool output;
                 var result = _QueryStringCollection.TryGetAndConvert<bool>("boolvalue", out output);
 
@@ -95,6 +100,10 @@ namespace JabbR.Tests
             [Fact]
             public void ShouldOutputNullForNonexistantString()
             {
+                var _QueryStringCollection = new QueryStringCollection(
+                    new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
+                    );
+
                 string output;
                 var result = _QueryStringCollection.TryGetAndConvert<string>("stringvalue1", out output);
 
@@ -105,6 +114,10 @@ namespace JabbR.Tests
             [Fact]
             public void ShouldOutputZeroForNonexistantInt()
             {
+                var _QueryStringCollection = new QueryStringCollection(
+                    new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
+                    );
+
                 int output;
                 var result = _QueryStringCollection.TryGetAndConvert<int>("nonexistant", out output);
 
@@ -114,6 +127,10 @@ namespace JabbR.Tests
             [Fact]
             public void ShouldReturnFalseForEmptyValueType()
             {
+                var _QueryStringCollection = new QueryStringCollection(
+                    new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
+                    );
+
                 int output;
                 var result = _QueryStringCollection.TryGetAndConvert<int>("empty", out output);
 
@@ -122,6 +139,10 @@ namespace JabbR.Tests
             [Fact]
             public void ShouldReturnTrueForEmptyReferenceType()
             {
+                var _QueryStringCollection = new QueryStringCollection(
+                    new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
+                    );
+
                 string output;
                 var result = _QueryStringCollection.TryGetAndConvert<string>("empty", out output);
 
@@ -130,6 +151,10 @@ namespace JabbR.Tests
             [Fact]
             public void ShouldReturnTrueForEmptyNullableType()
             {
+                var _QueryStringCollection = new QueryStringCollection(
+                    new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
+                    );
+
                 bool? output;
                 var result = _QueryStringCollection.TryGetAndConvert<bool?>("empty", out output);
 
@@ -138,15 +163,13 @@ namespace JabbR.Tests
         }
         public class Indexer
         {
-            QueryStringCollection _QueryStringCollection;
-            public Indexer()
-            {
-                _QueryStringCollection = new QueryStringCollection(new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty"));
-            }
-
             [Fact]
             public void ShouldReturnNullForNonExistantEntry()
             {
+                var _QueryStringCollection = new QueryStringCollection(
+                    new Uri("http://example.com?intvalue=1&stringvalue=str&boolvalue=true&empty")
+                    );
+
                 Assert.Null(_QueryStringCollection["nonexistant"]);
             }
         }
