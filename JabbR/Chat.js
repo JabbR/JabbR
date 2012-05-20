@@ -935,21 +935,6 @@
             });
         }
 
-        // Detect https for signalr traffic by requesting an image on the site via https.
-        // If it fails, don't bother changing the url. Otherwise use the https url.
-        // REVIEW: Should we do some caching?
-        // var baseUrl = 'https://' + document.location.hostname + ':' + document.location.port + document.location.pathname;
-        // var url = baseUrl + 'apple-touch-icon.png';
-        // $.get(url)
-        //     .done(function (r) {
-        //         $.connection.hub.url = baseUrl + 'signalr';
-        //         initConnection();
-        //     })
-        //     .fail(function () {
-        //         initConnection();
-        //     });
-
-        // TODO: Figure out how to detect if https is available
         initConnection();
     });
 
