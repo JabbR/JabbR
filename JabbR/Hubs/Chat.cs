@@ -210,13 +210,6 @@ namespace JabbR
             return outOfSync;
         }
 
-        //// TODO: Deprecate
-        //public bool Send(string content)
-        //{
-        //    string roomName = Caller.activeRoom;
-        //    return Send(content, roomName);
-        //}
-
         private string ParseChatMessageText(string content, out HashSet<string> links)
         {
             var textTransform = new TextTransform(_repository);
