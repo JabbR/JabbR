@@ -207,7 +207,7 @@
 }
 
 .avatar-bubble {
-    background: url("http://github.com/images/modules/comments/bubble-arrow.png") no-repeat scroll 51px 20px transparent;
+    background: url("https://github.com/images/modules/comments/bubble-arrow.png") no-repeat scroll 51px 20px transparent;
     margin: 20px 0;
     padding-left: 60px;
 }
@@ -257,7 +257,7 @@
     margin: 5px 0 0 5px;
 }
 .mini-avatar-bubble {
-    background: url("http://github.com/images/modules/comments/bubble-arrow-up.png") no-repeat scroll 14px 25px transparent;
+    background: url("https://github.com/images/modules/comments/bubble-arrow-up.png") no-repeat scroll 14px 25px transparent;
     width: 800px;
 }
 .mini-avatar-bubble .avatar {
