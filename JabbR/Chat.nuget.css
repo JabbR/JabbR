@@ -119,13 +119,13 @@
 }
 
 .nuget-authors-entry { 
-	float: left; 
+    float: left; 
 }
 
 .nuget-ProjectUrl {
     font-size: 80%;
     text-align: left;
-	float: left;
+    float: left;
 }
 
 .nuget-badge span { font-weight: bold; }
