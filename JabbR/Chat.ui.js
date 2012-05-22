@@ -690,13 +690,13 @@
         var topic = roomViewModel.Topic;
         var topicHtml = topic === '' ? 'You\'re chatting in ' + roomViewModel.Name : '<strong>Topic: </strong>' + topic;
         var roomTopic = room.roomTopic;
-        var isVisibleRoom = getCurrentRoomElements().getName() == roomViewModel.Name;
+        var isVisibleRoom = getCurrentRoomElements().getName() === roomViewModel.Name;
         if (isVisibleRoom) {
             roomTopic.hide();
         }
         roomTopic.html(topicHtml);
         if (isVisibleRoom) {
-            roomTopic.slideDown('slow');
+            roomTopic.fadeIn(2000);
         }
     }
 
