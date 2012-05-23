@@ -56,7 +56,9 @@ namespace JabbR.ContentProviders
         public override bool IsValidContent(Uri uri)
         {
             return uri.AbsoluteUri.StartsWith("http://twitter.com/", StringComparison.OrdinalIgnoreCase)
-                || uri.AbsoluteUri.StartsWith("https://twitter.com/", StringComparison.OrdinalIgnoreCase);
+                || uri.AbsoluteUri.StartsWith("https://twitter.com/", StringComparison.OrdinalIgnoreCase)
+                || uri.AbsoluteUri.StartsWith("http://www.twitter.com/", StringComparison.OrdinalIgnoreCase)
+                || uri.AbsoluteUri.StartsWith("https://www.twitter.com/", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
