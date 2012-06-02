@@ -222,12 +222,16 @@ namespace JabbR.App_Start
             var clients = connectionManager.GetHubContext<Chat>().Clients;
             var inactiveUsers = new List<ChatUser>();
 
-            foreach (var user in repo.Users.Online())
+            IQueryable<ChatUser> users = from u in repo.Users
+                                         where u.Status == (int)UserStatus.Active && !u.IsAfk
+                                         select u;
+
+            foreach (var user in users)
             {
                 var status = (UserStatus)user.Status;
                 var elapsed = DateTime.UtcNow - user.LastActivity;
 
-                if (!user.IsAfk && elapsed.TotalMinutes > 30)
+                if (elapsed.TotalMinutes > 30)
                 {
                     // After 30 minutes of inactivity make the user afk
                     user.IsAfk = true;
@@ -240,19 +244,22 @@ namespace JabbR.App_Start
                 }
             }
 
-            var roomGroups = from u in inactiveUsers
-                             from r in u.Rooms
-                             select new { User = u, Room = r } into tuple
-                             group tuple by tuple.Room into g
-                             select new
-                                        {
-                                            Room = g.Key,
-                                            Users = g.Select(t => new UserViewModel(t.User))
-                                        };
-
-            foreach (var roomGroup in roomGroups)
+            if (inactiveUsers.Count > 0)
             {
-                clients[roomGroup.Room.Name].markInactive(roomGroup.Users).Wait();
+                var roomGroups = from u in inactiveUsers
+                                 from r in u.Rooms
+                                 select new { User = u, Room = r } into tuple
+                                 group tuple by tuple.Room into g
+                                 select new
+                                 {
+                                     Room = g.Key,
+                                     Users = g.Select(t => new UserViewModel(t.User))
+                                 };
+
+                foreach (var roomGroup in roomGroups)
+                {
+                    clients[roomGroup.Room.Name].markInactive(roomGroup.Users).Wait();
+                }
             }
         }
     }
