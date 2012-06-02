@@ -1255,7 +1255,7 @@
         changeGravatar: function (user, roomName) {
             var room = getRoomElements(roomName),
                 $user = room.getUserReferences(user.Name),
-                src = 'http://www.gravatar.com/avatar/' + user.Hash + '?s=16&d=mm';
+                src = 'https://secure.gravatar.com/avatar/' + user.Hash + '?s=16&d=mm';
 
             $user.find('.gravatar')
                  .attr('src', src);
