@@ -6,15 +6,6 @@
 (function ($, connection, window, ui, utility) {
     "use strict";
 
-    window.onerror = function () {
-        if (typeof (console) !== 'undefined') {
-            console.log('ERROR!!');
-            for (var i = 0; i < arguments.length; i++) {
-                console.log(arguments[i]);
-            }
-        }
-    };
-
     var chat = connection.chat,
         messageHistory = [],
         historyLocation = 0,
