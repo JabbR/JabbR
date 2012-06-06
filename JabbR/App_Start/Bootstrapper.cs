@@ -222,8 +222,8 @@ namespace JabbR.App_Start
             var clients = connectionManager.GetHubContext<Chat>().Clients;
             var inactiveUsers = new List<ChatUser>();
 
-            IQueryable<ChatUser> users = from u in repo.Users
-                                         where u.Status == (int)UserStatus.Active && !u.IsAfk
+            IQueryable<ChatUser> users = from u in repo.Users.Online()
+                                         where !u.IsAfk
                                          select u;
 
             foreach (var user in users)
