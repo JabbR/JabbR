@@ -73,6 +73,9 @@ namespace JabbR.App_Start
                   .To<ApplicationSettings>()
                   .InSingletonScope();
 
+            kernel.Bind<IVirtualPathUtility>()
+                  .To<VirtualPathUtilityWrapper>();
+
             kernel.Bind<IJavaScriptMinifier>()
                   .To<AjaxMinMinifier>()
                   .InSingletonScope();
@@ -126,11 +129,18 @@ namespace JabbR.App_Start
         private static void SetupRoutes(IKernel kernel)
         {
             RouteTable.Routes.MapHttpRoute(
-                name: "DefaultApi",
+                name: "MessagesV1",
                 routeTemplate: "api/v1/{controller}/{room}"
             );
 
             RouteTable.Routes.MapHttpHandler<ProxyHandler>("proxy", "proxy/{*path}");
+
+            RouteTable.Routes.MapHttpRoute(
+                            name: "DefaultApi",
+                            routeTemplate: "api",
+                            defaults: new { controller = "ApiFrontPage" }
+                        );
+
         }
 
         private static void ClearConnectedClients(IJabbrRepository repository)

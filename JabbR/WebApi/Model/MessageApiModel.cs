@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace JabbR.Api.Model
+namespace JabbR.WebApi.Model
 {
     public class MessageApiModel
     {

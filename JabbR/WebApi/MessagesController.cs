@@ -1,15 +1,14 @@
-﻿using System;
+﻿using JabbR.Infrastructure;
+using JabbR.Models;
+using JabbR.WebApi.Model;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Web.Http;
-using JabbR.Api.Model;
-using JabbR.Models;
-using JabbR.Infrastructure;
 
-namespace JabbR.api
+namespace JabbR.WebApi
 {
     public class MessagesController : ApiController
     {

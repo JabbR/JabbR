@@ -1,13 +1,12 @@
 using System;
-using System.Linq;
 using System.Net;
+using System.Linq;
 using System.Net.Http;
+using JabbR.WebApi.Model;
 using System.Net.Http.Headers;
-using System.Web.Http;
-using JabbR.Infrastructure;
 using System.Collections.Generic;
 
-namespace JabbR.api
+namespace JabbR.Infrastructure
 {
     public static class HttpRequestExtensions 
     {
@@ -51,7 +50,11 @@ namespace JabbR.api
         /// <returns>HttpResponseMessage that wraps the given payload</returns>
         public static HttpResponseMessage CreateJabbrErrorMessage(this HttpRequestMessage request, HttpStatusCode statusCode, string message, string filenamePrefix)
         {
-            var responseMessage = request.CreateResponse(statusCode, new { message }, new MediaTypeHeaderValue("application/json"));
+            var responseMessage = request.CreateResponse(
+                statusCode, 
+                new ErrorModel { Message = message }, 
+                new MediaTypeHeaderValue("application/json"));
+
             return AddResponseHeaders(request, responseMessage, filenamePrefix);
         }
         /// <summary>
@@ -63,7 +66,11 @@ namespace JabbR.api
         /// <returns>HttpResponseMessage that wraps the given payload</returns>
         public static HttpResponseMessage CreateJabbrErrorMessage(this HttpRequestMessage request, HttpStatusCode statusCode, string message)
         {
-            var responseMessage = request.CreateResponse(statusCode, new { message }, new MediaTypeHeaderValue("application/json"));
+            var responseMessage = request.CreateResponse(
+                statusCode, 
+                new ErrorModel { Message = message }, 
+                new MediaTypeHeaderValue("application/json"));
+
             return AddResponseHeaders(request, responseMessage, null);
         }
 
@@ -84,7 +91,10 @@ namespace JabbR.api
             }
             else
             {
-                return request.CreateErrorResponse(HttpStatusCode.BadRequest, "Value for download was specified but cannot be converted to true or false.");
+                return request.CreateResponse(
+                    HttpStatusCode.BadRequest, 
+                    new ErrorModel { Message = "Value for download was specified but cannot be converted to true or false." }, 
+                    new MediaTypeHeaderValue("application/json"));
             }
 
             return responseMessage;

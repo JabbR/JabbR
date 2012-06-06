@@ -8,5 +8,6 @@ namespace JabbR.Services
         string DefaultAdminUserName { get; }
 
         string DefaultAdminPassword { get; }
+        string AuthAppId { get; }
     }
 }

@@ -819,9 +819,15 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WebApi\Model\ErrorModel.cs" />
     <Compile Include="Infrastructure\HttpRequestExtensions.cs" />
-    <Compile Include="Api\MessagesController.cs" />
-    <Compile Include="Api\Model\MessageApiModel.cs" />
+    <Compile Include="WebApi\MessagesController.cs" />
+    <Compile Include="WebApi\Model\MessageApiModel.cs" />
+    <Compile Include="WebApi\Model\ApiFrontpageModel.cs" />
+    <Compile Include="WebApi\ApiFrontPageController.cs" />
+    <Compile Include="WebApi\Model\AuthApiModel.cs" />
+    <Compile Include="Infrastructure\IVirtualPathUtility.cs" />
+    <Compile Include="Infrastructure\VirtualPathUtilityWrapper.cs" />
     <Compile Include="App_Start\Bootstrapper.cs" />
     <Compile Include="Auth\Login.ashx.cs">
       <DependentUpon>Login.ashx</DependentUpon>
@@ -1025,7 +1031,6 @@
     <Compile Include="Services\IApplicationSettings.cs" />
     <Compile Include="Services\IChatService.cs" />
     <Compile Include="Services\ICryptoService.cs" />
-    <Compile Include="Services\INotificationService.cs" />
     <Compile Include="Infrastructure\StringExtensions.cs" />
     <Compile Include="Migrations\201111240945284_Initial.cs" />
     <Compile Include="Migrations\201111240945284_Initial.Designer.cs">
@@ -1049,6 +1054,7 @@
     </Compile>
     <Compile Include="Migrations\MigrationsConfiguration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\INotificationService.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\RoomViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
