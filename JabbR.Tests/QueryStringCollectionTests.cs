@@ -1,12 +1,8 @@
-﻿using System;
+﻿using JabbR.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Xunit;
-using Moq;
-using System.Web.Http.Routing;
-using System.Net.Http;
-using JabbR.Infrastructure;
 
 namespace JabbR.Tests
 {

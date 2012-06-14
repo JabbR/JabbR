@@ -27,5 +27,14 @@ namespace JabbR.Services
                 return ConfigurationManager.AppSettings["defaultAdminPassword"];
             }
         }
+
+
+        public string AuthAppId
+        {
+            get 
+            {
+                return ConfigurationManager.AppSettings["auth.appId"];
+            }
+        }
     }
 }
