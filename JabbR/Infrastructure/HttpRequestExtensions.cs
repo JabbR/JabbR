@@ -103,7 +103,8 @@ namespace JabbR.Infrastructure
         }
 
         /// <summary>
-        /// Determines whether the specified request is local. This seems like reverse engineering the actual implementation, so might change in future.
+        /// Determines whether the specified request is local. 
+        /// This seems like reverse engineering the actual implementation, so it might change in future.
         /// </summary>
         /// <param name="requestMessage">The request message.</param>
         /// <returns>
@@ -111,7 +112,8 @@ namespace JabbR.Infrastructure
         /// </returns>
         public static bool IsLocal(this HttpRequestMessage requestMessage)
         {
-            Lazy<bool> isLocal = requestMessage.Properties[HttpPropertyKeys.IsLocalKey] as Lazy<bool>;
+            //Web API sets IsLocal as a Lazy<bool> in the Properties dictionary
+            var isLocal = requestMessage.Properties[HttpPropertyKeys.IsLocalKey] as Lazy<bool>;
             if (isLocal != null)
             {
                 return isLocal.Value;
@@ -122,13 +124,14 @@ namespace JabbR.Infrastructure
 
 
         /// <summary>
-        /// Sets IsLocal into request message. This API seems unfinished, so for now we encapsulate the implementation details of dealing with IsLocal here.
-        /// This method should not be used outside of unit tests
+        /// Sets IsLocal for the specified HttpRequestMessage
+        /// Do not use outside of unit tests
         /// </summary>
         /// <param name="requestMessage">The request message.</param>
         /// <param name="value">New value of isLocal</param>
         public static void SetIsLocal(this HttpRequestMessage requestMessage, bool value)
         {
+            //Web API sets IsLocal as a Lazy<bool> in the Properties dictionary
             requestMessage.Properties[HttpPropertyKeys.IsLocalKey] = new Lazy<bool>(()=>value);
         }
 
@@ -141,7 +144,7 @@ namespace JabbR.Infrastructure
         /// <returns></returns>
         public static Uri GetAbsoluteUri(this HttpRequestMessage requestMessage, string relativeUri)
         {
-            string proto = "http";
+            var proto = "http";
             IEnumerable<string> headerValues;
 
             if (requestMessage.Headers.TryGetValues("X-Forwarded-Proto", out headerValues))
