@@ -27,10 +27,9 @@ namespace JabbR.WebApi
         /// <returns>A URL that corresponds to requested path using host and protocol of the request</returns>
         public string ToAbsoluteUrl(string sitePath)
         {
-            var requestUri = Request.RequestUri;
             var path = _VirtualPathUtilityWrapper.ToAbsolute(sitePath);
 
-            return requestUri.GetLeftPart(UriPartial.Authority) + path;
+            return Request.GetAbsoluteUri(path).AbsoluteUri;
         }
 
         public HttpResponseMessage GetFrontPage()

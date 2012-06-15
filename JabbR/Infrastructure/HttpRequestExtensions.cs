@@ -5,6 +5,8 @@ using System.Net.Http;
 using JabbR.WebApi.Model;
 using System.Net.Http.Headers;
 using System.Collections.Generic;
+using System.Web;
+using System.Web.Http.Hosting;
 
 namespace JabbR.Infrastructure
 {
@@ -100,5 +102,66 @@ namespace JabbR.Infrastructure
             return responseMessage;
         }
 
+        /// <summary>
+        /// Determines whether the specified request is local. This seems like reverse engineering the actual implementation, so might change in future.
+        /// </summary>
+        /// <param name="requestMessage">The request message.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified request message is local; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsLocal(this HttpRequestMessage requestMessage)
+        {
+            Lazy<bool> isLocal = requestMessage.Properties[HttpPropertyKeys.IsLocalKey] as Lazy<bool>;
+            if (isLocal != null)
+            {
+                return isLocal.Value;
+            }
+
+            return false;
+        }
+
+
+        /// <summary>
+        /// Sets IsLocal into request message. This API seems unfinished, so for now we encapsulate the implementation details of dealing with IsLocal here.
+        /// This method should not be used outside of unit tests
+        /// </summary>
+        /// <param name="requestMessage">The request message.</param>
+        /// <param name="value">New value of isLocal</param>
+        public static void SetIsLocal(this HttpRequestMessage requestMessage, bool value)
+        {
+            requestMessage.Properties[HttpPropertyKeys.IsLocalKey] = new Lazy<bool>(()=>value);
+        }
+
+        /// <summary>
+        /// Gets the absolute URI of the current server, even if the app is running behind a load balancer.
+        /// Taken from AppHarbour blog and adapted to use request protocol and for use with Web API.
+        /// </summary>
+        /// <param name="requestMessage">The request message.</param>
+        /// <param name="relativeUri">The relative URI.</param>
+        /// <returns></returns>
+        public static Uri GetAbsoluteUri(this HttpRequestMessage requestMessage, string relativeUri)
+        {
+            string proto = "http";
+            IEnumerable<string> headerValues;
+
+            if (requestMessage.Headers.TryGetValues("X-Forwarded-Proto", out headerValues))
+            {
+                proto = headerValues.FirstOrDefault();
+            }
+
+            var uriBuilder = new UriBuilder
+            {
+                Host = requestMessage.RequestUri.Host,
+                Path = "/",
+                Scheme = proto,
+            };
+
+            if (requestMessage.IsLocal())
+            {
+                uriBuilder.Port = requestMessage.RequestUri.Port;
+            }
+
+            return new Uri(uriBuilder.Uri, relativeUri);
+        }
     }
 }
