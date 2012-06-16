@@ -304,7 +304,7 @@
         "~/Scripts/bootstrap.js",
         "~/Scripts/jquery.KeyTips.js",
         "~/Scripts/jquery-ui-1.8.17.min.js",
-        "~/Scripts/jquery.signalR-0.5.0.min.js")
+        "~/Scripts/jquery.signalR-0.5.1.min.js")
             .ForceRelease()
             .Render("~/Scripts/JabbR1_#.js")
   %>

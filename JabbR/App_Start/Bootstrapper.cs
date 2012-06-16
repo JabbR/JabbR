@@ -22,6 +22,7 @@ using Ninject;
 using RouteMagic;
 using SignalR;
 using SignalR.Hosting.Common;
+using SignalR.Hubs;
 using SignalR.Ninject;
 
 [assembly: WebActivator.PostApplicationStartMethod(typeof(JabbR.App_Start.Bootstrapper), "PreAppStart")]
