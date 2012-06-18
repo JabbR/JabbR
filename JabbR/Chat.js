@@ -427,6 +427,10 @@
         document.location = document.location.pathname;
     };
 
+    chat.forceUpdate = function () {
+        ui.showUpdateUI();
+    };
+
     chat.showUserInfo = function (userInfo) {
         var lastActivityDate = userInfo.LastActivity.fromJsonDate();
         var status = "Currently " + userInfo.Status;
@@ -902,14 +906,14 @@
                 checkingStatus = true;
 
                 chat.checkStatus()
-                .done(function (requiresUpdate) {
-                    if (requiresUpdate === true) {
-                        ui.showUpdateUI();
-                    }
-                })
-                .always(function () {
-                    checkingStatus = false;
-                });
+                    .done(function (requiresUpdate) {
+                        if (requiresUpdate === true) {
+                            ui.showUpdateUI();
+                        }
+                    })
+                    .always(function () {
+                        checkingStatus = false;
+                    });
             });
 
             connection.hub.disconnected(function () {

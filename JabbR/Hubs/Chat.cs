@@ -937,6 +937,11 @@ namespace JabbR
             }
         }
 
+        void INotificationService.ForceUpdate()
+        {
+            Clients.forceUpdate();
+        }
+
         private void OnRoomChanged(ChatRoom room)
         {
             var roomViewModel = new RoomViewModel
