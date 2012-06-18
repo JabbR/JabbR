@@ -91,13 +91,13 @@
     <Reference Include="RouteMagic">
       <HintPath>..\packages\RouteMagic.1.2\lib\net40\RouteMagic.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR, Version=0.5.1.10615, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SignalR, Version=0.5.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Server.0.5.1.1\lib\net40\SignalR.dll</HintPath>
+      <HintPath>..\lib\SignalR.dll</HintPath>
     </Reference>
-    <Reference Include="SignalR.Hosting.AspNet, Version=0.5.1.10610, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SignalR.Hosting.AspNet, Version=0.5.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Hosting.AspNet.0.5.1\lib\net40\SignalR.Hosting.AspNet.dll</HintPath>
+      <HintPath>..\lib\SignalR.Hosting.AspNet.dll</HintPath>
     </Reference>
     <Reference Include="SignalR.Hosting.Common, Version=0.5.1.10610, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -790,9 +790,8 @@
     <Content Include="Scripts\jquery.livesearch.js" />
     <Content Include="Scripts\jquery.mobile-1.0rc2.js" />
     <Content Include="Scripts\jquery.mobile-1.0rc2.min.js" />
-    <Content Include="Scripts\jquery.signalR-0.5.0.min.js" />
-    <Content Include="Scripts\jquery.signalR-0.5.1.js" />
-    <Content Include="Scripts\jquery.signalR-0.5.1.min.js" />
+    <Content Include="Scripts\jquery.signalR-0.5.1.1.js" />
+    <Content Include="Scripts\jquery.signalR-0.5.1.1.min.js" />
     <Content Include="Scripts\jquery.sortElements.js" />
     <Content Include="Scripts\jquery.timeago.0.10.js" />
     <Content Include="Scripts\jQuery.tmpl.js" />

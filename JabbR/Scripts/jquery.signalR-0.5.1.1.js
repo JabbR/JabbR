@@ -1,5 +1,5 @@
 /*!
-* SignalR JavaScript Library v0.5.1.1
+* SignalR JavaScript Library v0.5.1
 * http://signalr.net/
 *
 * Copyright David Fowler and Damian Edwards 2012
@@ -70,7 +70,7 @@
         changeState = function (connection, state) {
             if (state !== connection.state) {
                 // REVIEW: Should event fire before or after the state change actually occurs?
-                $(connection).trigger(events.onStateChanged, [{ oldState: connection.state, newState: state }]);
+                $(connection).trigger(events.onStateChanged, [{ oldState: connection.state, newState: state}]);
                 connection.state = state;
             }
         },
@@ -740,15 +740,21 @@
                 connectTimeOut = window.setTimeout(function () {
                     if (opened === false) {
                         connection.log("EventSource timed out trying to connect");
+                        connection.log("EventSource readyState: " + connection.eventSource.readyState);
 
                         if (onFailed) {
                             onFailed();
                         }
 
                         if (reconnecting) {
-                            // If we were reconnecting, rather than doing initial connect, then try reconnect again
-                            connection.log("EventSource reconnecting");
-                            that.reconnect(connection);
+                            // If we're reconnecting and the event source is attempting to connect,
+                            // don't keep retrying. This causes duplicate connections to spawn.
+                            if (connection.eventSource.readyState !== window.EventSource.CONNECTING &&
+                                connection.eventSource.readyState !== window.EventSource.OPEN) {
+                                // If we were reconnecting, rather than doing initial connect, then try reconnect again
+                                connection.log("EventSource reconnecting");
+                                that.reconnect(connection);
+                            }
                         } else {
                             connection.log("EventSource stopping the connection.");
                             that.stop(connection);
@@ -798,26 +804,18 @@
                     connection.log("EventSource readyState: " + connection.eventSource.readyState);
 
                     if (e.eventPhase === window.EventSource.CLOSED) {
-                        // connection closed
-                        if (connection.eventSource.readyState === window.EventSource.CONNECTING) {
-                            // We don't use the EventSource's native reconnect function as it
-                            // doesn't allow us to change the URL when reconnecting. We need
-                            // to change the URL to not include the /connect suffix, and pass
-                            // the last message id we received.
-                            connection.log("EventSource reconnecting due to the server connection ending");
+                        // We don't use the EventSource's native reconnect function as it
+                        // doesn't allow us to change the URL when reconnecting. We need
+                        // to change the URL to not include the /connect suffix, and pass
+                        // the last message id we received.
+                        connection.log("EventSource reconnecting due to the server connection ending");
 
-                            changeState(connection, signalR.connectionState.reconnecting);
+                        changeState(connection, signalR.connectionState.reconnecting);
 
-                            if (isDisconnecting(connection) === false) {
-                                that.reconnect(connection);
-                            }
+                        if (isDisconnecting(connection) === false) {
+                            that.reconnect(connection);
                         }
-                        else {
-                            // The EventSource has closed, either because its close() method was called,
-                            // or the server sent down a "don't reconnect" frame.
-                            connection.log("EventSource closed");
-                            that.stop(connection);
-                        }
+
                     } else {
                         // connection error
                         connection.log("EventSource error");
@@ -885,9 +883,9 @@
                     if ($.inArray(this.readyState, ["loaded", "complete"]) >= 0) {
                         connection.log("Forever frame iframe readyState changed to " + this.readyState + ", reconnecting");
 
-                        changeState(connection, signalR.connectionState.reconnecting);
-
                         if (isDisconnecting(connection) === false) {
+                            changeState(connection, signalR.connectionState.reconnecting);
+
                             that.reconnect(connection);
                         }
                     }
@@ -920,6 +918,10 @@
             reconnect: function (connection) {
                 var that = this;
                 window.setTimeout(function () {
+                    if (!connection.frame) {
+                        return;
+                    }
+
                     var frame = connection.frame,
                         src = transportLogic.getUrl(connection, that.name, true) + "&frameId=" + connection.frameId;
                     connection.log("Upating iframe src to '" + src + "'.");
@@ -934,11 +936,15 @@
             receive: transportLogic.processMessages,
 
             stop: function (connection) {
+                var cw = null;
                 if (connection.frame) {
                     if (connection.frame.stop) {
                         connection.frame.stop();
-                    } else if (connection.frame.document && connection.frame.document.execCommand) {
-                        connection.frame.document.execCommand("Stop");
+                    } else {
+                        cw = connection.frame.contentWindow || connection.frame.contentDocument;
+                        if (cw.document && cw.document.execCommand) {
+                           cw.document.execCommand("Stop");
+                        }
                     }
                     $(connection.frame).remove();
                     delete transportLogic.foreverFrame.connections[connection.frameId];
