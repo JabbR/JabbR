@@ -328,7 +328,8 @@ namespace JabbR
                 Owners = from u in room.Owners.Online()
                          select u.Name,
                 RecentMessages = recentMessages.Select(m => new MessageViewModel(m)),
-                Topic = ConvertUrlsAndRoomLinks(room.Topic ?? "")
+                Topic = ConvertUrlsAndRoomLinks(room.Topic ?? ""),
+                Welcome = ConvertUrlsAndRoomLinks(room.Welcome ?? "")
             };
         }
 
