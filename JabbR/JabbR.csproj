@@ -818,6 +818,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\WelcomeCommand.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />
     <Compile Include="Migrations\201206201924146_RoomWelcome.cs" />
     <Compile Include="Migrations\201206201924146_RoomWelcome.Designer.cs">
