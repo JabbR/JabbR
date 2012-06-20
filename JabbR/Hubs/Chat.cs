@@ -889,6 +889,15 @@ namespace JabbR
             Clients[room.Name].changeTopic(roomViewModel);
         }
 
+        void INotificationService.ChangeWelcome(ChatUser user, ChatRoom room)
+        {
+            bool isWelcomeCleared = String.IsNullOrWhiteSpace(room.Welcome);
+            var parsedWelcome = ConvertUrlsAndRoomLinks(room.Welcome ?? "");
+            foreach (var client in user.ConnectedClients) {
+                Clients[client.Id].welcomeChanged(isWelcomeCleared, parsedWelcome);
+            }
+        }
+
         void INotificationService.AddAdmin(ChatUser targetUser)
         {
             foreach (var client in targetUser.ConnectedClients)

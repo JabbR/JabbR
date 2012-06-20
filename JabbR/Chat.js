@@ -77,6 +77,10 @@
                     ui.setInitialized(room);
                     ui.scrollToBottom(room);
 
+                    if (roomInfo.Welcome) {
+                        ui.addMessage(roomInfo.Welcome, 'welcome', room);
+                    }
+
                     d.resolveWith(chat);
                 })
                 .fail(function () {
@@ -494,6 +498,16 @@
         var to = topic ? ' to ' + '"' + topic + '"' : '';
         var message = 'You have ' + action + ' the room topic' + to;
         ui.addMessage(message, 'notification', this.activeRoom);
+    };
+
+    chat.welcomeChanged = function (isCleared, welcome) {
+        var action = isCleared ? 'cleared' : 'set';
+        var to = welcome ? ' to:' : '';
+        var message = 'You have ' + action + ' the room welcome' + to;
+        ui.addMessage(message, 'notification', this.activeRoom);
+        if (welcome) {
+            ui.addMessage(welcome, 'welcome', this.activeRoom);
+        }
     };
 
     // Called when you have added or cleared a flag
