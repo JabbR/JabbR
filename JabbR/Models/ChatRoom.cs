@@ -17,6 +17,8 @@ namespace JabbR.Models
         public bool Closed { get; set; }
         [StringLength(80)]
         public string Topic { get; set; }
+        [StringLength(200)]
+        public string Welcome { get; set; }
 
         // Private rooms
         public bool Private { get; set; }
