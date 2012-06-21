@@ -260,7 +260,7 @@
         ui.closeRoom(room);
 
         if (this.activeRoom === room) {
-            ui.toggleMessageSection(room.closed());
+            ui.toggleMessageSection(true);
         }
     };
 
@@ -271,7 +271,7 @@
         ui.unCloseRoom(room);
 
         if (this.activeRoom === room) {
-            ui.toggleMessageSection(room.closed());
+            ui.toggleMessageSection(false);
         }
     };
 
