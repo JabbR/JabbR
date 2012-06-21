@@ -4303,7 +4303,137 @@ namespace JabbR.Test
                 notificationService.Verify(x => x.BroadcastMessage(user, "check out <a rel=\"nofollow external\" target=\"_blank\" href=\"http://www.jabbr.net\" title=\"www.jabbr.net\">www.jabbr.net</a>"), Times.Once());
             }
         }
-       
+
+        public class WelcomeCommand
+        {
+            [Fact]
+            public void UserMustBeOwner()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var roomOwner = new ChatUser {
+                    Name = "thomasjo",
+                    Id = "1"
+                };
+                repository.Add(roomOwner);
+                var room = new ChatRoom {
+                    Name = "room"
+                };
+                room.Users.Add(roomOwner);
+                repository.Add(room);
+                var service = new ChatService(cache, repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+                string welcomeMessage = "This is the room's welcome message";
+                var exception = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/welcome " + welcomeMessage));
+
+                Assert.Equal("You are not an owner of room 'room'", exception.Message);
+            }
+
+            [Fact]
+            public void CommandSucceeds()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var roomOwner = new ChatUser {
+                    Name = "thomasjo",
+                    Id = "1"
+                };
+                repository.Add(roomOwner);
+                var room = new ChatRoom {
+                    Name = "room"
+                };
+                room.Owners.Add(roomOwner);
+                room.Users.Add(roomOwner);
+                repository.Add(room);
+                var service = new ChatService(cache, repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+                string welcomeMessage = "This is the room's welcome message";
+                bool result = commandManager.TryHandleCommand("/welcome " + welcomeMessage);
+
+                Assert.True(result);
+                Assert.Equal(welcomeMessage, room.Welcome);
+                notificationService.Verify(x => x.ChangeWelcome(roomOwner, room), Times.Once());
+            }
+
+            [Fact]
+            public void ThrowsIfWelcomeMessageExceedsMaxLength()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var roomOwner = new ChatUser {
+                    Name = "thomasjo",
+                    Id = "1"
+                };
+                repository.Add(roomOwner);
+                var room = new ChatRoom {
+                    Name = "room"
+                };
+                room.Owners.Add(roomOwner);
+                room.Users.Add(roomOwner);
+                repository.Add(room);
+                var service = new ChatService(cache, repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+                string welcomeMessage = new String('A', 201);
+                var exception = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/welcome " + welcomeMessage));
+
+                Assert.Equal("Sorry, but your welcome is too long. Can please keep it under 200 characters.", exception.Message);
+            }
+
+            [Fact]
+            public void CommandClearsWelcomeIfNoTextProvided()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var roomOwner = new ChatUser {
+                    Name = "thomasjo",
+                    Id = "1"
+                };
+                repository.Add(roomOwner);
+                var room = new ChatRoom {
+                    Name = "room",
+                    Welcome = "foo"
+                };
+                room.Owners.Add(roomOwner);
+                room.Users.Add(roomOwner);
+                repository.Add(room);
+                var service = new ChatService(cache, repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/welcome");
+
+                Assert.True(result);
+                Assert.Equal(null, room.Welcome);
+                notificationService.Verify(x => x.ChangeWelcome(roomOwner, room), Times.Once());
+            }
+        }
 
         public static void VerifyThrows<T>(string command) where T : Exception
         {
