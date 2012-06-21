@@ -77,10 +77,6 @@
                     ui.setInitialized(room);
                     ui.scrollToBottom(room);
 
-                    if (roomInfo.Welcome) {
-                        ui.addMessage(roomInfo.Welcome, 'welcome', room);
-                    }
-
                     d.resolveWith(chat);
                 })
                 .fail(function () {
@@ -194,6 +190,10 @@
         if (added) {
             populateRoom(room.Name).done(function () {
                 ui.addMessage('You just entered ' + room.Name, 'notification', room.Name);
+
+                if (room.Welcome) {
+                    ui.addMessage(room.Welcome, 'welcome', room.Name);
+                }
             });
         }
     };

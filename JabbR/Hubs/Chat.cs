@@ -542,7 +542,8 @@ namespace JabbR
             var roomViewModel = new RoomViewModel
             {
                 Name = room.Name,
-                Private = room.Private
+                Private = room.Private,
+                Welcome = ConvertUrlsAndRoomLinks(room.Welcome ?? "")
             };
 
             var isOwner = user.OwnedRooms.Contains(room);
