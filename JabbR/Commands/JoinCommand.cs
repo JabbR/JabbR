@@ -22,8 +22,8 @@ namespace JabbR.Commands
                 inviteCode = args[1];
             }
 
-            // Locate the room
-            ChatRoom room = context.Repository.VerifyRoom(roomName);
+            // Locate the room, does NOT have to be open
+            ChatRoom room = context.Repository.VerifyRoom(roomName, mustBeOpen: false);
 
             if (!context.Repository.IsUserInRoom(context.Cache, callingUser, room))
             {

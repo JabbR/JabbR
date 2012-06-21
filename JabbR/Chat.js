@@ -72,6 +72,7 @@
                     });
 
                     ui.changeRoomTopic(roomInfo);
+
                     // mark room as initialized to differentiate messages
                     // that are added after initial population
                     ui.setInitialized(room);
@@ -181,7 +182,7 @@
 
     // When the /join command gets raised this is called
     chat.joinRoom = function (room) {
-        var added = ui.addRoom(room.Name);
+        var added = ui.addRoom(room);
         ui.setActiveRoom(room.Name);
         if (room.Private) {
             ui.setRoomLocked(room.Name);
@@ -211,7 +212,7 @@
             };
 
         $.each(rooms, function (index, room) {
-            ui.addRoom(room.Name);
+            ui.addRoom(room);
             if (room.Private) {
                 ui.setRoomLocked(room.Name);
             }
@@ -255,6 +256,23 @@
     chat.roomClosed = function (room) {
         populateLobbyRooms();
         ui.addMessage('Room \'' + room + '\' is now closed', 'notification', this.activeRoom);
+
+        ui.closeRoom(room);
+
+        if (this.activeRoom === room) {
+            ui.toggleMessageSection(room.closed());
+        }
+    };
+
+    chat.roomUnClosed = function (room) {
+        populateLobbyRooms();
+        ui.addMessage('Room \'' + room + '\' is now open', 'notification', this.activeRoom);
+
+        ui.unCloseRoom(room);
+
+        if (this.activeRoom === room) {
+            ui.toggleMessageSection(room.closed());
+        }
     };
 
     chat.addOwner = function (user, room) {

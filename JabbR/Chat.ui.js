@@ -9,6 +9,7 @@
     var $chatArea = null,
         $tabs = null,
         $submitButton = null,
+        $messageSection = null,
         $newMessage = null,
         $toast = null,
         $disconnectDialog = null,
@@ -170,6 +171,18 @@
 
         this.exists = function () {
             return this.tab.length > 0;
+        };
+
+        this.closed = function () {
+            return this.tab.attr('data-closed') === 'true';
+        };
+
+        this.close = function () {
+            this.tab.attr('data-closed', true);
+        };
+
+        this.unClose = function () {
+            this.tab.attr('data-closed', false);
         };
 
         this.clear = function () {
@@ -386,9 +399,10 @@
     }
 
 
-    function addRoom(roomName) {
+    function addRoom(roomViewModel) {
         // Do nothing if the room exists
-        var room = getRoomElements(roomName),
+        var roomName = roomViewModel.Name,
+            room = getRoomElements(roomViewModel.Name),
             roomId = null,
             viewModel = null,
             $messages = null,
@@ -405,7 +419,8 @@
         // Add the tab
         viewModel = {
             id: roomId,
-            name: roomName
+            name: roomName,
+            closed: roomViewModel.Closed
         };
 
         templates.tab.tmpl(viewModel).appendTo($tabs);
@@ -749,6 +764,7 @@
             $chatArea = $('#chat-area');
             $tabs = $('#tabs');
             $submitButton = $('#send');
+            $messageSection = $('#send-message');
             $newMessage = $('#new-message');
             $toast = $('#preferences .toast');
             $sound = $('#preferences .sound');
@@ -1108,6 +1124,8 @@
                 currentRoom.makeInactive();
                 triggerFocus();
                 room.makeActive();
+
+                ui.toggleMessageSection(room.closed());
 
                 document.location.hash = '#/rooms/' + roomName;
                 $ui.trigger(ui.events.activeRoomChanged, [roomName]);
@@ -1616,7 +1634,24 @@
             room.updateUserStatus($user);
         },
         shouldCollapseContent: shouldCollapseContent,
-        collapseRichContent: collapseRichContent
+        collapseRichContent: collapseRichContent,
+        toggleMessageSection: function (hideIt) {
+            if (hideIt) {
+                $messageSection.fadeOut(500);
+            } else {
+                $messageSection.fadeIn(1000);
+            }
+        },
+        closeRoom: function (roomName) {
+            var room = getRoomElements(roomName);
+
+            room.close();
+        },
+        unCloseRoom: function (roomName) {
+            var room = getRoomElements(roomName);
+
+            room.unClose();
+        }
     };
 
     if (!window.chat) {

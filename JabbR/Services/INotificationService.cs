@@ -48,6 +48,7 @@ namespace JabbR.Services
 
         void LockRoom(ChatUser targetUser, ChatRoom room);
         void CloseRoom(IEnumerable<ChatUser> users, ChatRoom room);
+        void UnCloseRoom(IEnumerable<ChatUser> users, ChatRoom room);
 
         void AddAdmin(ChatUser targetUser);
         void RemoveAdmin(ChatUser targetUser);

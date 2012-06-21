@@ -840,18 +840,6 @@ namespace JabbR.Services
                 throw new InvalidOperationException(String.Format("{0} is already closed.", targetRoom.Name));
             }
 
-            // Make sure the (owner) user is not in the room.
-            if (targetRoom.Users.Contains(user))
-            {
-                throw new InvalidOperationException("You are trying to close a room which you are still in. Please leave the room before closing it.");
-            }
-
-            // Kick all existing users in the room.
-            foreach (var targetUser in targetRoom.Users.ToList())
-            {
-                LeaveRoom(targetUser, targetRoom);
-            }
-
             // Make the room closed.
             targetRoom.Closed = true;
 
