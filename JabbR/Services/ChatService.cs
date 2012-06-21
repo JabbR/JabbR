@@ -881,7 +881,7 @@ namespace JabbR.Services
 
         public void ChangeWelcome(ChatUser user, ChatRoom room, string newWelcome)
         {
-            EnsureCreatorOrAdmin(user, room);
+            EnsureOwnerOrAdmin(user, room);
             room.Welcome = newWelcome;
             _repository.CommitChanges();
         }
