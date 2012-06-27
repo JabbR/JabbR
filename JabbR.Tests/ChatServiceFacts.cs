@@ -2135,5 +2135,67 @@ namespace JabbR.Test
                 Assert.False(user.IsAdmin);
             }
         }
+
+        public class ChangeWelcome
+        {
+            [Fact]
+            public void ThrowsIfActingUserIsNotAdmin()
+            {
+                var repository = new InMemoryRepository();
+                var nonAdmin = new ChatUser {
+                    Name = "foo",
+                    IsAdmin = false
+                };
+                var room = new ChatRoom();
+
+                repository.Add(nonAdmin);
+                repository.Add(room);
+
+                var service = new ChatService(new Mock<ICache>().Object, repository, new Mock<ICryptoService>().Object);
+
+                Assert.Throws<InvalidOperationException>(() => service.ChangeWelcome(nonAdmin, room, null));
+            }
+
+            [Fact]
+            public void SetsRoomWelcome()
+            {
+                var repository = new InMemoryRepository();
+                var admin = new ChatUser {
+                    Name = "foo",
+                    IsAdmin = true
+                };
+                var room = new ChatRoom();
+                var welcome = "bar";
+
+                repository.Add(admin);
+                repository.Add(room);
+
+                var service = new ChatService(new Mock<ICache>().Object, repository, new Mock<ICryptoService>().Object);
+
+                service.ChangeWelcome(admin, room, welcome);
+
+                Assert.Equal(welcome, room.Welcome);
+            }
+
+            [Fact]
+            public void ClearsRoomWelcome()
+            {
+                var repository = new InMemoryRepository();
+                var admin = new ChatUser {
+                    Name = "foo",
+                    IsAdmin = true
+                };
+                var room = new ChatRoom { Welcome = "bar" };
+
+                repository.Add(admin);
+                repository.Add(room);
+
+                var service = new ChatService(new Mock<ICache>().Object, repository, new Mock<ICryptoService>().Object);
+
+                service.ChangeWelcome(admin, room, "");
+
+                Assert.True(String.IsNullOrEmpty(room.Welcome));
+            }
+        }
     }
 }

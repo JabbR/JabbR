@@ -15,6 +15,7 @@ namespace JabbR.Services
 
         private const int NoteMaximumLength = 140;
         private const int TopicMaximumLength = 80;
+        private const int WelcomeMaximumLength = 200;
 
         // Iso reference: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
         private static readonly IDictionary<string, string> Countries = new Dictionary<string, string>
@@ -878,6 +879,13 @@ namespace JabbR.Services
             _repository.CommitChanges();
         }
 
+        public void ChangeWelcome(ChatUser user, ChatRoom room, string newWelcome)
+        {
+            EnsureOwnerOrAdmin(user, room);
+            room.Welcome = newWelcome;
+            _repository.CommitChanges();
+        }
+
         public void AddAdmin(ChatUser admin, ChatUser targetUser)
         {
             // Ensure the user is admin
@@ -926,6 +934,11 @@ namespace JabbR.Services
         internal static void ValidateTopic(string topic)
         {
             ValidateNote(topic, noteTypeName: "topic", maxLength: TopicMaximumLength);
+        }
+
+        internal static void ValidateWelcome(string message)
+        {
+            ValidateNote(message, noteTypeName: "welcome", maxLength: WelcomeMaximumLength);
         }
 
         internal static void ValidateIsoCode(string isoCode)

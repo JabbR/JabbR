@@ -28,6 +28,7 @@ namespace JabbR.Models.Mapping
             this.Property(r => r.InviteCode).HasColumnName("InviteCode");
             this.Property(r => r.Closed).HasColumnName("Closed");
             this.Property(r => r.Topic).HasColumnName("Topic");
+            this.Property(r => r.Welcome).HasColumnName("Welcome");
 
             // Relationships
             this.HasMany(r => r.AllowedUsers)

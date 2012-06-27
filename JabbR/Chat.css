@@ -508,6 +508,14 @@ li.room
     font-weight: bold;
 }
 
+.welcome
+{
+  color: #031531;
+  padding: 5px;
+  background-color: #c0e8ff;
+  font-weight: bold;
+}
+
 .notification
 {
   color: #bbb;
@@ -597,6 +605,12 @@ li.room
   .messages li .right .time
   {
     color: #bbb;
+  }
+
+  .messages li.welcome .right .time
+  {
+    color: #666;
+    font-weight: normal;
   }
 
 .highlight

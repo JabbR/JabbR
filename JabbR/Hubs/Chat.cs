@@ -264,6 +264,7 @@ namespace JabbR
                 new { Name = "afk", Description = "Type /afk - (aka. Away From Keyboard). To set a temporary note shown via a paperclip icon next to your name, with the message appearing when you hover over it. This note will disappear when you first resume typing."},
                 new { Name = "flag", Description = "Type /flag [Iso 3366-2 Code] - To show a small flag which represents your nationality. Eg. /flag US for a USA flag. ISO Reference Chart: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 (Apologies to people with dual citizenship). "},
                 new { Name = "topic", Description = "Type /topic [topic] to set the room topic. Type /topic to clear the room's topic." },
+                new { Name = "welcome", Description = "Type /welcome [message] to set the room's welcome message. Type /welcome to clear the room's welcome message." },
                 new { Name = "roomname", Description = "Type #roomname to add a link to that room in your message. Eg. If you add \"#meta\" to your message it will be replaced with a link to /#/rooms/meta." },
                 new { Name = "broadcast",  Description = "Sends a message to all users in all rooms. Only administrators can use this command." }
             };
@@ -328,7 +329,8 @@ namespace JabbR
                 Owners = from u in room.Owners.Online()
                          select u.Name,
                 RecentMessages = recentMessages.Select(m => new MessageViewModel(m)),
-                Topic = ConvertUrlsAndRoomLinks(room.Topic ?? "")
+                Topic = ConvertUrlsAndRoomLinks(room.Topic ?? ""),
+                Welcome = ConvertUrlsAndRoomLinks(room.Welcome ?? "")
             };
         }
 
@@ -540,7 +542,8 @@ namespace JabbR
             var roomViewModel = new RoomViewModel
             {
                 Name = room.Name,
-                Private = room.Private
+                Private = room.Private,
+                Welcome = ConvertUrlsAndRoomLinks(room.Welcome ?? "")
             };
 
             var isOwner = user.OwnedRooms.Contains(room);
@@ -886,6 +889,15 @@ namespace JabbR
                 Topic = parsedTopic
             };
             Clients[room.Name].changeTopic(roomViewModel);
+        }
+
+        void INotificationService.ChangeWelcome(ChatUser user, ChatRoom room)
+        {
+            bool isWelcomeCleared = String.IsNullOrWhiteSpace(room.Welcome);
+            var parsedWelcome = ConvertUrlsAndRoomLinks(room.Welcome ?? "");
+            foreach (var client in user.ConnectedClients) {
+                Clients[client.Id].welcomeChanged(isWelcomeCleared, parsedWelcome);
+            }
         }
 
         void INotificationService.AddAdmin(ChatUser targetUser)

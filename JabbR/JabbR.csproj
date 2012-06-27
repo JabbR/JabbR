@@ -818,7 +818,12 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\WelcomeCommand.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />
+    <Compile Include="Migrations\201206201924146_RoomWelcome.cs" />
+    <Compile Include="Migrations\201206201924146_RoomWelcome.Designer.cs">
+      <DependentUpon>201206201924146_RoomWelcome.cs</DependentUpon>
+    </Compile>
     <Compile Include="WebApi\Model\ErrorModel.cs" />
     <Compile Include="Infrastructure\HttpRequestExtensions.cs" />
     <Compile Include="WebApi\MessagesController.cs" />
