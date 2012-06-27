@@ -889,7 +889,17 @@
         ui.addMessage('Type /help to see the list of commands', 'notification');
 
         function initConnection() {
-            connection.hub.start(function () {
+            var logging = $.cookie('jabbr.logging') === '1',
+                transport = $.cookie('jabbr.transport'),
+                options = {};
+
+            if (transport) {
+                options['transport'] = transport;
+            }
+
+            connection.hub.logging = logging;
+
+            connection.hub.start(options, function () {
                 chat.join()
                 .fail(function (e) {
                     ui.addMessage(e, 'error');
