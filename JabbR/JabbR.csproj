@@ -817,6 +817,7 @@
   <ItemGroup>
     <Compile Include="Commands\WelcomeCommand.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />
+    <Compile Include="ContentProviders\SpotifyContentProvider.cs" />
     <Compile Include="Migrations\201206201924146_RoomWelcome.cs" />
     <Compile Include="Migrations\201206201924146_RoomWelcome.Designer.cs">
       <DependentUpon>201206201924146_RoomWelcome.cs</DependentUpon>
