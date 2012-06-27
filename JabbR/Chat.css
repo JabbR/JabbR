@@ -456,7 +456,7 @@ li.room
   width: 100%;
   height: 20px;
   resize: none;
-  overflow: hidden;
+  overflow: auto;
 }
 
 #send
