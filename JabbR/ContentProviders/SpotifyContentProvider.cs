@@ -12,8 +12,8 @@ namespace JabbR.ContentProviders
 
             return TaskAsyncHelper.FromResult(new ContentProviderResult()
                                                   {
-                                                      Content = string.Format("<iframe src=\"https://embed.spotify.com/?uri=spotify:{0}\" width=\"300\" height=\"380\" frameborder=\"0\" allowtransparency=\"true\"></iframe>", spotifyUri),
-                                                      Title = string.Format("spotify:track:{0}", spotifyUri)
+                                                      Content = String.Format("<iframe src=\"https://embed.spotify.com/?uri=spotify:{0}\" width=\"300\" height=\"380\" frameborder=\"0\" allowtransparency=\"true\"></iframe>", spotifyUri),
+                                                      Title = String.Format("spotify:track:{0}", spotifyUri)
                                                   });
         }
 
