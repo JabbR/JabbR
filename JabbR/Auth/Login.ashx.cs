@@ -79,7 +79,8 @@ namespace JabbR.Auth
                     // If they are logged in then assocate the identity
                     user.Identity = userIdentity;
                     user.Email = email;
-                    if (!String.IsNullOrEmpty(email))
+                    if (!String.IsNullOrEmpty(email) && 
+                        String.IsNullOrEmpty(user.Hash))
                     {
                         user.Hash = email.ToMD5();
                     }
@@ -100,7 +101,8 @@ namespace JabbR.Auth
             {
                 // Update email and gravatar
                 user.Email = email;
-                if (!String.IsNullOrEmpty(email))
+                if (!String.IsNullOrEmpty(email) &&
+                    String.IsNullOrEmpty(user.Hash))
                 {
                     user.Hash = email.ToMD5();
                 }
