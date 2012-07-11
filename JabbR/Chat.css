@@ -523,7 +523,7 @@ li.room
   padding: 5px;
 }
 
-  .notification .content, .pm .content, .error .content
+  .notification .content, .pm .content, .error .content, .broadcast .content
   {
     margin-right: 95px;
   }
