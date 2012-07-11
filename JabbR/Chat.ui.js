@@ -173,7 +173,7 @@
             return this.tab.length > 0;
         };
 
-        this.closed = function () {
+        this.isClosed = function () {
             return this.tab.attr('data-closed') === 'true';
         };
 
@@ -1125,7 +1125,7 @@
                 triggerFocus();
                 room.makeActive();
 
-                ui.toggleMessageSection(room.closed());
+                ui.toggleMessageSection(room.isClosed());
 
                 document.location.hash = '#/rooms/' + roomName;
                 $ui.trigger(ui.events.activeRoomChanged, [roomName]);
