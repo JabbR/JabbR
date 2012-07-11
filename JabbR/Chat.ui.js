@@ -1440,7 +1440,7 @@
         addPrivateMessage: function (content, type) {
             var rooms = getAllRoomElements();
             for (var r in rooms) {
-                if (rooms[r].getName() != undefined) {
+                if (rooms[r].getName() != undefined && rooms[r].isClosed() === false) {
                     this.addMessage(content, type, rooms[r].getName());
                 }
             }
