@@ -42,21 +42,21 @@ namespace JabbR.Infrastructure
             return message;
         }
 
+        static Regex urlPattern = new Regex(@"(?:(?:https?|ftp)://|www\.)[^\s]+", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
         public static string TransformAndExtractUrls(string message, out HashSet<string> extractedUrls)
         {
-            const string urlPattern = @"(?i)(?<s>(?:https?|ftp)://|www\.)?(?:\S+(?::\S*)?@)?(?:(?:[\w\p{S}][\w\p{S}@-]*[.:])+\w+)(?(s)/?|/)(?:(?:[^\s()<>.,\u0022'”]+|[.,\u0022'”][^\s()<>,\u0022]|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))*\))*)";
-
             var urls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            message = Regex.Replace(message, urlPattern, m =>
+            message = urlPattern.Replace(message, m =>
             {
-
-                string httpPortion = String.Empty;
-                if (!m.Value.Contains("://"))
+                string url = m.Value;
+                if (!url.Contains("://"))
                 {
-                    httpPortion = "http://";
+                    url = "http://" + url;
                 }
 
-                string url = httpPortion + m.Value;
+                if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+                    return m.Value;
 
                 urls.Add(HttpUtility.HtmlDecode(url));
 
