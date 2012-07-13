@@ -9,7 +9,6 @@
     var $chatArea = null,
         $tabs = null,
         $submitButton = null,
-        $messageSection = null,
         $newMessage = null,
         $toast = null,
         $disconnectDialog = null,
@@ -764,7 +763,6 @@
             $chatArea = $('#chat-area');
             $tabs = $('#tabs');
             $submitButton = $('#send');
-            $messageSection = $('#send-message');
             $newMessage = $('#new-message');
             $toast = $('#preferences .toast');
             $sound = $('#preferences .sound');
@@ -1640,11 +1638,20 @@
         },
         shouldCollapseContent: shouldCollapseContent,
         collapseRichContent: collapseRichContent,
-        toggleMessageSection: function (hideIt) {
-            if (hideIt) {
-                $messageSection.fadeOut(500);
+        toggleMessageSection: function (disabledIt) {
+            if (disabledIt) {
+                // disable button and textarea
+                $newMessage.attr('disabled', 'disabled');
+                $submitButton.attr('disabled', 'disabled');
+
             } else {
-                $messageSection.fadeIn(1000);
+                // re-enable textarea button
+                $newMessage.attr('disabled', '');
+                $newMessage.removeAttr('disabled');
+
+                // re-enable submit button
+                $submitButton.attr('disabled', '');
+                $submitButton.removeAttr('disabled');
             }
         },
         closeRoom: function (roomName) {
