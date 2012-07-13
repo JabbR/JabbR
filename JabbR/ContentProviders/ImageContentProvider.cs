@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
+using Microsoft.Security.Application;
 
 namespace JabbR.ContentProviders
 {
@@ -8,10 +9,11 @@ namespace JabbR.ContentProviders
     {
         protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
+            string url = request.RequestUri.ToString();
             return TaskAsyncHelper.FromResult(new ContentProviderResult()
              {
-                 Content = String.Format(@"<img src=""proxy?url={0}"" />", request.RequestUri),
-                 Title = request.RequestUri.AbsoluteUri.ToString()
+                 Content = String.Format(@"<img src=""proxy?url={0}"" />", Encoder.HtmlAttributeEncode(url)),
+                 Title = url
              });
         }
 

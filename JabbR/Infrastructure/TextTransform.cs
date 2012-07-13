@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using JabbR.Models;
+using Microsoft.Security.Application;
 
 namespace JabbR.Infrastructure
 {
@@ -56,13 +57,16 @@ namespace JabbR.Infrastructure
                 }
 
                 if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+                {
                     return m.Value;
+                }
 
                 urls.Add(HttpUtility.HtmlDecode(url));
 
                 return String.Format(CultureInfo.InvariantCulture,
                                      "<a rel=\"nofollow external\" target=\"_blank\" href=\"{0}\" title=\"{1}\">{1}</a>",
-                                     url, m.Value);
+                                     Encoder.HtmlAttributeEncode(url),
+                                     m.Value);
             });
 
             extractedUrls = urls;

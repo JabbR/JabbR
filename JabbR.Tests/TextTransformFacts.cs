@@ -206,7 +206,7 @@ namespace JabbR.Test
                 var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
 
                 //assert
-                Assert.Equal("message <a rel=\"nofollow external\" target=\"_blank\" href=\"http://➡.ws/䨹\" title=\"http://➡.ws/䨹\">http://➡.ws/䨹</a> continues on", result);
+                Assert.Equal("message <a rel=\"nofollow external\" target=\"_blank\" href=\"http://&#10145;.ws/&#19001;\" title=\"http://➡.ws/䨹\">http://➡.ws/䨹</a> continues on", result);
             }
 
             [Fact]
