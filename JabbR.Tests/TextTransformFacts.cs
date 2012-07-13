@@ -221,6 +221,34 @@ namespace JabbR.Test
                 //assert
                 Assert.Equal("message <a rel=\"nofollow external\" target=\"_blank\" href=\"https://github.com/NuGet/NuGetGallery/compare/345ea25491...90a05bc3e0\" title=\"https://github.com/NuGet/NuGetGallery/compare/345ea25491...90a05bc3e0\">https://github.com/NuGet/NuGetGallery/compare/345ea25491...90a05bc3e0</a> continues on", result);
             }
+
+            [Fact]
+            public void UrlWithCallbacks()
+            {
+                //arrange
+                var message = @"http://a.co/a.png#""onerror='alert(&quot;Eek!&quot;)'";
+                HashSet<string> extractedUrls;
+
+                //act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                //assert
+                Assert.Equal(@"http://a.co/a.png#""onerror='alert(&quot;Eek!&quot;)'", result);
+            }
+
+            [Fact]
+            public void LocalHost()
+            {
+                //arrange
+                var message = @"http://localhost/foo";
+                HashSet<string> extractedUrls;
+
+                //act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                //assert
+                Assert.Equal("<a rel=\"nofollow external\" target=\"_blank\" href=\"http://localhost/foo\" title=\"http://localhost/foo\">http://localhost/foo</a>", result);
+            }
         }
     }
 }
