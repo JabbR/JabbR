@@ -1366,6 +1366,11 @@
                 $message = null,
                 isMention = message.highlight;
 
+            // bounce out of here if the room is closed
+            if (room.isClosed()) {
+                return;
+            }
+
             if ($previousMessage.length > 0) {
                 previousUser = $previousMessage.data('name');
                 previousTimestamp = new Date($previousMessage.data('timestamp') || new Date());

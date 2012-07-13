@@ -179,6 +179,11 @@ namespace JabbR
             ChatUser user = _repository.VerifyUserId(id);
             ChatRoom room = _repository.VerifyUserRoom(_cache, user, message.Room);
 
+            if (room.Closed)
+            {
+                throw new InvalidOperationException(String.Format("You cannot post messages to '{0}'. The room is closed.", message.Room));
+            }
+
             // Update activity *after* ensuring the user, this forces them to be active
             UpdateActivity(user, room);
 
