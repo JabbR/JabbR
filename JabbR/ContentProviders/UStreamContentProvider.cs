@@ -20,7 +20,7 @@ namespace JabbR.ContentProviders
                 var iframeHtml = HttpUtility.HtmlDecode(result);
                 return new ContentProviderResult()
                 {
-                    Content = iframeHtml,
+                    Content = iframeHtml.Replace("http://", "https://"),
                     Title = request.RequestUri.AbsoluteUri.ToString()
                 };
             });
