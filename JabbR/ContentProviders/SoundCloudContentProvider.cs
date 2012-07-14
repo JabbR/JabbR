@@ -11,14 +11,14 @@ namespace JabbR.ContentProviders
     {
         protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {            
-            var url = String.Format(@"http://soundcloud.com/oembed?format=json&iframe=true&show_comments=false&url={0}", request.RequestUri.AbsoluteUri);
+            var url = String.Format(@"https://soundcloud.com/oembed?format=json&iframe=true&show_comments=false&url={0}", request.RequestUri.AbsoluteUri);
 
             return Http.GetJsonAsync<SoundCloudResponse>(url).Then(widgetInfo =>
             {
                 return new ContentProviderResult
                 {
                     Title = widgetInfo.Title,
-                    Content = widgetInfo.FrameMarkup
+                    Content = widgetInfo.FrameMarkup.Replace("http://", "https://")
                 };
             });
         }
