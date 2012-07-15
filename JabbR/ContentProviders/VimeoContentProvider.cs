@@ -30,7 +30,7 @@ namespace JabbR.ContentProviders
         {
             get
             {
-                return @"<iframe src=""https://player.vimeo.com/video/{0}?title=0&amp;byline=0&amp;portrait=0&amp;color=c9ff23"" width=""500"" height=""271"" frameborder=""0"" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+                return @"<iframe src=""//player.vimeo.com/video/{0}?title=0&amp;byline=0&amp;portrait=0&amp;color=c9ff23"" width=""500"" height=""271"" frameborder=""0"" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
             }
         }
     }

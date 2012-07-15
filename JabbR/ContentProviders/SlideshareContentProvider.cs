@@ -12,7 +12,7 @@ namespace JabbR.ContentProviders
     /// </summary>
     public class SlideShareContentProvider : CollapsibleContentProvider
     {
-        private static readonly String _oEmbedUrl = "http://www.slideshare.net/api/oembed/2?url={0}&format=json";
+        private static readonly String _oEmbedUrl = "https://www.slideshare.net/api/oembed/2?url={0}&format=json";
 
 
         protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
@@ -24,9 +24,10 @@ namespace JabbR.ContentProviders
             var url = String.Format(_oEmbedUrl, request.RequestUri.AbsoluteUri);
             return Http.GetJsonAsync(url).Then(slideShareData =>
             {
+                string html = slideShareData.html;
                 return new ContentProviderResult()
                 {
-                    Content = slideShareData.html,
+                    Content = html.Replace("http://", "https://"),
                     Title = slideShareData.title
                 };
             });
