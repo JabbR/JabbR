@@ -576,6 +576,7 @@
         if (isSelf({ Name: to })) {
             // Force notification for direct messages
             ui.notify(true);
+            ui.setLastPrivate(from);
         }
 
         ui.addPrivateMessage('<emp>*' + from + '* &raquo; *' + to + '*</emp> ' + message, 'pm');
