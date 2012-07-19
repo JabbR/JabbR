@@ -17,7 +17,7 @@ namespace JabbR.Commands
             {
                 string roomName = HttpUtility.HtmlDecode(args[0]);
 
-                room = context.Repository.VerifyRoom(roomName);
+                room = context.Repository.VerifyRoom(roomName, mustBeOpen: false);
             }
 
             context.Service.LeaveRoom(callingUser, room);
