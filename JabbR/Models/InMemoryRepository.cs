@@ -97,8 +97,8 @@ namespace JabbR.Models
         {
             return _rooms
                 .Where(r =>
-                    (!r.Private && !r.Closed) ||
-                    (r.Private && !r.Closed && r.AllowedUsers.Contains(user)))
+                    (!r.Private) ||
+                    (r.Private && r.AllowedUsers.Contains(user)))
                 .AsQueryable();
         }
 
