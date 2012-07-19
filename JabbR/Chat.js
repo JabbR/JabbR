@@ -187,6 +187,9 @@
         if (room.Private) {
             ui.setRoomLocked(room.Name);
         }
+        if (room.Closed) {
+            ui.setRoomClosed(room.Name);
+        }
 
         if (added) {
             populateRoom(room.Name).done(function () {
@@ -215,6 +218,9 @@
             ui.addRoom(room);
             if (room.Private) {
                 ui.setRoomLocked(room.Name);
+            }
+            if (room.Closed) {
+                ui.setRoomClosed(room.Name);
             }
         });
         ui.setUserName(chat.name);

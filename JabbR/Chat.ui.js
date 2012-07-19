@@ -178,10 +178,12 @@
 
         this.close = function () {
             this.tab.attr('data-closed', true);
+            this.tab.addClass('closed');
         };
 
         this.unClose = function () {
             this.tab.attr('data-closed', false);
+            this.tab.removeClass('closed');
         };
 
         this.clear = function () {
@@ -391,6 +393,9 @@
 
         if (room.Private === true) {
             $room.addClass('locked');
+        }
+        if (room.Closed === true) {
+            $room.addClass('closed');
         }
 
         // Do a little animation
@@ -1137,6 +1142,11 @@
 
             room.setLocked();
         },
+        setRoomClosed: function (roomName) {
+            var room = getRoomElements(roomName);
+
+            room.close();
+        },
         updateLobbyRoomCount: updateLobbyRoomCount,
         updateUnread: function (roomName, isMentioned) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
@@ -1175,16 +1185,21 @@
                                          .html(' (' + this.Count + ')')
                                          .data('count', this.Count),
                     $locked = $('<span/>').addClass('lock'),
+                    $readonly = $('<span/>').addClass('readonly'),
                     $li = $('<li/>').addClass('room')
                           .attr('data-room', this.Name)
                           .data('name', this.Name)
                           .append($locked)
+                          .append($readonly)
                           .append($name)
                           .append($count)
                           .appendTo(lobby.users);
 
                 if (this.Private) {
                     $li.addClass('locked');
+                }
+                if (this.Closed) {
+                    $li.addClass('closed');
                 }
             });
 

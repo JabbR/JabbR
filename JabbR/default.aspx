@@ -130,6 +130,7 @@
     <script id="new-tab-template" type="text/x-jquery-tmpl">
         <li id="tabs-${id}" class="room" data-name="${name}" data-closed="${closed}" role="tab">
             <span class="lock"></span>
+            <span class="readonly"></span>
             <button> 
                 <span class="content">${name}</span>
             </button>

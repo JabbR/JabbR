@@ -244,9 +244,19 @@
     vertical-align: middle;
   }
 
+  .users li.room.closed .name
+  {
+	margin-left: 23px;
+  }
+
   .users li.room.locked .name
   {
     margin-left: 20px;
+  }
+  
+  .users li.room.closed.locked .name
+  {
+    margin-left: 43px;
   }
 
   .users li.typing
@@ -261,7 +271,20 @@
     position: absolute;
     width: 16px;
     height: 16px;
-    background: url(Content/images/lock.png) no-repeat;
+    background: url(Content/images/lock.png) no-repeat bottom;
+  }
+  
+  .users li.room.closed .readonly
+  {
+    position: absolute;
+    width: 19px; 
+    height: 16px;
+    background: url(Content/images/no-typing.png) no-repeat;
+  }
+  
+  .users li.room.closed.locked .readonly
+  {
+    margin-left: 20px;
   }
 
 .users .details
@@ -355,7 +378,17 @@
     {
       margin: 6px 10px 6px 23px;
     }
-
+    
+    #tabs li.closed .content
+    {
+      margin: 6px 10px 6px 27px;
+    }
+    
+    #tabs li.closed.locked .content
+    {
+      margin: 6px 10px 6px 47px;
+    }
+    
     #tabs li .close
     {
       position: absolute;
@@ -379,6 +412,26 @@
     #tabs li.locked.current .lock, #tabs li.locked:hover .lock
     {
       background: url(Content/images/lock.png) no-repeat;
+    }
+    
+    #tabs li.closed .readonly
+    {
+      position: absolute;
+      top: 7px;
+      width: 19px;
+      height: 16px;
+      margin-left: 5px;
+      background: url(Content/images/no-typing-white.png) no-repeat;
+    }
+    
+    #tabs li.closed.current .readonly, #tabs li.closed:hover .readonly
+    {
+      background: url(Content/images/no-typing.png) no-repeat;
+    }
+        
+    #tabs li.closed.locked .readonly
+    {
+      margin-left: 22px;
     }
 
     #tabs li .close:hover
