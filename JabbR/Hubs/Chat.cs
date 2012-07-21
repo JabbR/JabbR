@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using JabbR.Commands;
@@ -466,6 +467,10 @@ namespace JabbR
 
         private void DisconnectClient(string clientId)
         {
+            // Sleep a little so that a browser refresh doesn't show the user 
+            // coming offline and back online
+            Thread.Sleep(500);
+
             ChatUser user = _service.DisconnectClient(clientId);
 
             // There's no associated user for this client id
