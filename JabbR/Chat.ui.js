@@ -1352,12 +1352,25 @@
                 $previousMessage = null,
                 $current = null,
                 previousUser = null,
-                previousTimestamp = new Date();
+                previousTimestamp = new Date().addDays(1); // Tomorrow so we always see a date line
 
             if (messages.length === 0) {
                 // Mark this list as full
                 $messages.data('full', true);
                 return;
+            }
+
+            // If our top message is a date header, it might be incorrect, so we
+            // check to see if we should remove it so that it can be inserted
+            // again at a more apropriate time.
+            if ($target.data('timestamp')) {
+                var postedDate = new Date($target.data('timestamp')).toDate();
+                var lastPrependDate = messages[messages.length - 1].date.toDate();
+
+                if (!lastPrependDate.diffDays(postedDate)) {
+                    $target.remove();
+                    $target = $messages.children().first();
+                }
             }
 
             // Populate the old messages
@@ -1394,7 +1407,7 @@
             var room = getRoomElements(roomName),
                 $previousMessage = room.messages.children().last(),
                 previousUser = null,
-                previousTimestamp = new Date(),
+                previousTimestamp = new Date().addDays(1), // Tomorrow so we always see a date line
                 showUserName = true,
                 $message = null,
                 isMention = message.highlight;
