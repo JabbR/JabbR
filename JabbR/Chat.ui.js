@@ -427,7 +427,7 @@
             closed: roomViewModel.Closed
         };
 
-        templates.tab.tmpl(viewModel).appendTo($tabs);
+        templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabs);
 
         $messages = $('<ul/>').attr('id', 'messages-' + roomId)
                               .addClass('messages')
