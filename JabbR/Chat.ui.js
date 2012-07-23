@@ -21,7 +21,7 @@
         templates = null,
         focus = true,
         commands = [],
-        Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13, Slash: 47 },
+        Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13, Slash: 47, Space: 32 },
         scrollTopThreshold = 75,
         toast = window.chat.toast,
         preferences = null,
@@ -33,7 +33,8 @@
         $document = $(document),
         $roomFilterInput = null,
         updateTimeout = 15000,
-        $richness = null;
+        $richness = null,
+        lastPrivate = null;
 
     function getRoomId(roomName) {
         return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -1000,6 +1001,12 @@
                         triggerSend();
                         ev.preventDefault();
                         return false;
+                    case Keys.Space:
+                        // Check for "/r " to reply to last private message
+                        if ($(this).val() === "/r" && lastPrivate) {
+                            ui.setMessage("/msg " + lastPrivate);
+                        }
+                        break;
                 }
             });
 
@@ -1652,6 +1659,9 @@
                  .find('.admin')
                  .text('');
             room.updateUserStatus($user);
+        },
+        setLastPrivate: function (userName) {
+            lastPrivate = userName;
         },
         shouldCollapseContent: shouldCollapseContent,
         collapseRichContent: collapseRichContent,
