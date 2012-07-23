@@ -987,9 +987,11 @@
                 switch (key) {
                     case Keys.Up:
                         cycleMessage(ui.events.prevMessage);
+                        ev.preventDefault();
                         break;
                     case Keys.Down:
                         cycleMessage(ui.events.nextMessage);
+                        ev.preventDefault();
                         break;
                     case Keys.Esc:
                         $(this).val('');
