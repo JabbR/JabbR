@@ -289,7 +289,10 @@ namespace JabbR
                 Count = r.Users.Count(u => u.Status != (int)UserStatus.Offline),
                 Private = r.Private,
                 Closed = r.Closed
-            }).ToList();
+            })
+            .OrderBy(r => r.Closed)
+            .ThenByDescending(r => r.Count)
+            .ToList();
 
             return rooms;
         }

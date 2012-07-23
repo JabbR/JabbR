@@ -1179,15 +1179,11 @@
             return room.isNearTheEnd();
         },
         populateLobbyRooms: function (rooms) {
-            var lobby = getLobby(),
-            // sort lobby by room count descending
-            sorted = rooms.sort(function (a, b) {
-                return a.Count > b.Count ? -1 : 1;
-            });
+            var lobby = getLobby();
 
             lobby.users.empty();
 
-            $.each(sorted, function () {
+            $.each(rooms, function () {
                 var $name = $('<span/>').addClass('name')
                                         .html(this.Name),
                     $count = $('<span/>').addClass('count')
