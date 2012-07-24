@@ -21,7 +21,7 @@
         templates = null,
         focus = true,
         commands = [],
-        Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13, Slash: 47, Space: 32 },
+        Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13, Slash: 47, Space: 32, Tab: 9 },
         scrollTopThreshold = 75,
         toast = window.chat.toast,
         preferences = null,
@@ -844,6 +844,26 @@
                 }
                 else {
                     ui.expandNotifications($notification);
+                }
+            });
+
+            // handle tab cycling - we skip the lobby when cycling
+            $document.on('keydown', function (ev) {
+                if (ev.keyCode === Keys.Tab && $newMessage.val() === "") {
+                    var current = getCurrentRoomElements(),
+                        index = current.tab.index(),
+                        tabCount = $tabs.children().length - 1;
+
+                    if (!ev.shiftKey) {
+                        // Next tab
+                        index = index % tabCount + 1;
+                    } else {
+                        // Prev tab
+                        index = (index - 1) || tabCount;
+                    }
+
+                    ui.setActiveRoom($tabs.children().eq(index).data('name'));
+                    $newMessage.focus();
                 }
             });
 
