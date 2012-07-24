@@ -1405,7 +1405,7 @@
         },
         addChatMessage: function (message, roomName) {
             var room = getRoomElements(roomName),
-                $previousMessage = room.messages.children().last(),
+                $previousMessage = room.messages.children(".message").last(),
                 previousUser = null,
                 previousTimestamp = new Date().addDays(1), // Tomorrow so we always see a date line
                 showUserName = true,
