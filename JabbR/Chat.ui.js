@@ -1363,8 +1363,8 @@
             // If our top message is a date header, it might be incorrect, so we
             // check to see if we should remove it so that it can be inserted
             // again at a more apropriate time.
-            if ($target.data('timestamp')) {
-                var postedDate = new Date($target.data('timestamp')).toDate();
+            if ($target.is(".list-header.date-header")) {
+                var postedDate = new Date($target.text()).toDate();
                 var lastPrependDate = messages[messages.length - 1].date.toDate();
 
                 if (!lastPrependDate.diffDays(postedDate)) {
@@ -1384,6 +1384,7 @@
 
                 if (this.date.toDate().diffDays(previousTimestamp.toDate())) {
                     ui.addMessageBeforeTarget(this.date.toLocaleDateString(), 'list-header', $target)
+                      .addClass('date-header')
                       .find('.right').remove(); // remove timestamp on date indicator
                 }
 
@@ -1443,6 +1444,7 @@
 
             if (message.date.toDate().diffDays(previousTimestamp.toDate())) {
                 ui.addMessage(message.date.toLocaleDateString(), 'list-header', roomName)
+                  .addClass('date-header')
                   .find('.right').remove(); // remove timestamp on date indicator
             }
 
