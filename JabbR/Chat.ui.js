@@ -788,7 +788,8 @@
                 message: $('#new-message-template'),
                 notification: $('#new-notification-template'),
                 separator: $('#message-separator-template'),
-                tab: $('#new-tab-template')
+                tab: $('#new-tab-template'),
+                gravatarprofile: $('#gravatar-profile-template')
             };
 
             if (toast.canToast()) {
@@ -1303,6 +1304,10 @@
 
             $user.find('.gravatar')
                  .attr('src', src);
+        },
+        showGravatarProfile: function (profile) {
+            var room = getCurrentRoomElements();
+            templates.gravatarprofile.tmpl(profile).appendTo(room.messages);
         },
         removeUser: function (user, roomName) {
             var room = getRoomElements(roomName),

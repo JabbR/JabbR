@@ -786,6 +786,7 @@ namespace JabbR
                 IsAfk = user.IsAfk,
                 AfkNote = user.AfkNote,
                 Note = user.Note,
+                Hash = user.Hash,
                 Rooms = user.Rooms.Allowed(userId).Select(r => r.Name)
             });
         }
