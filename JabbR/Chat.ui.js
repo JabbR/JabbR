@@ -750,17 +750,17 @@
         //lets store any events to be triggered as constants here to aid intellisense and avoid
         //string duplication everywhere
         events: {
-            closeRoom: 'closeRoom',
-            prevMessage: 'prevMessage',
-            openRoom: 'openRoom',
-            nextMessage: 'nextMessage',
-            activeRoomChanged: 'activeRoomChanged',
-            scrollRoomTop: 'scrollRoomTop',
-            typing: 'typing',
-            sendMessage: 'sendMessage',
-            focusit: 'focusit',
-            blurit: 'blurit',
-            preferencesChanged: 'preferencesChanged'
+            closeRoom: 'jabbr.ui.closeRoom',
+            prevMessage: 'jabbr.ui.prevMessage',
+            openRoom: 'jabbr.ui.openRoom',
+            nextMessage: 'jabbr.ui.nextMessage',
+            activeRoomChanged: 'jabbr.ui.activeRoomChanged',
+            scrollRoomTop: 'jabbr.ui.scrollRoomTop',
+            typing: 'jabbr.ui.typing',
+            sendMessage: 'jabbr.ui.sendMessage',
+            focusit: 'jabbr.ui.focusit',
+            blurit: 'jabbr.ui.blurit',
+            preferencesChanged: 'jabbr.ui.preferencesChanged'
         },
 
         initialize: function (state) {
