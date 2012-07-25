@@ -1185,6 +1185,8 @@
             sorted = rooms.sort(function (a, b) {
                 if (a.Closed && !b.Closed) {
                     return 1;
+                } else if (b.Closed && !a.Closed) {
+                    return -1;
                 }
 
                 return a.Count > b.Count ? -1 : 1;
