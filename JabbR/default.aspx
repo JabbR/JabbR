@@ -190,6 +190,20 @@
         </div>   
     </script>
     <!-- /Github Issus Content Provider -->
+    <!--Gravatar Profile Template for Who command-->
+    <script id="gravatar-profile-template" type="text/x-jquery-tmpl">
+        <li class="list-header">Gravatar</li>
+        <li class="list-item">
+            <img src="${thumbnailUrl}" />
+        </li>
+        <li class="list-item">
+            Profile Link: <a href="${profileUrl}">${profileUrl}</a>
+        </li>
+        <li class="list-item">
+            Name: ${name.formatted}
+        </li>
+    </script>
+    <!--/Gravatar Profile Template-->
 </head>
 <body>
   <section id="page" role="application">
