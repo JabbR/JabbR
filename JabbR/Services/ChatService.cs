@@ -938,7 +938,7 @@ namespace JabbR.Services
                     "Sorry, but the country ISO code you requested doesn't exist. Please refer to http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 for a proper list of country ISO codes.");
             }
         }
-
+         
         internal static string GetCountry(string isoCode)
         {
             if (String.IsNullOrEmpty(isoCode))
