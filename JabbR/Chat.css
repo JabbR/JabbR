@@ -242,6 +242,7 @@
   {
     word-wrap: break-word;
     vertical-align: middle;
+    cursor: pointer;
   }
 
   .users li.room.closed .name
@@ -619,6 +620,7 @@ li.room
     .message .left .name
     {
       font-weight: bold;
+      cursor: pointer;
     }
 
   .message.failed .left .state
