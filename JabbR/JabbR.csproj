@@ -683,6 +683,7 @@
     <Content Include="Content\images\icons-36-black.png" />
     <Content Include="Content\images\icons-36-white.png" />
     <Content Include="Content\images\lock.png" />
+    <Content Include="Content\images\logo64.png" />
     <Content Include="Content\images\no-typing-white.png" />
     <Content Include="Content\images\no-typing.png" />
     <Content Include="Content\images\richness-off.png" />

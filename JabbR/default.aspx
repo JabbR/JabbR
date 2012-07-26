@@ -14,6 +14,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
     <meta name="description" content="A real-time chat application. IRC without the R." />
     <meta name="keywords" content="chat,realtime chat,signalr,jabbr" />
+    <link href="/Content/images/logo32.png" rel="shortcut icon" type="image/png" sizes="32x32">
+    <link href="/Content/images/logo64.png" rel="shortcut icon" type="image/png" sizes="64x64">
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" sizes="16x16">
     <%= Bundle.Css()
             .Add("~/Chat.css",
                   "~/Chat.nuget.css",
