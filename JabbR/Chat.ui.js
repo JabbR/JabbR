@@ -21,7 +21,7 @@
         templates = null,
         focus = true,
         commands = [],
-        Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13, Slash: 47, Space: 32 },
+        Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13, Slash: 47, Space: 32, Tab: 9 },
         scrollTopThreshold = 75,
         toast = window.chat.toast,
         preferences = null,
@@ -750,17 +750,17 @@
         //lets store any events to be triggered as constants here to aid intellisense and avoid
         //string duplication everywhere
         events: {
-            closeRoom: 'closeRoom',
-            prevMessage: 'prevMessage',
-            openRoom: 'openRoom',
-            nextMessage: 'nextMessage',
-            activeRoomChanged: 'activeRoomChanged',
-            scrollRoomTop: 'scrollRoomTop',
-            typing: 'typing',
-            sendMessage: 'sendMessage',
-            focusit: 'focusit',
-            blurit: 'blurit',
-            preferencesChanged: 'preferencesChanged'
+            closeRoom: 'jabbr.ui.closeRoom',
+            prevMessage: 'jabbr.ui.prevMessage',
+            openRoom: 'jabbr.ui.openRoom',
+            nextMessage: 'jabbr.ui.nextMessage',
+            activeRoomChanged: 'jabbr.ui.activeRoomChanged',
+            scrollRoomTop: 'jabbr.ui.scrollRoomTop',
+            typing: 'jabbr.ui.typing',
+            sendMessage: 'jabbr.ui.sendMessage',
+            focusit: 'jabbr.ui.focusit',
+            blurit: 'jabbr.ui.blurit',
+            preferencesChanged: 'jabbr.ui.preferencesChanged'
         },
 
         initialize: function (state) {
@@ -844,6 +844,26 @@
                 }
                 else {
                     ui.expandNotifications($notification);
+                }
+            });
+
+            // handle tab cycling - we skip the lobby when cycling
+            $document.on('keydown', function (ev) {
+                if (ev.keyCode === Keys.Tab && $newMessage.val() === "") {
+                    var current = getCurrentRoomElements(),
+                        index = current.tab.index(),
+                        tabCount = $tabs.children().length - 1;
+
+                    if (!ev.shiftKey) {
+                        // Next tab
+                        index = index % tabCount + 1;
+                    } else {
+                        // Prev tab
+                        index = (index - 1) || tabCount;
+                    }
+
+                    ui.setActiveRoom($tabs.children().eq(index).data('name'));
+                    $newMessage.focus();
                 }
             });
 
@@ -988,12 +1008,14 @@
                 var key = ev.keyCode || ev.which;
                 switch (key) {
                     case Keys.Up:
-                        cycleMessage(ui.events.prevMessage);
-                        ev.preventDefault();
+                        if (cycleMessage(ui.events.prevMessage)) {
+                            ev.preventDefault();
+                        }
                         break;
                     case Keys.Down:
-                        cycleMessage(ui.events.nextMessage);
-                        ev.preventDefault();
+                        if (cycleMessage(ui.events.nextMessage)) {
+                            ev.preventDefault();
+                        }
                         break;
                     case Keys.Esc:
                         $(this).val('');
@@ -1011,11 +1033,14 @@
                 }
             });
 
+            // Returns true if a cycle was triggered
             function cycleMessage(messageHistoryDirection) {
                 var currentMessage = $newMessage[0].value;
                 if (currentMessage.length === 0 || lastCycledMessage === currentMessage) {
                     $ui.trigger(messageHistoryDirection);
+                    return true;
                 }
+                return false;
             }
 
             // Auto-complete for user names
@@ -1185,6 +1210,8 @@
             sorted = rooms.sort(function (a, b) {
                 if (a.Closed && !b.Closed) {
                     return 1;
+                } else if (b.Closed && !a.Closed) {
+                    return -1;
                 }
 
                 return a.Count > b.Count ? -1 : 1;
