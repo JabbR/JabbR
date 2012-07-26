@@ -1381,12 +1381,25 @@
                 $previousMessage = null,
                 $current = null,
                 previousUser = null,
-                previousTimestamp = new Date();
+                previousTimestamp = new Date().addDays(1); // Tomorrow so we always see a date line
 
             if (messages.length === 0) {
                 // Mark this list as full
                 $messages.data('full', true);
                 return;
+            }
+
+            // If our top message is a date header, it might be incorrect, so we
+            // check to see if we should remove it so that it can be inserted
+            // again at a more appropriate time.
+            if ($target.is('.list-header.date-header')) {
+                var postedDate = new Date($target.text()).toDate();
+                var lastPrependDate = messages[messages.length - 1].date.toDate();
+
+                if (!lastPrependDate.diffDays(postedDate)) {
+                    $target.remove();
+                    $target = $messages.children().first();
+                }
             }
 
             // Populate the old messages
@@ -1400,7 +1413,11 @@
 
                 if (this.date.toDate().diffDays(previousTimestamp.toDate())) {
                     ui.addMessageBeforeTarget(this.date.toLocaleDateString(), 'list-header', $target)
+                      .addClass('date-header')
                       .find('.right').remove(); // remove timestamp on date indicator
+
+                    // Force a user name to show after the header
+                    previousUser = null;
                 }
 
                 // Determine if we need to show the user
@@ -1416,14 +1433,22 @@
                 $previousMessage = $('#m-' + this.id);
             });
 
+            // If our old top message is a message from the same user as the
+            // last message in our prepended history, we can remove information
+            // and continue
+            if ($target.is('.message') && $target.data('name') === $previousMessage.data('name')) {
+                $target.find('.left').children().not('.state').remove();
+                $previousMessage.addClass('continue');
+            }
+
             // Scroll to the bottom element so the user sees there's more messages
             $target[0].scrollIntoView();
         },
         addChatMessage: function (message, roomName) {
             var room = getRoomElements(roomName),
-                $previousMessage = room.messages.children().last(),
+                $previousMessage = room.messages.children('.message').last(),
                 previousUser = null,
-                previousTimestamp = new Date(),
+                previousTimestamp = new Date().addDays(1), // Tomorrow so we always see a date line
                 showUserName = true,
                 $message = null,
                 isMention = message.highlight;
@@ -1436,6 +1461,16 @@
             if ($previousMessage.length > 0) {
                 previousUser = $previousMessage.data('name');
                 previousTimestamp = new Date($previousMessage.data('timestamp') || new Date());
+            }
+
+            // Determine if we need to show a new date header
+            if (message.date.toDate().diffDays(previousTimestamp.toDate())) {
+                ui.addMessage(message.date.toLocaleDateString(), 'list-header', roomName)
+                  .addClass('date-header')
+                  .find('.right').remove(); // remove timestamp on date indicator
+
+                // Force a user name to show after the header
+                previousUser = null;
             }
 
             // Determine if we need to show the user name next to the message
@@ -1455,11 +1490,6 @@
                     room.removeSeparator();
                 }
                 room.addSeparator();
-            }
-
-            if (message.date.toDate().diffDays(previousTimestamp.toDate())) {
-                ui.addMessage(message.date.toLocaleDateString(), 'list-header', roomName)
-                  .find('.right').remove(); // remove timestamp on date indicator
             }
 
             templates.message.tmpl(message).appendTo(room.messages);

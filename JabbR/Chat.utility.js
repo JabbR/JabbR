@@ -94,6 +94,11 @@
         return parseInt((t1 - t2) / (24 * 3600 * 1000));
     };
 
+    // adds a certain number of days to a Date object
+    Date.prototype.addDays = function (days) {
+        return new Date(this.getTime() + 1000 * 3600 * 24 * days);
+    }
+
     var utility = {
         trim: function (value, length) {
             if (value.length > length) {
