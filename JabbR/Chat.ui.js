@@ -1008,12 +1008,14 @@
                 var key = ev.keyCode || ev.which;
                 switch (key) {
                     case Keys.Up:
-                        cycleMessage(ui.events.prevMessage);
-                        ev.preventDefault();
+                        if (cycleMessage(ui.events.prevMessage)) {
+                            ev.preventDefault();
+                        }
                         break;
                     case Keys.Down:
-                        cycleMessage(ui.events.nextMessage);
-                        ev.preventDefault();
+                        if (cycleMessage(ui.events.nextMessage)) {
+                            ev.preventDefault();
+                        }
                         break;
                     case Keys.Esc:
                         $(this).val('');
@@ -1031,11 +1033,14 @@
                 }
             });
 
+            // Returns true if a cycle was triggered
             function cycleMessage(messageHistoryDirection) {
                 var currentMessage = $newMessage[0].value;
                 if (currentMessage.length === 0 || lastCycledMessage === currentMessage) {
                     $ui.trigger(messageHistoryDirection);
+                    return true;
                 }
+                return false;
             }
 
             // Auto-complete for user names
