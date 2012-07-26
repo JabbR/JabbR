@@ -867,6 +867,31 @@
                 }
             });
 
+            // handle click on names in chat / room list
+            var prepareMessage = function(ev) {
+                var message = $newMessage.val().trim();
+
+                // If it was a message to another person, replace that
+                if (message.indexOf('/msg') === 0) {
+                    message = message.replace(/^\/msg \S+ /, '');
+                }
+
+                // Re-focus because we lost it on the click
+                $newMessage.focus();
+
+                // Do not convert this to a message if it is a command
+                if (message[0] === '/') {
+                    return false;
+                }
+
+                // Prepend our target username
+                message = '/msg ' + $(this).text().trim() + ' ' + message;
+                ui.setMessage(message);
+                return false;
+            }
+            $document.on('click', '.users li.user .name', prepareMessage);
+            $document.on('click', '.message .left .name', prepareMessage);
+
             $submitButton.click(function (ev) {
                 triggerSend();
 
