@@ -1363,7 +1363,7 @@
             // If our top message is a date header, it might be incorrect, so we
             // check to see if we should remove it so that it can be inserted
             // again at a more appropriate time.
-            if ($target.is(".list-header.date-header")) {
+            if ($target.is('.list-header.date-header')) {
                 var postedDate = new Date($target.text()).toDate();
                 var lastPrependDate = messages[messages.length - 1].date.toDate();
 
@@ -1407,8 +1407,8 @@
             // If our old top message is a message from the same user as the
             // last message in our prepended history, we can remove information
             // and continue
-            if ($target.is(".message") && $target.data('name') === $previousMessage.data('name')) {
-                $target.find(".left").children().not(".state").remove();
+            if ($target.is('.message') && $target.data('name') === $previousMessage.data('name')) {
+                $target.find('.left').children().not('.state').remove();
                 $previousMessage.addClass('continue');
             }
 
@@ -1417,7 +1417,7 @@
         },
         addChatMessage: function (message, roomName) {
             var room = getRoomElements(roomName),
-                $previousMessage = room.messages.children(".message").last(),
+                $previousMessage = room.messages.children('.message').last(),
                 previousUser = null,
                 previousTimestamp = new Date().addDays(1), // Tomorrow so we always see a date line
                 showUserName = true,
