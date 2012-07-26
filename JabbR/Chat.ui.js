@@ -1333,8 +1333,12 @@
                  .attr('src', src);
         },
         showGravatarProfile: function (profile) {
-            var room = getCurrentRoomElements();
+            var room = getCurrentRoomElements(),
+                nearEnd = ui.isNearTheEnd();
             templates.gravatarprofile.tmpl(profile).appendTo(room.messages);
+            if (nearEnd) {
+                ui.scrollToBottom();
+            }
         },
         removeUser: function (user, roomName) {
             var room = getRoomElements(roomName),

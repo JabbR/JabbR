@@ -192,16 +192,21 @@
     <!-- /Github Issus Content Provider -->
     <!--Gravatar Profile Template for Who command-->
     <script id="gravatar-profile-template" type="text/x-jquery-tmpl">
-        <li class="list-header">Gravatar</li>
-        <li class="list-item">
-            <img src="${thumbnailUrl}" />
-        </li>
-        <li class="list-item">
-            Profile Link: <a href="${profileUrl}">${profileUrl}</a>
-        </li>
-        <li class="list-item">
-            Name: ${name.formatted}
-        </li>
+        <div class="collapsible_content">
+            <div class="collapsible_pin">
+            </div>
+            <h3 class="collapsible_title">Gravatar Profile: ${profileUrl} (click to show/hide)
+            </h3>
+            <div class="collapsible_box">
+                <div class="gravatar_${hash} gravatarProfile">
+                    <div class="user">
+                        <img src="${thumbnailUrl}">
+                        <span class="name">${preferredUsername}</span> (${name.formatted})
+                        <p><a href="${profileUrl}" target="_blank">${profileUrl}</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </script>
     <!--/Gravatar Profile Template-->
 </head>
