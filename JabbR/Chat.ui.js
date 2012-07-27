@@ -1360,7 +1360,8 @@
         showGravatarProfile: function (profile) {
             var room = getCurrentRoomElements(),
                 nearEnd = ui.isNearTheEnd();
-            templates.gravatarprofile.tmpl(profile).appendTo(room.messages);
+
+            this.appendMessage(templates.gravatarprofile.tmpl(profile), room);
             if (nearEnd) {
                 ui.scrollToBottom();
             }
@@ -1471,7 +1472,7 @@
         },
         addChatMessage: function (message, roomName) {
             var room = getRoomElements(roomName),
-                $previousMessage = room.messages.children('.message').last(),
+                $previousMessage = room.messages.children().last(),
                 previousUser = null,
                 previousTimestamp = new Date().addDays(1), // Tomorrow so we always see a date line
                 showUserName = true,
@@ -1488,13 +1489,8 @@
                 previousTimestamp = new Date($previousMessage.data('timestamp') || new Date());
             }
 
-            // Determine if we need to show a new date header
+            // Force a user name to show if a header will be displayed
             if (message.date.toDate().diffDays(previousTimestamp.toDate())) {
-                ui.addMessage(message.date.toLocaleDateString(), 'list-header', roomName)
-                  .addClass('date-header')
-                  .find('.right').remove(); // remove timestamp on date indicator
-
-                // Force a user name to show after the header
                 previousUser = null;
             }
 
@@ -1517,7 +1513,7 @@
                 room.addSeparator();
             }
 
-            templates.message.tmpl(message).appendTo(room.messages);
+            this.appendMessage(templates.message.tmpl(message), room);
 
             if (room.isInitialized()) {
                 if (isMention) {
@@ -1593,8 +1589,9 @@
                 nearEnd = room.isNearTheEnd(),
                 $element = null;
 
-            $element = ui.prepareNotificationMessage(content, type)
-                         .appendTo(room.messages);
+            $element = ui.prepareNotificationMessage(content, type);
+
+            this.appendMessage($element, room);
 
             if (type === 'notification' && room.isLobby() === false) {
                 ui.collapseNotifications($element);
@@ -1605,6 +1602,21 @@
             }
 
             return $element;
+        },
+        appendMessage: function (newMessage, room) {
+            // Determine if we need to show a new date header
+            if (!$(newMessage).is('.date-header')) {
+                var lastMessage = room.messages.find('li[data-timestamp]').last(),
+                    lastDate = new Date(lastMessage.data('timestamp')),
+                    thisDate = new Date($(newMessage).data('timestamp'));
+
+                if (!lastMessage.length || thisDate.toDate().diffDays(lastDate.toDate())) {
+                    ui.addMessage(thisDate.toLocaleDateString(), 'date-header list-header', room.getName())
+                      .find('.right').remove(); // remove timestamp on date indicator
+                }
+            }
+
+            $(newMessage).appendTo(room.messages);
         },
         hasFocus: function () {
             return ui.focus;
