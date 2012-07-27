@@ -1379,14 +1379,14 @@
                 $user = room.getUser(userViewModel.name),
                 timeout = null;
 
-            // Do not show typing indicator for current user
-            if (userViewModel.name === ui.getUserName()) {
-                return;
-            }
-
             // if the user is somehow missing from room, add them
             if ($user.length === 0) {
                 ui.addUser(userViewModel, roomName);
+            }
+
+            // Do not show typing indicator for current user
+            if (userViewModel.name === ui.getUserName()) {
+                return;
             }
 
             // Mark the user as typing
