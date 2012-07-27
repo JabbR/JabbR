@@ -1384,6 +1384,11 @@
                 return;
             }
 
+            // if the user is somehow missing from room, add them
+            if ($user.length === 0) {
+                ui.addUser(userViewModel, roomName);
+            }
+
             // Mark the user as typing
             $user.addClass('typing');
             var oldTimeout = $user.data('typing');
