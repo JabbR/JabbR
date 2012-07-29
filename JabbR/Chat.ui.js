@@ -154,7 +154,11 @@
         };
 
         this.scrollToBottom = function () {
-            this.messages.scrollTop(this.messages[0].scrollHeight);
+            var height = this.messages[0].scrollHeight - this.messages.height();
+
+            this.messages
+                .scrollTop(height - 1) // Fix for bug in Chrome
+                .scrollTop(height);
         };
 
         this.isNearTheEnd = function () {
