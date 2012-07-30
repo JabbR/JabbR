@@ -877,7 +877,7 @@
 
                 // If it was a message to another person, replace that
                 if (message.indexOf('/msg') === 0) {
-                    message = message.replace(/^\/msg \S+ /, '');
+                    message = message.replace(/^\/msg \S+/, '');
                 }
 
                 // Re-focus because we lost it on the click
