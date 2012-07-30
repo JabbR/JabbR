@@ -65,9 +65,11 @@
                         ui.setRoomOwner(this, room);
                     });
 
+                    var messageIds = [];
                     $.each(roomInfo.RecentMessages, function () {
                         var viewModel = getMessageViewModel(this);
 
+                        messageIds.push(viewModel.id);
                         ui.addChatMessage(viewModel, room);
                     });
 
@@ -77,6 +79,7 @@
                     // that are added after initial population
                     ui.setInitialized(room);
                     ui.scrollToBottom(room);
+                    ui.watchMessageScroll(messageIds, room);
 
                     d.resolveWith(chat);
                 })
@@ -306,36 +309,25 @@
     };
 
     chat.addMessageContent = function (id, content, room) {
-        var nearTheEndBefore = ui.isNearTheEnd(room);
-
         scrollIfNecessary(function () {
             ui.addChatMessageContent(id, content, room);
         }, room);
 
         updateUnread(room, false /* isMentioned: this is outside normal messages and user shouldn't be mentioned */);
 
-        // Adding external content can sometimes take a while to load
-        // Since we don't know when it'll become full size in the DOM
-        // we're just going to wait a little bit and hope for the best :) (still a HACK tho)
-        window.setTimeout(function () {
-            var nearTheEndAfter = ui.isNearTheEnd(room);
-            if (nearTheEndBefore && nearTheEndAfter) {
-                ui.scrollToBottom();
-            }
-        }, 850);
+        ui.watchMessageScroll([id], room);
     };
 
     chat.addMessage = function (message, room) {
         var viewModel = getMessageViewModel(message);
 
-        // Update your message when it comes from the server
-        if (ui.messageExists(viewModel.id)) {
-            ui.replaceMessage(viewModel);
-            return;
-        }
-
         scrollIfNecessary(function () {
-            ui.addChatMessage(viewModel, room);
+            // Update your message when it comes from the server
+            if (ui.messageExists(viewModel.id)) {
+                ui.replaceMessage(viewModel);
+            } else {
+                ui.addChatMessage(viewModel, room);
+            }
         }, room);
 
         var isMentioned = viewModel.highlight === 'highlight';

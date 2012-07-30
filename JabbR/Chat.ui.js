@@ -1228,6 +1228,33 @@
                 room.scrollToBottom();
             }
         },
+        watchMessageScroll: function (messageIds, roomName) {
+            // Given an array of message ids, if there is any embedded content
+            // in it, it may cause the window to scroll off of the bottom, so we
+            // can watch for that and correct it.
+            messageIds = $.map(messageIds, function (id) { return '#m-' + id; });
+
+            var $messages = $(messageIds.join(',')),
+                $content = $messages.expandableContent(),
+                room = getRoomElements(roomName),
+                nearTheEndBefore = room.messages.isNearTheEnd(),
+                scrollTopBefore = room.messages.scrollTop();
+
+            if (nearTheEndBefore && $content.length > 0) {
+                // Note that the load event does not bubble, so .on() is not
+                // suitable here.
+                $content.load(function () {
+                    // If we used to be at the end and our scrollTop() did not
+                    // change, then we can safely call scrollToBottom() without
+                    // worrying about interrupting the user. We skip this if the
+                    // room is already at the end in the event of multiple
+                    // images loading at the same time.
+                    if (!room.messages.isNearTheEnd() && scrollTopBefore === room.messages.scrollTop()) {
+                        room.scrollToBottom();
+                    }
+                });
+            }
+        },
         isNearTheEnd: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
 

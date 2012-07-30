@@ -32,6 +32,14 @@
         return this[0].scrollTop + this.height() >= this[0].scrollHeight;
     };
 
+    $.fn.expandableContent = function () {
+        // These are selectors to various rich content that may increase the
+        // scrollable area after they were initially appended
+        var selectors = ['img'];
+
+        return this.find(selectors.join(','));
+    };
+
     // REVIEW: is it safe to assume we do not need to strip tags before decoding?
     function decodeHtml(html) {
         // should we strip tags before running this?
