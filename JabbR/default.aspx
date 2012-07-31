@@ -5,6 +5,11 @@
     string appName = ConfigurationManager.AppSettings["auth.appName"];
     string apiKey = ConfigurationManager.AppSettings["auth.apiKey"];
     string googleAnalytics = ConfigurationManager.AppSettings["googleAnalytics"];
+
+    string sha = ConfigurationManager.AppSettings["releaseSha"];
+    string branch = ConfigurationManager.AppSettings["releaseBranch"];
+    string time = ConfigurationManager.AppSettings["releaseTime"];
+    bool showReleaseDetails = !String.IsNullOrEmpty(sha) && !String.IsNullOrEmpty(branch) && !String.IsNullOrEmpty(time);
 %>
 
 <!DOCTYPE html>
@@ -223,10 +228,8 @@
           Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a>
         </div>
       </div>
-      <a href="https://github.com/davidfowl/JabbR" class="forkme" target="_blank">
-        </a>
-          <div style="clear: both">
-    </div>
+      
+      <div style="clear: both"></div>
     <nav>
       <ul id="tabs" role="tablist">
         <li id="tabs-lobby" class="current lobby" data-name="Lobby" role="tab">
@@ -261,6 +264,15 @@
       </div>
       </form>
     </div>
+    <% if (showReleaseDetails) { %>
+    <div id="releaseArea">
+        <p id="releaseTag">
+            Deployed from <a href="https://github.com/davidfowl/JabbR/commit/<%:sha %>" title="View the commit."><%:sha.Substring(0, 10) %></a>
+            on <a href="https://github.com/davidfowl/JabbR/branches/<%:branch %>" title="View the branch."><%:branch %></a> 
+            at <%:time %>.
+        </p>
+    </div>
+    <% } %>
     <audio src="Content/sounds/notification.wav" id="noftificationSound" hidden="hidden" aria-hidden="true">
     </audio>
     <section aria-hidden="true" aria-haspopup="true">

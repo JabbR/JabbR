@@ -2164,4 +2164,30 @@ li.clearfix
     font-weight: bold;
     font-size: 15px;
 }
+ 
+#releaseArea 
+{
+	position: absolute; 
+	bottom: 0px; 
+	right: 0px;
+}
   
+  #releaseTag 
+  {
+	  float: right;
+	  font-size: smaller;
+	  padding: 10px;
+	  margin: 0;
+  }
+
+    #releaseTag a 
+    {
+	    color: #1C94C4;
+	    text-decoration: none;
+    }
+  
+    #releaseTag a:hover
+    {
+	    color: #1C94C4;
+	    text-decoration: underline;
+    }
