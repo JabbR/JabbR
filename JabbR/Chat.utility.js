@@ -35,7 +35,7 @@
     $.fn.expandableContent = function () {
         // These are selectors to various rich content that may increase the
         // scrollable area after they were initially appended
-        var selectors = ['img'];
+        var selectors = ['img:not(.gravatar)'];
 
         return this.find(selectors.join(','));
     };

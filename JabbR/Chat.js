@@ -79,9 +79,12 @@
                     // that are added after initial population
                     ui.setInitialized(room);
                     ui.scrollToBottom(room);
-                    ui.watchMessageScroll(messageIds, room);
 
                     d.resolveWith(chat);
+
+                    // Watch the messages after the defer, since room messages
+                    // may be appended if we are just joining the room
+                    ui.watchMessageScroll(messageIds, room);
                 })
                 .fail(function () {
                     d.rejectWith(chat);

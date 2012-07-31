@@ -486,8 +486,11 @@
                 return;
             }
 
-            // If you're we're near the top, raise the event
-            if ($(this).scrollTop() <= scrollTopThreshold) {
+            // If you're we're near the top, raise the event, but if the scroll
+            // bar is small enough that we're at the bottom edge, ignore it.
+            // We have to use the ui version because the room object above is
+            // not fully initialized, so there are no messages.
+            if ($(this).scrollTop() <= scrollTopThreshold && !ui.isNearTheEnd(roomId)) {
                 var $child = $messages.children('.message:first');
                 if ($child.length > 0) {
                     messageId = $child.attr('id')
@@ -1251,6 +1254,10 @@
                     // images loading at the same time.
                     if (!room.messages.isNearTheEnd() && scrollTopBefore === room.messages.scrollTop()) {
                         room.scrollToBottom();
+                        // Reset our scrollTopBefore so we know we are allowed
+                        // to move it again if another image loads and the user
+                        // hasn't touched it
+                        scrollTopBefore = room.messages.scrollTop();
                     }
 
                     // unbind the event from this object after it executes
