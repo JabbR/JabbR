@@ -1243,7 +1243,7 @@
             if (nearTheEndBefore && $content.length > 0) {
                 // Note that the load event does not bubble, so .on() is not
                 // suitable here.
-                $content.load(function () {
+                $content.load(function (event) {
                     // If we used to be at the end and our scrollTop() did not
                     // change, then we can safely call scrollToBottom() without
                     // worrying about interrupting the user. We skip this if the
@@ -1252,6 +1252,9 @@
                     if (!room.messages.isNearTheEnd() && scrollTopBefore === room.messages.scrollTop()) {
                         room.scrollToBottom();
                     }
+
+                    // unbind the event from this object after it executes
+                    $(this).unbind(event);
                 });
             }
         },
