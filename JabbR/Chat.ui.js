@@ -1254,6 +1254,10 @@
                     // images loading at the same time.
                     if (!room.messages.isNearTheEnd() && scrollTopBefore === room.messages.scrollTop()) {
                         room.scrollToBottom();
+                        // Reset our scrollTopBefore so we know we are allowed
+                        // to move it again if another image loads and the user
+                        // hasn't touched it
+                        scrollTopBefore = room.messages.scrollTop();
                     }
 
                     // unbind the event from this object after it executes
