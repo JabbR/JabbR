@@ -162,8 +162,13 @@
         };
 
         this.scrollToBottom = function () {
+            var height = this.messages[0].scrollHeight - this.messages.height();
+
             this.messages
-                .scrollTop(0) // Fix for bug in Chrome
+                // Fix for bug in Chrome
+                .scrollTop(height - 1)
+                // Still use full scrollHeight since height is not the best you
+                // can do if there is a horizontal scrollbar
                 .scrollTop(this.messages[0].scrollHeight);
         };
 
