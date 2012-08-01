@@ -50,7 +50,7 @@ namespace JabbR.Infrastructure
             var urls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             message = urlPattern.Replace(message, m =>
             {
-                string url = m.Value;
+                string url = HttpUtility.HtmlDecode(m.Value);
                 if (!url.Contains("://"))
                 {
                     url = "http://" + url;
@@ -61,7 +61,7 @@ namespace JabbR.Infrastructure
                     return m.Value;
                 }
 
-                urls.Add(HttpUtility.HtmlDecode(url));
+                urls.Add(url);
 
                 return String.Format(CultureInfo.InvariantCulture,
                                      "<a rel=\"nofollow external\" target=\"_blank\" href=\"{0}\" title=\"{1}\">{1}</a>",
