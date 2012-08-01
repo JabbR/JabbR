@@ -99,6 +99,14 @@
             return this.tab.hasClass('unread');
         };
 
+        this.hasMessages = function () {
+            return this.tab.data('messages');
+        };
+
+        this.updateMessages = function (value) {
+            this.tab.data('messages', value);
+        };
+
         this.getUnread = function () {
             return $tab.data('unread') || 0;
         };
@@ -1650,8 +1658,12 @@
             return $element;
         },
         appendMessage: function (newMessage, room) {
-            // Determine if we need to show a new date header
-            if (!$(newMessage).is('.date-header')) {
+            // Determine if we need to show a new date header: Two conditions
+            // for instantly skipping are if this message is a date header, or
+            // if the room only contains non-chat messages and we're adding a
+            // non-chat message.
+            var isMessage = $(newMessage).is('.message');
+            if (!$(newMessage).is('.date-header') && (isMessage || room.hasMessages())) {
                 var lastMessage = room.messages.find('li[data-timestamp]').last(),
                     lastDate = new Date(lastMessage.data('timestamp')),
                     thisDate = new Date($(newMessage).data('timestamp'));
@@ -1660,6 +1672,10 @@
                     ui.addMessage(thisDate.toLocaleDateString(), 'date-header list-header', room.getName())
                       .find('.right').remove(); // remove timestamp on date indicator
                 }
+            }
+
+            if (isMessage) {
+                room.updateMessages(true);
             }
 
             $(newMessage).appendTo(room.messages);
