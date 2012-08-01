@@ -480,7 +480,7 @@ namespace JabbR
         {
             // Sleep a little so that a browser refresh doesn't show the user 
             // coming offline and back online
-            Thread.Sleep(500);
+            Thread.Sleep(1500);
 
             ChatUser user = _service.DisconnectClient(clientId);
 
