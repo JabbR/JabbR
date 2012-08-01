@@ -237,6 +237,34 @@ namespace JabbR.Test
             }
 
             [Fact]
+            public void UrlWithAmpersand()
+            {
+                //arrange
+                var message = "message http://google.com/?1&amp;2 continues on";
+                HashSet<string> extractedUrls;
+
+                //act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                //assert
+                Assert.Equal("message <a rel=\"nofollow external\" target=\"_blank\" href=\"http://google.com/?1&amp;2\" title=\"http://google.com/?1&amp;2\">http://google.com/?1&amp;2</a> continues on", result);
+            }
+
+            [Fact]
+            public void UrlWithInvalidButEscapedCharacters()
+            {
+                //arrange
+                var message = "message http://google.com/&lt;a&gt; continues on";
+                HashSet<string> extractedUrls;
+
+                //act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                //assert
+                Assert.Equal("message http://google.com/&lt;a&gt; continues on", result);
+            }
+
+            [Fact]
             public void LocalHost()
             {
                 //arrange
