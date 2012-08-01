@@ -120,6 +120,9 @@ cp $cscfgPath $cscfgBakPath
 set-appsetting -path $webConfigPath -name "auth.apiKey" -value $authKey
 set-appsetting -path $webConfigPath -name "auth.appId" -value $appId
 set-appsetting -path $webConfigPath -name "googleAnalytics" -value $googleAnalyticsToken
+set-appsetting -path $webConfigPath -name "releaseBranch" -value $commitBranch
+set-appsetting -path $webConfigPath -name "releaseSha" -value $commitSha
+set-appsetting -path $webConfigPath -name "releaseTime" -value (Get-Date -format "dd/MM/yyyy HH:mm:ss")
 set-configurationsetting -path $cscfgPath -name "Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" -value $remoteDesktopAccountExpiration
 set-certificatethumbprint -path $cscfgPath -name "Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" -value $remoteDesktopCertificateThumbprint
 set-configurationsetting -path $cscfgPath -name "Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" -value $remoteDesktopEnctyptedPassword
