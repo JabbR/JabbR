@@ -213,6 +213,11 @@ namespace JabbR
         {
             string id = GetUserId();
 
+            if (String.IsNullOrEmpty(id))
+            {
+                return null;
+            }
+
             ChatUser user = _repository.VerifyUserId(id);
 
             // Make sure this client is being tracked
