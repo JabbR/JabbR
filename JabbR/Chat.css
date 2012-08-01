@@ -46,14 +46,26 @@
   height: 18px;
 }
 
+#users-filter-form 
+{
+	display: none;
+}
+
 #users-filter
 {
-  display: none;
   position: absolute;
   top: 55px;
   width: 15%;
   left: 71%;
   margin-top: 4px;
+}
+
+#users-filter-closed-area 
+{
+	position: absolute;
+	top: 80px;
+	left: 71%;
+	margin-top: 4px;
 }
 
 #preferences a
@@ -232,9 +244,14 @@
     cursor: pointer;
   }
 
+  .users li.room.closed 
+  {
+	  display: none;
+  }
+
   .users li.room.closed .name
   {
-	margin-left: 23px;
+	  margin-left: 23px;
   }
 
   .users li.room.locked .name

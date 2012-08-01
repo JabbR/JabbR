@@ -243,9 +243,13 @@
       <ul id="messages-lobby" class="messages current" role="log">
       </ul>
       <form id="users-filter-form" action="#">
-      <input id="users-filter" class="filter" type="text" />
+        <input id="users-filter" class="filter" type="text" />
+        <label id="users-filter-closed-area">
+          <input id="users-filter-closed" type="checkbox" />
+          Show Closed Rooms?
+        </label>
       </form>
-      <ul id="userlist-lobby" class="users current">
+      <ul id="userlist-lobby" class="users current" style="top: 105px;">
       </ul>
       <div id="preferences">
         <a class="sound" title="audible notifications"></a>
