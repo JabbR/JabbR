@@ -478,11 +478,14 @@ namespace JabbR
 
         private void DisconnectClient(string clientId)
         {
+            _service.DisconnectClient(clientId);
+            
             // Sleep a little so that a browser refresh doesn't show the user 
             // coming offline and back online
-            Thread.Sleep(1500);
+            Thread.Sleep(500);
 
-            ChatUser user = _service.DisconnectClient(clientId);
+            // Query for the user to get the updated status
+            ChatUser user = _repository.GetUserByClientId(clientId);
 
             // There's no associated user for this client id
             if (user == null)

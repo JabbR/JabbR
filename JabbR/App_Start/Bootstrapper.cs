@@ -147,11 +147,6 @@ namespace JabbR.App_Start
         {
             try
             {
-                foreach (var u in repository.Users.Online())
-                {
-                    u.Status = (int)UserStatus.Offline;
-                }
-
                 repository.RemoveAllClients();
                 repository.CommitChanges();
             }

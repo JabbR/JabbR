@@ -14,7 +14,7 @@ namespace JabbR.Services
         void ChangeUserPassword(ChatUser user, string oldPassword, string newPassword);
         void SetUserPassword(ChatUser user, string password);
         void UpdateActivity(ChatUser user, string clientId, string userAgent);
-        ChatUser DisconnectClient(string clientId);
+        void DisconnectClient(string clientId);
 
         // Rooms
         ChatRoom AddRoom(ChatUser user, string roomName);
