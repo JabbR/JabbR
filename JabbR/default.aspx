@@ -266,8 +266,8 @@
     <% if (showReleaseDetails) { %>
     <div id="releaseArea">
         <p id="releaseTag">
-            Deployed from <a href="https://github.com/davidfowl/JabbR/commit/<%:sha %>" title="View the commit."><%:sha.Substring(0, 10) %></a>
-            on <a href="https://github.com/davidfowl/JabbR/branches/<%:branch %>" title="View the branch."><%:branch %></a> 
+            Deployed from <a target="_blank" href="https://github.com/davidfowl/JabbR/commit/<%:sha %>" title="View the commit."><%:sha.Substring(0, 10) %></a>
+            on <a target="_blank" href="https://github.com/davidfowl/JabbR/branches/<%:branch %>" title="View the branch."><%:branch %></a> 
             at <%:time %>.
         </p>
     </div>
