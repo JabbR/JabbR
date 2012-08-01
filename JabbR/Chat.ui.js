@@ -162,14 +162,12 @@
         };
 
         this.scrollToBottom = function () {
-            var height = this.messages[0].scrollHeight - this.messages.height();
-
-            this.messages
-                // Fix for bug in Chrome
-                .scrollTop(height - 1)
-                // Still use full scrollHeight since height is not the best you
-                // can do if there is a horizontal scrollbar
-                .scrollTop(this.messages[0].scrollHeight);
+            // IE will repaint if we do the Chrome bugfix and look jumpy
+            if ($.browser.webkit) {
+                // Chrome fix for hiding and showing scroll areas
+                this.messages.scrollTop(0);
+            }
+            this.messages.scrollTop(this.messages[0].scrollHeight);
         };
 
         this.isNearTheEnd = function () {
