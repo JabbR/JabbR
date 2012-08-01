@@ -162,11 +162,9 @@
         };
 
         this.scrollToBottom = function () {
-            var height = this.messages[0].scrollHeight - this.messages.height();
-
             this.messages
-                .scrollTop(height - 1) // Fix for bug in Chrome
-                .scrollTop(height);
+                .scrollTop(0) // Fix for bug in Chrome
+                .scrollTop(this.messages[0].scrollHeight);
         };
 
         this.isNearTheEnd = function () {
