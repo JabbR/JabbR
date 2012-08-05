@@ -888,7 +888,7 @@
                     $newMessage.focus();
                 }
 
-                if (ev.shiftKey && ev.keyCode === 191 && $newMessage.val() === "") {
+                if (!$newMessage.is(':focus') && ev.shiftKey && ev.keyCode === 191) {
                     $ui.trigger(ui.events.sendMessage, '/?');
                     // Prevent the ? be recorded in the message box
                     ev.preventDefault();
