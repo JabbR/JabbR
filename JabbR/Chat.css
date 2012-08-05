@@ -74,11 +74,21 @@
   cursor: pointer;
 }
 
+#preferences .help
+{
+  background: url('Content/images/question-icon.png') no-repeat;
+  width: 16px;
+  height: 20px;
+  top: 3px;
+  position: absolute;
+}
+
 #preferences .sound
 {
   background: url('Content/images/sound-on.png') no-repeat;
   width: 16px;
   height: 16px;
+  left: 26px;
   position: absolute;
   margin-top: 4px;
 }
@@ -93,7 +103,7 @@
   background: url('Content/images/toast-on.png') no-repeat;
   width: 16px;
   height: 20px;
-  left: 26px;
+  left: 55px;
   position: absolute;
   display: none;
 }
@@ -107,7 +117,7 @@
 {
   width: 20px;
   height: 20px;
-  left: 55px;
+  left: 90px;
   position: absolute;
   background: url('Content/images/richness-off.png') no-repeat;
   margin-top: 3px;
@@ -123,7 +133,7 @@
   background: url('Content/images/download-icon.png') no-repeat;
   width: 16px;
   height: 20px;
-  left: 90px;
+  left: 120px;
   top: 3px;
   position: absolute;
 }
@@ -2191,3 +2201,43 @@ li.clearfix
 	    color: #1C94C4;
 	    text-decoration: underline;
     }
+    
+.command-list
+{
+    border-bottom: 1px solid #E5E5E5;
+    padding-bottom: 15px;
+}
+
+    .command-list > dd,
+    .command-list > p
+    {
+        font-style: italic;
+    }
+
+    .command-list > dd
+    {
+        padding-bottom: 5px;
+    }
+
+.command
+{
+    border:1px solid #000;
+    border-radius: 3px;
+    -moz-border-radius: 3px; /* Firefox 3.6 and earlier */
+    padding: 5px 10px;
+    box-shadow: 2px 2px 2px #888888;
+}
+
+.command-name 
+{
+    border-color: #E5E5E5;
+    background-color: #00103F;
+    color: #E5E5E5;
+}
+
+.command-args
+{
+    border-color: #00103F;
+    background-color: #E5E5E5;
+    color: #00103F;
+}

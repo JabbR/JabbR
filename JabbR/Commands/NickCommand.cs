@@ -7,7 +7,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("nick", "")]
+    [Command("nick", "Create a user or change your nickname or change your password.", "[user] [password] or [oldpassword] [newpassword]", "user")]
     public class NickCommand : ICommand
     {
         public void Execute(CommandContext context, CallerContext callerContext, string[] args)

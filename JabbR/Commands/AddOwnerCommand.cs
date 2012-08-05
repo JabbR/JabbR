@@ -4,7 +4,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("addowner", "")]
+    [Command("addowner", "Add an owner a user as an owner to the specified room. Only works if you're an owner of that room.", "user room", "room")]
     public class AddOwnerCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

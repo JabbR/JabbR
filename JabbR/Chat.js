@@ -659,10 +659,7 @@
     };
 
     chat.showCommands = function () {
-        ui.addMessage('Help', 'list-header');
-        $.each(ui.getCommands(), function () {
-            ui.addMessage(this.Name + ' - ' + this.Description, 'list-item');
-        });
+        ui.showHelp();
     };
 
     chat.showUsersInRoom = function (room, names) {
@@ -942,6 +939,11 @@
                     chat.getCommands()
                         .done(function (commands) {
                             ui.setCommands(commands);
+                        });
+                    // get list of available shortcuts
+                    chat.getShortcuts()
+                        .done(function (shortcuts) {
+                            ui.setShortcuts(shortcuts);
                         });
                 });
             });

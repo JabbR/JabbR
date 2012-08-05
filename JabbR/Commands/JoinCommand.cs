@@ -4,7 +4,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("join", "")]
+    [Command("join", "Join a channel of your choice. If it is private and you have an invite code, enter it after the room name.", "room [invitecode]", "user")]
     public class JoinCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

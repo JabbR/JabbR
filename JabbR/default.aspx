@@ -144,6 +144,13 @@
             <div class="close"></div>
         </li>
     </script>
+    <script id="command-help-template" type="text/x-jquery-tmpl">
+        <dt style="margin:10px;">
+            <span class="command command-name">${Name}</span> 
+            {{if Arguments}}<span class="command command-args">${Arguments}</span>{{/if}}
+        </dt>
+        <dd>${Description}</dd>
+    </script>
     <!-- TweetContentProvider: Should be extracted out if other content providers need templates -->
     <script id="tweet-template" type="text/x-jquery-tmpl">
         <div class="user">
@@ -252,6 +259,7 @@
         <a class="richness" title="toggle rich-content"></a>
         <a class="toast" title="popup notifications" aria-haspopup="true"></a>
         <a class="download" title="download messages" aria-haspopup="true"></a>
+        <a class="help" title="display help"></a>
       </div>
       <form id="send-message" action="#">
       <div id="message-box">
@@ -307,6 +315,28 @@
         </div>
         <div class="modal-footer">
           <a href="#" class="btn btn-primary" id="download-dialog-button">Download</a>
+        </div>
+      </div>
+      <div id="jabbr-help" class="modal hide fade">
+        <div class="modal-header">
+            <a class="close" data-dismiss="modal">&times;</a>
+            <h3>JabbR Help</h3>
+        </div>
+        <div class="modal-body">
+            <div class="command-list">
+                <h3>FAQ</h3>
+                <p>Click on a user to send message.</p>
+                <p>Type #roomname to create a link to a room</p>
+                <p>Use #test for testing.</p>
+            </div>
+            <h3>Site wide shortcuts</h3>
+            <dl id="shortcut" class="command-list"></dl>
+            <h3>Site wide commands</h3>
+            <dl id="global" class="command-list"></dl>
+            <h3>Room commands</h3>
+            <dl id="room" class="command-list"></dl>
+            <h3>User commands</h3>
+            <dl id="user" class="command-list"></dl>
         </div>
       </div>
       <div id="jabbr-update" class="modal hide fade">

@@ -2,7 +2,7 @@
 
 namespace JabbR.Commands
 {
-    [Command("update", "")]
+    [Command("update", "", "", "")]
     public class UpdateCommand : AdminCommand
     {        
         public override void ExecuteAdminOperation(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

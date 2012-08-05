@@ -131,5 +131,23 @@ namespace JabbR.Commands
             var compositionContainer = new CompositionContainer(catalog);
             return compositionContainer.GetExportedValues<ICommand>().ToList();
         }
+
+        public static IEnumerable<CommandMetaData> GetCommandsMetaData()
+        {
+            var commands = from c in _commands.Value
+                           let commandAttribute = c.GetType()
+                                                   .GetCustomAttributes(true)
+                                                   .OfType<CommandAttribute>()
+                                                   .FirstOrDefault()
+                           where commandAttribute != null
+                           select new CommandMetaData
+                           {
+                               Name = commandAttribute.CommandName,
+                               Description = commandAttribute.Description,
+                               Arguments = commandAttribute.Arguments,
+                               Group = commandAttribute.Group
+                           };
+            return commands;
+        }
     }
 }

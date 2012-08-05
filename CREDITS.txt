@@ -20,5 +20,7 @@ http://thenounproject.com/noun/paper-clip/#icon-No286
 - /content/images/clippy.png
 http://thenounproject.com/noun/download/#icon-No435
 - /content/images/download-icon.png
+http://thenounproject.com/noun/question/#icon-No2877
+- /content/images/question-icon.png
 
-All symbols included above are by Joe Smith, from The Noun Project collection.
+All symbols included above are by Joe Smith except the question-icon symbol which is by P.J. Onori, from The Noun Project collection.
