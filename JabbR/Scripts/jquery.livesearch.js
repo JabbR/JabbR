@@ -19,11 +19,11 @@ jQuery.fn.liveUpdate = function (list, displayCallback) {
         }
     }
 
-    this
-      .keyup(filter).keyup()
-	  .parents('form').submit(function () {
-          return false;
-	  });
+    this.keyup(filter)
+        .keyup()
+        .parents('form').submit(function () {
+            return false;
+        });
 
 
     return this;
