@@ -244,11 +244,6 @@
     cursor: pointer;
   }
 
-  .users li.room.closed 
-  {
-	  /*display: none;*/
-  }
-
   .users li.room.closed .name
   {
 	  margin-left: 23px;
