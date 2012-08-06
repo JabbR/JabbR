@@ -246,7 +246,7 @@
 
   .users li.room.closed 
   {
-	  display: none;
+	  /*display: none;*/
   }
 
   .users li.room.closed .name

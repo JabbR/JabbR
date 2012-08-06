@@ -1,12 +1,18 @@
-jQuery.fn.liveUpdate = function (list, childSelectorFilter) {
+jQuery.fn.liveUpdate = function (list, displayCallback) {
     list = jQuery(list);
-    childSelectorFilter = childSelectorFilter || 'li';
+    childSelectorFilter = 'li';
+    displayCallback = displayCallback || defaultDisplayCallback;
     var rows = $([]);
     var cache = $([]);
+
+    function defaultDisplayCallback($item) {
+        $item.show();
+    }
+
     // Change from John Resig's original code to allow for updates without rebinding events
-    this.update = function (updatedChildSelectorFilter) {
+    this.update = function () {
         if (list.length) {
-            rows = list.children(updatedChildSelectorFilter || childSelectorFilter);
+            rows = list.children(childSelectorFilter);
             cache = rows.map(function () {
                 return $(this).text().toLowerCase();
             });
@@ -15,17 +21,19 @@ jQuery.fn.liveUpdate = function (list, childSelectorFilter) {
 
     this.keyup(filter).keyup()
 		.parents('form').submit(function () {
-			return false;
+		    return false;
 		});
 
 
     return this;
 
-    function filter () {
+    function filter() {
         var term = jQuery.trim(jQuery(this).val().toLowerCase()), scores = [];
         list.scrollTop(0);
         if (!term) {
-            $(rows).show();
+            $.each(rows, function () {
+                displayCallback($(this));
+            });
         } else {
             $(rows).hide();
 
@@ -35,7 +43,9 @@ jQuery.fn.liveUpdate = function (list, childSelectorFilter) {
             });
 
             jQuery.each(scores.sort(function (a, b) { return b[0] - a[0]; }), function () {
-                jQuery(rows[this[1]]).show();
+                var $item = jQuery(rows[this[1]]);
+
+                displayCallback($item);
             });
         }
     }

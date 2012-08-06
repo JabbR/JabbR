@@ -50,6 +50,10 @@
         return '_room_' + roomName;
     }
 
+    function showClosedRoomsInLobby() {
+        return $closedRoomFilter.is(':checked');
+    }
+
     function Room($tab, $usersContainer, $usersOwners, $usersActive, $usersIdle, $messages, $roomTopic) {
         this.tab = $tab;
         this.users = $usersContainer;
@@ -738,10 +742,6 @@
         }
     }
 
-    function getLobbyRoomListFilterSelector() {
-        return $closedRoomFilter.is(':checked') ? 'li' : 'li:not(.closed)';
-    }
-
     // Rotating Tips.
     var messages = [
                 'Type @ then press TAB to auto-complete nicknames',
@@ -1051,6 +1051,9 @@
                 } else {
                     room.users.find('.closed').hide();
                 }
+
+                // clear the search text and update search list
+                ui.$roomFilter.update();
             });
 
             $window.blur(function () {
@@ -1164,7 +1167,14 @@
             loadPreferences();
 
             // Initilize liveUpdate plugin for room search
-            ui.$roomFilter = $roomFilterInput.liveUpdate('#userlist-lobby', getLobbyRoomListFilterSelector());
+            ui.$roomFilter = $roomFilterInput.liveUpdate('#userlist-lobby', function ($theListItem) {
+                if ($theListItem.hasClass('closed') && !showClosedRoomsInLobby()) {
+                    return;
+                }
+
+                // show it
+                $theListItem.show();
+            });
 
             // Start cycling the messages once the document has finished loading.
             cycleMessages();
@@ -1306,16 +1316,17 @@
         },
         populateLobbyRooms: function (rooms) {
             var lobby = getLobby(),
+                showClosedRooms = $closedRoomFilter.is(':checked'),
             // sort lobby by room open ascending then count descending
-            sorted = rooms.sort(function (a, b) {
-                if (a.Closed && !b.Closed) {
-                    return 1;
-                } else if (b.Closed && !a.Closed) {
-                    return -1;
-                }
+                sorted = rooms.sort(function (a, b) {
+                    if (a.Closed && !b.Closed) {
+                        return 1;
+                    } else if (b.Closed && !a.Closed) {
+                        return -1;
+                    }
 
-                return a.Count > b.Count ? -1 : 1;
-            });
+                    return a.Count > b.Count ? -1 : 1;
+                });
 
             lobby.users.empty();
 
@@ -1341,6 +1352,9 @@
                 }
                 if (this.Closed) {
                     $li.addClass('closed');
+                    if (!showClosedRooms) {
+                        $li.hide();
+                    }
                 }
             });
 
@@ -1349,7 +1363,7 @@
                 $lobbyRoomFilterForm.show();
             }
 
-            ui.$roomFilter.update(getLobbyRoomListFilterSelector());
+            ui.$roomFilter.update();
             $roomFilterInput.val('');
         },
         addUser: function (userViewModel, roomName) {
