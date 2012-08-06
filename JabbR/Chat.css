@@ -286,6 +286,11 @@
   {
     margin-left: 20px;
   }
+  
+  #userlist-lobby 
+  {
+    top: 105px;
+  }
 
 .users .details
 {

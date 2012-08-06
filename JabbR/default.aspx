@@ -249,7 +249,7 @@
           Show Closed Rooms?
         </label>
       </form>
-      <ul id="userlist-lobby" class="users current" style="top: 105px;">
+      <ul id="userlist-lobby" class="users current">
       </ul>
       <div id="preferences">
         <a class="sound" title="audible notifications"></a>
