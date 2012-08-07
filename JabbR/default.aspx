@@ -145,7 +145,7 @@
         </li>
     </script>
     <script id="command-help-template" type="text/x-jquery-tmpl">
-        <dt style="margin:10px;">
+        <dt>
             <span class="command command-name">${Name}</span> 
             {{if Arguments}}<span class="command command-args">${Arguments}</span>{{/if}}
         </dt>
@@ -259,7 +259,7 @@
         <a class="richness" title="toggle rich-content"></a>
         <a class="toast" title="popup notifications" aria-haspopup="true"></a>
         <a class="download" title="download messages" aria-haspopup="true"></a>
-        <a class="help" title="display help"></a>
+        <a class="help" title="display help" aria-haspopup="true"></a>
       </div>
       <form id="send-message" action="#">
       <div id="message-box">
@@ -323,20 +323,22 @@
             <h3>JabbR Help</h3>
         </div>
         <div class="modal-body">
-            <div class="command-list">
-                <h3>FAQ</h3>
-                <p>Click on a user to send message.</p>
-                <p>Type #roomname to create a link to a room</p>
-                <p>Use #test for testing.</p>
+            <div class="help-body">
+                <div class="command-list">
+                    <h3>FAQ</h3>
+                    <p>Click on a user to send message.</p>
+                    <p>Type #roomname to create a link to a room</p>
+                    <p>Use #test for testing.</p>
+                </div>
+                <h3>Site wide shortcuts</h3>
+                <dl id="shortcut" class="command-list"></dl>
+                <h3>Site wide commands</h3>
+                <dl id="global" class="command-list"></dl>
+                <h3>Room commands</h3>
+                <dl id="room" class="command-list"></dl>
+                <h3>User commands</h3>
+                <dl id="user" class="command-list"></dl>
             </div>
-            <h3>Site wide shortcuts</h3>
-            <dl id="shortcut" class="command-list"></dl>
-            <h3>Site wide commands</h3>
-            <dl id="global" class="command-list"></dl>
-            <h3>Room commands</h3>
-            <dl id="room" class="command-list"></dl>
-            <h3>User commands</h3>
-            <dl id="user" class="command-list"></dl>
         </div>
       </div>
       <div id="jabbr-update" class="modal hide fade">

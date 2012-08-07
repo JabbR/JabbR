@@ -2202,6 +2202,23 @@ li.clearfix
 	    text-decoration: underline;
     }
     
+#jabbr-help
+{
+    height: 100%;
+}    
+
+#jabbr-help .modal-body
+{
+    margin: 0;
+    padding: 0;
+}   
+
+.help-body
+{
+    overflow: auto;
+    margin: 0 0 0 10px;
+} 
+
 .command-list
 {
     border-bottom: 1px solid #E5E5E5;
@@ -2216,7 +2233,7 @@ li.clearfix
 
     .command-list > dd
     {
-        padding-bottom: 5px;
+        margin: 10px;
     }
 
 .command

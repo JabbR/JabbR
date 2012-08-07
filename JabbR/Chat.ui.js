@@ -23,7 +23,7 @@
         focus = true,
         commands = [],
         shortcuts = [],
-        Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13, Slash: 47, Space: 32, Tab: 9 },
+        Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13, Slash: 47, Space: 32, Tab: 9, Question: 191 },
         scrollTopThreshold = 75,
         toast = window.chat.toast,
         preferences = null,
@@ -31,6 +31,12 @@
         name,
         lastCycledMessage = null,
         $helpPopup = null,
+        $helpBody = null,
+        helpHeight = 0,
+        $shortCutHelp = null,
+        $globalCmdHelp = null,
+        $roomCmdHelp = null,
+        $userCmdHelp = null,
         $updatePopup = null,
         $window = $(window),
         $document = $(document),
@@ -781,6 +787,13 @@
             preferencesChanged: 'jabbr.ui.preferencesChanged'
         },
 
+        help: {
+            shortcut: '#shortcut',
+            global: '#global',
+            room: '#room',
+            user: '#user'
+        },
+
         initialize: function (state) {
             $ui = $(this);
             preferences = state || {};
@@ -799,6 +812,7 @@
             $disconnectDialog = $('#disconnect-dialog');
             $login = $('#jabbr-login');
             $helpPopup = $('#jabbr-help');
+            $helpBody = $('#jabbr-help .help-body');
             $updatePopup = $('#jabbr-update');
             focus = true;
             $roomFilterInput = $('#users-filter');
@@ -888,17 +902,26 @@
                     $newMessage.focus();
                 }
 
-                if (!$newMessage.is(':focus') && ev.shiftKey && ev.keyCode === 191) {
-                    $ui.trigger(ui.events.sendMessage, '/?');
+                if (!$newMessage.is(':focus') && ev.shiftKey && ev.keyCode === Keys.Question) {
+                    ui.showHelp();
                     // Prevent the ? be recorded in the message box
                     ev.preventDefault();
                 }
             });
 
-            // hack to get Chrome to scroll back to top of help modal
+            // hack to get Chrome to scroll back to top of help body
             // when redisplaying it after scrolling down and closing it
             $helpPopup.on('hide', function () {
-                $helpPopup.scrollTop(0);
+                $helpBody.scrollTop(0);
+            });
+
+            // set the height of the help body when displaying the help dialog
+            // so that the scroll bar does not block the rounded corners
+            $helpPopup.on('show', function () {
+                if (helpHeight === 0) {
+                    helpHeight = $helpPopup.height() - $helpBody.position().top - 10;
+                }
+                $helpBody.css('height', helpHeight);
             });
 
             // handle click on names in chat / room list
@@ -1047,7 +1070,7 @@
             });
 
             $help.click(function () {
-                $ui.trigger(ui.events.sendMessage, '/?');
+                ui.showHelp();
             });
 
             $window.blur(function () {
@@ -1800,22 +1823,22 @@
             $disconnectDialog.modal();
         },
         showHelp: function () {
-            var shortCutHelp = $helpPopup.find('#shortcut').empty();
-            var globalCmdHelp = $helpPopup.find('#global').empty();
-            var roomCmdHelp = $helpPopup.find('#room').empty();
-            var userCmdHelp = $helpPopup.find('#user').empty();
+            var shortCutHelp = $helpPopup.find(ui.help.shortcut).empty();
+            var globalCmdHelp = $helpPopup.find(ui.help.global).empty();
+            var roomCmdHelp = $helpPopup.find(ui.help.room).empty();
+            var userCmdHelp = $helpPopup.find(ui.help.user).empty();
             $.each(ui.getCommands(), function () {
                 switch (this.Group) {
-                    case "shortcut":
+                    case 'shortcut':
                         shortCutHelp.append(templates.commandhelp.tmpl(this));
                         break;
-                    case "global":
+                    case 'global':
                         globalCmdHelp.append(templates.commandhelp.tmpl(this));
                         break;
-                    case "room":
+                    case 'room':
                         roomCmdHelp.append(templates.commandhelp.tmpl(this));
                         break;
-                    case "user":
+                    case 'user':
                         userCmdHelp.append(templates.commandhelp.tmpl(this));
                         break;
                 }
