@@ -788,10 +788,10 @@
         },
 
         help: {
-            shortcut: '#shortcut',
-            global: '#global',
-            room: '#room',
-            user: '#user'
+            shortcut: 'shortcut',
+            global: 'global',
+            room: 'room',
+            user: 'user'
         },
 
         initialize: function (state) {
@@ -813,6 +813,10 @@
             $login = $('#jabbr-login');
             $helpPopup = $('#jabbr-help');
             $helpBody = $('#jabbr-help .help-body');
+            $shortCutHelp = $('#jabbr-help #shortcut');
+            $globalCmdHelp = $('#jabbr-help #global');
+            $roomCmdHelp = $('#jabbr-help #room');
+            $userCmdHelp = $('#jabbr-help #user');
             $updatePopup = $('#jabbr-update');
             focus = true;
             $roomFilterInput = $('#users-filter');
@@ -1823,28 +1827,28 @@
             $disconnectDialog.modal();
         },
         showHelp: function () {
-            var shortCutHelp = $helpPopup.find(ui.help.shortcut).empty();
-            var globalCmdHelp = $helpPopup.find(ui.help.global).empty();
-            var roomCmdHelp = $helpPopup.find(ui.help.room).empty();
-            var userCmdHelp = $helpPopup.find(ui.help.user).empty();
+            $shortCutHelp.empty();
+            $globalCmdHelp.empty();
+            $roomCmdHelp.empty();
+            $userCmdHelp.empty();
             $.each(ui.getCommands(), function () {
                 switch (this.Group) {
-                    case 'shortcut':
-                        shortCutHelp.append(templates.commandhelp.tmpl(this));
+                    case ui.help.shortcut:
+                        $shortCutHelp.append(templates.commandhelp.tmpl(this));
                         break;
-                    case 'global':
-                        globalCmdHelp.append(templates.commandhelp.tmpl(this));
+                    case ui.help.global:
+                        $globalCmdHelp.append(templates.commandhelp.tmpl(this));
                         break;
-                    case 'room':
-                        roomCmdHelp.append(templates.commandhelp.tmpl(this));
+                    case ui.help.room:
+                        $roomCmdHelp.append(templates.commandhelp.tmpl(this));
                         break;
-                    case 'user':
-                        userCmdHelp.append(templates.commandhelp.tmpl(this));
+                    case ui.help.user:
+                        $userCmdHelp.append(templates.commandhelp.tmpl(this));
                         break;
                 }
             });
             $.each(ui.getShortcuts(), function () {
-                shortCutHelp.append(templates.commandhelp.tmpl(this));
+                $shortCutHelp.append(templates.commandhelp.tmpl(this));
             });
             $helpPopup.modal();
         },
