@@ -369,7 +369,7 @@
     </section>
   </section> 
   <%= Bundle.JavaScript()
-            .Add("~/Scripts/jquery-1.7.min.js")
+            .Add("~/Scripts/jquery-1.7.2.min.js")
             .Add("~/Scripts/json2.min.js")
             .Add("~/Scripts/bootstrap.js")
             .Add("~/Scripts/jquery.KeyTips.js")

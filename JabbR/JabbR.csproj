@@ -782,14 +782,16 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="robots.txt" />
+    <None Include="Scripts\jquery-1.7.2-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.7.2.js" />
+    <Content Include="Scripts\jquery-1.7.2.min.js">
+      <DependentUpon>jquery-1.7.2.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\jquery-ui-1.8.22.js" />
     <Content Include="Scripts\jquery-ui-1.8.22.min.js">
       <DependentUpon>jquery-ui-1.8.22.js</DependentUpon>
     </Content>
     <Content Include="Scripts\jquery.history.js" />
-    <Content Include="Scripts\jquery-1.7-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.7.js" />
-    <Content Include="Scripts\jquery-1.7.min.js" />
     <Content Include="Scripts\jquery.autotabcomplete.js" />
     <Content Include="Scripts\jquery.captureDocumentWrite.js" />
     <Content Include="Scripts\jquery.captureDocumentWrite.min.js" />
