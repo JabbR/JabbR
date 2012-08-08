@@ -4,7 +4,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("lock", "")]
+    [Command("lock", "Make a room private. Only works if you're the creator of that room.", "room", "room")]
     public class LockCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

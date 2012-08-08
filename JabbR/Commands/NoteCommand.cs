@@ -5,7 +5,7 @@ using JabbR.Services;
 
 namespace JabbR.Commands
 {
-    [Command("note", "")]
+    [Command("note", "Set a note shown via a paperclip icon next to your name, with the message appearing when you hover over it.", "note", "user")]
     public class NoteCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

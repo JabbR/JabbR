@@ -16,18 +16,27 @@
         $downloadDialog = null,
         $downloadDialogButton = null,
         $downloadRange = null,
+        $help = null,
         $ui = null,
         $sound = null,
         templates = null,
         focus = true,
         commands = [],
-        Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13, Slash: 47, Space: 32, Tab: 9 },
+        shortcuts = [],
+        Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13, Slash: 47, Space: 32, Tab: 9, Question: 191 },
         scrollTopThreshold = 75,
         toast = window.chat.toast,
         preferences = null,
         $login = null,
         name,
         lastCycledMessage = null,
+        $helpPopup = null,
+        $helpBody = null,
+        helpHeight = 0,
+        $shortCutHelp = null,
+        $globalCmdHelp = null,
+        $roomCmdHelp = null,
+        $userCmdHelp = null,
         $updatePopup = null,
         $window = $(window),
         $document = $(document),
@@ -595,7 +604,6 @@
 
     function loadPreferences() {
         // Restore the global preferences
-
     }
 
     function toggleElement($element, preferenceName, roomName) {
@@ -745,9 +753,9 @@
     // Rotating Tips.
     var messages = [
                 'Type @ then press TAB to auto-complete nicknames',
-                'Type /help to see the list of commands',
+                'Use ? or type /? to display the FAQ and list of commands',
                 'Type : then press TAB to auto-complete emoji icons',
-                'You can create your own private rooms. Type /help for more info'
+                'You can create your own private rooms. Use ? or type /? for more info'
             ];
 
     var cycleTimeInMilliseconds = 60 * 1000; // 1 minute.
@@ -785,6 +793,13 @@
             preferencesChanged: 'jabbr.ui.preferencesChanged'
         },
 
+        help: {
+            shortcut: 'shortcut',
+            global: 'global',
+            room: 'room',
+            user: 'user'
+        },
+
         initialize: function (state) {
             $ui = $(this);
             preferences = state || {};
@@ -799,8 +814,15 @@
             $downloadDialog = $('#download-dialog');
             $downloadDialogButton = $('#download-dialog-button');
             $downloadRange = $('#download-range');
+            $help = $('#preferences .help');
             $disconnectDialog = $('#disconnect-dialog');
             $login = $('#jabbr-login');
+            $helpPopup = $('#jabbr-help');
+            $helpBody = $('#jabbr-help .help-body');
+            $shortCutHelp = $('#jabbr-help #shortcut');
+            $globalCmdHelp = $('#jabbr-help #global');
+            $roomCmdHelp = $('#jabbr-help #room');
+            $userCmdHelp = $('#jabbr-help #user');
             $updatePopup = $('#jabbr-update');
             focus = true;
             $lobbyRoomFilterForm = $('#users-filter-form'),
@@ -813,7 +835,8 @@
                 notification: $('#new-notification-template'),
                 separator: $('#message-separator-template'),
                 tab: $('#new-tab-template'),
-                gravatarprofile: $('#gravatar-profile-template')
+                gravatarprofile: $('#gravatar-profile-template'),
+                commandhelp: $('#command-help-template')
             };
 
             if (toast.canToast()) {
@@ -872,6 +895,7 @@
             });
 
             // handle tab cycling - we skip the lobby when cycling
+            // handle shift+/ - display help command
             $document.on('keydown', function (ev) {
                 if (ev.keyCode === Keys.Tab && $newMessage.val() === "") {
                     var current = getCurrentRoomElements(),
@@ -889,6 +913,27 @@
                     ui.setActiveRoom($tabs.children().eq(index).data('name'));
                     $newMessage.focus();
                 }
+
+                if (!$newMessage.is(':focus') && ev.shiftKey && ev.keyCode === Keys.Question) {
+                    ui.showHelp();
+                    // Prevent the ? be recorded in the message box
+                    ev.preventDefault();
+                }
+            });
+
+            // hack to get Chrome to scroll back to top of help body
+            // when redisplaying it after scrolling down and closing it
+            $helpPopup.on('hide', function () {
+                $helpBody.scrollTop(0);
+            });
+
+            // set the height of the help body when displaying the help dialog
+            // so that the scroll bar does not block the rounded corners
+            $helpPopup.on('show', function () {
+                if (helpHeight === 0) {
+                    helpHeight = $helpPopup.height() - $helpBody.position().top - 10;
+                }
+                $helpBody.css('height', helpHeight);
             });
 
             // handle click on names in chat / room list
@@ -1035,7 +1080,9 @@
 
                 $downloadDialog.modal('hide');
             });
-
+            $help.click(function () {
+                ui.showHelp();
+            });
             $closedRoomFilter.click(function () {
                 var room = getCurrentRoomElements(),
                     show = $(this).is(':checked');
@@ -1723,6 +1770,12 @@
         hasFocus: function () {
             return ui.focus;
         },
+        getShortcuts: function () {
+            return ui.shortcuts;
+        },
+        setShortcuts: function (shortcuts) {
+            ui.shortcuts = shortcuts;
+        },
         getCommands: function () {
             return ui.commands;
         },
@@ -1809,6 +1862,32 @@
         },
         showDisconnectUI: function () {
             $disconnectDialog.modal();
+        },
+        showHelp: function () {
+            $shortCutHelp.empty();
+            $globalCmdHelp.empty();
+            $roomCmdHelp.empty();
+            $userCmdHelp.empty();
+            $.each(ui.getCommands(), function () {
+                switch (this.Group) {
+                    case ui.help.shortcut:
+                        $shortCutHelp.append(templates.commandhelp.tmpl(this));
+                        break;
+                    case ui.help.global:
+                        $globalCmdHelp.append(templates.commandhelp.tmpl(this));
+                        break;
+                    case ui.help.room:
+                        $roomCmdHelp.append(templates.commandhelp.tmpl(this));
+                        break;
+                    case ui.help.user:
+                        $userCmdHelp.append(templates.commandhelp.tmpl(this));
+                        break;
+                }
+            });
+            $.each(ui.getShortcuts(), function () {
+                $shortCutHelp.append(templates.commandhelp.tmpl(this));
+            });
+            $helpPopup.modal();
         },
         showUpdateUI: function () {
             $updatePopup.modal();

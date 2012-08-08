@@ -5,7 +5,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("close", "")]
+    [Command("close", "Close a room. Only works if you're an owner of that room.", "room", "room")]
     public class CloseCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

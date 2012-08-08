@@ -5,7 +5,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("nudge", "")]
+    [Command("nudge", "Send a nudge to the whole room, or use [@nickname] to nudge a particular user. @ is optional.", "[@nickname]", "global")]
     public class NudgeCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

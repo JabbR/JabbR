@@ -7,7 +7,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("msg", "")]
+    [Command("msg", "Send a private message to nickname. @ is optional.", "@nickname message", "user")]
     public class PrivateMessageCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

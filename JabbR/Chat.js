@@ -659,10 +659,7 @@
     };
 
     chat.showCommands = function () {
-        ui.addMessage('Help', 'list-header');
-        $.each(ui.getCommands(), function () {
-            ui.addMessage(this.Name + ' - ' + this.Description, 'list-item');
-        });
+        ui.showHelp();
     };
 
     chat.showUsersInRoom = function (room, names) {
@@ -910,7 +907,7 @@
         ui.initialize(state.preferences);
 
         ui.addMessage('Welcome to ' + originalTitle, 'notification');
-        ui.addMessage('Type /help to see the list of commands', 'notification');
+        ui.addMessage('Use ? or type /? to display the FAQ and list of commands', 'notification');
 
         function initConnection() {
             var logging = $.cookie('jabbr.logging') === '1',
@@ -942,6 +939,11 @@
                     chat.getCommands()
                         .done(function (commands) {
                             ui.setCommands(commands);
+                        });
+                    // get list of available shortcuts
+                    chat.getShortcuts()
+                        .done(function (shortcuts) {
+                            ui.setShortcuts(shortcuts);
                         });
                 });
             });

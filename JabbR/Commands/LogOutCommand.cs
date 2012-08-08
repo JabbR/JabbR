@@ -2,7 +2,7 @@
 
 namespace JabbR.Commands
 {
-    [Command("logout", "")]
+    [Command("logout", "Logout from this client (chat cookie will be removed).", "", "user")]
     public class LogOutCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

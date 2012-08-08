@@ -1574,7 +1574,7 @@ namespace JabbR.Test
                                                         cache,
                                                         notificationService.Object);
 
-                bool result = commandManager.TryHandleCommand("/help");
+                bool result = commandManager.TryHandleCommand("/?");
 
                 Assert.True(result);
                 notificationService.Verify(x => x.ShowHelp(), Times.Once());

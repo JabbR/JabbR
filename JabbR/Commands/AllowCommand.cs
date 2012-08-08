@@ -4,7 +4,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("allow", "")]
+    [Command("allow", "Give a user permission to a private room. Only works if you're an owner of that room.", "user room", "room")]
     public class AllowCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
