@@ -819,7 +819,9 @@
     <Content Include="Scripts\jQuery.tmpl.min.js" />
     <Content Include="Scripts\jquery.writeCapture.js" />
     <Content Include="Scripts\json2.js" />
-    <Content Include="Scripts\json2.min.js" />
+    <Content Include="Scripts\json2.min.js">
+      <DependentUpon>json2.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\Markdown.Converter.js" />
     <Content Include="Scripts\modernizr.js" />
     <Content Include="Scripts\quicksilver.js" />
