@@ -711,6 +711,7 @@
     <Content Include="Content\jquery.mobile.structure-1.0rc2.css" />
     <Content Include="Content\jquery.mobile.structure-1.0rc2.min.css" />
     <Content Include="Content\KeyTips.css" />
+    <Content Include="Content\KeyTips.min.css" />
     <Content Include="Content\popup-back.gif" />
     <Content Include="Content\qunit.css" />
     <Content Include="Chat.pinnedWindows.js" />
@@ -799,6 +800,9 @@
     <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.easing.1.3.js" />
     <Content Include="Scripts\jquery.KeyTips.js" />
+    <Content Include="Scripts\jquery.KeyTips.min.js">
+      <DependentUpon>jquery.KeyTips.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\jquery.livesearch.js" />
     <Content Include="Scripts\jquery.mobile-1.0rc2.js" />
     <Content Include="Scripts\jquery.mobile-1.0rc2.min.js" />
