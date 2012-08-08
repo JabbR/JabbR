@@ -373,7 +373,7 @@
             .Add("~/Scripts/json2.min.js")
             .Add("~/Scripts/bootstrap.js")
             .Add("~/Scripts/jquery.KeyTips.js")
-            .Add("~/Scripts/jquery-ui-1.8.17.min.js")
+            .Add("~/Scripts/jquery-ui-1.8.22.min.js")
             .Add("~/Scripts/jquery.signalR-0.5.2.min.js")
             .Render("~/Scripts/JabbR1_#.js")
   %>
