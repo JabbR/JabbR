@@ -175,6 +175,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\emoji20.css" />
+    <Content Include="Content\images\ajax-loader.gif" />
     <Content Include="Content\images\ajax-loader.png" />
     <Content Include="Content\images\close-icon-hover.png" />
     <Content Include="Content\images\close-icon.png" />
@@ -684,12 +685,12 @@
     <Content Include="Content\images\flags.png" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
-    <Content Include="Content\images\loading.gif" />
-    <Content Include="Content\images\lockwhite.png" />
     <Content Include="Content\images\icons-18-black.png" />
     <Content Include="Content\images\icons-18-white.png" />
     <Content Include="Content\images\icons-36-black.png" />
     <Content Include="Content\images\icons-36-white.png" />
+    <Content Include="Content\images\loading.gif" />
+    <Content Include="Content\images\lockwhite.png" />
     <Content Include="Content\images\lock.png" />
     <Content Include="Content\images\logo64.png" />
     <Content Include="Content\images\no-typing-white.png" />
@@ -706,10 +707,12 @@
     <Content Include="Content\images\typing.png" />
     <Content Include="Content\images\Clippy.png" />
     <Content Include="Content\images\StopWatch.png" />
-    <Content Include="Content\jquery.mobile-1.0rc2.css" />
-    <Content Include="Content\jquery.mobile-1.0rc2.min.css" />
-    <Content Include="Content\jquery.mobile.structure-1.0rc2.css" />
-    <Content Include="Content\jquery.mobile.structure-1.0rc2.min.css" />
+    <Content Include="Content\jquery.mobile-1.1.1.css" />
+    <Content Include="Content\jquery.mobile-1.1.1.min.css" />
+    <Content Include="Content\jquery.mobile.structure-1.1.1.css" />
+    <Content Include="Content\jquery.mobile.structure-1.1.1.min.css" />
+    <Content Include="Content\jquery.mobile.theme-1.1.1.css" />
+    <Content Include="Content\jquery.mobile.theme-1.1.1.min.css" />
     <Content Include="Content\KeyTips.css" />
     <Content Include="Content\KeyTips.min.css" />
     <Content Include="Content\popup-back.gif" />
@@ -804,8 +807,10 @@
       <DependentUpon>jquery.KeyTips.js</DependentUpon>
     </Content>
     <Content Include="Scripts\jquery.livesearch.js" />
-    <Content Include="Scripts\jquery.mobile-1.0rc2.js" />
-    <Content Include="Scripts\jquery.mobile-1.0rc2.min.js" />
+    <Content Include="Scripts\jquery.mobile-1.1.1.js" />
+    <Content Include="Scripts\jquery.mobile-1.1.1.min.js">
+      <DependentUpon>jquery.mobile-1.1.1.js</DependentUpon>
+    </Content>
     <Content Include="Scripts\jquery.signalR-0.5.2.js" />
     <Content Include="Scripts\jquery.signalR-0.5.2.min.js" />
     <Content Include="Scripts\jquery.sortElements.js" />
