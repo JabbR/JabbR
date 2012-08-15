@@ -180,7 +180,7 @@
             // IE will repaint if we do the Chrome bugfix and look jumpy
             if ($.browser.webkit) {
                 // Chrome fix for hiding and showing scroll areas
-                this.messages.scrollTop(0);
+                this.messages.scrollTop(this.messages.scrollTop() - 1);
             }
             this.messages.scrollTop(this.messages[0].scrollHeight);
         };
