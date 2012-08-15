@@ -516,10 +516,15 @@
         ui.changeRoomTopic(room);
     };
 
-    chat.topicChanged = function (isCleared, topic) {
+    chat.topicChanged = function (isCleared, topic, who) {
         var action = isCleared ? 'cleared' : 'set';
         var to = topic ? ' to ' + '"' + topic + '"' : '';
-        var message = 'You have ' + action + ' the room topic' + to;
+        var message = action + ' the room topic' + to;
+        if (who === ui.getUserName()) {
+            message = 'You have ' + message;
+        } else {
+            message = who + ' has ' + message;
+        }
         ui.addMessage(message, 'notification', this.activeRoom);
     };
 
