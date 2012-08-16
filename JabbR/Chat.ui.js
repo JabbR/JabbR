@@ -1665,7 +1665,7 @@
 
                     if (ui.focus === false && anyRoomPreference('canToast') === true) {
                         // Only toast if there's no focus (even on mentions)
-                        ui.toast(message, true);
+                        ui.toast(message, true, roomName);
                     }
                 }
                 else {
@@ -1833,9 +1833,9 @@
                 $('#noftificationSound')[0].play();
             }
         },
-        toast: function (message, force) {
+        toast: function (message, force, roomName) {
             if (getActiveRoomPreference('canToast') === true || force) {
-                toast.toastMessage(message);
+                toast.toastMessage(message, roomName);
             }
         },
         setUserName: function (name) {
