@@ -23,14 +23,14 @@
     <link href="/Content/images/logo64.png" rel="icon" type="image/png" sizes="64x64">
     <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" sizes="16x16">
     <%= Bundle.Css()
-            .Add("~/Chat.css",
-                  "~/Chat.nuget.css",
-                  "~/Chat.bbcnews.css",
-                  "~/Chat.githubissues.css",
-                  "~/Chat.dictionary.css",
-                  "~/Content/KeyTips.css",
-                  "~/Content/bootstrap.min.css",
-                  "~/Content/emoji20.css")
+            .Add("~/Chat.css")
+            .Add("~/Chat.nuget.css")
+            .Add("~/Chat.bbcnews.css")
+            .Add("~/Chat.githubissues.css")
+            .Add("~/Chat.dictionary.css")
+            .Add("~/Content/KeyTips.css")
+            .Add("~/Content/bootstrap.min.css")
+            .Add("~/Content/emoji20.css")
             .Render("~/Content/JabbR_#.css")
   %>
 
@@ -369,35 +369,35 @@
     </section>
   </section> 
   <%= Bundle.JavaScript()
-            .Add("~/Scripts/jquery-1.7.min.js",
-                "~/Scripts/json2.min.js",
-                "~/Scripts/bootstrap.js",
-                "~/Scripts/jquery.KeyTips.js",
-                "~/Scripts/jquery-ui-1.8.17.min.js",
-                "~/Scripts/jquery.signalR-0.5.2.min.js")
+            .Add("~/Scripts/jquery-1.8.0.min.js")
+            .Add("~/Scripts/json2.min.js")
+            .Add("~/Scripts/bootstrap.js")
+            .Add("~/Scripts/jquery.KeyTips.js")
+            .Add("~/Scripts/jquery-ui-1.8.22.min.js")
+            .Add("~/Scripts/jquery.signalR-0.5.2.min.js")
             .Render("~/Scripts/JabbR1_#.js")
   %>
   <script type="text/javascript" src='<%= ResolveClientUrl("~/signalr/hubs") %>'></script>
   <%= Bundle.JavaScript()
-            .Add("~/Scripts/jQuery.tmpl.min.js",
-                "~/Scripts/jquery.cookie.js",
-                "~/Scripts/jquery.autotabcomplete.js",
-                "~/Scripts/jquery.timeago.0.10.js",
-                "~/Scripts/jquery.captureDocumentWrite.min.js",
-                "~/Scripts/jquery.sortElements.js",
-                "~/Scripts/quicksilver.js",
-                "~/Scripts/jquery.livesearch.js",
-                "~/Scripts/Markdown.Converter.js",
-                "~/Scripts/jquery.history.js",
-                "~/Chat.utility.js",
-                "~/Chat.emoji.js",
-                "~/Chat.toast.js",
-                "~/Chat.ui.js",
-                "~/Chat.documentOnWrite.js",
-                "~/Chat.twitter.js",
-                "~/Chat.pinnedWindows.js",
-                "~/Chat.githubissues.js",
-                "~/Chat.js")
+            .Add("~/Scripts/jQuery.tmpl.min.js")
+            .Add("~/Scripts/jquery.cookie.js")
+            .Add("~/Scripts/jquery.autotabcomplete.js")
+            .Add("~/Scripts/jquery.timeago.0.10.js")
+            .Add("~/Scripts/jquery.captureDocumentWrite.min.js")
+            .Add("~/Scripts/jquery.sortElements.js")
+            .Add("~/Scripts/quicksilver.js")
+            .Add("~/Scripts/jquery.livesearch.js")
+            .Add("~/Scripts/Markdown.Converter.js")
+            .Add("~/Scripts/jquery.history.js")
+            .Add("~/Chat.utility.js")
+            .Add("~/Chat.emoji.js")
+            .Add("~/Chat.toast.js")
+            .Add("~/Chat.ui.js")
+            .Add("~/Chat.documentOnWrite.js")
+            .Add("~/Chat.twitter.js")
+            .Add("~/Chat.pinnedWindows.js")
+            .Add("~/Chat.githubissues.js")
+            .Add("~/Chat.js")
             .Render("~/Scripts/JabbR2_#.js")
   %>
 </body>

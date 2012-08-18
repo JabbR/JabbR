@@ -1,4 +1,4 @@
-.KeyTips__highlighted {
+﻿.KeyTips__highlighted {
     color: Navy;
     background-color: #fdda8d;
 }
@@ -11,7 +11,7 @@
 	line-height: 17px;
 	background: #f3f3f8 url('popup-back.gif') left top no-repeat;
 	color: #4c4c4c;
-	font-family: "Lucida Sans", Verdana, Sans-Serif;
+	font-family: "Lucida Sans", Verdana, Helvetica, Sans-Serif;
 	font-size: 11px;
 	text-align: center;
 	cursor: default;
