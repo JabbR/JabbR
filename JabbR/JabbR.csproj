@@ -817,7 +817,6 @@
     <Content Include="Scripts\jquery.mobile-1.1.1.min.js">
       <DependentUpon>jquery.mobile-1.1.1.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\jquery.signalR-0.5.2.min.js" />
     <Content Include="Scripts\jquery.signalR-0.5.3.js" />
     <Content Include="Scripts\jquery.signalR-0.5.3.min.js" />
     <Content Include="Scripts\jquery.sortElements.js" />
