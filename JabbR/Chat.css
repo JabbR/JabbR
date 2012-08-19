@@ -2261,3 +2261,8 @@ li.clearfix
     background-color: #E5E5E5;
     color: #00103F;
 }
+
+.hide 
+{
+    display: none;
+}
