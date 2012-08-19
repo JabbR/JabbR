@@ -607,7 +607,7 @@ namespace JabbR.Services
             return client;
         }
 
-        public void DisconnectClient(string clientId)
+        public string DisconnectClient(string clientId)
         {
             // Remove this client from the list of user's clients
             ChatClient client = _repository.GetClientById(clientId, includeUser: true);
@@ -615,7 +615,7 @@ namespace JabbR.Services
             // No client tracking this user
             if (client == null)
             {
-                return;
+                return null;
             }
 
             // Get the user for this client
@@ -634,6 +634,8 @@ namespace JabbR.Services
                 _repository.Remove(client);
                 _repository.CommitChanges();
             }
+
+            return user.Id;
         }
 
         private void EnsureUserNameIsAvailable(string userName)

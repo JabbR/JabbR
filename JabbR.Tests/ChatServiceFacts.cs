@@ -1272,6 +1272,7 @@ namespace JabbR.Test
                 var repository = new InMemoryRepository();
                 var user = new ChatUser
                 {
+                    Id = "userId",
                     Name = "foo",
                     Status = (int)UserStatus.Inactive
                 };
@@ -1284,9 +1285,10 @@ namespace JabbR.Test
                 repository.Add(user);
                 var service = new ChatService(new Mock<ICache>().Object, repository, new Mock<ICryptoService>().Object);
 
-                service.DisconnectClient("foo");
+                string userId = service.DisconnectClient("foo");
 
                 Assert.Equal(0, user.ConnectedClients.Count);
+                Assert.Equal("userId", userId);
                 Assert.Equal((int)UserStatus.Offline, user.Status);
             }
         }

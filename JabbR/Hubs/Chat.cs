@@ -460,14 +460,19 @@ namespace JabbR
 
         private void DisconnectClient(string clientId)
         {
-            _service.DisconnectClient(clientId);
-            
+            string userId = _service.DisconnectClient(clientId);
+
+            if (String.IsNullOrEmpty(userId))
+            {
+                return;
+            }
+
             // Sleep a little so that a browser refresh doesn't show the user 
             // coming offline and back online
-            Thread.Sleep(500);
+            Thread.Sleep(1500);
 
             // Query for the user to get the updated status
-            ChatUser user = _repository.GetUserByClientId(clientId);
+            ChatUser user = _repository.GetUserById(userId);
 
             // There's no associated user for this client id
             if (user == null)
