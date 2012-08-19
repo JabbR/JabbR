@@ -135,7 +135,12 @@ if($sslCertificateThumbprint) {
   set-certificatethumbprint -path $cscfgPath -name "jabbr" -value $sslCertificateThumbprint
 }
 
-& 'C:\Program Files\Windows Azure SDK\v1.6\bin\cspack.exe' "$csdefFile" /out:"$cspkgFile" /role:"Website;$websitePath" /sites:"Website;Web;$websitePath" /rolePropertiesFile:"Website;$rolePropertiesPath"
+$paths = @("C:\Program Files\Windows Azure SDK\v1.6\bin\cspack.exe", 
+           "C:\Program Files\Microsoft SDKs\Windows Azure\.NET SDK\2012-06\bin\cspack.exe")
+
+$exe = @($paths | ?{ Test-Path $_ })[0]
+
+& $exe "$csdefFile" /out:"$cspkgFile" /role:"Website;$websitePath" /sites:"Website;Web;$websitePath" /rolePropertiesFile:"Website;$rolePropertiesPath"
 
 cp $cscfgPath $cspkgFolder
 
