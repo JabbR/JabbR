@@ -123,7 +123,7 @@ namespace JabbR.Test
             var mockedConnectionObject = chat.MockedConnection.Object;
 
             // setup client agent
-            chat.Clients = new ClientProxy(mockedConnectionObject, "Chat");
+            chat.Clients = new ClientAgent(mockedConnectionObject, "Chat");
 
             // setup signal agent
             var prinicipal = new Mock<IPrincipal>();
@@ -133,7 +133,7 @@ namespace JabbR.Test
             request.Setup(m => m.User).Returns(prinicipal.Object);
 
 
-            chat.Caller = new StatefulSignalProxy(mockedConnectionObject, connectionId, "Chat", clientState);
+            chat.Caller = new StatefulSignalAgent(mockedConnectionObject, connectionId, "Chat", clientState);
 
             // setup context
             chat.Context = new HubCallerContext(request.Object, connectionId);
