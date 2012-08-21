@@ -2220,6 +2220,7 @@ li.clearfix
 {
     overflow: auto;
     margin: 0 0 0 10px;
+    max-height: 430px;
 } 
 
 .command-list
