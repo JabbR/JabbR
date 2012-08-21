@@ -41,5 +41,6 @@ namespace JabbR.Services
         // Admin commands
         void AddAdmin(ChatUser admin, ChatUser targetUser);
         void RemoveAdmin(ChatUser admin, ChatUser targetUser);
+        void BanUser(ChatUser callingUser, ChatUser targetUser);
     }
 }
