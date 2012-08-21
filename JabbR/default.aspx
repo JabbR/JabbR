@@ -17,7 +17,7 @@
 <head>
     <title>JabbR</title>
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
-    <meta name="description" content="A real-time chat application. IRC without the R." />
+    <meta name="description" content="A real-time chat application." />
     <meta name="keywords" content="chat,realtime chat,signalr,jabbr" />
     <link href="/Content/images/logo32.png" rel="icon" type="image/png" sizes="32x32">
     <link href="/Content/images/logo64.png" rel="icon" type="image/png" sizes="64x64">
@@ -374,7 +374,7 @@
             .Add("~/Scripts/bootstrap.js")
             .Add("~/Scripts/jquery.KeyTips.js")
             .Add("~/Scripts/jquery-ui-1.8.22.min.js")
-            .Add("~/Scripts/jquery.signalR-0.5.2.min.js")
+            .Add("~/Scripts/jquery.signalR-0.5.3.min.js")
             .Render("~/Scripts/JabbR1_#.js")
   %>
   <script type="text/javascript" src='<%= ResolveClientUrl("~/signalr/hubs") %>'></script>
