@@ -901,7 +901,7 @@ namespace JabbR
         {
             bool isTopicCleared = String.IsNullOrWhiteSpace(room.Topic);
             var parsedTopic = ConvertUrlsAndRoomLinks(room.Topic ?? "");
-            Clients[room.Name].topicChanged(isTopicCleared, parsedTopic, user.Name);
+            Clients[room.Name].topicChanged(room.Name, isTopicCleared, parsedTopic, user.Name);
             // Create the view model
             var roomViewModel = new RoomViewModel
             {
