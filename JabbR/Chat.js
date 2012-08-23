@@ -516,7 +516,7 @@
         ui.changeRoomTopic(room);
     };
 
-    chat.topicChanged = function (isCleared, topic, who) {
+    chat.topicChanged = function (roomName, isCleared, topic, who) {
         var action = isCleared ? 'cleared' : 'set';
         var to = topic ? ' to ' + '"' + topic + '"' : '';
         var message = action + ' the room topic' + to;
@@ -525,7 +525,7 @@
         } else {
             message = who + ' has ' + message;
         }
-        ui.addMessage(message, 'notification', this.activeRoom);
+        ui.addMessage(message, 'notification', roomName);
     };
 
     chat.welcomeChanged = function (isCleared, welcome) {
