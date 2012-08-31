@@ -2033,7 +2033,7 @@ namespace JabbR.Test
 
                 var ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/ban dfowler2"));
 
-                Assert.True(ex.Message == "You are not an admin");
+                Assert.True(ex.Message == "You are not an admin.");
             }
 
             [Fact]
