@@ -109,6 +109,13 @@ namespace JabbR.Auth
                 repository.CommitChanges();
             }
 
+            // IsBanned is set to false if the user is new
+            // but check is placed here so it doesn't need to be checked twice in above user-if-conditions
+            if (user.IsBanned)
+            {
+                throw new InvalidOperationException("You're banned, sorry.");
+            }
+
             // Save the cokie state
             var state = JsonConvert.SerializeObject(new { userId = user.Id });
             var cookie = new HttpCookie("jabbr.state", state);

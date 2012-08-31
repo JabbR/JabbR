@@ -790,6 +790,9 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="robots.txt" />
+    <EmbeddedResource Include="Migrations\201208211555032_BanUser.resx">
+      <DependentUpon>201208211555032_BanUser.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.8.0.intellisense.js">
       <DependentUpon>jquery-1.8.0.js</DependentUpon>
     </None>
@@ -847,6 +850,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\BanCommand.cs" />
     <Compile Include="Commands\CommandMetaData.cs" />
     <Compile Include="Commands\WelcomeCommand.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />
@@ -854,6 +858,10 @@
     <Compile Include="Migrations\201206201924146_RoomWelcome.cs" />
     <Compile Include="Migrations\201206201924146_RoomWelcome.Designer.cs">
       <DependentUpon>201206201924146_RoomWelcome.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201208211555032_BanUser.cs" />
+    <Compile Include="Migrations\201208211555032_BanUser.Designer.cs">
+      <DependentUpon>201208211555032_BanUser.cs</DependentUpon>
     </Compile>
     <Compile Include="WebApi\Model\ErrorModel.cs" />
     <Compile Include="Infrastructure\HttpRequestExtensions.cs" />

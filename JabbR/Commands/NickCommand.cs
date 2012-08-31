@@ -51,6 +51,11 @@ namespace JabbR.Commands
                     }
                     else
                     {
+                        if (user.IsBanned)
+                        {
+                            throw new InvalidOperationException("You're banned, sorry.");
+                        }
+
                         // If there's no user but there's a password then authenticate the user
                         context.Service.AuthenticateUser(userName, password);
 
