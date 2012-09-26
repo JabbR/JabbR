@@ -1979,6 +1979,10 @@
             var room = getRoomElements(roomName);
 
             room.unClose();
+        },
+        setRoomListStatuses: function (roomName) {
+            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
+            room.setListState(room.owners);
         }
     };
 
