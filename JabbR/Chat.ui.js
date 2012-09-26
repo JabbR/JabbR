@@ -1504,7 +1504,12 @@
 
             $user.addClass('removing')
                 .fadeOut('slow', function () {
+                    var owner = $user.data('owner') || false;
                     $(this).remove();
+
+                    if (owner === true) {
+                        room.setListState(room.owners);
+                    }
                 });
         },
         setUserTyping: function (userViewModel, roomName) {
