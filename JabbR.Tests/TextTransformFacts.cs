@@ -320,6 +320,34 @@ namespace JabbR.Test
                 //assert
                 Assert.Equal("<a rel=\"nofollow external\" target=\"_blank\" href=\"http://localhost/foo\" title=\"http://localhost/foo\">http://localhost/foo</a>", result);
             }
+
+            [Fact]
+            public void UrlsFollowedByACommaDontEncodeTheComma()
+            {
+                // Arrange
+                var message = @"found him, hes https://twitter.com/dreamer3, sent him a tweet";
+                HashSet<string> extractedUrls;
+
+                // Act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                // Assert
+                Assert.Equal("found him, hes <a rel=\"nofollow external\" target=\"_blank\" href=\"https://twitter.com/dreamer3\" title=\"https://twitter.com/dreamer3\">https://twitter.com/dreamer3</a>, sent him a tweet", result);
+            }
+
+            [Fact]
+            public void UrlsThatContainCommasAreEncodedEntirely()
+            {
+                // Arrange
+                var message = @"found him, hes https://twitter.com/d,r,e,a,m,e,r,3, sent him a tweet";
+                HashSet<string> extractedUrls;
+
+                // Act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                // Assert
+                Assert.Equal("found him, hes <a rel=\"nofollow external\" target=\"_blank\" href=\"https://twitter.com/d,r,e,a,m,e,r,3\" title=\"https://twitter.com/d,r,e,a,m,e,r,3\">https://twitter.com/d,r,e,a,m,e,r,3</a>, sent him a tweet", result);
+            }
         }
     }
 }
