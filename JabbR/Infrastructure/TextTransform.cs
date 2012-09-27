@@ -59,7 +59,6 @@ namespace JabbR.Infrastructure
 
                 if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
                 {
-                    //return m.Value;
                     return HttpUtility.HtmlEncode(m.Value);
                 }
 
@@ -69,7 +68,6 @@ namespace JabbR.Infrastructure
                                      "<a rel=\"nofollow external\" target=\"_blank\" href=\"{0}\" title=\"{1}\">{1}</a>",
                                      Encoder.HtmlAttributeEncode(url),
                                      HttpUtility.HtmlEncode(m.Value));
-                                     //m.Value);
             });
 
             extractedUrls = urls;
