@@ -1438,16 +1438,21 @@
             var $user = $('.users').find(getUserClassName(userViewModel.name)),
                 active = $user.data('active');
 
-            if (userViewModel.active !== active) {
-                if (userViewModel.active === true) {
-                    $user.fadeTo('slow', 1, function () {
-                        $user.removeClass('idle');
-                    });
-                } else {
-                    $user.fadeTo('slow', 0.5, function () {
-                        $user.addClass('idle');
-                    });
-                }
+            var fadeSpeed = 'slow';
+            // If the states match it means they're not changing and the user
+            // is joining a room. In that case, set the fade time to be 1ms.
+            if (userViewModel.active === active) {
+                fadeSpeed = 1;
+            }
+
+            if (userViewModel.active === true) {
+                $user.fadeTo(fadeSpeed, 1, function () {
+                    $user.removeClass('idle');
+                });
+            } else {
+                $user.fadeTo(fadeSpeed, 0.5, function () {
+                    $user.addClass('idle');
+                });
             }
 
             updateNote(userViewModel, $user);
@@ -1504,7 +1509,12 @@
 
             $user.addClass('removing')
                 .fadeOut('slow', function () {
+                    var owner = $user.data('owner') || false;
                     $(this).remove();
+
+                    if (owner === true) {
+                        room.setListState(room.owners);
+                    }
                 });
         },
         setUserTyping: function (userViewModel, roomName) {
@@ -1974,6 +1984,10 @@
             var room = getRoomElements(roomName);
 
             room.unClose();
+        },
+        setRoomListStatuses: function (roomName) {
+            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
+            room.setListState(room.owners);
         }
     };
 

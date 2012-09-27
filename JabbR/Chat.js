@@ -79,6 +79,7 @@
                     // that are added after initial population
                     ui.setInitialized(room);
                     ui.scrollToBottom(room);
+                    ui.setRoomListStatuses(room);
 
                     d.resolveWith(chat);
 
