@@ -196,6 +196,21 @@ namespace JabbR.Test
             }
 
             [Fact]
+            public void UrlWithSingleTrailingParanthesisMatchesCloseBracketAsText()
+            {
+                // Arrange
+                var message = "(message http://www.jabbr.net/) doesn't match the outside brackets";
+                HashSet<string> extractedUrls;
+
+                // Act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                // Assert
+                Assert.Equal("(message <a rel=\"nofollow external\" target=\"_blank\" href=\"http://www.jabbr.net/\" title=\"http://www.jabbr.net/\">http://www.jabbr.net/</a>) doesn't match the outside brackets", result);
+
+            }
+
+            [Fact]
             public void UrlWithUnicodeIsTransformed()
             { 
                 //arrange
@@ -226,14 +241,14 @@ namespace JabbR.Test
             public void UrlWithCallbacks()
             {
                 //arrange
-                var message = @"http://a.co/a.png#""onerror='alert(&quot;Eek!&quot;)'";
+                var message = @"http://a.co/a.png#&quot;onerror=&#39;alert(&quot;Eek!&quot;)'";
                 HashSet<string> extractedUrls;
 
                 //act
                 var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
 
                 //assert
-                Assert.Equal(@"http://a.co/a.png#""onerror='alert(&quot;Eek!&quot;)'", result);
+                Assert.Equal(@"http://a.co/a.png#&quot;onerror=&#39;alert(&quot;Eek!&quot;)'", result);
             }
 
             [Fact]
@@ -251,7 +266,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void UrlWithInvalidButEscapedCharacters()
+            public void UrlWithInvalidButEscapedCharactersMatchesValidUrlSection()
             {
                 //arrange
                 var message = "message http://google.com/&lt;a&gt; continues on";
@@ -261,7 +276,35 @@ namespace JabbR.Test
                 var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
 
                 //assert
-                Assert.Equal("message http://google.com/&lt;a&gt; continues on", result);
+                Assert.Equal("message <a rel=\"nofollow external\" target=\"_blank\" href=\"http://google.com/\" title=\"http://google.com/\">http://google.com/</a><a> continues on", result);
+            }
+
+            [Fact]
+            public void UrlWithTrailingQuotationsMatchesUrlButNotTrailingQuotation()
+            {
+                // Arrange
+                var message = "\"Check out www.Jabbr.net/\"";
+                HashSet<string> extractedUrls;
+
+                // Act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                // Assert
+                Assert.Equal("\"Check out <a rel=\"nofollow external\" target=\"_blank\" href=\"http://www.Jabbr.net/\" title=\"www.Jabbr.net/\">www.Jabbr.net/</a>\"", result);
+            }
+
+            [Fact]
+            public void EncodedUrlWithTrailingQuotationsMatchesUrlButNotTrailingQuotation()
+            {
+                // Arrange
+                var message = "&quot;Visit http://www.jabbr.net/&quot;";
+                HashSet<string> extractedUrls;
+
+                // Act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+
+                // Assert
+                Assert.Equal("\"Visit <a rel=\"nofollow external\" target=\"_blank\" href=\"http://www.jabbr.net/\" title=\"http://www.jabbr.net/\">http://www.jabbr.net/</a>\"", result);
             }
 
             [Fact]
