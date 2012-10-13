@@ -3,10 +3,10 @@ using System.Security.Principal;
 using JabbR.ContentProviders.Core;
 using JabbR.Models;
 using JabbR.Services;
+using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Hubs;
 using Moq;
 using Newtonsoft.Json;
-using SignalR;
-using SignalR.Hubs;
 using Xunit;
 
 namespace JabbR.Test
@@ -27,7 +27,7 @@ namespace JabbR.Test
                 };
 
                 TestableChat chat = GetTestableChat(clientId, clientState, user);
-                chat.Caller.id = "1234";
+                chat.Clients.Caller.id = "1234";
 
                 bool result = chat.Join();
 
@@ -47,7 +47,7 @@ namespace JabbR.Test
                 };
 
                 TestableChat chat = GetTestableChat(clientId, clientState, user);
-                chat.Caller.id = "1234";
+                chat.Clients.Caller.id = "1234";
 
                 bool result = chat.Join();
 
@@ -112,6 +112,7 @@ namespace JabbR.Test
             var chatService = new Mock<IChatService>();
             var connection = new Mock<IConnection>();
             var settings = new Mock<IApplicationSettings>();
+            var mockPipeline = new Mock<IHubPipelineInvoker>();
 
             settings.Setup(m => m.AuthApiKey).Returns("key");
 
@@ -122,18 +123,13 @@ namespace JabbR.Test
             var chat = new TestableChat(settings, resourceProcessor, chatService, repository, connection);
             var mockedConnectionObject = chat.MockedConnection.Object;
 
-            // setup client agent
-            chat.Clients = new ClientProxy(mockedConnectionObject, "Chat");
-
-            // setup signal agent
+            chat.Clients = new HubConnectionContext(mockPipeline.Object, mockedConnectionObject, "Chat", connectionId, clientState);
+            
             var prinicipal = new Mock<IPrincipal>();
 
             var request = new Mock<IRequest>();
             request.Setup(m => m.Cookies).Returns(new Cookies(cookies));
             request.Setup(m => m.User).Returns(prinicipal.Object);
-
-
-            chat.Caller = new StatefulSignalProxy(mockedConnectionObject, connectionId, "Chat", clientState);
 
             // setup context
             chat.Context = new HubCallerContext(request.Object, connectionId);

@@ -11,8 +11,8 @@ using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
+using Microsoft.AspNet.SignalR.Hubs;
 using Newtonsoft.Json;
-using SignalR.Hubs;
 
 namespace JabbR
 {
@@ -1035,6 +1035,11 @@ namespace JabbR
             }
 
             Clients.Client(targetUser.ConnectedClients.First().Id).logOut(rooms);
+        }
+
+        public override void Dispose()
+        {
+            _repository.Dispose();
         }
     }
 }

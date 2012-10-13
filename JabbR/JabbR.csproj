@@ -81,6 +81,15 @@
     <Reference Include="Jurassic">
       <HintPath>..\packages\Jurassic.2.1.1\lib\Jurassic.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.1.0.0\lib\net40\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Hosting.AspNet">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Hosting.AspNet.1.0.0\lib\net40\Microsoft.AspNet.SignalR.Hosting.AspNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Hosting.Common">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Hosting.Common.1.0.0\lib\net40\Microsoft.AspNet.SignalR.Hosting.Common.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -88,30 +97,13 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.4.5.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.4.5.10\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Ninject, Version=2.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Ninject.2.2.1.4\lib\net40-Full\Ninject.dll</HintPath>
+    <Reference Include="Ninject">
+      <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="RouteMagic">
       <HintPath>..\packages\RouteMagic.1.2\lib\net40\RouteMagic.dll</HintPath>
-    </Reference>
-    <Reference Include="SignalR, Version=0.5.1.10822, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SignalR\SignalR.Hosting.AspNet\bin\Debug\SignalR.dll</HintPath>
-    </Reference>
-    <Reference Include="SignalR.Hosting.AspNet, Version=0.5.1.10822, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SignalR\SignalR.Hosting.AspNet\bin\Debug\SignalR.Hosting.AspNet.dll</HintPath>
-    </Reference>
-    <Reference Include="SignalR.Hosting.Common, Version=0.5.1.10822, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\SignalR\SignalR.Hosting.AspNet\bin\Debug\SignalR.Hosting.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="SignalR.Ninject">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SignalR.Ninject.0.5.0\lib\net40\SignalR.Ninject.dll</HintPath>
     </Reference>
     <Reference Include="SquishIt.Framework, Version=0.8.7.1, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -820,8 +812,8 @@
     <Content Include="Scripts\jquery.mobile-1.1.1.min.js">
       <DependentUpon>jquery.mobile-1.1.1.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\jquery.signalR-0.5.3.js" />
-    <Content Include="Scripts\jquery.signalR-0.5.3.min.js" />
+    <Content Include="Scripts\jquery.signalR-1.0.0.js" />
+    <Content Include="Scripts\jquery.signalR-1.0.0.min.js" />
     <Content Include="Scripts\jquery.sortElements.js" />
     <Content Include="Scripts\jquery.timeago.0.10.js" />
     <Content Include="Scripts\jQuery.tmpl.js" />
@@ -850,6 +842,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\NinjectDependencyResolver.cs" />
     <Compile Include="Commands\BanCommand.cs" />
     <Compile Include="Commands\CommandMetaData.cs" />
     <Compile Include="Commands\WelcomeCommand.cs" />

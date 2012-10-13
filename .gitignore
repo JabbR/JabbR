@@ -12,3 +12,4 @@ _AzurePackage/
 *.ncrunchsolution
 JabbR*.css
 JabbR*.js
+TestResults/
