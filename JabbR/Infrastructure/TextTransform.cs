@@ -47,7 +47,6 @@ namespace JabbR.Infrastructure
 
         public static string TransformAndExtractUrls(string message, out HashSet<string> extractedUrls)
         {
-            message = HttpUtility.HtmlDecode(message);
             var urls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             message = urlPattern.Replace(message, m =>
             {
@@ -59,7 +58,7 @@ namespace JabbR.Infrastructure
 
                 if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
                 {
-                    return HttpUtility.HtmlEncode(m.Value);
+                    return m.Value;
                 }
 
                 urls.Add(url);
@@ -67,7 +66,7 @@ namespace JabbR.Infrastructure
                 return String.Format(CultureInfo.InvariantCulture,
                                      "<a rel=\"nofollow external\" target=\"_blank\" href=\"{0}\" title=\"{1}\">{1}</a>",
                                      Encoder.HtmlAttributeEncode(url),
-                                     HttpUtility.HtmlEncode(m.Value));
+                                     m.Value);
             });
 
             extractedUrls = urls;

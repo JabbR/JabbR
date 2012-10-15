@@ -461,10 +461,6 @@ namespace JabbR
                 return;
             }
 
-            // Sleep a little so that a browser refresh doesn't show the user 
-            // coming offline and back online
-            Thread.Sleep(1500);
-
             // Query for the user to get the updated status
             ChatUser user = _repository.GetUserById(userId);
 
