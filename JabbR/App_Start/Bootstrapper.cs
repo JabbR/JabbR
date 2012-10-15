@@ -239,7 +239,7 @@ namespace JabbR.App_Start
         private static void MarkInactiveUsers(IJabbrRepository repo, IDependencyResolver resolver)
         {
             var connectionManager = resolver.Resolve<IConnectionManager>();
-            var clients = connectionManager.GetHubContext<Chat>().Clients;
+            var hubContext = connectionManager.GetHubContext<Chat>();
             var inactiveUsers = new List<ChatUser>();
 
             IQueryable<ChatUser> users = repo.Users.Online();
@@ -270,7 +270,7 @@ namespace JabbR.App_Start
 
                 foreach (var roomGroup in roomGroups)
                 {
-                    clients[roomGroup.Room.Name].markInactive(roomGroup.Users).Wait();
+                    hubContext.Group(roomGroup.Room.Name).markInactive(roomGroup.Users).Wait();
                 }
             }
         }
