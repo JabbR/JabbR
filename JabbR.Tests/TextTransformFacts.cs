@@ -531,6 +531,20 @@ namespace JabbR.Test
                 Assert.Equal("<a rel=\"nofollow external\" target=\"_blank\" href=\"https://www.google.com/search?q=test+search&amp;sugexp=chrome,mod=14&amp;sourceid=chrome&amp;ie=UTF-8\" title=\"https://www.google.com/search?q=test+search&amp;sugexp=chrome,mod=14&amp;sourceid=chrome&amp;ie=UTF-8\">https://www.google.com/search?q=test+search&amp;sugexp=chrome,mod=14&amp;sourceid=chrome&amp;ie=UTF-8</a>", result);
                 //Assert.Equal("<a rel=\"nofollow external\" target=\"_blank\" href=\"https://www.google.com/search?q=test+search&sugexp=chrome,mod=14&sourceid=chrome&ie=UTF-8\" title=\"https://www.google.com/search?q=test+search&amp;sugexp=chrome,mod=14&amp;sourceid=chrome&amp;ie=UTF-8\">https://www.google.com/search?q=test+search&amp;sugexp=chrome,mod=14&amp;sourceid=chrome&amp;ie=UTF-8</a>", result);
             }
+
+            [Fact]
+            public void DoNotUnescapeHtmlEntities()
+            {
+                //arrange
+                var message = System.Web.HttpUtility.HtmlEncode("<a href=\"#\" onclick=\"alert('fail')>clickme</a>");
+                HashSet<string> extractedUrls;
+            
+                //act
+                var result = TextTransform.TransformAndExtractUrls(message, out extractedUrls);
+            
+                //assert
+                Assert.Equal(message, result);
+            }
         }
     }
 }
