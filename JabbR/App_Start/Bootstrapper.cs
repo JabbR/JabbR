@@ -270,7 +270,7 @@ namespace JabbR.App_Start
 
                 foreach (var roomGroup in roomGroups)
                 {
-                    hubContext.Group(roomGroup.Room.Name).markInactive(roomGroup.Users).Wait();
+                    hubContext.Clients.Group(roomGroup.Room.Name).markInactive(roomGroup.Users).Wait();
                 }
             }
         }
