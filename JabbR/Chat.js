@@ -160,9 +160,7 @@
             document.title = originalTitle;
         }
         else {
-            document.title =
-                (isUnreadMessageForUser ? '*' : '')
-                + '(' + unread + ') ' + originalTitle;
+            document.title =  (isUnreadMessageForUser ? '*' : '') + '(' + unread + ') ' + originalTitle;
         }
     }
 
@@ -374,7 +372,7 @@
         ui.addMessage(user + ' now has access to ' + room, 'notification', this.state.activeRoom);
     };
 
-    chat.client.unallowUser = function (user) {
+    chat.client.unallowUser = function (user, room) {
         ui.addMessage('You access to ' + room + ' was revoked.', 'notification', this.state.activeRoom);
     };
 
@@ -615,8 +613,7 @@
                     move(0, i);
                 }
             }
-            return this;
-        };
+        }
         $("body").effect("pulsate", { times: 3 }, 300);
         window.setTimeout(function () {
             shake(20);
@@ -918,7 +915,7 @@
                 options = {};
 
             if (transport) {
-                options['transport'] = transport;
+                options.transport = transport;
             }
 
             connection.hub.logging = logging;

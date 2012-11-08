@@ -2,7 +2,7 @@
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 /// <reference path="Chat.toast.js" />
-
+/*global Emoji:true, janrain:true */
 (function ($, window, document, utility) {
     "use strict";
 
@@ -48,7 +48,7 @@
         lastPrivate = null;
 
     function getRoomId(roomName) {
-        return escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
+        return window.escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
     }
 
     function getUserClassName(userName) {
@@ -301,7 +301,7 @@
         this.setListState = function (list) {
             if (list.children('li').length > 0) {
                 var roomEmptyStatus = list.children('li.empty');
-                if (roomEmptyStatus.length == 0) {
+                if (roomEmptyStatus.length === 0) {
                     return;
                 } else {
                     roomEmptyStatus.remove();
@@ -326,7 +326,7 @@
             var oldParentList = $user.parent('ul');
             $user.appendTo(list);
             this.setListState(list);
-            if (typeof oldParentList != undefined) {
+            if (typeof oldParentList !== undefined) {
                 this.setListState(oldParentList);
             }
         };
@@ -372,7 +372,7 @@
                 var compA = $(a).data('name').toString().toUpperCase();
                 var compB = $(b).data('name').toString().toUpperCase();
                 return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
-            })
+            });
             $.each(listItems, function (index, item) { listToSort.append(item); });
         };
     }
@@ -773,7 +773,7 @@
 
             $('#message-instruction').fadeIn(2000, cycleMessages);
         }, cycleTimeInMilliseconds);
-    };
+    }
 
     var ui = {
 
@@ -862,7 +862,7 @@
             });
 
             $document.on('click', '#tabs li', function () {
-                ui.setActiveRoom($(this).data('name'))
+                ui.setActiveRoom($(this).data('name'));
             });
 
             $document.on('click', 'li.room', function () {
@@ -957,7 +957,7 @@
                 message = '/msg ' + $(this).text().trim() + ' ' + message;
                 ui.setMessage(message);
                 return false;
-            }
+            };
             $document.on('click', '.users li.user .name', prepareMessage);
             $document.on('click', '.message .left .name', prepareMessage);
 
@@ -1157,7 +1157,7 @@
 
             // Auto-complete for user names
             $newMessage.autoTabComplete({
-                prefixMatch: '[@#/\:]',
+                prefixMatch: '[@#/:]',
                 get: function (prefix) {
                     switch (prefix) {
                         case '@':
@@ -1705,7 +1705,7 @@
         addPrivateMessage: function (content, type) {
             var rooms = getAllRoomElements();
             for (var r in rooms) {
-                if (rooms[r].getName() != undefined && rooms[r].isClosed() === false) {
+                if (rooms[r].getName() !== undefined && rooms[r].isClosed() === false) {
                     this.addMessage(content, type, rooms[r].getName());
                 }
             }

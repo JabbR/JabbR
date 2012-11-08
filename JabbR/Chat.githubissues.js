@@ -1,4 +1,5 @@
-﻿(function ($, window, ui) {
+﻿/*global chat: true */
+(function ($, window, ui) {
     'use strict';
 
     window.addGitHubIssue = function (issue) {
@@ -24,7 +25,7 @@
             ui.scrollToBottom();
         }
         elements.append('<script src="https://api.github.com/users/' + issue.data.user.login + '?callback=addGitHubIssuesUser"></script>');
-        if (issue.data.assignee != undefined) {
+        if (issue.data.assignee !== undefined) {
             elements.append('<script src="https://api.github.com/users/' + issue.data.assignee.login + '?callback=addGitHubIssuesUser"></script>');
         }
     };
