@@ -1,4 +1,5 @@
-﻿(function ($, window, ui) {
+﻿/*global document:true */
+(function ($, window, ui) {
     'use strict';
 
     var collapsibleUtility = {
