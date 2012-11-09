@@ -265,12 +265,12 @@ namespace JabbR
             };
         }
 
-        public IEnumerable<RoomViewModel> GetRooms()
+        public IEnumerable<LobbyRoomViewModel> GetRooms()
         {
             string id = GetUserId();
             ChatUser user = _repository.VerifyUserId(id);
 
-            var rooms = _repository.GetAllowedRooms(user).Select(r => new RoomViewModel
+            var rooms = _repository.GetAllowedRooms(user).Select(r => new LobbyRoomViewModel
             {
                 Name = r.Name,
                 Count = r.Users.Count(u => u.Status != (int)UserStatus.Offline),

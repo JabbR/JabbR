@@ -858,6 +858,7 @@
     <Compile Include="Migrations\201208211555032_BanUser.Designer.cs">
       <DependentUpon>201208211555032_BanUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\LobbyRoomViewModel.cs" />
     <Compile Include="WebApi\Model\ErrorModel.cs" />
     <Compile Include="Infrastructure\HttpRequestExtensions.cs" />
     <Compile Include="WebApi\MessagesController.cs" />
