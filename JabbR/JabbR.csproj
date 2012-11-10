@@ -804,7 +804,6 @@
     <Content Include="Scripts\jquery.captureDocumentWrite.min.js" />
     <Content Include="Scripts\jquery.color.js" />
     <Content Include="Scripts\jquery.cookie.js" />
-    <Content Include="Scripts\jquery.easing.1.3.js" />
     <Content Include="Scripts\jquery.KeyTips.js" />
     <Content Include="Scripts\jquery.KeyTips.min.js">
       <DependentUpon>jquery.KeyTips.js</DependentUpon>
