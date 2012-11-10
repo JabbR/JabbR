@@ -829,7 +829,6 @@
     <Content Include="Scripts\modernizr.js" />
     <Content Include="Scripts\quicksilver.js" />
     <Content Include="Scripts\qunit.js" />
-    <Content Include="Scripts\sammy-latest.min.js" />
     <Content Include="Scripts\writeCapture.js" />
     <Content Include="Test\index.html" />
     <Content Include="Chat.dictionary.css" />
