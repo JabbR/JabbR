@@ -820,7 +820,6 @@
     <Content Include="Scripts\jquery.timeago.0.10.js" />
     <Content Include="Scripts\jQuery.tmpl.js" />
     <Content Include="Scripts\jQuery.tmpl.min.js" />
-    <Content Include="Scripts\jquery.writeCapture.js" />
     <Content Include="Scripts\json2.js" />
     <Content Include="Scripts\json2.min.js">
       <DependentUpon>json2.js</DependentUpon>
@@ -829,7 +828,6 @@
     <Content Include="Scripts\modernizr.js" />
     <Content Include="Scripts\quicksilver.js" />
     <Content Include="Scripts\qunit.js" />
-    <Content Include="Scripts\writeCapture.js" />
     <Content Include="Test\index.html" />
     <Content Include="Chat.dictionary.css" />
     <Content Include="Web.config">
