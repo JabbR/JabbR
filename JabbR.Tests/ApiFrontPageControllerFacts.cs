@@ -17,7 +17,6 @@ namespace JabbR.Test
     {
         public class GetFrontPage
         {
-
             [Fact]
             public void ShouldOutputAuthEndpoint()
             {
