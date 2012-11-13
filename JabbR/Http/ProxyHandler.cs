@@ -12,9 +12,9 @@ namespace JabbR.Auth
     /// <summary>
     /// Proxies images through the jabbr server to avoid mixed mode https.
     /// </summary>
-    public class ProxyHandler : HttpTaskAsyncHandler
+    public class ProxyHandler : System.Web.HttpTaskAsyncHandler
     {
-        public override Task ProcessRequestAsync(HttpContextBase context)
+        public override Task ProcessRequestAsync(HttpContext context)
         {
             string url = context.Request.QueryString["url"];
 
