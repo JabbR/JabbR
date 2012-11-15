@@ -237,7 +237,7 @@ namespace JabbR
                     Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner).Wait();
 
                     // Add the caller to the group so they receive messages
-                    Groups.Add(Context.ConnectionId, room.Name).Wait();
+                    Groups.Add(Context.ConnectionId, room.Name);
                 }
             }
 
@@ -385,7 +385,7 @@ namespace JabbR
                 Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner).Wait();
 
                 // Add the caller to the group so they receive messages
-                Groups.Add(clientId, room.Name).Wait();
+                Groups.Add(clientId, room.Name);
 
                 // Add to the list of room names
                 rooms.Add(new RoomViewModel
@@ -495,7 +495,7 @@ namespace JabbR
 
             foreach (var client in user.ConnectedClients)
             {
-                Groups.Remove(client.Id, room.Name).Wait();
+                Groups.Remove(client.Id, room.Name);
             }
 
             OnRoomChanged(room);
@@ -524,7 +524,7 @@ namespace JabbR
                 Clients.Client(client.Id).kick(room.Name);
 
                 // Remove the user from this the room group so he doesn't get the leave message
-                Groups.Remove(client.Id, room.Name).Wait();
+                Groups.Remove(client.Id, room.Name);
             }
 
             // Tell the room the user left
@@ -569,8 +569,7 @@ namespace JabbR
 
             foreach (var client in user.ConnectedClients)
             {
-                // Add the caller to the group so they receive messages
-                Groups.Add(client.Id, room.Name).Wait();
+                Groups.Add(client.Id, room.Name);
             }
         }
 
@@ -1026,7 +1025,7 @@ namespace JabbR
                     Clients.Client(client.Id).kick(room);
 
                     // Remove the user from this the room group so he doesn't get the leave message
-                    Groups.Remove(client.Id, room).Wait();
+                    Groups.Remove(client.Id, room);
                 }
             }
 
