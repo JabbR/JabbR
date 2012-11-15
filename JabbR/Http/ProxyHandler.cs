@@ -5,7 +5,6 @@ using System.Net.Cache;
 using System.Threading.Tasks;
 using System.Web;
 using JabbR.ContentProviders;
-using Microsoft.AspNet.SignalR.Hosting.AspNet;
 
 namespace JabbR.Auth
 {

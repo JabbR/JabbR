@@ -1033,9 +1033,14 @@ namespace JabbR
             Clients.Client(targetUser.ConnectedClients.First().Id).logOut(rooms);
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            _repository.Dispose();
+            if (disposing)
+            {
+                _repository.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

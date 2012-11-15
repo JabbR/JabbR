@@ -18,7 +18,7 @@ namespace JabbR.Test
             [Fact]
             public void CannotJoinChat()
             {
-                var clientState = new TrackingDictionary();
+                var clientState = new StateChangeTracker();
                 string clientId = "1";
                 var user = new ChatUser
                 {
@@ -37,7 +37,7 @@ namespace JabbR.Test
             [Fact]
             public void CanJoinChatIfIdentitySet()
             {
-                var clientState = new TrackingDictionary();
+                var clientState = new StateChangeTracker();
                 string clientId = "1";
                 var user = new ChatUser
                 {
@@ -62,7 +62,7 @@ namespace JabbR.Test
             [Fact]
             public void MissingUsernameReturnsFalse()
             {
-                var clientState = new TrackingDictionary();
+                var clientState = new StateChangeTracker();
                 string clientId = "1";
                 var user = new ChatUser();
 
@@ -76,7 +76,7 @@ namespace JabbR.Test
             [Fact]
             public void CanDeserializeClientState()
             {
-                var clientState = new TrackingDictionary();
+                var clientState = new StateChangeTracker();
                 string clientId = "1";
                 var user = new ChatUser
                 {
@@ -99,12 +99,12 @@ namespace JabbR.Test
             }
         }
 
-        public static TestableChat GetTestableChat(string clientId, TrackingDictionary clientState, ChatUser user)
+        public static TestableChat GetTestableChat(string clientId, StateChangeTracker clientState, ChatUser user)
         {
             return GetTestableChat(clientId, clientState, user, new NameValueCollection());
         }
 
-        public static TestableChat GetTestableChat(string connectionId, TrackingDictionary clientState, ChatUser user, NameValueCollection cookies)
+        public static TestableChat GetTestableChat(string connectionId, StateChangeTracker clientState, ChatUser user, NameValueCollection cookies)
         {
             // setup things needed for chat
             var repository = new InMemoryRepository();
