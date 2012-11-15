@@ -135,8 +135,9 @@ if($sslCertificateThumbprint) {
   set-certificatethumbprint -path $cscfgPath -name "jabbr" -value $sslCertificateThumbprint
 }
 
-$paths = @("C:\Program Files\Windows Azure SDK\v1.6\bin\cspack.exe", 
-           "C:\Program Files\Microsoft SDKs\Windows Azure\.NET SDK\2012-06\bin\cspack.exe")
+$paths = @("C:\Program Files\Microsoft SDKs\Windows Azure\.NET SDK\2012-10\bin\cspack.exe",
+           "C:\Program Files\Microsoft SDKs\Windows Azure\.NET SDK\2012-06\bin\cspack.exe",
+           "C:\Program Files\Windows Azure SDK\v1.6\bin\cspack.exe")
 
 $exe = @($paths | ?{ Test-Path $_ })[0]
 

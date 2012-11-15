@@ -11,6 +11,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0DC26C
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "azure", "azure", "{E97E0A5A-F231-474F-B831-1515BFFE70E6}"
+	ProjectSection(SolutionItems) = preProject
+		Scripts\_Common.ps1 = Scripts\_Common.ps1
+		Scripts\Build-Package.ps1 = Scripts\Build-Package.ps1
+		Scripts\JabbR.cscfg = Scripts\JabbR.cscfg
+		Scripts\JabbR.csdef = Scripts\JabbR.csdef
+		Scripts\JabbR.RoleProperties.txt = Scripts\JabbR.RoleProperties.txt
+		Scripts\Package.ps1 = Scripts\Package.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
