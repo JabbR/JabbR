@@ -30,7 +30,11 @@
     }
 
     $.fn.isNearTheEnd = function () {
-        return this[0].scrollTop + this.height() >= this[0].scrollHeight;
+        // Because of some weird bug in Chrome, sometimes the scroll stops at
+        // bottom-1. I'm just going to approximate here to hopefully handle most
+        // cases where it gets buggy. I don't think anyone will complain about
+        // 10 pixels.
+        return this[0].scrollTop + this.height() >= this[0].scrollHeight - 10;
     };
 
     $.fn.expandableContent = function () {

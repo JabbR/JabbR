@@ -116,6 +116,7 @@ namespace JabbR.App_Start
 
             var host = new Host(resolver);
             host.Configuration.KeepAlive = TimeSpan.FromSeconds(30);
+            host.HubPipeline.EnableAutoRejoiningGroups();
 
             RouteTable.Routes.MapHubs(resolver);
 
