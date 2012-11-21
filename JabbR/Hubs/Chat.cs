@@ -237,7 +237,7 @@ namespace JabbR
                     Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner).Wait();
 
                     // Add the caller to the group so they receive messages
-                    Groups.Add(Context.ConnectionId, room.Name).Wait();
+                    Groups.Add(Context.ConnectionId, room.Name);
                 }
             }
 
@@ -385,7 +385,7 @@ namespace JabbR
                 Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner).Wait();
 
                 // Add the caller to the group so they receive messages
-                Groups.Add(clientId, room.Name).Wait();
+                Groups.Add(clientId, room.Name);
 
                 // Add to the list of room names
                 rooms.Add(new RoomViewModel
@@ -477,7 +477,7 @@ namespace JabbR
                 {
                     var userViewModel = new UserViewModel(user);
 
-                    Clients.Group(room.Name).leave(userViewModel, room.Name).Wait();
+                    Clients.Group(room.Name).leave(userViewModel, room.Name);
                 }
             }
         }
