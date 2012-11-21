@@ -17,7 +17,6 @@ using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
 using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Hosting.Common;
 using Microsoft.AspNet.SignalR.Hubs;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -114,9 +113,11 @@ namespace JabbR.App_Start
 
             var resolver = new NinjectDependencyResolver(kernel);
 
-            var host = new Host(resolver);
-            host.Configuration.KeepAlive = TimeSpan.FromSeconds(30);
-            host.HubPipeline.EnableAutoRejoiningGroups();
+            var configuration = resolver.Resolve<IConfigurationManager>();
+            var pipeline = resolver.Resolve<IHubPipeline>();
+
+            configuration.KeepAlive = TimeSpan.FromSeconds(30);
+            pipeline.EnableAutoRejoiningGroups();
 
             RouteTable.Routes.MapHubs(resolver);
 
