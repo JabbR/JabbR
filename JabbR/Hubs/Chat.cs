@@ -495,7 +495,7 @@ namespace JabbR
 
             foreach (var client in user.ConnectedClients)
             {
-                Groups.Remove(client.Id, room.Name).Wait();
+                Groups.Remove(client.Id, room.Name);
             }
 
             OnRoomChanged(room);
@@ -524,7 +524,7 @@ namespace JabbR
                 Clients.Client(client.Id).kick(room.Name);
 
                 // Remove the user from this the room group so he doesn't get the leave message
-                Groups.Remove(client.Id, room.Name).Wait();
+                Groups.Remove(client.Id, room.Name);
             }
 
             // Tell the room the user left
@@ -569,8 +569,7 @@ namespace JabbR
 
             foreach (var client in user.ConnectedClients)
             {
-                // Add the caller to the group so they receive messages
-                Groups.Add(client.Id, room.Name).Wait();
+                Groups.Add(client.Id, room.Name);
             }
         }
 
@@ -1026,16 +1025,21 @@ namespace JabbR
                     Clients.Client(client.Id).kick(room);
 
                     // Remove the user from this the room group so he doesn't get the leave message
-                    Groups.Remove(client.Id, room).Wait();
+                    Groups.Remove(client.Id, room);
                 }
             }
 
             Clients.Client(targetUser.ConnectedClients.First().Id).logOut(rooms);
         }
 
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            _repository.Dispose();
+            if (disposing)
+            {
+                _repository.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
     }
 }

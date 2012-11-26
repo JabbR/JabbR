@@ -450,7 +450,7 @@
             /// <param name="callback" type="Function">A callback function to execute when the connection is slow</param>
             /// <returns type="signalR" />
             var connection = this;
-            $(connection).bind(events.onConnectionSlow, function (e, data) {
+            $(connection).bind(events.onConnectionSlow, function(e, data) {
                 callback.call(connection);
             });
 
