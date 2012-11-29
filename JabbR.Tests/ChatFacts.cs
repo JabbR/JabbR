@@ -1,4 +1,5 @@
-﻿using System.Collections.Specialized;
+﻿using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Security.Principal;
 using JabbR.ContentProviders.Core;
 using JabbR.Models;
@@ -85,8 +86,9 @@ namespace JabbR.Test
                     Identity = "foo"
                 };
 
-                var cookies = new NameValueCollection();
-                cookies["jabbr.state"] = JsonConvert.SerializeObject(new ClientState { UserId = user.Id });
+                var cookies = new Dictionary<string, Cookie>();
+                var cookie = new Cookie("jabbr.state", JsonConvert.SerializeObject(new ClientState { UserId = user.Id }));
+                cookies[cookie.Name] = cookie;
 
 
                 TestableChat chat = GetTestableChat(clientId, clientState, user, cookies);
@@ -101,10 +103,10 @@ namespace JabbR.Test
 
         public static TestableChat GetTestableChat(string clientId, StateChangeTracker clientState, ChatUser user)
         {
-            return GetTestableChat(clientId, clientState, user, new NameValueCollection());
+            return GetTestableChat(clientId, clientState, user, new Dictionary<string, Cookie>());
         }
 
-        public static TestableChat GetTestableChat(string connectionId, StateChangeTracker clientState, ChatUser user, NameValueCollection cookies)
+        public static TestableChat GetTestableChat(string connectionId, StateChangeTracker clientState, ChatUser user, IDictionary<string, Cookie> cookies)
         {
             // setup things needed for chat
             var repository = new InMemoryRepository();
@@ -124,11 +126,11 @@ namespace JabbR.Test
             var mockedConnectionObject = chat.MockedConnection.Object;
 
             chat.Clients = new HubConnectionContext(mockPipeline.Object, mockedConnectionObject, "Chat", connectionId, clientState);
-            
+
             var prinicipal = new Mock<IPrincipal>();
 
             var request = new Mock<IRequest>();
-            request.Setup(m => m.Cookies).Returns(new Cookies(cookies));
+            request.Setup(m => m.Cookies).Returns(cookies);
             request.Setup(m => m.User).Returns(prinicipal.Object);
 
             // setup context
@@ -153,31 +155,6 @@ namespace JabbR.Test
                 MockSettings = mockSettings;
                 Repository = repository;
                 MockedConnection = connection;
-            }
-        }
-
-        private class Cookies : IRequestCookieCollection
-        {
-            private readonly NameValueCollection _nvc;
-            public Cookies(NameValueCollection nvc)
-            {
-                _nvc = nvc;
-            }
-
-            public int Count
-            {
-                get
-                {
-                    return _nvc.Count;
-                }
-            }
-
-            public Cookie this[string name]
-            {
-                get
-                {
-                    return new Cookie(name, _nvc[name]);
-                }
             }
         }
     }

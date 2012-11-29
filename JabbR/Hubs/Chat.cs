@@ -11,6 +11,7 @@ using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
+using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Newtonsoft.Json;
 
@@ -1008,7 +1009,8 @@ namespace JabbR
 
         private string GetCookieValue(string key)
         {
-            var cookie = Context.RequestCookies[key];
+            Cookie cookie;
+            Context.RequestCookies.TryGetValue(key, out cookie);
             string value = cookie != null ? cookie.Value : null;
             return value != null ? HttpUtility.UrlDecode(value) : null;
         }
