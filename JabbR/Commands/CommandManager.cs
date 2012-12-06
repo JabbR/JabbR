@@ -129,11 +129,16 @@ namespace JabbR.Commands
                                                       StringComparer.OrdinalIgnoreCase);
             }
 
-            ExpandCommand(_commandCache.Keys, ref commandName);
-
-            if (!_commandCache.TryGetValue(commandName, out command))
-            {
-                throw new CommandNotFoundException();
+            var extended = _commandCache.Keys.Where(comm => comm.StartsWith(commandName));
+            switch(extended.Count()) {
+                case 1:
+                    _commandCache.TryGetValue(extended.Single(), out command);
+                    commandName = extended.Single();
+                    break;
+                case 0:
+                    throw new CommandNotFoundException();
+                default:
+                    throw new CommandAmbiguityException(extended);
             }
         }
 
@@ -161,23 +166,6 @@ namespace JabbR.Commands
                                Group = commandAttribute.Group
                            };
             return commands;
-        }
-
-        private static void ExpandCommand(IEnumerable<string> commandNames, ref string commandName)
-        {
-            var inputCommand = commandName;
-            var extended = commandNames.Where(comm => comm.StartsWith(inputCommand));
-
-            if (!extended.Any()) return;
-
-            try
-            {
-                commandName = extended.Single();
-            }
-            catch (InvalidOperationException)
-            {
-                throw new CommandAmbiguityException(extended);
-            }
         }
     }
 }
