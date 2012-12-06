@@ -745,7 +745,12 @@
         if (checkingStatus === false && typing === false) {
             typing = true;
 
-            chat.server.typing(chat.state.activeRoom);
+            try {
+                chat.server.typing(chat.state.activeRoom);
+            }
+            catch (e) {
+                connection.hub.log('Failed to send via websockets');
+            }
 
             window.setTimeout(function () {
                 typing = false;
@@ -795,22 +800,30 @@
             pendingMessages[id] = messageCompleteTimeout;
         }
 
-        chat.server.send(clientMessage)
-            .done(function (requiresUpdate) {
-                if (requiresUpdate === true) {
-                    ui.showUpdateUI();
-                }
+        try {
+            chat.server.send(clientMessage)
+                .done(function (requiresUpdate) {
+                    if (requiresUpdate === true) {
+                        ui.showUpdateUI();
+                    }
 
-                if (messageCompleteTimeout) {
-                    clearTimeout(messageCompleteTimeout);
-                    delete pendingMessages[id];
-                }
+                    if (messageCompleteTimeout) {
+                        clearTimeout(messageCompleteTimeout);
+                        delete pendingMessages[id];
+                    }
 
-                ui.confirmMessage(id);
-            })
-            .fail(function (e) {
-                ui.addMessage(e, 'error');
-            });
+                    ui.confirmMessage(id);
+                })
+                .fail(function (e) {
+                    ui.addMessage(e, 'error');
+                });
+        }
+        catch (e) {
+            connection.hub.log('Failed to send via websockets');
+
+            clearTimeout(pendingMessages[id]);
+            ui.failMessage(id);
+        }
 
         // Store message history
         messageHistory.push(msg);
