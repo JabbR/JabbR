@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
 
-namespace JabbR.Commands.Exceptions
+namespace JabbR.Commands
 {
     public class CommandNotFoundException : Exception
     {

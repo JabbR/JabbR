@@ -4,7 +4,6 @@ using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using JabbR.Models;
 using JabbR.Services;
-using JabbR.Commands.Exceptions;
 
 namespace JabbR.Commands
 {
@@ -101,7 +100,7 @@ namespace JabbR.Commands
             }
             catch (CommandAmbiguityException e)
             {
-                throw new InvalidOperationException(String.Format("'{0}' is ambiguous: {1}.", commandName, e.Ambiguities.Aggregate((s, r) => s += ", " + r)));
+                throw new InvalidOperationException(String.Format("'{0}' is ambiguous: {1}.", commandName, String.Join(", ", e.Ambiguities)));
             }
 
             command.Execute(context, callerContext, args);
@@ -169,7 +168,7 @@ namespace JabbR.Commands
             var inputCommand = commandName;
             var extended = commandNames.Where(comm => comm.StartsWith(inputCommand));
 
-            if (extended.Count() == 0) return;
+            if (!extended.Any()) return;
 
             try
             {
