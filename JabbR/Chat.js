@@ -980,12 +980,12 @@
             });
 
             connection.hub.disconnected(function () {
-                connection.hub.log('Dropped the connection from the server. Restarting in 1 second.');
+                connection.hub.log('Dropped the connection from the server. Restarting in 5 seconds.');
 
                 // Restart the connection
                 setTimeout(function () {
                     connection.hub.start();
-                }, 1000);
+                }, 5000);
             });
 
             connection.hub.error(function (err) {
