@@ -19,7 +19,7 @@ namespace JabbR.Commands
 
         public CommandAmbiguityException(IEnumerable<string> ambiguities)
         {
-            this.Ambiguities = ambiguities;
+            Ambiguities = ambiguities;
         }
 
         public CommandAmbiguityException(string message) : base(message) { }
