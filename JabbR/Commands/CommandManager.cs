@@ -90,9 +90,17 @@ namespace JabbR.Commands
             };
 
             ICommand command;
-            if (!TryMatchCommand(commandName, out command))
+            try
+            {
+                MatchCommand(commandName, out command);
+            }
+            catch (CommandNotFoundException)
             {
                 throw new InvalidOperationException(String.Format("'{0}' is not a valid command.", commandName));
+            }
+            catch (CommandAmbiguityException e)
+            {
+                throw new InvalidOperationException(String.Format("'{0}' is ambiguous: {1}.", commandName, String.Join(", ", e.Ambiguities)));
             }
 
             command.Execute(context, callerContext, args);
@@ -100,7 +108,7 @@ namespace JabbR.Commands
             return true;
         }
 
-        private bool TryMatchCommand(string commandName, out ICommand command)
+        private void MatchCommand(string commandName, out ICommand command)
         {
             if (_commandCache == null)
             {
@@ -121,7 +129,17 @@ namespace JabbR.Commands
                                                       StringComparer.OrdinalIgnoreCase);
             }
 
-            return _commandCache.TryGetValue(commandName, out command);
+            var extended = _commandCache.Keys.Where(comm => comm.StartsWith(commandName));
+            switch(extended.Count()) {
+                case 1:
+                    _commandCache.TryGetValue(extended.Single(), out command);
+                    commandName = extended.Single();
+                    break;
+                case 0:
+                    throw new CommandNotFoundException();
+                default:
+                    throw new CommandAmbiguityException(extended);
+            }
         }
 
         private static IList<ICommand> GetCommands()

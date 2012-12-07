@@ -841,6 +841,7 @@
   <ItemGroup>
     <Compile Include="App_Start\NinjectDependencyResolver.cs" />
     <Compile Include="Commands\BanCommand.cs" />
+    <Compile Include="Commands\CommandExceptions.cs" />
     <Compile Include="Commands\CommandMetaData.cs" />
     <Compile Include="Commands\WelcomeCommand.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />

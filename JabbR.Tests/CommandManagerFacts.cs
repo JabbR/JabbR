@@ -68,6 +68,33 @@ namespace JabbR.Test
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/foo"));
             }
+
+            [Fact]
+            public void ThrowsIfCommandIsAmbiguous()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var service = new ChatService(cache, repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var user = new ChatUser
+                {
+                    Name = "tilde",
+                    Id = "1",
+                    HashedPassword = "password".ToSha256(null)
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                };
+
+                user.Rooms.Add(room);
+                room.Users.Add(user);
+                repository.Add(room);
+                var commandManager = new CommandManager("1", "1", "room", service, repository, cache, notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/a"));
+            }
         }
 
         public class NickCommand
