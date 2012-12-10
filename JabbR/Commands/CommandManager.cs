@@ -51,6 +51,12 @@ namespace JabbR.Commands
             _notificationService = notificationService;
         }
 
+        public string ParseCommand(string commandString, out string[] args)
+        {
+            var parts = commandString.Substring(1).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            args = parts.Skip(1).ToArray();
+            return parts[0];
+        }
         public bool TryHandleCommand(string command)
         {
             command = command.Trim();
@@ -59,10 +65,9 @@ namespace JabbR.Commands
                 return false;
             }
 
-            string[] args = command.Substring(1).Split(' ');
-            string commandName = args[0];
-
-            return TryHandleCommand(commandName, args.Skip(1).ToArray());
+            string[] args;
+            var commandName = ParseCommand(command, out args);
+            return TryHandleCommand(commandName, args);
         }
 
         public bool TryHandleCommand(string commandName, string[] args)

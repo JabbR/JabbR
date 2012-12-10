@@ -12,6 +12,76 @@ namespace JabbR.Test
 {
     public class CommandManagerFacts
     {
+        public class ParseCommand
+        {
+            [Fact]
+            public void ReturnsTheCommandName()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var service = new ChatService(cache, repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
+
+                const string commandName = "thecommand";
+                string[] args;
+                var parsedName = commandManager.ParseCommand(String.Format("/{0}", commandName), out args);
+
+                Assert.Equal(commandName, parsedName);
+            }
+
+            [Fact]
+            public void ParsesTheArguments()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var service = new ChatService(cache, repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
+            
+                var parts = new[] {"/cmd", "arg0", "arg1", "arg2"};
+                var command = String.Join(" ", parts);
+                
+                string[] parsedArgs;
+                commandManager.ParseCommand(command, out parsedArgs);
+
+                Assert.Equal(parts.Skip(1), parsedArgs);
+            }
+
+            [Fact]
+            public void IgnoresMultipleWhitespaceBetweenArguments()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var service = new ChatService(cache, repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
+                
+                var parts = new[] { "/cmd", "arg0", "arg1", "arg2" };
+                var command = String.Join("    ", parts);
+
+                string[] parsedArgs;
+                commandManager.ParseCommand(command, out parsedArgs);
+
+                Assert.Equal(parts.Skip(1), parsedArgs);
+            }
+
+            [Fact]
+            public void ProducesEmptyArrayIfNoArguments()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var service = new ChatService(cache, repository, new Mock<ICryptoService>().Object);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
+
+                string[] parsedArgs;
+                commandManager.ParseCommand("/cmd", out parsedArgs);
+
+                Assert.Equal(0, parsedArgs.Length);
+            }
+        }
+
         public class TryHandleCommand
         {
             [Fact]
