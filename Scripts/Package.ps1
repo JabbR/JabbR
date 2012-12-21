@@ -90,6 +90,7 @@ function set-machinekey {
 # Do Work Brah
 $scriptPath = split-path $MyInvocation.MyCommand.Path
 $rootPath = resolve-path(join-path $scriptPath "..")
+$libPath = join-path $rootPath "lib"
 $csdefFile = join-path $scriptPath "JabbR.csdef"
 $websitePath = join-path $rootPath "JabbR"
 $webConfigPath = join-path $websitePath "Web.config"
@@ -116,6 +117,7 @@ if ((test-path $cspkgFolder) -eq $false) {
 
 cp $webConfigPath $webConfigBakPath
 cp $cscfgPath $cscfgBakPath
+cp $libPath\signalr.exe $binPath\signalr.exe
 
 set-appsetting -path $webConfigPath -name "auth.apiKey" -value $authKey
 set-appsetting -path $webConfigPath -name "auth.appId" -value $appId

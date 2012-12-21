@@ -18,5 +18,8 @@
       <Import moduleName="RemoteAccess" />
       <Import moduleName="RemoteForwarder" />
     </Imports>
+    <Startup>
+        <Task commandLine="signalr.exe ipc" executionContext="elevated"></Task>
+    </Startup>
   </WebRole>
 </ServiceDefinition>
