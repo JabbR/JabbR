@@ -116,12 +116,18 @@ namespace JabbR.App_Start
 
             var resolver = new NinjectDependencyResolver(kernel);
 
+            var config = new HubConfiguration
+            {
+                Resolver = resolver,
+                EnableJavaScriptProxies = true
+            };
+
             var configuration = resolver.Resolve<IConfigurationManager>();
             var pipeline = resolver.Resolve<IHubPipeline>();
 
             pipeline.EnableAutoRejoiningGroups();
 
-            RouteTable.Routes.MapHubs(resolver);
+            RouteTable.Routes.MapHubs(config);
 
             // Perform the required migrations
             DoMigrations();
