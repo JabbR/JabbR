@@ -118,8 +118,7 @@ namespace JabbR.App_Start
 
             var config = new HubConfiguration
             {
-                Resolver = resolver,
-                EnableJavaScriptProxies = true
+                Resolver = resolver
             };
 
             var configuration = resolver.Resolve<IConfigurationManager>();
