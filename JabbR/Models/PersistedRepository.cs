@@ -134,6 +134,11 @@ namespace JabbR.Models
                       .Online();
         }
 
+        public IQueryable<ChatUser> GetOnlineUsers()
+        {
+            return _db.Users.Include(c => c.ConnectedClients).Online();
+        }
+
         public IQueryable<ChatUser> SearchUsers(string name)
         {
             return _db.Users.Online().Where(u => u.Name.Contains(name));

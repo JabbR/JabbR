@@ -112,6 +112,11 @@ namespace JabbR.Models
             return room.Users.Online().AsQueryable();
         }
 
+        public IQueryable<ChatUser> GetOnlineUsers()
+        {
+            return _users.Online().AsQueryable();
+        }
+
         public IQueryable<ChatUser> SearchUsers(string name)
         {
             return _users.Online()

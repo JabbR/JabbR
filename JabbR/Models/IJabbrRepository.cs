@@ -9,6 +9,7 @@ namespace JabbR.Models
         IQueryable<ChatUser> Users { get; }
 
         IQueryable<ChatUser> GetOnlineUsers(ChatRoom room);
+        IQueryable<ChatUser> GetOnlineUsers();
 
         IQueryable<ChatUser> SearchUsers(string name);
         IQueryable<ChatMessage> GetMessagesByRoom(ChatRoom room);

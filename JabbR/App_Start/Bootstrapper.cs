@@ -248,7 +248,7 @@ namespace JabbR.App_Start
             var hubContext = connectionManager.GetHubContext<Chat>();
             var inactiveUsers = new List<ChatUser>();
 
-            IQueryable<ChatUser> users = repo.Users.Online();
+            IQueryable<ChatUser> users = repo.GetOnlineUsers();
 
             foreach (var user in users)
             {
