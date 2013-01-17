@@ -122,9 +122,6 @@ namespace JabbR.App_Start
             };
 
             var configuration = resolver.Resolve<IConfigurationManager>();
-            var pipeline = resolver.Resolve<IHubPipeline>();
-
-            pipeline.EnableAutoRejoiningGroups();
 
             RouteTable.Routes.MapHubs(config);
 
