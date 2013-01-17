@@ -255,7 +255,12 @@ namespace JabbR.App_Start
                 var status = (UserStatus)user.Status;
                 var elapsed = DateTime.UtcNow - user.LastActivity;
 
-                if (elapsed.TotalMinutes > 15)
+                if (user.ConnectedClients.Count == 0)
+                {
+                    // Fix users that are marked as inactive but have no clients
+                    user.Status = (int)UserStatus.Offline;
+                }
+                else if (elapsed.TotalMinutes > 15)
                 {
                     user.Status = (int)UserStatus.Inactive;
                     inactiveUsers.Add(user);
