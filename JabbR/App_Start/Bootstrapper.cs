@@ -118,7 +118,8 @@ namespace JabbR.App_Start
 
             var config = new HubConfiguration
             {
-                Resolver = resolver
+                Resolver = resolver,
+                EnableDetailedErrors = true
             };
 
             var configuration = resolver.Resolve<IConfigurationManager>();
