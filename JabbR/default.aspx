@@ -324,9 +324,7 @@
           <a class="close" data-dismiss="modal">&times;</a>
           <h3>JabbR Login</h3>
         </div>
-        <div class="modal-body">
-          <div id="janrainEngageEmbed">
-          </div>
+        <div class="modal-body">          
         </div>
       </div>
     </section>

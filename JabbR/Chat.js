@@ -945,7 +945,6 @@
                         }
                         else {
                             ui.addMessage('Use /nick user password to log in with jabbr', 'notification');
-                            ui.addMessage('To enable janrain login, setup the missing values in web.config', 'notification');
                         }
                     }
                     // get list of available commands

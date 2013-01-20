@@ -2,7 +2,7 @@
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 /// <reference path="Chat.toast.js" />
-/*global Emoji:true, janrain:true */
+/*global Emoji:true*/
 (function ($, window, document, utility) {
     "use strict";
 
@@ -1851,19 +1851,7 @@
             return ui.name;
         },
         showLogin: function () {
-            if (typeof (janrain) !== 'undefined') {
-                if (janrain.ready === false) {
-                    window.setTimeout(function () {
-                        $login.modal({ backdrop: true, keyboard: true });
-                    }, 1000);
-                }
-                else {
-                    $login.modal({ backdrop: true, keyboard: true });
-                }
-
-                return true;
-            }
-
+            
             return false;
         },
         showDisconnectUI: function () {
