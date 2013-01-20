@@ -110,7 +110,6 @@ namespace JabbR
 
         private static void SetupMiddleware(IAppBuilder app)
         {
-            app.Use(typeof(DisableCompressionHandler));
             app.UseStaticFiles("/", ".");
             app.Use(typeof(LoginHandler));
             app.Use(typeof(ImageProxyHandler), "/proxy");
