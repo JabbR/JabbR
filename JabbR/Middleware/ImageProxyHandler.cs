@@ -15,12 +15,12 @@ namespace JabbR.Middleware
     /// <summary>
     /// Proxies images through the jabbr server to avoid mixed mode https.
     /// </summary>
-    public class ProxyHandler
+    public class ImageProxyHandler
     {
         private readonly AppFunc _next;
         private readonly string _path;
 
-        public ProxyHandler(AppFunc next, string path)
+        public ImageProxyHandler(AppFunc next, string path)
         {
             _next = next;
             _path = path;

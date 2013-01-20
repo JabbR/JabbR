@@ -100,17 +100,21 @@ namespace JabbR
 
             SetupSignalR(kernel, app);
             SetupWebApi(kernel, app);
-
-            app.Use(typeof(DisableCompressionHandler));
-            app.UseStaticFiles("/", ".");
-            app.Use(typeof(LoginHandler));
-            app.Use(typeof(ProxyHandler), "/proxy");
-            app.UseRazor(new PhysicalFileSystem(Environment.CurrentDirectory), new AssemblyReferenceLocator(), "/");
+            SetupMiddleware(app);
 
             // Perform the required migrations
             DoMigrations();
 
             SetupErrorHandling();
+        }
+
+        private static void SetupMiddleware(IAppBuilder app)
+        {
+            app.Use(typeof(DisableCompressionHandler));
+            app.UseStaticFiles("/", ".");
+            app.Use(typeof(LoginHandler));
+            app.Use(typeof(ImageProxyHandler), "/proxy");
+            app.UseRazor(new PhysicalFileSystem(Environment.CurrentDirectory), new AssemblyReferenceLocator(), "/");
         }
 
         private static void SetupSignalR(StandardKernel kernel, IAppBuilder app)
