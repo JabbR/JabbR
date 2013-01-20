@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Formatting;
+﻿using System;
+using System.Net.Http.Formatting;
 using System.Web.Http;
 using JabbR.Auth;
 using JabbR.ContentProviders.Core;
@@ -67,9 +68,15 @@ namespace JabbR
                   .To<AjaxMinMinifier>()
                   .InSingletonScope();
 
-            kernel.Bind<ICache>()
-                  .To<AspNetCache>()
-                  .InSingletonScope();
+            try
+            {
+                BindSystemWebDependencies(kernel, app);
+            }
+            catch (Exception ex)
+            {
+                // If we were unable to load the system web specific dependencies don't cry about it
+                ReportError(ex);
+            }
 
             var serializer = new JsonNetSerializer(new JsonSerializerSettings
             {

@@ -100,6 +100,9 @@
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.0.12-alpha2\lib\Microsoft.AspNet.WebApi.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin.Host.HttpListener">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.0.18.0-alpha\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb">
       <HintPath>..\lib\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
@@ -825,6 +828,7 @@
     <Content Include="Scripts\jquery-1.9.0.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\Startup.SystemWeb.cs" />
     <Compile Include="App_Start\Startup.ErrorHandling.cs" />
     <Compile Include="App_Start\Startup.Migrations.cs" />
     <Compile Include="App_Start\Startup.BackgroundWork.cs" />
