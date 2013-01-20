@@ -6,6 +6,7 @@ using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
+using Microsoft.AspNet.Razor.Owin.IO;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Json;
@@ -101,7 +102,7 @@ namespace JabbR
             SetupWebApi(kernel, app);
 
             app.UseStaticFiles("/", ".");
-
+            app.UseRazor(new PhysicalFileSystem(Environment.CurrentDirectory), new AssemblyReferenceLocator(), "/");
             app.Use(typeof(LoginHandler));
             app.Use(typeof(ProxyHandler), "/proxy");
 

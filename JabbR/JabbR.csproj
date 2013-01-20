@@ -87,6 +87,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Razor.Owin, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\lib\Microsoft.AspNet.Razor.Owin.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\lib\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -829,6 +833,7 @@
     <Content Include="Scripts\jquery-1.9.0.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\AssemblyReferenceLocator.cs" />
     <Compile Include="App_Start\Startup.SystemWeb.cs" />
     <Compile Include="App_Start\Startup.ErrorHandling.cs" />
     <Compile Include="App_Start\Startup.Migrations.cs" />
