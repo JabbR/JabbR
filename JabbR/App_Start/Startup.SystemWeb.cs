@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using JabbR.Models;
+using JabbR.Services;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.SystemWeb.Infrastructure;

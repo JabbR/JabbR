@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace JabbR.Models
+namespace JabbR.Services
 {
     public interface ICache
     {

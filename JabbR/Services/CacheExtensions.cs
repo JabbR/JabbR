@@ -1,6 +1,7 @@
 ﻿using System;
+using JabbR.Models;
 
-namespace JabbR.Models
+namespace JabbR.Services
 {
     public static class CacheExtensions
     {

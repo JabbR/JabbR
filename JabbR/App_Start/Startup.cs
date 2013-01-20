@@ -74,6 +74,12 @@ namespace JabbR
                 {
                     BindSystemWebDependencies(kernel);
                 }
+                else
+                {
+                    kernel.Bind<ICache>()
+                          .To<DefaultCache>()
+                          .InSingletonScope();
+                }
             }
             catch (Exception ex)
             {

@@ -2,7 +2,7 @@
 using System.Web;
 using System.Web.Caching;
 
-namespace JabbR.Models
+namespace JabbR.Services
 {
     public class AspNetCache : ICache
     {
