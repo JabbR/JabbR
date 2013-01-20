@@ -17,25 +17,6 @@ namespace JabbR.Test
         public class Join
         {
             [Fact]
-            public void CannotJoinChat()
-            {
-                var clientState = new StateChangeTracker();
-                string clientId = "1";
-                var user = new ChatUser
-                {
-                    Id = "1234",
-                    Name = "John"
-                };
-
-                TestableChat chat = GetTestableChat(clientId, clientState, user);
-                chat.Clients.Caller.id = "1234";
-
-                bool result = chat.Join();
-
-                Assert.False(result);
-            }
-
-            [Fact]
             public void CanJoinChatIfIdentitySet()
             {
                 var clientState = new StateChangeTracker();
@@ -115,8 +96,6 @@ namespace JabbR.Test
             var connection = new Mock<IConnection>();
             var settings = new Mock<IApplicationSettings>();
             var mockPipeline = new Mock<IHubPipelineInvoker>();
-
-            settings.Setup(m => m.AuthApiKey).Returns("key");
 
             // add user to repository
             repository.Add(user);

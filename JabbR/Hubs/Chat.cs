@@ -75,13 +75,6 @@ namespace JabbR
                 return false;
             }
 
-            // Migrate all users to use new auth
-            if (!String.IsNullOrEmpty(_settings.AuthApiKey) &&
-                String.IsNullOrEmpty(user.Identity))
-            {
-                return false;
-            }
-
             // Update some user values
             _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
             _repository.CommitChanges();

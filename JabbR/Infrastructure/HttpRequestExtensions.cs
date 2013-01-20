@@ -1,12 +1,11 @@
 using System;
-using System.Net;
-using System.Linq;
-using System.Net.Http;
-using JabbR.WebApi.Model;
-using System.Net.Http.Headers;
 using System.Collections.Generic;
-using System.Web;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Web.Http.Hosting;
+using JabbR.WebApi.Model;
 
 namespace JabbR.Infrastructure
 {
@@ -159,10 +158,7 @@ namespace JabbR.Infrastructure
                 Scheme = proto,
             };
 
-            if (requestMessage.IsLocal())
-            {
-                uriBuilder.Port = requestMessage.RequestUri.Port;
-            }
+            uriBuilder.Port = requestMessage.RequestUri.Port;
 
             return new Uri(uriBuilder.Uri, relativeUri);
         }

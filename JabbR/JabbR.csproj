@@ -87,9 +87,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.Razor.Owin">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.Owin.0.19-alpha\lib\net45\Microsoft.AspNet.Razor.Owin.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\lib\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -130,15 +127,6 @@
     <Reference Include="Owin.Types">
       <HintPath>..\packages\Owin.Types.0.7-alpha\lib\net40\Owin.Types.dll</HintPath>
     </Reference>
-    <Reference Include="Roslyn.Compilers">
-      <HintPath>..\packages\Roslyn.Compilers.Common.1.2.20906.2\lib\net45\Roslyn.Compilers.dll</HintPath>
-    </Reference>
-    <Reference Include="Roslyn.Compilers.CSharp">
-      <HintPath>..\packages\Roslyn.Compilers.CSharp.1.2.20906.2\lib\net45\Roslyn.Compilers.CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="Roslyn.Compilers.VisualBasic">
-      <HintPath>..\packages\Roslyn.Compilers.VisualBasic.1.2.20906.2\lib\net45\Roslyn.Compilers.VisualBasic.dll</HintPath>
-    </Reference>
     <Reference Include="SquishIt.Framework, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\SquishIt.0.9.1\lib\SquishIt.Framework.dll</HintPath>
@@ -159,10 +147,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20715.0\lib\net40\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -872,9 +856,6 @@
     <Compile Include="WebApi\Model\MessageApiModel.cs" />
     <Compile Include="WebApi\Model\ApiFrontpageModel.cs" />
     <Compile Include="WebApi\ApiFrontPageController.cs" />
-    <Compile Include="WebApi\Model\AuthApiModel.cs" />
-    <Compile Include="Infrastructure\IVirtualPathUtility.cs" />
-    <Compile Include="Infrastructure\VirtualPathUtilityWrapper.cs" />
     <Compile Include="App_Start\Startup.cs" />
     <Compile Include="Commands\AddAdminCommand.cs" />
     <Compile Include="Commands\AddOwnerCommand.cs" />

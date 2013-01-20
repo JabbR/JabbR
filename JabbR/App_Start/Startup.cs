@@ -63,9 +63,6 @@ namespace JabbR
                   .To<ApplicationSettings>()
                   .InSingletonScope();
 
-            kernel.Bind<IVirtualPathUtility>()
-                  .To<VirtualPathUtilityWrapper>();
-
             kernel.Bind<IJavaScriptMinifier>()
                   .To<AjaxMinMinifier>()
                   .InSingletonScope();
@@ -88,7 +85,6 @@ namespace JabbR
             SetupWebApi(kernel, app);
 
             app.UseStaticFiles("/", ".");
-            app.UseRazor();
 
             app.Use(typeof(LoginHandler));
             app.Use(typeof(ProxyHandler));
