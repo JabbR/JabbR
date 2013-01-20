@@ -4,8 +4,8 @@ using System.IO;
 using System.Net;
 using System.Net.Cache;
 using System.Threading.Tasks;
-using System.Web;
 using JabbR.ContentProviders;
+using JabbR.Infrastructure;
 using Owin.Types;
 
 namespace JabbR
@@ -29,7 +29,7 @@ namespace JabbR
             var httpRequest = new OwinRequest(env);
             var httpResponse = new OwinResponse(env);
 
-            var qs = HttpUtility.ParseQueryString(httpRequest.QueryString);
+            var qs = new QueryStringCollection(httpRequest.QueryString);
 
             string url = qs["url"];
 

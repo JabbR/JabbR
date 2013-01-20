@@ -1,7 +1,5 @@
-﻿using JabbR.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using JabbR.Infrastructure;
 using Xunit;
 
 namespace JabbR.Tests
@@ -20,6 +18,7 @@ namespace JabbR.Tests
                 Assert.Equal("value1", collection["first"]);
                 Assert.Equal("value2", collection["second"]);
             }
+
             [Fact]
             public void ShouldHandleNameOnlyParameters()
             {
@@ -29,6 +28,7 @@ namespace JabbR.Tests
 
                 Assert.Equal(null, collection["second"]);
             }
+
             [Fact]
             public void ShouldHandleMultipleAmpersands()
             {
@@ -38,15 +38,24 @@ namespace JabbR.Tests
 
                 Assert.Equal(2, collection.Count);
             }
+
             [Fact]
             public void ShouldThrowInvalidArgumentExceptionWhenUriIsNull()
             {
                 Assert.Throws<ArgumentNullException>(() =>
                 {
-                    var collection = new QueryStringCollection(null);
+                    var collection = new QueryStringCollection((Uri)null);
                 });
             }
 
+            [Fact]
+            public void ShouldThrowInvalidArgumentExceptionWhenQsIsNull()
+            {
+                Assert.Throws<ArgumentNullException>(() =>
+                {
+                    var collection = new QueryStringCollection((string)null);
+                });
+            }
         }
         public class TryGetAndConvert
         {
@@ -61,8 +70,8 @@ namespace JabbR.Tests
                 var result = queryStringCollection.TryGetAndConvert<string>("stringvalue", out output);
 
                 Assert.True(result);
-                Assert.Equal("str", output); 
-                
+                Assert.Equal("str", output);
+
             }
 
             [Fact]
@@ -120,6 +129,7 @@ namespace JabbR.Tests
                 Assert.True(result);
                 Assert.Equal(0, output);
             }
+
             [Fact]
             public void ShouldReturnFalseForEmptyValueType()
             {
@@ -132,6 +142,7 @@ namespace JabbR.Tests
 
                 Assert.False(result);
             }
+
             [Fact]
             public void ShouldReturnTrueForEmptyReferenceType()
             {
@@ -144,6 +155,7 @@ namespace JabbR.Tests
 
                 Assert.True(result);
             }
+
             [Fact]
             public void ShouldReturnTrueForEmptyNullableType()
             {
@@ -157,6 +169,7 @@ namespace JabbR.Tests
                 Assert.True(result);
             }
         }
+
         public class Indexer
         {
             [Fact]

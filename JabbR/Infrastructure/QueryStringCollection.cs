@@ -16,6 +16,16 @@ namespace JabbR.Infrastructure
     {
         private Dictionary<string, string> _queryStringDictionary;
 
+        public QueryStringCollection(string query)
+        {
+            if (query == null)
+            {
+                throw new ArgumentNullException("query");
+            }
+
+            BuildQueryString(query);
+        }
+
         public QueryStringCollection(Uri requestUri)
         {
             if (requestUri == null)
@@ -23,7 +33,11 @@ namespace JabbR.Infrastructure
                 throw new ArgumentNullException("requestUri");
             }
 
-            var query = requestUri.Query;
+            BuildQueryString(requestUri.Query);
+        }
+
+        private void BuildQueryString(string query)
+        {
             var parameters = query.TrimStart(new char[] { '?' }).Split(new char[] { '&' });
             _queryStringDictionary = new Dictionary<string, string>();
 
