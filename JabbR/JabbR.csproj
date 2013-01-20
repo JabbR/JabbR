@@ -69,6 +69,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Gate">
+      <HintPath>..\packages\Gate.0.27\lib\net40\Gate.dll</HintPath>
+    </Reference>
+    <Reference Include="Gate.Middleware">
+      <HintPath>..\packages\Gate.Middleware.0.27\lib\net40\Gate.Middleware.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net40\HtmlAgilityPack.dll</HintPath>
@@ -97,6 +103,12 @@
     <Reference Include="Microsoft.Owin.Host.SystemWeb">
       <HintPath>..\lib\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Owin.Mapping">
+      <HintPath>..\packages\Microsoft.Owin.Mapping.0.19-alpha\lib\net40\Microsoft.Owin.Mapping.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.StaticFiles">
+      <HintPath>..\packages\Microsoft.Owin.StaticFiles.0.19-alpha\lib\net40\Microsoft.Owin.StaticFiles.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -111,6 +123,9 @@
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin.Types">
+      <HintPath>..\packages\Owin.Types.0.7-alpha\lib\net40\Owin.Types.dll</HintPath>
     </Reference>
     <Reference Include="SquishIt.Framework, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -771,8 +786,6 @@
     <Content Include="Content\images\logo32.png" />
     <Content Include="Content\images\small-logo.png" />
     <Content Include="default.aspx" />
-    <Content Include="Mobile.css" />
-    <Content Include="mobile.htm" />
     <Content Include="Content\sounds\notification.wav" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -833,6 +846,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\NinjectDependencyResolver.cs" />
+    <Compile Include="Middleware\LoginHandler.cs" />
     <Compile Include="Commands\BanCommand.cs" />
     <Compile Include="Commands\CommandExceptions.cs" />
     <Compile Include="Commands\CommandMetaData.cs" />
@@ -858,9 +872,6 @@
     <Compile Include="Infrastructure\IVirtualPathUtility.cs" />
     <Compile Include="Infrastructure\VirtualPathUtilityWrapper.cs" />
     <Compile Include="App_Start\Startup.cs" />
-    <Compile Include="Auth\Login.ashx.cs">
-      <DependentUpon>Login.ashx</DependentUpon>
-    </Compile>
     <Compile Include="Commands\AddAdminCommand.cs" />
     <Compile Include="Commands\AddOwnerCommand.cs" />
     <Compile Include="Commands\AdminCommand.cs" />
@@ -925,7 +936,7 @@
     <Compile Include="ContentProviders\GoogleDocsFormProvider.cs" />
     <Compile Include="ContentProviders\SlideshareContentProvider.cs" />
     <Compile Include="ContentProviders\GistContentProvider.cs" />
-    <Compile Include="Http\ProxyHandler.cs" />
+    <Compile Include="Middleware\ProxyHandler.cs" />
     <Compile Include="Hubs\Chat.cs" />
     <Compile Include="ContentProviders\CollegeHumorContentProvider.cs" />
     <Compile Include="ContentProviders\ImgurContentProvider.cs" />
@@ -1091,9 +1102,6 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Auth\Login.ashx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Chat.emoji.js" />

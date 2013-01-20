@@ -2,8 +2,6 @@
 <%@ Import namespace="System.Configuration" %>
 <%@ Import Namespace="SquishIt.Framework" %>
 <%
-    string appName = ConfigurationManager.AppSettings["auth.appName"];
-    string apiKey = ConfigurationManager.AppSettings["auth.apiKey"];
     string googleAnalytics = ConfigurationManager.AppSettings["googleAnalytics"];
 
     string sha = ConfigurationManager.AppSettings["releaseSha"];
@@ -34,41 +32,6 @@
             .Render("~/Content/JabbR_#.css")
   %>
 
-    <% if (!String.IsNullOrEmpty(apiKey)) { %>
-    <script type="text/javascript">
-        (function () {
-            if (typeof window.janrain !== 'object') window.janrain = {};
-            window.janrain.settings = {};
-
-            var url = document.location.href;
-            var nav = url.indexOf('#');
-            url = nav > 0 ? url.substring(0, nav) : url;
-            url = url.replace('default.aspx', '');
-            janrain.settings.tokenUrl = url + 'Auth/Login.ashx?hash=' + escape(document.location.hash);
-            janrain.settings.type = 'embed';
-
-            function isReady() { janrain.ready = true; };
-            if (document.addEventListener) {
-                document.addEventListener("DOMContentLoaded", isReady, false);
-            } else {
-                window.attachEvent('onload', isReady);
-            }
-
-            var e = document.createElement('script');
-            e.type = 'text/javascript';
-            e.id = 'janrainAuthWidget';
-
-            if (document.location.protocol === 'https:') {
-                e.src = 'https://rpxnow.com/js/lib/<%:appName %>/engage.js';
-            } else {
-                e.src = 'http://widget-cdn.rpxnow.com/js/lib/<%:appName %>/engage.js';
-            }
-
-            var s = document.getElementsByTagName('script')[0];
-            s.parentNode.insertBefore(e, s);
-        })();
-    </script>
-    <% } %>
     <% if (!String.IsNullOrEmpty(googleAnalytics)) { %>
     <script type="text/javascript">
         var _gaq = _gaq || [];

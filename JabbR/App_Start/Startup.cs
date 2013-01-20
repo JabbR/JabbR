@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Elmah;
+using JabbR.Auth;
 using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
 using JabbR.Models;
@@ -17,6 +18,7 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Json;
+using Microsoft.Owin.StaticFiles;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Ninject;
@@ -103,8 +105,13 @@ namespace JabbR
             Kernel = kernel;
 
             SetupSignalR(kernel, app);
-            SetupRoutes(kernel, app);
             SetupWebApi(kernel, app);
+
+            app.UseShowExceptions();
+
+            app.UseStaticFiles("/", ".");
+            app.Use(typeof(LoginHandler));
+            app.Use(typeof(ProxyHandler));
 
             // Perform the required migrations
             DoMigrations();
@@ -153,12 +160,7 @@ namespace JabbR
 
             app.UseHttpServer(config);
         }
-
-        private static void SetupRoutes(IKernel kernel, IAppBuilder app)
-        {
-            // RouteTable.Routes.MapHttpHandler<ProxyHandler>("proxy", "proxy/{*path}");
-        }
-
+        
         private static void ClearConnectedClients(IJabbrRepository repository)
         {
             try

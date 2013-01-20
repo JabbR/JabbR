@@ -1,35 +1,46 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Cache;
 using System.Threading.Tasks;
 using System.Web;
 using JabbR.ContentProviders;
+using Owin.Types;
 
-namespace JabbR.Auth
+namespace JabbR
 {
+    using AppFunc = Func<IDictionary<string, object>, Task>;
+
     /// <summary>
     /// Proxies images through the jabbr server to avoid mixed mode https.
     /// </summary>
-    public class ProxyHandler : System.Web.HttpTaskAsyncHandler
+    public class ProxyHandler
     {
-        public override Task ProcessRequestAsync(HttpContext context)
+        private readonly AppFunc _next;
+
+        public ProxyHandler(AppFunc next)
         {
-            string url = context.Request.QueryString["url"];
+            _next = next;
+        }
+
+        public Task Invoke(IDictionary<string, object> env)
+        {
+            var httpRequest = new OwinRequest(env);
+            var httpResponse = new OwinResponse(env);
+
+            var qs = HttpUtility.ParseQueryString(httpRequest.QueryString);
+
+            string url = qs["url"];
 
             Uri uri;
             if (String.IsNullOrEmpty(url) ||
                 !ImageContentProvider.IsValidImagePath(url) ||
                 !Uri.TryCreate(url, UriKind.Absolute, out uri))
             {
-                context.Response.StatusCode = 404;
+                httpResponse.StatusCode = 404;
                 return TaskAsyncHelper.Empty;
             }
-
-            // Since we only handle requests for imgur and other random images, just cached based on the url
-            // context.Response.Cache.SetCacheability(HttpCacheability.Public);
-            // context.Response.Cache.SetMaxAge(TimeSpan.MaxValue);
-            // context.Response.Cache.SetLastModified(DateTime.Now);
 
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.Default);
@@ -38,16 +49,15 @@ namespace JabbR.Auth
 
             return requestTask.Then(response =>
             {
-                context.Response.ContentType = response.ContentType;
-                context.Response.StatusCode = (int)response.StatusCode;
-                context.Response.StatusDescription = response.StatusDescription;
+                httpResponse.SetHeader("ContentType", response.ContentType);
+                httpResponse.StatusCode = (int)response.StatusCode;
 
                 using (response)
                 {
                     using (Stream stream = response.GetResponseStream())
                     {
                         // TODO: Make this async
-                        stream.CopyTo(context.Response.OutputStream);
+                        return stream.CopyToAsync(httpResponse.Body);
                     }
                 }
             });
