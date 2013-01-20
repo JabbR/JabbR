@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net;
 using System.Web;
-using JabbR.App_Start;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
@@ -19,7 +18,7 @@ namespace JabbR.Auth
 
         public void ProcessRequest(HttpContext context)
         {
-            var settings = Bootstrapper.Kernel.Get<IApplicationSettings>();
+            var settings = Startup.Kernel.Get<IApplicationSettings>();
             string apiKey = settings.AuthApiKey;
 
             if (String.IsNullOrEmpty(apiKey))
@@ -60,8 +59,8 @@ namespace JabbR.Auth
                 email = j.profile.email.ToString();
             }
 
-            var repository = Bootstrapper.Kernel.Get<IJabbrRepository>();
-            var chatService = Bootstrapper.Kernel.Get<IChatService>();
+            var repository = Startup.Kernel.Get<IJabbrRepository>();
+            var chatService = Startup.Kernel.Get<IChatService>();
 
             // Try to get the user by identity
             ChatUser user = repository.GetUserByIdentity(userIdentity);

@@ -6,31 +6,25 @@ using System.Linq;
 using System.Net.Http.Formatting;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Hosting;
 using System.Web.Http;
-using System.Web.Routing;
 using Elmah;
-using JabbR.Auth;
 using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
 using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Configuration;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Json;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Ninject;
-using RouteMagic;
+using Owin;
 
-[assembly: WebActivator.PostApplicationStartMethod(typeof(JabbR.App_Start.Bootstrapper), "PreAppStart")]
-
-namespace JabbR.App_Start
+namespace JabbR
 {
-    public static class Bootstrapper
+    public class Startup
     {
         // Background task info
         private static bool _sweeping;
@@ -41,14 +35,8 @@ namespace JabbR.App_Start
 
         internal static IKernel Kernel = null;
 
-        public static void PreAppStart()
+        public void Configuration(IAppBuilder app)
         {
-            if (HostingEnvironment.InClientBuildManager)
-            {
-                // If we're in the VS app domain then do nothing
-                return;
-            }
-
             var kernel = new StandardKernel();
 
             kernel.Bind<JabbrContext>()
@@ -114,6 +102,18 @@ namespace JabbR.App_Start
 
             Kernel = kernel;
 
+            SetupSignalR(kernel, app);
+            SetupRoutes(kernel, app);
+            SetupWebApi(kernel, app);
+
+            // Perform the required migrations
+            DoMigrations();
+
+            SetupErrorHandling();
+        }
+
+        private static void SetupSignalR(StandardKernel kernel, IAppBuilder app)
+        {
             var resolver = new NinjectDependencyResolver(kernel);
 
             var config = new HubConfiguration
@@ -122,48 +122,41 @@ namespace JabbR.App_Start
                 EnableDetailedErrors = true
             };
 
-            var configuration = resolver.Resolve<IConfigurationManager>();
-
-            RouteTable.Routes.MapHubs(config);
-
-            // Perform the required migrations
-            DoMigrations();
+            app.MapHubs(config);
 
             // Start the sweeper
             var repositoryFactory = new Func<IJabbrRepository>(() => kernel.Get<IJabbrRepository>());
             _timer = new Timer(_ => Sweep(repositoryFactory, resolver), null, _sweepInterval, _sweepInterval);
 
-            SetupErrorHandling();
-
+            // Clear all connections on app start
             ClearConnectedClients(repositoryFactory());
-            SetupRoutes(kernel);
-            SetupWebApi(kernel);
         }
 
-        private static void SetupWebApi(IKernel kernel)
+        private static void SetupWebApi(IKernel kernel, IAppBuilder app)
         {
-            GlobalConfiguration.Configuration.Formatters.Clear();
+            var config = new HttpConfiguration();
+            config.Formatters.Clear();
             JsonMediaTypeFormatter jsonFormatter = new JsonMediaTypeFormatter();
             jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            GlobalConfiguration.Configuration.Formatters.Add(jsonFormatter);
-            GlobalConfiguration.Configuration.DependencyResolver = new NinjectWebApiDependencyResolver(kernel);
-        }
+            config.Formatters.Add(jsonFormatter);
+            config.DependencyResolver = new NinjectWebApiDependencyResolver(kernel);
 
-        private static void SetupRoutes(IKernel kernel)
-        {
-            RouteTable.Routes.MapHttpRoute(
+            config.Routes.MapHttpRoute(
                 name: "MessagesV1",
-                routeTemplate: "api/v1/{controller}/{room}"
+                routeTemplate: "api/v1/{controller}/{room}");
+
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi",
+                routeTemplate: "api",
+                defaults: new { controller = "ApiFrontPage" }
             );
 
-            RouteTable.Routes.MapHttpHandler<ProxyHandler>("proxy", "proxy/{*path}");
+            app.UseHttpServer(config);
+        }
 
-            RouteTable.Routes.MapHttpRoute(
-                            name: "DefaultApi",
-                            routeTemplate: "api",
-                            defaults: new { controller = "ApiFrontPage" }
-                        );
-
+        private static void SetupRoutes(IKernel kernel, IAppBuilder app)
+        {
+            // RouteTable.Routes.MapHttpHandler<ProxyHandler>("proxy", "proxy/{*path}");
         }
 
         private static void ClearConnectedClients(IJabbrRepository repository)

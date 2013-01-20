@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.AspNet.SignalR;
 using Ninject;
 
-namespace JabbR.App_Start
+namespace JabbR
 {
     internal class NinjectDependencyResolver : DefaultDependencyResolver
     {
