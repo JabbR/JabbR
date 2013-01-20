@@ -100,7 +100,7 @@ namespace JabbR
 
         private static void SetupSignalR(StandardKernel kernel, IAppBuilder app)
         {
-            var resolver = new NinjectDependencyResolver(kernel);
+            var resolver = new NinjectSignalRDependencyResolver(kernel);
 
             var config = new HubConfiguration
             {

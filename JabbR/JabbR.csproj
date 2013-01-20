@@ -864,7 +864,7 @@
     <Compile Include="App_Start\Startup.ErrorHandling.cs" />
     <Compile Include="App_Start\Startup.Migrations.cs" />
     <Compile Include="App_Start\Startup.BackgroundWork.cs" />
-    <Compile Include="App_Start\NinjectDependencyResolver.cs" />
+    <Compile Include="Infrastructure\NinjectSignalRDependencyResolver.cs" />
     <Compile Include="Middleware\LoginHandler.cs" />
     <Compile Include="Commands\BanCommand.cs" />
     <Compile Include="Commands\CommandExceptions.cs" />

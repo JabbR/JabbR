@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.AspNet.SignalR;
 using Ninject;
 
-namespace JabbR
+namespace JabbR.Infrastructure
 {
-    internal class NinjectDependencyResolver : DefaultDependencyResolver
+    internal class NinjectSignalRDependencyResolver : DefaultDependencyResolver
     {
         private readonly IKernel _kernel;
-        public NinjectDependencyResolver(IKernel kernel)
+        public NinjectSignalRDependencyResolver(IKernel kernel)
         {
             _kernel = kernel;
         }
