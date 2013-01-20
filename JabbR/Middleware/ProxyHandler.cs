@@ -18,15 +18,23 @@ namespace JabbR
     public class ProxyHandler
     {
         private readonly AppFunc _next;
+        private readonly string _path;
 
-        public ProxyHandler(AppFunc next)
+        public ProxyHandler(AppFunc next, string path)
         {
             _next = next;
+            _path = path;
         }
 
         public Task Invoke(IDictionary<string, object> env)
         {
             var httpRequest = new OwinRequest(env);
+
+            if (!httpRequest.Path.StartsWith(EnsureTrailingSlash(_path)))
+            {
+                return _next(env);
+            }
+
             var httpResponse = new OwinResponse(env);
 
             var qs = new QueryStringCollection(httpRequest.QueryString);
@@ -61,6 +69,11 @@ namespace JabbR
                     }
                 }
             });
+        }
+
+        private static string EnsureTrailingSlash(string path)
+        {
+            return path.TrimEnd('/') + "/";
         }
     }
 }

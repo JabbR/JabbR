@@ -70,7 +70,10 @@ namespace JabbR
 
             try
             {
-                BindSystemWebDependencies(kernel, app);
+                if (app.IsRunningUnderSystemWeb())
+                {
+                    BindSystemWebDependencies(kernel);
+                }
             }
             catch (Exception ex)
             {
@@ -94,7 +97,7 @@ namespace JabbR
             app.UseStaticFiles("/", ".");
 
             app.Use(typeof(LoginHandler));
-            app.Use(typeof(ProxyHandler));
+            app.Use(typeof(ProxyHandler), "/proxy");
 
             // Perform the required migrations
             DoMigrations();
