@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using JabbR.Infrastructure;
+using JabbR.Models;
 
-namespace JabbR.Models
+namespace JabbR.Services
 {
     public class InMemoryRepository : IJabbrRepository
     {

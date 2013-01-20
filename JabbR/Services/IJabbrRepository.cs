@@ -1,7 +1,8 @@
 ﻿using System.Linq;
 using System;
+using JabbR.Models;
 
-namespace JabbR.Models
+namespace JabbR.Services
 {
     public interface IJabbrRepository : IDisposable
     {

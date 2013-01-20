@@ -1,12 +1,13 @@
-﻿using JabbR.Infrastructure;
-using JabbR.Models;
-using JabbR.WebApi.Model;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using JabbR.Infrastructure;
+using JabbR.Models;
+using JabbR.Services;
+using JabbR.WebApi.Model;
 
 namespace JabbR.WebApi
 {

@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using JabbR.Infrastructure;
 using JabbR.Models;
+using JabbR.Services;
 using Xunit;
 
 namespace JabbR.Test

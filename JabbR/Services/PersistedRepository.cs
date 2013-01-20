@@ -4,8 +4,9 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Objects;
 using System.Data.Objects.DataClasses;
 using System.Linq;
+using JabbR.Models;
 
-namespace JabbR.Models
+namespace JabbR.Services
 {
     public class PersistedRepository : IJabbrRepository
     {

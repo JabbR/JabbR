@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
-using JabbR.Models;
+using JabbR.Services;
 using Microsoft.Security.Application;
 
 namespace JabbR.Infrastructure

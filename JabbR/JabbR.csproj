@@ -1029,10 +1029,10 @@
     </Compile>
     <Compile Include="Services\AspNetCache.cs" />
     <Compile Include="Services\ICache.cs" />
-    <Compile Include="Models\IJabbrRepository.cs">
+    <Compile Include="Services\IJabbrRepository.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Models\InMemoryRepository.cs">
+    <Compile Include="Services\InMemoryRepository.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\JabbrContext.cs">
@@ -1042,7 +1042,7 @@
     <Compile Include="Models\Mapping\ChatMessageMap.cs" />
     <Compile Include="Models\Mapping\ChatRoomMap.cs" />
     <Compile Include="Models\Mapping\ChatUserMap.cs" />
-    <Compile Include="Models\PersistedRepository.cs">
+    <Compile Include="Services\PersistedRepository.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\RepositoryExtensions.cs">
