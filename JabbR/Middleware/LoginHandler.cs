@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Owin.Types;
 
-namespace JabbR.Auth
+namespace JabbR.Middleware
 {
     using AppFunc = Func<IDictionary<string, object>, Task>;
 

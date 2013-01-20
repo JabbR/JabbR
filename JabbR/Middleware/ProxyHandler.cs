@@ -8,7 +8,7 @@ using JabbR.ContentProviders;
 using JabbR.Infrastructure;
 using Owin.Types;
 
-namespace JabbR
+namespace JabbR.Middleware
 {
     using AppFunc = Func<IDictionary<string, object>, Task>;
 
@@ -26,13 +26,14 @@ namespace JabbR
             _path = path;
         }
 
-        public Task Invoke(IDictionary<string, object> env)
+        public async Task Invoke(IDictionary<string, object> env)
         {
             var httpRequest = new OwinRequest(env);
 
-            if (!httpRequest.Path.StartsWith(EnsureTrailingSlash(_path)))
+            if (!httpRequest.Path.StartsWith(_path))
             {
-                return _next(env);
+                await _next(env);
+                return;
             }
 
             var httpResponse = new OwinResponse(env);
@@ -47,33 +48,24 @@ namespace JabbR
                 !Uri.TryCreate(url, UriKind.Absolute, out uri))
             {
                 httpResponse.StatusCode = 404;
-                return TaskAsyncHelper.Empty;
+                await TaskAsyncHelper.Empty;
+                return;
             }
 
             var request = (HttpWebRequest)WebRequest.Create(url);
             request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.Default);
-            var requestTask = Task.Factory.FromAsync((cb, state) => request.BeginGetResponse(cb, state),
-                                                                 ar => (HttpWebResponse)request.EndGetResponse(ar), null);
+            var response = (HttpWebResponse)await request.GetResponseAsync();
 
-            return requestTask.Then(response =>
+            httpResponse.SetHeader("ContentType", response.ContentType);
+            httpResponse.StatusCode = (int)response.StatusCode;
+
+            using (response)
             {
-                httpResponse.SetHeader("ContentType", response.ContentType);
-                httpResponse.StatusCode = (int)response.StatusCode;
-
-                using (response)
+                using (Stream stream = response.GetResponseStream())
                 {
-                    using (Stream stream = response.GetResponseStream())
-                    {
-                        // TODO: Make this async
-                        return stream.CopyToAsync(httpResponse.Body);
-                    }
+                    await stream.CopyToAsync(httpResponse.Body);
                 }
-            });
-        }
-
-        private static string EnsureTrailingSlash(string path)
-        {
-            return path.TrimEnd('/') + "/";
+            }
         }
     }
 }

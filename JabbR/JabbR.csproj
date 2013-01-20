@@ -840,6 +840,7 @@
     <Compile Include="App_Start\Startup.BackgroundWork.cs" />
     <Compile Include="Infrastructure\AppBuilderExtensions.cs" />
     <Compile Include="Infrastructure\NinjectSignalRDependencyResolver.cs" />
+    <Compile Include="Middleware\DisableCompressionHandler.cs" />
     <Compile Include="Middleware\LoginHandler.cs" />
     <Compile Include="Commands\BanCommand.cs" />
     <Compile Include="Commands\CommandExceptions.cs" />

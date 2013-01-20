@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Net.Http.Formatting;
 using System.Web.Http;
-using JabbR.Auth;
 using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
+using JabbR.Middleware;
 using JabbR.Models;
 using JabbR.Services;
 using Microsoft.AspNet.Razor.Owin.IO;
@@ -101,10 +101,11 @@ namespace JabbR
             SetupSignalR(kernel, app);
             SetupWebApi(kernel, app);
 
+            app.Use(typeof(DisableCompressionHandler));
             app.UseStaticFiles("/", ".");
-            app.UseRazor(new PhysicalFileSystem(Environment.CurrentDirectory), new AssemblyReferenceLocator(), "/");
             app.Use(typeof(LoginHandler));
             app.Use(typeof(ProxyHandler), "/proxy");
+            app.UseRazor(new PhysicalFileSystem(Environment.CurrentDirectory), new AssemblyReferenceLocator(), "/");
 
             // Perform the required migrations
             DoMigrations();
