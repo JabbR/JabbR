@@ -1,14 +1,14 @@
-﻿<%@ Page Language="C#" %>
-<%@ Import namespace="System.Configuration" %>
-<%@ Import Namespace="SquishIt.Framework" %>
-<%
+﻿@using System.Configuration;
+@using SquishIt.Framework;
+
+@{
     string googleAnalytics = ConfigurationManager.AppSettings["googleAnalytics"];
 
     string sha = ConfigurationManager.AppSettings["releaseSha"];
     string branch = ConfigurationManager.AppSettings["releaseBranch"];
     string time = ConfigurationManager.AppSettings["releaseTime"];
     bool showReleaseDetails = !String.IsNullOrEmpty(sha) && !String.IsNullOrEmpty(branch) && !String.IsNullOrEmpty(time);
-%>
+}
 
 <!DOCTYPE html>
 <html>
@@ -20,7 +20,8 @@
     <link href="/Content/images/logo32.png" rel="icon" type="image/png" sizes="32x32">
     <link href="/Content/images/logo64.png" rel="icon" type="image/png" sizes="64x64">
     <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" sizes="16x16">
-    <%= Bundle.Css()
+    @{ 
+        WriteLiteral(Bundle.Css()
             .Add("~/Chat.css")
             .Add("~/Chat.nuget.css")
             .Add("~/Chat.bbcnews.css")
@@ -29,10 +30,10 @@
             .Add("~/Content/KeyTips.css")
             .Add("~/Content/bootstrap.min.css")
             .Add("~/Content/emoji20.css")
-            .Render("~/Content/JabbR_#.css")
-  %>
+            .Render("~/Content/JabbR_#.css"));
+   }
 
-    <% if (!String.IsNullOrEmpty(googleAnalytics)) { %>
+    @if (!String.IsNullOrEmpty(googleAnalytics)) {
     <script type="text/javascript">
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', '<%:googleAnalytics %>']);
@@ -45,7 +46,7 @@
         })();
 
     </script>
-    <% } %>
+    }
     <script id="new-message-template" type="text/x-jquery-tmpl">
         <li class="message ${highlight} clearfix" id="m-${id}" data-name="${name}" data-timestamp="${date}">
             <div class="left">
@@ -234,11 +235,11 @@
       </div>
       <input type="submit" id="send" value="Send" class="send" />
       <div id="message-instruction">
-        Type @ then press TAB to auto-complete nicknames
+        Type @@ then press TAB to auto-complete nicknames
       </div>
       </form>
     </div>
-    <% if (showReleaseDetails) { %>
+    @if (showReleaseDetails) {
     <div id="releaseArea">
         <p id="releaseTag">
             Deployed from <a target="_blank" href="https://github.com/davidfowl/JabbR/commit/<%:sha %>" title="View the commit."><%:sha.Substring(0, 10) %></a>
@@ -246,7 +247,7 @@
             at <%:time %>.
         </p>
     </div>
-    <% } %>
+    }
     <audio src="Content/sounds/notification.wav" id="noftificationSound" hidden="hidden" aria-hidden="true">
     </audio>
     <section aria-hidden="true" aria-haspopup="true">
@@ -329,17 +330,21 @@
       </div>
     </section>
   </section> 
-  <%= Bundle.JavaScript()
+     @{
+         WriteLiteral(Bundle.JavaScript()
             .Add("~/Scripts/jquery-1.8.0.min.js")
             .Add("~/Scripts/json2.min.js")
             .Add("~/Scripts/bootstrap.js")
             .Add("~/Scripts/jquery.KeyTips.js")
             .Add("~/Scripts/jquery-ui-1.8.22.min.js")
             .Add("~/Scripts/jquery.signalR.min.js")
-            .Render("~/Scripts/JabbR1_#.js")
-  %>
-  <script type="text/javascript" src='<%= ResolveClientUrl("~/signalr/hubs") %>'></script>
-  <%= Bundle.JavaScript()
+            .Render("~/Scripts/JabbR1_#.js"));
+    }
+
+  <script type="text/javascript" src="/signalr/hubs"></script>
+     @{
+         
+        WriteLiteral(Bundle.JavaScript()
             .Add("~/Scripts/jQuery.tmpl.min.js")
             .Add("~/Scripts/jquery.cookie.js")
             .Add("~/Scripts/jquery.autotabcomplete.js")
@@ -359,7 +364,7 @@
             .Add("~/Chat.pinnedWindows.js")
             .Add("~/Chat.githubissues.js")
             .Add("~/Chat.js")
-            .Render("~/Scripts/JabbR2_#.js")
-  %>
+            .Render("~/Scripts/JabbR2_#.js"));
+    }
 </body>
 </html>

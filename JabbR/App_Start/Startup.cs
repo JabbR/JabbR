@@ -110,6 +110,7 @@ namespace JabbR
             app.UseShowExceptions();
 
             app.UseStaticFiles("/", ".");
+            app.UseRazor();
             app.Use(typeof(LoginHandler));
             app.Use(typeof(ProxyHandler));
 

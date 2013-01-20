@@ -87,6 +87,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\YUICompressor.NET.2.1.1.0\lib\NET20\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Razor.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.Owin.0.19-alpha\lib\net45\Microsoft.AspNet.Razor.Owin.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core">
       <HintPath>..\lib\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -127,6 +130,15 @@
     <Reference Include="Owin.Types">
       <HintPath>..\packages\Owin.Types.0.7-alpha\lib\net40\Owin.Types.dll</HintPath>
     </Reference>
+    <Reference Include="Roslyn.Compilers">
+      <HintPath>..\packages\Roslyn.Compilers.Common.1.2.20906.2\lib\net45\Roslyn.Compilers.dll</HintPath>
+    </Reference>
+    <Reference Include="Roslyn.Compilers.CSharp">
+      <HintPath>..\packages\Roslyn.Compilers.CSharp.1.2.20906.2\lib\net45\Roslyn.Compilers.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Roslyn.Compilers.VisualBasic">
+      <HintPath>..\packages\Roslyn.Compilers.VisualBasic.1.2.20906.2\lib\net45\Roslyn.Compilers.VisualBasic.dll</HintPath>
+    </Reference>
     <Reference Include="SquishIt.Framework, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\SquishIt.0.9.1\lib\SquishIt.Framework.dll</HintPath>
@@ -153,6 +165,10 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.20715.0\lib\net40\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -785,7 +801,7 @@
     <Content Include="Content\images\big-logo.png" />
     <Content Include="Content\images\logo32.png" />
     <Content Include="Content\images\small-logo.png" />
-    <Content Include="default.aspx" />
+    <None Include="default.cshtml" />
     <Content Include="Content\sounds\notification.wav" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
