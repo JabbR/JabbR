@@ -49,9 +49,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AjaxMin, Version=4.73.4685.17665, Culture=neutral, PublicKeyToken=21ef50ce11b5d80f, processorArchitecture=MSIL">
+    <Reference Include="AjaxMin, Version=4.80.4763.16593, Culture=neutral, PublicKeyToken=21ef50ce11b5d80f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\AjaxMin.4.73.4685.17669\lib\net40\AjaxMin.dll</HintPath>
+      <HintPath>..\packages\AjaxMin.4.80.4763.16598\lib\net40\AjaxMin.dll</HintPath>
     </Reference>
     <Reference Include="AntiXssLibrary, Version=4.2.0.0, Culture=neutral, PublicKeyToken=d127efab8a9c114f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -59,7 +59,7 @@
     </Reference>
     <Reference Include="EcmaScript.NET, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\YUICompressor.NET.2.1.1.0\lib\NET20\EcmaScript.NET.dll</HintPath>
+      <HintPath>..\packages\EcmaScript.Net.1.0.1.0\lib\net20\EcmaScript.NET.dll</HintPath>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -85,7 +85,7 @@
     </Reference>
     <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\YUICompressor.NET.2.1.1.0\lib\NET20\Iesi.Collections.dll</HintPath>
+      <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Razor.Owin">
       <HintPath>..\packages\Microsoft.AspNet.Razor.Owin.0.19-alpha\lib\net45\Microsoft.AspNet.Razor.Owin.dll</HintPath>
@@ -168,9 +168,9 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
-    <Reference Include="Yahoo.Yui.Compressor, Version=2.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Yahoo.Yui.Compressor, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\YUICompressor.NET.2.1.1.0\lib\NET20\Yahoo.Yui.Compressor.dll</HintPath>
+      <HintPath>..\packages\YUICompressor.NET.2.2.0.0\lib\NET20\Yahoo.Yui.Compressor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -190,8 +190,6 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\emoji20.css" />
-    <Content Include="Content\images\ajax-loader.gif" />
-    <Content Include="Content\images\ajax-loader.png" />
     <Content Include="Content\images\close-icon-hover.png" />
     <Content Include="Content\images\close-icon.png" />
     <Content Include="Content\images\contentproviders\bbcnews-header.png" />
@@ -700,10 +698,6 @@
     <Content Include="Content\images\flags.png" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
-    <Content Include="Content\images\icons-18-black.png" />
-    <Content Include="Content\images\icons-18-white.png" />
-    <Content Include="Content\images\icons-36-black.png" />
-    <Content Include="Content\images\icons-36-white.png" />
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\lockwhite.png" />
     <Content Include="Content\images\lock.png" />
@@ -736,6 +730,7 @@
     <Content Include="Chat.githubissues.js" />
     <Content Include="Chat.githubissues.css" />
     <Content Include="Chat.nuget.css" />
+    <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -758,12 +753,16 @@
     <Content Include="Content\themes\base\jquery.ui.core.css" />
     <Content Include="Content\themes\base\jquery.ui.datepicker.css" />
     <Content Include="Content\themes\base\jquery.ui.dialog.css" />
+    <Content Include="Content\themes\base\jquery.ui.menu.css" />
     <Content Include="Content\themes\base\jquery.ui.progressbar.css" />
     <Content Include="Content\themes\base\jquery.ui.resizable.css" />
     <Content Include="Content\themes\base\jquery.ui.selectable.css" />
     <Content Include="Content\themes\base\jquery.ui.slider.css" />
+    <Content Include="Content\themes\base\jquery.ui.spinner.css" />
     <Content Include="Content\themes\base\jquery.ui.tabs.css" />
     <Content Include="Content\themes\base\jquery.ui.theme.css" />
+    <Content Include="Content\themes\base\jquery.ui.tooltip.css" />
+    <Content Include="Content\themes\base\minified\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
@@ -784,12 +783,15 @@
     <Content Include="Content\themes\base\minified\jquery.ui.core.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.datepicker.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.dialog.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.menu.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.progressbar.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.resizable.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.selectable.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.spinner.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
+    <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Content\images\big-logo.png" />
     <Content Include="Content\images\logo32.png" />
@@ -802,17 +804,12 @@
     <EmbeddedResource Include="Migrations\201208211555032_BanUser.resx">
       <DependentUpon>201208211555032_BanUser.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="Scripts\jquery-1.8.0.intellisense.js">
-      <DependentUpon>jquery-1.8.0.js</DependentUpon>
-    </None>
-    <Content Include="Scripts\jquery-1.8.0.js" />
-    <Content Include="Scripts\jquery-1.8.0.min.js">
-      <DependentUpon>jquery-1.8.0.js</DependentUpon>
-    </Content>
-    <Content Include="Scripts\jquery-ui-1.8.22.js" />
-    <Content Include="Scripts\jquery-ui-1.8.22.min.js">
-      <DependentUpon>jquery-ui-1.8.22.js</DependentUpon>
-    </Content>
+    <None Include="Scripts\jquery-1.9.0.intellisense.js" />
+    <Content Include="Scripts\jquery-1.9.0.js" />
+    <Content Include="Scripts\jquery-1.9.0.min.js" />
+    <Content Include="Scripts\jquery-migrate-1.0.0.min.js" />
+    <Content Include="Scripts\jquery-ui-1.10.0.js" />
+    <Content Include="Scripts\jquery-ui-1.10.0.min.js" />
     <Content Include="Scripts\jquery.history.js" />
     <Content Include="Scripts\jquery.autotabcomplete.js" />
     <Content Include="Scripts\jquery.captureDocumentWrite.js" />
@@ -824,10 +821,6 @@
       <DependentUpon>jquery.KeyTips.js</DependentUpon>
     </Content>
     <Content Include="Scripts\jquery.livesearch.js" />
-    <Content Include="Scripts\jquery.mobile-1.1.1.js" />
-    <Content Include="Scripts\jquery.mobile-1.1.1.min.js">
-      <DependentUpon>jquery.mobile-1.1.1.js</DependentUpon>
-    </Content>
     <Content Include="Scripts\jquery.signalR.min.js" />
     <Content Include="Scripts\jquery.sortElements.js" />
     <Content Include="Scripts\jquery.timeago.0.10.js" />
@@ -852,6 +845,7 @@
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Scripts\jquery-1.9.0.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\Startup.ErrorHandling.cs" />

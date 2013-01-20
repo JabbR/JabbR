@@ -82,13 +82,14 @@ namespace JabbR
             kernel.Bind<IJsonSerializer>()
                   .ToConstant(serializer);
 
+            app.UseShowExceptions();
+
             SetupSignalR(kernel, app);
             SetupWebApi(kernel, app);
 
-            app.UseShowExceptions();
-
             app.UseStaticFiles("/", ".");
             app.UseRazor();
+
             app.Use(typeof(LoginHandler));
             app.Use(typeof(ProxyHandler));
 

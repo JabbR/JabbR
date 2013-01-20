@@ -325,22 +325,23 @@
           <a class="close" data-dismiss="modal">&times;</a>
           <h3>JabbR Login</h3>
         </div>
-        <div class="modal-body">          
+        <div class="modal-body">
         </div>
       </div>
     </section>
   </section> 
+
      @{
          WriteLiteral(Bundle.JavaScript()
-            .Add("~/Scripts/jquery-1.8.0.min.js")
+            .Add("~/Scripts/jquery-1.9.0.min.js")
+            .Add("~/Scripts/jquery-migrate-1.0.0.min.js")
             .Add("~/Scripts/json2.min.js")
             .Add("~/Scripts/bootstrap.js")
             .Add("~/Scripts/jquery.KeyTips.js")
-            .Add("~/Scripts/jquery-ui-1.8.22.min.js")
+            .Add("~/Scripts/jquery-ui-1.10.0.min.js")
             .Add("~/Scripts/jquery.signalR.min.js")
             .Render("~/Scripts/JabbR1_#.js"));
     }
-
   <script type="text/javascript" src="/signalr/hubs"></script>
      @{
          
