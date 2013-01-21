@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
+using JabbR.Services;
 using Microsoft.AspNet.Razor.Owin.Compilation;
 using SquishIt.Framework;
 
@@ -16,7 +17,8 @@ namespace JabbR
             return new[] {
                 typeof(ConfigurationManager).Assembly.Location,
                 typeof(Bundle).Assembly.Location,
-                typeof(NameValueCollection).Assembly.Location
+                typeof(NameValueCollection).Assembly.Location,
+                typeof(ApplicationSettings).Assembly.Location,
             };
         }
     }

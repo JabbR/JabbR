@@ -25,15 +25,20 @@ namespace JabbR.Services
         {
             get
             {
-                string modeValue = ConfigurationManager.AppSettings["authenticationMode"];
-                AuthenticationMode mode;
-                if (Enum.TryParse<AuthenticationMode>(modeValue, out mode))
-                {
-                    return mode;
-                }
-
-                return AuthenticationMode.UsernamePassword;
+                return GetAuthenticationMode();
             }
+        }
+
+        public static AuthenticationMode GetAuthenticationMode()
+        {
+            string modeValue = ConfigurationManager.AppSettings["authenticationMode"];
+            AuthenticationMode mode;
+            if (Enum.TryParse<AuthenticationMode>(modeValue, out mode))
+            {
+                return mode;
+            }
+
+            return AuthenticationMode.UsernamePassword;
         }
     }
 }

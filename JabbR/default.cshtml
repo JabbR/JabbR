@@ -1,5 +1,6 @@
 ﻿@using System.Configuration;
 @using SquishIt.Framework;
+@using JabbR.Services;
 
 @{
     string googleAnalytics = ConfigurationManager.AppSettings["googleAnalytics"];
@@ -8,6 +9,8 @@
     string branch = ConfigurationManager.AppSettings["releaseBranch"];
     string time = ConfigurationManager.AppSettings["releaseTime"];
     bool showReleaseDetails = !String.IsNullOrEmpty(sha) && !String.IsNullOrEmpty(branch) && !String.IsNullOrEmpty(time);
+
+    var authType = ApplicationSettings.GetAuthenticationMode();
 }
 
 <!DOCTYPE html>
@@ -326,11 +329,22 @@
           <h3>JabbR Login</h3>
         </div>
         <div class="modal-body">
+            @if (authType == AuthenticationMode.UsernamePassword)
+            {
             <form class="form-inline" action="~/auth/login" method="post">
               <input type="text" name="user" class="input-small" placeholder="User">
               <input type="password" name="password" class="input-small" placeholder="Password">
               <button type="submit" class="btn">Sign in</button>
             </form>
+            }
+            else if(authType == AuthenticationMode.Social) 
+            {
+                // TODO: Put social login ui here
+            }
+            else if(authType == AuthenticationMode.Windows) 
+            {
+                // TODO: Put windows login stuff here
+            }
         </div>
       </div>
     </section>
