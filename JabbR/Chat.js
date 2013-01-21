@@ -425,26 +425,6 @@
         updateCookie();
     };
 
-    chat.client.logOut = function (rooms) {
-        ui.setActiveRoom('Lobby');
-
-        // Close all rooms
-        $.each(rooms, function () {
-            ui.removeRoom(this);
-        });
-
-        ui.addMessage("You've been logged out.", 'notification', this.state.activeRoom);
-
-        chat.state.activeRoom = undefined;
-        chat.state.name = undefined;
-        chat.state.id = undefined;
-
-        updateCookie();
-
-        // Reload the page
-        document.location = document.location.pathname;
-    };
-
     chat.client.forceUpdate = function () {
         ui.showUpdateUI();
     };
@@ -800,22 +780,29 @@
         }
 
         try {
-            chat.server.send(clientMessage)
-                .done(function (requiresUpdate) {
-                    if (requiresUpdate === true) {
-                        ui.showUpdateUI();
-                    }
-
-                    if (messageCompleteTimeout) {
-                        clearTimeout(messageCompleteTimeout);
-                        delete pendingMessages[id];
-                    }
-
-                    ui.confirmMessage(id);
-                })
-                .fail(function (e) {
-                    ui.addMessage(e, 'error');
+            if (msg === '/logout') {
+                $.post('/auth/logout', {}).done(function () {
+                    document.location = document.location.pathname;
                 });
+            }
+            else {
+                chat.server.send(clientMessage)
+                    .done(function (requiresUpdate) {
+                        if (requiresUpdate === true) {
+                            ui.showUpdateUI();
+                        }
+
+                        if (messageCompleteTimeout) {
+                            clearTimeout(messageCompleteTimeout);
+                            delete pendingMessages[id];
+                        }
+
+                        ui.confirmMessage(id);
+                    })
+                    .fail(function (e) {
+                        ui.addMessage(e, 'error');
+                    });
+            }
         }
         catch (e) {
             connection.hub.log('Failed to send via websockets');
@@ -957,6 +944,8 @@
                     if (e.status === 403) {
                         ui.showLogin();
                     }
+
+                    $.cookie('jabbr.state', null);
                 });
 
             connection.hub.reconnected(function () {

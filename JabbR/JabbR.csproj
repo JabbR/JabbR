@@ -119,6 +119,9 @@
     <Reference Include="Nancy">
       <HintPath>..\packages\Nancy.0.15.3\lib\net40\Nancy.dll</HintPath>
     </Reference>
+    <Reference Include="Nancy.Bootstrappers.Ninject">
+      <HintPath>..\packages\Nancy.Bootstrappers.Ninject.0.15.3\lib\net40\Nancy.Bootstrappers.Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="Nancy.Owin">
       <HintPath>..\lib\Nancy.Owin.dll</HintPath>
     </Reference>
@@ -128,6 +131,9 @@
     </Reference>
     <Reference Include="Ninject">
       <HintPath>..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
+    </Reference>
+    <Reference Include="Ninject.Extensions.ChildKernel">
+      <HintPath>..\packages\Ninject.Extensions.ChildKernel.3.0.0.5\lib\net45-full\Ninject.Extensions.ChildKernel.dll</HintPath>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -842,6 +848,8 @@
     <Compile Include="App_Start\Startup.Migrations.cs" />
     <Compile Include="App_Start\Startup.BackgroundWork.cs" />
     <Compile Include="Infrastructure\AppBuilderExtensions.cs" />
+    <Compile Include="Infrastructure\Constants.cs" />
+    <Compile Include="Infrastructure\JabbRNinjectNancyBootstrapper.cs" />
     <Compile Include="Infrastructure\NinjectSignalRDependencyResolver.cs" />
     <Compile Include="Commands\BanCommand.cs" />
     <Compile Include="Commands\CommandExceptions.cs" />
@@ -858,9 +866,10 @@
     <Compile Include="Migrations\201208211555032_BanUser.Designer.cs">
       <DependentUpon>201208211555032_BanUser.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\JabbRIdentity.cs" />
     <Compile Include="Nancy\AuthenticationModule.cs" />
+    <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Services\DefaultCache.cs" />
+    <Compile Include="Services\IAuthenticationService.cs" />
     <Compile Include="Services\IMembershipService.cs" />
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="ViewModels\LobbyRoomViewModel.cs" />

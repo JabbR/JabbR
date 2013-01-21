@@ -967,7 +967,7 @@ namespace JabbR
 
         private string GetUserId()
         {
-            return ((JabbRIdentity)Context.User.Identity).UserId;
+            return Context.User.Identity.Name;
         }
 
         private ClientState GetClientState()

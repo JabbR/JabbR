@@ -80,7 +80,7 @@ namespace JabbR.Services
             return user;
         }
 
-        public void AuthenticateUser(string userName, string password)
+        public ChatUser AuthenticateUser(string userName, string password)
         {
             ChatUser user = _repository.VerifyUser(userName);
 
@@ -95,6 +95,8 @@ namespace JabbR.Services
             }
 
             EnsureSaltedPassword(user, password);
+
+            return user;
         }
 
         public void ChangeUserName(ChatUser user, string newUserName)

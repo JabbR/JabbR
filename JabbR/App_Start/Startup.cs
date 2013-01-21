@@ -12,6 +12,7 @@ using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Json;
 using Microsoft.Owin.Mapping;
 using Microsoft.Owin.StaticFiles;
+using Nancy.Bootstrappers.Ninject;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Ninject;
@@ -23,7 +24,7 @@ namespace JabbR
     {
         public void Configuration(IAppBuilder app)
         {
-            var kernel = new StandardKernel();
+            var kernel = new StandardKernel(new[] { new FactoryModule() });
 
             kernel.Bind<JabbrContext>()
                 .To<JabbrContext>();
@@ -33,6 +34,9 @@ namespace JabbR
 
             kernel.Bind<IChatService>()
                   .To<ChatService>();
+
+            kernel.Bind<IAuthenticationService>()
+                  .To<AuthenticationService>();
 
             // We're doing this manually since we want the chat repository to be shared
             // between the chat service and the chat hub itself
@@ -101,8 +105,12 @@ namespace JabbR
 
             app.UseShowExceptions();
 
+            // This needs to run before everything
+            app.Use(typeof(AuthorizationHandler), kernel);
+
             SetupSignalR(kernel, app);
             SetupWebApi(kernel, app);
+            SetupNancy(kernel, app);
             SetupMiddleware(app);
 
             // Perform the required migrations
@@ -111,12 +119,16 @@ namespace JabbR
             SetupErrorHandling();
         }
 
+        private static void SetupNancy(IKernel kernel, IAppBuilder app)
+        {
+            var bootstrapper = new JabbRNinjectNancyBootstrapper(kernel);
+            app.MapPath("/auth", subApp => subApp.UseNancy(bootstrapper));
+        }
+
         private static void SetupMiddleware(IAppBuilder app)
         {
             app.UseStaticFiles("/", ".");
-            app.Use(typeof(AuthorizationHandler));
             app.Use(typeof(ImageProxyHandler), "/proxy");
-            app.MapPath("/auth", subApp => subApp.UseNancy());
             app.UseRazor(new PhysicalFileSystem(Environment.CurrentDirectory), new AssemblyReferenceLocator(), "/");
         }
 
