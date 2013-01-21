@@ -1,5 +1,4 @@
-﻿using System;
-using JabbR.Models;
+﻿using JabbR.Models;
 using Microsoft.AspNet.SignalR.Infrastructure;
 
 namespace JabbR.Services
@@ -19,11 +18,19 @@ namespace JabbR.Services
 
         public bool TryGetUserId(string userToken, out string userId)
         {
-            userId = _protectedData.Unprotect(userToken, "userId");
-
-            if (_repository.GetUserById(userId) != null)
+            try
             {
-                return true;
+                userId = _protectedData.Unprotect(userToken, "userId");
+
+                if (_repository.GetUserById(userId) != null)
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                userId = null;
+                return false;
             }
 
             return false;
@@ -31,8 +38,15 @@ namespace JabbR.Services
 
         public bool IsUserAuthenticated(string userToken)
         {
-            string userId = _protectedData.Unprotect(userToken, "userId");
-            return _repository.GetUserById(userId) != null;
+            try
+            {
+                string userId = _protectedData.Unprotect(userToken, "userId");
+                return _repository.GetUserById(userId) != null;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public string GetAuthenticationToken(ChatUser user)

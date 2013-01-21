@@ -9,6 +9,7 @@ using JabbR.Services;
 using Microsoft.AspNet.Razor.Owin.IO;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
+using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Json;
 using Microsoft.Owin.Mapping;
 using Microsoft.Owin.StaticFiles;
@@ -82,6 +83,9 @@ namespace JabbR
                 }
                 else
                 {
+                    kernel.Bind<IProtectedData>()
+                           .To<DefaultProtectedData>();
+
                     kernel.Bind<ICache>()
                           .To<DefaultCache>()
                           .InSingletonScope();
