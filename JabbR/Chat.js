@@ -146,7 +146,6 @@
     // Save some state in a cookie
     function updateCookie() {
         var state = {
-            userId: chat.state.id,
             activeRoom: chat.state.activeRoom,
             preferences: ui.getState()
         },

@@ -111,7 +111,8 @@ namespace JabbR
         private static void SetupMiddleware(IAppBuilder app)
         {
             app.UseStaticFiles("/", ".");
-            app.Use(typeof(LoginHandler));
+            app.Use(typeof(AuthorizationHandler));
+            app.Use(typeof(AuthenticationHandler));
             app.Use(typeof(ImageProxyHandler), "/proxy");
             app.UseRazor(new PhysicalFileSystem(Environment.CurrentDirectory), new AssemblyReferenceLocator(), "/");
         }

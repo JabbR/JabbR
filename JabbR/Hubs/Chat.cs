@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using JabbR.Commands;
@@ -12,7 +11,6 @@ using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
 using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Hubs;
 using Newtonsoft.Json;
 
 namespace JabbR
@@ -63,11 +61,16 @@ namespace JabbR
         {
             SetVersion();
 
+            if (!Context.User.Identity.IsAuthenticated)
+            {
+                return false;
+            }
+
             // Get the client state
-            ClientState clientState = GetClientState();
+            var userId = GetUserId();
 
             // Try to get the user from the client state
-            ChatUser user = _repository.GetUserById(clientState.UserId);
+            ChatUser user = _repository.GetUserById(userId);
 
             // Threre's no user being tracked
             if (user == null)
@@ -78,6 +81,8 @@ namespace JabbR
             // Update some user values
             _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
             _repository.CommitChanges();
+
+            ClientState clientState = GetClientState();
 
             OnUserInitialize(clientState, user);
 
@@ -974,8 +979,7 @@ namespace JabbR
 
         private string GetUserId()
         {
-            ClientState state = GetClientState();
-            return state.UserId;
+            return ((JabbRIdentity)Context.User.Identity).UserId;
         }
 
         private ClientState GetClientState()
@@ -993,9 +997,6 @@ namespace JabbR
             {
                 clientState = JsonConvert.DeserializeObject<ClientState>(jabbrState);
             }
-
-            // Read the id from the caller if there's no cookie
-            clientState.UserId = clientState.UserId ?? Clients.Caller.id;
 
             return clientState;
         }

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Security.Principal;
 using JabbR.ContentProviders.Core;
 using JabbR.Models;
@@ -7,7 +6,6 @@ using JabbR.Services;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Moq;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace JabbR.Test
@@ -53,32 +51,6 @@ namespace JabbR.Test
                 bool result = chat.Join();
 
                 Assert.False(result);
-            }
-
-            [Fact]
-            public void CanDeserializeClientState()
-            {
-                var clientState = new StateChangeTracker();
-                string clientId = "1";
-                var user = new ChatUser
-                {
-                    Id = "1234",
-                    Name = "John",
-                    Identity = "foo"
-                };
-
-                var cookies = new Dictionary<string, Cookie>();
-                var cookie = new Cookie("jabbr.state", JsonConvert.SerializeObject(new ClientState { UserId = user.Id }));
-                cookies[cookie.Name] = cookie;
-
-
-                TestableChat chat = GetTestableChat(clientId, clientState, user, cookies);
-
-                bool result = chat.Join();
-
-                Assert.Equal("1234", clientState["id"]);
-                Assert.Equal("John", clientState["name"]);
-                Assert.True(result);
             }
         }
 
