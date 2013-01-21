@@ -28,7 +28,7 @@ namespace JabbR.Middleware
 
         public async Task Invoke(IDictionary<string, object> env)
         {
-            var httpRequest = new OwinRequest(env);
+            var httpRequest = new Gate.Request(env);
 
             if (!httpRequest.Path.StartsWith(_path))
             {
@@ -38,12 +38,10 @@ namespace JabbR.Middleware
 
             var httpResponse = new OwinResponse(env);
 
-            var qs = new QueryStringCollection(httpRequest.QueryString);
-
-            string url = qs["url"];
-
+            string url;
             Uri uri;
-            if (String.IsNullOrEmpty(url) ||
+            if (!httpRequest.Query.TryGetValue("url", out url) ||
+                String.IsNullOrEmpty(url) ||
                 !ImageContentProvider.IsValidImagePath(url) ||
                 !Uri.TryCreate(url, UriKind.Absolute, out uri))
             {
