@@ -43,15 +43,13 @@ namespace JabbR
             kernel.Bind<Chat>()
                   .ToMethod(context =>
                   {
-                      var settings = context.Kernel.Get<IApplicationSettings>();
                       var resourceProcessor = context.Kernel.Get<IResourceProcessor>();
                       var repository = context.Kernel.Get<IJabbrRepository>();
                       var cache = context.Kernel.Get<ICache>();
 
                       var service = new ChatService(cache, repository);
 
-                      return new Chat(settings,
-                                      resourceProcessor,
+                      return new Chat(resourceProcessor,
                                       service,
                                       repository,
                                       cache);

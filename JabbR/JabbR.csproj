@@ -867,6 +867,7 @@
       <DependentUpon>201208211555032_BanUser.cs</DependentUpon>
     </Compile>
     <Compile Include="Nancy\AuthenticationModule.cs" />
+    <Compile Include="Services\AuthenticationMode.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Services\DefaultCache.cs" />
     <Compile Include="Services\IAuthenticationService.cs" />

@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using System;
+using System.Configuration;
 
 namespace JabbR.Services
 {
@@ -17,6 +18,21 @@ namespace JabbR.Services
             get
             {
                 return ConfigurationManager.AppSettings["defaultAdminPassword"];
+            }
+        }
+
+        public AuthenticationMode AuthenticationMode
+        {
+            get
+            {
+                string modeValue = ConfigurationManager.AppSettings["authenticationMode"];
+                AuthenticationMode mode;
+                if (Enum.TryParse<AuthenticationMode>(modeValue, out mode))
+                {
+                    return mode;
+                }
+
+                return AuthenticationMode.UsernamePassword;
             }
         }
     }

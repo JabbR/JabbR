@@ -22,14 +22,12 @@ namespace JabbR
         private readonly IChatService _service;
         private readonly ICache _cache;
         private readonly IResourceProcessor _resourceProcessor;
-        private readonly IApplicationSettings _settings;
 
         private static readonly Version _version = typeof(Chat).Assembly.GetName().Version;
         private static readonly string _versionString = _version.ToString();
 
-        public Chat(IApplicationSettings settings, IResourceProcessor resourceProcessor, IChatService service, IJabbrRepository repository, ICache cache)
+        public Chat(IResourceProcessor resourceProcessor, IChatService service, IJabbrRepository repository, ICache cache)
         {
-            _settings = settings;
             _resourceProcessor = resourceProcessor;
             _service = service;
             _repository = repository;
