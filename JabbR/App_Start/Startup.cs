@@ -83,9 +83,6 @@ namespace JabbR
                 }
                 else
                 {
-                    kernel.Bind<IProtectedData>()
-                           .To<DefaultProtectedData>();
-
                     kernel.Bind<ICache>()
                           .To<DefaultCache>()
                           .InSingletonScope();

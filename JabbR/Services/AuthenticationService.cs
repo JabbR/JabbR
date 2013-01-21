@@ -1,5 +1,4 @@
 ﻿using JabbR.Models;
-using Microsoft.AspNet.SignalR.Infrastructure;
 
 namespace JabbR.Services
 {
@@ -7,20 +6,16 @@ namespace JabbR.Services
     {
         private readonly IJabbrRepository _repository;
 
-        // What a hack: This comes from SignalR (Won't work on .NET 4.0)
-        private readonly IProtectedData _protectedData;
-
-        public AuthenticationService(IJabbrRepository repository, IProtectedData protectedData)
+        public AuthenticationService(IJabbrRepository repository)
         {
             _repository = repository;
-            _protectedData = protectedData;
         }
 
         public bool TryGetUserId(string userToken, out string userId)
         {
             try
             {
-                userId = _protectedData.Unprotect(userToken, "userId");
+                userId = userToken;
 
                 if (_repository.GetUserById(userId) != null)
                 {
@@ -40,7 +35,7 @@ namespace JabbR.Services
         {
             try
             {
-                string userId = _protectedData.Unprotect(userToken, "userId");
+                string userId = userToken;
                 return _repository.GetUserById(userId) != null;
             }
             catch
@@ -51,7 +46,8 @@ namespace JabbR.Services
 
         public string GetAuthenticationToken(ChatUser user)
         {
-            return _protectedData.Protect(user.Id, "userId");
+            // TODO: encrypt and sign
+            return user.Id;
         }
 
         public void Dispose()
