@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using JabbR.Infrastructure;
-using JabbR.Models;
 using JabbR.Services;
-using System.Security.Principal;
 using Ninject;
 
 namespace JabbR.Middleware

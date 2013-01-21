@@ -63,7 +63,7 @@ namespace JabbR
             SetVersion();
 
             // Get the client state
-            var userId = GetUserId();
+            var userId = Context.User.Identity.Name;
 
             // Try to get the user from the client state
             ChatUser user = _repository.GetUserById(userId);
@@ -131,9 +131,9 @@ namespace JabbR
                 return outOfSync;
             }
 
-            string id = GetUserId();
+            var userId = Context.User.Identity.Name;
 
-            ChatUser user = _repository.VerifyUserId(id);
+            ChatUser user = _repository.VerifyUserId(userId);
             ChatRoom room = _repository.VerifyUserRoom(_cache, user, message.Room);
 
             // REVIEW: Is it better to use _repository.VerifyRoom(message.Room, mustBeOpen: false)
@@ -183,23 +183,18 @@ namespace JabbR
 
         public UserViewModel GetUserInfo()
         {
-            string id = GetUserId();
+            var userId = Context.User.Identity.Name;
 
-            ChatUser user = _repository.VerifyUserId(id);
+            ChatUser user = _repository.VerifyUserId(userId);
 
             return new UserViewModel(user);
         }
 
         public override Task OnReconnected()
         {
-            string id = GetUserId();
+            var userId = Context.User.Identity.Name;
 
-            if (String.IsNullOrEmpty(id))
-            {
-                return null;
-            }
-
-            ChatUser user = _repository.VerifyUserId(id);
+            ChatUser user = _repository.VerifyUserId(userId);
 
             // Make sure this client is being tracked
             _service.AddClient(user, Context.ConnectionId, UserAgent);
@@ -254,8 +249,8 @@ namespace JabbR
 
         public IEnumerable<LobbyRoomViewModel> GetRooms()
         {
-            string id = GetUserId();
-            ChatUser user = _repository.VerifyUserId(id);
+            string userId = Context.User.Identity.Name;
+            ChatUser user = _repository.VerifyUserId(userId);
 
             var rooms = _repository.GetAllowedRooms(user).Select(r => new LobbyRoomViewModel
             {
@@ -336,13 +331,9 @@ namespace JabbR
 
         public void Typing(string roomName)
         {
-            string id = GetUserId();
-            ChatUser user = _repository.GetUserById(id);
+            string userId = Context.User.Identity.Name;
 
-            if (user == null)
-            {
-                return;
-            }
+            ChatUser user = _repository.GetUserById(userId);
 
             ChatRoom room = _repository.VerifyUserRoom(_cache, user, roomName);
 
@@ -433,7 +424,7 @@ namespace JabbR
         private bool TryHandleCommand(string command, string room)
         {
             string clientId = Context.ConnectionId;
-            string userId = GetUserId();
+            string userId = Context.User.Identity.Name;
 
             var commandManager = new CommandManager(clientId, UserAgent, userId, room, _service, _repository, _cache, this);
             return commandManager.TryHandleCommand(command);
@@ -678,7 +669,8 @@ namespace JabbR
 
         void INotificationService.ListRooms(ChatUser user)
         {
-            string userId = GetUserId();
+            string userId = Context.User.Identity.Name;
+
             var userModel = new UserViewModel(user);
 
             Clients.Caller.showUsersRoomList(userModel, user.Rooms.Allowed(userId).Select(r => r.Name));
@@ -749,7 +741,7 @@ namespace JabbR
 
         void INotificationService.ShowUserInfo(ChatUser user)
         {
-            string userId = GetUserId();
+            string userId = Context.User.Identity.Name;
 
             Clients.Caller.showUserInfo(new
             {
@@ -963,11 +955,6 @@ namespace JabbR
 
             // Update the room count
             Clients.All.updateRoomCount(roomViewModel, _repository.GetOnlineUsers(room).Count());
-        }
-
-        private string GetUserId()
-        {
-            return Context.User.Identity.Name;
         }
 
         private ClientState GetClientState()
