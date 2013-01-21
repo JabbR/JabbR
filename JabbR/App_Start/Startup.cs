@@ -10,6 +10,7 @@ using Microsoft.AspNet.Razor.Owin.IO;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Json;
+using Microsoft.Owin.Mapping;
 using Microsoft.Owin.StaticFiles;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
@@ -42,9 +43,8 @@ namespace JabbR
                       var resourceProcessor = context.Kernel.Get<IResourceProcessor>();
                       var repository = context.Kernel.Get<IJabbrRepository>();
                       var cache = context.Kernel.Get<ICache>();
-                      var crypto = context.Kernel.Get<ICryptoService>();
 
-                      var service = new ChatService(cache, repository, crypto);
+                      var service = new ChatService(cache, repository);
 
                       return new Chat(settings,
                                       resourceProcessor,
@@ -68,6 +68,9 @@ namespace JabbR
             kernel.Bind<IJavaScriptMinifier>()
                   .To<AjaxMinMinifier>()
                   .InSingletonScope();
+
+            kernel.Bind<IMembershipService>()
+                  .To<MembershipService>();
 
             try
             {
@@ -112,8 +115,8 @@ namespace JabbR
         {
             app.UseStaticFiles("/", ".");
             app.Use(typeof(AuthorizationHandler));
-            app.Use(typeof(AuthenticationHandler));
             app.Use(typeof(ImageProxyHandler), "/proxy");
+            app.MapPath("/auth", subApp => subApp.UseNancy());
             app.UseRazor(new PhysicalFileSystem(Environment.CurrentDirectory), new AssemblyReferenceLocator(), "/");
         }
 

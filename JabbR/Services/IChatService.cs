@@ -4,15 +4,8 @@ namespace JabbR.Services
 {
     public interface IChatService
     {
-        // Users
-        ChatUser AddUser(string userName, string clientId, string userAgent, string password);
-        ChatUser AddUser(string userName, string identity, string email);
-
+        // Users 
         ChatClient AddClient(ChatUser user, string clientId, string userAgent);
-        void AuthenticateUser(string userName, string password);
-        void ChangeUserName(ChatUser user, string newUserName);
-        void ChangeUserPassword(ChatUser user, string oldPassword, string newPassword);
-        void SetUserPassword(ChatUser user, string password);
         void UpdateActivity(ChatUser user, string clientId, string userAgent);
         string DisconnectClient(string clientId);
 

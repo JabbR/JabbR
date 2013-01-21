@@ -12,48 +12,6 @@ namespace JabbR.Test
 {
     public class ChatFacts
     {
-        public class Join
-        {
-            [Fact]
-            public void CanJoinChatIfIdentitySet()
-            {
-                var clientState = new StateChangeTracker();
-                string clientId = "1";
-                var user = new ChatUser
-                {
-                    Id = "1234",
-                    Name = "John",
-                    Identity = "foo"
-                };
-
-                TestableChat chat = GetTestableChat(clientId, clientState, user);
-                chat.Clients.Caller.id = "1234";
-
-                bool result = chat.Join();
-
-                Assert.Equal("1234", clientState["id"]);
-                Assert.Equal("John", clientState["name"]);
-                Assert.True(result);
-                // TODO: find out why these don't work
-                //Assert.Equal(1, user.ConnectedClients.Count);
-                //Assert.Equal("1", user.ConnectedClients.First().Id);
-            }
-
-            [Fact]
-            public void MissingUsernameReturnsFalse()
-            {
-                var clientState = new StateChangeTracker();
-                string clientId = "1";
-                var user = new ChatUser();
-
-                TestableChat chat = GetTestableChat(clientId, clientState, user);
-
-                bool result = chat.Join();
-
-                Assert.False(result);
-            }
-        }
-
         public static TestableChat GetTestableChat(string clientId, StateChangeTracker clientState, ChatUser user)
         {
             return GetTestableChat(clientId, clientState, user, new Dictionary<string, Cookie>());

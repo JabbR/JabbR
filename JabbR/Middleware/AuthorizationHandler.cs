@@ -20,9 +20,8 @@ namespace JabbR.Middleware
 
         public Task Invoke(IDictionary<string, object> env)
         {
-            var request = new Gate.Request(env);
-
-            // Add new login code here
+            var request = new OwinRequest(env);
+            var respoinse = new OwinResponse(env);
 
             return _next(env);
         }

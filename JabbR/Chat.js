@@ -159,7 +159,7 @@
             document.title = originalTitle;
         }
         else {
-            document.title =  (isUnreadMessageForUser ? '*' : '') + '(' + unread + ') ' + originalTitle;
+            document.title = (isUnreadMessageForUser ? '*' : '') + '(' + unread + ') ' + originalTitle;
         }
     }
 
@@ -930,26 +930,34 @@
                 options.transport = transport;
             }
 
-            connection.hub.logging = logging;
-
-            connection.hub.start(options, function () {
-                chat.server.join()
-                .fail(function (e) {
-                    ui.showLogin();
-                })
+            $.post('/auth', {})
                 .done(function () {
-                    // get list of available commands
-                    chat.server.getCommands()
-                        .done(function (commands) {
-                            ui.setCommands(commands);
+                    connection.hub.logging = logging;
+                    connection.hub.start(options, function () {
+                        chat.server.join()
+                        .fail(function (e) {
+                            ui.addMessage(e, 'error');
+                        })
+                        .done(function () {
+                            // get list of available commands
+                            chat.server.getCommands()
+                                .done(function (commands) {
+                                    ui.setCommands(commands);
+                                });
+                            // get list of available shortcuts
+                            chat.server.getShortcuts()
+                                .done(function (shortcuts) {
+                                    ui.setShortcuts(shortcuts);
+                                });
                         });
-                    // get list of available shortcuts
-                    chat.server.getShortcuts()
-                        .done(function (shortcuts) {
-                            ui.setShortcuts(shortcuts);
-                        });
+                    });
+                })
+                .fail(function (e) {
+                    // Not authorized so show the login screen
+                    if (e.status === 403) {
+                        ui.showLogin();
+                    }
                 });
-            });
 
             connection.hub.reconnected(function () {
                 if (checkingStatus === true) {

@@ -15,7 +15,7 @@ namespace JabbR.Commands
                 return;
             }
 
-            var name = ChatService.NormalizeUserName(args[0]);
+            var name = MembershipService.NormalizeUserName(args[0]);
 
             ChatUser user = context.Repository.GetUserByName(name);
 

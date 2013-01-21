@@ -101,7 +101,7 @@ namespace JabbR.Models
 
         public static ChatUser VerifyUser(this IJabbrRepository repository, string userName)
         {
-            userName = ChatService.NormalizeUserName(userName);
+            userName = MembershipService.NormalizeUserName(userName);
 
             ChatUser user = repository.GetUserByName(userName);
 
