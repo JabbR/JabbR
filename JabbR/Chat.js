@@ -935,17 +935,9 @@
             connection.hub.start(options, function () {
                 chat.server.join()
                 .fail(function (e) {
-                    ui.addMessage(e, 'error');
+                    ui.showLogin();
                 })
-                .done(function (success) {
-                    if (success === false) {
-                        if (ui.showLogin() === true) {
-                            ui.addMessage('Type /login to show the login screen', 'notification');
-                        }
-                        else {
-                            ui.addMessage('Use /nick user password to log in with jabbr', 'notification');
-                        }
-                    }
+                .done(function () {
                     // get list of available commands
                     chat.server.getCommands()
                         .done(function (commands) {

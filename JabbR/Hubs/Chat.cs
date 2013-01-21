@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 
 namespace JabbR
 {
+    [Authorize]
     public class Chat : Hub, INotificationService
     {
         private readonly IJabbrRepository _repository;
@@ -57,26 +58,15 @@ namespace JabbR
             }
         }
 
-        public bool Join()
+        public void Join()
         {
             SetVersion();
-
-            if (!Context.User.Identity.IsAuthenticated)
-            {
-                return false;
-            }
 
             // Get the client state
             var userId = GetUserId();
 
             // Try to get the user from the client state
             ChatUser user = _repository.GetUserById(userId);
-
-            // Threre's no user being tracked
-            if (user == null)
-            {
-                return false;
-            }
 
             // Update some user values
             _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
@@ -85,8 +75,6 @@ namespace JabbR
             ClientState clientState = GetClientState();
 
             OnUserInitialize(clientState, user);
-
-            return true;
         }
 
         private void SetVersion()

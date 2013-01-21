@@ -1851,8 +1851,8 @@
             return ui.name;
         },
         showLogin: function () {
-            
-            return false;
+            $login.modal({ backdrop: true, keyboard: true });
+            return true;
         },
         showDisconnectUI: function () {
             $disconnectDialog.modal();
