@@ -781,7 +781,7 @@
     <Content Include="Content\images\big-logo.png" />
     <Content Include="Content\images\logo32.png" />
     <Content Include="Content\images\small-logo.png" />
-    <None Include="default.cshtml" />
+    <Content Include="default.cshtml" />
     <Content Include="Content\sounds\notification.wav" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
