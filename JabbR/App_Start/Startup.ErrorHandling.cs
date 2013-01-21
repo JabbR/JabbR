@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Elmah;
 
 namespace JabbR
 {
@@ -12,7 +11,7 @@ namespace JabbR
             {
                 try
                 {
-                    // Write all unobserved exceptions to elmah
+                    // Write all unobserved exceptions
                     ReportError(e.Exception);
                 }
                 catch
@@ -28,7 +27,7 @@ namespace JabbR
 
         private static void ReportError(Exception e)
         {
-            ErrorLog.GetDefault(null).Log(new Error(e));
+
         }
     }
 }

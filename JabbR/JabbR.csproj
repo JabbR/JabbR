@@ -61,10 +61,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EcmaScript.Net.1.0.1.0\lib\net20\EcmaScript.NET.dll</HintPath>
     </Reference>
-    <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
@@ -160,8 +156,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="apple-touch-icon.png" />
-    <EmbeddedResource Include="Elmah\Elmah.SqlServer.sql" />
-    <Content Include="App_Readme\Elmah.txt" />
     <Content Include="Chat.bbcnews.css" />
     <Content Include="Chat.css" />
     <Content Include="Chat.documentOnWrite.js" />
