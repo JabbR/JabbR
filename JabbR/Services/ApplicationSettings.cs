@@ -29,6 +29,20 @@ namespace JabbR.Services
             }
         }
 
+        public bool RequireHttps
+        {
+            get
+            {
+                string requireHttpsValue = ConfigurationManager.AppSettings["requireHttps"];
+                bool requireHttps;
+                if (Boolean.TryParse(requireHttpsValue, out requireHttps))
+                {
+                    return requireHttps;
+                }
+                return false;
+            }
+        }
+
         public static AuthenticationMode GetAuthenticationMode()
         {
             string modeValue = ConfigurationManager.AppSettings["authenticationMode"];
