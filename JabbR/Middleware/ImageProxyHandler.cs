@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Cache;
 using System.Threading.Tasks;
 using JabbR.ContentProviders;
-using JabbR.Infrastructure;
 using Owin.Types;
 
 namespace JabbR.Middleware
@@ -18,24 +17,15 @@ namespace JabbR.Middleware
     public class ImageProxyHandler
     {
         private readonly AppFunc _next;
-        private readonly string _path;
 
-        public ImageProxyHandler(AppFunc next, string path)
+        public ImageProxyHandler(AppFunc next)
         {
             _next = next;
-            _path = path;
         }
 
         public async Task Invoke(IDictionary<string, object> env)
         {
             var httpRequest = new Gate.Request(env);
-
-            if (!httpRequest.Path.StartsWith(_path))
-            {
-                await _next(env);
-                return;
-            }
-
             var httpResponse = new OwinResponse(env);
 
             string url;
@@ -46,7 +36,6 @@ namespace JabbR.Middleware
                 !Uri.TryCreate(url, UriKind.Absolute, out uri))
             {
                 httpResponse.StatusCode = 404;
-                await TaskAsyncHelper.Empty;
                 return;
             }
 

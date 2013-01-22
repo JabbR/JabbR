@@ -9,7 +9,6 @@ using JabbR.Services;
 using Microsoft.AspNet.Razor.Owin.IO;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
-using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Json;
 using Microsoft.Owin.Mapping;
 using Microsoft.Owin.StaticFiles;
@@ -122,12 +121,12 @@ namespace JabbR
         {
             var bootstrapper = new JabbRNinjectNancyBootstrapper(kernel);
             app.MapPath("/auth", subApp => subApp.UseNancy(bootstrapper));
+            app.MapPath("/proxy", subApp => subApp.Use(typeof(ImageProxyHandler)));
         }
 
         private static void SetupMiddleware(IAppBuilder app)
         {
             app.UseStaticFiles("/", ".");
-            app.Use(typeof(ImageProxyHandler), "/proxy");
             app.UseRazor(new PhysicalFileSystem(Environment.CurrentDirectory), new AssemblyReferenceLocator(), "/");
         }
 
