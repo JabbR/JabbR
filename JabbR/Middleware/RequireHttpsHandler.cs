@@ -21,9 +21,7 @@ namespace JabbR.Middleware
             var request = new ServerRequest(env);
             var response = new Gate.Response(env);
 
-            string scheme = GetScheme(request);
-
-            if (!scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
+            if (!request.Url.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
             {
                 var builder = new UriBuilder(request.Url);
                 builder.Scheme = "https";
@@ -42,17 +40,6 @@ namespace JabbR.Middleware
             {
                 return _next(env);
             }
-        }
-
-        private string GetScheme(ServerRequest request)
-        {
-            var scheme = request.Headers["X-Forwarded-Proto"];
-            if (String.IsNullOrEmpty(scheme))
-            {
-                return request.Url.Scheme;
-            }
-
-            return scheme;
         }
     }
 }

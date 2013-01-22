@@ -101,6 +101,7 @@ namespace JabbR
             kernel.Bind<IJsonSerializer>()
                   .ToConstant(serializer);
 
+            app.Use(typeof(DetectSchemeHandler));
 
             var settings = kernel.Get<IApplicationSettings>();
             if (settings.RequireHttps)
