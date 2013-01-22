@@ -1,6 +1,4 @@
 ﻿param(
-  $authKey                            = $env:JABBR_AUTH_KEY,
-  $appId                              = $env:JABBR_APP_ID,
   $googleAnalyticsToken               = $env:JABBR_GOOGLE_ANALYTICS,
   $remoteDesktopAccountExpiration     = $env:JABBR_REMOTE_DESKTOP_ACCOUNT_EXPIRATION,
   $remoteDesktopCertificateThumbprint = $env:JABBR_REMOTE_DESKTOP_CERTIFICATE_THUMBPRINT,
@@ -17,8 +15,6 @@ $ScriptRoot = (Split-Path -parent $MyInvocation.MyCommand.Definition)
 . $ScriptRoot\_Common.ps1
 
 # Validate Sutff
-require-param -value $authKey -paramName "authKey"
-require-param -value $appId -paramName "appId"
 require-param -value $remoteDesktopAccountExpiration -paramName "remoteDesktopAccountExpiration"
 require-param -value $remoteDesktopCertificateThumbprint -paramName "remoteDesktopCertificateThumbprint"
 require-param -value $remoteDesktopEnctyptedPassword -paramName "remoteDesktopEnctyptedPassword"
@@ -119,8 +115,7 @@ cp $webConfigPath $webConfigBakPath
 cp $cscfgPath $cscfgBakPath
 cp $libPath\signalr.exe $binPath\signalr.exe
 
-set-appsetting -path $webConfigPath -name "auth.apiKey" -value $authKey
-set-appsetting -path $webConfigPath -name "auth.appId" -value $appId
+set-appsetting -path $webConfigPath -name "requireHttps" -value $true
 set-appsetting -path $webConfigPath -name "googleAnalytics" -value $googleAnalyticsToken
 set-appsetting -path $webConfigPath -name "releaseBranch" -value $commitBranch
 set-appsetting -path $webConfigPath -name "releaseSha" -value $commitSha
