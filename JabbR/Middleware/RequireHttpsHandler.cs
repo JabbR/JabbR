@@ -26,6 +26,11 @@ namespace JabbR.Middleware
                 var builder = new UriBuilder(request.Url);
                 builder.Scheme = "https";
 
+                if (builder.Port == 80)
+                {
+                    builder.Port = -1;
+                }
+
                 response.SetHeader("Location", builder.ToString());
                 response.StatusCode = 302;
 
