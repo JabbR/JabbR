@@ -32,6 +32,7 @@ namespace JabbR.Models
         [StringLength(2)]
         public string Flag { get; set; }
 
+        // TODO: Migrate everyone off identity and email
         public string Identity { get; set; }
 
         public string Email { get; set; }
@@ -40,6 +41,7 @@ namespace JabbR.Models
         public bool IsBanned { get; set; }
 
         // List of clients that are currently connected for this user
+        public virtual ICollection<ChatUserIdentity> Identities { get; set; }
         public virtual ICollection<ChatClient> ConnectedClients { get; set; }
         public virtual ICollection<ChatRoom> OwnedRooms { get; set; }
         public virtual ICollection<ChatRoom> Rooms { get; set; }
@@ -49,6 +51,7 @@ namespace JabbR.Models
 
         public ChatUser()
         {
+            Identities = new SafeCollection<ChatUserIdentity>();
             ConnectedClients = new SafeCollection<ChatClient>();
             OwnedRooms = new SafeCollection<ChatRoom>();
             Rooms = new SafeCollection<ChatRoom>();

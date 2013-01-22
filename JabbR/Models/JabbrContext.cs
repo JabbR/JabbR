@@ -27,5 +27,6 @@ namespace JabbR.Models
         public DbSet<ChatMessage> Messages { get; set; }
         public DbSet<ChatRoom> Rooms { get; set; }
         public DbSet<ChatUser> Users { get; set; }
+        public DbSet<ChatUserIdentity> Identities { get; set; }
     }
 }

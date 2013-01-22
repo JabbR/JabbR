@@ -805,6 +805,9 @@
     <EmbeddedResource Include="Migrations\201208211555032_BanUser.resx">
       <DependentUpon>201208211555032_BanUser.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201301220843580_MultipleIdentities.resx">
+      <DependentUpon>201301220843580_MultipleIdentities.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\jquery-1.9.0.js" />
     <Content Include="Scripts\jquery-1.9.0.min.js" />
@@ -873,6 +876,12 @@
     <Compile Include="Migrations\201208211555032_BanUser.Designer.cs">
       <DependentUpon>201208211555032_BanUser.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201301220843580_MultipleIdentities.cs" />
+    <Compile Include="Migrations\201301220843580_MultipleIdentities.Designer.cs">
+      <DependentUpon>201301220843580_MultipleIdentities.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Mapping\ChatUserIdentityMap.cs" />
+    <Compile Include="Models\ChatUserIdentity.cs" />
     <Compile Include="Nancy\AuthenticationModule.cs" />
     <Compile Include="Services\AuthenticationMode.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
