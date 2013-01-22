@@ -10,6 +10,11 @@ namespace JabbR.Models
         {
         }
 
+        static JabbrContext()
+        {
+            Database.SetInitializer<JabbrContext>(null);
+        }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Configurations.Add(new ChatClientMap());
