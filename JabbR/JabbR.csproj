@@ -96,13 +96,11 @@
     <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
       <HintPath>..\lib\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.WebApi.Owin">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.0.12-alpha2\lib\Microsoft.AspNet.WebApi.Owin.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.WebApi.Owin, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.0.19-alpha\lib\net40\Microsoft.AspNet.WebApi.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Owin.Host.HttpListener">
-      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.0.18.0-alpha\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb">
       <HintPath>..\lib\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
