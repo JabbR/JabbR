@@ -4,13 +4,16 @@
   font-size: 13px;
   background-color: #e5e5e5;
 }
+
 input, button, select, textarea {
   font-family: Lucida Grande, Trebuchet MS;
   font-size: 13px;
 }
+
 h1,h2,h3,h4,h5,h6 {
     margin: 16px 0;
 }
+
 form#send-message {
     margin: 0;
 }
