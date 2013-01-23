@@ -2449,39 +2449,6 @@ namespace JabbR.Test
                 Assert.True(result);
                 notificationService.Verify(x => x.SendPrivateMessage(user, user2, "what is up?"), Times.Once());
             }
-
-            [Fact]
-            public void UrlsInMessageIsTransformed()
-            {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var user = new ChatUser
-                {
-                    Name = "dfowler",
-                    Id = "1"
-                };
-                repository.Add(user);
-                var user2 = new ChatUser
-                {
-                    Name = "dfowler2",
-                    Id = "2"
-                };
-                repository.Add(user2);
-                var service = new ChatService(cache, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                bool result = commandManager.TryHandleCommand("/msg dfowler2 check out www.jabbr.net");
-
-                Assert.True(result);
-                notificationService.Verify(x => x.SendPrivateMessage(user, user2, "check out <a rel=\"nofollow external\" target=\"_blank\" href=\"http://www.jabbr.net\" title=\"www.jabbr.net\">www.jabbr.net</a>"), Times.Once());
-            }
         }
 
         public class InviteCommand
@@ -4280,34 +4247,6 @@ namespace JabbR.Test
 
                 Assert.True(result);
                 notificationService.Verify(x => x.BroadcastMessage(user, "what is up?"), Times.Once());
-            }
-
-            [Fact]
-            public void UrlsInMessageIsTransformed()
-            {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var user = new ChatUser
-                {
-                    Name = "dfowler",
-                    Id = "1",
-                    IsAdmin = true
-                };
-                repository.Add(user);
-                var service = new ChatService(cache, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                bool result = commandManager.TryHandleCommand("/broadcast check out www.jabbr.net");
-
-                Assert.True(result);
-                notificationService.Verify(x => x.BroadcastMessage(user, "check out <a rel=\"nofollow external\" target=\"_blank\" href=\"http://www.jabbr.net\" title=\"www.jabbr.net\">www.jabbr.net</a>"), Times.Once());
             }
         }
 
