@@ -24,6 +24,9 @@ namespace JabbR
     {
         public void Configuration(IAppBuilder app)
         {
+            // Perform the required migrations
+            DoMigrations();
+
             var kernel = new StandardKernel(new[] { new FactoryModule() });
 
             kernel.Bind<JabbrContext>()
@@ -118,9 +121,6 @@ namespace JabbR
             SetupWebApi(kernel, app);
             SetupNancy(kernel, app);
             SetupMiddleware(app);
-
-            // Perform the required migrations
-            DoMigrations();
 
             SetupErrorHandling();
         }
