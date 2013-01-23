@@ -155,6 +155,12 @@ namespace JabbR
             chatMessage.Id = Guid.NewGuid().ToString("d");
             _repository.CommitChanges();
 
+            var urls = TextTransform.ExtractUrls(chatMessage.Content);
+            if (urls.Count > 0)
+            {
+                ProcessUrls(urls, room.Name, clientMessageId, message.Id);
+            }
+
             return outOfSync;
         }
 
@@ -292,10 +298,8 @@ namespace JabbR
 
         private string ConvertUrlsAndRoomLinks(string message)
         {
-            TextTransform textTransform = new TextTransform(_repository);
-            message = textTransform.ConvertHashtagsToRoomLinks(message);
-            HashSet<string> urls;
-            return TextTransform.TransformAndExtractUrls(message, out urls);
+            var textTransform = new TextTransform(_repository);
+            return textTransform.ConvertHashtagsToRoomLinks(message);
         }
 
         public void Typing(string roomName)

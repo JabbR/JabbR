@@ -13,6 +13,8 @@ namespace JabbR.Infrastructure
     {
         private readonly IJabbrRepository _repository;
         public const string HashTagPattern = @"(?:(?<=\s)|^)#([A-Za-z0-9-_]{1,30}\w*)";
+        private static Regex urlPattern = new Regex(@"(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'"".,<>?«»“”‘’]))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
 
         public TextTransform(IJabbrRepository repository)
         {
@@ -42,12 +44,12 @@ namespace JabbR.Infrastructure
             return message;
         }
 
-        static Regex urlPattern = new Regex(@"(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'"".,<>?«»“”‘’]))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        public static string TransformAndExtractUrls(string message, out HashSet<string> extractedUrls)
+        public static IList<string> ExtractUrls(string message)
         {
             var urls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            message = urlPattern.Replace(message, m =>
+            var matches = urlPattern.Matches(message);
+
+            foreach (Match m in matches)
             {
                 string url = m.Value;
                 if (!url.Contains("://"))
@@ -55,21 +57,13 @@ namespace JabbR.Infrastructure
                     url = "http://" + url;
                 }
 
-                if (!Uri.IsWellFormedUriString(url, UriKind.Absolute))
+                if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
                 {
-                    return m.Value;
+                    urls.Add(url);
                 }
+            };
 
-                urls.Add(url);
-
-                return String.Format(CultureInfo.InvariantCulture,
-                                     "<a rel=\"nofollow external\" target=\"_blank\" href=\"{0}\" title=\"{1}\">{1}</a>",
-                                     Encoder.HtmlAttributeEncode(url),
-                                     m.Value);
-            });
-
-            extractedUrls = urls;
-            return message;
+            return urls.ToList();
         }
 
         public string ConvertHashtagsToRoomLinks(string message)

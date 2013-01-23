@@ -36,12 +36,6 @@ namespace JabbR.Commands
                 throw new InvalidOperationException(String.Format("What did you want to say to '{0}'?", toUser.Name));
             }
 
-            HashSet<string> urls;
-            var transform = new TextTransform(context.Repository);
-            messageText = transform.Parse(messageText);
-
-            messageText = TextTransform.TransformAndExtractUrls(messageText, out urls);
-
             context.NotificationService.SendPrivateMessage(callingUser, toUser, messageText);
         }
     }

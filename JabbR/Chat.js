@@ -558,7 +558,7 @@
             ui.setLastPrivate(from);
         }
 
-        ui.addPrivateMessage('<emp>*' + from + '* &raquo; *' + to + '*</emp> ' + message, 'pm');
+        ui.addPrivateMessage('<emp>*' + from + '* &raquo; *' + to + '*</emp> ' + utility.encodeHtml(message), 'pm');
     };
 
     chat.client.sendInvite = function (from, to, roomLink) {
@@ -712,7 +712,7 @@
     };
 
     chat.client.broadcastMessage = function (message, room) {
-        ui.addMessage('ADMIN: ' + message, 'broadcast', room);
+        ui.addMessage('ADMIN: ' + utility.encodeHtml(message), 'broadcast', room);
     };
 
     $ui.bind(ui.events.typing, function () {

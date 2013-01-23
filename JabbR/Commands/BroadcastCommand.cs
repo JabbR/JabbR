@@ -17,12 +17,6 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("What did you want to broadcast?");
             }
 
-            HashSet<string> urls;
-            var transform = new TextTransform(context.Repository);
-            messageText = transform.Parse(messageText);
-
-            messageText = TextTransform.TransformAndExtractUrls(messageText, out urls);
-
             context.NotificationService.BroadcastMessage(callingUser, messageText);
         }
     }
