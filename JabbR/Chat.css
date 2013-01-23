@@ -8,7 +8,9 @@ input, button, select, textarea {
   font-family: Lucida Grande, Trebuchet MS;
   font-size: 13px;
 }
-
+h1,h2,h3,h4,h5,h6 {
+    margin: 16px 0;
+}
 form#send-message {
     margin: 0;
 }
@@ -179,6 +181,9 @@ form#send-message {
   #heading h1
   {
     margin-left: 5px;
+      font-family: 'Lucida Grande', 'Trebuchet MS';
+    line-height: normal;
+    font-size: 20px;
   }
 
 .messages

@@ -799,8 +799,6 @@
     <Content Include="Content\images\small-logo.png" />
     <Content Include="default.cshtml" />
     <Content Include="Content\sounds\notification.wav" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="robots.txt" />
     <EmbeddedResource Include="Migrations\201208211555032_BanUser.resx">
       <DependentUpon>201208211555032_BanUser.cs</DependentUpon>
@@ -809,6 +807,8 @@
       <DependentUpon>201301220843580_MultipleIdentities.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.9.0.js" />
     <Content Include="Scripts\jquery-1.9.0.min.js" />
     <Content Include="Scripts\jquery-migrate-1.0.0.min.js" />
