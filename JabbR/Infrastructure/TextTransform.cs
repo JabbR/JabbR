@@ -1,41 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using JabbR.Services;
-using Microsoft.Security.Application;
 
 namespace JabbR.Infrastructure
 {
-
     public class TextTransform
     {
-        public const string HashTagPattern = @"(?:(?<=\s)|^)#([A-Za-z0-9-_]{1,30}\w*)";
         private static Regex urlPattern = new Regex(@"(?i)\b((?:[a-z][\w-]+:(?:/{1,3}|[a-z0-9%])|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'"".,<>?«»“”‘’]))", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        public string Parse(string message)
-        {
-            return ConvertTextWithNewLines(message);
-        }
-
-        private string ConvertTextWithNewLines(string message)
-        {
-            // If the message contains new lines wrap all of it in a pre tag
-            if (message.Contains('\n'))
-            {
-                return String.Format(@"
-<div class=""collapsible_content"">
-    <h3 class=""collapsible_title"">Paste (click to show/hide)</h3>
-    <div class=""collapsible_box"">
-        <pre class=""multiline"">{0}</pre>
-    </div>
-</div>
-", message);
-            }
-
-            return message;
-        }
 
         public static IList<string> ExtractUrls(string message)
         {
