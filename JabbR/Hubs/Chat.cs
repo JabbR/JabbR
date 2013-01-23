@@ -120,9 +120,6 @@ namespace JabbR
 
             SetVersion();
 
-            // Sanitize the content (strip and bad html out)
-            message.Content = HttpUtility.HtmlEncode(message.Content);
-
             // See if this is a valid command (starts with /)
             if (TryHandleCommand(message.Content, message.Room))
             {
@@ -144,11 +141,7 @@ namespace JabbR
             // Update activity *after* ensuring the user, this forces them to be active
             UpdateActivity(user, room);
 
-
-            HashSet<string> links;
-            var messageText = ParseChatMessageText(message.Content, out links);
-
-            ChatMessage chatMessage = _service.AddMessage(user, room, message.Id, messageText);
+            ChatMessage chatMessage = _service.AddMessage(user, room, message.Id, message.Content);
 
 
             var messageViewModel = new MessageViewModel(chatMessage);
@@ -162,21 +155,7 @@ namespace JabbR
             chatMessage.Id = Guid.NewGuid().ToString("d");
             _repository.CommitChanges();
 
-            if (!links.Any())
-            {
-                return outOfSync;
-            }
-
-            ProcessUrls(links, room.Name, clientMessageId, chatMessage.Id);
-
             return outOfSync;
-        }
-
-        private string ParseChatMessageText(string content, out HashSet<string> links)
-        {
-            var textTransform = new TextTransform(_repository);
-            string message = textTransform.Parse(content);
-            return TextTransform.TransformAndExtractUrls(message, out links);
         }
 
         public UserViewModel GetUserInfo()
@@ -319,14 +298,6 @@ namespace JabbR
             return TextTransform.TransformAndExtractUrls(message, out urls);
         }
 
-        // TODO: Deprecate
-        public void Typing()
-        {
-            string roomName = Clients.Caller.activeRoom;
-
-            Typing(roomName);
-        }
-
         public void Typing(string roomName)
         {
             string userId = Context.User.Identity.Name;
@@ -413,8 +384,6 @@ namespace JabbR
 
                     // Notify the room
                     Clients.Group(roomName).addMessageContent(clientMessageId, extractedContent, roomName);
-
-                    _service.AppendMessage(messageId, extractedContent);
                 }
             });
         }

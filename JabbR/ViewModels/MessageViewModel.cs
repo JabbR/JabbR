@@ -11,8 +11,10 @@ namespace JabbR.ViewModels
             Content = message.Content;
             User = new UserViewModel(message.User);
             When = message.When;
+            HtmlEncoded = message.HtmlEncoded;
         }
 
+        public bool HtmlEncoded { get; set; }
         public string Id { get; set; }
         public string Content { get; set; }
         public DateTimeOffset When { get; set; }

@@ -13,6 +13,7 @@ namespace JabbR.Models
         public virtual ChatRoom Room { get; set; }
         public virtual ChatUser User { get; set; }
         public DateTimeOffset When { get; set; }
+        public bool HtmlEncoded { get; set; }
 
         public int? RoomKey { get; set; }
         public int? UserKey { get; set; }

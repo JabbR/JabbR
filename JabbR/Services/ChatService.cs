@@ -374,7 +374,8 @@ namespace JabbR.Services
                 User = user,
                 Content = content,
                 When = DateTimeOffset.UtcNow,
-                Room = room
+                Room = room,
+                HtmlEncoded = false
             };
 
             _repository.Add(chatMessage);

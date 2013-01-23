@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
 using JabbR.Services;
 using Microsoft.Security.Application;
 
@@ -50,7 +49,7 @@ namespace JabbR.Infrastructure
             var urls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             message = urlPattern.Replace(message, m =>
             {
-                string url = HttpUtility.HtmlDecode(m.Value);
+                string url = m.Value;
                 if (!url.Contains("://"))
                 {
                     url = "http://" + url;
@@ -95,6 +94,5 @@ namespace JabbR.Infrastructure
 
             return message;
         }
-
     }
 }

@@ -135,7 +135,7 @@
         return {
             name: message.User.Name,
             hash: message.User.Hash,
-            message: message.Content,
+            message: message.HtmlEncoded ? message.Content : utility.encodeHtml(message.Content),
             id: message.Id,
             date: message.When.fromJsonDate(),
             highlight: re.test(message.Content) ? 'highlight' : '',
