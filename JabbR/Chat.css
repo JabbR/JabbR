@@ -4,6 +4,14 @@
   font-size: 13px;
   background-color: #e5e5e5;
 }
+input, button, select, textarea {
+  font-family: Lucida Grande, Trebuchet MS;
+  font-size: 13px;
+}
+
+form#send-message {
+    margin: 0;
+}
 
 .banner > *
 {
@@ -63,9 +71,14 @@
 #users-filter-closed-area 
 {
 	position: absolute;
-	top: 80px;
+	top: 85px;
 	left: 71%;
 	margin-top: 4px;
+    font-size: 13px;
+}
+
+#users-filter-closed {
+    margin: -4px 4px 0;
 }
 
 #preferences a
