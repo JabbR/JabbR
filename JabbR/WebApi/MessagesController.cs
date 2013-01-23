@@ -86,7 +86,8 @@ namespace JabbR.WebApi
                 {
                     Content = msg.Content,
                     Username = msg.User.Name,
-                    When = msg.When
+                    When = msg.When,
+                    HtmlEncoded = msg.HtmlEncoded,
                 });
 
 

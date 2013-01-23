@@ -7,5 +7,6 @@ namespace JabbR.WebApi.Model
         public string Content { get; set; }
         public string Username { get; set; }
         public DateTimeOffset When { get; set; }
+        public bool HtmlEncoded { get; set; }
     }
 }
