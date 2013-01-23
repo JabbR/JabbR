@@ -135,7 +135,7 @@
         return {
             name: message.User.Name,
             hash: message.User.Hash,
-            message: message.HtmlEncoded ? message.Content : utility.encodeHtml(message.Content),
+            message: message.HtmlEncoded ? message.Content : ui.processChatMessage(message.Content),
             id: message.Id,
             date: message.When.fromJsonDate(),
             highlight: re.test(message.Content) ? 'highlight' : '',
@@ -558,7 +558,7 @@
             ui.setLastPrivate(from);
         }
 
-        ui.addPrivateMessage('<emp>*' + from + '* &raquo; *' + to + '*</emp> ' + utility.encodeHtml(message), 'pm');
+        ui.addPrivateMessage('<emp>*' + from + '* &raquo; *' + to + '*</emp> ' + ui.processChatMessage(message), 'pm');
     };
 
     chat.client.sendInvite = function (from, to, roomLink) {
@@ -712,7 +712,7 @@
     };
 
     chat.client.broadcastMessage = function (message, room) {
-        ui.addMessage('ADMIN: ' + utility.encodeHtml(message), 'broadcast', room);
+        ui.addMessage('ADMIN: ' + ui.processChatMessage(message), 'broadcast', room);
     };
 
     $ui.bind(ui.events.typing, function () {

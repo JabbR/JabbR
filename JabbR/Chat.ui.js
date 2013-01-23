@@ -1976,6 +1976,13 @@
         setRoomListStatuses: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
             room.setListState(room.owners);
+        },
+        processChatMessage: function (content) {
+            return linkify(utility.encodeHtml(content), {
+                callback: function (text, href) {
+                    return href ? '<a rel="nofollow external" target="_blank" href="' + href + '" title="' + href + '">' + text + '</a>' : text;
+                }
+            });
         }
     };
 
