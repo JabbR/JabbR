@@ -212,7 +212,6 @@
                         populateRoom(room.Name);
                     }
                 });
-                populateLobbyRooms();
             };
 
         $.each(rooms, function (index, room) {
@@ -931,11 +930,15 @@
                                 .done(function (commands) {
                                     ui.setCommands(commands);
                                 });
+
                             // get list of available shortcuts
                             chat.server.getShortcuts()
                                 .done(function (shortcuts) {
                                     ui.setShortcuts(shortcuts);
                                 });
+
+                            // populate the lobby rooms
+                            populateLobbyRooms();
                         });
                     });
                 })

@@ -290,16 +290,10 @@ namespace JabbR
                 Owners = from u in room.Owners.Online()
                          select u.Name,
                 RecentMessages = recentMessages.Select(m => new MessageViewModel(m)),
-                Topic = ConvertUrlsAndRoomLinks(room.Topic ?? ""),
-                Welcome = ConvertUrlsAndRoomLinks(room.Welcome ?? ""),
+                Topic = room.Topic ?? "",
+                Welcome = room.Welcome ?? "",
                 Closed = room.Closed
             };
-        }
-
-        private string ConvertUrlsAndRoomLinks(string message)
-        {
-            var textTransform = new TextTransform(_repository);
-            return textTransform.ConvertHashtagsToRoomLinks(message);
         }
 
         public void Typing(string roomName)
@@ -498,7 +492,7 @@ namespace JabbR
             {
                 Name = room.Name,
                 Private = room.Private,
-                Welcome = ConvertUrlsAndRoomLinks(room.Welcome ?? ""),
+                Welcome = room.Welcome ?? "",
                 Closed = room.Closed
             };
 
@@ -738,19 +732,16 @@ namespace JabbR
 
         void INotificationService.Invite(ChatUser user, ChatUser targetUser, ChatRoom targetRoom)
         {
-            var transform = new TextTransform(_repository);
-            string roomLink = transform.ConvertHashtagsToRoomLinks("#" + targetRoom.Name);
-
             // Send the invite message to the sendee
             foreach (var client in targetUser.ConnectedClients)
             {
-                Clients.Client(client.Id).sendInvite(user.Name, targetUser.Name, roomLink);
+                Clients.Client(client.Id).sendInvite(user.Name, targetUser.Name, targetRoom.Name);
             }
 
             // Send the invite notification to the sender
             foreach (var client in user.ConnectedClients)
             {
-                Clients.Client(client.Id).sendInvite(user.Name, targetUser.Name, roomLink);
+                Clients.Client(client.Id).sendInvite(user.Name, targetUser.Name, targetRoom.Name);
             }
         }
 
@@ -839,7 +830,7 @@ namespace JabbR
         void INotificationService.ChangeTopic(ChatUser user, ChatRoom room)
         {
             bool isTopicCleared = String.IsNullOrWhiteSpace(room.Topic);
-            var parsedTopic = ConvertUrlsAndRoomLinks(room.Topic ?? "");
+            var parsedTopic = room.Topic ?? "";
             Clients.Group(room.Name).topicChanged(room.Name, isTopicCleared, parsedTopic, user.Name);
             // Create the view model
             var roomViewModel = new RoomViewModel
@@ -854,7 +845,7 @@ namespace JabbR
         void INotificationService.ChangeWelcome(ChatUser user, ChatRoom room)
         {
             bool isWelcomeCleared = String.IsNullOrWhiteSpace(room.Welcome);
-            var parsedWelcome = ConvertUrlsAndRoomLinks(room.Welcome ?? "");
+            var parsedWelcome = room.Welcome ?? "";
             foreach (var client in user.ConnectedClients)
             {
                 Clients.Client(client.Id).welcomeChanged(isWelcomeCleared, parsedWelcome);

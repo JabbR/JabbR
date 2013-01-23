@@ -45,7 +45,8 @@
         $closedRoomFilter = null,
         updateTimeout = 15000,
         $richness = null,
-        lastPrivate = null;
+        lastPrivate = null,
+        roomCache = {};
 
     function getRoomId(roomName) {
         return window.escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -412,6 +413,12 @@
         return getRoomElements('Lobby');
     }
 
+    function getRoomsNames() {
+        var lobby = getLobby();
+        return lobby.users.find('li')
+                     .map(function () { return $(this).data('name') + ' '; });
+    }
+
     function updateLobbyRoomCount(room, count) {
         var lobby = getLobby(),
             $room = lobby.users.find('[data-room="' + room.Name + '"]'),
@@ -455,6 +462,8 @@
             name: roomName,
             closed: roomViewModel.Closed
         };
+
+        roomCache[roomName] = true;
 
         templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabs);
 
@@ -1167,9 +1176,7 @@
                                          .not('.room')
                                          .map(function () { return ($(this).data('name') + ' ' || "").toString(); });
                         case '#':
-                            var lobby = getLobby();
-                            return lobby.users.find('li')
-                                         .map(function () { return $(this).data('name') + ' '; });
+                            return getRoomsNames();
 
                         case '/':
                             var commands = ui.getCommands();
@@ -1399,6 +1406,8 @@
                         $li.hide();
                     }
                 }
+
+                roomCache[this.Name] = true;
             });
 
             if (lobby.isActive()) {
@@ -1978,7 +1987,20 @@
             room.setListState(room.owners);
         },
         processChatMessage: function (content) {
-            return linkify(utility.encodeHtml(content), {
+            // Html encode
+            content = utility.encodeHtml(content);
+            
+            // Create rooms links
+            content = content.replace(/#([A-Za-z0-9-_]{1,30}\w*)/g, function (m) {
+                var roomName = m.substr(1);
+
+                if (roomCache[roomName]) {
+                    return '<a href="#/rooms/' + roomName + '" title="' + roomName + '">' + m + '</a>';
+                }
+                return m;
+            });
+
+            return linkify(content, {
                 callback: function (text, href) {
                     return href ? '<a rel="nofollow external" target="_blank" href="' + href + '" title="' + href + '">' + text + '</a>' : text;
                 }

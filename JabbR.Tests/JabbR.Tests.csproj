@@ -84,7 +84,6 @@
     <Compile Include="ChatFacts.cs" />
     <Compile Include="ChatServiceFacts.cs" />
     <Compile Include="CommandManagerFacts.cs" />
-    <Compile Include="TextTransformFacts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QueryStringCollectionTests.cs" />
   </ItemGroup>
