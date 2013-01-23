@@ -155,7 +155,7 @@ namespace JabbR
             chatMessage.Id = Guid.NewGuid().ToString("d");
             _repository.CommitChanges();
 
-            var urls = TextTransform.ExtractUrls(chatMessage.Content);
+            var urls = UrlExtractor.ExtractUrls(chatMessage.Content);
             if (urls.Count > 0)
             {
                 ProcessUrls(urls, room.Name, clientMessageId, message.Id);

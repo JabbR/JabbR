@@ -983,7 +983,7 @@
     <Compile Include="Infrastructure\RegexExtensions.cs" />
     <Compile Include="Infrastructure\SafeCollection.cs" />
     <Compile Include="Infrastructure\TaskAsyncHelper.cs" />
-    <Compile Include="Infrastructure\TextTransform.cs" />
+    <Compile Include="Infrastructure\UrlExtractor.cs" />
     <Compile Include="Infrastructure\QueryStringCollection.cs" />
     <Compile Include="Migrations\201111290920351_Passwords.cs" />
     <Compile Include="Migrations\201111290920351_Passwords.Designer.cs">
