@@ -82,6 +82,14 @@
         <li class="message-separator">
         </li>
     </script>
+    <script id="multiline-content-template" type="text/x-jquery-tmpl">
+        <div class="collapsible_content">
+            <h3 class="collapsible_title">Paste (click to show/hide)</h3>
+            <div class="collapsible_box">
+                <pre class="multiline">${content}</pre>
+            </div>
+        </div>
+    </script>
     <script id="new-user-template" type="text/x-jquery-tmpl">
         <li class="user" data-name="${name}">
             <img class="gravatar" src="https://secure.gravatar.com/avatar/${hash}?s=16&d=mm" />

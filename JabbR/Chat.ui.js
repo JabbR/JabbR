@@ -845,7 +845,8 @@
                 separator: $('#message-separator-template'),
                 tab: $('#new-tab-template'),
                 gravatarprofile: $('#gravatar-profile-template'),
-                commandhelp: $('#command-help-template')
+                commandhelp: $('#command-help-template'),
+                multiline: $('#multiline-content-template')
             };
 
             if (toast.canToast()) {
@@ -1987,6 +1988,8 @@
             room.setListState(room.owners);
         },
         processChatMessage: function (content) {
+            var hasNewline = content.indexOf('\n') != -1;
+
             // Html encode
             content = utility.encodeHtml(content);
             
@@ -2000,11 +2003,20 @@
                 return m;
             });
 
-            return linkify(content, {
+            // Convert normal links
+            content = linkify(content, {
                 callback: function (text, href) {
                     return href ? '<a rel="nofollow external" target="_blank" href="' + href + '" title="' + href + '">' + text + '</a>' : text;
                 }
             });
+
+            if (hasNewline) {
+                // Multiline detection
+                return templates.multiline.tmpl({ content: content }).html();
+            }
+            else {
+                return content;
+            }
         }
     };
 
