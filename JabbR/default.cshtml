@@ -25,13 +25,13 @@
     <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" sizes="16x16">
     @{ 
         WriteLiteral(Bundle.Css()
+            .Add("~/Content/bootstrap.min.css")
             .Add("~/Chat.css")
             .Add("~/Chat.nuget.css")
             .Add("~/Chat.bbcnews.css")
             .Add("~/Chat.githubissues.css")
             .Add("~/Chat.dictionary.css")
             .Add("~/Content/KeyTips.css")
-            .Add("~/Content/bootstrap.min.css")
             .Add("~/Content/emoji20.css")
             .Render("~/Content/JabbR_#.css"));
    }
