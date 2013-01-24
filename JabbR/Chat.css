@@ -26,7 +26,7 @@ form#send-message {
 
 .jabbrLogo
 {
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAOwwAADsMBx2+oZAAAABp0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjUuMTAw9HKhAAAE1UlEQVRIS62WDTSVdxzHb7bV1s7ZijLaWaYNWydqs9oi614vkVAYKSTmdeJ6CQdzCJW8hBtmM51uN4SYvLZuC6GXrRTL2Ym8RM3ZlkXIS5f25W+Pp+fe7nYP9zyc3//t+3n+/9/L/2GxlmymnkWKhmExWX1/D5RU1NP7Fy43WLnG9mxlww/ldc7ecZ8Zem00+gr/13M8tHRd1LTtlTWsFitvoS+ZtSlLRdO2san12fRvcPCJnDwbQ/KqZqs/dYKclUNETf0t8vAyiz439UUn41mn9yVIcvKc50ik8a7Wzp77fxL1G7daN5nsW7zCWFPHmS7hvT+lrOoyYRw/Vam31UecgR5ttrvCKovndvCqklHT7XainsDLe3mZvrq2PTeEZ2ARQCQs7MJ8g3kcMz99C/8sfjlhJKXlSwSQTtW1dgvI4eMvJuEkUT+cnIPmbteYCzU36BKFJTVolp27jKFNJj7ZgkrCcPI6LIWBU5kCyKuaDw2PQP3Kzy0vKXB8Q3gN125jcXXdTb/QNLI+OaOQKAprrtu5HDCyDKwSXkMzp0AoBYChN1easvYFpZDXZ5txtXSdO+/1YiUCxmZvJMMBP9U2Yqi4rA6nHxadRZDWjhFSGB9u2MPCxqHe0fU7tpNTKGz5rRNClvZfYxl2A2dmHi+1d4tF0z8sjYjinYytgogdeuA7KYAN+p6s7vt/AMDPO4e47B8Yam7pwIFgTWB4OhWXFy812jhF6hp7n62oR2dU3AlMyC+uhh19hC8FgFxhjY2NAwA/K6lbwmjvfOAXegxrThddpADE4SbWwa4+8fGpecgJ2Hs8D0XH801tQnTEEoJCrtV1YY1OA2ITBW+p7YABh/uHpWNGbuEFOkCKLay+zs/7ERGBLTJ2o/yBFauruxe6pwrOL1jK7nv0GHZx2SXM8wlK/Z8AalrG9yU6W2YZqCJyS9mskoo6iMITAMClsEUikaPHQTDcuAnZggqZMIHhGWQTH+m5LlQ0nMoDd24iCVMT6yD1TxxGR6dO7K+H/S7TRc3WOUomAKoh1DXWO6IczFSLN94xRfBA9GZz2yvLDVx94ycnCfFZTDxfHJDyzRmvgKN4fIJTE4/lIx/pb4ByuWbjXmaxQywTxYzsEow5uMcOPB4eGRlL4J0GoLah6U5bD4pV3ZVfoRUSmUn3ZFJaASagPnZ09Q4OPYEI0pAJwItf/aWFMLJOlqP2Kart8PRPYm/jIp+HpwsJ+Y2MjgVHZiqomi97zwIlc4nKNiTjJLXl6Tmo5BLKtZKGZevdHqICY/vucFRdxfe3ww2UOjH2R2TQ16O4MiasWrdLAgBdyAOcAJmNS43EgDjgSEouijnCgWPuhzMUTUzQAfd6pqJRMgC9qKZegUfvdjw4kVtFJokDGO/LaAaEpzMvTskX6b8XtUwApPRsdFJX/bwA4PzUzDOvKRlJUJs7YGJi4mCiYCZvad8oM8qyAkKivlXR3FkpvMo4/dKqBqZ7qTtZCuNFYYqL9lH/IIPh4Zc4D0dE5UFccg4D8LCv//UVxnONIgrw9uovxsefMhju4puQ1Qf0TBbkn2cAmlva520HEPp4s5t43uHr5IWZLL6b/6xFKNcMRlFp7XwCzHeFMgBPRSJ8is8y5uIDrMXHzp22bgaDfIKS5x/esfBAlPv1lgAAAABJRU5ErkJggg==);
+  background-image: url('Content/images/logo32.png');
   background-repeat: no-repeat;
   width: 32px;
   height: 32px;
@@ -76,7 +76,7 @@ form#send-message {
 #users-filter-closed-area 
 {
 	position: absolute;
-	top: 85px;
+	top: 90px;
 	left: 71%;
 	margin-top: 4px;
   font-size: 13px;
@@ -2430,4 +2430,17 @@ pre {
 
 h3.userlist-header {
     padding: 3px 0;
+}
+
+.modal, .modal-header {
+    line-height: normal;
+}
+.modal-header h3 {
+    font-size: 15px;
+    line-height: normal;
+    margin: 16px 0;
+}
+
+.modal-header .close {
+    line-height: 18px;
 }
