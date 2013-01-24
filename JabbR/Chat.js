@@ -50,9 +50,22 @@
         return (user.Flag) ? 'flag flag-' + user.Flag : '';
     }
 
-    function logout() {
+    function performLogout() {
+        var d = $.Deferred();
         $.post('account/logout', {}).done(function () {
+            d.resolveWith(null);
             document.location = document.location.pathname;
+        });
+
+        return d.promise();
+    }
+
+    function logout() {
+        performLogout().done(function () {
+            chat.server.send('/logout', chat.state.activeRoom)
+                .fail(function (e) {
+                    ui.addMessage(e, 'error', chat.state.activeRoom);
+                });
         });
     }
 
@@ -250,6 +263,10 @@
             // There's no active room so we don't care
             loadRooms();
         }
+    };
+
+    chat.client.logOut = function () {
+        performLogout();
     };
 
     chat.client.lockRoom = function (user, room) {
@@ -785,27 +802,22 @@
         }
 
         try {
-            if (msg === '/logout') {
-                logout();
-            }
-            else {
-                chat.server.send(clientMessage)
-                    .done(function (requiresUpdate) {
-                        if (requiresUpdate === true) {
-                            ui.showUpdateUI();
-                        }
+            chat.server.send(clientMessage)
+                .done(function (requiresUpdate) {
+                    if (requiresUpdate === true) {
+                        ui.showUpdateUI();
+                    }
 
-                        if (messageCompleteTimeout) {
-                            clearTimeout(messageCompleteTimeout);
-                            delete pendingMessages[id];
-                        }
+                    if (messageCompleteTimeout) {
+                        clearTimeout(messageCompleteTimeout);
+                        delete pendingMessages[id];
+                    }
 
-                        ui.confirmMessage(id);
-                    })
-                    .fail(function (e) {
-                        ui.addMessage(e, 'error');
-                    });
-            }
+                    ui.confirmMessage(id);
+                })
+                .fail(function (e) {
+                    ui.addMessage(e, 'error');
+                });
         }
         catch (e) {
             connection.hub.log('Failed to send via websockets');

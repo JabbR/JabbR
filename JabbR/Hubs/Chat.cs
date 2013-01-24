@@ -417,7 +417,7 @@ namespace JabbR
                 {
                     var userViewModel = new UserViewModel(user);
 
-                    Clients.Group(room.Name).leave(userViewModel, room.Name);
+                    Clients.OthersInGroup(room.Name).leave(userViewModel, room.Name);
                 }
             }
         }
@@ -694,11 +694,11 @@ namespace JabbR
 
         void INotificationService.LogOut(ChatUser user, string clientId)
         {
-            DisconnectClient(clientId);
-
-            var rooms = user.Rooms.Select(r => r.Name);
-
-            Clients.Caller.logOut(rooms);
+            foreach (var client in user.ConnectedClients)
+            {
+                DisconnectClient(client.Id);
+                Clients.Client(client.Id).logOut();
+            }
         }
 
         void INotificationService.ShowUserInfo(ChatUser user)
