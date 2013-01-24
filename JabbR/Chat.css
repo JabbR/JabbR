@@ -2318,6 +2318,10 @@ li.clearfix
     color: #FFFFFF;
 }
 
+.login-header h1 {
+    font-size: 20px;
+}
+
 .subheader {
     text-shadow: 0 1px 0 rgba(255, 255, 255, .7), 0 2px 0 rgba(0, 0, 0, .5);
     text-transform: uppercase;
@@ -2445,6 +2449,7 @@ h3.userlist-header {
 .modal, .modal-header {
     line-height: normal;
 }
+
 .modal-header h3 {
     font-size: 15px;
     line-height: normal;

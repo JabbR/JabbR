@@ -857,6 +857,7 @@
     </Content>
     <Content Include="Scripts\jquery-1.9.0.min.map" />
     <Content Include="Views\Authentication\login.cshtml" />
+    <Content Include="Views\Account\register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\AssemblyReferenceLocator.cs" />

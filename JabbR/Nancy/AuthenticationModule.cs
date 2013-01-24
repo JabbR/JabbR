@@ -71,6 +71,8 @@ namespace JabbR.Nancy
 
                 return response;
             };
+
+            Get["/account/register"] = _ => View["account/register"];
         }
     }
 }
