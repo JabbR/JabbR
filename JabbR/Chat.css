@@ -2369,7 +2369,8 @@ li.clearfix
 }
 
 .windows-auth,
-.usernamepassword-auth {
+.usernamepassword-auth,
+.user-registration {
     margin: 20px -40px;
 }
 
@@ -2384,6 +2385,7 @@ li.clearfix
     background-position: center left;
     height: 16px;
     width: 16px;
+    margin: 0 10px 0 -10px;
 }
 
 .icon-facebook-logo {
@@ -2392,6 +2394,7 @@ li.clearfix
     background-position: center left;
     height: 16px;
     width: 16px;
+    margin: 0  10px;
 }
 
 .icon-google-logo {
@@ -2400,6 +2403,7 @@ li.clearfix
     background-position: center left;
     height: 16px;
     width: 16px;
+    margin: 0 10px 0 -10px;
 }
 
 .login-body .btn {

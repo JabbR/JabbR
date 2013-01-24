@@ -1,108 +1,16 @@
-﻿@using JabbR.Services;
-
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>JabbR</title>
-    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/Chat.css")" rel="stylesheet" />
-</head>
-<body>
-    <div class="container">
-        <div id="login">
-            <div class="login-header">
-                <div class="banner" role="banner">
-                    <h1>Jabb</h1>
-                    <div class="jabbrLogo large-logo" id="logo"></div>
-                    <div>
-                        Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a>
-                    </div>
-                </div>
-            </div>
-            <div class="login-body">
-                @switch ((AuthenticationMode)Model)
-                {
-                    case AuthenticationMode.UsernamePassword:
-                    <div class="usernamepassword-auth">
-                        <form class="form-horizontal" action="@Url.Content("~/account/login")" method="post">
-                            <div class="control-group">
-                                <div class="controls">
-                                    <div class="input-prepend">
-                                        <span class="add-on"><i class="icon-user"></i></span>
-                                        <input class="input-block-level" name="username" type="text" placeholder="Username" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls">
-                                    <div class="input-prepend">
-                                        <span class="add-on"><i class="icon-lock"></i></span>
-                                        <input class="input-block-level" name="password" type="password" placeholder="Password" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls">
-                                    <button type="submit" class="btn">Sign in</button>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls">
-                                    <a href="@Url.Content("~/account/register")">Register</a> if you don't have an account.
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                        break;
-                    case AuthenticationMode.Social:
-                    <div class="social-auth">
-                        <div class="control-group">
-                            <div class="controls">
-                                <button class="btn btn-large btn-block btn-primary twitter" type="button"><i class="icon-twitter-logo"></i> Twitter</button>
-                                <button class="btn btn-large btn-block btn-primary facebook" type="button"><i class="icon-facebook-logo"></i> Facebook</button>
-                                <button class="btn btn-large btn-block btn-primary google" type="button"><i class="icon-google-logo"></i> Google</button>
-                            </div>
-                        </div>
-                    </div>
-                        break;
-                    case AuthenticationMode.Windows:
-                    <div class="windows-auth">
-                        <form class="form-horizontal" action="@Url.Content("~/account/login")" method="post">
-                            <div class="control-group">
-                                <div class="controls">
-                                    <div class="input-prepend">
-                                        <span class="add-on"><i class="icon-home"></i></span>
-                                        <input class="input-block-level" id="inputIcon" type="text" placeholder="Domain" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls">
-                                    <div class="input-prepend">
-                                        <span class="add-on"><i class="icon-user"></i></span>
-                                        <input class="input-block-level" id="inputIcon" type="text" placeholder="Username" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls">
-                                    <div class="input-prepend">
-                                        <span class="add-on"><i class="icon-lock"></i></span>
-                                        <input class="input-block-level" id="inputIcon" type="password" placeholder="Password" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="control-group">
-                                <div class="controls">
-                                    <button type="submit" class="btn">Sign in</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                        break;
-                }
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+﻿@using JabbR.Services
+@{
+    Layout = "_layout.cshtml";
+}
+@switch ((AuthenticationMode)Model)
+{
+    case AuthenticationMode.UsernamePassword:
+    @Html.Partial("_username")
+        break;
+    case AuthenticationMode.Social:
+    @Html.Partial("_social")
+        break;
+    case AuthenticationMode.Windows:
+    @Html.Partial("_windows")
+        break;
+}
