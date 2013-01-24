@@ -377,11 +377,8 @@ namespace JabbR
                         continue;
                     }
 
-                    // Try to get content from each url we're resolved in the query
-                    string extractedContent = "<p>" + task.Result.Content + "</p>";
-
                     // Notify the room
-                    Clients.Group(roomName).addMessageContent(clientMessageId, extractedContent, roomName);
+                    Clients.Group(roomName).addMessageContent(clientMessageId, task.Result.Content, roomName);
                 }
             });
         }
