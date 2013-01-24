@@ -2,8 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>JabbR</title>
-    <link href="/Content/bootstrap.css" rel="stylesheet" />
-    <link href="/Chat.css" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Chat.css")" rel="stylesheet" />
 </head>
 <body>
     <div class="container">
@@ -19,7 +19,7 @@
             </div>
             <div class="login-body">
                 <div class="usernamepassword-auth">
-                    <form class="form-horizontal" action="~/auth/login" method="post">
+                    <form class="form-horizontal" action="@Url.Content("~/account/login")" method="post">
                         <div class="control-group">
                             <div class="controls">
                                 <div class="input-prepend">

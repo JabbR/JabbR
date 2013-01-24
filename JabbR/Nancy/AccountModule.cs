@@ -7,13 +7,13 @@ using Nancy.Cookies;
 
 namespace JabbR.Nancy
 {
-    public class AuthenticationModule : NancyModule
+    public class AccountModule : NancyModule
     {
-        public AuthenticationModule(IAuthenticationService authService, IMembershipService membershipService)
+        public AccountModule(IAuthenticationService authService, IMembershipService membershipService)
         {
-            Get["auth/login"] = _ => View["login"];
+            Get["/account/login"] = _ => View["login"];
 
-            Post["auth/login"] = param =>
+            Post["/account/login"] = param =>
             {
                 string name = Request.Form.user;
                 string password = Request.Form.password;
@@ -47,7 +47,7 @@ namespace JabbR.Nancy
                 return response;
             };
 
-            Post["auth/logout"] = _ =>
+            Post["/account/logout"] = _ =>
             {
                 var response = Response.AsJson(new { success = true });
 
@@ -59,7 +59,7 @@ namespace JabbR.Nancy
                 return response;
             };
 
-            Get["/account/register"] = _ => View["account/register"];
+            Get["/account/register"] = _ => View["register"];
         }
     }
 }

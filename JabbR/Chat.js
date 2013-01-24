@@ -51,7 +51,7 @@
     }
 
     function logout() {
-        $.post('auth/logout', {}).done(function () {
+        $.post('account/logout', {}).done(function () {
             document.location = document.location.pathname;
         });
     }

@@ -6,8 +6,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>JabbR</title>
-    <link href="/Content/bootstrap.css" rel="stylesheet" />
-    <link href="/Chat.css" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Chat.css")" rel="stylesheet" />
 </head>
 <body>
     <div class="container">
@@ -26,7 +26,7 @@
                 {
                     case AuthenticationMode.UsernamePassword:
                     <div class="usernamepassword-auth">
-                        <form class="form-horizontal" action="@Url.Content("~/auth/login")" method="post">
+                        <form class="form-horizontal" action="@Url.Content("~/account/login")" method="post">
                             <div class="control-group">
                                 <div class="controls">
                                     <div class="input-prepend">
@@ -50,7 +50,7 @@
                             </div>
                             <div class="control-group">
                                 <div class="controls">
-                                    <a href="account/register">Register</a> if you don't have an account.
+                                    <a href="@Url.Content("~/account/register")">Register</a> if you don't have an account.
                                 </div>
                             </div>
                         </form>
@@ -69,7 +69,7 @@
                         break;
                     case AuthenticationMode.Windows:
                     <div class="windows-auth">
-                        <form class="form-horizontal" action="@Url.Content("~/auth/login")" method="post">
+                        <form class="form-horizontal" action="@Url.Content("~/account/login")" method="post">
                             <div class="control-group">
                                 <div class="controls">
                                     <div class="input-prepend">

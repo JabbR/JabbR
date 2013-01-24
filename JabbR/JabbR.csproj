@@ -851,7 +851,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Scripts\jquery-1.9.0.min.map" />
-    <Content Include="Views\Authentication\login.cshtml" />
+    <Content Include="Views\Account\login.cshtml" />
     <Content Include="Views\Account\register.cshtml" />
     <Content Include="Views\Home\index.cshtml" />
   </ItemGroup>
@@ -891,7 +891,7 @@
     </Compile>
     <Compile Include="Models\Mapping\ChatUserIdentityMap.cs" />
     <Compile Include="Models\ChatUserIdentity.cs" />
-    <Compile Include="Nancy\AuthenticationModule.cs" />
+    <Compile Include="Nancy\AccountModule.cs" />
     <Compile Include="Nancy\HomeModule.cs" />
     <Compile Include="Services\AuthenticationMode.cs" />
     <Compile Include="Services\AuthenticationService.cs" />

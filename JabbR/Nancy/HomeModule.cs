@@ -31,7 +31,7 @@ namespace JabbR.Nancy
                     return View["index", viewModel];
                 }
 
-                return Response.AsRedirect("~/auth/login");
+                return Response.AsRedirect("~/account/login");
             };
         }
     }
