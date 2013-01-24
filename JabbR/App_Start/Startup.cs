@@ -119,8 +119,8 @@ namespace JabbR
 
             SetupSignalR(kernel, app);
             SetupWebApi(kernel, app);
-            SetupNancy(kernel, app);
             SetupMiddleware(app);
+            SetupNancy(kernel, app);
 
             SetupErrorHandling();
         }
@@ -128,14 +128,13 @@ namespace JabbR
         private static void SetupNancy(IKernel kernel, IAppBuilder app)
         {
             var bootstrapper = new JabbRNinjectNancyBootstrapper(kernel);
-            app.MapPath("/auth", subApp => subApp.UseNancy(bootstrapper));
-            app.MapPath("/proxy", subApp => subApp.Use(typeof(ImageProxyHandler)));
+            app.UseNancy(bootstrapper);
         }
 
         private static void SetupMiddleware(IAppBuilder app)
         {
+            app.MapPath("/proxy", subApp => subApp.Use(typeof(ImageProxyHandler)));
             app.UseStaticFiles("/", ".");
-            app.UseRazor(new PhysicalFileSystem(Environment.CurrentDirectory), new AssemblyReferenceLocator(), "/");
         }
 
         private static void SetupSignalR(StandardKernel kernel, IAppBuilder app)

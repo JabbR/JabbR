@@ -799,7 +799,6 @@
     <Content Include="Content\images\big-logo.png" />
     <Content Include="Content\images\logo32.png" />
     <Content Include="Content\images\small-logo.png" />
-    <Content Include="default.cshtml" />
     <Content Include="Content\sounds\notification.wav" />
     <Content Include="robots.txt" />
     <EmbeddedResource Include="Migrations\201208211555032_BanUser.resx">
@@ -858,6 +857,7 @@
     <Content Include="Scripts\jquery-1.9.0.min.map" />
     <Content Include="Views\Authentication\login.cshtml" />
     <Content Include="Views\Account\register.cshtml" />
+    <Content Include="Views\Home\index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\AssemblyReferenceLocator.cs" />
@@ -897,6 +897,7 @@
     <Compile Include="Models\Mapping\ChatUserIdentityMap.cs" />
     <Compile Include="Models\ChatUserIdentity.cs" />
     <Compile Include="Nancy\AuthenticationModule.cs" />
+    <Compile Include="Nancy\HomeModule.cs" />
     <Compile Include="Services\AuthenticationMode.cs" />
     <Compile Include="Services\AuthenticationService.cs" />
     <Compile Include="Services\DefaultCache.cs" />
@@ -904,6 +905,7 @@
     <Compile Include="Services\IMembershipService.cs" />
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="ViewModels\LobbyRoomViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="WebApi\Model\ErrorModel.cs" />
     <Compile Include="Infrastructure\HttpRequestExtensions.cs" />
     <Compile Include="WebApi\MessagesController.cs" />

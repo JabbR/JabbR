@@ -11,27 +11,14 @@ namespace JabbR.Nancy
     {
         public AuthenticationModule(IAuthenticationService authService, IMembershipService membershipService)
         {
-            Post["/"] = _ =>
-            {
-                string userToken;
-                if (Request.Cookies.TryGetValue(Constants.UserTokenCookie, out userToken) &&
-                    !String.IsNullOrEmpty(userToken) &&
-                    authService.IsUserAuthenticated(userToken))
-                {
-                    return 200;
-                }
+            Get["auth/login"] = _ => View["login"];
 
-                return 403;
-            };
-
-            Get["/login"] = _ => View["login"];
-
-            Post["/login"] = param =>
+            Post["auth/login"] = param =>
             {
                 string name = Request.Form.user;
                 string password = Request.Form.password;
 
-                var response = Response.AsRedirect("/");
+                var response = Response.AsRedirect("~/");
 
                 try
                 {
@@ -60,7 +47,7 @@ namespace JabbR.Nancy
                 return response;
             };
 
-            Post["/logout"] = _ =>
+            Post["auth/logout"] = _ =>
             {
                 var response = Response.AsJson(new { success = true });
 

@@ -924,40 +924,29 @@
                 options.transport = transport;
             }
 
-            $.post('auth', {})
-                .done(function () {
-                    connection.hub.logging = logging;
-                    connection.hub.start(options, function () {
-                        chat.server.join()
-                        .fail(function (e) {
-                            ui.addMessage(e, 'error');
-                        })
-                        .done(function () {
-                            // get list of available commands
-                            chat.server.getCommands()
-                                .done(function (commands) {
-                                    ui.setCommands(commands);
-                                });
-
-                            // get list of available shortcuts
-                            chat.server.getShortcuts()
-                                .done(function (shortcuts) {
-                                    ui.setShortcuts(shortcuts);
-                                });
-
-                            // populate the lobby rooms
-                            populateLobbyRooms();
-                        });
-                    });
-                })
+            connection.hub.logging = logging;
+            connection.hub.start(options, function () {
+                chat.server.join()
                 .fail(function (e) {
-                    // Not authorized so show the login screen
-                    if (e.status === 403) {
-                        window.location = 'auth/login';
-                    }
+                    ui.addMessage(e, 'error');
+                })
+                .done(function () {
+                    // get list of available commands
+                    chat.server.getCommands()
+                        .done(function (commands) {
+                            ui.setCommands(commands);
+                        });
 
-                    $.cookie('jabbr.state', null);
+                    // get list of available shortcuts
+                    chat.server.getShortcuts()
+                        .done(function (shortcuts) {
+                            ui.setShortcuts(shortcuts);
+                        });
+
+                    // populate the lobby rooms
+                    populateLobbyRooms();
                 });
+            });
 
             connection.hub.reconnected(function () {
                 if (checkingStatus === true) {
