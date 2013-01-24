@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>JabbR</title>
+    <link href="/Content/bootstrap.css" rel="stylesheet" />
+    <link href="/Chat.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="container">
+        <div id="login">
+            <div class="login-header">
+                <div class="banner" role="banner">
+                    <h1>Jabb</h1>
+                    <div class="jabbrLogo large-logo" id="logo"></div>
+                    <div>
+                        Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a>
+                    </div>
+                </div>
+            </div>
+            <div class="login-body">
+                <div class="usernamepassword-auth">
+                    <form class="form-horizontal" action="~/auth/login" method="post">
+                        <div class="control-group">
+                            <div class="controls">
+                                <div class="input-prepend">
+                                    <span class="add-on"><i class="icon-user"></i></span>
+                                    <input class="input-block-level" id="inputIcon" type="text" placeholder="Username" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <div class="input-prepend">
+                                    <span class="add-on"><i class="icon-lock"></i></span>
+                                    <input class="input-block-level" id="inputIcon" type="password" placeholder="Password" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <div class="input-prepend">
+                                    <span class="add-on"><i class="icon-lock"></i></span>
+                                    <input class="input-block-level" id="inputIcon" type="password" placeholder="Confirm Password" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <div class="controls">
+                                <button type="submit" class="btn">Register</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
