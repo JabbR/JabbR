@@ -1,15 +1,6 @@
 ﻿@using SquishIt.Framework;
 @model SettingsViewModel
 
-@{
-    string googleAnalytics = Model.GoogleAnalytics;
-    string sha = Model.Sha;
-    string branch = Model.Branch;
-    string time = Model.Time;
-    bool showReleaseDetails = Model.ShowDetails;
-    var authType = Model.AuthMode;
-}
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -33,10 +24,11 @@
             .Render("~/Content/JabbR_#.css"));
    }
 
-    @if (!String.IsNullOrEmpty(googleAnalytics)) {
+    @if (!String.IsNullOrEmpty(Model.GoogleAnalytics))
+    {
     <script type="text/javascript">
         var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', '<%:googleAnalytics %>']);
+        _gaq.push(['_setAccount', '@Model.GoogleAnalytics']);
         _gaq.push(['_trackPageview']);
 
         (function () {
@@ -248,12 +240,13 @@
       </div>
       </form>
     </div>
-    @if (showReleaseDetails) {
+    @if (Model.ShowDetails)
+    {
     <div id="releaseArea">
         <p id="releaseTag">
-            Deployed from <a target="_blank" href="https://github.com/davidfowl/JabbR/commit/<%:sha %>" title="View the commit."><%:sha.Substring(0, 10) %></a>
-            on <a target="_blank" href="https://github.com/davidfowl/JabbR/branches/<%:branch %>" title="View the branch."><%:branch %></a> 
-            at <%:time %>.
+            Deployed from <a target="_blank" href="https://github.com/davidfowl/JabbR/commit/@Model.Sha" title="View the commit.">@Model.Sha.Substring(0, 10) %></a>
+            on <a target="_blank" href="https://github.com/davidfowl/JabbR/branches/@Model.Branch" title="View the branch.">@Model.Branch</a> 
+            at @Model.Time.
         </p>
     </div>
     }
