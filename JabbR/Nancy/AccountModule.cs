@@ -9,16 +9,16 @@ namespace JabbR.Nancy
 {
     public class AccountModule : NancyModule
     {
-        public AccountModule(IApplicationSettings applicationSettings, IAuthenticationService authService, IMembershipService membershipService)
+        public AccountModule(IApplicationSettings applicationSettings,
+                             IAuthenticationService authService,
+                             IMembershipService membershipService)
         {
             Get["/account/login"] = _ => View["login", applicationSettings.AuthenticationMode];
 
             Post["/account/login"] = param =>
             {
-                string name = Request.Form.user;
+                string name = Request.Form.username;
                 string password = Request.Form.password;
-
-                var response = Response.AsRedirect("~/");
 
                 try
                 {
@@ -26,13 +26,7 @@ namespace JabbR.Nancy
                        !String.IsNullOrEmpty(password))
                     {
                         ChatUser user = membershipService.AuthenticateUser(name, password);
-                        string userToken = authService.GetAuthenticationToken(user);
-                        var cookie = new NancyCookie(Constants.UserTokenCookie, userToken, httpOnly: true)
-                        {
-                            Expires = DateTime.Now + TimeSpan.FromDays(30)
-                        };
-
-                        response.AddCookie(cookie);
+                        return CompleteLogin(authService, user);
                     }
                     else
                     {
@@ -43,8 +37,6 @@ namespace JabbR.Nancy
                 {
                     return View["login", applicationSettings.AuthenticationMode];
                 }
-
-                return response;
             };
 
             Post["/account/logout"] = _ =>
@@ -60,6 +52,41 @@ namespace JabbR.Nancy
             };
 
             Get["/account/register"] = _ => View["register"];
+
+            Post["/account/create"] = _ =>
+            {
+                string name = Request.Form.username;
+                string password = Request.Form.password;
+                string confirmPassword = Request.Form.confirmPassword;
+
+                try
+                {
+                    if (!String.Equals(password, confirmPassword))
+                    {
+                        return View["register"];
+                    }
+
+                    ChatUser user = membershipService.AddUser(name, password);
+                    return CompleteLogin(authService, user);
+                }
+                catch
+                {
+                    return View["register"];
+                }
+            };
+        }
+
+        private Response CompleteLogin(IAuthenticationService authService, ChatUser user)
+        {
+            string userToken = authService.GetAuthenticationToken(user);
+            var cookie = new NancyCookie(Constants.UserTokenCookie, userToken, httpOnly: true)
+            {
+                Expires = DateTime.Now + TimeSpan.FromDays(30)
+            };
+
+            var response = Response.AsRedirect("~/");
+            response.AddCookie(cookie);
+            return response;
         }
     }
 }
