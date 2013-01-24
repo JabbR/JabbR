@@ -942,7 +942,7 @@
                 .fail(function (e) {
                     // Not authorized so show the login screen
                     if (e.status === 403) {
-                        window.location = '/auth/login';
+                        window.location = 'auth/login';
                     }
 
                     $.cookie('jabbr.state', null);

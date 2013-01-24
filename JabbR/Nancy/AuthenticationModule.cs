@@ -24,7 +24,7 @@ namespace JabbR.Nancy
                 return 403;
             };
 
-            Get["/login"] = _ => View["/login"];
+            Get["/login"] = _ => View["login"];
 
             Post["/login"] = param =>
             {
