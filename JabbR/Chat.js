@@ -50,6 +50,12 @@
         return (user.Flag) ? 'flag flag-' + user.Flag : '';
     }
 
+    function logout() {
+        $.post('auth/logout', {}).done(function () {
+            document.location = document.location.pathname;
+        });
+    }
+
     function populateRoom(room) {
         var d = $.Deferred();
         // Populate the list of users rooms and messages 
@@ -780,9 +786,7 @@
 
         try {
             if (msg === '/logout') {
-                $.post('/auth/logout', {}).done(function () {
-                    document.location = document.location.pathname;
-                });
+                logout();
             }
             else {
                 chat.server.send(clientMessage)
@@ -897,6 +901,10 @@
         updateCookie();
     });
 
+    $(ui).bind(ui.events.loggedOut, function () {
+        logout();
+    });
+
     $(function () {
         var stateCookie = $.cookie('jabbr.state'),
             state = stateCookie ? JSON.parse(stateCookie) : {};
@@ -916,7 +924,7 @@
                 options.transport = transport;
             }
 
-            $.post('/auth', {})
+            $.post('auth', {})
                 .done(function () {
                     connection.hub.logging = logging;
                     connection.hub.start(options, function () {

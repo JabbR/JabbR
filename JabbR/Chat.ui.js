@@ -16,6 +16,7 @@
         $downloadDialog = null,
         $downloadDialogButton = null,
         $downloadRange = null,
+        $logout = null,
         $help = null,
         $ui = null,
         $sound = null,
@@ -799,7 +800,8 @@
             sendMessage: 'jabbr.ui.sendMessage',
             focusit: 'jabbr.ui.focusit',
             blurit: 'jabbr.ui.blurit',
-            preferencesChanged: 'jabbr.ui.preferencesChanged'
+            preferencesChanged: 'jabbr.ui.preferencesChanged',
+            loggedOut: 'jabbr.ui.loggedOut'
         },
 
         help: {
@@ -823,6 +825,7 @@
             $downloadDialog = $('#download-dialog');
             $downloadDialogButton = $('#download-dialog-button');
             $downloadRange = $('#download-range');
+            $logout = $('#preferences .logout');
             $help = $('#preferences .help');
             $disconnectDialog = $('#disconnect-dialog');
             $login = $('#jabbr-login');
@@ -1086,9 +1089,15 @@
 
                 $downloadDialog.modal('hide');
             });
+
+            $logout.click(function () {
+                $ui.trigger(ui.events.loggedOut);
+            });
+
             $help.click(function () {
                 ui.showHelp();
             });
+
             $closedRoomFilter.click(function () {
                 var room = getCurrentRoomElements(),
                     show = $(this).is(':checked');

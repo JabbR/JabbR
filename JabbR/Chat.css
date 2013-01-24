@@ -155,6 +155,16 @@ form#send-message {
   position: absolute;
 }
 
+#preferences .logout
+{
+  background: url('Content/images/logout.png') no-repeat;
+  width: 16px;
+  height: 20px;
+  top: 6px;
+  left: 150px;
+  position: absolute;
+}
+
 #logo
 {
   margin-top: 10px;
