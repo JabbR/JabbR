@@ -1,8 +1,5 @@
-﻿@{
-    Layout = "_layout.cshtml";
-}
-<div class="user-registration">
-    <form class="form-horizontal" action="@Url.Content("~/account/create")" method="post">
+﻿<div class="usernamepassword-auth">
+    <form class="form-horizontal" action="@Url.Content("~/account/login")" method="post">
         <div class="control-group">
             <div class="controls">
                 <div class="input-prepend">
@@ -21,15 +18,12 @@
         </div>
         <div class="control-group">
             <div class="controls">
-                <div class="input-prepend">
-                    <span class="add-on"><i class="icon-lock"></i></span>
-                    <input class="input-block-level" name="confirmPassword" type="password" placeholder="Confirm Password" />
-                </div>
+                <button type="submit" class="btn">Sign in</button>
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
-                <button type="submit" class="btn">Register</button>
+                <a href="@Url.Content("~/account/register")">Register</a> if you don't have an account.
             </div>
         </div>
     </form>

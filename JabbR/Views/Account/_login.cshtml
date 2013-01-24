@@ -1,0 +1,16 @@
+﻿@using JabbR.Services
+@{
+    Layout = "_layout.cshtml";
+}
+@switch ((AuthenticationMode)Model)
+{
+    case AuthenticationMode.UsernamePassword:
+    @Html.Partial("_username")
+        break;
+    case AuthenticationMode.Social:
+    @Html.Partial("_social")
+        break;
+    case AuthenticationMode.Windows:
+    @Html.Partial("_windows")
+        break;
+}

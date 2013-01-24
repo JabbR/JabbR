@@ -2369,7 +2369,8 @@ li.clearfix
 }
 
 .windows-auth,
-.usernamepassword-auth {
+.usernamepassword-auth,
+.user-registration {
     margin: 20px -40px;
 }
 
