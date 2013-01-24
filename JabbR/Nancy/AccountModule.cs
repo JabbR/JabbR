@@ -13,7 +13,7 @@ namespace JabbR.Nancy
                              IAuthenticationTokenService authenticationTokenService,
                              IMembershipService membershipService)
         {
-            Get["/account/login"] = _ => View["_login", applicationSettings.AuthenticationMode];
+            Get["/account/login"] = _ => View["login", applicationSettings.AuthenticationMode];
 
             Post["/account/login"] = param =>
             {
@@ -30,12 +30,12 @@ namespace JabbR.Nancy
                     }
                     else
                     {
-                        return View["_login", applicationSettings.AuthenticationMode];
+                        return View["login", applicationSettings.AuthenticationMode];
                     }
                 }
                 catch
                 {
-                    return View["_login", applicationSettings.AuthenticationMode];
+                    return View["login", applicationSettings.AuthenticationMode];
                 }
             };
 
