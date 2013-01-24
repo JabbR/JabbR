@@ -945,7 +945,7 @@
                 .fail(function (e) {
                     // Not authorized so show the login screen
                     if (e.status === 403) {
-                        ui.showLogin();
+                        window.location = 'auth/login';
                     }
 
                     $.cookie('jabbr.state', null);

@@ -852,6 +852,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Scripts\jquery-1.9.0.min.map" />
+    <Content Include="Views\Authentication\login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\AssemblyReferenceLocator.cs" />
@@ -1138,9 +1139,7 @@
   <ItemGroup>
     <Content Include="Chat.emoji.js" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Authentication\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

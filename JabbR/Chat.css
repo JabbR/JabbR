@@ -2283,3 +2283,151 @@ li.clearfix
 {
     display: none;
 }
+
+#login {
+    background-color: #FFF;
+    box-shadow: 0 0 10px #00103F;
+    -moz-box-shadow: 0 0 10px #00103F;
+    -webkit-box-shadow: 0 0 10px #00103F;
+    margin: 100px auto;
+    width: 500px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
+.login-header {
+    border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    -webkit-border-radius: 5px 5px 0 0;
+    background-color: #00103F;
+    height: 50px;
+    margin: 0 auto;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    color: #FFFFFF;
+}
+
+.subheader {
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .7), 0 2px 0 rgba(0, 0, 0, .5);
+    text-transform: uppercase;
+    text-align: center;
+    color: #00103F;
+    margin: 0 0 0 0;
+    padding-top: 15px;
+    letter-spacing: 4px;
+    font: normal 26px/1 Verdana, Helvetica;
+    position: relative;
+    width: 500px;
+}
+
+    .subheader:after, .subheader:before {
+        background-color: #00103F;
+        content: "";
+        height: 1px;
+        position: absolute;
+        top: 30px;
+        width: 120px;
+    }
+
+    .subheader:after {
+        background-image: -webkit-gradient(linear, left top, right top, from(#00103F), to(#fff));
+        background-image: -webkit-linear-gradient(left, #00103F, #fff);
+        background-image: -moz-linear-gradient(left, #00103F, #fff);
+        background-image: -ms-linear-gradient(left, #00103F, #fff);
+        background-image: -o-linear-gradient(left, #00103F, #fff);
+        background-image: linear-gradient(left, #00103F, #fff);
+        right: 0;
+    }
+
+    .subheader:before {
+        background-image: -webkit-gradient(linear, right top, left top, from(#00103F), to(#fff));
+        background-image: -webkit-linear-gradient(right, #00103F, #fff);
+        background-image: -moz-linear-gradient(right, #00103F, #fff);
+        background-image: -ms-linear-gradient(right, #00103F, #fff);
+        background-image: -o-linear-gradient(right, #00103F, #fff);
+        background-image: linear-gradient(right, #00103F, #fff);
+        left: 0;
+    }
+
+.login-body {
+    border-radius: 0 0 5px 5px;
+    -moz-border-radius: 0 0 5px 5px;
+    -webkit-border-radius: 0 0 5px 5px;
+    padding-top: 10px;
+    padding-bottom: 15px;
+}
+
+.windows-auth,
+.usernamepassword-auth {
+    margin: 20px -40px;
+}
+
+.social-auth {
+    margin: 20px 30px;
+    padding: 0 20px;
+}
+
+.icon-twitter-logo {
+    background-image: url('/Content/images/twitter_white.png');
+    background-repeat: no-repeat;
+    background-position: center left;
+    height: 16px;
+    width: 16px;
+}
+
+.icon-facebook-logo {
+    background-image: url('/Content/images/facebook_white.png');
+    background-repeat: no-repeat;
+    background-position: center left;
+    height: 16px;
+    width: 16px;
+}
+
+.icon-google-logo {
+    background-image: url('/Content/images/google_white.png');
+    background-repeat: no-repeat;
+    background-position: center left;
+    height: 16px;
+    width: 16px;
+}
+
+.login-body .btn {
+    background-color: #00103F;
+    background-image: none;
+    text-shadow: none;
+    color: #FFF;
+}
+
+.login-body .btn:hover {
+    background-color: #164C85;
+}
+
+.large-logo {
+    background-image: url('/Content/images/logo64.png');
+    background-size: 48px 48px;
+    height: 48px;
+    width: 48px;
+}
+
+h3.collapsible_title {
+    line-height: normal;
+    margin-top: 16px;
+}
+
+pre {
+    color: #000000;
+    display: block;
+    padding: 0;
+    font-size: 13px;
+    line-height: normal;
+    background-color: #FFFFFF;
+    border: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+h3.userlist-header {
+    padding: 3px 0;
+}
