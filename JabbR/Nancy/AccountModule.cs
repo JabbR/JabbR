@@ -9,9 +9,9 @@ namespace JabbR.Nancy
 {
     public class AccountModule : NancyModule
     {
-        public AccountModule(IAuthenticationService authService, IMembershipService membershipService)
+        public AccountModule(IApplicationSettings applicationSettings, IAuthenticationService authService, IMembershipService membershipService)
         {
-            Get["/account/login"] = _ => View["login"];
+            Get["/account/login"] = _ => View["login", applicationSettings.AuthenticationMode];
 
             Post["/account/login"] = param =>
             {
@@ -36,12 +36,12 @@ namespace JabbR.Nancy
                     }
                     else
                     {
-                        return View["login"];
+                        return View["login", applicationSettings.AuthenticationMode];
                     }
                 }
                 catch
                 {
-                    return View["login"];
+                    return View["login", applicationSettings.AuthenticationMode];
                 }
 
                 return response;

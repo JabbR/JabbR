@@ -1,7 +1,5 @@
 ﻿@using JabbR.Services;
-@{
-    var authType = ApplicationSettings.GetAuthenticationMode();
-}
+
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -22,7 +20,7 @@
                 </div>
             </div>
             <div class="login-body">
-                @switch (authType)
+                @switch ((AuthenticationMode)Model)
                 {
                     case AuthenticationMode.UsernamePassword:
                     <div class="usernamepassword-auth">
