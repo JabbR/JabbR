@@ -967,7 +967,7 @@
                 }
 
                 // Prepend our target username
-                message = '/msg ' + $(this).text().trim() + ' ' + message;
+                message = '@' + $(this).text().trim() + ' ' + message;
                 ui.setMessage(message);
                 return false;
             };
