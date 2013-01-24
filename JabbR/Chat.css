@@ -256,7 +256,7 @@ form#send-message {
 
 #userlist-lobby
 {
-  top: 85px;
+  top: 120px;
 }
 
 .users ul
@@ -326,11 +326,6 @@ form#send-message {
   .users li.room.closed.locked .readonly
   {
     margin-left: 20px;
-  }
-  
-  #userlist-lobby 
-  {
-    top: 105px;
   }
 
 .users .details
