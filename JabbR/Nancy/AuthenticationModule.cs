@@ -33,17 +33,28 @@ namespace JabbR.Nancy
 
                 var response = Response.AsRedirect("/");
 
-                if (!String.IsNullOrEmpty(name) &&
-                   !String.IsNullOrEmpty(password))
+                try
                 {
-                    ChatUser user = membershipService.AuthenticateUser(name, password);
-                    string userToken = authService.GetAuthenticationToken(user);
-                    var cookie = new NancyCookie(Constants.UserTokenCookie, userToken, httpOnly: true)
+                    if (!String.IsNullOrEmpty(name) &&
+                       !String.IsNullOrEmpty(password))
                     {
-                        Expires = DateTime.Now + TimeSpan.FromDays(30)
-                    };
+                        ChatUser user = membershipService.AuthenticateUser(name, password);
+                        string userToken = authService.GetAuthenticationToken(user);
+                        var cookie = new NancyCookie(Constants.UserTokenCookie, userToken, httpOnly: true)
+                        {
+                            Expires = DateTime.Now + TimeSpan.FromDays(30)
+                        };
 
-                    response.AddCookie(cookie);
+                        response.AddCookie(cookie);
+                    }
+                    else
+                    {
+                        return View["login"];
+                    }
+                }
+                catch
+                {
+                    return View["login"];
                 }
 
                 return response;
