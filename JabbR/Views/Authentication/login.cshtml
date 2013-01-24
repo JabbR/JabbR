@@ -26,7 +26,7 @@
                 {
                     case AuthenticationMode.UsernamePassword:
                     <div class="usernamepassword-auth">
-                        <form class="form-horizontal" action="/auth/login" method="post">
+                        <form class="form-horizontal" action="@Url.Content("~/login")" method="post">
                             <div class="control-group">
                                 <div class="controls">
                                     <div class="input-prepend">
@@ -64,7 +64,7 @@
                         break;
                     case AuthenticationMode.Windows:
                     <div class="windows-auth">
-                        <form class="form-horizontal" action="~/auth/login" method="post">
+                        <form class="form-horizontal" action="@Url.Content("~/login")" method="post">
                             <div class="control-group">
                                 <div class="controls">
                                     <div class="input-prepend">
