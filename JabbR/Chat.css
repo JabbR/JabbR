@@ -256,7 +256,7 @@ form#send-message {
 
 #userlist-lobby
 {
-  top: 85px;
+  top: 120px;
 }
 
 .users ul
@@ -326,11 +326,6 @@ form#send-message {
   .users li.room.closed.locked .readonly
   {
     margin-left: 20px;
-  }
-  
-  #userlist-lobby 
-  {
-    top: 105px;
   }
 
 .users .details
@@ -2233,20 +2228,21 @@ li.clearfix
     
 #jabbr-help
 {
-    height: 100%;
+    height: 490px;
 }    
 
 #jabbr-help .modal-body
 {
     margin: 0;
     padding: 0;
+    overflow: hidden;
 }   
 
 .help-body
 {
     overflow: auto;
     margin: 0 0 0 10px;
-    max-height: 430px;
+    max-height: 400px;
 } 
 
 .command-list
