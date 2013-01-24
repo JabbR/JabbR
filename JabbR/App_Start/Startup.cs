@@ -6,7 +6,6 @@ using JabbR.Infrastructure;
 using JabbR.Middleware;
 using JabbR.Models;
 using JabbR.Services;
-using Microsoft.AspNet.Razor.Owin.IO;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Json;
