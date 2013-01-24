@@ -9,7 +9,7 @@ namespace JabbR.Nancy
 {
     public class HomeModule : NancyModule
     {
-        public HomeModule(IAuthenticationTokenService authService, IApplicationSettings settings)
+        public HomeModule(IAuthenticationTokenService authService)
         {
             Get["/"] = _ =>
             {
@@ -24,8 +24,7 @@ namespace JabbR.Nancy
                         GoogleAnalytics = ConfigurationManager.AppSettings["googleAnalytics"],
                         Sha = ConfigurationManager.AppSettings["googleAnalytics"],
                         Branch = ConfigurationManager.AppSettings["releaseBranch"],
-                        Time = ConfigurationManager.AppSettings["releaseTime"],
-                        AuthMode = settings.AuthenticationMode
+                        Time = ConfigurationManager.AppSettings["releaseTime"]
                     };
 
                     return View["index", viewModel];

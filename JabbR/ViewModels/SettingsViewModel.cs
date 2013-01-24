@@ -16,7 +16,5 @@ namespace JabbR.ViewModels
                 return !String.IsNullOrEmpty(Sha) && !String.IsNullOrEmpty(Branch) && !String.IsNullOrEmpty(Time);
             }
         }
-
-        public AuthenticationMode AuthMode { get; set; }  
     }
 }
