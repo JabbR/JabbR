@@ -10,7 +10,7 @@ namespace JabbR.Nancy
     public class AccountModule : NancyModule
     {
         public AccountModule(IApplicationSettings applicationSettings,
-                             IAuthenticationService authService,
+                             IAuthenticationTokenService authenticationTokenService,
                              IMembershipService membershipService)
         {
             Get["/account/login"] = _ => View["login", applicationSettings.AuthenticationMode];
@@ -26,7 +26,7 @@ namespace JabbR.Nancy
                        !String.IsNullOrEmpty(password))
                     {
                         ChatUser user = membershipService.AuthenticateUser(name, password);
-                        return CompleteLogin(authService, user);
+                        return CompleteLogin(authenticationTokenService, user);
                     }
                     else
                     {
@@ -67,7 +67,7 @@ namespace JabbR.Nancy
                     }
 
                     ChatUser user = membershipService.AddUser(name, password);
-                    return CompleteLogin(authService, user);
+                    return CompleteLogin(authenticationTokenService, user);
                 }
                 catch
                 {
@@ -76,9 +76,9 @@ namespace JabbR.Nancy
             };
         }
 
-        private Response CompleteLogin(IAuthenticationService authService, ChatUser user)
+        private Response CompleteLogin(IAuthenticationTokenService authenticationTokenService, ChatUser user)
         {
-            string userToken = authService.GetAuthenticationToken(user);
+            string userToken = authenticationTokenService.GetAuthenticationToken(user);
             var cookie = new NancyCookie(Constants.UserTokenCookie, userToken, httpOnly: true)
             {
                 Expires = DateTime.Now + TimeSpan.FromDays(30)

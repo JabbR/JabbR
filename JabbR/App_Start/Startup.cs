@@ -37,8 +37,8 @@ namespace JabbR
             kernel.Bind<IChatService>()
                   .To<ChatService>();
 
-            kernel.Bind<IAuthenticationService>()
-                  .To<AuthenticationService>();
+            kernel.Bind<IAuthenticationTokenService>()
+                  .To<AuthenticationTokenService>();
 
             // We're doing this manually since we want the chat repository to be shared
             // between the chat service and the chat hub itself

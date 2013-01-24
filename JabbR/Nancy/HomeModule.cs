@@ -9,14 +9,14 @@ namespace JabbR.Nancy
 {
     public class HomeModule : NancyModule
     {
-        public HomeModule(IAuthenticationService authService, IApplicationSettings settings)
+        public HomeModule(IAuthenticationTokenService authService, IApplicationSettings settings)
         {
             Get["/"] = _ =>
             {
                 string userToken;
                 if (Request.Cookies.TryGetValue(Constants.UserTokenCookie, out userToken) &&
                     !String.IsNullOrEmpty(userToken) &&
-                    authService.IsUserAuthenticated(userToken))
+                    authService.IsValidAuthenticationToken(userToken))
                 {
 
                     var viewModel = new SettingsViewModel

@@ -894,9 +894,9 @@
     <Compile Include="Nancy\AccountModule.cs" />
     <Compile Include="Nancy\HomeModule.cs" />
     <Compile Include="Services\AuthenticationMode.cs" />
-    <Compile Include="Services\AuthenticationService.cs" />
+    <Compile Include="Services\AuthenticationTokenService.cs" />
     <Compile Include="Services\DefaultCache.cs" />
-    <Compile Include="Services\IAuthenticationService.cs" />
+    <Compile Include="Services\IAuthenticationTokenService.cs" />
     <Compile Include="Services\IMembershipService.cs" />
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="ViewModels\LobbyRoomViewModel.cs" />
