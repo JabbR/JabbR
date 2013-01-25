@@ -18,7 +18,7 @@ namespace JabbR.Nancy
             return response;
         }
 
-        public static void AddAuthenticationCookie(this Response response,
+        private static void AddAuthenticationCookie(this Response response,
                                                    IAuthenticationTokenService authenticationTokenService,
                                                    ChatUser user)
         {
