@@ -268,7 +268,9 @@ namespace JabbR.Services
                                                                                 {"za", "South Africa"},
                                                                                 {"zm", "Zambia"},
                                                                                 {"zw", "Zimbabwe"},
-                                                                                {"zz", "Scotland"}
+                                                                                {"g1", "England"},
+                                                                                {"g2", "Wales"},
+                                                                                {"g3", "Scotland"}
                                                   };
 
         public ChatService(ICache cache, IJabbrRepository repository)
