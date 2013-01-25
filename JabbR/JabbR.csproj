@@ -57,6 +57,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\AntiXSS.4.2.1\lib\net40\AntiXssLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="CuttingEdge.Conditions">
+      <HintPath>..\packages\CuttingEdge.Conditions.1.2.0.0\lib\NET35\CuttingEdge.Conditions.dll</HintPath>
+    </Reference>
     <Reference Include="EcmaScript.NET, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EcmaScript.Net.1.0.1.0\lib\net20\EcmaScript.NET.dll</HintPath>
@@ -113,6 +116,10 @@
     <Reference Include="Nancy">
       <HintPath>..\packages\Nancy.0.15.3\lib\net40\Nancy.dll</HintPath>
     </Reference>
+    <Reference Include="Nancy.Authentication.WorldDomination, Version=0.13.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Nancy.Authentication.WorldDomination.0.13.0-beta\lib\net40\Nancy.Authentication.WorldDomination.dll</HintPath>
+    </Reference>
     <Reference Include="Nancy.Bootstrappers.Ninject">
       <HintPath>..\packages\Nancy.Bootstrappers.Ninject.0.15.3\lib\net40\Nancy.Bootstrappers.Ninject.dll</HintPath>
     </Reference>
@@ -138,6 +145,9 @@
     </Reference>
     <Reference Include="Owin.Types">
       <HintPath>..\packages\Owin.Types.0.7-alpha\lib\net40\Owin.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
     </Reference>
     <Reference Include="SquishIt.Framework, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -165,6 +175,10 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
+    <Reference Include="WorldDomination.Web.Authentication, Version=0.13.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WorldDomination.Web.Authentication.0.13.0-beta\lib\net40\WorldDomination.Web.Authentication.dll</HintPath>
+    </Reference>
     <Reference Include="Yahoo.Yui.Compressor, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\YUICompressor.NET.2.2.0.0\lib\NET20\Yahoo.Yui.Compressor.dll</HintPath>
@@ -806,6 +820,9 @@
     <EmbeddedResource Include="Migrations\201301230858497_MessageHtmlEncoding.resx">
       <DependentUpon>201301230858497_MessageHtmlEncoding.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201301250443391_AddProviderName.resx">
+      <DependentUpon>201301250443391_AddProviderName.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -860,6 +877,12 @@
     <Content Include="Views\Account\login.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Migrations\201301250443391_AddProviderName.cs" />
+    <Compile Include="Migrations\201301250443391_AddProviderName.Designer.cs">
+      <DependentUpon>201301250443391_AddProviderName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Nancy\NancyExtensions.cs" />
+    <Compile Include="Services\JabbRAuthenticationCallbackProvider.cs" />
     <Compile Include="App_Start\Startup.SystemWeb.cs" />
     <Compile Include="App_Start\Startup.ErrorHandling.cs" />
     <Compile Include="App_Start\Startup.Migrations.cs" />

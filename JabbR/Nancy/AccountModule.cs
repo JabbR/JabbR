@@ -26,7 +26,7 @@ namespace JabbR.Nancy
                        !String.IsNullOrEmpty(password))
                     {
                         ChatUser user = membershipService.AuthenticateUser(name, password);
-                        return CompleteLogin(authenticationTokenService, user);
+                        return this.CompleteLogin(authenticationTokenService, user);
                     }
                     else
                     {
@@ -67,26 +67,13 @@ namespace JabbR.Nancy
                     }
 
                     ChatUser user = membershipService.AddUser(name, password);
-                    return CompleteLogin(authenticationTokenService, user);
+                    return this.CompleteLogin(authenticationTokenService, user);
                 }
                 catch
                 {
                     return View["register"];
                 }
             };
-        }
-
-        private Response CompleteLogin(IAuthenticationTokenService authenticationTokenService, ChatUser user)
-        {
-            string userToken = authenticationTokenService.GetAuthenticationToken(user);
-            var cookie = new NancyCookie(Constants.UserTokenCookie, userToken, httpOnly: true)
-            {
-                Expires = DateTime.Now + TimeSpan.FromDays(30)
-            };
-
-            var response = Response.AsRedirect("~/");
-            response.AddCookie(cookie);
-            return response;
         }
     }
 }

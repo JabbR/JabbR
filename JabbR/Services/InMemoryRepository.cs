@@ -9,12 +9,14 @@ namespace JabbR.Services
     public class InMemoryRepository : IJabbrRepository
     {
         private readonly ICollection<ChatUser> _users;
+        private readonly ICollection<ChatUserIdentity> _identities;
         private readonly ICollection<ChatRoom> _rooms;
 
         public InMemoryRepository()
         {
             _users = new SafeCollection<ChatUser>();
             _rooms = new SafeCollection<ChatRoom>();
+            _identities = new SafeCollection<ChatUserIdentity>();
         }
 
         public IQueryable<ChatRoom> Rooms { get { return _rooms.AsQueryable(); } }
@@ -29,6 +31,11 @@ namespace JabbR.Services
         public void Add(ChatUser user)
         {
             _users.Add(user);
+        }
+
+        public void Add(ChatUserIdentity identity)
+        {
+            _identities.Add(identity);
         }
 
         public void Add(ChatMessage message)
@@ -130,9 +137,14 @@ namespace JabbR.Services
             return _users.FirstOrDefault(u => u.ConnectedClients.Any(c => c.Id == clientId));
         }
 
-        public ChatUser GetUserByIdentity(string userIdentity)
+        public ChatUser GetUserByIdentity(string providerName, string userIdentity)
         {
-            return _users.FirstOrDefault(u => u.Identity == userIdentity);
+            var identity = _identities.FirstOrDefault(u => u.Identity == userIdentity && u.ProvierName == providerName);
+            if (identity != null)
+            {
+                return identity.User;
+            }
+            return null;
         }
 
         public ChatClient GetClientById(string clientId, bool includeUser = false)

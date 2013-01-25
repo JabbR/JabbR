@@ -87,14 +87,16 @@ namespace JabbR.Test
                 var repository = new InMemoryRepository();
                 var service = new MembershipService(repository, new Mock<ICryptoService>().Object);
 
-                service.AddUser("SomeUser", "identity", "email");
+                service.AddUser("SomeUser", "provider", "identity", "email");
 
-                var user = repository.GetUserByIdentity("identity");
+                var user = repository.GetUserByIdentity("provider", "identity");
                 Assert.NotNull(user);
                 Assert.Equal("SomeUser", user.Name);
-                Assert.Equal("identity", user.Identity);
-                Assert.Equal("email", user.Email);
+                Assert.Null(user.Identity);
+                Assert.Null(user.Email);
                 Assert.Equal("0c83f57c786a0b4a39efab23731c7ebc", user.Hash);
+                Assert.Equal(1, user.Identities.Count);
+                Assert.Equal("email", user.Identities.First().Email);
             }
 
             [Fact]
@@ -109,14 +111,16 @@ namespace JabbR.Test
 
                 var service = new MembershipService(repository, new Mock<ICryptoService>().Object);
 
-                service.AddUser("david", "idenity", email: null);
+                service.AddUser("david", "provider", "identity", email: null);
 
-                var user = repository.GetUserByIdentity("idenity");
+                var user = repository.GetUserByIdentity("provider", "identity");
                 Assert.NotNull(user);
                 Assert.Equal("david1", user.Name);
-                Assert.Equal("idenity", user.Identity);
+                Assert.Null(user.Identity);
                 Assert.Null(user.Email);
                 Assert.Null(user.Hash);
+                Assert.Equal(1, user.Identities.Count);
+                Assert.Equal("identity", user.Identities.First().Identity);
             }
         }
 
@@ -265,7 +269,7 @@ namespace JabbR.Test
             public void ThrowsIfUserDoesNotExist()
             {
                 var repository = new InMemoryRepository();
-                var service = new MembershipService(repository,new Mock<ICryptoService>().Object);
+                var service = new MembershipService(repository, new Mock<ICryptoService>().Object);
 
                 Assert.Throws<InvalidOperationException>(() => service.AuthenticateUser("SomeUser", "foo"));
             }

@@ -17,7 +17,7 @@ namespace JabbR.Services
             _crypto = crypto;
         }
 
-        public ChatUser AddUser(string userName, string identity, string email)
+        public ChatUser AddUser(string userName, string providerName, string identity, string email)
         {
             if (!IsValidUserName(userName))
             {
@@ -36,14 +36,23 @@ namespace JabbR.Services
             {
                 Name = userName,
                 Status = (int)UserStatus.Active,
-                Email = email,
                 Hash = email.ToMD5(),
-                Identity = identity,
                 Id = Guid.NewGuid().ToString("d"),
                 LastActivity = DateTime.UtcNow
             };
 
+            var chatUserIdentity = new ChatUserIdentity
+            {
+                User = user,
+                Email = email,
+                Identity = identity,
+                ProvierName = providerName
+            };
+
+            user.Identities.Add(chatUserIdentity);
+
             _repository.Add(user);
+            _repository.Add(chatUserIdentity);
             _repository.CommitChanges();
 
             return user;

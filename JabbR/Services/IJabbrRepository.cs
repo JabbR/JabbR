@@ -23,7 +23,7 @@ namespace JabbR.Services
 
         ChatUser GetUserByName(string userName);
         ChatUser GetUserByClientId(string clientId);
-        ChatUser GetUserByIdentity(string userIdentity);
+        ChatUser GetUserByIdentity(string providerName, string userIdentity);
 
         ChatClient GetClientById(string clientId, bool includeUser = false);
 
@@ -34,6 +34,8 @@ namespace JabbR.Services
         void Add(ChatMessage message);
         void Add(ChatRoom room);
         void Add(ChatUser user);
+        void Add(ChatUserIdentity identity);
+
         void Remove(ChatClient client);
         void Remove(ChatRoom room);
         void Remove(ChatUser user);

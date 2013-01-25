@@ -11,11 +11,13 @@ using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Json;
 using Microsoft.Owin.Mapping;
 using Microsoft.Owin.StaticFiles;
+using Nancy.Authentication.WorldDomination;
 using Nancy.Bootstrappers.Ninject;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Ninject;
 using Owin;
+using WorldDomination.Web.Authentication;
 
 namespace JabbR
 {
@@ -75,6 +77,12 @@ namespace JabbR
 
             kernel.Bind<IMembershipService>()
                   .To<MembershipService>();
+
+            kernel.Bind<IAuthenticationService>()
+                  .ToConstant(new AuthenticationService());
+
+            kernel.Bind<IAuthenticationCallbackProvider>()
+                      .To<JabbRAuthenticationCallbackProvider>();
 
             try
             {
