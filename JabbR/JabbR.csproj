@@ -875,6 +875,7 @@
     <Content Include="Views\Account\_windows.cshtml" />
     <Content Include="Views\Account\_social.cshtml" />
     <Content Include="Views\Account\login.cshtml" />
+    <Content Include="Views\Account\index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Migrations\201301250443391_AddProviderName.cs" />

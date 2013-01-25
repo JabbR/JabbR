@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Security.Principal;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
+using JabbR.ViewModels;
 using Nancy;
 using Nancy.Cookies;
+using Nancy.Owin;
 
 namespace JabbR.Nancy
 {
@@ -11,8 +15,15 @@ namespace JabbR.Nancy
     {
         public AccountModule(IApplicationSettings applicationSettings,
                              IAuthenticationTokenService authenticationTokenService,
-                             IMembershipService membershipService)
+                             IMembershipService membershipService,
+                             IJabbrRepository repository)
         {
+            Get["/account"] = _ =>
+                {
+                    var user = repository.GetUserById(Context.CurrentUser.UserName);
+                    return View["index", new UserViewModel(user)];
+                };
+
             Get["/account/login"] = _ => View["login", applicationSettings.AuthenticationMode];
 
             Post["/account/login"] = param =>

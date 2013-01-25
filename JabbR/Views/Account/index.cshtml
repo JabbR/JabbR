@@ -1,0 +1,68 @@
+﻿@using JabbR.ViewModels
+@{
+    var userModel = (UserViewModel)Model;
+    var gravatar = string.Format("https://secure.gravatar.com/avatar/{0}?s=48&d=mm", userModel.Hash);
+}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>JabbR</title>
+    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Chat.css")" rel="stylesheet" />
+</head>
+<body>
+    <section id="page" role="application">
+        <header id="heading" role="heading">
+            <div class="banner" role="banner">
+                <h1>Jabb</h1>
+                <div class="jabbrLogo" id="logo"></div>
+                <div>
+                    Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a>
+                </div>
+            </div>
+            <div style="clear: both"></div>
+        </header>
+        <div class="container">
+            <div class="row" style="padding-top: 75px;">
+                <div class="span4 user-details-sidenav">
+                    <div class="user-details">
+                        <img class="gravatar img-rounded" src="@gravatar" style="float: left;" />
+                        <div class="details">
+                            <span class="name">@userModel.Name</span>
+                        </div>
+                    </div>
+                    <ul class="nav nav-list">
+                        <li class="active"><a href="#"><i class="icon-chevron-right"></i>Profile</a></li>
+                        <li><a href="#"><i class="icon-chevron-right"></i>Password</a></li>
+                        <li><a href="#"><i class="icon-chevron-right"></i>Identity Providers</a></li>
+                    </ul>
+                </div>
+                <div class="span8">
+                    <div class="account-details">
+                        <div class="account-details-header">
+                            <h1>Profile</h1>
+                        </div>
+                        <div class="account-details-body">
+                            <form class="form-horizontal">
+                                <div class="control-group">
+                                    <label class="control-label" for="note">Note</label>
+                                    <div class="controls">
+                                        <input type="text" id="note" class="input-xlarge" placeholder="Note" value="@userModel.Note"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="country">Country</label>
+                                    <div class="controls">
+                                        <select>
+                                        </select>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
