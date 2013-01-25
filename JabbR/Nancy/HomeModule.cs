@@ -13,12 +13,8 @@ namespace JabbR.Nancy
         {
             Get["/"] = _ =>
             {
-                string userToken;
-                if (Request.Cookies.TryGetValue(Constants.UserTokenCookie, out userToken) &&
-                    !String.IsNullOrEmpty(userToken) &&
-                    authService.IsValidAuthenticationToken(userToken))
+                if (Context.CurrentUser != null)
                 {
-
                     var viewModel = new SettingsViewModel
                     {
                         GoogleAnalytics = ConfigurationManager.AppSettings["googleAnalytics"],

@@ -5,6 +5,7 @@ using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
 using JabbR.Middleware;
 using JabbR.Models;
+using JabbR.Nancy;
 using JabbR.Services;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;

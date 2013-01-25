@@ -7,7 +7,7 @@ using Nancy.Owin;
 using Nancy.Security;
 using Ninject;
 
-namespace JabbR.Infrastructure
+namespace JabbR.Nancy
 {
     public class JabbRNinjectNancyBootstrapper : NinjectNancyBootstrapper
     {
@@ -36,7 +36,7 @@ namespace JabbR.Infrastructure
             if (env != null)
             {
                 var principal = Get<IPrincipal>(env, "server.User");
-                if (principal != null)
+                if (principal != null && principal.Identity.IsAuthenticated)
                 {
                     context.CurrentUser = new PrincipalIdentity(principal);
                 }
