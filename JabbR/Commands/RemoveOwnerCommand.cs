@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using JabbR.Models;
 
 namespace JabbR.Commands
@@ -14,7 +13,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which owner do you want to remove?");
             }
 
-            string targetUserName = HttpUtility.HtmlDecode(args[0]);
+            string targetUserName = args[0];
 
             ChatUser targetUser = context.Repository.VerifyUser(targetUserName);
 
@@ -23,7 +22,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which room?");
             }
 
-            string roomName = HttpUtility.HtmlDecode(args[1]);
+            string roomName = args[1];
             ChatRoom targetRoom = context.Repository.VerifyRoom(roomName);
 
             context.Service.RemoveOwner(callingUser, targetUser, targetRoom);

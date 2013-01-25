@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Web;
 using JabbR.ContentProviders.Core;
+using JabbR.Infrastructure;
 
 namespace JabbR.ContentProviders
 {
@@ -26,7 +26,7 @@ namespace JabbR.ContentProviders
 
         protected override IList<string> ExtractParameters(Uri responseUri)
         {
-            var queryString = HttpUtility.ParseQueryString(responseUri.Query);
+            var queryString = new QueryStringCollection(responseUri.Query);
             string formKey = queryString["formkey"];
             
             if (!String.IsNullOrEmpty(formKey))

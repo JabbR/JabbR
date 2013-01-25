@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using JabbR.Commands;
 using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
@@ -940,7 +939,7 @@ namespace JabbR
             Cookie cookie;
             Context.RequestCookies.TryGetValue(key, out cookie);
             string value = cookie != null ? cookie.Value : null;
-            return value != null ? HttpUtility.UrlDecode(value) : null;
+            return value != null ? Uri.UnescapeDataString(value) : null;
         }
 
         void INotificationService.BanUser(ChatUser targetUser)

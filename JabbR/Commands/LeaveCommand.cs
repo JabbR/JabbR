@@ -1,5 +1,4 @@
-﻿using System.Web;
-using JabbR.Models;
+﻿using JabbR.Models;
 
 namespace JabbR.Commands
 {
@@ -15,7 +14,7 @@ namespace JabbR.Commands
             }
             else
             {
-                string roomName = HttpUtility.HtmlDecode(args[0]);
+                string roomName = args[0];
 
                 room = context.Repository.VerifyRoom(roomName, mustBeOpen: false);
             }

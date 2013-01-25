@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using JabbR.Models;
 
 namespace JabbR.Commands
@@ -14,7 +13,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which admin do you want to remove?");
             }
 
-            string targetUserName = HttpUtility.HtmlDecode(args[0]);
+            string targetUserName = args[0];
 
             ChatUser targetUser = context.Repository.VerifyUser(targetUserName);
 

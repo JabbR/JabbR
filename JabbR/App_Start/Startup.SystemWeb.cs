@@ -13,10 +13,6 @@ namespace JabbR
         [MethodImpl(MethodImplOptions.NoInlining)]
         private static void BindSystemWebDependencies(IKernel kernel)
         {
-            kernel.Bind<ICache>()
-                  .To<AspNetCache>()
-                  .InSingletonScope();
-
             kernel.Bind<IAssemblyLocator>()
                   .To<BuildManagerAssemblyLocator>()
                   .InSingletonScope();

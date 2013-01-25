@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Web;
 using JabbR.Models;
 
 namespace JabbR.Commands
@@ -15,7 +14,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which room do you want to close?");
             }
 
-            string roomName = HttpUtility.HtmlDecode(args[0]);
+            string roomName = args[0];
             ChatRoom room = context.Repository.VerifyRoom(roomName);
 
             // Before I close the room, I need to grab a copy of -all- the users in that room.

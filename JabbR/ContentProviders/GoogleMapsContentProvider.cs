@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web;
 using JabbR.ContentProviders.Core;
+using JabbR.Infrastructure;
 
 namespace JabbR.ContentProviders
 {
@@ -23,7 +23,7 @@ namespace JabbR.ContentProviders
 
         protected override IList<string> ExtractParameters(Uri responseUri)
         {
-            var queryString = HttpUtility.ParseQueryString(responseUri.Query);
+            var queryString = new QueryStringCollection(responseUri.Query);
             string query = queryString["q"];
             string hl = queryString["hl"];
             string ll = queryString["ll"];
@@ -48,7 +48,7 @@ namespace JabbR.ContentProviders
         {
             return base.GetCollapsibleContent(request).Then(content =>
             {
-                var queryString = HttpUtility.ParseQueryString(request.RequestUri.Query);
+                var queryString = new QueryStringCollection(request.RequestUri.Query);
                 content.Title = queryString["q"] ?? "Google Maps";
                 return content;
             });

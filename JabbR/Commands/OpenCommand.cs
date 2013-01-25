@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using System.Linq;
 using JabbR.Models;
 
@@ -15,7 +14,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which room do you want to open?");
             }
 
-            string roomName = HttpUtility.HtmlDecode(args[0]);
+            string roomName = args[0];
             ChatRoom room = context.Repository.VerifyRoom(roomName, mustBeOpen: false);
 
             context.Service.OpenRoom(callingUser, room);

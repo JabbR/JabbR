@@ -1,6 +1,6 @@
-﻿using System.Text;
-using System.Web;
-using System.Web.Security;
+﻿using System;
+using System.Security.Cryptography;
+using System.Text;
 using JabbR.Models;
 
 namespace JabbR.Services
@@ -9,7 +9,7 @@ namespace JabbR.Services
     {
         private readonly IJabbrRepository _repository;
         private static readonly UTF8Encoding _encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
-        private static readonly string UserIdPurpose = "JabbR.UserId";
+        private static readonly byte[] UserIdPurpose = _encoding.GetBytes("JabbR.UserId");
 
         public AuthenticationTokenService(IJabbrRepository repository)
         {
@@ -20,9 +20,9 @@ namespace JabbR.Services
         {
             try
             {
-                byte[] buffer = HttpServerUtility.UrlTokenDecode(authenticationToken);
+                byte[] buffer = Convert.FromBase64String(authenticationToken);
 
-                buffer = MachineKey.Unprotect(buffer, UserIdPurpose);
+                buffer = ProtectedData.Unprotect(buffer, UserIdPurpose, DataProtectionScope.CurrentUser);
 
                 userId = _encoding.GetString(buffer);
 
@@ -44,9 +44,9 @@ namespace JabbR.Services
         {
             byte[] buffer = _encoding.GetBytes(user.Id);
 
-            buffer = MachineKey.Protect(buffer, UserIdPurpose);
+            buffer = ProtectedData.Protect(buffer, UserIdPurpose, DataProtectionScope.CurrentUser);
 
-            return HttpServerUtility.UrlTokenEncode(buffer);
+            return Convert.ToBase64String(buffer);
         }
 
         public void Dispose()

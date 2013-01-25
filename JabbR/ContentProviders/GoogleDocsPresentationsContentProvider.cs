@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Web;
 using JabbR.ContentProviders.Core;
+using JabbR.Infrastructure;
 
 namespace JabbR.ContentProviders
 {
@@ -44,8 +44,8 @@ namespace JabbR.ContentProviders
                 if (uri.AbsoluteUri.StartsWith("https://accounts.google.com/ServiceLogin") ||
                     uri.AbsoluteUri.StartsWith("http://accounts.google.com/ServiceLogin"))
                 {
-                    var qs = HttpUtility.ParseQueryString(uri.Query);
-                    if (qs.AllKeys.Contains("continue"))
+                    var qs = new QueryStringCollection(uri.Query);
+                    if (qs["continue"] != null)
                     {
                         return Domains.Any(d => qs["continue"].StartsWith(d));
                     }

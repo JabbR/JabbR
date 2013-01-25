@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Web;
 using JabbR.Models;
 
 namespace JabbR.Commands
@@ -15,7 +14,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Who are you trying to ban?");
             }
 
-            string targetUserName = HttpUtility.HtmlDecode(args[0]);
+            string targetUserName = args[0];
 
             ChatUser targetUser = context.Repository.VerifyUser(targetUserName);
 
