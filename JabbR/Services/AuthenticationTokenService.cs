@@ -20,7 +20,7 @@ namespace JabbR.Services
         {
             try
             {
-                byte[] buffer = Convert.FromBase64String(authenticationToken);
+                byte[] buffer = TokenDencode(authenticationToken);
 
                 buffer = ProtectedData.Unprotect(buffer, UserIdPurpose, DataProtectionScope.CurrentUser);
 
@@ -46,7 +46,19 @@ namespace JabbR.Services
 
             buffer = ProtectedData.Protect(buffer, UserIdPurpose, DataProtectionScope.CurrentUser);
 
-            return Convert.ToBase64String(buffer);
+            return TokenEncode(buffer);
+        }
+
+        private static string TokenEncode(byte[] buffer)
+        {
+            return Convert.ToBase64String(buffer).Replace('+', '.')
+                                                 .Replace('/', '-')
+                                                 .Replace('=', '_');
+        }
+
+        private static byte[] TokenDencode(string authenticationToken)
+        {
+            return Convert.FromBase64String(authenticationToken.Replace('.', '+').Replace('-', '/').Replace('_', '='));
         }
 
         public void Dispose()

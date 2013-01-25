@@ -85,17 +85,15 @@ namespace JabbR
             kernel.Bind<IAuthenticationCallbackProvider>()
                       .To<JabbRAuthenticationCallbackProvider>();
 
+            kernel.Bind<ICache>()
+                  .To<DefaultCache>()
+                  .InSingletonScope();
+
             try
             {
                 if (app.IsRunningUnderSystemWeb())
                 {
                     BindSystemWebDependencies(kernel);
-                }
-                else
-                {
-                    kernel.Bind<ICache>()
-                          .To<DefaultCache>()
-                          .InSingletonScope();
                 }
             }
             catch (Exception ex)
