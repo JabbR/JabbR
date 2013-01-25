@@ -198,7 +198,9 @@
           Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a>
         </div>
       </div>
-      
+        <div class="account">
+                    <a href="@Url.Content("~/account")" class="btn">Account</a>
+        </div>
       <div style="clear: both"></div>
     <nav>
       <ul id="tabs" role="tablist">
@@ -339,28 +341,28 @@
   <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
      @{
          
-        WriteLiteral(Bundle.JavaScript()
-            .Add("~/Scripts/jQuery.tmpl.min.js")
-            .Add("~/Scripts/jquery.cookie.js")
-            .Add("~/Scripts/jquery.autotabcomplete.js")
-            .Add("~/Scripts/jquery.timeago.0.10.js")
-            .Add("~/Scripts/jquery.captureDocumentWrite.min.js")
-            .Add("~/Scripts/jquery.sortElements.js")
-            .Add("~/Scripts/ba-linkify.min.js")
-            .Add("~/Scripts/quicksilver.js")
-            .Add("~/Scripts/jquery.livesearch.js")
-            .Add("~/Scripts/Markdown.Converter.js")
-            .Add("~/Scripts/jquery.history.js")
-            .Add("~/Chat.utility.js")
-            .Add("~/Chat.emoji.js")
-            .Add("~/Chat.toast.js")
-            .Add("~/Chat.ui.js")
-            .Add("~/Chat.documentOnWrite.js")
-            .Add("~/Chat.twitter.js")
-            .Add("~/Chat.pinnedWindows.js")
-            .Add("~/Chat.githubissues.js")
-            .Add("~/Chat.js")
-            .Render("~/Scripts/JabbR2_#.js"));
+         WriteLiteral(Bundle.JavaScript()
+             .Add("~/Scripts/jQuery.tmpl.min.js")
+             .Add("~/Scripts/jquery.cookie.js")
+             .Add("~/Scripts/jquery.autotabcomplete.js")
+             .Add("~/Scripts/jquery.timeago.0.10.js")
+             .Add("~/Scripts/jquery.captureDocumentWrite.min.js")
+             .Add("~/Scripts/jquery.sortElements.js")
+             .Add("~/Scripts/ba-linkify.min.js")
+             .Add("~/Scripts/quicksilver.js")
+             .Add("~/Scripts/jquery.livesearch.js")
+             .Add("~/Scripts/Markdown.Converter.js")
+             .Add("~/Scripts/jquery.history.js")
+             .Add("~/Chat.utility.js")
+             .Add("~/Chat.emoji.js")
+             .Add("~/Chat.toast.js")
+             .Add("~/Chat.ui.js")
+             .Add("~/Chat.documentOnWrite.js")
+             .Add("~/Chat.twitter.js")
+             .Add("~/Chat.pinnedWindows.js")
+             .Add("~/Chat.githubissues.js")
+             .Add("~/Chat.js")
+             .Render("~/Scripts/JabbR2_#.js"));
     }
 </body>
 </html>
