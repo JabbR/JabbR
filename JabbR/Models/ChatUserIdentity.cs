@@ -12,6 +12,6 @@ namespace JabbR.Models
 
         public string Email { get; set; }
         public string Identity { get; set; }
-        public string ProvierName { get; set; }
+        public string ProviderName { get; set; }
     }
 }

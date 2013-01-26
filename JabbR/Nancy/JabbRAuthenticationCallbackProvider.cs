@@ -43,7 +43,7 @@ namespace JabbR.Nancy
                         {
                             Email = userInfo.Email,
                             Identity = userInfo.Id,
-                            ProvierName = providerName
+                            ProviderName = providerName
                         });
 
                         _repository.CommitChanges();

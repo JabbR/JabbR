@@ -24,7 +24,7 @@ namespace JabbR.ViewModels
                 return false;
             }
 
-            return _userIdentities.Any(x => x.ProvierName.Equals(providerName, StringComparison.InvariantCultureIgnoreCase));
+            return _userIdentities.Any(x => x.ProviderName.Equals(providerName, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }
