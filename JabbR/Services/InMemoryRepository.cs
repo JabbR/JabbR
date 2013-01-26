@@ -139,7 +139,7 @@ namespace JabbR.Services
 
         public ChatUser GetUserByIdentity(string providerName, string userIdentity)
         {
-            var identity = _identities.FirstOrDefault(u => u.Identity == userIdentity && u.ProvierName == providerName);
+            var identity = _identities.FirstOrDefault(u => u.Identity == userIdentity && u.ProviderName == providerName);
             if (identity != null)
             {
                 return identity.User;

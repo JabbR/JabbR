@@ -46,7 +46,7 @@ namespace JabbR.Services
                 User = user,
                 Email = email,
                 Identity = identity,
-                ProvierName = providerName
+                ProviderName = providerName
             };
 
             user.Identities.Add(chatUserIdentity);

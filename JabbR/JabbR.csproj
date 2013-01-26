@@ -827,6 +827,9 @@
     <EmbeddedResource Include="Migrations\201301250443391_AddProviderName.resx">
       <DependentUpon>201301250443391_AddProviderName.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201301262237296_FixProviderName.resx">
+      <DependentUpon>201301262237296_FixProviderName.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -885,6 +888,10 @@
     <Compile Include="Migrations\201301250443391_AddProviderName.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.Designer.cs">
       <DependentUpon>201301250443391_AddProviderName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201301262237296_FixProviderName.cs" />
+    <Compile Include="Migrations\201301262237296_FixProviderName.Designer.cs">
+      <DependentUpon>201301262237296_FixProviderName.cs</DependentUpon>
     </Compile>
     <Compile Include="Nancy\NancyExtensions.cs" />
     <Compile Include="Nancy\JabbRAuthenticationCallbackProvider.cs" />
