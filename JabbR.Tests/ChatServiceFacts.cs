@@ -18,7 +18,7 @@ namespace JabbR.Test
                 var repository = new InMemoryRepository();
                 var service = new MembershipService(repository, new Mock<ICryptoService>().Object);
 
-                Assert.Throws<InvalidOperationException>(() => service.AddUser("some in valid name", password: null));
+                Assert.Throws<InvalidOperationException>(() => service.AddUser("some in valid name", "email", password: null));
             }
 
             [Fact]
@@ -27,7 +27,7 @@ namespace JabbR.Test
                 // Fix issue #370
                 var repository = new InMemoryRepository();
                 var service = new MembershipService(repository, new Mock<ICryptoService>().Object);
-                var user = service.AddUser("ТарасБуга", "password");
+                var user = service.AddUser("ТарасБуга", "email", "password");
 
                 Assert.Equal("ТарасБуга", user.Name);
             }
@@ -42,7 +42,7 @@ namespace JabbR.Test
                 });
                 var service = new MembershipService(repository, new Mock<ICryptoService>().Object);
 
-                Assert.Throws<InvalidOperationException>(() => service.AddUser("taken", password: null));
+                Assert.Throws<InvalidOperationException>(() => service.AddUser("taken", "email", password: null));
             }
 
             [Fact]
@@ -51,8 +51,8 @@ namespace JabbR.Test
                 var repository = new InMemoryRepository();
                 var service = new MembershipService(repository, new Mock<ICryptoService>().Object);
 
-                Assert.Throws<InvalidOperationException>(() => service.AddUser(null, password: null));
-                Assert.Throws<InvalidOperationException>(() => service.AddUser(String.Empty, password: null));
+                Assert.Throws<InvalidOperationException>(() => service.AddUser(null, "email", password: null));
+                Assert.Throws<InvalidOperationException>(() => service.AddUser(String.Empty, "email", password: null));
             }
 
             [Fact]
@@ -61,7 +61,7 @@ namespace JabbR.Test
                 var repository = new InMemoryRepository();
                 var service = new MembershipService(repository, new Mock<ICryptoService>().Object);
 
-                Assert.Throws<InvalidOperationException>(() => service.AddUser("SomeUser", password: "short"));
+                Assert.Throws<InvalidOperationException>(() => service.AddUser("SomeUser", "email", password: "short"));
             }
 
             [Fact]
@@ -72,10 +72,11 @@ namespace JabbR.Test
                 var repository = new InMemoryRepository();
                 var service = new MembershipService(repository, crypto.Object);
 
-                service.AddUser("SomeUser", password: "password");
+                service.AddUser("SomeUser", "email", password: "password");
 
                 var user = repository.GetUserByName("SomeUser");
                 Assert.NotNull(user);
+                Assert.Equal("email", user.Email);
                 Assert.Equal("SomeUser", user.Name);
                 Assert.Equal("salted", user.Salt);
                 Assert.Equal("8f5793009fe15c2227e3528d0507413a83dff10635d3a6acf1ba3229a03380d8", user.HashedPassword);

@@ -58,7 +58,7 @@ namespace JabbR.Services
             return user;
         }
 
-        public ChatUser AddUser(string userName, string password)
+        public ChatUser AddUser(string userName, string email, string password)
         {
             if (!IsValidUserName(userName))
             {
@@ -75,10 +75,11 @@ namespace JabbR.Services
             var user = new ChatUser
             {
                 Name = userName,
+                Email = email,
                 Status = (int)UserStatus.Active,
                 Id = Guid.NewGuid().ToString("d"),
                 Salt = _crypto.CreateSalt(),
-                LastActivity = DateTime.UtcNow
+                LastActivity = DateTime.UtcNow,
             };
 
             ValidatePassword(password);

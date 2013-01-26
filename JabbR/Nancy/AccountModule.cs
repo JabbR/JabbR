@@ -65,6 +65,7 @@ namespace JabbR.Nancy
             Post["/account/create"] = _ =>
             {
                 string name = Request.Form.username;
+                string email = Request.Form.email;
                 string password = Request.Form.password;
                 string confirmPassword = Request.Form.confirmPassword;
 
@@ -75,7 +76,12 @@ namespace JabbR.Nancy
                         return View["register"];
                     }
 
-                    ChatUser user = membershipService.AddUser(name, password);
+                    if (String.IsNullOrEmpty(email))
+                    {
+                        return View["register"];
+                    }
+
+                    ChatUser user = membershipService.AddUser(name, email, password);
                     return this.CompleteLogin(authenticationTokenService, user);
                 }
                 catch

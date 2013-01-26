@@ -3,11 +3,19 @@
 }
 <div class="user-registration">
     <form class="form-horizontal" action="@Url.Content("~/account/create")" method="post">
-        <div class="control-group">
+       <div class="control-group">
             <div class="controls">
                 <div class="input-prepend">
                     <span class="add-on"><i class="icon-user"></i></span>
                     <input class="input-block-level" name="username" type="text" placeholder="Username" />
+                </div>
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <div class="input-prepend">
+                    <span class="add-on"><i class="icon-envelope"></i></span>
+                    <input class="input-block-level" name="email" type="text" placeholder="Email" />
                 </div>
             </div>
         </div>
