@@ -2645,3 +2645,7 @@ h3.userlist-header
 {
     margin: 10px 10px;
 }
+
+.form-horizontal .label-align-left {
+  text-align: left;
+}
