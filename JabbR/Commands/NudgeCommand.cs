@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Web;
 using JabbR.Models;
 
 namespace JabbR.Commands
@@ -45,7 +44,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("You're the only person in here...");
             }
 
-            var toUserName = HttpUtility.HtmlDecode(args[0]);
+            var toUserName = args[0];
 
             ChatUser toUser = context.Repository.VerifyUser(toUserName);
 

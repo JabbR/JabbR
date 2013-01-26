@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using System.Web;
 using JabbR.ContentProviders.Core;
 using System.Threading.Tasks;
 using JabbR.Infrastructure;
@@ -35,7 +34,7 @@ namespace JabbR.ContentProviders
                 {
                     using (var sr = new StreamReader(responseStream))
                     {
-                        var pageContext = HttpUtility.HtmlDecode(sr.ReadToEnd());
+                        var pageContext = WebUtility.HtmlDecode(sr.ReadToEnd());
                         info.Title = ExtractUsingRegex(new Regex(@"<meta\s.*property=""og:title"".*content=""(.*)"".*/>"), pageContext);
                         info.Description = ExtractUsingRegex(new Regex(@"<meta\s.*name=""Description"".*content=""(.*)"".*/>"), pageContext);
                         info.ImageURL = ExtractUsingRegex(new Regex(@"<meta.*property=""og:image"".*content=""(.*)"".*/>"), pageContext);

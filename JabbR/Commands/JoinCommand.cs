@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using JabbR.Models;
 
 namespace JabbR.Commands
@@ -15,7 +14,7 @@ namespace JabbR.Commands
             }
 
             // Extract arguments
-            string roomName = HttpUtility.HtmlDecode(args[0]);
+            string roomName = args[0];
             string inviteCode = null;
             if (args.Length > 1)
             {

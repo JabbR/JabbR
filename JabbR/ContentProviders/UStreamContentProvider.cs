@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Web;
 using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
 
@@ -17,7 +16,7 @@ namespace JabbR.ContentProviders
         {
             return ExtractIFrameCode(request).Then(result =>
             {
-                var iframeHtml = HttpUtility.HtmlDecode(result);
+                var iframeHtml = result;
                 return new ContentProviderResult()
                 {
                     Content = iframeHtml.Replace("http://", "https://"),

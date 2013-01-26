@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using System.Web;
-using JabbR.ContentProviders.Core;
 using System.Threading.Tasks;
+using JabbR.ContentProviders.Core;
 
 namespace JabbR.ContentProviders
 {
@@ -26,7 +25,7 @@ namespace JabbR.ContentProviders
         /// </summary>
         private static readonly string tweetScript = String.Format( // Be aware: Nested string.format placeholder!
             "<div class=\"tweet_{{0}}\"><script src=\"{0}\"></script></div>",
-            HttpUtility.HtmlEncode("https://api.twitter.com/1/statuses/show/{0}.json?include_entities=false&callback=addTweet")
+            WebUtility.HtmlEncode("https://api.twitter.com/1/statuses/show/{0}.json?include_entities=false&callback=addTweet")
         );
 
         protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)

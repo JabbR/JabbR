@@ -85,17 +85,15 @@ namespace JabbR
             kernel.Bind<IAuthenticationCallbackProvider>()
                       .To<JabbRAuthenticationCallbackProvider>();
 
+            kernel.Bind<ICache>()
+                  .To<DefaultCache>()
+                  .InSingletonScope();
+
             try
             {
                 if (app.IsRunningUnderSystemWeb())
                 {
                     BindSystemWebDependencies(kernel);
-                }
-                else
-                {
-                    kernel.Bind<ICache>()
-                          .To<DefaultCache>()
-                          .InSingletonScope();
                 }
             }
             catch (Exception ex)
@@ -142,7 +140,7 @@ namespace JabbR
         private static void SetupMiddleware(IAppBuilder app)
         {
             app.MapPath("/proxy", subApp => subApp.Use(typeof(ImageProxyHandler)));
-            app.UseStaticFiles("/", ".");
+            app.UseStaticFiles();
         }
 
         private static void SetupSignalR(StandardKernel kernel, IAppBuilder app)

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using JabbR.Models;
 
 namespace JabbR.Commands
@@ -19,7 +18,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("No room specified.");
             }
 
-            string roomName = HttpUtility.HtmlDecode(args[0]);
+            string roomName = args[0];
             if (String.IsNullOrWhiteSpace(roomName))
             {
                 throw new InvalidOperationException("No room specified.");

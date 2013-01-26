@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Web;
 using JabbR.Models;
 
 namespace JabbR.Commands
@@ -15,7 +14,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("List users in which room?");
             }
 
-            string roomName = HttpUtility.HtmlDecode(args[0]);
+            string roomName = args[0];
             ChatRoom room = context.Repository.VerifyRoom(roomName);
 
             var names = context.Repository.GetOnlineUsers(room).Select(s => s.Name);

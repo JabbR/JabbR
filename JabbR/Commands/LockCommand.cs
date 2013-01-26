@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Web;
 using JabbR.Models;
 
 namespace JabbR.Commands
@@ -14,7 +13,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which room do you want to lock?");
             }
 
-            string roomName = HttpUtility.HtmlDecode(args[0]);
+            string roomName = args[0];
             ChatRoom room = context.Repository.VerifyRoom(roomName);
 
             context.Service.LockRoom(callingUser, room);
