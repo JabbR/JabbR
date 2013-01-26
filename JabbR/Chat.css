@@ -2202,3 +2202,7 @@ h3.userlist-header {
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
 }
+
+.account {
+    margin: 10px 10px;   
+}
