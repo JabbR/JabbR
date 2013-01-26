@@ -2068,7 +2068,7 @@ li.clearfix {
 }
 
 .social-auth {
-    margin: 20px 30px;
+    margin: 20px 15px;
     padding: 0 20px;
 }
 
@@ -2125,6 +2125,19 @@ li.clearfix {
     font-size: 17.5px;
     width: 400px;
     padding: 11px 0;
+}
+
+.login-body .btn-provider {
+    width: 220px;
+    padding: 6px 0;
+}
+
+.login-body .form-horizontal .controls {
+    margin-left: 60px;
+}
+
+.login-body .usernamepassword-auth {
+    border-right: 1px solid #ccc;
 }
 
 .login-body .btn,
