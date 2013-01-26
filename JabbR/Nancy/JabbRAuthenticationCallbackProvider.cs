@@ -51,7 +51,7 @@ namespace JabbR.Nancy
                     else
                     {
                         // User doesn't exist
-                        _membershipService.AddUser(userInfo.UserName, providerName, userInfo.Id, userInfo.Email);
+                        user = _membershipService.AddUser(userInfo.UserName, providerName, userInfo.Id, userInfo.Email);
                     }
                 }
 
