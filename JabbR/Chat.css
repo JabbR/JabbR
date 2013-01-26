@@ -2357,13 +2357,18 @@ li.clearfix
   border-bottom-right-radius:0;
 }
 
-.user-details-sidenav ul > li:last-child > a {
+.user-details-sidenav ul > li:last-child > a,
+.user-details-sidenav ul > li:last-child {
   border-bottom-left-radius:6px;
   border-bottom-right-radius:6px;
 }
 
 .user-details-sidenav ul > li.active > a {
     background-color: #00103f;
+}
+
+.user-details-sidenav ul > li.active > a:hover {
+    background-color: #164c85;
 }
 
 .user-details-sidenav ul > li > a {
@@ -2373,16 +2378,6 @@ li.clearfix
     display:block;
     margin:0 0 -1px;
     padding:8px 14px;
-}
-
-.user-details-sidenav ul > li > a.hover {
-    background-color: #00103f;
-    color: #f1f1f1;
-    text-shadow: none;
-}
-
-.user-details-sidenav ul > li > a:hover .icon-chevron-right {
-    background-image: url("/Content/images/glyphicons-halflings-white.png");
 }
 
 .user-details-sidenav .icon-chevron-right {
@@ -2495,14 +2490,16 @@ li.clearfix
     margin: 0 10px 0 -10px;
 }
 
-.login-body .btn {
+.login-body .btn,
+.account-details .btn {
     background-color: #00103F;
     background-image: none;
     text-shadow: none;
     color: #FFF;
 }
 
-.login-body .btn:hover {
+.login-body .btn:hover, 
+.account-details .btn:hover {
     background-color: #164C85;
 }
 
