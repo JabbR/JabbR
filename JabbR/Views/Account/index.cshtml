@@ -31,14 +31,14 @@
                             <span class="name">@userModel.Name</span>
                         </div>
                     </div>
-                    <ul class="nav nav-list">
-                        <li class="active"><a href="#"><i class="icon-chevron-right"></i>Profile</a></li>
-                        <li><a href="#"><i class="icon-chevron-right"></i>Password</a></li>
-                        <li><a href="#"><i class="icon-chevron-right"></i>Identity Providers</a></li>
+                    <ul id="accountmenu" class="nav nav-list">
+                        <li class="active" data-target="#profile"><a href="#"><i class="icon-chevron-right"></i>Profile</a></li>
+                        <li data-target="#changePassword"><a href="#"><i class="icon-chevron-right"></i>Password</a></li>
+                        <li data-target="#identityProviders"><a href="#"><i class="icon-chevron-right"></i>Identity Providers</a></li>
                     </ul>
                 </div>
                 <div class="span8">
-                    <div class="account-details">
+                    <div class="account-details" id="profile">
                         <div class="account-details-header">
                             <h1>Profile</h1>
                         </div>
@@ -57,12 +57,75 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <input type="submit" class="btn" value="Save Changes"/>
+                                    </div>
+                                </div>
                             </form>
+                        </div>
+                    </div>
+                    <div class="account-details hide" id="changePassword">
+                        <div class="account-details-header">
+                            <h1>Password</h1>
+                        </div>
+                        <div class="account-details-body">
+                            <form class="form-horizontal">
+                                <div class="control-group">
+                                    <label class="control-label" for="currentPassword">Current Password</label>
+                                    <div class="controls">
+                                        <input type="password" id="currentPassword" class="input-xlarge"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="newPassword">New Password</label>
+                                    <div class="controls">
+                                        <input type="password" id="newPassword" class="input-xlarge"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="confirmNewPassword">Confirm Password</label>
+                                    <div class="controls">
+                                        <input type="password" id="confirmNewPassword" class="input-xlarge"/>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <input type="submit" class="btn" value="Save Changes"/>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="account-details hide" id="identityProviders">
+                        <div class="account-details-header">
+                            <h1>Identity Providers</h1>
+                        </div>
+                        <div class="account-details-body">
+                            
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <script src="Scripts/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            var currentSection = $('#profile');
+            var active = $('#accountmenu li.active');
+            
+            $('#accountmenu li').click(function () {
+                if (currentSection) {
+                    $(currentSection).hide();
+                    $(active).removeClass('active');
+                }
+                currentSection = $(this).data('target');
+                active = this;
+                $(this).addClass('active');
+                $(currentSection).show();
+            });
+        });
+    </script>
 </body>
 </html>
