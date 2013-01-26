@@ -24,3 +24,12 @@ http://thenounproject.com/noun/question/#icon-No2877
 - /content/images/question-icon.png
 
 All symbols included above are by Joe Smith except the question-icon symbol which is by P.J. Onori, from The Noun Project collection.
+
+JabbR uses icons from http://www.iconfinder.com
+
+http://www.iconfinder.com/icondetails/83330/32/link_icon
+- /content/images/link.png
+http://www.iconfinder.com/icondetails/83413/32/unlink_icon
+- /content/images/unlink.png
+
+All symbols from IconFinder above are by Keyamoon, http://keyamoon.com

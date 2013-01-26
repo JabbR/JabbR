@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using JabbR.Models;
 using JabbR.Services;
 
@@ -19,6 +20,7 @@ namespace JabbR.ViewModels
             Country = ChatService.GetCountry(user.Flag);
             LastActivity = user.LastActivity;
             IsAdmin = user.IsAdmin;
+            Identities = user.Identities;
         }
 
         public string Name { get; private set; }
@@ -32,5 +34,6 @@ namespace JabbR.ViewModels
         public string Country { get; private set; }
         public DateTime LastActivity { get; private set; }
         public bool IsAdmin { get; private set; }
+        public IEnumerable<ChatUserIdentity> Identities { get; private set; }
     }
 }

@@ -711,6 +711,7 @@
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\images\google_white.png" />
+    <Content Include="Content\images\link.png" />
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\lockwhite.png" />
     <Content Include="Content\images\lock.png" />
@@ -731,6 +732,7 @@
     <Content Include="Content\images\typing.png" />
     <Content Include="Content\images\Clippy.png" />
     <Content Include="Content\images\StopWatch.png" />
+    <Content Include="Content\images\unlink.png" />
     <Content Include="Content\jquery.mobile-1.1.1.css" />
     <Content Include="Content\jquery.mobile-1.1.1.min.css" />
     <Content Include="Content\jquery.mobile.structure-1.1.1.css" />

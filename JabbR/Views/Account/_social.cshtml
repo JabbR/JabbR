@@ -1,8 +1,42 @@
-﻿<div class="social-auth">
+﻿@using System
+@using System.Linq
+@using JabbR.Infrastructure
+@using JabbR.Models
+@using JabbR.ViewModels
+@{
+    var identies = Model == null ? null : ((SafeCollection<ChatUserIdentity>) Model).ToList();
+}
+<div class="social-auth">
     <div class="control-group">
         <div class="controls">
-            <a class="btn btn-large btn-block btn-primary twitter" href="@Url.Content("~/authentication/redirect/twitter")"><i class="icon-twitter-logo"></i> Twitter</a>
-            <a class="btn btn-large btn-block btn-primary google" href="@Url.Content("~/authentication/redirect/google")"><i class="icon-google-logo"></i> Google</a>
+            <ul class="inline">
+                <li><a class="btn btn-provider" href="@Url.Content("~/authentication/redirect/twitter")"><i class="icon-twitter-logo"></i> Twitter</a></li>
+                @if (identies != null)
+                {
+                    if (identies.Find(ident => ident.ProvierName.Equals("twitter", StringComparison.InvariantCultureIgnoreCase)) == null)
+                     {
+                         <li><a href="#" title="link identity provider"><i class="icon-link"></i></a></li>
+                     }
+                     else
+                     {
+                         <li><a href="#" title="unlink identity provider"><i class="icon-unlink"></i></a></li>
+                     }
+                }
+            </ul>
+            <ul class="inline">
+                <li><a class="btn btn-provider" href="@Url.Content("~/authentication/redirect/google")"><i class="icon-google-logo"></i> Google</a></li>
+                @if (identies != null)
+                {
+                    if (identies.Find(ident => ident.ProvierName.Equals("google", StringComparison.InvariantCultureIgnoreCase)) == null)
+                    {
+                        <li><a href="#" title="link identity provider"><i class="icon-link"></i></a></li>
+                    }
+                    else
+                    {
+                        <li><a href="#" title="unlink identity provider"><i class="icon-unlink"></i></a></li>
+                    }
+                }
+            </ul>
         </div>
     </div>
 </div>

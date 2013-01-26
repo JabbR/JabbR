@@ -5,8 +5,14 @@
 @switch ((AuthenticationMode)Model)
 {
     case AuthenticationMode.Default:
-    @Html.Partial("_username")
-    @Html.Partial("_social")
+    <div class="row-fluid">
+        <div class="span5">
+            @Html.Partial("_username")
+        </div>
+        <div class="span5">
+            @Html.Partial("_social")
+        </div>
+    </div>
         break;
     case AuthenticationMode.Windows:
     @Html.Partial("_windows")
