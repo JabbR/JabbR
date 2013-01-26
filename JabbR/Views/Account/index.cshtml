@@ -26,7 +26,7 @@
             <div class="row" style="padding-top: 75px;">
                 <div class="span4 user-details-sidenav">
                     <div class="user-details">
-                        <img class="gravatar img-rounded" src="@gravatar" style="float: left;" />
+                        <img class="gravatar" src="@gravatar" style="float: left;" />
                         <div class="details">
                             <span class="name">@userModel.Name</span>
                         </div>
@@ -102,7 +102,7 @@
                             <h1>Identity Providers</h1>
                         </div>
                         <div class="account-details-body">
-                           @Html.Partial("_social")
+                           @Html.Partial("_social", @userModel.Identities)
                         </div>
                     </div>
                 </div>
