@@ -1,7 +1,7 @@
 ﻿@using JabbR.ViewModels
 @{
-    var userModel = (UserViewModel)Model;
-    var gravatar = string.Format("https://secure.gravatar.com/avatar/{0}?s=48&d=mm", userModel.Hash);
+    var userModel = (ProfilePageViewModel)Model;
+    var gravatar = String.Format("https://secure.gravatar.com/avatar/{0}?s=48&d=mm", userModel.Hash);
 }
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">

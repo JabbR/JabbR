@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using JabbR.Models;
 using JabbR.Services;
 
 namespace JabbR.ViewModels
 {
-    public class UserViewModel
-    {
-        public UserViewModel(ChatUser user)
+    public class ProfilePageViewModel
+    {        
+        public ProfilePageViewModel(Models.ChatUser user)
         {
             Name = user.Name;
             Hash = user.Hash;
