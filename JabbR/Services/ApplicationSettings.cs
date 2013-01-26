@@ -32,7 +32,7 @@ namespace JabbR.Services
                     return mode;
                 }
 
-                return AuthenticationMode.UsernamePassword;
+                return AuthenticationMode.Default;
             }
         }
 

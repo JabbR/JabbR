@@ -2,8 +2,7 @@
 {
     public enum AuthenticationMode
     {
-        UsernamePassword,
+        Default,
         Windows,
-        Social
     }
 }

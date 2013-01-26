@@ -4,10 +4,8 @@
 }
 @switch ((AuthenticationMode)Model)
 {
-    case AuthenticationMode.UsernamePassword:
+    case AuthenticationMode.Default:
     @Html.Partial("_username")
-        break;
-    case AuthenticationMode.Social:
     @Html.Partial("_social")
         break;
     case AuthenticationMode.Windows:
