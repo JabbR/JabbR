@@ -2558,7 +2558,7 @@ li.clearfix
     padding: 6px 0;
 }
 
-.login-body .form-horizontal .controls
+.login-body .usernamepassword-auth .form-horizontal .controls
 {
     margin-left: 60px;
 }
