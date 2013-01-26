@@ -50,14 +50,13 @@
                                 <div class="control-group">
                                     <label class="control-label" for="note">Note</label>
                                     <div class="controls">
-                                        <input type="text" id="note" class="input-xlarge" placeholder="Note" value="@userModel.Note"/>
+                                       @userModel.Note 
                                     </div>
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label" for="country">Country</label>
                                     <div class="controls">
-                                        <select>
-                                        </select>
+                                        @userModel.Country
                                     </div>
                                 </div>
                                 <div class="control-group">
@@ -65,6 +64,7 @@
                                         <input type="submit" class="btn" value="Save Changes" />
                                     </div>
                                 </div>
+
                             </form>
                         </div>
                     </div>
@@ -97,6 +97,7 @@
                                         <input type="submit" class="btn" value="Save Changes" />
                                     </div>
                                 </div>
+                                @Html.AntiForgeryToken()
                             </form>
                         </div>
                     </div>
