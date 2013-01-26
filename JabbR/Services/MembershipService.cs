@@ -24,6 +24,8 @@ namespace JabbR.Services
                 throw new InvalidOperationException(String.Format("'{0}' is not a valid user name.", userName));
             }
 
+            EnsureProviderAndIdentityAvailable(providerName, identity);
+
             // This method is used in the auth workflow. If the username is taken it will add a number
             // to the user name.
             if (UserExists(userName))
@@ -180,6 +182,19 @@ namespace JabbR.Services
             return _repository.Users.Any(u => u.Name.Equals(userName, StringComparison.OrdinalIgnoreCase));
         }
 
+        private void EnsureProviderAndIdentityAvailable(string providerName, string identity)
+        {
+            if (ProviderAndIdentityExist(providerName, identity))
+            {
+                ThrowProviderAndIdentityExist(providerName, identity);
+            }
+        }
+
+        private bool ProviderAndIdentityExist(string providerName, string identity)
+        {
+            return _repository.GetUserByIdentity(providerName, identity) != null;
+        }
+
         internal static string NormalizeUserName(string userName)
         {
             return userName.StartsWith("@") ? userName.Substring(1) : userName;
@@ -195,5 +210,9 @@ namespace JabbR.Services
             throw new InvalidOperationException("A password is required.");
         }
 
+        internal static void ThrowProviderAndIdentityExist(string providerName, string identity)
+        {
+            throw new InvalidOperationException(String.Format("Identity {0} already taken with Provider {1}, please login with a different provider/identity combination.", identity, providerName));
+        }
     }
 }
