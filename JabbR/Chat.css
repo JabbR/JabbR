@@ -1,33 +1,30 @@
-﻿body 
+﻿body
 {
   font-family: Lucida Grande, Trebuchet MS;
   font-size: 13px;
   background-color: #e5e5e5;
 }
 
-input, button, select, textarea 
-{
+input, button, select, textarea {
   font-family: Lucida Grande, Trebuchet MS;
   font-size: 13px;
 }
 
-h1, h2, h3, h4, h5, h6 
-{
+h1,h2,h3,h4,h5,h6 {
   margin: 16px 0;
 }
 
-form#send-message 
-{
+form#send-message {
   margin: 0;
 }
 
-.banner > * 
+.banner > *
 {
   float: left;
   margin-left: 10px;
 }
 
-.jabbrLogo 
+.jabbrLogo
 {
   background-image: url('Content/images/logo32.png');
   background-repeat: no-repeat;
@@ -35,20 +32,20 @@ form#send-message
   height: 32px;
 }
 
-.banner > div 
+.banner > div
 {
   float: left;
   margin-top: 28px;
   margin-left: 10px;
 }
 
-.banner a 
+.banner a
 {
   color: #fff;
   text-decoration: none;
 }
 
-#preferences 
+#preferences
 {
   margin-left: 0px;
   padding-left: 0px;
@@ -62,12 +59,12 @@ form#send-message
   height: 18px;
 }
 
-#users-filter-form 
+#users-filter-form
 {
   display: none;
 }
 
-#users-filter 
+#users-filter
 {
   position: absolute;
   top: 55px;
@@ -76,7 +73,7 @@ form#send-message
   margin-top: 4px;
 }
 
-#users-filter-closed-area 
+#users-filter-closed-area
 {
   position: absolute;
   top: 90px;
@@ -85,17 +82,16 @@ form#send-message
   font-size: 13px;
 }
 
-#users-filter-closed 
-{
-  margin: -4px 4px 0;
+#users-filter-closed {
+    margin: -4px 4px 0;
 }
 
-#preferences a 
+#preferences a
 {
   cursor: pointer;
 }
 
-#preferences .help 
+#preferences .help
 {
   background: url('Content/images/question-icon.png') no-repeat;
   width: 16px;
@@ -104,7 +100,7 @@ form#send-message
   position: absolute;
 }
 
-#preferences .sound 
+#preferences .sound
 {
   background: url('Content/images/sound-on.png') no-repeat;
   width: 16px;
@@ -114,12 +110,12 @@ form#send-message
   margin-top: 4px;
 }
 
-  #preferences .sound.off 
-{
+  #preferences .sound.off
+  {
     background: url('Content/images/sound-off.png') no-repeat;
   }
 
-#preferences .toast 
+#preferences .toast
 {
   background: url('Content/images/toast-on.png') no-repeat;
   width: 16px;
@@ -129,12 +125,12 @@ form#send-message
   display: none;
 }
 
-  #preferences .toast.off 
-{
+  #preferences .toast.off
+  {
     background: url('Content/images/toast-off.png') no-repeat;
   }
 
-#preferences .richness 
+#preferences .richness
 {
   width: 20px;
   height: 20px;
@@ -144,12 +140,12 @@ form#send-message
   margin-top: 3px;
 }
 
-  #preferences .richness.off 
-{
+  #preferences .richness.off
+  {
     background: url('Content/images/richness-on.png') no-repeat;
   }
 
-#preferences .download 
+#preferences .download
 {
   background: url('Content/images/download-icon.png') no-repeat;
   width: 16px;
@@ -159,7 +155,7 @@ form#send-message
   position: absolute;
 }
 
-#preferences .logout 
+#preferences .logout
 {
   background: url('Content/images/logout.png') no-repeat;
   width: 16px;
@@ -169,13 +165,13 @@ form#send-message
   position: absolute;
 }
 
-#logo 
+#logo
 {
   margin-top: 10px;
   margin-left: 0px;
 }
 
-#chat-area 
+#chat-area
 {
   position: absolute;
   top: 95px;
@@ -185,7 +181,7 @@ form#send-message
   min-height: 450px;
 }
 
-#heading 
+#heading
 {
   background-color: #00103f;
   color: #fff;
@@ -195,15 +191,15 @@ form#send-message
   width: 100%;
 }
 
-  #heading h1 
-{
+  #heading h1
+  {
     margin-left: 5px;
     font-family: 'Lucida Grande', 'Trebuchet MS';
     line-height: normal;
     font-size: 20px;
   }
 
-.messages 
+.messages
 {
   width: 70%;
   border: 1px solid #ccc;
@@ -217,33 +213,33 @@ form#send-message
   background-color: #fff;
 }
 
-  .messages li 
-{
+  .messages li
+  {
     list-style-type: none;
     position: relative;
     margin: 0px;
   }
 
-    .messages li.message 
-{
+    .messages li.message
+    {
       padding: 0px;
       border-left: 175px solid #f1f1f1; /* background color for left column (user info) */
     }
 
-    .messages li img.gravatar 
-{
+    .messages li img.gravatar
+    {
       height: 16px;
       width: 16px;
       display: inline-block;
     }
 
-.roomTopic 
+.roomTopic
 {
   position: absolute;
   top: 25px;
 }
 
-.users 
+.users
 {
   margin-left: 0px;
   padding-left: 0px;
@@ -258,119 +254,119 @@ form#send-message
   overflow: auto;
 }
 
-#userlist-lobby 
+#userlist-lobby
 {
   top: 120px;
 }
 
-.users ul 
+.users ul
 {
   margin-left: 0px;
   padding-left: 0px;
   margin-top: 0px;
 }
 
-.users li 
+.users li
 {
   padding: 4px;
   list-style: none;
 }
 
-  .users li.empty 
-{
+  .users li.empty
+  {
     color: #909090;
     font-style: italic;
   }
 
-  .users li .name 
-{
+  .users li .name
+  {
     word-wrap: break-word;
     vertical-align: middle;
     cursor: pointer;
   }
 
-  .users li.room.closed .name 
-{
+  .users li.room.closed .name
+  {
     margin-left: 23px;
   }
 
-  .users li.room.locked .name 
-{
+  .users li.room.locked .name
+  {
     margin-left: 20px;
   }
 
-  .users li.room.closed.locked .name 
-{
+  .users li.room.closed.locked .name
+  {
     margin-left: 43px;
   }
 
-  .users li.typing 
-{
+  .users li.typing
+  {
     background-image: url('Content/images/typing.png');
     background-repeat: no-repeat;
     background-position: right center;
   }
 
-  .users li.room.locked .lock 
-{
+  .users li.room.locked .lock
+  {
     position: absolute;
     width: 16px;
     height: 16px;
     background: url(Content/images/lock.png) no-repeat bottom;
   }
 
-  .users li.room.closed .readonly 
-{
+  .users li.room.closed .readonly
+  {
     position: absolute;
     width: 19px;
     height: 16px;
     background: url(Content/images/no-typing.png) no-repeat;
   }
 
-  .users li.room.closed.locked .readonly 
-{
+  .users li.room.closed.locked .readonly
+  {
     margin-left: 20px;
   }
 
-.users .details 
+.users .details
 {
   width: 90%;
   display: inline-block;
   vertical-align: top;
 }
 
-.users .owner 
+.users .owner
 {
   vertical-align: middle;
 }
 
-.users .admin 
+.users .admin
 {
   vertical-align: middle;
 }
 
-.note 
+.note
 {
   display: inline-block;
   vertical-align: middle;
 }
 
-  .note.afk 
-{
+  .note.afk
+  {
     background: url(Content/images/stopwatch.png) no-repeat;
     height: 16px;
     width: 12px;
   }
 
-  .note.message 
-{
+  .note.message
+  {
     background: url(Content/images/clippy.png) no-repeat;
     height: 16px;
     width: 6px;
     border-bottom: none;
   }
 
-#tabs 
+#tabs
 {
   padding: 0;
   margin: 0px 0px 0px 5px;
@@ -378,8 +374,8 @@ form#send-message
   height: 30px;
 }
 
-  #tabs li 
-{
+  #tabs li
+  {
     display: inline-block;
     padding: 0;
     margin: 0px 4px 0px 0px;
@@ -392,8 +388,8 @@ form#send-message
     cursor: pointer;
   }
 
-    #tabs li button 
-{
+    #tabs li button
+    {
       height: inherit;
       margin: 0;
       padding: 0 20px 0 0;
@@ -405,8 +401,8 @@ form#send-message
       font-weight: inherit;
     }
 
-    #tabs li.current 
-{
+    #tabs li.current
+    {
       color: #32aa52;
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', endColorstr='#e5e5e5'); /* for IE */
       background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#e5e5e5)); /* for webkit browsers */
@@ -414,28 +410,28 @@ form#send-message
       background: -o-linear-gradient(top, #f5f5f5, #e5e5e5); /* for opera 11.10+ */
     }
 
-    #tabs li .content 
-{
+    #tabs li .content
+    {
       margin: 6px 10px 6px 10px;
     }
 
-    #tabs li.locked .content 
-{
+    #tabs li.locked .content
+    {
       margin: 6px 10px 6px 23px;
     }
 
-    #tabs li.closed .content 
-{
+    #tabs li.closed .content
+    {
       margin: 6px 10px 6px 27px;
     }
 
-    #tabs li.closed.locked .content 
-{
+    #tabs li.closed.locked .content
+    {
       margin: 6px 10px 6px 47px;
     }
 
-    #tabs li .close 
-{
+    #tabs li .close
+    {
       position: absolute;
       top: 7px;
       right: 5px;
@@ -444,8 +440,8 @@ form#send-message
       background: url(Content/images/close-icon.png);
     }
 
-    #tabs li.locked .lock 
-{
+    #tabs li.locked .lock
+    {
       position: absolute;
       top: 7px;
       width: 16px;
@@ -454,13 +450,13 @@ form#send-message
       background: url(Content/images/lockwhite.png) no-repeat;
     }
 
-    #tabs li.locked.current .lock, #tabs li.locked:hover .lock 
-{
+    #tabs li.locked.current .lock, #tabs li.locked:hover .lock
+    {
       background: url(Content/images/lock.png) no-repeat;
     }
 
-    #tabs li.closed .readonly 
-{
+    #tabs li.closed .readonly
+    {
       position: absolute;
       top: 7px;
       width: 19px;
@@ -469,66 +465,66 @@ form#send-message
       background: url(Content/images/no-typing-white.png) no-repeat;
     }
 
-    #tabs li.closed.current .readonly, #tabs li.closed:hover .readonly 
-{
+    #tabs li.closed.current .readonly, #tabs li.closed:hover .readonly
+    {
       background: url(Content/images/no-typing.png) no-repeat;
     }
 
-    #tabs li.closed.locked .readonly 
-{
+    #tabs li.closed.locked .readonly
+    {
       margin-left: 22px;
     }
 
-    #tabs li .close:hover 
-{
+    #tabs li .close:hover
+    {
       background: url(Content/images/close-icon-hover.png);
     }
 
-    #tabs li.unread 
-{
+    #tabs li.unread
+    {
     }
 
-    #tabs li:hover 
-{
+    #tabs li:hover
+    {
       background-color: #e5e5e5;
       color: #32aa52;
     }
 
-    #tabs li.current:hover 
-{
+    #tabs li.current:hover
+    {
       background-color: #e5e5e5;
     }
 
-li.room 
+li.room
 {
   cursor: pointer;
 }
 
-  li.room:hover 
-{
+  li.room:hover
+  {
     background-color: #f5f5f5;
   }
 
-#tabs li.lobby 
+#tabs li.lobby
 {
   background-color: #00103f;
   color: #fff;
   padding-right: 0;
 }
 
-  #tabs li.lobby button 
-{
+  #tabs li.lobby button
+  {
     padding-right: 0;
     margin-right: 10px;
   }
 
-  #tabs li.lobby.current 
-{
+  #tabs li.lobby.current
+  {
     background-color: #00103f;
     color: #000;
   }
 
-#send-message 
+#send-message
 {
   position: absolute;
   bottom: 20px;
@@ -536,7 +532,7 @@ li.room
   width: 70%;
 }
 
-#message-box 
+#message-box
 {
   position: absolute;
   left: 0;
@@ -545,7 +541,7 @@ li.room
   margin: 0;
 }
 
-#new-message 
+#new-message
 {
   font-family: Trebuchet MS;
   font-size: 13px;
@@ -557,7 +553,7 @@ li.room
   overflow: auto;
 }
 
-#send 
+#send
 {
   padding: 5px;
   position: absolute;
@@ -565,7 +561,7 @@ li.room
   width: 100px;
 }
 
-#enable-disable-toast 
+#enable-disable-toast
 {
   cursor: pointer;
   display: block;
@@ -576,7 +572,7 @@ li.room
   left: 71%;
 }
 
-#message-instruction 
+#message-instruction
 {
   color: #999;
   font-style: italic;
@@ -585,28 +581,28 @@ li.room
   width: 100%;
 }
 
-.error 
+.error
 {
   padding: 5px;
   background-color: #fddfde;
   border-bottom: 1px solid #fbc7c6;
 }
 
-.pm 
+.pm
 {
   color: Red;
   padding: 5px;
 }
 
-.broadcast 
+.broadcast
 {
-  color: #c09853;
-  padding: 5px;
-  background-color: #fff6bd;
-  font-weight: bold;
+    color: #c09853;
+    padding: 5px;
+    background-color: #fff6bd;
+    font-weight: bold;
 }
 
-.welcome 
+.welcome
 {
   color: #031531;
   padding: 5px;
@@ -614,61 +610,61 @@ li.room
   font-weight: bold;
 }
 
-.notification 
+.notification
 {
   color: #bbb;
   border-bottom: 1px solid #eee;
   padding: 5px;
 }
 
-  .notification .content, .pm .content, .error .content, .broadcast .content 
-{
+  .notification .content, .pm .content, .error .content, .broadcast .content
+  {
     margin-right: 95px;
   }
 
-  .notification a.info 
-{
+  .notification a.info
+  {
     color: #bbb;
     font-style: italic;
     text-decoration: none;
   }
 
-    .notification a.info:visited 
-{
+    .notification a.info:visited
+    {
       color: inherit;
     }
 
-  .notification .emoji20 
-{
+  .notification .emoji20
+  {
     opacity: 0.4;
   }
 
-.message 
+.message
 {
   border-bottom: 1px solid #eee;
 }
 
-  .message.continue 
-{
+  .message.continue
+  {
     border-bottom: 1px solid #f1f1f1;
   }
 
-  .message .left 
-{
+  .message .left
+  {
     float: left;
     width: 170px; /* width should exclude padding */
     padding: 5px;
     margin-left: -175px;
   }
 
-    .message .left .name 
-{
+    .message .left .name
+    {
       font-weight: bold;
       cursor: pointer;
     }
 
-  .message.failed .left .state 
-{
+  .message.failed .left .state
+  {
     width: 20px;
     height: 20px;
     float: right;
@@ -676,8 +672,8 @@ li.room
     background-repeat: no-repeat;
   }
 
-  .message.loading .left .state 
-{
+  .message.loading .left .state
+  {
     width: 20px;
     height: 20px;
     float: right;
@@ -685,14 +681,14 @@ li.room
     background-repeat: no-repeat;
   }
 
-  .message .middle 
-{
+  .message .middle
+  {
     margin-right: 95px;
     padding: 5px;
     word-wrap: break-word;
   }
 
-.messages li .right 
+.messages li .right
 {
   position: absolute;
   padding: 5px;
@@ -701,29 +697,29 @@ li.room
   width: 85px;
 }
 
-  .messages li .right .time 
-{
+  .messages li .right .time
+  {
     color: #bbb;
   }
 
-.messages li.welcome .right .time 
-{
-  color: #666;
-  font-weight: normal;
-}
+  .messages li.welcome .right .time
+  {
+    color: #666;
+    font-weight: normal;
+  }
 
-.highlight 
+.highlight
 {
   background-color: #fff6bd;
 }
 
-.list-header 
+.list-header
 {
   padding: 5px;
   border-bottom: 1px solid #eee;
 }
 
-.list-item 
+.list-item
 {
   padding: 5px;
   padding-left: 10px;
@@ -731,18 +727,18 @@ li.room
 }
 
 
-.list-header .content 
+.list-header .content
 {
   font-weight: bold;
 }
 
-.list-item .right 
+.list-item .right
 {
   /* hide time for list items */
   display: none;
 }
 
-.message-separator 
+.message-separator
 {
   height: 2px;
   background-color: #88b7d6;
@@ -750,7 +746,7 @@ li.room
 
 /* This stuff is to support TweetContentProvider, but should be extracted out if other content providers need custom CSS */
 
-.tweet 
+.tweet
 {
   margin-left: 30px;
   margin-right: 10px;
@@ -759,37 +755,37 @@ li.room
   min-height: 48px;
 }
 
-  .tweet p 
-{
+  .tweet p
+  {
     margin: 0px;
     padding: 0px;
   }
 
-  .tweet time 
-{
+  .tweet time
+  {
     font-size: .8em;
   }
 
-  .tweet img 
-{
+  .tweet img
+  {
     float: left;
     margin-right: 5px;
   }
 
-  .tweet .user 
-{
+  .tweet .user
+  {
     margin-bottom: 5px;
   }
 
-  .tweet .name 
-{
+  .tweet .name
+  {
     font-weight: bold;
     font-size: 15px;
   }
 
 /* End TweetContentProvider CSS */
 
-.captureDocumentWrite_collapsible h3, h3.collapsible_title 
+.captureDocumentWrite_collapsible h3, h3.collapsible_title
 {
   color: #1c94c4;
   font-size: smaller;
@@ -800,18 +796,18 @@ li.room
   cursor: pointer;
 }
 
-.collapsible_box 
+.collapsible_box
 {
   border: 1px solid #DDD;
   padding: 5px;
 }
 
-  .collapsible_box img, .collapsible_box embed 
-{
+  .collapsible_box img, .collapsible_box embed
+  {
     max-width: 100%;
   }
 
-pre.multiline 
+pre.multiline
 {
   white-space: pre-wrap; /* css-3 */
   white-space: -moz-pre-wrap !important; /* Mozilla, since 1999 */
@@ -822,7 +818,7 @@ pre.multiline
 }
 
 /* CLEAR FIX */
-.clearfix:after 
+.clearfix:after
 {
   clear: both;
   display: block;
@@ -831,41 +827,41 @@ pre.multiline
   visibility: hidden;
 }
 
-.clearfix 
+.clearfix
 {
   display: inline-block;
 }
 
 /* Hide these rules from IE-mac \*/
-* html .clearfix 
+* html .clearfix
 {
   height: 1%;
 }
 
-.clearfix 
+.clearfix
 {
   display: block;
 }
 
-li.clearfix 
+li.clearfix
 {
   display: list-item;
 }
 
 /* CSS for Popout Content Providers */
-.collapsible_wrapper.ui-draggable 
+.collapsible_wrapper.ui-draggable
 {
   width: 800px;
   background-color: #fff;
   position: absolute;
 }
 
-  .collapsible_wrapper.ui-draggable h3 
-{
+  .collapsible_wrapper.ui-draggable h3
+  {
     margin-top: 0px;
   }
 
-.collapsible_pin 
+.collapsible_pin
 {
   width: 20px;
   height: 20px;
@@ -876,7 +872,7 @@ li.clearfix
   cursor: pointer;
 }
 
-.flag 
+.flag
 {
   position: absolute;
   width: 16px;
@@ -886,1247 +882,1247 @@ li.clearfix
   background: url('Content/images/flags.png') no-repeat;
 }
 
-  .flag.flag-ad 
-{
+  .flag.flag-ad
+  {
     background-position: -16px 0;
   }
 
-  .flag.flag-ae 
-{
+  .flag.flag-ae
+  {
     background-position: -32px 0;
   }
 
-  .flag.flag-af 
-{
+  .flag.flag-af
+  {
     background-position: -48px 0;
   }
 
-  .flag.flag-ag 
-{
+  .flag.flag-ag
+  {
     background-position: -64px 0;
   }
 
-  .flag.flag-ai 
-{
+  .flag.flag-ai
+  {
     background-position: -80px 0;
   }
 
-  .flag.flag-al 
-{
+  .flag.flag-al
+  {
     background-position: -96px 0;
   }
 
-  .flag.flag-am 
-{
+  .flag.flag-am
+  {
     background-position: -112px 0;
   }
 
-  .flag.flag-an 
-{
+  .flag.flag-an
+  {
     background-position: -128px 0;
   }
 
-  .flag.flag-ao 
-{
+  .flag.flag-ao
+  {
     background-position: -144px 0;
   }
 
-  .flag.flag-ar 
-{
+  .flag.flag-ar
+  {
     background-position: -160px 0;
   }
 
-  .flag.flag-as 
-{
+  .flag.flag-as
+  {
     background-position: -176px 0;
   }
 
-  .flag.flag-at 
-{
+  .flag.flag-at
+  {
     background-position: -192px 0;
   }
 
-  .flag.flag-au 
-{
+  .flag.flag-au
+  {
     background-position: -208px 0;
   }
 
-  .flag.flag-aw 
-{
+  .flag.flag-aw
+  {
     background-position: -224px 0;
   }
 
-  .flag.flag-az 
-{
+  .flag.flag-az
+  {
     background-position: -240px 0;
   }
 
-  .flag.flag-ba 
-{
+  .flag.flag-ba
+  {
     background-position: 0 -11px;
   }
 
-  .flag.flag-bb 
-{
+  .flag.flag-bb
+  {
     background-position: -16px -11px;
   }
 
-  .flag.flag-bd 
-{
+  .flag.flag-bd
+  {
     background-position: -32px -11px;
   }
 
-  .flag.flag-be 
-{
+  .flag.flag-be
+  {
     background-position: -48px -11px;
   }
 
-  .flag.flag-bf 
-{
+  .flag.flag-bf
+  {
     background-position: -64px -11px;
   }
 
-  .flag.flag-bg 
-{
+  .flag.flag-bg
+  {
     background-position: -80px -11px;
   }
 
-  .flag.flag-bh 
-{
+  .flag.flag-bh
+  {
     background-position: -96px -11px;
   }
 
-  .flag.flag-bi 
-{
+  .flag.flag-bi
+  {
     background-position: -112px -11px;
   }
 
-  .flag.flag-bj 
-{
+  .flag.flag-bj
+  {
     background-position: -128px -11px;
   }
 
-  .flag.flag-bm 
-{
+  .flag.flag-bm
+  {
     background-position: -144px -11px;
   }
 
-  .flag.flag-bn 
-{
+  .flag.flag-bn
+  {
     background-position: -160px -11px;
   }
 
-  .flag.flag-bo 
-{
+  .flag.flag-bo
+  {
     background-position: -176px -11px;
   }
 
-  .flag.flag-br 
-{
+  .flag.flag-br
+  {
     background-position: -192px -11px;
   }
 
-  .flag.flag-bs 
-{
+  .flag.flag-bs
+  {
     background-position: -208px -11px;
   }
 
-  .flag.flag-bt 
-{
+  .flag.flag-bt
+  {
     background-position: -224px -11px;
   }
 
-  .flag.flag-bv 
-{
+  .flag.flag-bv
+  {
     background-position: -240px -11px;
   }
 
-  .flag.flag-bw 
-{
+  .flag.flag-bw
+  {
     background-position: 0 -22px;
   }
 
-  .flag.flag-by 
-{
+  .flag.flag-by
+  {
     background-position: -16px -22px;
   }
 
-  .flag.flag-bz 
-{
+  .flag.flag-bz
+  {
     background-position: -32px -22px;
   }
 
-  .flag.flag-ca 
-{
+  .flag.flag-ca
+  {
     background-position: -48px -22px;
   }
 
-  .flag.flag-catalonia 
-{
+  .flag.flag-catalonia
+  {
     background-position: -64px -22px;
   }
 
-  .flag.flag-cd 
-{
+  .flag.flag-cd
+  {
     background-position: -80px -22px;
   }
 
-  .flag.flag-cf 
-{
+  .flag.flag-cf
+  {
     background-position: -96px -22px;
   }
 
-  .flag.flag-cg 
-{
+  .flag.flag-cg
+  {
     background-position: -112px -22px;
   }
 
-  .flag.flag-ch 
-{
+  .flag.flag-ch
+  {
     background-position: -128px -22px;
   }
 
-  .flag.flag-ci 
-{
+  .flag.flag-ci
+  {
     background-position: -144px -22px;
   }
 
-  .flag.flag-ck 
-{
+  .flag.flag-ck
+  {
     background-position: -160px -22px;
   }
 
-  .flag.flag-cl 
-{
+  .flag.flag-cl
+  {
     background-position: -176px -22px;
   }
 
-  .flag.flag-cm 
-{
+  .flag.flag-cm
+  {
     background-position: -192px -22px;
   }
 
-  .flag.flag-cn 
-{
+  .flag.flag-cn
+  {
     background-position: -208px -22px;
   }
 
-  .flag.flag-co 
-{
+  .flag.flag-co
+  {
     background-position: -224px -22px;
   }
 
-  .flag.flag-cr 
-{
+  .flag.flag-cr
+  {
     background-position: -240px -22px;
   }
 
-  .flag.flag-cu 
-{
+  .flag.flag-cu
+  {
     background-position: 0 -33px;
   }
 
-  .flag.flag-cv 
-{
+  .flag.flag-cv
+  {
     background-position: -16px -33px;
   }
 
-  .flag.flag-cy 
-{
+  .flag.flag-cy
+  {
     background-position: -32px -33px;
   }
 
-  .flag.flag-cz 
-{
+  .flag.flag-cz
+  {
     background-position: -48px -33px;
   }
 
-  .flag.flag-de 
-{
+  .flag.flag-de
+  {
     background-position: -64px -33px;
   }
 
-  .flag.flag-dj 
-{
+  .flag.flag-dj
+  {
     background-position: -80px -33px;
   }
 
-  .flag.flag-dk 
-{
+  .flag.flag-dk
+  {
     background-position: -96px -33px;
   }
 
-  .flag.flag-dm 
-{
+  .flag.flag-dm
+  {
     background-position: -112px -33px;
   }
 
-  .flag.flag-do 
-{
+  .flag.flag-do
+  {
     background-position: -128px -33px;
   }
 
-  .flag.flag-dz 
-{
+  .flag.flag-dz
+  {
     background-position: -144px -33px;
   }
 
-  .flag.flag-ec 
-{
+  .flag.flag-ec
+  {
     background-position: -160px -33px;
   }
 
-  .flag.flag-ee 
-{
+  .flag.flag-ee
+  {
     background-position: -176px -33px;
   }
 
-  .flag.flag-eg 
-{
+  .flag.flag-eg
+  {
     background-position: -192px -33px;
   }
 
-  .flag.flag-eh 
-{
+  .flag.flag-eh
+  {
     background-position: -208px -33px;
   }
 
-  .flag.flag-g1 
-{
+  .flag.flag-g1
+  {
     background-position: -224px -33px;
   }
 
-  .flag.flag-er 
-{
+  .flag.flag-er
+  {
     background-position: -240px -33px;
   }
 
-  .flag.flag-es 
-{
+  .flag.flag-es
+  {
     background-position: 0 -44px;
   }
 
-  .flag.flag-et 
-{
+  .flag.flag-et
+  {
     background-position: -16px -44px;
   }
 
-  .flag.flag-eu 
-{
+  .flag.flag-eu
+  {
     background-position: -32px -44px;
   }
 
-  .flag.flag-fi 
-{
+  .flag.flag-fi
+  {
     background-position: -48px -44px;
   }
 
-  .flag.flag-fj 
-{
+  .flag.flag-fj
+  {
     background-position: -64px -44px;
   }
 
-  .flag.flag-fk 
-{
+  .flag.flag-fk
+  {
     background-position: -80px -44px;
   }
 
-  .flag.flag-fm 
-{
+  .flag.flag-fm
+  {
     background-position: -96px -44px;
   }
 
-  .flag.flag-fo 
-{
+  .flag.flag-fo
+  {
     background-position: -112px -44px;
   }
 
-  .flag.flag-fr 
-{
+  .flag.flag-fr
+  {
     background-position: -128px -44px;
   }
 
-  .flag.flag-ga 
-{
+  .flag.flag-ga
+  {
     background-position: -144px -44px;
   }
 
-  .flag.flag-gb 
-{
+  .flag.flag-gb
+  {
     background-position: -160px -44px;
   }
 
-  .flag.flag-gd 
-{
+  .flag.flag-gd
+  {
     background-position: -176px -44px;
   }
 
-  .flag.flag-ge 
-{
+  .flag.flag-ge
+  {
     background-position: -192px -44px;
   }
 
-  .flag.flag-gf 
-{
+  .flag.flag-gf
+  {
     background-position: -208px -44px;
   }
 
-  .flag.flag-gg 
-{
+  .flag.flag-gg
+  {
     background-position: -224px -44px;
   }
 
-  .flag.flag-gh 
-{
+  .flag.flag-gh
+  {
     background-position: -240px -44px;
   }
 
-  .flag.flag-gi 
-{
+  .flag.flag-gi
+  {
     background-position: 0 -55px;
   }
 
-  .flag.flag-gl 
-{
+  .flag.flag-gl
+  {
     background-position: -16px -55px;
   }
 
-  .flag.flag-gm 
-{
+  .flag.flag-gm
+  {
     background-position: -32px -55px;
   }
 
-  .flag.flag-gn 
-{
+  .flag.flag-gn
+  {
     background-position: -48px -55px;
   }
 
-  .flag.flag-gp 
-{
+  .flag.flag-gp
+  {
     background-position: -64px -55px;
   }
 
-  .flag.flag-gq 
-{
+  .flag.flag-gq
+  {
     background-position: -80px -55px;
   }
 
-  .flag.flag-gr 
-{
+  .flag.flag-gr
+  {
     background-position: -96px -55px;
   }
 
-  .flag.flag-gs 
-{
+  .flag.flag-gs
+  {
     background-position: -112px -55px;
   }
 
-  .flag.flag-gt 
-{
+  .flag.flag-gt
+  {
     background-position: -128px -55px;
   }
 
-  .flag.flag-gu 
-{
+  .flag.flag-gu
+  {
     background-position: -144px -55px;
   }
 
-  .flag.flag-gw 
-{
+  .flag.flag-gw
+  {
     background-position: -160px -55px;
   }
 
-  .flag.flag-gy 
-{
+  .flag.flag-gy
+  {
     background-position: -176px -55px;
   }
 
-  .flag.flag-hk 
-{
+  .flag.flag-hk
+  {
     background-position: -192px -55px;
   }
 
-  .flag.flag-hm 
-{
+  .flag.flag-hm
+  {
     background-position: -208px -55px;
   }
 
-  .flag.flag-hn 
-{
+  .flag.flag-hn
+  {
     background-position: -224px -55px;
   }
 
-  .flag.flag-hr 
-{
+  .flag.flag-hr
+  {
     background-position: -240px -55px;
   }
 
-  .flag.flag-ht 
-{
+  .flag.flag-ht
+  {
     background-position: 0 -66px;
   }
 
-  .flag.flag-hu 
-{
+  .flag.flag-hu
+  {
     background-position: -16px -66px;
   }
 
-  .flag.flag-id 
-{
+  .flag.flag-id
+  {
     background-position: -32px -66px;
   }
 
-  .flag.flag-ie 
-{
+  .flag.flag-ie
+  {
     background-position: -48px -66px;
   }
 
-  .flag.flag-il 
-{
+  .flag.flag-il
+  {
     background-position: -64px -66px;
   }
 
-  .flag.flag-im 
-{
+  .flag.flag-im
+  {
     background-position: -80px -66px;
   }
 
-  .flag.flag-in 
-{
+  .flag.flag-in
+  {
     background-position: -96px -66px;
   }
 
-  .flag.flag-io 
-{
+  .flag.flag-io
+  {
     background-position: -112px -66px;
   }
 
-  .flag.flag-iq 
-{
+  .flag.flag-iq
+  {
     background-position: -128px -66px;
   }
 
-  .flag.flag-ir 
-{
+  .flag.flag-ir
+  {
     background-position: -144px -66px;
   }
 
-  .flag.flag-is 
-{
+  .flag.flag-is
+  {
     background-position: -160px -66px;
   }
 
-  .flag.flag-it 
-{
+  .flag.flag-it
+  {
     background-position: -176px -66px;
   }
 
-  .flag.flag-je 
-{
+  .flag.flag-je
+  {
     background-position: -192px -66px;
   }
 
-  .flag.flag-jm 
-{
+  .flag.flag-jm
+  {
     background-position: -208px -66px;
   }
 
-  .flag.flag-jo 
-{
+  .flag.flag-jo
+  {
     background-position: -224px -66px;
   }
 
-  .flag.flag-jp 
-{
+  .flag.flag-jp
+  {
     background-position: -240px -66px;
   }
 
-  .flag.flag-ke 
-{
+  .flag.flag-ke
+  {
     background-position: 0 -77px;
   }
 
-  .flag.flag-kg 
-{
+  .flag.flag-kg
+  {
     background-position: -16px -77px;
   }
 
-  .flag.flag-kh 
-{
+  .flag.flag-kh
+  {
     background-position: -32px -77px;
   }
 
-  .flag.flag-ki 
-{
+  .flag.flag-ki
+  {
     background-position: -48px -77px;
   }
 
-  .flag.flag-km 
-{
+  .flag.flag-km
+  {
     background-position: -64px -77px;
   }
 
-  .flag.flag-kn 
-{
+  .flag.flag-kn
+  {
     background-position: -80px -77px;
   }
 
-  .flag.flag-kp 
-{
+  .flag.flag-kp
+  {
     background-position: -96px -77px;
   }
 
-  .flag.flag-kr 
-{
+  .flag.flag-kr
+  {
     background-position: -112px -77px;
   }
 
-  .flag.flag-kw 
-{
+  .flag.flag-kw
+  {
     background-position: -128px -77px;
   }
 
-  .flag.flag-ky 
-{
+  .flag.flag-ky
+  {
     background-position: -144px -77px;
   }
 
-  .flag.flag-kz 
-{
+  .flag.flag-kz
+  {
     background-position: -160px -77px;
   }
 
-  .flag.flag-la 
-{
+  .flag.flag-la
+  {
     background-position: -176px -77px;
   }
 
-  .flag.flag-lb 
-{
+  .flag.flag-lb
+  {
     background-position: -192px -77px;
   }
 
-  .flag.flag-lc 
-{
+  .flag.flag-lc
+  {
     background-position: -208px -77px;
   }
 
-  .flag.flag-li 
-{
+  .flag.flag-li
+  {
     background-position: -224px -77px;
   }
 
-  .flag.flag-lk 
-{
+  .flag.flag-lk
+  {
     background-position: -240px -77px;
   }
 
-  .flag.flag-lr 
-{
+  .flag.flag-lr
+  {
     background-position: 0 -88px;
   }
 
-  .flag.flag-ls 
-{
+  .flag.flag-ls
+  {
     background-position: -16px -88px;
   }
 
-  .flag.flag-lt 
-{
+  .flag.flag-lt
+  {
     background-position: -32px -88px;
   }
 
-  .flag.flag-lu 
-{
+  .flag.flag-lu
+  {
     background-position: -48px -88px;
   }
 
-  .flag.flag-lv 
-{
+  .flag.flag-lv
+  {
     background-position: -64px -88px;
   }
 
-  .flag.flag-ly 
-{
+  .flag.flag-ly
+  {
     background-position: -80px -88px;
   }
 
-  .flag.flag-ma 
-{
+  .flag.flag-ma
+  {
     background-position: -96px -88px;
   }
 
-  .flag.flag-mc 
-{
+  .flag.flag-mc
+  {
     background-position: -112px -88px;
   }
 
-  .flag.flag-md 
-{
+  .flag.flag-md
+  {
     background-position: -128px -88px;
   }
 
-  .flag.flag-me 
-{
+  .flag.flag-me
+  {
     background-position: -144px -88px;
   }
 
-  .flag.flag-mg 
-{
+  .flag.flag-mg
+  {
     background-position: -160px -88px;
   }
 
-  .flag.flag-mh 
-{
+  .flag.flag-mh
+  {
     background-position: -176px -88px;
   }
 
-  .flag.flag-mk 
-{
+  .flag.flag-mk
+  {
     background-position: -192px -88px;
   }
 
-  .flag.flag-ml 
-{
+  .flag.flag-ml
+  {
     background-position: -208px -88px;
   }
 
-  .flag.flag-mm 
-{
+  .flag.flag-mm
+  {
     background-position: -224px -88px;
   }
 
-  .flag.flag-mn 
-{
+  .flag.flag-mn
+  {
     background-position: -240px -88px;
   }
 
-  .flag.flag-mo 
-{
+  .flag.flag-mo
+  {
     background-position: 0 -99px;
   }
 
-  .flag.flag-mp 
-{
+  .flag.flag-mp
+  {
     background-position: -16px -99px;
   }
 
-  .flag.flag-mq 
-{
+  .flag.flag-mq
+  {
     background-position: -32px -99px;
   }
 
-  .flag.flag-mr 
-{
+  .flag.flag-mr
+  {
     background-position: -48px -99px;
   }
 
-  .flag.flag-ms 
-{
+  .flag.flag-ms
+  {
     background-position: -64px -99px;
   }
 
-  .flag.flag-mt 
-{
+  .flag.flag-mt
+  {
     background-position: -80px -99px;
   }
 
-  .flag.flag-mu 
-{
+  .flag.flag-mu
+  {
     background-position: -96px -99px;
   }
 
-  .flag.flag-mv 
-{
+  .flag.flag-mv
+  {
     background-position: -112px -99px;
   }
 
-  .flag.flag-mw 
-{
+  .flag.flag-mw
+  {
     background-position: -128px -99px;
   }
 
-  .flag.flag-mx 
-{
+  .flag.flag-mx
+  {
     background-position: -144px -99px;
   }
 
-  .flag.flag-my 
-{
+  .flag.flag-my
+  {
     background-position: -160px -99px;
   }
 
-  .flag.flag-mz 
-{
+  .flag.flag-mz
+  {
     background-position: -176px -99px;
   }
 
-  .flag.flag-na 
-{
+  .flag.flag-na
+  {
     background-position: -192px -99px;
   }
 
-  .flag.flag-nc 
-{
+  .flag.flag-nc
+  {
     background-position: -208px -99px;
   }
 
-  .flag.flag-ne 
-{
+  .flag.flag-ne
+  {
     background-position: -224px -99px;
   }
 
-  .flag.flag-nf 
-{
+  .flag.flag-nf
+  {
     background-position: -240px -99px;
   }
 
-  .flag.flag-ng 
-{
+  .flag.flag-ng
+  {
     background-position: 0 -110px;
   }
 
-  .flag.flag-ni 
-{
+  .flag.flag-ni
+  {
     background-position: -16px -110px;
   }
 
-  .flag.flag-nl 
-{
+  .flag.flag-nl
+  {
     background-position: -32px -110px;
   }
 
-  .flag.flag-no 
-{
+  .flag.flag-no
+  {
     background-position: -48px -110px;
   }
 
-  .flag.flag-np 
-{
+  .flag.flag-np
+  {
     background-position: -64px -110px;
   }
 
-  .flag.flag-nr 
-{
+  .flag.flag-nr
+  {
     background-position: -80px -110px;
   }
 
-  .flag.flag-nu 
-{
+  .flag.flag-nu
+  {
     background-position: -96px -110px;
   }
 
-  .flag.flag-nz 
-{
+  .flag.flag-nz
+  {
     background-position: -112px -110px;
   }
 
-  .flag.flag-om 
-{
+  .flag.flag-om
+  {
     background-position: -128px -110px;
   }
 
-  .flag.flag-pa 
-{
+  .flag.flag-pa
+  {
     background-position: -144px -110px;
   }
 
-  .flag.flag-pe 
-{
+  .flag.flag-pe
+  {
     background-position: -160px -110px;
   }
 
-  .flag.flag-pf 
-{
+  .flag.flag-pf
+  {
     background-position: -176px -110px;
   }
 
-  .flag.flag-pg 
-{
+  .flag.flag-pg
+  {
     background-position: -192px -110px;
   }
 
-  .flag.flag-ph 
-{
+  .flag.flag-ph
+  {
     background-position: -208px -110px;
   }
 
-  .flag.flag-pk 
-{
+  .flag.flag-pk
+  {
     background-position: -224px -110px;
   }
 
-  .flag.flag-pl 
-{
+  .flag.flag-pl
+  {
     background-position: -240px -110px;
   }
 
-  .flag.flag-pm 
-{
+  .flag.flag-pm
+  {
     background-position: 0 -121px;
   }
 
-  .flag.flag-pn 
-{
+  .flag.flag-pn
+  {
     background-position: -16px -121px;
   }
 
-  .flag.flag-pr 
-{
+  .flag.flag-pr
+  {
     background-position: -32px -121px;
   }
 
-  .flag.flag-ps 
-{
+  .flag.flag-ps
+  {
     background-position: -48px -121px;
   }
 
-  .flag.flag-pt 
-{
+  .flag.flag-pt
+  {
     background-position: -64px -121px;
   }
 
-  .flag.flag-pw 
-{
+  .flag.flag-pw
+  {
     background-position: -80px -121px;
   }
 
-  .flag.flag-py 
-{
+  .flag.flag-py
+  {
     background-position: -96px -121px;
   }
 
-  .flag.flag-qa 
-{
+  .flag.flag-qa
+  {
     background-position: -112px -121px;
   }
 
-  .flag.flag-re 
-{
+  .flag.flag-re
+  {
     background-position: -128px -121px;
   }
 
-  .flag.flag-ro 
-{
+  .flag.flag-ro
+  {
     background-position: -144px -121px;
   }
 
-  .flag.flag-rs 
-{
+  .flag.flag-rs
+  {
     background-position: -160px -121px;
   }
 
-  .flag.flag-ru 
-{
+  .flag.flag-ru
+  {
     background-position: -176px -121px;
   }
 
-  .flag.flag-rw 
-{
+  .flag.flag-rw
+  {
     background-position: -192px -121px;
   }
 
-  .flag.flag-sa 
-{
+  .flag.flag-sa
+  {
     background-position: -208px -121px;
   }
 
-  .flag.flag-sb 
-{
+  .flag.flag-sb
+  {
     background-position: -224px -121px;
   }
 
-  .flag.flag-sc 
-{
+  .flag.flag-sc
+  {
     background-position: -240px -121px;
   }
 
-  .flag.flag-g3 
-{
+  .flag.flag-g3
+  {
     background-position: 0 -132px;
   }
 
-  .flag.flag-sd 
-{
+  .flag.flag-sd
+  {
     background-position: -16px -132px;
   }
 
-  .flag.flag-se 
-{
+  .flag.flag-se
+  {
     background-position: -32px -132px;
   }
 
-  .flag.flag-sg 
-{
+  .flag.flag-sg
+  {
     background-position: -48px -132px;
   }
 
-  .flag.flag-sh 
-{
+  .flag.flag-sh
+  {
     background-position: -64px -132px;
   }
 
-  .flag.flag-si 
-{
+  .flag.flag-si
+  {
     background-position: -80px -132px;
   }
 
-  .flag.flag-sk 
-{
+  .flag.flag-sk
+  {
     background-position: -96px -132px;
   }
 
-  .flag.flag-sl 
-{
+  .flag.flag-sl
+  {
     background-position: -112px -132px;
   }
 
-  .flag.flag-sm 
-{
+  .flag.flag-sm
+  {
     background-position: -128px -132px;
   }
 
-  .flag.flag-sn 
-{
+  .flag.flag-sn
+  {
     background-position: -144px -132px;
   }
 
-  .flag.flag-so 
-{
+  .flag.flag-so
+  {
     background-position: -160px -132px;
   }
 
-  .flag.flag-sr 
-{
+  .flag.flag-sr
+  {
     background-position: -176px -132px;
   }
 
-  .flag.flag-ss 
-{
+  .flag.flag-ss
+  {
     background-position: -192px -132px;
   }
 
-  .flag.flag-st 
-{
+  .flag.flag-st
+  {
     background-position: -208px -132px;
   }
 
-  .flag.flag-sv 
-{
+  .flag.flag-sv
+  {
     background-position: -224px -132px;
   }
 
-  .flag.flag-sy 
-{
+  .flag.flag-sy
+  {
     background-position: -240px -132px;
   }
 
-  .flag.flag-sz 
-{
+  .flag.flag-sz
+  {
     background-position: 0 -143px;
   }
 
-  .flag.flag-tc 
-{
+  .flag.flag-tc
+  {
     background-position: -16px -143px;
   }
 
-  .flag.flag-td 
-{
+  .flag.flag-td
+  {
     background-position: -32px -143px;
   }
 
-  .flag.flag-tf 
-{
+  .flag.flag-tf
+  {
     background-position: -48px -143px;
   }
 
-  .flag.flag-tg 
-{
+  .flag.flag-tg
+  {
     background-position: -64px -143px;
   }
 
-  .flag.flag-th 
-{
+  .flag.flag-th
+  {
     background-position: -80px -143px;
   }
 
-  .flag.flag-tj 
-{
+  .flag.flag-tj
+  {
     background-position: -96px -143px;
   }
 
-  .flag.flag-tk 
-{
+  .flag.flag-tk
+  {
     background-position: -112px -143px;
   }
 
-  .flag.flag-tl 
-{
+  .flag.flag-tl
+  {
     background-position: -128px -143px;
   }
 
-  .flag.flag-tm 
-{
+  .flag.flag-tm
+  {
     background-position: -144px -143px;
   }
 
-  .flag.flag-tn 
-{
+  .flag.flag-tn
+  {
     background-position: -160px -143px;
   }
 
-  .flag.flag-to 
-{
+  .flag.flag-to
+  {
     background-position: -176px -143px;
   }
 
-  .flag.flag-tr 
-{
+  .flag.flag-tr
+  {
     background-position: -192px -143px;
   }
 
-  .flag.flag-tt 
-{
+  .flag.flag-tt
+  {
     background-position: -208px -143px;
   }
 
-  .flag.flag-tv 
-{
+  .flag.flag-tv
+  {
     background-position: -224px -143px;
   }
 
-  .flag.flag-tw 
-{
+  .flag.flag-tw
+  {
     background-position: -240px -143px;
   }
 
-  .flag.flag-tz 
-{
+  .flag.flag-tz
+  {
     background-position: 0 -154px;
   }
 
-  .flag.flag-ua 
-{
+  .flag.flag-ua
+  {
     background-position: -16px -154px;
   }
 
-  .flag.flag-ug 
-{
+  .flag.flag-ug
+  {
     background-position: -32px -154px;
   }
 
-  .flag.flag-um 
-{
+  .flag.flag-um
+  {
     background-position: -48px -154px;
   }
 
-  .flag.flag-us 
-{
+  .flag.flag-us
+  {
     background-position: -64px -154px;
   }
 
-  .flag.flag-uy 
-{
+  .flag.flag-uy
+  {
     background-position: -80px -154px;
   }
 
-  .flag.flag-uz 
-{
+  .flag.flag-uz
+  {
     background-position: -96px -154px;
   }
 
-  .flag.flag-va 
-{
+  .flag.flag-va
+  {
     background-position: -112px -154px;
   }
 
-  .flag.flag-vc 
-{
+  .flag.flag-vc
+  {
     background-position: -128px -154px;
   }
 
-  .flag.flag-ve 
-{
+  .flag.flag-ve
+  {
     background-position: -144px -154px;
   }
 
-  .flag.flag-vg 
-{
+  .flag.flag-vg
+  {
     background-position: -160px -154px;
   }
 
-  .flag.flag-vi 
-{
+  .flag.flag-vi
+  {
     background-position: -176px -154px;
   }
 
-  .flag.flag-vn 
-{
+  .flag.flag-vn
+  {
     background-position: -192px -154px;
   }
 
-  .flag.flag-vu 
-{
+  .flag.flag-vu
+  {
     background-position: -208px -154px;
   }
 
-  .flag.flag-g2 
-{
+  .flag.flag-g2
+  {
     background-position: -224px -154px;
   }
 
-  .flag.flag-wf 
-{
+  .flag.flag-wf
+  {
     background-position: -240px -154px;
   }
 
-  .flag.flag-ws 
-{
+  .flag.flag-ws
+  {
     background-position: 0 -165px;
   }
 
-  .flag.flag-ye 
-{
+  .flag.flag-ye
+  {
     background-position: -16px -165px;
   }
 
-  .flag.flag-yt 
-{
+  .flag.flag-yt
+  {
     background-position: -32px -165px;
   }
 
-  .flag.flag-za 
-{
+  .flag.flag-za
+  {
     background-position: -48px -165px;
   }
 
-  .flag.flag-zm 
-{
+  .flag.flag-zm
+  {
     background-position: -64px -165px;
   }
 
-  .flag.flag-zw 
-{
+  .flag.flag-zw
+  {
     background-position: -80px -165px;
   }
 
-@media screen and (max-width:480px) 
+@media screen and (max-width:480px)
 {
-  .messages 
-{
+  .messages
+  {
     width: auto;
     right: 50px;
     left: 0px;
   }
 
-    .messages li.message 
-{
+    .messages li.message
+    {
       border-left: inherit;
     }
 
-  .users 
-{
+  .users
+  {
     top: 24px;
     width: 50px;
     right: 0px;
@@ -2135,20 +2131,20 @@ li.clearfix
   }
 
 
-    .users span 
-{
+    .users span
+    {
       display: none;
     }
 
-  .message .left 
-{
+  .message .left
+  {
     float: inherit;
     width: inherit;
     margin-left: inherit;
   }
 
-  .message .middle 
-{
+  .message .middle
+  {
     position: relative;
     top: 0.5em;
     margin-bottom: 10px;
@@ -2156,18 +2152,18 @@ li.clearfix
     padding: 5px;
   }
 
-  #message-instruction 
-{
+  #message-instruction
+  {
     display: none;
   }
 
-  #tabs 
-{
+  #tabs
+  {
     overflow: auto;
   }
 }
 
-.gravatarProfile 
+.gravatarProfile
 {
   margin-left: 30px;
   margin-right: 10px;
@@ -2176,476 +2172,476 @@ li.clearfix
   min-height: 80px;
 }
 
-  .gravatarProfile p 
-{
+  .gravatarProfile p
+  {
     margin: 0px;
     padding: 0px;
   }
 
-  .gravatarProfile time 
-{
+  .gravatarProfile time
+  {
     font-size: .8em;
   }
 
-  .gravatarProfile img 
-{
+  .gravatarProfile img
+  {
     float: left;
     margin-right: 5px;
   }
 
-  .gravatarProfile .user 
-{
+  .gravatarProfile .user
+  {
     margin-bottom: 5px;
   }
 
-  .gravatarProfile .name 
-{
+  .gravatarProfile .name
+  {
     font-weight: bold;
     font-size: 15px;
   }
 
-#releaseArea 
+#releaseArea
 {
   position: fixed;
   bottom: 0px;
   right: 0px;
 }
 
-#releaseTag 
-{
-  font-size: smaller;
-  padding: 10px;
-  margin: 0;
-}
+  #releaseTag
+  {
+    font-size: smaller;
+    padding: 10px;
+    margin: 0;
+  }
 
-  #releaseTag a 
-{
+  #releaseTag a
+  {
     color: #1C94C4;
     text-decoration: none;
   }
 
-    #releaseTag a:hover 
-{
+    #releaseTag a:hover
+    {
       color: #1C94C4;
       text-decoration: underline;
     }
 
-#jabbr-help 
+#jabbr-help
 {
-  height: 490px;
+    height: 490px;
 }
 
-  #jabbr-help .modal-body 
-{
+  #jabbr-help .modal-body
+  {
     margin: 0;
     padding: 0;
     overflow: hidden;
   }
 
-.help-body 
+.help-body
 {
-  overflow: auto;
-  margin: 0 0 0 10px;
-  max-height: 400px;
+    overflow: auto;
+    margin: 0 0 0 10px;
+    max-height: 400px;
 }
 
-.command-list 
+.command-list
 {
-  border-bottom: 1px solid #E5E5E5;
-  padding-bottom: 15px;
+    border-bottom: 1px solid #E5E5E5;
+    padding-bottom: 15px;
 }
 
-  .command-list > dd,
-  .command-list > p 
-{
-    font-style: italic;
-  }
+    .command-list > dd,
+    .command-list > p
+    {
+        font-style: italic;
+    }
 
-  .command-list > dd 
-{
-    margin: 10px;
-  }
+    .command-list > dd
+    {
+        margin: 10px;
+    }
 
-.command 
+.command
 {
-  border: 1px solid #000;
-  border-radius: 3px;
-  -moz-border-radius: 3px; /* Firefox 3.6 and earlier */
-  padding: 5px 10px;
-  box-shadow: 2px 2px 2px #888888;
+    border: 1px solid #000;
+    border-radius: 3px;
+    -moz-border-radius: 3px; /* Firefox 3.6 and earlier */
+    padding: 5px 10px;
+    box-shadow: 2px 2px 2px #888888;
 }
 
-.command-name 
+.command-name
 {
-  border-color: #E5E5E5;
-  background-color: #00103F;
-  color: #E5E5E5;
+    border-color: #E5E5E5;
+    background-color: #00103F;
+    color: #E5E5E5;
 }
 
-.command-args 
+.command-args
 {
-  border-color: #00103F;
-  background-color: #E5E5E5;
-  color: #00103F;
+    border-color: #00103F;
+    background-color: #E5E5E5;
+    color: #00103F;
 }
 
-.hide 
+.hide
 {
-  display: none;
+    display: none;
 }
 
-#login 
+#login
 {
-  background-color: #FFF;
-  box-shadow: 0 0 10px #00103F;
-  -moz-box-shadow: 0 0 10px #00103F;
-  -webkit-box-shadow: 0 0 10px #00103F;
-  margin: 100px auto;
-  width: 500px;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-}
-
-.account-details 
-{
-  background-color: #FFF;
-}
-
-.login-header, .account-details-header 
-{
-  border-radius: 5px 5px 0 0;
-  -moz-border-radius: 5px 5px 0 0;
-  -webkit-border-radius: 5px 5px 0 0;
-  background-color: #00103F;
-  height: 50px;
-  margin: 0 auto;
-  padding-top: 10px;
-  padding-bottom: 20px;
-  color: #FFFFFF;
-}
-
-  .login-header h1 
-{
-    font-size: 20px;
-  }
-
-.user-details 
-{
-  background-color: #00103f;
-  color: #f1f1f1;
-  height: 48px;
-  padding: 10px;
-  border-radius: 5px 5px 0 0;
-  -moz-border-radius: 5px 5px 0 0;
-  -webkit-border-radius: 5px 5px 0 0;
-}
-
-  .user-details img 
-{
-    margin-right: 10px;
+    background-color: #FFF;
+    box-shadow: 0 0 10px #00103F;
+    -moz-box-shadow: 0 0 10px #00103F;
+    -webkit-box-shadow: 0 0 10px #00103F;
+    margin: 100px auto;
+    width: 500px;
     border-radius: 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
-  }
-
-  .user-details .name 
-{
-    font-size: 20px;
-  }
-
-.user-details-sidenav 
-{
-  background-color: #FFFFFF;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  padding: 0;
 }
 
-  .user-details-sidenav ul 
+.account-details
 {
-    margin: 20px 0 0;
-    padding: 0;
+    background-color: #FFF;
+}
+
+.login-header, .account-details-header
+{
+    border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    -webkit-border-radius: 5px 5px 0 0;
+    background-color: #00103F;
+    height: 50px;
+    margin: 0 auto;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    color: #FFFFFF;
+}
+
+  .login-header h1
+  {
+      font-size: 20px;
   }
 
-    .user-details-sidenav ul > li:first-child > a 
+.user-details
 {
-      border-bottom-left-radius: 0;
-      border-bottom-right-radius: 0;
+    background-color: #00103f;
+    color: #f1f1f1;
+    height: 48px;
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    -moz-border-radius: 5px 5px 0 0;
+    -webkit-border-radius: 5px 5px 0 0;
+}
+
+  .user-details img
+  {
+      margin-right: 10px;
+      border-radius: 5px;
+      -moz-border-radius: 5px;
+      -webkit-border-radius: 5px;
+  }
+
+  .user-details .name
+  {
+      font-size: 20px;
+  }
+
+.user-details-sidenav
+{
+    background-color: #FFFFFF;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    padding: 0;
+}
+
+  .user-details-sidenav ul
+  {
+      margin: 20px 0 0;
+      padding: 0;
+  }
+
+    .user-details-sidenav ul > li:first-child > a
+    {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
     }
 
     .user-details-sidenav ul > li:last-child > a,
-    .user-details-sidenav ul > li:last-child 
-{
-      border-bottom-left-radius: 6px;
-      border-bottom-right-radius: 6px;
+    .user-details-sidenav ul > li:last-child
+    {
+        border-bottom-left-radius: 6px;
+        border-bottom-right-radius: 6px;
     }
 
-    .user-details-sidenav ul > li.active > a 
-{
-      background-color: #00103f;
+    .user-details-sidenav ul > li.active > a
+    {
+        background-color: #00103f;
     }
 
-      .user-details-sidenav ul > li.active > a:hover 
-{
-        background-color: #164c85;
+      .user-details-sidenav ul > li.active > a:hover
+      {
+          background-color: #164c85;
       }
 
-    .user-details-sidenav ul > li > a 
-{
-      color: #00103f;
-      border-top: 1px solid #E5E5E5;
-      border-bottom: 1px solid #e5e5e5;
-      display: block;
-      margin: 0 0 -1px;
-      padding: 8px 14px;
+    .user-details-sidenav ul > li > a
+    {
+        color: #00103f;
+        border-top: 1px solid #E5E5E5;
+        border-bottom: 1px solid #e5e5e5;
+        display: block;
+        margin: 0 0 -1px;
+        padding: 8px 14px;
     }
 
-  .user-details-sidenav .icon-chevron-right 
-{
-    float: right;
-    margin-right: -6px;
-    margin-top: 2px;
-    opacity: 0.25;
+  .user-details-sidenav .icon-chevron-right
+  {
+      float: right;
+      margin-right: -6px;
+      margin-top: 2px;
+      opacity: 0.25;
   }
 
-.account-details-header 
+.account-details-header
 {
-  padding-bottom: 10px;
+    padding-bottom: 10px;
 }
 
-  .account-details-header h1 
-{
-    margin: 0 20px;
-    font-size: 28px;
-    font-weight: normal;
+  .account-details-header h1
+  {
+      margin: 0 20px;
+      font-size: 28px;
+      font-weight: normal;
   }
 
-.account-details-body 
+.account-details-body
 {
-  margin: 0;
-  padding: 20px 0;
+    margin: 0;
+    padding: 20px 0;
 }
 
-.subheader 
+.subheader
 {
-  text-shadow: 0 1px 0 rgba(255, 255, 255, .7), 0 2px 0 rgba(0, 0, 0, .5);
-  text-transform: uppercase;
-  text-align: center;
-  color: #00103F;
-  margin: 0 0 0 0;
-  padding-top: 15px;
-  letter-spacing: 4px;
-  font: normal 26px/1 Verdana, Helvetica;
-  position: relative;
-  width: 500px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, .7), 0 2px 0 rgba(0, 0, 0, .5);
+    text-transform: uppercase;
+    text-align: center;
+    color: #00103F;
+    margin: 0 0 0 0;
+    padding-top: 15px;
+    letter-spacing: 4px;
+    font: normal 26px/1 Verdana, Helvetica;
+    position: relative;
+    width: 500px;
 }
 
-  .subheader:after, .subheader:before 
-{
-    background-color: #00103F;
-    content: "";
-    height: 1px;
-    position: absolute;
-    top: 30px;
-    width: 120px;
+  .subheader:after, .subheader:before
+  {
+      background-color: #00103F;
+      content: "";
+      height: 1px;
+      position: absolute;
+      top: 30px;
+      width: 120px;
   }
 
-  .subheader:after 
-{
-    background-image: -webkit-gradient(linear, left top, right top, from(#00103F), to(#fff));
-    background-image: -webkit-linear-gradient(left, #00103F, #fff);
-    background-image: -moz-linear-gradient(left, #00103F, #fff);
-    background-image: -ms-linear-gradient(left, #00103F, #fff);
-    background-image: -o-linear-gradient(left, #00103F, #fff);
-    background-image: linear-gradient(left, #00103F, #fff);
-    right: 0;
+  .subheader:after
+  {
+      background-image: -webkit-gradient(linear, left top, right top, from(#00103F), to(#fff));
+      background-image: -webkit-linear-gradient(left, #00103F, #fff);
+      background-image: -moz-linear-gradient(left, #00103F, #fff);
+      background-image: -ms-linear-gradient(left, #00103F, #fff);
+      background-image: -o-linear-gradient(left, #00103F, #fff);
+      background-image: linear-gradient(left, #00103F, #fff);
+      right: 0;
   }
 
-  .subheader:before 
-{
-    background-image: -webkit-gradient(linear, right top, left top, from(#00103F), to(#fff));
-    background-image: -webkit-linear-gradient(right, #00103F, #fff);
-    background-image: -moz-linear-gradient(right, #00103F, #fff);
-    background-image: -ms-linear-gradient(right, #00103F, #fff);
-    background-image: -o-linear-gradient(right, #00103F, #fff);
-    background-image: linear-gradient(right, #00103F, #fff);
-    left: 0;
+  .subheader:before
+  {
+      background-image: -webkit-gradient(linear, right top, left top, from(#00103F), to(#fff));
+      background-image: -webkit-linear-gradient(right, #00103F, #fff);
+      background-image: -moz-linear-gradient(right, #00103F, #fff);
+      background-image: -ms-linear-gradient(right, #00103F, #fff);
+      background-image: -o-linear-gradient(right, #00103F, #fff);
+      background-image: linear-gradient(right, #00103F, #fff);
+      left: 0;
   }
 
-.login-body 
+.login-body
 {
-  border-radius: 0 0 5px 5px;
-  -moz-border-radius: 0 0 5px 5px;
-  -webkit-border-radius: 0 0 5px 5px;
-  padding-top: 10px;
-  padding-bottom: 15px;
+    border-radius: 0 0 5px 5px;
+    -moz-border-radius: 0 0 5px 5px;
+    -webkit-border-radius: 0 0 5px 5px;
+    padding-top: 10px;
+    padding-bottom: 15px;
 }
 
 .windows-auth,
 .usernamepassword-auth,
-.user-registration 
+.user-registration
 {
-  margin: 20px -40px;
+    margin: 20px -40px;
 }
 
-.social-auth 
+.social-auth
 {
-  margin: 20px 15px;
-  padding: 0 20px;
+    margin: 20px 15px;
+    padding: 0 20px;
 }
 
-.icon-twitter-logo 
+.icon-twitter-logo
 {
-  background-image: url('/Content/images/twitter_white.png');
-  background-repeat: no-repeat;
-  background-position: center left;
-  height: 16px;
-  width: 16px;
-  margin: 3px 10px 0 -10px;
+    background-image: url('/Content/images/twitter_white.png');
+    background-repeat: no-repeat;
+    background-position: center left;
+    height: 16px;
+    width: 16px;
+    margin: 3px 10px 0 -10px;
 }
 
-.icon-facebook-logo 
+.icon-facebook-logo
 {
-  background-image: url('/Content/images/facebook_white.png');
-  background-repeat: no-repeat;
-  background-position: center left;
-  height: 16px;
-  width: 16px;
-  margin: 0 10px;
+    background-image: url('/Content/images/facebook_white.png');
+    background-repeat: no-repeat;
+    background-position: center left;
+    height: 16px;
+    width: 16px;
+    margin: 0 10px;
 }
 
-.icon-google-logo 
+.icon-google-logo
 {
-  background-image: url('/Content/images/google_white.png');
-  background-repeat: no-repeat;
-  background-position: center left;
-  height: 16px;
-  width: 16px;
-  margin: 5px 10px 0 -10px;
+    background-image: url('/Content/images/google_white.png');
+    background-repeat: no-repeat;
+    background-position: center left;
+    height: 16px;
+    width: 16px;
+    margin: 5px 10px 0 -10px;
 }
 
-.icon-link 
+.icon-link
 {
-  background-image: url('/Content/images/link.png');
-  background-repeat: no-repeat;
-  background-position: top left;
-  background-size: 24px 24px;
-  height: 32px;
-  width: 32px;
+    background-image: url('/Content/images/link.png');
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-size: 24px 24px;
+    height: 32px;
+    width: 32px;
 }
 
-.icon-unlink 
+.icon-unlink
 {
-  background-image: url('/Content/images/unlink.png');
-  background-repeat: no-repeat;
-  background-position: top left;
-  background-size: 24px 24px;
-  height: 32px;
-  width: 32px;
+    background-image: url('/Content/images/unlink.png');
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-size: 24px 24px;
+    height: 32px;
+    width: 32px;
 }
 
-.btn-provider 
+.btn-provider
 {
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-  font-size: 17.5px;
-  width: 400px;
-  padding: 11px 0;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    font-size: 17.5px;
+    width: 400px;
+    padding: 11px 0;
 }
 
-.login-body .btn-provider 
+.login-body .btn-provider
 {
-  width: 220px;
-  padding: 6px 0;
+    width: 220px;
+    padding: 6px 0;
 }
 
-.login-body .form-horizontal .controls 
+.login-body .form-horizontal .controls
 {
-  margin-left: 60px;
+    margin-left: 60px;
 }
 
-.login-body .usernamepassword-auth 
+.login-body .usernamepassword-auth
 {
-  border-right: 1px solid #ccc;
+    border-right: 1px solid #ccc;
 }
 
 .login-body .btn,
-.account-details .btn 
+.account-details .btn
 {
-  background-color: #00103F;
-  background-image: none;
-  text-shadow: none;
-  color: #FFF;
+    background-color: #00103F;
+    background-image: none;
+    text-shadow: none;
+    color: #FFF;
 }
 
   .login-body .btn:hover,
-  .account-details .btn:hover 
-{
-    background-color: #164C85;
+  .account-details .btn:hover
+  {
+      background-color: #164C85;
   }
 
-.large-logo 
+.large-logo
 {
-  background-image: url('/Content/images/logo64.png');
-  background-size: 48px 48px;
-  height: 48px;
-  width: 48px;
+    background-image: url('/Content/images/logo64.png');
+    background-size: 48px 48px;
+    height: 48px;
+    width: 48px;
 }
 
-h3.collapsible_title 
+h3.collapsible_title
 {
-  line-height: normal;
-  margin-top: 16px;
-}
-
-pre 
-{
-  color: #000000;
-  display: block;
-  padding: 0;
-  font-size: 13px;
-  line-height: normal;
-  background-color: #FFFFFF;
-  border: 0;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
-}
-
-h3.userlist-header 
-{
-  padding: 3px 0;
-}
-
-.modal, .modal-header 
-{
-  line-height: normal;
-}
-
-  .modal-header h3 
-{
-    font-size: 15px;
     line-height: normal;
-    margin: 16px 0;
-  }
-
-  .modal-header .close 
-{
-    line-height: 18px;
-  }
-
-.account-details 
-{
-  background-color: #FFF;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
+    margin-top: 16px;
 }
 
-.account 
+pre
 {
-  margin: 10px 10px;
+    color: #000000;
+    display: block;
+    padding: 0;
+    font-size: 13px;
+    line-height: normal;
+    background-color: #FFFFFF;
+    border: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+h3.userlist-header
+{
+    padding: 3px 0;
+}
+
+.modal, .modal-header
+{
+    line-height: normal;
+}
+
+  .modal-header h3
+  {
+      font-size: 15px;
+      line-height: normal;
+      margin: 16px 0;
+  }
+
+  .modal-header .close
+  {
+      line-height: 18px;
+  }
+
+.account-details
+{
+    background-color: #FFF;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+}
+
+.account
+{
+    margin: 10px 10px;
 }
