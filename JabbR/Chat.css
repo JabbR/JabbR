@@ -11,11 +11,11 @@ input, button, select, textarea {
 }
 
 h1,h2,h3,h4,h5,h6 {
-  margin: 16px 0;
+    margin: 16px 0;
 }
 
 form#send-message {
-  margin: 0;
+    margin: 0;
 }
 
 .banner > *
@@ -59,7 +59,7 @@ form#send-message {
   height: 18px;
 }
 
-#users-filter-form
+#users-filter-form 
 {
   display: none;
 }
@@ -73,7 +73,7 @@ form#send-message {
   margin-top: 4px;
 }
 
-#users-filter-closed-area
+#users-filter-closed-area 
 {
   position: absolute;
   top: 90px;
@@ -317,7 +317,7 @@ form#send-message {
 
   .users li.room.closed .readonly
   {
-    position: absolute;
+    position: absolute; 
     width: 19px;
     height: 16px;
     background: url(Content/images/no-typing.png) no-repeat;
@@ -594,7 +594,7 @@ li.room
   padding: 5px;
 }
 
-.broadcast
+.broadcast 
 {
     color: #c09853;
     padding: 5px;
@@ -2165,11 +2165,11 @@ li.clearfix
 
 .gravatarProfile
 {
-  margin-left: 30px;
-  margin-right: 10px;
-  border: 1px solid #ccc;
-  padding: 6px;
-  min-height: 80px;
+    margin-left: 30px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    padding: 6px;
+    min-height: 80px;
 }
 
   .gravatarProfile p
