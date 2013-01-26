@@ -143,7 +143,7 @@ namespace JabbR
             app.UseStaticFiles();
         }
 
-        private static void SetupSignalR(StandardKernel kernel, IAppBuilder app)
+        private static void SetupSignalR(IKernel kernel, IAppBuilder app)
         {
             var resolver = new NinjectSignalRDependencyResolver(kernel);
 
