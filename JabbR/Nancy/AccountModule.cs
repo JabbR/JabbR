@@ -14,17 +14,18 @@ namespace JabbR.Nancy
                              IAuthenticationTokenService authenticationTokenService,
                              IMembershipService membershipService,
                              IJabbrRepository repository)
+            : base("/account")
         {
-            Get["/account"] = _ =>
+            Get["/"] = _ =>
             {
                 ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
 
                 return View["index", new ProfilePageViewModel(user)];
             };
 
-            Get["/account/login"] = _ => View["login", applicationSettings.AuthenticationMode];
+            Get["/login"] = _ => View["login", applicationSettings.AuthenticationMode];
 
-            Post["/account/login"] = param =>
+            Post["/login"] = param =>
             {
                 string name = Request.Form.username;
                 string password = Request.Form.password;
@@ -48,7 +49,7 @@ namespace JabbR.Nancy
                 }
             };
 
-            Post["/account/logout"] = _ =>
+            Post["/logout"] = _ =>
             {
                 var response = Response.AsJson(new { success = true });
 
@@ -60,9 +61,9 @@ namespace JabbR.Nancy
                 return response;
             };
 
-            Get["/account/register"] = _ => View["register"];
+            Get["/register"] = _ => View["register"];
 
-            Post["/account/create"] = _ =>
+            Post["/create"] = _ =>
             {
                 string name = Request.Form.username;
                 string email = Request.Form.email;
