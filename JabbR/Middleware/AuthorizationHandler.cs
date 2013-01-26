@@ -13,24 +13,22 @@ namespace JabbR.Middleware
     public class AuthorizationHandler
     {
         private readonly AppFunc _next;
-        private readonly IKernel _kernel;
+        private readonly IAuthenticationTokenService _authenticationTokenService;
 
-        public AuthorizationHandler(AppFunc next, IKernel kernel)
+        public AuthorizationHandler(AppFunc next, IAuthenticationTokenService authenticationTokenService)
         {
             _next = next;
-            _kernel = kernel;
+            _authenticationTokenService = authenticationTokenService;
         }
 
         public Task Invoke(IDictionary<string, object> env)
         {
             var request = new Gate.Request(env);
 
-            var authenticationTokenService = _kernel.Get<IAuthenticationTokenService>();
-
             string userToken;
             string userId;
             if (request.Cookies.TryGetValue(Constants.UserTokenCookie, out userToken) &&
-                authenticationTokenService.TryGetUserId(userToken, out userId))
+                _authenticationTokenService.TryGetUserId(userToken, out userId))
             {
                 env["server.User"] = new GenericPrincipal(new GenericIdentity(userId), new string[0]);
             }

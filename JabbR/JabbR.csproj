@@ -885,7 +885,7 @@
       <DependentUpon>201301250443391_AddProviderName.cs</DependentUpon>
     </Compile>
     <Compile Include="Nancy\NancyExtensions.cs" />
-    <Compile Include="Services\JabbRAuthenticationCallbackProvider.cs" />
+    <Compile Include="Nancy\JabbRAuthenticationCallbackProvider.cs" />
     <Compile Include="App_Start\Startup.SystemWeb.cs" />
     <Compile Include="App_Start\Startup.ErrorHandling.cs" />
     <Compile Include="App_Start\Startup.Migrations.cs" />

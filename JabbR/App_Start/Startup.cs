@@ -121,7 +121,7 @@ namespace JabbR
             app.UseShowExceptions();
 
             // This needs to run before everything
-            app.Use(typeof(AuthorizationHandler), kernel);
+            app.Use(typeof(AuthorizationHandler), kernel.Get<IAuthenticationTokenService>());
 
             SetupSignalR(kernel, app);
             SetupWebApi(kernel, app);
