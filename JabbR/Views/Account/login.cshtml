@@ -10,10 +10,7 @@
 {
     case AuthenticationMode.Default:
     <div class="row-fluid">
-      <div class="span5 @if (!hasSocialProviders)
-                        {
-                          <text>offset3</text>
-                        }">
+      <div class="span5 @if (!hasSocialProviders) {<text>offset3</text>}">
         <div class="usernamepassword-auth @if(hasSocialProviders) {<text>auth-divider</text>}">
             @Html.Partial("_username")
           </div>
