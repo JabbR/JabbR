@@ -7,14 +7,8 @@ namespace JabbR.Services
 {
     public class AuthenticationTokenService : IAuthenticationTokenService
     {
-        private readonly IJabbrRepository _repository;
         private static readonly UTF8Encoding _encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
         private static readonly byte[] UserIdPurpose = _encoding.GetBytes("JabbR.UserId");
-
-        public AuthenticationTokenService(IJabbrRepository repository)
-        {
-            _repository = repository;
-        }
 
         public bool TryGetUserId(string authenticationToken, out string userId)
         {
@@ -26,18 +20,15 @@ namespace JabbR.Services
 
                 userId = _encoding.GetString(buffer);
 
-                if (_repository.GetUserById(userId) != null)
-                {
-                    return true;
-                }
+                // REVIEW: Should we verify the user id with the db on every request?
+                // it would need to be cached.
+                return true;
             }
             catch
             {
                 userId = null;
                 return false;
             }
-
-            return false;
         }
 
         public string GetAuthenticationToken(ChatUser user)
@@ -59,11 +50,6 @@ namespace JabbR.Services
         private static byte[] TokenDencode(string authenticationToken)
         {
             return Convert.FromBase64String(authenticationToken.Replace('.', '+').Replace('-', '/').Replace('_', '='));
-        }
-
-        public void Dispose()
-        {
-            _repository.Dispose();
         }
     }
 }

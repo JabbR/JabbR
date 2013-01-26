@@ -26,19 +26,13 @@ namespace JabbR.Middleware
             var request = new Gate.Request(env);
 
             var authenticationTokenService = _kernel.Get<IAuthenticationTokenService>();
-            try
+
+            string userToken;
+            string userId;
+            if (request.Cookies.TryGetValue(Constants.UserTokenCookie, out userToken) &&
+                authenticationTokenService.TryGetUserId(userToken, out userId))
             {
-                string userToken;
-                string userId;
-                if (request.Cookies.TryGetValue(Constants.UserTokenCookie, out userToken) &&
-                    authenticationTokenService.TryGetUserId(userToken, out userId))
-                {
-                    env["server.User"] = new GenericPrincipal(new GenericIdentity(userId), new string[0]);
-                }
-            }
-            finally
-            {
-                authenticationTokenService.Dispose();
+                env["server.User"] = new GenericPrincipal(new GenericIdentity(userId), new string[0]);
             }
 
             return _next(env);
