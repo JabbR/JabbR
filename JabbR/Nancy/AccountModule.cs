@@ -30,10 +30,19 @@ namespace JabbR.Nancy
                 string name = Request.Form.username;
                 string password = Request.Form.password;
 
+                if (String.IsNullOrEmpty(name))
+                {
+                    ModelValidationResult.AddError("name", "Name is required");
+                }
+
+                if (String.IsNullOrEmpty(password))
+                {
+                    ModelValidationResult.AddError("password", "Password is required");
+                }
+
                 try
                 {
-                    if (!String.IsNullOrEmpty(name) &&
-                       !String.IsNullOrEmpty(password))
+                    if (ModelValidationResult.IsValid)
                     {
                         ChatUser user = membershipService.AuthenticateUser(name, password);
                         return this.CompleteLogin(authenticationTokenService, user);
@@ -43,8 +52,9 @@ namespace JabbR.Nancy
                         return View["login", applicationSettings.AuthenticationMode];
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    ModelValidationResult.AddError("_FORM", ex.Message);
                     return View["login", applicationSettings.AuthenticationMode];
                 }
             };
@@ -70,24 +80,42 @@ namespace JabbR.Nancy
                 string password = Request.Form.password;
                 string confirmPassword = Request.Form.confirmPassword;
 
+                if (String.IsNullOrEmpty(name))
+                {
+                    ModelValidationResult.AddError("name", "Name is required");
+                }
+
+                if (String.IsNullOrEmpty(email))
+                {
+                    ModelValidationResult.AddError("email", "Email is required");
+                }
+
+                if (String.IsNullOrEmpty(password))
+                {
+                    ModelValidationResult.AddError("password", "Password is required");
+                }
+
+                if (!String.Equals(password, confirmPassword))
+                {
+                    ModelValidationResult.AddError("confirmPassword", "Passwords don't match");
+                }
+
                 try
                 {
-                    if (!String.Equals(password, confirmPassword))
+                    if (ModelValidationResult.IsValid)
                     {
-                        return View["register"];
+                        ChatUser user = membershipService.AddUser(name, email, password);
+                        return this.CompleteLogin(authenticationTokenService, user);
                     }
-
-                    if (String.IsNullOrEmpty(email))
+                    else
                     {
-                        return View["register"];
+                        return View["register", ModelValidationResult];
                     }
-
-                    ChatUser user = membershipService.AddUser(name, email, password);
-                    return this.CompleteLogin(authenticationTokenService, user);
                 }
-                catch
+                catch(Exception ex)
                 {
-                    return View["register"];
+                    ModelValidationResult.AddError("_FORM", ex.Message);
+                    return View["register", ModelValidationResult];
                 }
             };
         }
