@@ -140,7 +140,7 @@ namespace JabbR
         private static void SetupMiddleware(IAppBuilder app)
         {
             app.MapPath("/proxy", subApp => subApp.Use(typeof(ImageProxyHandler)));
-            app.UseStaticFiles("/", ".");
+            app.UseStaticFiles();
         }
 
         private static void SetupSignalR(StandardKernel kernel, IAppBuilder app)
