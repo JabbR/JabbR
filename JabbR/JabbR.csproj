@@ -932,8 +932,10 @@
     <Compile Include="Services\IMembershipService.cs" />
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="ViewModels\LobbyRoomViewModel.cs" />
+    <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ProfilePageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
+    <Compile Include="ViewModels\SocialLoginViewModel.cs" />
     <Compile Include="WebApi\Model\ErrorModel.cs" />
     <Compile Include="Infrastructure\HttpRequestExtensions.cs" />
     <Compile Include="WebApi\MessagesController.cs" />

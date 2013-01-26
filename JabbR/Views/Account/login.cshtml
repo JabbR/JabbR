@@ -1,8 +1,10 @@
-﻿@using JabbR.Services
+﻿@using JabbR.Services;
+@using JabbR.ViewModels;
+@model LoginViewModel
 @{
     Layout = "_layout.cshtml";
 }
-@switch ((AuthenticationMode)Model)
+@switch ((AuthenticationMode)Model.AuthenticationMode)
 {
     case AuthenticationMode.Default:
     <div class="row-fluid">
@@ -10,7 +12,7 @@
             @Html.Partial("_username")
         </div>
         <div class="span5">
-            @Html.Partial("_social")
+            @Html.Partial("_social", Model.SocialDetails)
         </div>
     </div>
         break;

@@ -5,6 +5,7 @@ using JabbR.Services;
 using JabbR.ViewModels;
 using Nancy;
 using Nancy.Cookies;
+using WorldDomination.Web.Authentication;
 
 namespace JabbR.Nancy
 {
@@ -13,17 +14,21 @@ namespace JabbR.Nancy
         public AccountModule(IApplicationSettings applicationSettings,
                              IAuthenticationTokenService authenticationTokenService,
                              IMembershipService membershipService,
-                             IJabbrRepository repository)
+                             IJabbrRepository repository,
+                             IAuthenticationService authService)
             : base("/account")
         {
             Get["/"] = _ =>
             {
                 ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
 
-                return View["index", new ProfilePageViewModel(user)];
+                return View["index", new ProfilePageViewModel(user, authService.Providers)];
             };
 
-            Get["/login"] = _ => View["login", applicationSettings.AuthenticationMode];
+            Get["/login"] = _ =>
+            {
+                return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
+            };
 
             Post["/login"] = param =>
             {
@@ -49,13 +54,13 @@ namespace JabbR.Nancy
                     }
                     else
                     {
-                        return View["login", applicationSettings.AuthenticationMode];
+                        return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
                     }
                 }
                 catch (Exception ex)
                 {
                     ModelValidationResult.AddError("_FORM", ex.Message);
-                    return View["login", applicationSettings.AuthenticationMode];
+                    return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
                 }
             };
 
@@ -118,6 +123,22 @@ namespace JabbR.Nancy
                     return View["register", ModelValidationResult];
                 }
             };
+        }
+
+        private LoginViewModel GetLoginViewModel(IApplicationSettings applicationSettings, IJabbrRepository repository,
+                                                 IAuthenticationService authService)
+        {
+            ChatUser user = null;
+
+            if (Context.CurrentUser != null)
+            {
+                user = repository.GetUserById(Context.CurrentUser.UserName);
+            }
+
+            var viewModel = new LoginViewModel(applicationSettings.AuthenticationMode,
+                                               authService.Providers,
+                                               user != null ? user.Identities : null);
+            return viewModel;
         }
     }
 }

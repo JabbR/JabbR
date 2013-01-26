@@ -1,42 +1,25 @@
-﻿@using System
-@using System.Linq
-@using JabbR.Infrastructure
-@using JabbR.Models
-@using JabbR.ViewModels
-@{
-    var identies = Model == null ? null : ((SafeCollection<ChatUserIdentity>) Model).ToList();
-}
+﻿@using System;
+@using System.Linq;
+@using JabbR.Infrastructure;
+@using JabbR.Models;
+@using JabbR.ViewModels;
+@model SocialLoginViewModel
 <div class="social-auth">
     <div class="control-group">
         <div class="controls">
-            <ul class="inline">
-                <li><a class="btn btn-provider" href="@Url.Content("~/authentication/redirect/twitter")"><i class="icon-twitter-logo"></i> Twitter</a></li>
-                @if (identies != null)
-                {
-                    if (identies.Find(ident => ident.ProvierName.Equals("twitter", StringComparison.InvariantCultureIgnoreCase)) == null)
-                     {
-                         <li><a href="#" title="link identity provider"><i class="icon-link"></i></a></li>
-                     }
-                     else
-                     {
-                         <li><a href="#" title="unlink identity provider"><i class="icon-unlink"></i></a></li>
-                     }
-                }
-            </ul>
-            <ul class="inline">
-                <li><a class="btn btn-provider" href="@Url.Content("~/authentication/redirect/google")"><i class="icon-google-logo"></i> Google</a></li>
-                @if (identies != null)
-                {
-                    if (identies.Find(ident => ident.ProvierName.Equals("google", StringComparison.InvariantCultureIgnoreCase)) == null)
+            @foreach (var provider in Model.ConfiguredProviders)
+            {
+                <ul class="inline">
+                    @if (!Model.IsAlreadyLinked(provider))
                     {
-                        <li><a href="#" title="link identity provider"><i class="icon-link"></i></a></li>
+                        <li><a class="btn btn-provider" href="@Url.Content("~/authentication/redirect/" + provider)"><i class="icon-@provider.ToLower()-logo"></i> @provider</a></li>
                     }
                     else
                     {
                         <li><a href="#" title="unlink identity provider"><i class="icon-unlink"></i></a></li>
                     }
-                }
-            </ul>
+                </ul>
+            }
         </div>
     </div>
 </div>

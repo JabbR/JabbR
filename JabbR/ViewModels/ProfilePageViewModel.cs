@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using JabbR.Models;
 using JabbR.Services;
+using WorldDomination.Web.Authentication;
 
 namespace JabbR.ViewModels
 {
     public class ProfilePageViewModel
     {        
-        public ProfilePageViewModel(Models.ChatUser user)
+        public ProfilePageViewModel(Models.ChatUser user, IEnumerable<IAuthenticationProvider> configuredProviders)
         {
             Name = user.Name;
             Hash = user.Hash;
@@ -21,6 +22,7 @@ namespace JabbR.ViewModels
             LastActivity = user.LastActivity;
             IsAdmin = user.IsAdmin;
             Identities = user.Identities;
+            SocialDetails = new SocialLoginViewModel(configuredProviders, user.Identities);
         }
 
         public string Name { get; private set; }
@@ -35,5 +37,6 @@ namespace JabbR.ViewModels
         public DateTime LastActivity { get; private set; }
         public bool IsAdmin { get; private set; }
         public IEnumerable<ChatUserIdentity> Identities { get; private set; }
+        public SocialLoginViewModel SocialDetails { get; private set; }
     }
 }
