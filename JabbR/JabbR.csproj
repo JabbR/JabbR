@@ -883,6 +883,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\IdentityUtility.cs" />
+    <Compile Include="Infrastructure\AlertMessageStore.cs" />
     <Compile Include="Nancy\HtmlHelperExtensions.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.Designer.cs">
@@ -932,6 +933,7 @@
     <Compile Include="Models\ChatUserIdentity.cs" />
     <Compile Include="Nancy\AccountModule.cs" />
     <Compile Include="Nancy\HomeModule.cs" />
+    <Compile Include="Nancy\SessionExtensions.cs" />
     <Compile Include="Services\AuthenticationMode.cs" />
     <Compile Include="Services\AuthenticationTokenService.cs" />
     <Compile Include="Services\DefaultCache.cs" />

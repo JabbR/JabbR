@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using JabbR.Infrastructure;
 using Nancy.ViewEngines.Razor;
 
 namespace JabbR
@@ -48,6 +49,27 @@ namespace JabbR
             }
 
             return new NonEncodedHtmlString(errorsForField.First().GetMessage(propertyName));
+        }
+
+        public static IHtmlString AlertMessages<TModel>(this HtmlHelpers<TModel> htmlHelper)
+        {
+            const string message = @"<div class=""alert alert-{0}"">{1}</div>";
+            var alertsDynamicValue = htmlHelper.RenderContext.Context.ViewBag.Alerts;
+            var alerts = (AlertMessageStore)(alertsDynamicValue.HasValue ? alertsDynamicValue.Value : null);
+
+            if (alerts == null || !alerts.Messages.Any())
+            {
+                return new NonEncodedHtmlString(String.Empty);
+            }
+
+            var builder = new StringBuilder();
+
+            foreach (var messageDetail in alerts.Messages)
+            {
+                builder.AppendFormat(message, messageDetail.Key, messageDetail.Value);
+            }
+
+            return new NonEncodedHtmlString(builder.ToString());
         }
     }
 }

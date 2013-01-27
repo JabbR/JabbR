@@ -87,7 +87,7 @@ namespace JabbR.Nancy
                 return nancyModule.CompleteLogin(_authenticationTokenService, user);
             }
 
-            // TODO: Handle errors better
+            nancyModule.AddAlertMessage("error", model.Exception.Message);
             return nancyModule.Response.AsRedirect("~/");
         }
 

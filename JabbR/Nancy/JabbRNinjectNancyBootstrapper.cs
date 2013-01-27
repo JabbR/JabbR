@@ -5,6 +5,7 @@ using Nancy.Bootstrapper;
 using Nancy.Bootstrappers.Ninject;
 using Nancy.Owin;
 using Nancy.Security;
+using Nancy.Session;
 using Ninject;
 
 namespace JabbR.Nancy

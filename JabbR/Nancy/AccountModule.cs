@@ -53,12 +53,12 @@ namespace JabbR.Nancy
 
                 if (String.IsNullOrEmpty(name))
                 {
-                    AddValidationError("name", "Name is required");
+                    this.AddValidationError("name", "Name is required");
                 }
 
                 if (String.IsNullOrEmpty(password))
                 {
-                    AddValidationError("password", "Password is required");
+                    this.AddValidationError("password", "Password is required");
                 }
 
                 try
@@ -75,7 +75,7 @@ namespace JabbR.Nancy
                 }
                 catch (Exception ex)
                 {
-                    AddValidationError("_FORM", ex.Message);
+                    this.AddValidationError("_FORM", ex.Message);
                     return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
                 }
             };
@@ -121,22 +121,22 @@ namespace JabbR.Nancy
 
                 if (String.IsNullOrEmpty(name))
                 {
-                    AddValidationError("name", "Name is required");
+                    this.AddValidationError("name", "Name is required");
                 }
 
                 if (String.IsNullOrEmpty(email))
                 {
-                    AddValidationError("email", "Email is required");
+                    this.AddValidationError("email", "Email is required");
                 }
 
                 if (String.IsNullOrEmpty(password))
                 {
-                    AddValidationError("password", "Password is required");
+                    this.AddValidationError("password", "Password is required");
                 }
 
                 if (!String.Equals(password, confirmPassword))
                 {
-                    AddValidationError("confirmPassword", "Passwords don't match");
+                    this.AddValidationError("confirmPassword", "Passwords don't match");
                 }
 
                 try
@@ -153,7 +153,7 @@ namespace JabbR.Nancy
                 }
                 catch(Exception ex)
                 {
-                    AddValidationError("_FORM", ex.Message);
+                    this.AddValidationError("_FORM", ex.Message);
                     return View["register", ModelValidationResult];
                 }
             };
@@ -170,8 +170,7 @@ namespace JabbR.Nancy
 
                 if (user.Identities.Count == 1 && !user.HasUserNameAndPasswordCredentials())
                 {
-                    //TODO: convert this to a tempdata/alert-y message
-                    AddValidationError("_FORM", "You cannot unlink this provider because you would lose your ability to login.");
+                    this.AddAlertMessage("error", "You cannot unlink this provider because you would lose your ability to login.");
                     return Response.AsRedirect("~/account");
                 }
 
@@ -181,7 +180,7 @@ namespace JabbR.Nancy
                 {
                     repository.Remove(identity);
 
-                    //TODO: add an alert-y message here about success
+                    this.AddAlertMessage("success", String.Format("Successfully unlinked {0}", provider));
                     return Response.AsRedirect("~/account");
                 }
 

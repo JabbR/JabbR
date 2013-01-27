@@ -30,5 +30,24 @@ namespace JabbR.Nancy
 
             response.AddCookie(cookie);
         }
+
+        public static void AddValidationError(this NancyModule module, string propertyName, string errorMessage)
+        {
+            module.ModelValidationResult = module.ModelValidationResult.AddError(propertyName, errorMessage);
+        }
+
+        public static void AddAlertMessage(this NancyModule module, string messageType, string alertMessage)
+        {
+            var container = module.Request.Session.GetSessionVaue<AlertMessageStore>(AlertMessageStore.AlertMessageKey);
+
+            if (container == null)
+            {
+                container = new AlertMessageStore();
+            }
+
+            container.AddMessage(messageType, alertMessage);
+
+            module.Request.Session.SetSessionValue(AlertMessageStore.AlertMessageKey, container);
+        }
     }
 }

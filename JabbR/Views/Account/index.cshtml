@@ -1,4 +1,5 @@
-﻿@using JabbR.ViewModels
+﻿@using JabbR
+@using JabbR.ViewModels
 @model ProfilePageViewModel
 
 @{
@@ -29,6 +30,7 @@
         </header>
         <div class="container">
             <div class="row" style="padding-top: 75px;">
+                @Html.AlertMessages()
                 <div class="span4 user-details-sidenav">
                     <div class="user-details">
                         <img class="gravatar" src="@gravatar" style="float: left;" />
@@ -41,7 +43,7 @@
                         <li data-target="#changePassword"><a href="#"><i class="icon-chevron-right"></i>Password</a></li>
                         @if(userModel.SocialDetails.ConfiguredProviders.Any())
                         {
-                        <li data-target="#identityProviders"><a href="#"><i class="icon-chevron-right"></i>Identity Providers</a></li>
+                            <li data-target="#identityProviders"><a href="#"><i class="icon-chevron-right"></i>Identity Providers</a></li>
                         }
                     </ul>
                 </div>
@@ -118,11 +120,14 @@
             var currentSection = $('#profile');
             var active = $('#accountmenu li.active');
 
-            $('#accountmenu li').click(function () {
+            $('#accountmenu li').click(function (e) {
+                e.preventDefault();
+                
                 if (currentSection) {
                     $(currentSection).hide();
                     $(active).removeClass('active');
                 }
+                
                 currentSection = $(this).data('target');
                 active = this;
                 $(this).addClass('active');

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using JabbR.Infrastructure;
 using Nancy;
 
 namespace JabbR.Nancy
@@ -8,16 +8,23 @@ namespace JabbR.Nancy
         public JabbRModule()
             : base()
         {
+            Before.AddItemToEndOfPipeline(AlertsToViewBag);
         }
 
         public JabbRModule(string modulePath)
             : base(modulePath)
         {
+            Before.AddItemToEndOfPipeline(AlertsToViewBag);
         }
 
-        protected void AddValidationError(string propertyName, string errorMessage)
+        internal static Response AlertsToViewBag(NancyContext context)
         {
-            ModelValidationResult = ModelValidationResult.AddError(propertyName, errorMessage);
+            var item = context.Request.Session.GetSessionVaue<AlertMessageStore>(AlertMessageStore.AlertMessageKey);
+            context.ViewBag.Alerts = item;
+
+            context.Request.Session.Delete(AlertMessageStore.AlertMessageKey);
+
+            return null;
         }
     }
 }
