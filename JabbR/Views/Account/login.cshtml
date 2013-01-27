@@ -3,10 +3,10 @@
 @using System.Linq;
 @model LoginViewModel
 @{
-    Layout = "_layout.cshtml";
-    var hasSocialProviders = Model.SocialDetails.ConfiguredProviders.ToList().Any();
+    Layout = "_layout.cshtml"; 
+    var hasSocialProviders = Model.SocialDetails.ConfiguredProviders.Any();
 }
-@switch ((AuthenticationMode)Model.AuthenticationMode)
+@switch (Model.AuthenticationMode)
 {
     case AuthenticationMode.Default:
     <div class="row-fluid">
