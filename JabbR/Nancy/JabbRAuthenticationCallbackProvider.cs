@@ -1,4 +1,5 @@
-﻿using JabbR.Infrastructure;
+﻿using System;
+using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
 using Nancy;
@@ -79,8 +80,7 @@ namespace JabbR.Nancy
                 else if (loggedInUser != null && user != loggedInUser)
                 {
                     // You can't link an account that's already attached to another user
-
-                    // TODO: Handle errors better
+                    nancyModule.AddAlertMessage("error", String.Format("This {0} account has alrady been linked to another user.", providerName));
                     return nancyModule.Response.AsRedirect("~/");
                 }
 
