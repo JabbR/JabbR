@@ -67,6 +67,11 @@ namespace JabbR.Services
             _users.Remove(user);
         }
 
+        public void Remove(ChatUserIdentity identity)
+        {
+            _identities.Remove(identity);
+        }
+
         public void CommitChanges()
         {
             // no-op since this is an in-memory impl' of the repo

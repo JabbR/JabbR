@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;

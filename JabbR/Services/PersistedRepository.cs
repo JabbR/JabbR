@@ -69,6 +69,12 @@ namespace JabbR.Services
             _db.SaveChanges();
         }
 
+        public void Remove(ChatUserIdentity identity)
+        {
+            _db.Identities.Remove(identity);
+            _db.SaveChanges();
+        }
+
         public void CommitChanges()
         {
             _db.SaveChanges();
@@ -247,6 +253,6 @@ namespace JabbR.Services
                       .Where(r => r.Key == room.Key)
                       .Select(r => r.Name)
                       .FirstOrDefault() != null;
-        }        
+        }
     }
 }

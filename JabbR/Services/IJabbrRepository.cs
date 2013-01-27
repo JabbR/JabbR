@@ -40,6 +40,7 @@ namespace JabbR.Services
         void Remove(ChatClient client);
         void Remove(ChatRoom room);
         void Remove(ChatUser user);
+        void Remove(ChatUserIdentity identity);
         void RemoveAllClients();
         void CommitChanges();
 
