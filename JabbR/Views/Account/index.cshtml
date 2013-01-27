@@ -79,9 +79,9 @@
                             <text>
                             <form class="form-horizontal" action="@Url.Content("~/account/changepassword")" method="POST">
                                 <div class="control-group">
-                                    <label class="control-label" for="currentPassword">Current Password</label>
+                                    <label class="control-label" for="oldPassword">Current Password</label>
                                     <div class="controls">
-                                        <input type="password" name="currentPassword" class="input-xlarge" />
+                                        <input type="password" name="oldPassword" class="input-xlarge" />
                                     </div>
                                 </div>
                             </text>
@@ -91,15 +91,15 @@
                             <text><form class="form-horizontal" action="@Url.Content("~/account/newpassword")" method="POST"></text>
                             }
                                 <div class="control-group">
-                                    <label class="control-label" for="newPassword">Password</label>
+                                    <label class="control-label" for="password">Password</label>
                                     <div class="controls">
-                                        <input type="password" name="newPassword" class="input-xlarge" />
+                                        <input type="password" name="password" class="input-xlarge" />
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label class="control-label" for="confirmNewPassword">Confirm Password</label>
+                                    <label class="control-label" for="confirmPassword">Confirm Password</label>
                                     <div class="controls">
-                                        <input type="password" name="confirmNewPassword" class="input-xlarge" />
+                                        <input type="password" name="confirmPassword" class="input-xlarge" />
                                     </div>
                                 </div>
                                 <div class="control-group">
@@ -123,7 +123,7 @@
             </div>
         </div>
     </section>
-    <script src="Scripts/jquery-1.9.0.min.js"></script>
+    <script src="@Url.Content("~/Scripts/jquery-1.9.0.min.js")"></script>
     <script type="text/javascript">
         $(function () {
             var currentSection = $('#profile');

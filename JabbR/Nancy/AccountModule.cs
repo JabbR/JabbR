@@ -28,7 +28,7 @@ namespace JabbR.Nancy
 
                 ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
 
-                return View["index", new ProfilePageViewModel(user, authService.Providers)];
+                return GetProfileView(authService, user);
             };
 
             Get["/login"] = _ =>
@@ -42,7 +42,7 @@ namespace JabbR.Nancy
             };
 
             Post["/login"] = param =>
-            { 
+            {
                 if (Context.CurrentUser != null)
                 {
                     return Response.AsRedirect("~/");
@@ -73,9 +73,9 @@ namespace JabbR.Nancy
                         return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    this.AddValidationError("_FORM", ex.Message);
+                    this.AddValidationError("_FORM", "Login failed. Check your username/password.");
                     return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
                 }
             };
@@ -129,15 +129,7 @@ namespace JabbR.Nancy
                     this.AddValidationError("email", "Email is required");
                 }
 
-                if (String.IsNullOrEmpty(password))
-                {
-                    this.AddValidationError("password", "Password is required");
-                }
-
-                if (!String.Equals(password, confirmPassword))
-                {
-                    this.AddValidationError("confirmPassword", "Passwords don't match");
-                }
+                ValidatePassword(password, confirmPassword);
 
                 try
                 {
@@ -146,16 +138,13 @@ namespace JabbR.Nancy
                         ChatUser user = membershipService.AddUser(name, email, password);
                         return this.CompleteLogin(authenticationTokenService, user);
                     }
-                    else
-                    {
-                        return View["register", ModelValidationResult];
-                    }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    this.AddValidationError("_FORM", ex.Message);
-                    return View["register", ModelValidationResult];
+                    this.AddValidationError("_FORM", ex.Message);                    
                 }
+
+                return View["register"];
             };
 
             Post["/unlink"] = param =>
@@ -186,9 +175,106 @@ namespace JabbR.Nancy
 
                 return HttpStatusCode.BadRequest;
             };
+
+            Post["/newpassword"] = _ =>
+            {
+                if (Context.CurrentUser == null)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
+                string password = Request.Form.password;
+                string confirmPassword = Request.Form.confirmPassword;
+
+                ValidatePassword(password, confirmPassword);
+
+                ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
+
+                try
+                {
+                    if (ModelValidationResult.IsValid)
+                    {
+                        membershipService.SetUserPassword(user, password);
+                        repository.CommitChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.AddValidationError("_FORM", ex.Message);
+                }
+
+                if (ModelValidationResult.IsValid)
+                {
+                    this.AddAlertMessage("success", "Successfully added a password.");
+                    return Response.AsRedirect("~/account");
+                }
+
+                return GetProfileView(authService, user);
+            };
+
+            Post["/changepassword"] = _ =>
+            {
+                if (Context.CurrentUser == null)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
+                string oldPassword = Request.Form.oldPassword;
+                string password = Request.Form.password;
+                string confirmPassword = Request.Form.confirmPassword;
+
+                if (String.IsNullOrEmpty(oldPassword))
+                {
+                    this.AddValidationError("oldPassword", "Old password is required");
+                }
+
+                ValidatePassword(password, confirmPassword);
+
+                ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
+
+                try
+                {
+                    if (ModelValidationResult.IsValid)
+                    {
+                        membershipService.ChangeUserPassword(user, oldPassword, password);
+                        repository.CommitChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.AddValidationError("_FORM", ex.Message);
+                }
+
+                if (ModelValidationResult.IsValid)
+                {
+                    this.AddAlertMessage("success", "Successfully changed your password.");
+                    return Response.AsRedirect("~/account");
+                }
+
+                return GetProfileView(authService, user);
+            };
         }
 
-        private LoginViewModel GetLoginViewModel(IApplicationSettings applicationSettings, IJabbrRepository repository,
+        private void ValidatePassword(string password, string confirmPassword)
+        {
+            if (String.IsNullOrEmpty(password))
+            {
+                this.AddValidationError("password", "Password is required");
+            }
+
+            if (!String.Equals(password, confirmPassword))
+            {
+                this.AddValidationError("confirmPassword", "Passwords don't match");
+            }
+        }
+
+        private dynamic GetProfileView(IAuthenticationService authService, ChatUser user)
+        {
+            return View["index", new ProfilePageViewModel(user, authService.Providers)];
+        }
+
+        private LoginViewModel GetLoginViewModel(IApplicationSettings applicationSettings, 
+                                                 IJabbrRepository repository,
                                                  IAuthenticationService authService)
         {
             ChatUser user = null;

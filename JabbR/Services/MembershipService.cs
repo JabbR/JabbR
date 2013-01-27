@@ -94,14 +94,9 @@ namespace JabbR.Services
         {
             ChatUser user = _repository.VerifyUser(userName);
 
-            if (user.HashedPassword == null)
-            {
-                throw new InvalidOperationException(String.Format("The nick '{0}' is unclaimable", userName));
-            }
-
             if (user.HashedPassword != password.ToSha256(user.Salt))
             {
-                throw new InvalidOperationException(String.Format("Unable to claim '{0}'.", userName));
+                throw new InvalidOperationException();
             }
 
             EnsureSaltedPassword(user, password);
