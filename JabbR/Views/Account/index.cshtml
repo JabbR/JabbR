@@ -39,7 +39,10 @@
                     <ul id="accountmenu" class="nav nav-list">
                         <li class="active" data-target="#profile"><a href="#"><i class="icon-chevron-right"></i>Profile</a></li>
                         <li data-target="#changePassword"><a href="#"><i class="icon-chevron-right"></i>Password</a></li>
+                        @if(userModel.SocialDetails.ConfiguredProviders.Any())
+                        {
                         <li data-target="#identityProviders"><a href="#"><i class="icon-chevron-right"></i>Identity Providers</a></li>
+                        }
                     </ul>
                 </div>
                 <div class="span8">
