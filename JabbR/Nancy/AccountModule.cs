@@ -146,6 +146,22 @@ namespace JabbR.Nancy
                     return View["register", ModelValidationResult];
                 }
             };
+
+            Post["/unlink"] = param =>
+                {
+                    string provider = Request.Form.provider;
+                    ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
+
+                    var identity = user.Identities.FirstOrDefault(ident => ident.ProviderName.Equals(provider, StringComparison.InvariantCultureIgnoreCase));
+                    
+                    if (identity != null)
+                    {
+                            repository.Remove(identity);
+
+                        return Response.AsRedirect("~/account");
+                    }
+                    return HttpStatusCode.BadRequest;
+                };
         }
 
         private LoginViewModel GetLoginViewModel(IApplicationSettings applicationSettings, IJabbrRepository repository,

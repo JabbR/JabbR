@@ -2539,6 +2539,7 @@ li.clearfix
     background-size: 24px 24px;
     height: 32px;
     width: 32px;
+    margin-left: 10px;
 }
 
 .btn-provider
@@ -2550,6 +2551,11 @@ li.clearfix
     font-size: 17.5px;
     width: 400px;
     padding: 11px 0;
+}
+
+.btn-unlink {
+    border: none;
+    background: none;
 }
 
 .login-body .btn-provider
