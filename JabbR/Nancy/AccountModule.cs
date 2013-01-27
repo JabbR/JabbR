@@ -156,7 +156,7 @@ namespace JabbR.Nancy
                     
                 if (identity != null)
                 {
-                        repository.Remove(identity);
+                    repository.Remove(identity);
 
                     return Response.AsRedirect("~/account");
                 }
