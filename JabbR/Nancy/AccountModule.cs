@@ -27,11 +27,21 @@ namespace JabbR.Nancy
 
             Get["/login"] = _ =>
             {
+                if (Context.CurrentUser != null)
+                {
+                    return Response.AsRedirect("~/");
+                }
+
                 return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
             };
 
             Post["/login"] = param =>
             {
+                if (Context.CurrentUser != null)
+                {
+                    return Response.AsRedirect("~/");
+                }
+
                 string name = Request.Form.username;
                 string password = Request.Form.password;
 
@@ -76,10 +86,23 @@ namespace JabbR.Nancy
                 return response;
             };
 
-            Get["/register"] = _ => View["register"];
+            Get["/register"] = _ =>
+            {
+                if (Context.CurrentUser != null)
+                {
+                    return Response.AsRedirect("~/");
+                }
+
+                return View["register"];
+            };
 
             Post["/create"] = _ =>
             {
+                if (Context.CurrentUser != null)
+                {
+                    return Response.AsRedirect("~/");
+                }
+
                 string name = Request.Form.username;
                 string email = Request.Form.email;
                 string password = Request.Form.password;
