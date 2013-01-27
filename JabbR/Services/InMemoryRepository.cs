@@ -36,6 +36,10 @@ namespace JabbR.Services
         public void Add(ChatUserIdentity identity)
         {
             _identities.Add(identity);
+            if (identity.User != null)
+            {
+                identity.User.Identities.Add(identity);
+            }
         }
 
         public void Add(ChatMessage message)

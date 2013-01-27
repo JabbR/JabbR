@@ -27,7 +27,7 @@ namespace JabbR.Nancy
             if (model.Exception == null)
             {
                 UserInformation userInfo = model.AuthenticatedClient.UserInformation;
-                string providerName = model.AuthenticatedClient.ProviderType;
+                string providerName = model.AuthenticatedClient.ProviderName;
 
                 ChatUser user = _repository.GetUserByIdentity(providerName, userInfo.Id);
 

@@ -51,8 +51,6 @@ namespace JabbR.Services
                 ProviderName = providerName
             };
 
-            user.Identities.Add(chatUserIdentity);
-
             _repository.Add(user);
             _repository.Add(chatUserIdentity);
             _repository.CommitChanges();
