@@ -2551,6 +2551,31 @@ li.clearfix
     font-size: 17.5px;
     width: 400px;
     padding: 11px 0;
+    margin-left: 20px;
+}
+
+.social-auth .btn-provider {
+    margin-left: 0;
+}
+
+.provider {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    font-size: 17.5px;
+    width: 400px;
+    padding: 11px 0;
+    margin-left: 20px;
+    background-color: #00103f;
+    text-align: center;
+    line-height: 20px;
+    cursor: default;
+    border: 1px solid #00103f;
+    display: inline-block;
+    box-shadow: rgba(255, 255, 255, 0.2) 0 1px 0 inset, rgba(0, 0, 0, 0.0470588) 0 1px 2px;
+    color: #f1f1f1;
+    opacity: 0.25;
 }
 
 .btn-unlink {

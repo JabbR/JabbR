@@ -153,7 +153,7 @@ namespace JabbR.Nancy
                 string provider = Request.Form.provider;
                 ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
 
-                var identity = user.Identities.FirstOrDefault(ident => ident.ProviderName == provider);
+                var identity = user.Identities.FirstOrDefault(i => i.ProviderName == provider);
                     
                 if (identity != null)
                 {
@@ -161,6 +161,7 @@ namespace JabbR.Nancy
 
                     return Response.AsRedirect("~/account");
                 }
+
                 return HttpStatusCode.BadRequest;
             };
         }
