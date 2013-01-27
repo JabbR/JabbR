@@ -19,18 +19,28 @@ namespace JabbR.ContentProviders
 
         public override bool IsValidContent(Uri uri)
         {
-            string path = uri.AbsolutePath.ToLower();
-
-            return IsValidImagePath(path);
+            return IsValidImagePath(uri);
         }
 
-        public static bool IsValidImagePath(string path)
+        public static bool IsValidImagePath(Uri uri)
         {
+            string path = uri.LocalPath.ToLowerInvariant();
+
             return path.EndsWith(".png") ||
                    path.EndsWith(".bmp") ||
                    path.EndsWith(".jpg") ||
                    path.EndsWith(".jpeg") ||
                    path.EndsWith(".gif");
+        }
+
+        public static bool IsValidContentType(string contentType)
+        {
+            return contentType.Equals("image/bmp", StringComparison.OrdinalIgnoreCase) ||
+                   contentType.Equals("image/gif", StringComparison.OrdinalIgnoreCase) ||
+                   contentType.Equals("image/jpeg", StringComparison.OrdinalIgnoreCase) ||
+                   contentType.Equals("image/tiff", StringComparison.OrdinalIgnoreCase) ||
+                   contentType.Equals("image/x-tiff", StringComparison.OrdinalIgnoreCase) ||
+                   contentType.Equals("image/png", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
