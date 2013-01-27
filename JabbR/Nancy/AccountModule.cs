@@ -84,7 +84,7 @@ namespace JabbR.Nancy
             {
                 if (Context.CurrentUser == null)
                 {
-                    return HttpStatusCode.Unauthorized;
+                    return HttpStatusCode.Forbidden;
                 }
 
                 var response = Response.AsJson(new { success = true });
