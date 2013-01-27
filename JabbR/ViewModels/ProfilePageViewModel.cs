@@ -22,8 +22,10 @@ namespace JabbR.ViewModels
             LastActivity = user.LastActivity;
             IsAdmin = user.IsAdmin;
             SocialDetails = new SocialLoginViewModel(configuredProviders, user.Identities);
+            HasPassword = user.HasUserNameAndPasswordCredentials();
         }
 
+        public bool HasPassword { get; private set; }
         public string Name { get; private set; }
         public string Hash { get; private set; }
         public bool Active { get; private set; }

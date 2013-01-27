@@ -74,6 +74,9 @@
                             <h1>Password</h1>
                         </div>
                         <div class="account-details-body">
+                            @if(userModel.HasPassword)
+                            {
+                            <text>
                             <form class="form-horizontal" action="@Url.Content("~/account/changepassword")" method="POST">
                                 <div class="control-group">
                                     <label class="control-label" for="currentPassword">Current Password</label>
@@ -81,8 +84,14 @@
                                         <input type="password" name="currentPassword" class="input-xlarge" />
                                     </div>
                                 </div>
+                            </text>
+                            }
+                            else
+                            {
+                            <text><form class="form-horizontal" action="@Url.Content("~/account/newpassword")" method="POST"></text>
+                            }
                                 <div class="control-group">
-                                    <label class="control-label" for="newPassword">New Password</label>
+                                    <label class="control-label" for="newPassword">Password</label>
                                     <div class="controls">
                                         <input type="password" name="newPassword" class="input-xlarge" />
                                     </div>
