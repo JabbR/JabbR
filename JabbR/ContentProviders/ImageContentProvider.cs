@@ -40,7 +40,8 @@ namespace JabbR.ContentProviders
                    contentType.Equals("image/jpeg", StringComparison.OrdinalIgnoreCase) ||
                    contentType.Equals("image/tiff", StringComparison.OrdinalIgnoreCase) ||
                    contentType.Equals("image/x-tiff", StringComparison.OrdinalIgnoreCase) ||
-                   contentType.Equals("image/png", StringComparison.OrdinalIgnoreCase);
+                   contentType.Equals("image/png", StringComparison.OrdinalIgnoreCase) ||
+                   contentType.Equals("image/svg+xml", StringComparison.OrdinalIgnoreCase);                   
         }
     }
 }
