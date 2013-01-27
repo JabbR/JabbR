@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
+using Microsoft.Security.Application;
 
 namespace JabbR.ContentProviders
 {
@@ -15,10 +16,11 @@ namespace JabbR.ContentProviders
 
         public Task<ContentProviderResult> GetContent(ContentProviderHttpRequest request)
         {
+            string url = request.RequestUri.ToString();
             return TaskAsyncHelper.FromResult(new ContentProviderResult()
             {
-                Content = String.Format(@"<audio controls=""controls"" src=""{0}"">Your browser does not support the audio tag.</audio>", request.RequestUri),
-                Title = request.RequestUri.AbsoluteUri.ToString()
+                Content = String.Format(@"<audio controls=""controls"" src=""{0}"">Your browser does not support the audio tag.</audio>", Encoder.HtmlAttributeEncode(url)),
+                Title = request.RequestUri.AbsoluteUri
             });
         }
     }
