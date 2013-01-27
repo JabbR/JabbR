@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Security.Application;
 
 namespace JabbR.ContentProviders.Core
 {
@@ -19,7 +19,7 @@ namespace JabbR.ContentProviders.Core
                     result.Content = String.Format(CultureInfo.InvariantCulture,
                                                       ContentFormat,
                                                       IsPopOut ? @"<div class=""collapsible_pin""></div>" : "",
-                                                      result.Title,
+                                                      Encoder.HtmlEncode(result.Title),
                                                       result.Content);
                 }
 
