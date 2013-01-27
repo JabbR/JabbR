@@ -137,6 +137,11 @@ namespace JabbR.Services
             return _users.FirstOrDefault(u => u.ConnectedClients.Any(c => c.Id == clientId));
         }
 
+        public ChatUser GetUserByLegacyIdentity(string userIdentity)
+        {
+            return _users.FirstOrDefault(u => u.Identity == userIdentity);
+        }
+
         public ChatUser GetUserByIdentity(string providerName, string userIdentity)
         {
             var identity = _identities.FirstOrDefault(u => u.Identity == userIdentity && u.ProviderName == providerName);

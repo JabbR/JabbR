@@ -885,6 +885,7 @@
     <Content Include="Views\Account\index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\IdentityUtility.cs" />
     <Compile Include="Nancy\HtmlHelperExtensions.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.Designer.cs">

@@ -216,6 +216,11 @@ namespace JabbR.Services
             return null;
         }
 
+        public ChatUser GetUserByLegacyIdentity(string userIdentity)
+        {
+            return _db.Users.FirstOrDefault(u => u.Identity == userIdentity);
+        }
+
         public ChatClient GetClientById(string clientId, bool includeUser = false)
         {
             if (includeUser)
@@ -242,6 +247,6 @@ namespace JabbR.Services
                       .Where(r => r.Key == room.Key)
                       .Select(r => r.Name)
                       .FirstOrDefault() != null;
-        }
+        }        
     }
 }
