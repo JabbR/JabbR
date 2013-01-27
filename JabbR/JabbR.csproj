@@ -885,6 +885,7 @@
     <Content Include="Views\Account\index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Nancy\HtmlHelperExtensions.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.Designer.cs">
       <DependentUpon>201301250443391_AddProviderName.cs</DependentUpon>
@@ -893,6 +894,7 @@
     <Compile Include="Migrations\201301262237296_FixProviderName.Designer.cs">
       <DependentUpon>201301262237296_FixProviderName.cs</DependentUpon>
     </Compile>
+    <Compile Include="Nancy\JabbRModule.cs" />
     <Compile Include="Nancy\NancyExtensions.cs" />
     <Compile Include="Nancy\JabbRAuthenticationCallbackProvider.cs" />
     <Compile Include="App_Start\Startup.SystemWeb.cs" />

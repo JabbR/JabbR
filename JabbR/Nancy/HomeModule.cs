@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Configuration;
-using JabbR.Infrastructure;
 using JabbR.Services;
 using JabbR.ViewModels;
 using Nancy;
 
 namespace JabbR.Nancy
 {
-    public class HomeModule : NancyModule
+    public class HomeModule : JabbRModule
     {
         public HomeModule(IAuthenticationTokenService authService)
         {
