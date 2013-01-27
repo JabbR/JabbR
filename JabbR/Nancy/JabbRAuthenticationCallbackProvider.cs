@@ -30,16 +30,22 @@ namespace JabbR.Nancy
                 string providerName = model.AuthenticatedClient.ProviderName;
 
                 ChatUser user = _repository.GetUserByIdentity(providerName, userInfo.Id);
+                ChatUser loggedInUser = null;
+
+                if (nancyModule.Context.CurrentUser != null)
+                {
+                    loggedInUser = _repository.GetUserById(nancyModule.Context.CurrentUser.UserName);
+                }
 
                 // User with that identity doesn't exist, check if a user is logged in
                 if (user == null)
                 {
-                    if (nancyModule.Context.CurrentUser != null)
+                    if (loggedInUser != null)
                     {
                         // Link to the logged in user
-                        user = _repository.GetUserById(nancyModule.Context.CurrentUser.UserName);
+                        LinkIdentity(userInfo, providerName, loggedInUser);
 
-                        LinkIdentity(userInfo, providerName, user);
+                        user = loggedInUser;
                     }
                     else
                     {
@@ -69,6 +75,13 @@ namespace JabbR.Nancy
                             }
                         }
                     }
+                }
+                else if (loggedInUser != null && user != loggedInUser)
+                {
+                    // You can't link an account that's already attached to another user
+
+                    // TODO: Handle errors better
+                    return nancyModule.Response.AsRedirect("~/");
                 }
 
                 return nancyModule.CompleteLogin(_authenticationTokenService, user);
