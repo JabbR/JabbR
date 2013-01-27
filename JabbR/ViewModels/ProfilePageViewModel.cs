@@ -8,7 +8,7 @@ namespace JabbR.ViewModels
 {
     public class ProfilePageViewModel
     {        
-        public ProfilePageViewModel(Models.ChatUser user, IEnumerable<IAuthenticationProvider> configuredProviders)
+        public ProfilePageViewModel(ChatUser user, IEnumerable<IAuthenticationProvider> configuredProviders)
         {
             Name = user.Name;
             Hash = user.Hash;
@@ -21,7 +21,6 @@ namespace JabbR.ViewModels
             Country = ChatService.GetCountry(user.Flag);
             LastActivity = user.LastActivity;
             IsAdmin = user.IsAdmin;
-            Identities = user.Identities;
             SocialDetails = new SocialLoginViewModel(configuredProviders, user.Identities);
         }
 
@@ -36,7 +35,6 @@ namespace JabbR.ViewModels
         public string Country { get; private set; }
         public DateTime LastActivity { get; private set; }
         public bool IsAdmin { get; private set; }
-        public IEnumerable<ChatUserIdentity> Identities { get; private set; }
         public SocialLoginViewModel SocialDetails { get; private set; }
     }
 }
