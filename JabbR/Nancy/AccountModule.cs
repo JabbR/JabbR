@@ -148,20 +148,20 @@ namespace JabbR.Nancy
             };
 
             Post["/unlink"] = param =>
-                {
-                    string provider = Request.Form.provider;
-                    ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
+            {
+                string provider = Request.Form.provider;
+                ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
 
-                    var identity = user.Identities.FirstOrDefault(ident => ident.ProviderName.Equals(provider, StringComparison.InvariantCultureIgnoreCase));
+                var identity = user.Identities.FirstOrDefault(ident => ident.ProviderName == provider);
                     
-                    if (identity != null)
-                    {
-                            repository.Remove(identity);
+                if (identity != null)
+                {
+                        repository.Remove(identity);
 
-                        return Response.AsRedirect("~/account");
-                    }
-                    return HttpStatusCode.BadRequest;
-                };
+                    return Response.AsRedirect("~/account");
+                }
+                return HttpStatusCode.BadRequest;
+            };
         }
 
         private LoginViewModel GetLoginViewModel(IApplicationSettings applicationSettings, IJabbrRepository repository,
