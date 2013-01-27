@@ -2563,7 +2563,7 @@ li.clearfix
     margin-left: 60px;
 }
 
-.login-body .usernamepassword-auth
+.login-body .auth-divider
 {
     border-right: 1px solid #ccc;
 }
@@ -2644,4 +2644,8 @@ h3.userlist-header
 .account
 {
     margin: 10px 10px;
+}
+
+.form-horizontal .label-align-left {
+  text-align: left;
 }
