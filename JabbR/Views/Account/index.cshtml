@@ -5,6 +5,7 @@
 @{
     var userModel = Model;
     var gravatar = String.Format("https://secure.gravatar.com/avatar/{0}?s=48&d=mm", userModel.Hash);
+    var passwordUrl = userModel.HasPassword ? Url.Content("~/account/changepassword") : Url.Content("~/account/newpassword");
 }
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -74,22 +75,16 @@
                             <h1>Password</h1>
                         </div>
                         <div class="account-details-body">
-                            @if(userModel.HasPassword)
-                            {
-                            <text>
-                            <form class="form-horizontal" action="@Url.Content("~/account/changepassword")" method="POST">
-                                <div class="control-group">
-                                    <label class="control-label" for="oldPassword">Current Password</label>
-                                    <div class="controls">
-                                        <input type="password" name="oldPassword" class="input-xlarge" />
+                            <form class="form-horizontal" action="@passwordUrl" method="POST">
+                                @if(userModel.HasPassword)
+                                {
+                                    <div class="control-group">
+                                        <label class="control-label" for="oldPassword">Current Password</label>
+                                        <div class="controls">
+                                            <input type="password" name="oldPassword" class="input-xlarge" />
+                                        </div>
                                     </div>
-                                </div>
-                            </text>
-                            }
-                            else
-                            {
-                            <text><form class="form-horizontal" action="@Url.Content("~/account/newpassword")" method="POST"></text>
-                            }
+                                }
                                 <div class="control-group">
                                     <label class="control-label" for="password">Password</label>
                                     <div class="controls">
