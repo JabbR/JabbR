@@ -9,7 +9,7 @@ using WorldDomination.Web.Authentication;
 
 namespace JabbR.Nancy
 {
-    public class AccountModule : NancyModule
+    public class AccountModule : JabbRModule
     {
         public AccountModule(IApplicationSettings applicationSettings,
                              IAuthenticationTokenService authenticationTokenService,
@@ -37,12 +37,12 @@ namespace JabbR.Nancy
 
                 if (String.IsNullOrEmpty(name))
                 {
-                    ModelValidationResult.AddError("name", "Name is required");
+                    AddValidationError("name", "Name is required");
                 }
 
                 if (String.IsNullOrEmpty(password))
                 {
-                    ModelValidationResult.AddError("password", "Password is required");
+                    AddValidationError("password", "Password is required");
                 }
 
                 try
@@ -59,7 +59,7 @@ namespace JabbR.Nancy
                 }
                 catch (Exception ex)
                 {
-                    ModelValidationResult.AddError("_FORM", ex.Message);
+                    AddValidationError("_FORM", ex.Message);
                     return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
                 }
             };
@@ -87,22 +87,22 @@ namespace JabbR.Nancy
 
                 if (String.IsNullOrEmpty(name))
                 {
-                    ModelValidationResult.AddError("name", "Name is required");
+                    AddValidationError("name", "Name is required");
                 }
 
                 if (String.IsNullOrEmpty(email))
                 {
-                    ModelValidationResult.AddError("email", "Email is required");
+                    AddValidationError("email", "Email is required");
                 }
 
                 if (String.IsNullOrEmpty(password))
                 {
-                    ModelValidationResult.AddError("password", "Password is required");
+                    AddValidationError("password", "Password is required");
                 }
 
                 if (!String.Equals(password, confirmPassword))
                 {
-                    ModelValidationResult.AddError("confirmPassword", "Passwords don't match");
+                    AddValidationError("confirmPassword", "Passwords don't match");
                 }
 
                 try
@@ -119,7 +119,7 @@ namespace JabbR.Nancy
                 }
                 catch(Exception ex)
                 {
-                    ModelValidationResult.AddError("_FORM", ex.Message);
+                    AddValidationError("_FORM", ex.Message);
                     return View["register", ModelValidationResult];
                 }
             };

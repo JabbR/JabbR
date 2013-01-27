@@ -1,4 +1,6 @@
-﻿    <form class="form-horizontal" action="@Url.Content("~/account/login")" method="post">
+﻿@using JabbR;
+    <form class="form-horizontal" action="@Url.Content("~/account/login")" method="post">
+        @Html.ValidationSummary()
         <div class="control-group">
             <div class="controls">
                 <div class="input-prepend">
