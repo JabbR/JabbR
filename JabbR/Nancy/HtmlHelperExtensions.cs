@@ -40,7 +40,12 @@ namespace JabbR
 
             var errorsForField =
                 validationResult.Errors.Where(
-                    x => x.MemberNames.Any(y => y.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase)));
+                    x => x.MemberNames.Any(y => y.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase))).ToList();
+
+            if (!errorsForField.Any())
+            {
+                return new NonEncodedHtmlString(String.Empty);
+            }
 
             return new NonEncodedHtmlString(errorsForField.First().GetMessage(propertyName));
         }

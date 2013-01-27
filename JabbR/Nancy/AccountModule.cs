@@ -168,12 +168,20 @@ namespace JabbR.Nancy
                 string provider = Request.Form.provider;
                 ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
 
+                if (user.Identities.Count == 1 && !user.HasUserNameAndPasswordCredentials())
+                {
+                    //TODO: convert this to a tempdata/alert-y message
+                    AddValidationError("_FORM", "You cannot unlink this provider because you would lose your ability to login.");
+                    return Response.AsRedirect("~/account");
+                }
+
                 var identity = user.Identities.FirstOrDefault(i => i.ProviderName == provider);
-                    
+
                 if (identity != null)
                 {
                     repository.Remove(identity);
 
+                    //TODO: add an alert-y message here about success
                     return Response.AsRedirect("~/account");
                 }
 

@@ -57,5 +57,10 @@ namespace JabbR.Models
             Rooms = new SafeCollection<ChatRoom>();
             AllowedRooms = new SafeCollection<ChatRoom>();
         }
+
+        public bool HasUserNameAndPasswordCredentials()
+        {
+            return !String.IsNullOrEmpty(HashedPassword) && !String.IsNullOrEmpty(Name);
+        }
     }
 }

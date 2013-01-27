@@ -1,9 +1,11 @@
-﻿@{
+﻿@using JabbR;
+@{
     Layout = "_layout.cshtml";
 }
 <div class="user-registration">
     <form class="form-horizontal" action="@Url.Content("~/account/create")" method="post">
-       <div class="control-group">
+        @Html.ValidationSummary()
+        <div class="control-group">
             <div class="controls">
                 <div class="input-prepend">
                     <span class="add-on"><i class="icon-user"></i></span>
