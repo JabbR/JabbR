@@ -21,6 +21,11 @@ namespace JabbR.Nancy
         {
             Get["/"] = _ =>
             {
+                if (Context.CurrentUser == null)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
                 ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
 
                 return View["index", new ProfilePageViewModel(user, authService.Providers)];
@@ -37,7 +42,7 @@ namespace JabbR.Nancy
             };
 
             Post["/login"] = param =>
-            {
+            { 
                 if (Context.CurrentUser != null)
                 {
                     return Response.AsRedirect("~/");
@@ -77,6 +82,11 @@ namespace JabbR.Nancy
 
             Post["/logout"] = _ =>
             {
+                if (Context.CurrentUser == null)
+                {
+                    return HttpStatusCode.Unauthorized;
+                }
+
                 var response = Response.AsJson(new { success = true });
 
                 response.AddCookie(new NancyCookie(Constants.UserTokenCookie, null)
@@ -150,6 +160,11 @@ namespace JabbR.Nancy
 
             Post["/unlink"] = param =>
             {
+                if (Context.CurrentUser == null)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
                 string provider = Request.Form.provider;
                 ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
 
