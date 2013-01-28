@@ -9,7 +9,7 @@
             <div class="controls">
                 <div class="input-prepend">
                     <span class="add-on"><i class="icon-user"></i></span>
-                    <input class="input-block-level" name="username" type="text" placeholder="Username" />
+                    @Html.TextBox("username", "input-block-level", "Username")
                 </div>
             </div>
         </div>
@@ -17,7 +17,7 @@
             <div class="controls">
                 <div class="input-prepend">
                     <span class="add-on"><i class="icon-envelope"></i></span>
-                    <input class="input-block-level" name="email" type="text" placeholder="Email" />
+                    @Html.TextBox("email", "input-block-level", "Email")
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@
             <div class="controls">
                 <div class="input-prepend">
                     <span class="add-on"><i class="icon-lock"></i></span>
-                    <input class="input-block-level" name="password" type="password" placeholder="Password" />
+                    @Html.Password("password", "input-block-level", "Password")
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@
             <div class="controls">
                 <div class="input-prepend">
                     <span class="add-on"><i class="icon-lock"></i></span>
-                    <input class="input-block-level" name="confirmPassword" type="password" placeholder="Confirm Password" />
+                    @Html.Password("confirmPassword", "input-block-level", "Confirm Password")
                 </div>
             </div>
         </div>

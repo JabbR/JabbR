@@ -81,20 +81,20 @@
                                     <div class="control-group">
                                         <label class="control-label" for="oldPassword">Current Password</label>
                                         <div class="controls">
-                                            <input type="password" name="oldPassword" class="input-xlarge" />
+                                            @Html.Password("oldPassword", "input-xlarge", "Current Password")
                                         </div>
                                     </div>
                                 }
                                 <div class="control-group">
                                     <label class="control-label" for="password">Password</label>
                                     <div class="controls">
-                                        <input type="password" name="password" class="input-xlarge" />
+                                        @Html.Password("password", "input-xlarge", "Password")
                                     </div>
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label" for="confirmPassword">Confirm Password</label>
                                     <div class="controls">
-                                        <input type="password" name="confirmPassword" class="input-xlarge" />
+                                        @Html.Password("confirmPassword", "input-xlarge", "Confirm Password")
                                     </div>
                                 </div>
                                 <div class="control-group">
@@ -137,6 +137,8 @@
                 $(this).addClass('active');
                 $(currentSection).show();
             });
+            
+            $('input.error').closest('.control-group').addClass('error');
         }(jQuery));
     </script>
 </body>

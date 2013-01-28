@@ -48,12 +48,12 @@ namespace JabbR.Nancy
                     return Response.AsRedirect("~/");
                 }
 
-                string name = Request.Form.username;
+                string username = Request.Form.username;
                 string password = Request.Form.password;
 
-                if (String.IsNullOrEmpty(name))
+                if (String.IsNullOrEmpty(username))
                 {
-                    this.AddValidationError("name", "Name is required");
+                    this.AddValidationError("username", "Name is required");
                 }
 
                 if (String.IsNullOrEmpty(password))
@@ -65,7 +65,7 @@ namespace JabbR.Nancy
                 {
                     if (ModelValidationResult.IsValid)
                     {
-                        ChatUser user = membershipService.AuthenticateUser(name, password);
+                        ChatUser user = membershipService.AuthenticateUser(username, password);
                         return this.CompleteLogin(authenticationTokenService, user);
                     }
                     else
@@ -114,14 +114,14 @@ namespace JabbR.Nancy
                     return Response.AsRedirect("~/");
                 }
 
-                string name = Request.Form.username;
+                string username = Request.Form.username;
                 string email = Request.Form.email;
                 string password = Request.Form.password;
                 string confirmPassword = Request.Form.confirmPassword;
 
-                if (String.IsNullOrEmpty(name))
+                if (String.IsNullOrEmpty(username))
                 {
-                    this.AddValidationError("name", "Name is required");
+                    this.AddValidationError("username", "Name is required");
                 }
 
                 if (String.IsNullOrEmpty(email))
@@ -135,13 +135,13 @@ namespace JabbR.Nancy
                 {
                     if (ModelValidationResult.IsValid)
                     {
-                        ChatUser user = membershipService.AddUser(name, email, password);
+                        ChatUser user = membershipService.AddUser(username, email, password);
                         return this.CompleteLogin(authenticationTokenService, user);
                     }
                 }
                 catch (Exception ex)
                 {
-                    this.AddValidationError("_FORM", ex.Message);                    
+                    this.AddValidationError("_FORM", ex.Message);
                 }
 
                 return View["register"];
