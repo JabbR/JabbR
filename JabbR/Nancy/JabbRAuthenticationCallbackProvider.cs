@@ -46,8 +46,6 @@ namespace JabbR.Nancy
                     {
                         // Link to the logged in user
                         LinkIdentity(userInfo, providerName, loggedInUser);
-                        
-                        user = loggedInUser;
 
                         // If a user is already logged in, then we know they could only have gotten here via the account page,
                         // so we will redirect them there
