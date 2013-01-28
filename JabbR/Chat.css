@@ -2489,9 +2489,20 @@ li.clearfix
 {
     margin: 20px 40px;
 }
+
 .user-registration .validation-summary-errors
 {
     margin: 20px 60px;
+}
+
+.usernamepassword-auth .control-group
+{
+    margin-left: 40px;
+}
+
+.usernamepassword-auth .validation-summary-errors
+{
+    margin-left: 60px;
 }
 
 .social-auth
@@ -2600,7 +2611,7 @@ li.clearfix
 
 .login-body .usernamepassword-auth .form-horizontal .controls
 {
-    margin-left: 60px;
+    margin-left: 10px;
 }
 
 .login-body .auth-divider
