@@ -17,7 +17,7 @@ namespace JabbR.Nancy
                     var viewModel = new SettingsViewModel
                     {
                         GoogleAnalytics = ConfigurationManager.AppSettings["googleAnalytics"],
-                        Sha = ConfigurationManager.AppSettings["googleAnalytics"],
+                        Sha = ConfigurationManager.AppSettings["releaseSha"],
                         Branch = ConfigurationManager.AppSettings["releaseBranch"],
                         Time = ConfigurationManager.AppSettings["releaseTime"]
                     };
