@@ -51,7 +51,7 @@ namespace JabbR.Nancy
                         // If a user is already logged in, then we know they could only have gotten here via the account page,
                         // so we will redirect them there
                         nancyModule.AddAlertMessage("success", String.Format("Successfully linked {0} account.", providerName));
-                        return nancyModule.CompleteLogin(_authenticationTokenService, user, "~/account");
+                        return nancyModule.Response.AsRedirect("~/account");
                     }
                     else
                     {
