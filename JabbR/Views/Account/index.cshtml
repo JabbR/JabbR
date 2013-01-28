@@ -120,11 +120,11 @@
     </section>
     <script src="@Url.Content("~/Scripts/jquery-1.9.0.min.js")"></script>
     <script type="text/javascript">
-        $(function () {
+        (function ($) {
             var currentSection = $('#profile');
             var active = $('#accountmenu li.active');
 
-            $('#accountmenu li').click(function (e) {
+            $('#accountmenu').on('click', 'li', function (e) {
                 e.preventDefault();
                 
                 if (currentSection) {
@@ -137,7 +137,7 @@
                 $(this).addClass('active');
                 $(currentSection).show();
             });
-        });
+        }(jQuery));
     </script>
 </body>
 </html>
