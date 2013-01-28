@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Configuration;
-using JabbR.Services;
 using JabbR.ViewModels;
 using Nancy;
+using Nancy.Helpers;
 
 namespace JabbR.Nancy
 {
     public class HomeModule : JabbRModule
     {
-        public HomeModule(IAuthenticationTokenService authService)
+        public HomeModule()
         {
             Get["/"] = _ =>
             {
@@ -25,7 +25,7 @@ namespace JabbR.Nancy
                     return View["index", viewModel];
                 }
 
-                return Response.AsRedirect("~/account/login");
+                return Response.AsRedirect(String.Format("~/account/login?returnUrl={0}", HttpUtility.UrlEncode(Request.Path)));
             };
         }
     }

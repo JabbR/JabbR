@@ -13,7 +13,13 @@ namespace JabbR.Nancy
                                              IAuthenticationTokenService authenticationTokenService,
                                              ChatUser user)
         {
-            var response = module.Response.AsRedirect("~/");
+            string returnUrl = module.Request.Query.returnUrl;
+            if (String.IsNullOrWhiteSpace(returnUrl))
+            {
+                returnUrl = "~/";
+            }
+
+            var response = module.Response.AsRedirect(returnUrl);
             response.AddAuthenticationCookie(authenticationTokenService, user);
             return response;
         }
