@@ -159,7 +159,7 @@ namespace JabbR.Nancy
 
                 if (user.Identities.Count == 1 && !user.HasUserNameAndPasswordCredentials())
                 {
-                    this.AddAlertMessage("error", "You cannot unlink this provider because you would lose your ability to login.");
+                    this.AddAlertMessage("error", "You cannot unlink this account because you would lose your ability to login.");
                     return Response.AsRedirect("~/account");
                 }
 
@@ -169,7 +169,7 @@ namespace JabbR.Nancy
                 {
                     repository.Remove(identity);
 
-                    this.AddAlertMessage("success", String.Format("Successfully unlinked {0}", provider));
+                    this.AddAlertMessage("success", String.Format("Successfully unlinked {0} account.", provider));
                     return Response.AsRedirect("~/account");
                 }
 

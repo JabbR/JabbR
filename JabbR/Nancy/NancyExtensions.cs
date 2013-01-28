@@ -9,11 +9,20 @@ namespace JabbR.Nancy
 {
     public static class NancyExtensions
     {
+        /// <summary>
+        /// Sets the Auth Cookie and Redirects
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="authenticationTokenService"></param>
+        /// <param name="user">the User to be logged in</param>
+        /// <param name="redirectUrl">optional URL to redirect to, default is querystring returnUrl, if present, otherwise the root</param>
+        /// <returns></returns>
         public static Response CompleteLogin(this NancyModule module,
                                              IAuthenticationTokenService authenticationTokenService,
-                                             ChatUser user)
+                                             ChatUser user,
+                                             string redirectUrl = null)
         {
-            string returnUrl = module.Request.Query.returnUrl;
+            string returnUrl = redirectUrl ?? module.Request.Query.returnUrl;
             if (String.IsNullOrWhiteSpace(returnUrl))
             {
                 returnUrl = "~/";

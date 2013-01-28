@@ -45,8 +45,13 @@ namespace JabbR.Nancy
                     {
                         // Link to the logged in user
                         LinkIdentity(userInfo, providerName, loggedInUser);
-
+                        
                         user = loggedInUser;
+
+                        // If a user is already logged in, then we know they could only have gotten here via the account page,
+                        // so we will redirect them there
+                        nancyModule.AddAlertMessage("success", String.Format("Successfully linked {0} account.", providerName));
+                        return nancyModule.CompleteLogin(_authenticationTokenService, user, "~/account");
                     }
                     else
                     {
@@ -80,8 +85,10 @@ namespace JabbR.Nancy
                 else if (loggedInUser != null && user != loggedInUser)
                 {
                     // You can't link an account that's already attached to another user
-                    nancyModule.AddAlertMessage("error", String.Format("This {0} account has alrady been linked to another user.", providerName));
-                    return nancyModule.Response.AsRedirect("~/");
+                    nancyModule.AddAlertMessage("error", String.Format("This {0} account has already been linked to another user.", providerName));
+                    
+                    // If a user is logged in then we know they got here from the account page, and we should redirect them back there
+                    return nancyModule.Response.AsRedirect("~/account");
                 }
 
                 return nancyModule.CompleteLogin(_authenticationTokenService, user);
