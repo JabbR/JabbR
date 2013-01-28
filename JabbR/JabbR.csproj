@@ -115,9 +115,9 @@
     <Reference Include="Nancy">
       <HintPath>..\packages\Nancy.0.15.3\lib\net40\Nancy.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy.Authentication.WorldDomination, Version=0.14.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Nancy.Authentication.WorldDomination, Version=0.15.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Nancy.Authentication.WorldDomination.0.14.0\lib\net40\Nancy.Authentication.WorldDomination.dll</HintPath>
+      <HintPath>..\packages\Nancy.Authentication.WorldDomination.0.15.0\lib\net40\Nancy.Authentication.WorldDomination.dll</HintPath>
     </Reference>
     <Reference Include="Nancy.Bootstrappers.Ninject">
       <HintPath>..\packages\Nancy.Bootstrappers.Ninject.0.15.3\lib\net40\Nancy.Bootstrappers.Ninject.dll</HintPath>
@@ -174,9 +174,9 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
-    <Reference Include="WorldDomination.Web.Authentication, Version=0.14.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="WorldDomination.Web.Authentication, Version=0.15.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\WorldDomination.Web.Authentication.0.14.0\lib\net40\WorldDomination.Web.Authentication.dll</HintPath>
+      <HintPath>..\packages\WorldDomination.Web.Authentication.0.15.0\lib\net40\WorldDomination.Web.Authentication.dll</HintPath>
     </Reference>
     <Reference Include="Yahoo.Yui.Compressor, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
