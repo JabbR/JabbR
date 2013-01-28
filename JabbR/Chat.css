@@ -581,7 +581,7 @@ li.room
   width: 100%;
 }
 
-.error
+li.error
 {
   padding: 5px;
   background-color: #fddfde;
@@ -2485,14 +2485,9 @@ li.clearfix
     margin: 20px -40px;
 }
 
-.user-registration .control-group
-{
-    margin: 20px 40px;
-}
-
 .user-registration .validation-summary-errors
 {
-    margin: 20px 60px;
+    margin: 20px 200px;
 }
 
 .usernamepassword-auth .control-group
@@ -2502,7 +2497,7 @@ li.clearfix
 
 .usernamepassword-auth .validation-summary-errors
 {
-    margin-left: 60px;
+    margin-left: 80px;
 }
 
 .social-auth
