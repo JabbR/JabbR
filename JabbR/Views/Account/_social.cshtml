@@ -7,9 +7,6 @@
 @using Nancy;
 @using Nancy.Helpers;
 @model SocialLoginViewModel
-@{
-    var returnUrl = HttpUtility.UrlEncode(Html.RenderContext.Context.Request.Path);
-}
     <div class="control-group">
         <div class="controls">
             <form action="@Url.Content("~/account/unlink")" method="POST">
@@ -18,7 +15,7 @@
                     <ul class="inline">
                         @if (!Model.IsAlreadyLinked(provider))
                         {
-                            <li><a class="btn btn-provider" href="@Url.Content("~/authentication/redirect/" + provider.ToLower() + "?returnUrl=" + returnUrl)"><i class="icon-@provider.ToLower()-logo"></i> @provider</a></li>
+                            <li><a class="btn btn-provider" href="@Url.Content("~/authentication/redirect/" + provider.ToLower())"><i class="icon-@provider.ToLower()-logo"></i> @provider</a></li>
                         }
                         else
                         {
