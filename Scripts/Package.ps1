@@ -6,6 +6,12 @@
   $remoteDesktopUsername              = $env:JABBR_REMOTE_DESKTOP_USERNAME,
   $sqlAzureConnectionString           = $env:JABBR_SQL_AZURE_CONNECTION_STRING,
   $sslCertificateThumbprint           = $env:JABBR_SSL_CERTIFICATE_THUMBPRINT,
+  $googleKey                          = $env:JABBR_GOOGLE_LOGIN_KEY,
+  $googleSecret                       = $env:JABBR_GOOGLE_LOGIN_SECRET,
+  $facebookKey                        = $env:JABBR_FACEBOOK_LOGIN_KEY,
+  $facebookSecret                     = $env:JABBR_FACEBOOK_LOGIN_SECRET,
+  $twitterKey                         = $env:JABBR_TWITTER_LOGIN_KEY,
+  $twitterSecret                      = $env:JABBR_TWITTER_LOGIN_SECRET,
   $commitSha,
   $commitBranch
 )
@@ -55,6 +61,18 @@ function set-appsetting {
     $settings = [xml](get-content $path)
     $setting = $settings.configuration.appSettings.selectsinglenode("add[@key='" + $name + "']")
     $setting.value = $value.toString()
+    $resolvedPath = resolve-path($path) 
+    $settings.save($resolvedPath)
+}
+
+function add-authprovider {
+    param($path, $name, $key, $secret)
+    $settings = [xml](get-content $path)
+    $node = $settings.CreateElement("add")
+    $node.SetAttribute("name", $name)
+    $node.SetAttribute("key", $key)
+    $node.SetAttribute("secret", $secret)
+    $settings.configuration.authenticationProviders.providers.appendChild($node) | Out-Null
     $resolvedPath = resolve-path($path) 
     $settings.save($resolvedPath)
 }
@@ -115,11 +133,31 @@ cp $webConfigPath $webConfigBakPath
 cp $cscfgPath $cscfgBakPath
 cp $libPath\signalr.exe $binPath\signalr.exe
 
+# Set app settngs
 set-appsetting -path $webConfigPath -name "requireHttps" -value $true
 set-appsetting -path $webConfigPath -name "googleAnalytics" -value $googleAnalyticsToken
 set-appsetting -path $webConfigPath -name "releaseBranch" -value $commitBranch
 set-appsetting -path $webConfigPath -name "releaseSha" -value $commitSha
 set-appsetting -path $webConfigPath -name "releaseTime" -value (Get-Date -format "dd/MM/yyyy HH:mm")
+
+# Set auth providers
+if($googleKey -and $googleSecret)
+{
+  add-authprovider -path $webConfigPath -name "Google" -key $googleKey -secret $googleSecret
+}
+
+if($twitterKey -and $twitterSecret)
+{
+  add-authprovider -path $webConfigPath -name "Twitter" -key $twitterKey -secret $twitterSecret
+  
+}
+
+if($facebookKey -and $facebookSecret)
+{
+  add-authprovider -path $webConfigPath -name "Facebook" -key $facebookKey -secret $facebookSecret
+}
+
+# Set cscfg settings
 set-configurationsetting -path $cscfgPath -name "Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountExpiration" -value $remoteDesktopAccountExpiration
 set-certificatethumbprint -path $cscfgPath -name "Microsoft.WindowsAzure.Plugins.RemoteAccess.PasswordEncryption" -value $remoteDesktopCertificateThumbprint
 set-configurationsetting -path $cscfgPath -name "Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountEncryptedPassword" -value $remoteDesktopEnctyptedPassword
