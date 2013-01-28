@@ -782,7 +782,7 @@
             var viewModel = {
                 name: chat.state.name,
                 hash: chat.state.hash,
-                message: $('<div/>').text(clientMessage.content).html(),
+                message: ui.processContent(clientMessage.content),
                 id: clientMessage.id,
                 date: new Date(),
                 highlight: ''
