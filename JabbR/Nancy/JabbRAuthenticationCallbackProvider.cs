@@ -25,18 +25,19 @@ namespace JabbR.Nancy
 
         public dynamic Process(NancyModule nancyModule, AuthenticateCallbackData model)
         {
+            ChatUser loggedInUser = null;
+
+            if (nancyModule.Context.CurrentUser != null)
+            {
+                loggedInUser = _repository.GetUserById(nancyModule.Context.CurrentUser.UserName);
+            }
+
             if (model.Exception == null)
             {
                 UserInformation userInfo = model.AuthenticatedClient.UserInformation;
                 string providerName = model.AuthenticatedClient.ProviderName;
 
                 ChatUser user = _repository.GetUserByIdentity(providerName, userInfo.Id);
-                ChatUser loggedInUser = null;
-
-                if (nancyModule.Context.CurrentUser != null)
-                {
-                    loggedInUser = _repository.GetUserById(nancyModule.Context.CurrentUser.UserName);
-                }
 
                 // User with that identity doesn't exist, check if a user is logged in
                 if (user == null)
@@ -95,6 +96,14 @@ namespace JabbR.Nancy
             }
 
             nancyModule.AddAlertMessage("error", model.Exception.Message);
+
+            // If a user is logged in, then they got here from the account page, send them back there
+            if (loggedInUser != null)
+            {
+                return nancyModule.Response.AsRedirect("~/account");
+            }
+
+            // At this point, send the user back to the root, everything else will work itself out
             return nancyModule.Response.AsRedirect("~/");
         }
 
