@@ -2485,6 +2485,15 @@ li.clearfix
     margin: 20px -40px;
 }
 
+.user-registration .control-group
+{
+    margin: 20px 40px;
+}
+.user-registration .validation-summary-errors
+{
+    margin: 20px 60px;
+}
+
 .social-auth
 {
     margin: 20px 15px;
