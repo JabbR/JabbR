@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using JabbR.Infrastructure;
+using Nancy.Validation;
 using Nancy.ViewEngines.Razor;
 
 namespace JabbR
@@ -33,15 +35,7 @@ namespace JabbR
 
         public static IHtmlString ValidationMessage<TModel>(this HtmlHelpers<TModel> htmlHelper, string propertyName)
         {
-            var validationResult = htmlHelper.RenderContext.Context.ModelValidationResult;
-            if (validationResult.IsValid)
-            {
-                return new NonEncodedHtmlString(String.Empty);
-            }
-
-            var errorsForField =
-                validationResult.Errors.Where(
-                    x => x.MemberNames.Any(y => y.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase))).ToList();
+            var errorsForField = htmlHelper.GetErrorsForProperty(propertyName).ToList();
 
             if (!errorsForField.Any())
             {
@@ -70,6 +64,22 @@ namespace JabbR
             }
 
             return new NonEncodedHtmlString(builder.ToString());
+        }
+
+        internal static IEnumerable<ModelValidationError> GetErrorsForProperty<TModel>(this HtmlHelpers<TModel> htmlHelper,
+                                                                         string propertyName)
+        {
+            var validationResult = htmlHelper.RenderContext.Context.ModelValidationResult;
+            if (validationResult.IsValid)
+            {
+                return Enumerable.Empty<ModelValidationError>();
+            }
+
+            var errorsForField =
+                validationResult.Errors.Where(
+                    x => x.MemberNames.Any(y => y.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase)));
+
+            return errorsForField;
         }
     }
 }
