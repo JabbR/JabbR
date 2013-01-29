@@ -182,9 +182,17 @@ namespace JabbR
             config.Formatters.Add(jsonFormatter);
             config.DependencyResolver = new NinjectWebApiDependencyResolver(kernel);
 
+
+            config.Routes.MapHttpRoute(
+                name: "LoginV1",
+                routeTemplate: "api/v1/authenticate",
+                defaults: new { controller = "Authenticate" }
+             );
+
             config.Routes.MapHttpRoute(
                 name: "MessagesV1",
-                routeTemplate: "api/v1/{controller}/{room}");
+                routeTemplate: "api/v1/{controller}/{room}"
+            );
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
