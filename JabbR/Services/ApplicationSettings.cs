@@ -17,7 +17,7 @@ namespace JabbR.Services
         {
             get
             {
-                return ConfigurationManager.AppSettings["jabbr:validationKey"];
+                return ConfigurationManager.AppSettings["jabbr:verificationKey"];
             }
         }
 

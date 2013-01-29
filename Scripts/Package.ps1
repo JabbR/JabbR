@@ -12,8 +12,10 @@
   $facebookSecret                     = $env:JABBR_FACEBOOK_LOGIN_SECRET,
   $twitterKey                         = $env:JABBR_TWITTER_LOGIN_KEY,
   $twitterSecret                      = $env:JABBR_TWITTER_LOGIN_SECRET,
+  $encryptionKey                      = $env:JABBR_ENCRYPTION_KEY,
+  $verificationKey                    = $env:JABBR_VERIFICATION_KEY,
   $commitSha,
-  $commitBranch
+  $commitBranch,  
 )
 
 # Import Common Stuff
@@ -26,6 +28,8 @@ require-param -value $remoteDesktopCertificateThumbprint -paramName "remoteDeskt
 require-param -value $remoteDesktopEnctyptedPassword -paramName "remoteDesktopEnctyptedPassword"
 require-param -value $remoteDesktopUsername -paramName "remoteDesktopUsername"
 require-param -value $sqlAzureConnectionString -paramName "sqlAzureConnectionString"
+require-param -value $encryptionKey -paramName "encryptionKey"
+require-param -value $verificationKey -paramName "verificationKey"
 
 # Helper Functions
 function set-certificatethumbprint {
@@ -86,21 +90,6 @@ function set-releasemode {
   $xml.save($resolvedPath)
 }
 
-function set-machinekey {
-    param($path)
-    if($validationKey -AND $decryptionKey){
-        $xml = [xml](get-content $path)
-        $machinekey = $xml.CreateElement("machineKey")
-        $machinekey.setattribute("validation", "HMACSHA256")
-        $machinekey.setattribute("validationKey", $validationKey)
-        $machinekey.setattribute("decryption", "AES")
-        $machinekey.setattribute("decryptionKey", $decryptionKey)       
-        $xml.configuration."system.web".AppendChild($machineKey)
-        $resolvedPath = resolve-path($path) 
-        $xml.save($resolvedPath)
-    }
-}
-
 # Do Work Brah
 $scriptPath = split-path $MyInvocation.MyCommand.Path
 $rootPath = resolve-path(join-path $scriptPath "..")
@@ -134,11 +123,15 @@ cp $cscfgPath $cscfgBakPath
 cp $libPath\signalr.exe $binPath\signalr.exe
 
 # Set app settngs
-set-appsetting -path $webConfigPath -name "requireHttps" -value $true
-set-appsetting -path $webConfigPath -name "googleAnalytics" -value $googleAnalyticsToken
-set-appsetting -path $webConfigPath -name "releaseBranch" -value $commitBranch
-set-appsetting -path $webConfigPath -name "releaseSha" -value $commitSha
-set-appsetting -path $webConfigPath -name "releaseTime" -value (Get-Date -format "dd/MM/yyyy HH:mm")
+set-appsetting -path $webConfigPath -name "jabbr:requireHttps" -value $true
+set-appsetting -path $webConfigPath -name "jabbr:googleAnalytics" -value $googleAnalyticsToken
+set-appsetting -path $webConfigPath -name "jabbr:releaseBranch" -value $commitBranch
+set-appsetting -path $webConfigPath -name "jabbr:releaseSha" -value $commitSha
+set-appsetting -path $webConfigPath -name "jabbr:releaseTime" -value (Get-Date -format "dd/MM/yyyy HH:mm")
+
+# Set encryption keys
+set-appsetting -path $webConfigPath -name "jabbr:encryptionKey" -value $encryptionKey
+set-appsetting -path $webConfigPath -name "jabbr:verificationKey" -value $verificationKey
 
 # Set auth providers
 if($googleKey -and $googleSecret)
@@ -164,7 +157,6 @@ set-configurationsetting -path $cscfgPath -name "Microsoft.WindowsAzure.Plugins.
 set-configurationsetting -path $cscfgPath -name "Microsoft.WindowsAzure.Plugins.RemoteAccess.AccountUsername" -value $remoteDesktopUsername
 set-connectionstring -path $webConfigPath -name "JabbR" -value $sqlAzureConnectionString
 set-releasemode $webConfigPath
-set-machinekey $webConfigPath
 
 if($sslCertificateThumbprint) {
   set-certificatethumbprint -path $cscfgPath -name "jabbr" -value $sslCertificateThumbprint
