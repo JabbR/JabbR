@@ -940,7 +940,8 @@
             connection.hub.start(options, function () {
                 chat.server.join()
                 .fail(function (e) {
-                    ui.addMessage(e, 'error');
+                    // So refresh the page, our auth token is probably gone
+                    document.location = document.location.pathname;
                 })
                 .done(function () {
                     // get list of available commands
