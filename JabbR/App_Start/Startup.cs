@@ -89,6 +89,9 @@ namespace JabbR
                   .To<DefaultCache>()
                   .InSingletonScope();
 
+            kernel.Bind<IKeyProvider>()
+                  .ToConstant(new FileBasedKeyProvider());
+
             try
             {
                 if (app.IsRunningUnderSystemWeb())

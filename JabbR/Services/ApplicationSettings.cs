@@ -5,11 +5,27 @@ namespace JabbR.Services
 {
     public class ApplicationSettings : IApplicationSettings
     {
+        public string EncryptionKey
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["jabbr:encryptionKey"];
+            }
+        }
+
+        public string ValidationKey
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["jabbr:validationKey"];
+            }
+        }
+
         public string DefaultAdminUserName
         {
             get
             {
-                return ConfigurationManager.AppSettings["defaultAdminUserName"];
+                return ConfigurationManager.AppSettings["jabbr:defaultAdminUserName"];
             }
         }
 
@@ -17,7 +33,7 @@ namespace JabbR.Services
         {
             get
             {
-                return ConfigurationManager.AppSettings["defaultAdminPassword"];
+                return ConfigurationManager.AppSettings["jabbr:defaultAdminPassword"];
             }
         }
 
@@ -25,7 +41,7 @@ namespace JabbR.Services
         {
             get
             {
-                string modeValue = ConfigurationManager.AppSettings["authenticationMode"];
+                string modeValue = ConfigurationManager.AppSettings["jabbr:authenticationMode"];
                 AuthenticationMode mode;
                 if (Enum.TryParse<AuthenticationMode>(modeValue, out mode))
                 {
@@ -40,7 +56,7 @@ namespace JabbR.Services
         {
             get
             {
-                string requireHttpsValue = ConfigurationManager.AppSettings["requireHttps"];
+                string requireHttpsValue = ConfigurationManager.AppSettings["jabbr:requireHttps"];
                 bool requireHttps;
                 if (Boolean.TryParse(requireHttpsValue, out requireHttps))
                 {

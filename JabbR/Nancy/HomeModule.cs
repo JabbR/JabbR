@@ -16,10 +16,10 @@ namespace JabbR.Nancy
                 {
                     var viewModel = new SettingsViewModel
                     {
-                        GoogleAnalytics = ConfigurationManager.AppSettings["googleAnalytics"],
-                        Sha = ConfigurationManager.AppSettings["releaseSha"],
-                        Branch = ConfigurationManager.AppSettings["releaseBranch"],
-                        Time = ConfigurationManager.AppSettings["releaseTime"]
+                        GoogleAnalytics = ConfigurationManager.AppSettings["jabbr:googleAnalytics"],
+                        Sha = ConfigurationManager.AppSettings["jabbr:releaseSha"],
+                        Branch = ConfigurationManager.AppSettings["jabbr:releaseBranch"],
+                        Time = ConfigurationManager.AppSettings["jabbr:releaseTime"]
                     };
 
                     return View["index", viewModel];

@@ -936,10 +936,13 @@
     <Compile Include="Nancy\AccountModule.cs" />
     <Compile Include="Nancy\HomeModule.cs" />
     <Compile Include="Nancy\SessionExtensions.cs" />
+    <Compile Include="Services\AppSettingKeyProvider.cs" />
     <Compile Include="Services\AuthenticationMode.cs" />
     <Compile Include="Services\AuthenticationTokenService.cs" />
     <Compile Include="Services\DefaultCache.cs" />
+    <Compile Include="Services\FileBasedKeyProvider.cs" />
     <Compile Include="Services\IAuthenticationTokenService.cs" />
+    <Compile Include="Services\IKeyProvider.cs" />
     <Compile Include="Services\IMembershipService.cs" />
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="ViewModels\LobbyRoomViewModel.cs" />

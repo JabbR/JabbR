@@ -8,7 +8,12 @@ namespace JabbR.Services
     public class AuthenticationTokenService : IAuthenticationTokenService
     {
         private static readonly UTF8Encoding _encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false, throwOnInvalidBytes: true);
-        private static readonly byte[] UserIdPurpose = _encoding.GetBytes("JabbR.UserId");
+        private readonly ICryptoService _cryptoService;
+
+        public AuthenticationTokenService(ICryptoService cryptoService)
+        {
+            _cryptoService = cryptoService;
+        }
 
         public bool TryGetUserId(string authenticationToken, out string userId)
         {
@@ -16,7 +21,7 @@ namespace JabbR.Services
             {
                 byte[] buffer = TokenDencode(authenticationToken);
 
-                buffer = ProtectedData.Unprotect(buffer, UserIdPurpose, DataProtectionScope.CurrentUser);
+                buffer = _cryptoService.Unprotect(buffer);
 
                 userId = _encoding.GetString(buffer);
 
@@ -35,7 +40,7 @@ namespace JabbR.Services
         {
             byte[] buffer = _encoding.GetBytes(user.Id);
 
-            buffer = ProtectedData.Protect(buffer, UserIdPurpose, DataProtectionScope.CurrentUser);
+            buffer = _cryptoService.Protect(buffer);
 
             return TokenEncode(buffer);
         }

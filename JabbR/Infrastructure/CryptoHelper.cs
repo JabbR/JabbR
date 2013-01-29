@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace JabbR.Infrastructure
 {
@@ -14,7 +16,7 @@ namespace JabbR.Infrastructure
         private const int HMacLength = 32;
 
         public static byte[] Protect(byte[] encryptionKey, byte[] validationKey, byte[] initializationVector, byte[] plainText)
-        {            
+        {
             using (var provider = new AesCryptoServiceProvider())
             {
                 using (ICryptoTransform transform = provider.CreateEncryptor(encryptionKey, initializationVector))
@@ -110,6 +112,44 @@ namespace JabbR.Infrastructure
                     throw new InvalidOperationException();
                 }
             }
+        }
+
+        public static string ToHex(byte[] buffer)
+        {
+            var sb = new StringBuilder(buffer.Length * 2);
+            
+            foreach (byte b in buffer)
+            {
+                sb.Append(HexChar((int)(b >> 4)));
+                sb.Append(HexChar((int)(b & 0xF)));
+            }
+
+            return sb.ToString();
+
+        }
+
+        public static byte[] FromHex(string hexValue)
+        {
+            var buffer = new byte[hexValue.Length / 2];
+
+            for (int i = 0; i < buffer.Length; i++)
+            {
+                var b1 = HexValue(hexValue[i * 2]) << 4;
+                var b2 = HexValue(hexValue[(i * 2) + 1]);
+                buffer[i] = (byte)(b1 + b2);
+            }
+
+            return buffer;
+        }
+
+        private static int HexValue(char digit)
+        {
+            return digit > '9' ? digit - '7' : digit - '0';
+        }
+
+        private static char HexChar(int value)
+        {
+            return (char)(value > 9 ? value + '7' : value + '0');
         }
     }
 }

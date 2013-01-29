@@ -53,6 +53,43 @@ namespace JabbR.Tests
             }
         }
 
+        [Fact]
+        public void ToHex()
+        {
+            var buffer = new byte[] { 1, 2, 3, 4, 25, 15 };
+
+            var bitConv = BitConverter.ToString(buffer).Replace("-", "");
+            var hex = CryptoHelper.ToHex(buffer);
+            Assert.Equal(bitConv, hex);
+            Assert.Equal("01020304190F", hex);
+        }
+
+        [Fact]
+        public void FromHex()
+        {
+            string value = "01020304190F";
+            var buffer = new byte[] { 1, 2, 3, 4, 25, 15 };
+
+            byte[] resut = CryptoHelper.FromHex(value);
+
+            Assert.Equal(buffer, resut);
+        }
+
+        [Fact]
+        public void ToAndFromHex()
+        {
+            for (int i = 0; i < 20; i++)
+            {
+                var buffer = GenerateRandomBytes();
+                string hex = CryptoHelper.ToHex(buffer);
+                var bitConverter = BitConverter.ToString(buffer).Replace("-", "");                
+                Assert.Equal(bitConverter, hex);
+                
+                var fromBytes = CryptoHelper.FromHex(hex);
+                Assert.Equal(buffer, fromBytes);
+            }
+        }
+
         private byte[] GenerateRandomBytes(int n = 32)
         {
             using (var cryptoProvider = new RNGCryptoServiceProvider())
