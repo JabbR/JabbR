@@ -50,7 +50,7 @@ namespace JabbR.Nancy
                         // If a user is already logged in, then we know they could only have gotten here via the account page,
                         // so we will redirect them there
                         nancyModule.AddAlertMessage("success", String.Format("Successfully linked {0} account.", providerName));
-                        return nancyModule.Response.AsRedirect("~/account");
+                        return nancyModule.Response.AsRedirect("~/account/#identityProviders");
                     }
                     else
                     {
@@ -87,7 +87,7 @@ namespace JabbR.Nancy
                     nancyModule.AddAlertMessage("error", String.Format("This {0} account has already been linked to another user.", providerName));
                     
                     // If a user is logged in then we know they got here from the account page, and we should redirect them back there
-                    return nancyModule.Response.AsRedirect("~/account");
+                    return nancyModule.Response.AsRedirect("~/account/#identityProviders");
                 }
 
                 return nancyModule.CompleteLogin(_authenticationTokenService, user);
@@ -98,7 +98,7 @@ namespace JabbR.Nancy
             // If a user is logged in, then they got here from the account page, send them back there
             if (loggedInUser != null)
             {
-                return nancyModule.Response.AsRedirect("~/account");
+                return nancyModule.Response.AsRedirect("~/account/#identityProviders");
             }
 
             // At this point, send the user back to the root, everything else will work itself out

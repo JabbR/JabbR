@@ -160,7 +160,7 @@ namespace JabbR.Nancy
                 if (user.Identities.Count == 1 && !user.HasUserNameAndPasswordCredentials())
                 {
                     this.AddAlertMessage("error", "You cannot unlink this account because you would lose your ability to login.");
-                    return Response.AsRedirect("~/account");
+                    return Response.AsRedirect("~/account/#identityProviders");
                 }
 
                 var identity = user.Identities.FirstOrDefault(i => i.ProviderName == provider);
@@ -170,7 +170,7 @@ namespace JabbR.Nancy
                     repository.Remove(identity);
 
                     this.AddAlertMessage("success", String.Format("Successfully unlinked {0} account.", provider));
-                    return Response.AsRedirect("~/account");
+                    return Response.AsRedirect("~/account/#identityProviders");
                 }
 
                 return HttpStatusCode.BadRequest;
@@ -206,7 +206,7 @@ namespace JabbR.Nancy
                 if (ModelValidationResult.IsValid)
                 {
                     this.AddAlertMessage("success", "Successfully added a password.");
-                    return Response.AsRedirect("~/account");
+                    return Response.AsRedirect("~/account/#changePassword");
                 }
 
                 return GetProfileView(authService, user);
@@ -248,7 +248,7 @@ namespace JabbR.Nancy
                 if (ModelValidationResult.IsValid)
                 {
                     this.AddAlertMessage("success", "Successfully changed your password.");
-                    return Response.AsRedirect("~/account");
+                    return Response.AsRedirect("~/account/#changePassword");
                 }
 
                 return GetProfileView(authService, user);
