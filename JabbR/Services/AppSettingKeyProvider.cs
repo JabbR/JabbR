@@ -12,13 +12,13 @@ namespace JabbR.Services
                 throw new ArgumentException("Missing encryptionKey");
             }
 
-            if (String.IsNullOrEmpty(settings.ValidationKey))
+            if (String.IsNullOrEmpty(settings.VerificationKey))
             {
                 throw new ArgumentException("Missing validationKey");
             }
 
             EncryptionKey = CryptoHelper.FromHex(settings.EncryptionKey);
-            ValidationKey = CryptoHelper.FromHex(settings.ValidationKey);
+            VerificationKey = CryptoHelper.FromHex(settings.VerificationKey);
         }
 
         public byte[] EncryptionKey
@@ -27,7 +27,7 @@ namespace JabbR.Services
             private set;
         }
 
-        public byte[] ValidationKey
+        public byte[] VerificationKey
         {
             get;
             private set;

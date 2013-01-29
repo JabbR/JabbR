@@ -89,8 +89,20 @@ namespace JabbR
                   .To<DefaultCache>()
                   .InSingletonScope();
 
-            kernel.Bind<IKeyProvider>()
-                  .ToConstant(new FileBasedKeyProvider());
+            var settings = kernel.Get<IApplicationSettings>();
+
+            if (String.IsNullOrEmpty(settings.VerificationKey) ||
+                String.IsNullOrEmpty(settings.EncryptionKey))
+            {
+                kernel.Bind<IKeyProvider>()
+                      .ToConstant(new FileBasedKeyProvider());
+            }
+            else
+            {
+                kernel.Bind<IKeyProvider>()
+                      .To<AppSettingKeyProvider>()
+                      .InSingletonScope();
+            }
 
             try
             {
@@ -115,7 +127,6 @@ namespace JabbR
 
             app.Use(typeof(DetectSchemeHandler));
 
-            var settings = kernel.Get<IApplicationSettings>();
             if (settings.RequireHttps)
             {
                 app.Use(typeof(RequireHttpsHandler));

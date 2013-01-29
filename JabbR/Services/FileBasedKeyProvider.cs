@@ -27,7 +27,7 @@ namespace JabbR.Services
             get { return _keyCache.Value.EncryptionKey; }
         }
 
-        public byte[] ValidationKey
+        public byte[] VerificationKey
         {
             get { return _keyCache.Value.ValidationKey; }
         }

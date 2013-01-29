@@ -31,13 +31,13 @@ namespace JabbR.Services
             using (var crypto = new RNGCryptoServiceProvider())
             {
                 crypto.GetBytes(initializationVector);
-                return CryptoHelper.Protect(_keyProvider.EncryptionKey, _keyProvider.ValidationKey, initializationVector, plainText);
+                return CryptoHelper.Protect(_keyProvider.EncryptionKey, _keyProvider.VerificationKey, initializationVector, plainText);
             }
         }
 
         public byte[] Unprotect(byte[] payload)
         {
-            return CryptoHelper.Unprotect(_keyProvider.EncryptionKey, _keyProvider.ValidationKey, payload);
+            return CryptoHelper.Unprotect(_keyProvider.EncryptionKey, _keyProvider.VerificationKey, payload);
         }
     }
 }

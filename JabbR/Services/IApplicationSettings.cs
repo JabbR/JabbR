@@ -4,7 +4,7 @@ namespace JabbR.Services
     public interface IApplicationSettings
     {
         string EncryptionKey { get; }
-        string ValidationKey { get; }
+        string VerificationKey { get; }
 
         string DefaultAdminUserName { get; }
         string DefaultAdminPassword { get; }

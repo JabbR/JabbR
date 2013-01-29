@@ -3,6 +3,6 @@
     public interface IKeyProvider
     {
         byte[] EncryptionKey { get; }
-        byte[] ValidationKey { get; }
+        byte[] VerificationKey { get; }
     }
 }

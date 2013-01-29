@@ -15,7 +15,7 @@
   $encryptionKey                      = $env:JABBR_ENCRYPTION_KEY,
   $verificationKey                    = $env:JABBR_VERIFICATION_KEY,
   $commitSha,
-  $commitBranch,  
+  $commitBranch
 )
 
 # Import Common Stuff

@@ -13,7 +13,7 @@ namespace JabbR.Services
             }
         }
 
-        public string ValidationKey
+        public string VerificationKey
         {
             get
             {
