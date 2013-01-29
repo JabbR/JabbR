@@ -1997,38 +1997,38 @@
         },
         processContent: function (content) {
             var hasNewline = content.indexOf('\n') != -1;
-
-            // Emoji
-            content = utility.parseEmojis(content);
-
-            // Html encode
-            content = utility.encodeHtml(content);
-
-            // Transform emoji to html
-            content = utility.transformEmojis(content);
-
-            // Create rooms links
-            content = content.replace(/#([A-Za-z0-9-_]{1,30}\w*)/g, function (m) {
-                var roomName = m.substr(1);
-
-                if (roomCache[roomName]) {
-                    return '<a href="#/rooms/' + roomName + '" title="' + roomName + '">' + m + '</a>';
-                }
-                return m;
-            });
-
-            // Convert normal links
-            content = linkify(content, {
-                callback: function (text, href) {
-                    return href ? '<a rel="nofollow external" target="_blank" href="' + href + '" title="' + href + '">' + text + '</a>' : text;
-                }
-            });
-
+            
             if (hasNewline) {
                 // Multiline detection
                 return templates.multiline.tmpl({ content: content }).html();
             }
             else {
+                // Emoji
+                content = utility.parseEmojis(content);
+
+                // Html encode
+                content = utility.encodeHtml(content);
+
+                // Transform emoji to html
+                content = utility.transformEmojis(content);
+
+                // Create rooms links
+                content = content.replace(/#([A-Za-z0-9-_]{1,30}\w*)/g, function (m) {
+                    var roomName = m.substr(1);
+
+                    if (roomCache[roomName]) {
+                        return '<a href="#/rooms/' + roomName + '" title="' + roomName + '">' + m + '</a>';
+                    }
+                    return m;
+                });
+
+                // Convert normal links
+                content = linkify(content, {
+                    callback: function (text, href) {
+                        return href ? '<a rel="nofollow external" target="_blank" href="' + href + '" title="' + href + '">' + text + '</a>' : text;
+                    }
+                });
+
                 return content;
             }
         }
