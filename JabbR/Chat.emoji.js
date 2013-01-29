@@ -15,23 +15,21 @@
     
     Emoji.Parser = function () {
         this.parse = function (content) {
-            // wrap content in div tags, allows plain content to match in the following regex
-            content = '<div>' + content + '</div>';
-
-            // match text within html tags
-            content = content.replace( /(?:^|>)([^<]+)(?:<|$)/g, function(str, match) {
-                return '>' + parseEmoji(util.encodeHtml(util.decodeHtml(match)))  + '<';
-            });
-
-            // unwrap content from div tags
-            return $(content).html();
+            return parseEmoji(content);
         };
+
+        this.transformToHtml = transformToHtml;
 
         function parseEmoji(content) {
             for(var key in validAlias) {
                 var regex = new RegExp(key, "g");
                 content = content.replace(regex, validAlias[key]);
             }
+            
+            return content;
+        }
+
+        function transformToHtml(content) {
             return content.replace(/:([a-z0-9\+\-_]+):/g, emojiReplacer);
         }
 

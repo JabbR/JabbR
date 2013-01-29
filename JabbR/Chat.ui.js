@@ -581,7 +581,6 @@
         var isFromCollapibleContentProvider = isFromCollapsibleContentProvider(message.message),
             collapseContent = shouldCollapseContent(message.message, roomName);
 
-        message.message = isFromCollapibleContentProvider ? message.message : utility.parseEmojis(message.message);
         message.trimmedName = utility.trim(message.name, 21);
         message.when = message.date.formatTime(true);
         message.fulldate = message.date.toLocaleString();
@@ -1732,7 +1731,7 @@
         prepareNotificationMessage: function (content, type) {
             var now = new Date(),
                 message = {
-                    message: utility.parseEmojis(content),
+                    message: ui.processContent(content),
                     type: type,
                     date: now,
                     when: now.formatTime(true),
@@ -1999,9 +1998,15 @@
         processContent: function (content) {
             var hasNewline = content.indexOf('\n') != -1;
 
+            // Emoji
+            content = utility.parseEmojis(content);
+
             // Html encode
             content = utility.encodeHtml(content);
-            
+
+            // Transform emoji to html
+            content = utility.transformEmojis(content);
+
             // Create rooms links
             content = content.replace(/#([A-Za-z0-9-_]{1,30}\w*)/g, function (m) {
                 var roomName = m.substr(1);

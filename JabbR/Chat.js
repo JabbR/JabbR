@@ -216,7 +216,7 @@
                 ui.addMessage('You just entered ' + room.Name, 'notification', room.Name);
 
                 if (room.Welcome) {
-                    ui.addMessage(ui.processContent(room.Welcome), 'welcome', room.Name);
+                    ui.addMessage(room.Welcome, 'welcome', room.Name);
                 }
             });
         }
@@ -462,10 +462,10 @@
             " (" + status + " - last seen " + $.timeago(lastActivityDate) + ")", 'list-header');
 
         if (userInfo.AfkNote) {
-            ui.addMessage('Afk: ' + ui.processContent(userInfo.AfkNote), 'list-item');
+            ui.addMessage('Afk: ' + userInfo.AfkNote, 'list-item');
         }
         else if (userInfo.Note) {
-            ui.addMessage('Note: ' + ui.processContent(userInfo.Note), 'list-item');
+            ui.addMessage('Note: ' + userInfo.Note, 'list-item');
         }
 
         $.getJSON('https://secure.gravatar.com/' + userInfo.Hash + '.json?callback=?', function (profile) {
@@ -522,7 +522,7 @@
         } else {
             message = who + ' has ' + message;
         }
-        ui.addMessage(ui.processContent(message), 'notification', roomName);
+        ui.addMessage(message, 'notification', roomName);
     };
 
     chat.client.welcomeChanged = function (isCleared, welcome) {
@@ -531,7 +531,7 @@
         var message = 'You have ' + action + ' the room welcome' + to;
         ui.addMessage(message, 'notification', this.state.activeRoom);
         if (welcome) {
-            ui.addMessage(ui.processContent(welcome), 'welcome', this.state.activeRoom);
+            ui.addMessage(welcome, 'welcome', this.state.activeRoom);
         }
     };
 
@@ -580,16 +580,16 @@
             ui.setLastPrivate(from);
         }
 
-        ui.addPrivateMessage('<emp>*' + from + '* &raquo; *' + to + '*</emp> ' + ui.processContent(message), 'pm');
+        ui.addPrivateMessage('*' + from + '* *' + to + '* ' + message, 'pm');
     };
 
     chat.client.sendInvite = function (from, to, room) {
         if (isSelf({ Name: to })) {
             ui.notify(true);
-            ui.addPrivateMessage('*' + from + '* has invited you to ' + ui.processContent('#' + room) + '. Click the room name to join.', 'pm');
+            ui.addPrivateMessage('*' + from + '* has invited you to #' + room + '. Click the room name to join.', 'pm');
         }
         else {
-            ui.addPrivateMessage('Invitation to *' + to + '* to join ' + ui.processContent('#' + room) + ' has been sent.', 'pm');
+            ui.addPrivateMessage('Invitation to *' + to + '* to join #' + room + ' has been sent.', 'pm');
         }
     };
 
@@ -734,7 +734,7 @@
     };
 
     chat.client.broadcastMessage = function (message, room) {
-        ui.addMessage('ADMIN: ' + ui.processContent(message), 'broadcast', room);
+        ui.addMessage('ADMIN: ' + message, 'broadcast', room);
     };
 
     $ui.bind(ui.events.typing, function () {

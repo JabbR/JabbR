@@ -134,6 +134,10 @@
             var parser = new Emoji.Parser().parse;
             return (parser(content));
         },
+        transformEmojis: function (content) {
+            var transformToHtml = new Emoji.Parser().transformToHtml;
+            return (transformToHtml(content));
+        },
         decodeHtml: decodeHtml,
         encodeHtml: encodeHtml,
         newId: guidGenerator
