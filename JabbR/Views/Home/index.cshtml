@@ -198,8 +198,17 @@
           Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a>
         </div>
       </div>
-        <div class="account pull-right">
-            <a href="@Url.Content("~/account")" class="btn"><i class="icon-user"></i> Account</a>
+        <div class="btn-group account pull-right">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-cog"></i><span class="caret"></span></a>
+            <ul id="preferences" class="dropdown-menu">
+                <li><a href="@Url.Content("~/account")" target="_blank"><i class="icon-user"></i> Account</a></li>
+                <li><a class="logout" title="logout"><i class="icon-logout"></i> Logout</a></li>
+                <li><a class="sound" title="audible notifications"><i class="icon-sound"></i> Audible Notifications</a></li>
+                <li><a class="richness" title="toggle rich-content"><i class="icon-richness"></i> Toggle Rich-content</a></li>
+                <li><a class="toast" title="popup notifications" aria-haspopup="true"><i class="icon-toast"></i>Popup Notifications</a></li>
+                <li><a class="download" title="download messages" aria-haspopup="true"><i class="icon-download"></i>Download Messages</a></li>
+                <li><a class="help" title="display help" aria-haspopup="true"><i class="icon-help"></i>Display help</a></li>
+            </ul>
         </div>
       <div style="clear: both"></div>
     <nav>
@@ -224,14 +233,6 @@
       </form>
       <ul id="userlist-lobby" class="users current">
       </ul>
-      <div id="preferences">
-        <a class="logout" title="logout"></a>
-        <a class="sound" title="audible notifications"></a>
-        <a class="richness" title="toggle rich-content"></a>
-        <a class="toast" title="popup notifications" aria-haspopup="true"></a>
-        <a class="download" title="download messages" aria-haspopup="true"></a>
-        <a class="help" title="display help" aria-haspopup="true"></a>
-      </div>
       <form id="send-message" action="#">
       <div id="message-box">
         <textarea id="new-message" autocomplete="off" aria-autocomplete="none" accesskey="m"></textarea>
