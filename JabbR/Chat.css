@@ -45,20 +45,6 @@ form#send-message {
   text-decoration: none;
 }
 
-#preferences
-{
-  margin-left: 0px;
-  padding-left: 0px;
-  font-size: small;
-  position: absolute;
-  top: 24px;
-  left: 71%;
-  width: 25%;
-  bottom: 70px;
-  margin-left: 2px;
-  height: 18px;
-}
-
 #users-filter-form 
 {
   display: none;
@@ -89,80 +75,6 @@ form#send-message {
 #preferences a
 {
   cursor: pointer;
-}
-
-#preferences .help
-{
-  background: url('Content/images/question-icon.png') no-repeat;
-  width: 16px;
-  height: 20px;
-  top: 3px;
-  position: absolute;
-}
-
-#preferences .sound
-{
-  background: url('Content/images/sound-on.png') no-repeat;
-  width: 16px;
-  height: 16px;
-  left: 26px;
-  position: absolute;
-  margin-top: 4px;
-}
-
-  #preferences .sound.off
-  {
-    background: url('Content/images/sound-off.png') no-repeat;
-  }
-
-#preferences .toast
-{
-  background: url('Content/images/toast-on.png') no-repeat;
-  width: 16px;
-  height: 20px;
-  left: 55px;
-  position: absolute;
-  display: none;
-}
-
-  #preferences .toast.off
-  {
-    background: url('Content/images/toast-off.png') no-repeat;
-  }
-
-#preferences .richness
-{
-  width: 20px;
-  height: 20px;
-  left: 90px;
-  position: absolute;
-  background: url('Content/images/richness-off.png') no-repeat;
-  margin-top: 3px;
-}
-
-  #preferences .richness.off
-  {
-    background: url('Content/images/richness-on.png') no-repeat;
-  }
-
-#preferences .download
-{
-  background: url('Content/images/download-icon.png') no-repeat;
-  width: 16px;
-  height: 20px;
-  left: 120px;
-  top: 3px;
-  position: absolute;
-}
-
-#preferences .logout
-{
-  background: url('Content/images/logout.png') no-repeat;
-  width: 16px;
-  height: 20px;
-  top: 6px;
-  left: 150px;
-  position: absolute;
 }
 
 #logo
@@ -2695,4 +2607,103 @@ h3.userlist-header
 
 .form-horizontal .label-align-left {
   text-align: left;
+}
+
+.icon-logout {
+    background-image: url('Content/images/logout.png');
+    background-position: 0 0;
+    background-size: 12px 16px;
+    height: 16px;
+    width: 12px;
+}
+
+#preferences .logout:hover .icon-logout {
+    background-image: url('Content/images/logout-white.png');
+}
+
+.icon-sound {
+    background-image: url('Content/images/sound-on.png');
+    background-position: 0 0;
+    background-size: 14px 14px;
+    height: 14px;
+    width: 14px;
+}
+
+#preferences .sound:hover .icon-sound {
+    background-image: url('Content/images/sound-on-white.png');
+}
+
+#preferences .sound.off .icon-sound {
+    background-image: url('Content/images/sound-off.png');
+}
+
+#preferences .sound.off:hover .icon-sound {
+    background-image: url('Content/images/sound-off-white.png');
+}
+
+.icon-toast {
+    background-image: url('Content/images/toast-on.png');
+    background-position: 0 0;
+    background-size: 10px 14px;
+    height: 14px;
+    width: 10px;
+    margin-right: 8px;
+}
+
+#preferences .toast:hover .icon-toast {
+    background-image: url('Content/images/toast-on-white.png');
+}
+
+#preferences .toast.off .icon-toast {
+    background-image: url('Content/images/toast-off.png');
+}
+
+#preferences .toast.off:hover .icon-toast {
+    background-image: url('Content/images/toast-off-white.png');
+}
+
+.icon-richness {
+    background-image: url('Content/images/richness-on.png');
+    background-position: 0 0;
+    background-size: 14px 14px;
+    height: 14px;
+    width: 14px;
+}
+
+#preferences .richness:hover .icon-richness {
+    background-image: url('Content/images/richness-on-white.png');
+}
+
+#preferences .richness.off .icon-richness {
+    background-image: url('Content/images/richness-off.png');
+}
+
+#preferences .richness.off:hover .icon-richness {
+    background-image: url('Content/images/richness-off-white.png');
+}
+
+.icon-download {
+    background-image: url('Content/images/download-icon.png');
+    background-position: 0 0;
+    background-size: 10px 14px;
+    height: 14px;
+    width: 10px;
+    margin-right: 8px;
+}
+
+#preferences .download:hover .icon-download {
+    background-image: url('Content/images/download-icon-white.png');
+}
+
+.icon-help {
+    background-image: url('Content/images/question-icon.png');
+    background-position: 0 0;
+    background-size: 10px 14px;
+    height: 14px;
+    width: 10px;
+    margin-right: 8px;
+}
+
+#preferences .help:hover .icon-help {
+    background-image: url('Content/images/question-icon-white.png');
 }
