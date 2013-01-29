@@ -113,7 +113,7 @@ namespace JabbR.Commands
             return true;
         }
 
-        private void MatchCommand(string commandName, out ICommand command)
+        public void MatchCommand(string commandName, out ICommand command)
         {
             if (_commandCache == null)
             {
@@ -134,16 +134,31 @@ namespace JabbR.Commands
                                                       StringComparer.OrdinalIgnoreCase);
             }
 
-            var extended = _commandCache.Keys.Where(comm => comm.StartsWith(commandName));
-            switch(extended.Count()) {
+            IList<string> candidates = null;
+
+            var exactMatches = _commandCache.Keys.Where(comm => comm.Equals(commandName))
+                                                 .ToList();
+
+            if (exactMatches.Count == 1)
+            {
+                candidates = exactMatches;
+            }
+            else
+            {
+                candidates = _commandCache.Keys.Where(comm => comm.StartsWith(commandName))
+                                               .ToList();
+            }
+
+            switch (candidates.Count)
+            {
                 case 1:
-                    _commandCache.TryGetValue(extended.Single(), out command);
-                    commandName = extended.Single();
+                    _commandCache.TryGetValue(candidates[0], out command);
+                    commandName = candidates[0];
                     break;
                 case 0:
                     throw new CommandNotFoundException();
                 default:
-                    throw new CommandAmbiguityException(extended);
+                    throw new CommandAmbiguityException(candidates);
             }
         }
 

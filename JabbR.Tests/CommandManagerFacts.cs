@@ -165,6 +165,22 @@ namespace JabbR.Test
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/a"));
             }
+
+            [Fact]
+            public void DoesNotThrowIfCommandIsPrefixButExactMatch()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var service = new ChatService(cache, repository);
+                var notificationService = new Mock<INotificationService>();
+
+                var commandManager = new CommandManager("1", "1", "room", service, repository, cache, notificationService.Object);
+
+                ICommand command;
+                commandManager.MatchCommand("invite", out command);
+
+                Assert.IsType<JabbR.Commands.InviteCommand>(command);
+            }
         }
         
         public class LogOutCommand
