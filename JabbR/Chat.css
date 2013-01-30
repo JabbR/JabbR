@@ -120,7 +120,7 @@ form#send-message {
   margin-top: 0px;
   padding-left: 0px;
   left: 0;
-  right: 220px;
+  right: 240px;
   position: absolute;
   top: 55px;
   bottom: 70px;
@@ -161,7 +161,7 @@ form#send-message {
   position: absolute;
   top: 35px;
   right: 0;
-  width: 210px;
+  width: 230px;
   bottom: 70px;
   margin-left: 2px; /* for #messages border */
   margin-top: 0px;
@@ -181,7 +181,7 @@ form#send-message {
 }
 
 .user .details .name {
-  max-width: 105px;
+  max-width: 100px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -453,7 +453,7 @@ li.room
   bottom: 20px;
   height: 50px;
   left: 0;
-  right: 220px;
+  right: 240px;
 }
 
 #message-box
