@@ -21,7 +21,7 @@ namespace JabbR
         private static void StartBackgroundWork(IKernel kernel, IDependencyResolver resolver)
         {
             // Resolve the hub context, so we can broadcast to the hub from a background thread
-            var connectionManager = resolver.Resolve<IConnectionManager>();            
+            var connectionManager = resolver.Resolve<IConnectionManager>();
 
             // Start the sweeper
             _backgroundTimer = new Timer(_ =>

@@ -951,9 +951,11 @@
     <Compile Include="Services\DefaultCache.cs" />
     <Compile Include="Services\FileBasedKeyProvider.cs" />
     <Compile Include="Services\IAuthenticationTokenService.cs" />
+    <Compile Include="Services\IChatNotificationService.cs" />
     <Compile Include="Services\IKeyProvider.cs" />
     <Compile Include="Services\IMembershipService.cs" />
     <Compile Include="Services\MembershipService.cs" />
+    <Compile Include="Services\ChatNotificationService.cs" />
     <Compile Include="ViewModels\LobbyRoomViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ProfilePageViewModel.cs" />

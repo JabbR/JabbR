@@ -9,6 +9,7 @@ using JabbR.Nancy;
 using JabbR.Services;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
+using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Json;
 using Microsoft.Owin.Mapping;
 using Microsoft.Owin.StaticFiles;
@@ -89,6 +90,9 @@ namespace JabbR
                   .To<DefaultCache>()
                   .InSingletonScope();
 
+            kernel.Bind<IChatNotificationService>()
+                  .To<ChatNotificationService>();
+
             var settings = kernel.Get<IApplicationSettings>();
 
             if (String.IsNullOrEmpty(settings.VerificationKey) ||
@@ -160,6 +164,10 @@ namespace JabbR
         private static void SetupSignalR(IKernel kernel, IAppBuilder app)
         {
             var resolver = new NinjectSignalRDependencyResolver(kernel);
+            var connectionManager = resolver.Resolve<IConnectionManager>();
+
+            kernel.Bind<IConnectionManager>()
+                  .ToConstant(connectionManager);
 
             var config = new HubConfiguration
             {

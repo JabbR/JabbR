@@ -38,6 +38,7 @@
                     </div>
                     <ul id="accountmenu" class="nav nav-list">
                         <li class="active"><a href="#profile" data-toggle="tab"><i class="icon-chevron-right"></i>Profile</a></li>
+                        <li><a href="#changeUsername" data-toggle="tab"><i class="icon-chevron-right"></i>Username</a></li>
                         <li><a href="#changePassword" data-toggle="tab"><i class="icon-chevron-right"></i>Password</a></li>
                         @if(userModel.SocialDetails.ConfiguredProviders.Any())
                         {
@@ -55,7 +56,7 @@
                                 <div class="control-group">
                                     <label class="control-label" for="note">Note</label>
                                     <div class="controls">
-                                      <label class="control-label label-align-left">@(userModel.Note ?? "-")</label>
+                                        <label class="control-label label-align-left">@(userModel.Note ?? "-")</label>
                                     </div>
                                 </div>
                                 <div class="control-group">
@@ -64,6 +65,34 @@
                                         <label class="control-label label-align-left">@(userModel.Country ?? "-") <span class="flag flag-@userModel.Flag"></span></label>
                                     </div>
                                 </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="account-details tab-pane hide" id="changeUsername">
+                        <div class="account-details-header">
+                            <h1>Username</h1>
+                        </div>
+                        <div class="account-details-body">
+                            <form class="form-horizontal" action="@Url.Content("~/account/changeusername")#changeUsername" method="POST">
+                                @Html.ValidationSummary()
+                                <div class="control-group">
+                                    <label class="control-label" for="username">Username</label>
+                                    <div class="controls">
+                                        @Html.TextBox("username", "input-xlarge", "Username")
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="confirmUsername">Confirm Username</label>
+                                    <div class="controls">
+                                        @Html.TextBox("confirmUsername", "input-xlarge", "Confirm Username")
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <div class="controls">
+                                        <input type="submit" class="btn" value="Change Username" />
+                                    </div>
+                                </div>
+                                @Html.AntiForgeryToken()
                             </form>
                         </div>
                     </div>
@@ -97,7 +126,7 @@
                                 </div>
                                 <div class="control-group">
                                     <div class="controls">
-                                        <input type="submit" class="btn" value="Save Changes" />
+                                        <input type="submit" class="btn" value="Change Password" />
                                     </div>
                                 </div>
                                 @Html.AntiForgeryToken()

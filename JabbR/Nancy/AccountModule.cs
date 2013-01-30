@@ -16,7 +16,8 @@ namespace JabbR.Nancy
                              IAuthenticationTokenService authenticationTokenService,
                              IMembershipService membershipService,
                              IJabbrRepository repository,
-                             IAuthenticationService authService)
+                             IAuthenticationService authService,
+                             IChatNotificationService notificationService)
             : base("/account")
         {
             Get["/"] = _ =>
@@ -253,6 +254,45 @@ namespace JabbR.Nancy
 
                 return GetProfileView(authService, user);
             };
+
+            Post["/changeusername"] = _ =>
+            {
+                if (Context.CurrentUser == null)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
+                string username = Request.Form.username;
+                string confirmUsername = Request.Form.confirmUsername;
+
+                ValidateUsername(username, confirmUsername);
+
+                ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
+                string oldUsername = user.Name;
+
+                try
+                {
+                    if (ModelValidationResult.IsValid)
+                    {
+                        membershipService.ChangeUserName(user, username);
+                        repository.CommitChanges();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.AddValidationError("_FORM", ex.Message);
+                }
+
+                if (ModelValidationResult.IsValid)
+                {
+                    notificationService.OnUserNameChanged(user, oldUsername, username);
+
+                    this.AddAlertMessage("success", "Successfully changed your username.");
+                    return Response.AsRedirect("~/account/#changeUsername");
+                }
+
+                return GetProfileView(authService, user);
+            };
         }
 
         private void ValidatePassword(string password, string confirmPassword)
@@ -265,6 +305,19 @@ namespace JabbR.Nancy
             if (!String.Equals(password, confirmPassword))
             {
                 this.AddValidationError("confirmPassword", "Passwords don't match");
+            }
+        }
+
+        private void ValidateUsername(string username, string confirmUsername)
+        {
+            if (String.IsNullOrEmpty(username))
+            {
+                this.AddValidationError("username", "Username is required");
+            }
+
+            if (!String.Equals(username, confirmUsername))
+            {
+                this.AddValidationError("confirmUsername", "Usernames don't match");
             }
         }
 
