@@ -464,7 +464,7 @@
             closed: roomViewModel.Closed
         };
 
-        roomCache[roomName] = true;
+        roomCache[roomName.toLowerCase()] = true;
 
         templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabs);
 
@@ -1416,7 +1416,7 @@
                     }
                 }
 
-                roomCache[this.Name] = true;
+                roomCache[this.Name.toLowerCase()] = true;
             });
 
             if (lobby.isActive()) {
@@ -2016,7 +2016,7 @@
                 content = content.replace(/#([A-Za-z0-9-_]{1,30}\w*)/g, function (m) {
                     var roomName = m.substr(1);
 
-                    if (roomCache[roomName]) {
+                    if (roomCache[roomName.toLowerCase()]) {
                         return '<a href="#/rooms/' + roomName + '" title="' + roomName + '">' + m + '</a>';
                     }
                     return m;
