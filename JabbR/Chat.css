@@ -54,8 +54,8 @@ form#send-message {
 {
   position: absolute;
   top: 55px;
-  width: 15%;
-  left: 71%;
+  width: 200px;
+  right: 0;
   margin-top: 4px;
 }
 
@@ -63,7 +63,8 @@ form#send-message {
 {
   position: absolute;
   top: 90px;
-  left: 71%;
+  right: 0;
+  width: 210px;
   margin-top: 4px;
   font-size: 13px;
 }
@@ -113,12 +114,13 @@ form#send-message {
 
 .messages
 {
-  width: 70%;
   border: 1px solid #ccc;
   overflow: auto;
   margin-left: 0px;
   margin-top: 0px;
   padding-left: 0px;
+  left: 0;
+  right: 220px;
   position: absolute;
   top: 55px;
   bottom: 70px;
@@ -157,9 +159,9 @@ form#send-message {
   padding-left: 0px;
   font-size: small;
   position: absolute;
-  top: 55px;
-  left: 71%;
-  width: 25%;
+  top: 35px;
+  right: 0;
+  width: 210px;
   bottom: 70px;
   margin-left: 2px; /* for #messages border */
   margin-top: 0px;
@@ -178,6 +180,14 @@ form#send-message {
   margin-top: 0px;
 }
 
+.user .details .name {
+  width: 150px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  float: left;
+}
+
 .users li
 {
   padding: 4px;
@@ -192,7 +202,6 @@ form#send-message {
 
   .users li .name
   {
-    word-wrap: break-word;
     vertical-align: middle;
     cursor: pointer;
   }
@@ -441,7 +450,8 @@ li.room
   position: absolute;
   bottom: 20px;
   height: 50px;
-  width: 70%;
+  left: 0;
+  right: 220px;
 }
 
 #message-box
