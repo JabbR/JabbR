@@ -10,20 +10,24 @@
     <div class="control-group">
         <div class="controls">
             <form action="@Url.Content("~/account/unlink")" method="POST">
-                @foreach (var provider in Model.ConfiguredProviders)
-                {
-                    <ul class="inline">
-                        @if (!Model.IsAlreadyLinked(provider))
+                <div class="row">
+                    <div class="span7 offset1">
+                        @foreach (var provider in Model.ConfiguredProviders)
                         {
-                            <li><a class="btn btn-provider" href="@Url.Content("~/authentication/redirect/" + provider.ToLower())"><i class="icon-@provider.ToLower()-logo"></i> @provider</a></li>
+                            <ul class="inline">
+                                @if (!Model.IsAlreadyLinked(provider))
+                                {
+                                    <li><a class="btn btn-provider" href="@Url.Content("~/authentication/redirect/" + provider.ToLower())"><i class="icon-@provider.ToLower()-logo"></i> @provider</a></li>
+                                }
+                                else
+                                {
+                                    <li><div class="provider"><i class="icon-@provider.ToLower()-logo"></i> @provider</div><button type="submit" class="btn-unlink" name="provider" value="@provider.ToLower()" title="unlink identity provider"><i class="icon-unlink"></i></button></li>
+                                }
+                            </ul>
                         }
-                        else
-                        {
-                            <li><div class="provider"><i class="icon-@provider.ToLower()-logo"></i> @provider</div><button type="submit" class="btn-unlink" name="provider" value="@provider.ToLower()" title="unlink identity provider"><i class="icon-unlink"></i></button></li>
-                        }
-                    </ul>
-                }
-                @Html.AntiForgeryToken()
+                        @Html.AntiForgeryToken()
+                    </div>
+                </div>
             </form>
         </div>
     </div>
