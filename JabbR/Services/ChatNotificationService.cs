@@ -23,25 +23,28 @@ namespace JabbR.Services
             // Tell the user's connected clients that the name changed
             foreach (var client in user.ConnectedClients)
             {
-                GetHubContext().Clients.Client(client.Id).userNameChanged(userViewModel);
+                HubContext.Clients.Client(client.Id).userNameChanged(userViewModel);
             }
 
             // Notify all users in the rooms
             foreach (var room in user.Rooms)
             {
-                GetHubContext().Clients.Group(room.Name).changeUserName(oldUserName, userViewModel, room.Name);
+                HubContext.Clients.Group(room.Name).changeUserName(oldUserName, userViewModel, room.Name);
             }
         }
 
         private IHubContext _hubContext;
-        internal IHubContext GetHubContext()
+        private IHubContext HubContext
         {
-            if (_hubContext == null)
+            get
             {
-                _hubContext = _connectionManager.GetHubContext<Chat>();
-            }
+                if (_hubContext == null)
+                {
+                    _hubContext = _connectionManager.GetHubContext<Chat>();
+                }
 
-            return _hubContext;
+                return _hubContext;
+            }
         }
     }
 }
