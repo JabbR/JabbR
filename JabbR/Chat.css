@@ -2717,3 +2717,14 @@ h3.userlist-header
 #preferences .help:hover .icon-help {
     background-image: url('Content/images/question-icon-white.png');
 }
+
+.git-hub-issue .starting-comment .author {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.git-hub-issue .starting-comment h2 {
+    font-size: 13px;
+    margin: 0;
+    line-height: 13px;
+}
