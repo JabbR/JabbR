@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using JabbR.Infrastructure;
 
 namespace JabbR.Models
@@ -45,6 +46,7 @@ namespace JabbR.Models
         public virtual ICollection<ChatClient> ConnectedClients { get; set; }
         public virtual ICollection<ChatRoom> OwnedRooms { get; set; }
         public virtual ICollection<ChatRoom> Rooms { get; set; }
+        public virtual ICollection<ChatUserPreference> Preferences { get; set; }
 
         // Private rooms this user is allowed to go into
         public virtual ICollection<ChatRoom> AllowedRooms { get; set; }
@@ -62,5 +64,53 @@ namespace JabbR.Models
         {
             return !String.IsNullOrEmpty(HashedPassword) && !String.IsNullOrEmpty(Name);
         }
+
+        public T GetPreference<T>(string key, int roomId)
+        {
+            var pref = Preferences.SingleOrDefault(x => x.Key == key && x.RoomId == roomId);
+
+            if (pref == null)
+            {
+                return default(T);
+            }
+
+            return (T)Convert.ChangeType(pref.Value, typeof (T));
+        }
+
+        public void SetPreference(string key, int roomId, object value)
+        {
+            var pref = Preferences.SingleOrDefault(x => x.Key == key && x.RoomId == roomId);
+
+            if (pref == null)
+            {
+                pref = new ChatUserPreference()
+                {
+                    ChatUserId = Key,
+                    Key = key,
+                    RoomId = roomId
+                };
+
+                Preferences.Add(pref);
+            }
+            else
+            {
+                pref.Value = value.ToString();
+            }
+        }
+    }
+
+    public class ChatUserPreference
+    {
+        public const string AudibleNotificationsKey = "jabbr.audible";
+        public const string RichContentKey = "jabbr.richcontent";
+        public const string PopupNotificationsKey = "jabbr.toast";
+
+        public int ChatUserId { get; set; }
+
+        public int RoomId { get; set; }
+
+        public string Key { get; set; }
+
+        public string Value { get; set; }
     }
 }

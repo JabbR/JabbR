@@ -293,6 +293,40 @@ namespace JabbR.Nancy
 
                 return GetProfileView(authService, user);
             };
+
+            Post["changepreference/{roomKey}/{key}/{value}"] = _ =>
+            {
+                if (Context.CurrentUser == null)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
+                string roomKey = Request.Form.roomKey;
+                string key = Request.Form.key;
+                object value = Request.Form.value;
+
+                ChatRoom room = repository.GetRoomByName(roomKey);
+
+                if (room == null)
+                {
+                    return Response.AsJson(new { message = "invalid room" }, HttpStatusCode.Conflict);
+                }
+
+                ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
+
+                try
+                {
+                    user.SetPreference(key, room.Key, value);
+
+                    repository.CommitChanges();
+                }
+                catch (Exception ex)
+                {
+                    return Response.AsJson(new { message = ex.Message }, HttpStatusCode.Conflict);
+                }
+                
+                return Response.AsJson(new {success = true}, HttpStatusCode.OK);
+            };
         }
 
         private void ValidatePassword(string password, string confirmPassword)
