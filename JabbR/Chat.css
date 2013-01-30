@@ -181,11 +181,13 @@ form#send-message {
 }
 
 .user .details .name {
-  width: 150px;
+  max-width: 105px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
   float: left;
+  margin-top: 2px;
+  padding-right: 2px;
 }
 
 .users li
