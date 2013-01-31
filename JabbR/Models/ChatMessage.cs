@@ -9,7 +9,7 @@ namespace JabbR.Models
         public int Key { get; set; }
 
         public string Content { get; set; }
-        public string Id { get; set; }        
+        public string Id { get; set; }
         public virtual ChatRoom Room { get; set; }
         public virtual ChatUser User { get; set; }
         public DateTimeOffset When { get; set; }

@@ -16,6 +16,7 @@ namespace JabbR.Models.Mapping
             this.Property(c => c.Identity).HasColumnName("Identity");
             this.Property(c => c.UserKey).HasColumnName("User_Key");
             this.Property(c => c.Email).HasColumnName("Email");
+            this.Property(c => c.ProviderName).HasColumnName("ProviderName");
 
             // Relationships
             this.HasRequired(c => c.User)

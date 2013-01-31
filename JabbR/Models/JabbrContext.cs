@@ -20,6 +20,8 @@ namespace JabbR.Models
 
             modelBuilder.Configurations.Add(new ChatUserMap());
 
+            modelBuilder.Configurations.Add(new ChatUserPreferenceMap());
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -28,5 +30,6 @@ namespace JabbR.Models
         public DbSet<ChatRoom> Rooms { get; set; }
         public DbSet<ChatUser> Users { get; set; }
         public DbSet<ChatUserIdentity> Identities { get; set; }
+        public DbSet<ChatUserPreference> Preferences { get; set; }
     }
 }

@@ -22,14 +22,11 @@
         $sound = null,
         templates = null,
         focus = true,
-        commands = [],
-        shortcuts = [],
         Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13, Slash: 47, Space: 32, Tab: 9, Question: 191 },
         scrollTopThreshold = 75,
         toast = window.chat.toast,
         preferences = null,
         $login = null,
-        name,
         lastCycledMessage = null,
         $helpPopup = null,
         $helpBody = null,
@@ -404,8 +401,8 @@
 
     function getAllRoomElements() {
         var rooms = [];
-        $("ul#tabs > li.room").each(function () {
-            rooms[rooms.length] = getRoomElements($(this).data("name"));
+        $('ul#tabs > li.room').each(function () {
+            rooms[rooms.length] = getRoomElements($(this).data('name'));
         });
         return rooms;
     }
@@ -611,36 +608,23 @@
         $ui.trigger(ui.events.focusit);
     }
 
-    function loadPreferences() {
-        // Restore the global preferences
-    }
-
     function toggleElement($element, preferenceName, roomName) {
         var value = roomName ? getRoomPreference(roomName, preferenceName) : preferences[preferenceName];
+        
         if (value === true) {
             $element.removeClass('off');
-        }
-        else {
+        } else {
             $element.addClass('off');
         }
     }
 
     function loadRoomPreferences(roomName) {
-        var roomPreferences = getRoomPreference(roomName);
-
-        // Placeholder for room level preferences
         toggleElement($sound, 'hasSound', roomName);
         toggleElement($toast, 'canToast', roomName);
         toggleElement($richness, 'blockRichness', roomName);
     }
 
-    function setPreference(name, value) {
-        preferences[name] = value;
-
-        $(ui).trigger(ui.events.preferencesChanged);
-    }
-
-    function setRoomPreference(roomName, name, value) {
+    function setRoomPreference(roomName, key, value) {
         var roomPreferences = preferences[getRoomPreferenceKey(roomName)];
 
         if (!roomPreferences) {
@@ -648,26 +632,27 @@
             preferences[getRoomPreferenceKey(roomName)] = roomPreferences;
         }
 
-        roomPreferences[name] = value;
+        roomPreferences[key] = value;
 
-        $ui.trigger(ui.events.preferencesChanged);
+        $ui.trigger(ui.events.preferencesChanged, [roomName, key, value]);
     }
 
-    function getRoomPreference(roomName, name) {
-        return (preferences[getRoomPreferenceKey(roomName)] || {})[name];
+    function getRoomPreference(roomName, key) {
+        return (preferences[getRoomPreferenceKey(roomName)] || {})[key];
     }
 
-    function getActiveRoomPreference(name) {
+    function getActiveRoomPreference(key) {
         var room = getCurrentRoomElements();
-        return getRoomPreference(room.getName(), name);
+        return getRoomPreference(room.getName(), key);
     }
 
-    function anyRoomPreference(name, value) {
-        for (var key in preferences) {
-            if (preferences[key][name] === value) {
+    function anyRoomPreference(key, value) {
+        for (var roomPrefKey in preferences) {
+            if (preferences[roomPrefKey][key] === value) {
                 return true;
             }
         }
+        
         return false;
     }
 
@@ -1188,7 +1173,6 @@
                             return getRoomsNames();
 
                         case '/':
-                            var commands = ui.getCommands();
                             return ui.getCommands()
                                          .map(function (cmd) { return cmd.Name + ' '; });
 
@@ -1221,9 +1205,6 @@
 
             // Make sure we can toast at all
             toast.ensureToast(preferences);
-
-            // Load preferences
-            loadPreferences();
 
             // Initilize liveUpdate plugin for room search
             ui.$roomFilter = $roomFilterInput.liveUpdate('#userlist-lobby', function ($theListItem) {

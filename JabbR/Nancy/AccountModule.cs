@@ -294,7 +294,7 @@ namespace JabbR.Nancy
                 return GetProfileView(authService, user);
             };
 
-            Post["changepreference/{roomKey}/{key}/{value}"] = _ =>
+            Post["/changepreference"] = _ =>
             {
                 if (Context.CurrentUser == null)
                 {

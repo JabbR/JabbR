@@ -909,7 +909,20 @@
             });
     });
 
-    $(ui).bind(ui.events.preferencesChanged, function (ev) {
+    $(ui).bind(ui.events.preferencesChanged, function (ev, roomName, key, value) {
+        
+        if (roomName && key && value) {
+            $.ajax({
+                url: '/account/changepreference',
+                type: 'POST',
+                data: {
+                    roomKey: roomName,
+                    key: key,
+                    value: value
+                }
+            });
+        }
+        
         updateCookie();
     });
 
