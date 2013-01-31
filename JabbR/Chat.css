@@ -534,6 +534,30 @@ li.error
   font-weight: bold;
 }
 
+.action
+{
+  color: #9c009c;
+  border-bottom: 1px solid #eee;
+  padding: 5px;
+}
+
+  .action .content, .pm .content, .error .content, .broadcast .content
+  {
+    margin-right: 95px;
+  }
+
+  .action a.info
+  {
+    color: #9c009c;
+    font-style: italic;
+    text-decoration: none;
+  }
+
+    .action a.info:visited
+    {
+      color: inherit;
+    }
+
 .notification
 {
   color: #bbb;
