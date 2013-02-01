@@ -53,7 +53,7 @@ namespace JabbR.Middleware
                     return;
                 }
 
-                httpResponse.SetHeader("ContentType", response.ContentType);
+                httpResponse.SetHeader("Content-Type", response.ContentType);
                 httpResponse.StatusCode = (int)response.StatusCode;
 
                 using (response)
