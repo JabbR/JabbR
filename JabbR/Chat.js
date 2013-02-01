@@ -570,7 +570,7 @@
     };
 
     chat.client.sendMeMessage = function (name, message, room) {
-        ui.addMessage('*' + name + ' ' + message, 'notification', room);
+        ui.addMessage('*' + name + ' ' + message, 'action', room);
     };
 
     chat.client.sendPrivateMessage = function (from, to, message) {
