@@ -65,5 +65,19 @@ namespace JabbR.Services
                 return false;
             }
         }
+
+        public bool MigrateDatabase
+        {
+            get
+            {
+                string migrateDatabaseValue = ConfigurationManager.AppSettings["jabbr:migrateDatabase"];
+                bool migrateDatabase;
+                if (Boolean.TryParse(migrateDatabaseValue, out migrateDatabase))
+                {
+                    return migrateDatabase;
+                }
+                return false;
+            }
+        }
     }
 }

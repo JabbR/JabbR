@@ -27,8 +27,13 @@ namespace JabbR
     {
         public void Configuration(IAppBuilder app)
         {
-            // Perform the required migrations
-            DoMigrations();
+            var settings = new ApplicationSettings();
+
+            if (settings.MigrateDatabase)
+            {
+                // Perform the required migrations
+                DoMigrations();
+            }
 
             var kernel = new StandardKernel(new[] { new FactoryModule() });
 
@@ -70,8 +75,7 @@ namespace JabbR
                 .InSingletonScope();
 
             kernel.Bind<IApplicationSettings>()
-                  .To<ApplicationSettings>()
-                  .InSingletonScope();
+                  .ToConstant(settings);
 
             kernel.Bind<IJavaScriptMinifier>()
                   .To<AjaxMinMinifier>()
@@ -92,8 +96,6 @@ namespace JabbR
 
             kernel.Bind<IChatNotificationService>()
                   .To<ChatNotificationService>();
-
-            var settings = kernel.Get<IApplicationSettings>();
 
             if (String.IsNullOrEmpty(settings.VerificationKey) ||
                 String.IsNullOrEmpty(settings.EncryptionKey))
