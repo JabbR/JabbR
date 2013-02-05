@@ -15,12 +15,12 @@ namespace JabbR.Infrastructure
             // Not hosing on system web host? Bail out.
             object serverName;
             if (capabilities.TryGetValue("server.Name", out serverName) &&
-                !SystemWebHostName.Equals((string)serverName, StringComparison.Ordinal))
+                SystemWebHostName.Equals((string)serverName, StringComparison.Ordinal))
             {
-                return false;
+                return true;
             }
 
-            return true;
+            return false;
         }
     }
 }
