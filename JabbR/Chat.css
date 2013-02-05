@@ -2749,7 +2749,8 @@ h3.userlist-header
     padding-bottom: 0;
 }
 
-.git-hub-issue .starting-comment h2 {
+.git-hub-issue .starting-comment h2,
+.tweet h1, .tweet h2, .tweet h3, .tweet h4 {
     font-size: 13px;
     margin: 0;
     line-height: 13px;
