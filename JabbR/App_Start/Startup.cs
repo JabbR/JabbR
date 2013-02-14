@@ -110,19 +110,6 @@ namespace JabbR
                       .InSingletonScope();
             }
 
-            try
-            {
-                if (app.IsRunningUnderSystemWeb())
-                {
-                    BindSystemWebDependencies(kernel);
-                }
-            }
-            catch (Exception ex)
-            {
-                // If we were unable to load the system web specific dependencies don't cry about it
-                ReportError(ex);
-            }
-
             var serializer = new JsonNetSerializer(new JsonSerializerSettings
             {
                 DateFormatHandling = DateFormatHandling.MicrosoftDateFormat

@@ -914,7 +914,6 @@
     <Compile Include="Nancy\JabbRModule.cs" />
     <Compile Include="Nancy\NancyExtensions.cs" />
     <Compile Include="Nancy\JabbRAuthenticationCallbackProvider.cs" />
-    <Compile Include="App_Start\Startup.SystemWeb.cs" />
     <Compile Include="App_Start\Startup.ErrorHandling.cs" />
     <Compile Include="App_Start\Startup.Migrations.cs" />
     <Compile Include="App_Start\Startup.BackgroundWork.cs" />
@@ -1237,10 +1236,7 @@
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
   <PropertyGroup>
     <PostBuildEvent>
-if $(ConfigurationName) == Debug (
-xcopy /s /y /R "$(SolutionDir)packages\Nancy.Viewengines.Razor.0.16.0\BuildProviders\Nancy.ViewEngines.Razor.BuildProviders.dll" "$(ProjectDir)bin\"
-xcopy /s /y /R "$(SolutionDir)packages\Nancy.Viewengines.Razor.0.16.0\lib\Net40\Nancy.ViewEngines.Razor.dll" "$(ProjectDir)bin\"
-)</PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
