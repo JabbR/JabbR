@@ -35,6 +35,30 @@ namespace JabbR
                 DoMigrations();
             }
 
+            var kernel = SetupNinject(settings);
+
+            app.Use(typeof(DetectSchemeHandler));
+
+            if (settings.RequireHttps)
+            {
+                app.Use(typeof(RequireHttpsHandler));
+            }
+
+            app.UseShowExceptions();
+
+            // This needs to run before everything
+            app.Use(typeof(AuthorizationHandler), kernel.Get<IAuthenticationTokenService>());
+
+            SetupSignalR(kernel, app);
+            SetupWebApi(kernel, app);
+            SetupMiddleware(app);
+            SetupNancy(kernel, app);
+
+            SetupErrorHandling();
+        }
+
+        private static KernelBase SetupNinject(ApplicationSettings settings)
+        {
             var kernel = new StandardKernel(new[] { new FactoryModule() });
 
             kernel.Bind<JabbrContext>()
@@ -110,7 +134,7 @@ namespace JabbR
                       .InSingletonScope();
             }
 
-            var serializer = new JsonNetSerializer(new JsonSerializerSettings
+            var serializer = new JsonNetSerializer(new JsonSerializerSettings()
             {
                 DateFormatHandling = DateFormatHandling.MicrosoftDateFormat
             });
@@ -118,24 +142,7 @@ namespace JabbR
             kernel.Bind<IJsonSerializer>()
                   .ToConstant(serializer);
 
-            app.Use(typeof(DetectSchemeHandler));
-
-            if (settings.RequireHttps)
-            {
-                app.Use(typeof(RequireHttpsHandler));
-            }
-
-            app.UseShowExceptions();
-
-            // This needs to run before everything
-            app.Use(typeof(AuthorizationHandler), kernel.Get<IAuthenticationTokenService>());
-
-            SetupSignalR(kernel, app);
-            SetupWebApi(kernel, app);
-            SetupMiddleware(app);
-            SetupNancy(kernel, app);
-
-            SetupErrorHandling();
+            return kernel;
         }
 
         private static void SetupNancy(IKernel kernel, IAppBuilder app)
