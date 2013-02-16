@@ -898,6 +898,7 @@
     <Content Include="Views\Account\index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Start\Startup.DependencyInjection.cs" />
     <Compile Include="Infrastructure\CryptoHelper.cs" />
     <Compile Include="Infrastructure\IdentityUtility.cs" />
     <Compile Include="Infrastructure\AlertMessageStore.cs" />
