@@ -54,6 +54,13 @@ namespace JabbR.Commands
         public string ParseCommand(string commandString, out string[] args)
         {
             var parts = commandString.Substring(1).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length == 0)
+            {
+                args = new string[0];
+                return null;
+            }
+
             args = parts.Skip(1).ToArray();
             return parts[0];
         }
@@ -72,6 +79,11 @@ namespace JabbR.Commands
 
         public bool TryHandleCommand(string commandName, string[] args)
         {
+            if (String.IsNullOrEmpty(commandName))
+            {
+                return false;
+            }
+
             commandName = commandName.Trim();
             if (commandName.StartsWith("/"))
             {
@@ -101,7 +113,7 @@ namespace JabbR.Commands
             }
             catch (CommandNotFoundException)
             {
-                throw new InvalidOperationException(String.Format("'{0}' is not a valid command.", commandName));
+                return false;
             }
             catch (CommandAmbiguityException e)
             {

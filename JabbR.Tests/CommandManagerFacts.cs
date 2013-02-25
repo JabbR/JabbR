@@ -31,6 +31,21 @@ namespace JabbR.Test
             }
 
             [Fact]
+            public void ReturnsNullForEmptyCommandName()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var service = new ChatService(cache, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
+
+                string[] args;
+                var parsedName = commandManager.ParseCommand("/", out args);
+
+                Assert.Null(parsedName);
+            }
+
+            [Fact]
             public void ParsesTheArguments()
             {
                 var repository = new InMemoryRepository();
@@ -113,7 +128,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void ThrowsIfCommandDoesntExists()
+            public void ReturnsFalseIfCommandDoesntExists()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -136,7 +151,9 @@ namespace JabbR.Test
                 repository.Add(room);
                 var commandManager = new CommandManager("1", "1", "room", service, repository, cache, notificationService.Object);
 
-                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/foo"));
+                bool result = commandManager.TryHandleCommand("/foo");
+
+                Assert.False(result);
             }
 
             [Fact]
