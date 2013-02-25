@@ -195,7 +195,7 @@ namespace JabbR.Services
 
         internal static void ThrowUserExists(string userName)
         {
-            throw new InvalidOperationException(String.Format("Username {0} already taken, please pick a new one using '/nick nickname'.", userName));
+            throw new InvalidOperationException(String.Format("Username {0} already taken.", userName));
         }
 
         internal static void ThrowPasswordIsRequired()
