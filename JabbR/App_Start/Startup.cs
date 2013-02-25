@@ -6,6 +6,7 @@ using JabbR.Nancy;
 using JabbR.Services;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
+using Microsoft.AspNet.SignalR.SystemWeb.Infrastructure;
 using Microsoft.Owin.Mapping;
 using Microsoft.Owin.StaticFiles;
 using Newtonsoft.Json.Serialization;
@@ -64,6 +65,10 @@ namespace JabbR
         {
             var resolver = new NinjectSignalRDependencyResolver(kernel);
             var connectionManager = resolver.Resolve<IConnectionManager>();
+
+            // Ah well loading system web.
+            kernel.Bind<IProtectedData>()
+                  .To<MachineKeyProtectedData>();
 
             kernel.Bind<IConnectionManager>()
                   .ToConstant(connectionManager);
