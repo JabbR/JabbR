@@ -909,6 +909,10 @@
             });
     });
 
+    $(ui).bind(ui.events.reloadMessages, function (ev, roomInfo) {
+        ui.showReloadMessage(roomInfo.name);
+    });
+
     $(ui).bind(ui.events.preferencesChanged, function (ev) {
         updateCookie();
     });

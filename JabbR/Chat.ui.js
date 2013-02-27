@@ -47,7 +47,8 @@
         updateTimeout = 15000,
         $richness = null,
         lastPrivate = null,
-        roomCache = {};
+        roomCache = {},
+        $reloadMessage = null;
 
     function getRoomId(roomName) {
         return window.escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -800,7 +801,8 @@
             focusit: 'jabbr.ui.focusit',
             blurit: 'jabbr.ui.blurit',
             preferencesChanged: 'jabbr.ui.preferencesChanged',
-            loggedOut: 'jabbr.ui.loggedOut'
+            loggedOut: 'jabbr.ui.loggedOut',
+            reloadMessages: 'jabbr.ui.reloadMessages'
         },
 
         help: {
@@ -850,6 +852,7 @@
                 commandhelp: $('#command-help-template'),
                 multiline: $('#multiline-content-template')
             };
+            $reloadMessage = $('#reloadMessage');
 
             if (toast.canToast()) {
                 $toast.show();
@@ -1909,6 +1912,13 @@
                 document.location = document.location.pathname;
             },
             updateTimeout);
+        },
+        showReloadMessage: function (roomName) {
+            var room = getRoomElements(roomName);
+            if (!room.isLobby()) {
+                $reloadMessage.appendTo(room.messages);
+                $reloadMessage.show();
+            }
         },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
