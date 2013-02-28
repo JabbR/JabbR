@@ -910,7 +910,7 @@
     });
 
     $(ui).bind(ui.events.reloadMessages, function (ev, roomInfo) {
-        ui.reloadMessages(roomInfo);
+
     });
 
     $(ui).bind(ui.events.preferencesChanged, function (ev) {

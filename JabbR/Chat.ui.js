@@ -785,13 +785,9 @@
         }, cycleTimeInMilliseconds);
     }
 
-    function showReloadMessageNotification(roomName) {
-        var room = getRoomElements(roomName);
-        if (!room.isLobby()) {
-            $reloadMessageNotification.data('room', { name: roomName });
-            $reloadMessageNotification.appendTo(room.messages);
-            $reloadMessageNotification.show();
-        }
+    function showReloadMessageNotification() {
+        $reloadMessageNotification.appendTo($chatArea);
+        $reloadMessageNotification.show();
     }
 
 
@@ -1928,9 +1924,6 @@
                 document.location = document.location.pathname;
             },
             updateTimeout);
-        },
-        reloadMessages: function(roomName) {
-            //reload the messages for the room specified
         },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
