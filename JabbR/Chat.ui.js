@@ -916,9 +916,7 @@
             });
 
             $document.on('click', '#reloadMessageNotification a', function () {
-                var roomName = $reloadMessageNotification.data('room').name;
-
-                $ui.trigger(ui.events.reloadMessages, [roomName]);
+                $ui.trigger(ui.events.reloadMessages);
             });
 
             // handle tab cycling - we skip the lobby when cycling

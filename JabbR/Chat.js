@@ -909,7 +909,7 @@
             });
     });
 
-    $(ui).bind(ui.events.reloadMessages, function (ev, roomInfo) {
+    $(ui).bind(ui.events.reloadMessages, function () {
 
     });
 
