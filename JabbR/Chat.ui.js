@@ -785,12 +785,6 @@
         }, cycleTimeInMilliseconds);
     }
 
-    function showReloadMessageNotification() {
-        $reloadMessageNotification.appendTo($chatArea);
-        $reloadMessageNotification.show();
-    }
-
-
     var ui = {
 
         //lets store any events to be triggered as constants here to aid intellisense and avoid
@@ -1922,6 +1916,10 @@
                 document.location = document.location.pathname;
             },
             updateTimeout);
+        },
+        showReloadMessageNotification: function () {
+            $reloadMessageNotification.appendTo($chatArea);
+            $reloadMessageNotification.show();
         },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
