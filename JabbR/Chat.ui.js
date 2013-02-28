@@ -48,7 +48,7 @@
         $richness = null,
         lastPrivate = null,
         roomCache = {},
-        $reloadMessage = null;
+        $reloadMessageNotification = null;
 
     function getRoomId(roomName) {
         return window.escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -785,6 +785,16 @@
         }, cycleTimeInMilliseconds);
     }
 
+    function showReloadMessageNotification(roomName) {
+        var room = getRoomElements(roomName);
+        if (!room.isLobby()) {
+            $reloadMessageNotification.data('room', { name: roomName });
+            $reloadMessageNotification.appendTo(room.messages);
+            $reloadMessageNotification.show();
+        }
+    }
+
+
     var ui = {
 
         //lets store any events to be triggered as constants here to aid intellisense and avoid
@@ -852,7 +862,7 @@
                 commandhelp: $('#command-help-template'),
                 multiline: $('#multiline-content-template')
             };
-            $reloadMessage = $('#reloadMessage');
+            $reloadMessageNotification = $('#reloadMessageNotification');
 
             if (toast.canToast()) {
                 $toast.show();
@@ -907,6 +917,12 @@
                 else {
                     ui.expandNotifications($notification);
                 }
+            });
+
+            $document.on('click', '#reloadMessageNotification a', function () {
+                var roomName = $reloadMessageNotification.data('room').name;
+
+                $ui.trigger(ui.events.reloadMessages, [roomName]);
             });
 
             // handle tab cycling - we skip the lobby when cycling
@@ -1913,12 +1929,8 @@
             },
             updateTimeout);
         },
-        showReloadMessage: function (roomName) {
-            var room = getRoomElements(roomName);
-            if (!room.isLobby()) {
-                $reloadMessage.appendTo(room.messages);
-                $reloadMessage.show();
-            }
+        reloadMessages: function(roomName) {
+            //reload the messages for the room specified
         },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
