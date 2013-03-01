@@ -47,7 +47,8 @@
         updateTimeout = 15000,
         $richness = null,
         lastPrivate = null,
-        roomCache = {};
+        roomCache = {},
+        $reloadMessageNotification = null;
 
     function getRoomId(roomName) {
         return window.escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -800,7 +801,8 @@
             focusit: 'jabbr.ui.focusit',
             blurit: 'jabbr.ui.blurit',
             preferencesChanged: 'jabbr.ui.preferencesChanged',
-            loggedOut: 'jabbr.ui.loggedOut'
+            loggedOut: 'jabbr.ui.loggedOut',
+            reloadMessages: 'jabbr.ui.reloadMessages'
         },
 
         help: {
@@ -850,6 +852,7 @@
                 commandhelp: $('#command-help-template'),
                 multiline: $('#multiline-content-template')
             };
+            $reloadMessageNotification = $('#reloadMessageNotification');
 
             if (toast.canToast()) {
                 $toast.show();
@@ -904,6 +907,10 @@
                 else {
                     ui.expandNotifications($notification);
                 }
+            });
+
+            $document.on('click', '#reloadMessageNotification a', function () {
+                $ui.trigger(ui.events.reloadMessages);
             });
 
             // handle tab cycling - we skip the lobby when cycling
@@ -1909,6 +1916,10 @@
                 document.location = document.location.pathname;
             },
             updateTimeout);
+        },
+        showReloadMessageNotification: function () {
+            $reloadMessageNotification.appendTo($chatArea);
+            $reloadMessageNotification.show();
         },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),

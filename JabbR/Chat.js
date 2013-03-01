@@ -909,6 +909,10 @@
             });
     });
 
+    $(ui).bind(ui.events.reloadMessages, function () {
+
+    });
+
     $(ui).bind(ui.events.preferencesChanged, function (ev) {
         updateCookie();
     });

@@ -112,6 +112,20 @@ form#send-message {
     font-size: 20px;
   }
 
+.reload-message {
+    display: none;
+    text-align: center;
+    margin-left: 0px;
+    margin-top: 0px;
+    padding-left: 0px;
+    left: 30px;
+    right: 250px;
+    position: fixed;
+    top: 150px;
+    z-index: 1000;
+    opacity: 0.85;
+}
+
 .messages
 {
   border: 1px solid #ccc;
