@@ -2293,7 +2293,10 @@ li.clearfix
     background-color: #00103f;
     color: #f1f1f1;
     height: 48px;
+    overflow: hidden;
     padding: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     border-radius: 5px 5px 0 0;
     -moz-border-radius: 5px 5px 0 0;
     -webkit-border-radius: 5px 5px 0 0;
@@ -2301,7 +2304,9 @@ li.clearfix
 
   .user-details img
   {
+      height: 48px;
       margin-right: 10px;
+      width: 48px;
       border-radius: 5px;
       -moz-border-radius: 5px;
       -webkit-border-radius: 5px;
