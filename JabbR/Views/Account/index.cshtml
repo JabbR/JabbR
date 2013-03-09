@@ -31,10 +31,8 @@
                 @Html.AlertMessages()
                 <div class="span4 user-details-sidenav">
                     <div class="user-details">
-                        <img class="gravatar" src="@gravatar" style="float: left;" />
-                        <div class="details">
-                            <span class="name">@userModel.Name</span>
-                        </div>
+                        <img class="gravatar" src="@gravatar" />
+                        <span class="name">@userModel.Name</span>
                     </div>
                     <ul id="accountmenu" class="nav nav-list">
                         <li class="active"><a href="#profile" data-toggle="tab"><i class="icon-chevron-right"></i>Profile</a></li>
