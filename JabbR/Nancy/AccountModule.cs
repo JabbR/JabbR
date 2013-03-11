@@ -323,7 +323,7 @@ namespace JabbR.Nancy
 
         private dynamic GetProfileView(IAuthenticationService authService, ChatUser user)
         {
-            return View["index", new ProfilePageViewModel(user, authService.Providers)];
+            return View["index", new ProfilePageViewModel(user, authService.GetProviders())];
         }
 
         private LoginViewModel GetLoginViewModel(IApplicationSettings applicationSettings, 
@@ -338,7 +338,7 @@ namespace JabbR.Nancy
             }
 
             var viewModel = new LoginViewModel(applicationSettings.AuthenticationMode,
-                                               authService.Providers,
+                                               authService.GetProviders(),
                                                user != null ? user.Identities : null);
             return viewModel;
         }
