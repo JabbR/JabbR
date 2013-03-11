@@ -6,7 +6,6 @@ using JabbR.Services;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Moq;
-using Xunit;
 
 namespace JabbR.Test
 {
