@@ -48,7 +48,8 @@
         $richness = null,
         lastPrivate = null,
         roomCache = {},
-        $reloadMessageNotification = null;
+        $reloadMessageNotification = null,
+        $connectionSlowNotification = null;
 
     function getRoomId(roomName) {
         return window.escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -853,7 +854,8 @@
                 multiline: $('#multiline-content-template')
             };
             $reloadMessageNotification = $('#reloadMessageNotification');
-
+            $connectionSlowNotification = $('#connectionSlowNotification');
+            
             if (toast.canToast()) {
                 $toast.show();
             }
@@ -1920,6 +1922,12 @@
         showReloadMessageNotification: function () {
             $reloadMessageNotification.appendTo($chatArea);
             $reloadMessageNotification.show();
+        },
+        showConnectionSlowNotification: function () {
+            $connectionSlowNotification.show();
+        },
+        hideConnectionSlowNotification: function () {
+            $connectionSlowNotification.hide();
         },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),

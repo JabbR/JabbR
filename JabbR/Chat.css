@@ -2775,3 +2775,11 @@ h3.userlist-header
     margin: 0;
     line-height: 13px;
 }
+
+#connectionSlowNotification {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 50px;
+    right: 20px;
+}

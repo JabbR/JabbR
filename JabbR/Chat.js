@@ -71,6 +71,7 @@
 
     function populateRoom(room) {
         var d = $.Deferred();
+        
         // Populate the list of users rooms and messages 
         chat.server.getRoomInfo(room)
                 .done(function (roomInfo) {
@@ -998,6 +999,18 @@
                     clearTimeout(pendingMessages[id]);
                     ui.failMessage(id);
                     delete pendingMessages[id];
+                }
+            });
+
+            connection.hub.stateChanged(function (change) {
+                connection.hub.log('Connection state changed. New state is ' + change.newState);
+
+                if (change.newState === $.signalR.connectionState.connected) {
+                    ui.hideConnectionSlowNotification();
+                }
+                
+                if (change.newState === $.signalR.connectionState.reconnecting) {
+                    ui.showConnectionSlowNotification();
                 }
             });
         }
