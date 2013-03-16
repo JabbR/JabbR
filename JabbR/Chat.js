@@ -21,6 +21,14 @@
         messageSendingDelay = 1500,
         pendingMessages = {};
 
+    function failPendingMessages() {
+        for (var id in pendingMessages) {
+            clearTimeout(pendingMessages[id]);
+            ui.failMessage(id);
+            delete pendingMessages[id];
+        }
+    }
+
     function isSelf(user) {
         return chat.state.name === user.Name;
     }
@@ -793,8 +801,13 @@
             // If there's a significant delay in getting the message sent
             // mark it as pending
             messageCompleteTimeout = window.setTimeout(function () {
-                // If after a second
-                ui.markMessagePending(id);
+                if ($.connection.hub.state === $.connection.connectionState.reconnecting) {
+                    ui.failMessage(id);
+                }
+                else {
+                    // If after a second
+                    ui.markMessagePending(id);
+                }
             },
             messageSendingDelay);
 
@@ -985,6 +998,8 @@
 
             connection.hub.stateChanged(function (change) {
                 if (change.newState === $.connection.connectionState.reconnecting) {
+                    failPendingMessages();
+
                     ui.showStatus(0);
                 }
                 else if (change.newState === $.connection.connectionState.connected) {
@@ -994,6 +1009,8 @@
 
             connection.hub.disconnected(function () {
                 connection.hub.log('Dropped the connection from the server. Restarting in 5 seconds.');
+
+                failPendingMessages();
 
                 ui.showStatus(0);
 
@@ -1005,11 +1022,7 @@
 
             connection.hub.error(function (err) {
                 // Make all pening messages failed if there's an error
-                for (var id in pendingMessages) {
-                    clearTimeout(pendingMessages[id]);
-                    ui.failMessage(id);
-                    delete pendingMessages[id];
-                }
+                failPendingMessages();
             });
         }
 
