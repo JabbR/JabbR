@@ -1923,7 +1923,6 @@
         },
         showStatus: function (status) {
             // Change the status indicator here
-            console.log('Status = ' + status);
         },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
