@@ -1945,7 +1945,6 @@
                     $connectionSlowNotification.hide();
                     $connectionLostNotification.show();
                     break;
-                default:
             }
         },
         changeNote: function (userViewModel, roomName) {
