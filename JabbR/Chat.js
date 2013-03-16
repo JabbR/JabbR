@@ -1025,18 +1025,6 @@
                 // Make all pending messages failed if there's an error
                 failPendingMessages();
             });
-
-            connection.hub.stateChanged(function (change) {
-                connection.hub.log('Connection state changed. New state is ' + change.newState);
-
-                if (change.newState === $.signalR.connectionState.connected) {
-                    ui.hideConnectionSlowNotification();
-                }
-                
-                if (change.newState === $.signalR.connectionState.reconnecting) {
-                    ui.showConnectionSlowNotification();
-                }
-            });
         }
 
         initConnection();
