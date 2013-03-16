@@ -983,8 +983,19 @@
                     });
             });
 
+            connection.hub.stateChanged(function (change) {
+                if (change.newState === $.connection.connectionState.reconnecting) {
+                    ui.showStatus(0);
+                }
+                else if (change.newState === $.connection.connectionState.connected) {
+                    ui.showStatus(1);
+                }
+            });
+
             connection.hub.disconnected(function () {
                 connection.hub.log('Dropped the connection from the server. Restarting in 5 seconds.');
+
+                ui.showStatus(0);
 
                 // Restart the connection
                 setTimeout(function () {

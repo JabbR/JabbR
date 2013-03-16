@@ -530,7 +530,7 @@
                 if ($child.length > 0) {
                     messageId = $child.attr('id')
                                       .substr(2); // Remove the "m-"
-                    $ui.trigger(ui.events.scrollRoomTop, [{ name: roomName, messageId: messageId}]);
+                    $ui.trigger(ui.events.scrollRoomTop, [{ name: roomName, messageId: messageId }]);
                 }
             }
         };
@@ -766,7 +766,7 @@
                 'Use ? or type /? to display the FAQ and list of commands',
                 'Type : then press TAB to auto-complete emoji icons',
                 'You can create your own private rooms. Use ? or type /? for more info'
-            ];
+    ];
 
     var cycleTimeInMilliseconds = 60 * 1000; // 1 minute.
     var messageIndex = 0;
@@ -1921,6 +1921,10 @@
             $reloadMessageNotification.appendTo($chatArea);
             $reloadMessageNotification.show();
         },
+        showStatus: function (status) {
+            // Change the status indicator here
+            console.log('Status = ' + status);
+        },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
                 $user = room.getUser(userViewModel.name);
@@ -2008,7 +2012,7 @@
         },
         processContent: function (content) {
             var hasNewline = content.indexOf('\n') != -1;
-            
+
             if (hasNewline) {
                 // Multiline detection
                 return templates.multiline.tmpl({ content: content }).html();
