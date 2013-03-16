@@ -79,6 +79,7 @@
 
     function populateRoom(room) {
         var d = $.Deferred();
+        
         // Populate the list of users rooms and messages 
         chat.server.getRoomInfo(room)
                 .done(function (roomInfo) {
@@ -1023,6 +1024,18 @@
             connection.hub.error(function (err) {
                 // Make all pending messages failed if there's an error
                 failPendingMessages();
+            });
+
+            connection.hub.stateChanged(function (change) {
+                connection.hub.log('Connection state changed. New state is ' + change.newState);
+
+                if (change.newState === $.signalR.connectionState.connected) {
+                    ui.hideConnectionSlowNotification();
+                }
+                
+                if (change.newState === $.signalR.connectionState.reconnecting) {
+                    ui.showConnectionSlowNotification();
+                }
             });
         }
 
