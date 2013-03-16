@@ -48,7 +48,10 @@
         $richness = null,
         lastPrivate = null,
         roomCache = {},
-        $reloadMessageNotification = null;
+        $reloadMessageNotification = null,
+        $connectionStatus = null,
+        $connectionSlowNotification = null,
+        $connectionLostNotification = null;
 
     function getRoomId(roomName) {
         return window.escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -853,6 +856,9 @@
                 multiline: $('#multiline-content-template')
             };
             $reloadMessageNotification = $('#reloadMessageNotification');
+            $connectionStatus = $('#connectionStatus');
+            $connectionSlowNotification = $('#connectionSlowNotification');
+            $connectionLostNotification = $('#connectionLostNotification');
 
             if (toast.canToast()) {
                 $toast.show();
@@ -1923,6 +1929,23 @@
         },
         showStatus: function (status) {
             // Change the status indicator here
+            switch (status) {
+                case 0: // Connected
+                    $connectionStatus.show();
+                    $connectionLostNotification.hide();
+                    $connectionSlowNotification.hide();
+                    break;
+                case 1: // Reconnecting
+                    $connectionStatus.hide();
+                    $connectionLostNotification.hide();
+                    $connectionSlowNotification.show();
+                    break;
+                case 2: // Disconnected
+                    $connectionStatus.hide();
+                    $connectionSlowNotification.hide();
+                    $connectionLostNotification.show();
+                    break;
+            }
         },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
