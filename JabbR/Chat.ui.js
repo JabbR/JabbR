@@ -51,7 +51,8 @@
         $reloadMessageNotification = null,
         $connectionStatus = null,
         $connectionSlowNotification = null,
-        $connectionLostNotification = null;
+        $connectionLostNotification = null,
+        connectionState = -1;
 
     function getRoomId(roomName) {
         return window.escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -1929,22 +1930,39 @@
         },
         showStatus: function (status) {
             // Change the status indicator here
-            switch (status) {
-                case 0: // Connected
-                    $connectionStatus.show();
-                    $connectionLostNotification.hide();
-                    $connectionSlowNotification.hide();
-                    break;
-                case 1: // Reconnecting
-                    $connectionStatus.hide();
-                    $connectionLostNotification.hide();
-                    $connectionSlowNotification.show();
-                    break;
-                case 2: // Disconnected
-                    $connectionStatus.hide();
-                    $connectionSlowNotification.hide();
-                    $connectionLostNotification.show();
-                    break;
+            if (connectionState !== status) {
+                switch (status) {
+                    case 0: // Connected
+                        connectionState = status;
+                        $connectionStatus.show();
+                        $connectionStatus.popover('show');
+                        setTimeout(function() {
+                            $connectionStatus.popover('hide');
+                        }, 2000);
+                        $connectionLostNotification.hide();
+                        $connectionSlowNotification.hide();
+                        break;
+                    case 1: // Reconnecting
+                        connectionState = status;
+                        $connectionStatus.hide();
+                        $connectionLostNotification.hide();
+                        $connectionSlowNotification.show();
+                        $connectionSlowNotification.popover('show');
+                        setTimeout(function() {
+                            $connectionSlowNotification.popover('hide');
+                        }, 2000);
+                        break;
+                    case 2: // Disconnected
+                        connectionState = status;
+                        $connectionStatus.hide();
+                        $connectionSlowNotification.hide();
+                        $connectionLostNotification.show();
+                        $connectionLostNotification.popover('show');
+                        setTimeout(function() {
+                            $connectionLostNotification.popover('hide');
+                        }, 2000);
+                        break;
+                    }
             }
         },
         changeNote: function (userViewModel, roomName) {

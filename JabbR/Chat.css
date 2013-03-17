@@ -2777,8 +2777,12 @@ h3.userlist-header
 }
 
 .connection-status {
-    position: fixed;
+    position: absolute;
     z-index: 1000;
     top: 50px;
     right: 20px;
+}
+
+.popover .popover-title {
+    display: none;
 }
