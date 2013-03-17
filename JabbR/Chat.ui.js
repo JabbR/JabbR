@@ -1950,7 +1950,7 @@
                         $connectionSlowNotification.popover('show');
                         setTimeout(function() {
                             $connectionSlowNotification.popover('hide');
-                        }, 2000);
+                        }, 5000);
                         break;
                     case 2: // Disconnected
                         connectionState = status;
@@ -1960,7 +1960,7 @@
                         $connectionLostNotification.popover('show');
                         setTimeout(function() {
                             $connectionLostNotification.popover('hide');
-                        }, 2000);
+                        }, 5000);
                         break;
                     }
             }
