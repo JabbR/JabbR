@@ -52,7 +52,8 @@
         $connectionStatus = null,
         $connectionSlowNotification = null,
         $connectionLostNotification = null,
-        connectionState = -1;
+        connectionState = -1,
+        popoverOptions = {};
 
     function getRoomId(roomName) {
         return window.escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -1251,6 +1252,13 @@
 
             // Start cycling the messages once the document has finished loading.
             cycleMessages();
+            
+            popoverOptions = {
+                html: true,
+                trigger: 'manual',
+                template: $('#connection-state-changed-popover')
+            };
+
         },
         run: function () {
             $.history.init(function (hash) {
@@ -1928,16 +1936,30 @@
             $reloadMessageNotification.appendTo($chatArea);
             $reloadMessageNotification.show();
         },
-        showStatus: function (status) {
+        showStatus: function (status, transport) {
             // Change the status indicator here
             if (connectionState !== status) {
                 switch (status) {
                     case 0: // Connected
                         connectionState = status;
                         $connectionStatus.show();
+                        popoverOptions.content = function() {
+                            return '<i class="icon-ok-sign"></i> You\'re connected.';
+                        };
+                        $connectionStatus.popover(popoverOptions);
                         $connectionStatus.popover('show');
                         setTimeout(function() {
-                            $connectionStatus.popover('hide');
+                            $connectionStatus.popover('destroy');
+                            popoverOptions.trigger = 'hover';
+                            popoverOptions.delay = { show: 0, hide: 500 };
+                            popoverOptions.template = $('#connection-status-popover'),
+                            popoverOptions.title = function () {
+                                return "<strong>JabbR Connection Status</strong>";
+                            };
+                            popoverOptions.content = function() {
+                                return '<p>Status: Connected</p><p>Transport: ' + transport;
+                            };
+                            $connectionStatus.popover(popoverOptions);
                         }, 2000);
                         $connectionLostNotification.hide();
                         $connectionSlowNotification.hide();
@@ -1947,6 +1969,10 @@
                         $connectionStatus.hide();
                         $connectionLostNotification.hide();
                         $connectionSlowNotification.show();
+                        popoverOptions.content = function () {
+                            return '<i class="icon-question-sign"></i> The connection to JabbR has been temporarily lost, trying to reconnect.';
+                        };
+                        $connectionSlowNotification.popover(popoverOptions);
                         $connectionSlowNotification.popover('show');
                         setTimeout(function() {
                             $connectionSlowNotification.popover('hide');
@@ -1957,6 +1983,10 @@
                         $connectionStatus.hide();
                         $connectionSlowNotification.hide();
                         $connectionLostNotification.show();
+                        popoverOptions.content = function() {
+                            return '<i class="icon-exclamation-sign"></i> The connection to JabbR has been lost, trying to reconnect.';
+                        };
+                        $connectionSlowNotification.popover(popoverOptions);
                         $connectionLostNotification.popover('show');
                         setTimeout(function() {
                             $connectionLostNotification.popover('hide');

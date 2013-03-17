@@ -2,6 +2,7 @@
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 /// <reference path="Chat.ui.js" />
+/// <reference path="Scripts/jquery.network.mock.js" />
 
 (function ($, connection, window, ui, utility) {
     "use strict";
@@ -976,6 +977,11 @@
 
                     // populate the lobby rooms
                     populateLobbyRooms();
+
+                    //$.network.disconnect();
+                    //setTimeout(function() {
+                    //    $.network.connect();
+                    //}, 60000);
                 });
             });
 
@@ -1001,10 +1007,10 @@
                 if (change.newState === $.connection.connectionState.reconnecting) {
                     failPendingMessages();
 
-                    ui.showStatus(1);
+                    ui.showStatus(1, $.connection.hub.transport.name);
                 }
                 else if (change.newState === $.connection.connectionState.connected) {
-                    ui.showStatus(0);
+                    ui.showStatus(0, $.connection.hub.transport.name);
                 }
             });
 
@@ -1013,7 +1019,7 @@
 
                 failPendingMessages();
 
-                ui.showStatus(2);
+                ui.showStatus(2, $.connection.hub.transport.name);
 
                 // Restart the connection
                 setTimeout(function () {

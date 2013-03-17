@@ -328,20 +328,22 @@
       <div id="reloadMessageNotification" class="reload-message alert alert-info">
         <button type="button" class="close" data-dismiss="alert">&times;</button><a href="#">Load missing messages</a>
       </div>
-        <div id="connectionStatus" class="connection-status" data-toggle="popover" data-placement="left" data-content="You're connected.">
+        <div id="connectionStatus" class="connection-status" data-toggle="popover" data-placement="left">
             <i class="icon-signal icon-white"></i>
         </div>
-        <div id="connectionSlowNotification" class="connection-status" style="display: none;" data-toggle="popover" data-placement="left" data-content="The connection to JabbR has been temporarily lost, trying to reconnect.">
+        <div id="connectionSlowNotification" class="connection-status" style="display: none;" data-toggle="popover" data-placement="left">
             <i class="icon-signal icon-white"></i><i class="icon-question-sign icon-white"></i>
         </div>
-        <div id="connectionLostNotification" class="connection-status" style="display: none;" data-toggle="popover" data-placement="left" data-content="The connection to JabbR has been lost, trying to reconnect.">
+        <div id="connectionLostNotification" class="connection-status" style="display: none;" data-toggle="popover" data-placement="left">
             <i class="icon-signal icon-white"></i><i class="icon-exclamation-sign icon-white"></i>
         </div>
+        <div id="connection-status-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title"></h3><div class="popover-content"><p></p></div></div></div>
+        <div id="connection-state-changed-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title" style="display: none;"></h3><div class="popover-content"><p></p></div></div></div>
     </section>
   </section> 
 
      @{
-         WriteLiteral(Bundle.JavaScript()
+         WriteLiteral(Bundle.JavaScript().ForceDebug()
             .Add("~/Scripts/jquery-1.9.0.min.js")
             .Add("~/Scripts/jquery-migrate-1.0.0.min.js")
             .Add("~/Scripts/json2.min.js")
@@ -349,6 +351,7 @@
             .Add("~/Scripts/jquery.KeyTips.js")
             .Add("~/Scripts/jquery-ui-1.10.0.min.js")
             .Add("~/Scripts/jquery.signalR-1.1.0-beta1-130316.min.js")
+            .Add("~/Scripts/jquery.network.mock.js")
             .Render("~/Scripts/JabbR1_#.js"));
     }
   <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
