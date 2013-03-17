@@ -2,7 +2,6 @@
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 /// <reference path="Chat.ui.js" />
-/// <reference path="Scripts/jquery.network.mock.js" />
 
 (function ($, connection, window, ui, utility) {
     "use strict";
@@ -977,11 +976,6 @@
 
                     // populate the lobby rooms
                     populateLobbyRooms();
-
-                    //$.network.disconnect();
-                    //setTimeout(function() {
-                    //    $.network.connect();
-                    //}, 60000);
                 });
             });
 

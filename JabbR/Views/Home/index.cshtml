@@ -343,7 +343,7 @@
   </section> 
 
      @{
-         WriteLiteral(Bundle.JavaScript().ForceDebug()
+         WriteLiteral(Bundle.JavaScript()
             .Add("~/Scripts/jquery-1.9.0.min.js")
             .Add("~/Scripts/jquery-migrate-1.0.0.min.js")
             .Add("~/Scripts/json2.min.js")
@@ -351,7 +351,6 @@
             .Add("~/Scripts/jquery.KeyTips.js")
             .Add("~/Scripts/jquery-ui-1.10.0.min.js")
             .Add("~/Scripts/jquery.signalR-1.1.0-beta1-130316.min.js")
-            .Add("~/Scripts/jquery.network.mock.js")
             .Render("~/Scripts/JabbR1_#.js"));
     }
   <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
