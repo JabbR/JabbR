@@ -1981,10 +1981,12 @@
                         $connectionLostNotification.hide();
                         $connectionSlowNotification.hide();
                         $connectionStatus.show();
+                        $connectionStatus.popover('destroy');
                         $connectionStatus.popover(getConnectionStateChangedPopoverOptions('You\'re connected.'));
                         $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-ok-sign');
                         $connectionStatus.popover('show');
                         setTimeout(function () {
+                            $connectionStatus.popover('destroy');
                             $connectionStatus.popover(getConnectionInfoPopoverOptions(transport));
                         }, 2000);
                         break;
