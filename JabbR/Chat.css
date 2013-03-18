@@ -2778,11 +2778,24 @@ h3.userlist-header
 
 .connection-status {
     position: absolute;
-    z-index: 1000;
     top: 50px;
     right: 20px;
 }
 
-.popover .popover-title {
-    display: none;
+#connection-info-popover .popover-title-icon {
+    float: left;
+    margin: 10px 5px;
+}
+
+#connection-info-popover .popover-title {
+    font-weight: bold;
+}
+
+#connection-state-changed-popover #popover-content-icon {
+    float: left;
+    margin: 12px 5px;
+}
+
+#connection-state-changed-popover .popover-content {
+    margin: 0 15px;
 }

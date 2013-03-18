@@ -79,7 +79,7 @@
 
     function populateRoom(room) {
         var d = $.Deferred();
-        
+
         // Populate the list of users rooms and messages 
         chat.server.getRoomInfo(room)
                 .done(function (roomInfo) {
@@ -1001,10 +1001,10 @@
                 if (change.newState === $.connection.connectionState.reconnecting) {
                     failPendingMessages();
 
-                    ui.showStatus(1);
+                    ui.showStatus(1, '');
                 }
                 else if (change.newState === $.connection.connectionState.connected) {
-                    ui.showStatus(0);
+                    ui.showStatus(0, $.connection.hub.transport.name);
                 }
             });
 
@@ -1013,7 +1013,7 @@
 
                 failPendingMessages();
 
-                ui.showStatus(2);
+                ui.showStatus(2, '');
 
                 // Restart the connection
                 setTimeout(function () {
