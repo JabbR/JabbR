@@ -316,7 +316,7 @@ form#send-message {
   margin: 30px 0px 0px 5px;
   z-index: 1000;
   height: 30px;
-  left: 25px;
+  left: 10px;
   position: relative;
   width: 90%;
 }
