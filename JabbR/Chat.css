@@ -87,11 +87,12 @@ form#send-message {
 #chat-area
 {
   position: absolute;
-  top: 95px;
+  top: 45px;
   bottom: 10px;
   left: 30px;
   right: 10px;
   min-height: 450px;
+  z-index: -1; 
 }
 
 #heading
@@ -312,9 +313,12 @@ form#send-message {
 #tabs
 {
   padding: 0;
-  margin: 0px 0px 0px 5px;
+  margin: 30px 0px 0px 5px;
   z-index: 1000;
   height: 30px;
+  left: 25px;
+  position: relative;
+  width: 90%;
 }
 
   #tabs li
@@ -2784,8 +2788,8 @@ h3.userlist-header
 
 .connection-status {
     position: absolute;
-    top: 50px;
-    right: 20px;
+    top: 20px;
+    right: 80px;
 }
 
 #connection-info-popover .popover-title-icon {
