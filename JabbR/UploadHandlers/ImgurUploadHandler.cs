@@ -10,12 +10,12 @@ using Newtonsoft.Json.Linq;
 
 namespace JabbR.UploadHandlers
 {
-    public class ImagurUploadHandler : IUploadHandler
+    public class ImgurUploadHandler : IUploadHandler
     {
         private readonly IApplicationSettings _settings;
 
         [ImportingConstructor]
-        public ImagurUploadHandler(IApplicationSettings settings)
+        public ImgurUploadHandler(IApplicationSettings settings)
         {
             _settings = settings;
         }
@@ -33,7 +33,6 @@ namespace JabbR.UploadHandlers
             }
 
             var client = new HttpClient();
-
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Client-ID", _settings.ImagurClientId);
 
             var content = new StreamContent(stream);

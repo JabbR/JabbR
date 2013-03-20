@@ -972,7 +972,7 @@
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="Services\ChatNotificationService.cs" />
     <Compile Include="Services\UploadCallbackHandler.cs" />
-    <Compile Include="UploadHandlers\ImagurUploadHandler.cs" />
+    <Compile Include="UploadHandlers\ImgurUploadHandler.cs" />
     <Compile Include="UploadHandlers\UploadProcessor.cs" />
     <Compile Include="ViewModels\LobbyRoomViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
