@@ -42,13 +42,14 @@ namespace JabbR.Nancy
                 string connectionId = Request.Form.connectionId;
                 HttpFile file = Request.Files.First();
 
-                uploadHandler.Upload(Context.CurrentUser.UserName, 
+                // This blocks since we're not using nancy's async support yet
+                uploadHandler.Upload(Context.CurrentUser.UserName,
                                      connectionId,
-                                     roomName, 
+                                     roomName,
                                      clientMessageId,
-                                     file.Name, 
+                                     file.Name,
                                      file.ContentType,
-                                     file.Value);
+                                     file.Value).Wait();
 
                 return 200;
             };

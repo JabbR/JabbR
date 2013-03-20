@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
 using JabbR.UploadHandlers;
 using Microsoft.AspNet.SignalR;
@@ -24,7 +25,7 @@ namespace JabbR.Services
             _service = service;
         }
 
-        public async void Upload(string userId, string connectionId, string roomName, string clientMessageId, string file, string contentType, Stream stream)
+        public async Task Upload(string userId, string connectionId, string roomName, string clientMessageId, string file, string contentType, Stream stream)
         {
             string contentUrl = await _processor.HandleUpload(file, contentType, stream);
 
