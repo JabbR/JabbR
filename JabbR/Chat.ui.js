@@ -702,6 +702,8 @@
                 $fileMessageId.val(messageId);
 
                 $uploadForm.submit();
+
+                $hiddenFile.val('');
             }
         };
 
