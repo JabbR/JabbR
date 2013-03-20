@@ -960,7 +960,8 @@
 
     $(function () {
         var stateCookie = $.cookie('jabbr.state'),
-            state = stateCookie ? JSON.parse(stateCookie) : {};
+            state = stateCookie ? JSON.parse(stateCookie) : {},
+            initial = true;
 
         // Initialize the ui, passing the user preferences
         ui.initialize(state.preferences);
@@ -1027,7 +1028,11 @@
                     ui.showStatus(1, '');
                 }
                 else if (change.newState === $.connection.connectionState.connected) {
-                    ui.showStatus(0, $.connection.hub.transport.name);
+                    if (!initial) {
+                        ui.showStatus(0, $.connection.hub.transport.name);                        
+                    }
+
+                    initial = false;
                 }
             });
 
