@@ -24,12 +24,13 @@ namespace JabbR.Services
             _service = service;
         }
 
-        public async void Upload(string userId, string roomName, string clientMessageId, string file, string contentType, Stream stream)
+        public async void Upload(string userId, string connectionId, string roomName, string clientMessageId, string file, string contentType, Stream stream)
         {
             string contentUrl = await _processor.HandleUpload(file, contentType, stream);
 
             if (contentUrl == null)
             {
+                _hubContext.Clients.Client(connectionId).postMessage("Failed to upload " + Path.GetFileName(file) + ".", "error", roomName);
                 return;
             }
 

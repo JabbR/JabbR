@@ -62,6 +62,7 @@
         $uploadForm = null,
         $fileRoom = null,
         $fileMessageId = null,
+        $fileConnectionId = null,
         connectionInfoStatus = null,
         connectionInfoTransport = null;
 
@@ -687,7 +688,15 @@
 
         var arg = {
             message: msg,
-            submitFile: function (messageId, room) {
+            getFileName: function () {
+                var slash = file.lastIndexOf('\\'),
+                    name = file.substring(slash + 1);
+
+                return name;
+            },
+            submitFile: function (connectionId, messageId, room) {
+                $fileConnectionId.val(connectionId);
+
                 $fileRoom.val(room);
 
                 $fileMessageId.val(messageId);
@@ -910,6 +919,7 @@
             $uploadForm = $('#upload');
             $fileRoom = $('#file-room');
             $fileMessageId = $('#file-message-id');
+            $fileConnectionId = $('#file-connection-id');
             $connectionStatus = $('#connectionStatus');
             $connectionSlowNotification = $('#connectionSlowNotification');
             $connectionLostNotification = $('#connectionLostNotification');

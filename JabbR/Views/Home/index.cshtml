@@ -242,6 +242,7 @@
       </form>
     </div>
     <form id="upload" action="@Url.Content("~/upload")" method="post" enctype="multipart/form-data" target="upload-frame">
+        <input type="hidden" id="file-connection-id" name="connectionId" />
         <input type="hidden" id="file-message-id" name="messageId" />
         <input type="hidden" id="file-room" name="room" />
         <input type="file" id="hidden-file" name="data" style="display:none;">

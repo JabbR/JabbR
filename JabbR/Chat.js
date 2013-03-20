@@ -449,6 +449,10 @@
         ui.addMessage(msg, 'notification', room);
     };
 
+    chat.client.postMessage = function (msg, type, room) {
+        ui.addMessage(msg, type, room);
+    };
+
     // Called when you created a new user
     chat.client.userCreated = function () {
         ui.setUserName(this.state.name);
@@ -798,11 +802,13 @@
                 return false;
             }
 
+            var uploadMessage = 'Uploading ' + arg.getFileName() + '...';
+
             // Added the message to the ui first
             var viewModel = {
                 name: chat.state.name,
                 hash: chat.state.hash,
-                message: ui.processContent(clientMessage.content),
+                message: ui.processContent(clientMessage.content || uploadMessage),
                 id: clientMessage.id,
                 date: new Date(),
                 highlight: ''
@@ -810,9 +816,9 @@
 
             ui.addChatMessage(viewModel, clientMessage.room);
 
-            arg.submitFile(id, clientMessage.room);
+            arg.submitFile(connection.hub.id, id, clientMessage.room);
 
-            if (!clientMessage.message) {
+            if (!clientMessage.content) {
                 return;
             }
 
