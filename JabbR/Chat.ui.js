@@ -363,14 +363,8 @@
                 return;
             }
 
-            if (status === true) {
-                if (!this.appearsInList($user, this.activeUsers)) {
-                    this.addUserToList($user, this.activeUsers);
-                }
-            } else {
-                if (!this.appearsInList($user, this.idleUsers)) {
-                    this.addUserToList($user, this.idleUsers);
-                }
+            if (!this.appearsInList($user, this.activeUsers)) {
+                this.addUserToList($user, this.activeUsers);
             }
         };
 
@@ -385,6 +379,10 @@
                 var compA = $(a).data('name').toString().toUpperCase();
                 var compB = $(b).data('name').toString().toUpperCase();
                 return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
+            }).sort(function (a, b) {
+                var compA = $(a).data('active');
+                var compB = $(b).data('active');
+                return (compA > compB) ? -1 : (compA < compB) ? 1 : 0;
             });
             $.each(listItems, function (index, item) { listToSort.append(item); });
         };
@@ -496,11 +494,7 @@
             templates.userlist.tmpl({ listname: '- Room Owners', id: 'userlist-' + roomId + '-owners' })
                 .addClass('owners')
                 .appendTo(userContainer);
-            templates.userlist.tmpl({ listname: '- Online', id: 'userlist-' + roomId + '-active' })
-                .addClass('active')
-                .appendTo(userContainer);
-            templates.userlist.tmpl({ listname: '- Away', id: 'userlist-' + roomId + '-idle' })
-                .addClass('idle')
+            templates.userlist.tmpl({ listname: '- Users', id: 'userlist-' + roomId + '-active' })
                 .appendTo(userContainer);
             userContainer.find('h3').click(function () {
                 if ($.trim($(this).text())[0] === '-') {
@@ -1522,13 +1516,9 @@
             }
 
             if (userViewModel.active === true) {
-                $user.fadeTo(fadeSpeed, 1, function () {
-                    $user.removeClass('idle');
-                });
+                $user.removeClass('idle');
             } else {
-                $user.fadeTo(fadeSpeed, 0.5, function () {
-                    $user.addClass('idle');
-                });
+                $user.addClass('idle');
             }
 
             updateNote(userViewModel, $user);
