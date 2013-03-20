@@ -347,16 +347,6 @@
         ui.watchMessageScroll([id], room);
     };
 
-    chat.client.appendMessage = function (id, content, room) {
-        scrollIfNecessary(function () {
-            ui.appendChatMessageContent(id, content, room);
-        }, room);
-
-        updateUnread(room, false /* isMentioned: this is outside normal messages and user shouldn't be mentioned */);
-
-        ui.watchMessageScroll([id], room);
-    };
-
     chat.client.addMessage = function (message, room) {
         var viewModel = getMessageViewModel(message);
 

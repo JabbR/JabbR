@@ -688,13 +688,22 @@
 
         var arg = {
             message: msg,
+            file: file,
             getFileName: function () {
+                if (!this.file) {
+                    return;
+                }
+
                 var slash = file.lastIndexOf('\\'),
                     name = file.substring(slash + 1);
 
                 return name;
             },
             submitFile: function (connectionId, messageId, room) {
+                if (!this.file) {
+                    return;
+                }
+
                 $fileConnectionId.val(connectionId);
 
                 $fileRoom.val(room);
@@ -1809,11 +1818,6 @@
         },
         messageExists: function (id) {
             return $('#m-' + id).length > 0;
-        },
-        appendChatMessageContent: function (id, content, roomName) {
-            var $message = $('#m-' + id);
-
-            $message.find('.middle').append(ui.processContent(content));
         },
         addChatMessageContent: function (id, content, roomName) {
             var $message = $('#m-' + id);

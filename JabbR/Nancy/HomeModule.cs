@@ -46,7 +46,6 @@ namespace JabbR.Nancy
                 uploadHandler.Upload(Context.CurrentUser.UserName,
                                      connectionId,
                                      roomName,
-                                     clientMessageId,
                                      file.Name,
                                      file.ContentType,
                                      file.Value).Wait();

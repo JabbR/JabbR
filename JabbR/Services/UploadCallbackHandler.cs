@@ -1,7 +1,9 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
+using JabbR.Models;
 using JabbR.UploadHandlers;
+using JabbR.ViewModels;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
 
@@ -25,7 +27,7 @@ namespace JabbR.Services
             _service = service;
         }
 
-        public async Task Upload(string userId, string connectionId, string roomName, string clientMessageId, string file, string contentType, Stream stream)
+        public async Task Upload(string userId, string connectionId, string roomName, string file, string contentType, Stream stream)
         {
             string contentUrl = await _processor.HandleUpload(file, contentType, stream);
 
@@ -36,13 +38,15 @@ namespace JabbR.Services
             }
 
             // Add the message to the persistent chat
-            _service.AddMessage(userId, roomName, contentUrl);
+            ChatMessage message = _service.AddMessage(userId, roomName, contentUrl);
+
+            var messageViewModel = new MessageViewModel(message);
 
             // Notify all clients for the uploaded url
-            _hubContext.Clients.Group(roomName).appendMessage(clientMessageId, contentUrl, roomName);
+            _hubContext.Clients.Group(roomName).addMessage(messageViewModel, roomName);
 
             // Run the content providers (I wish this happened client side :))
-            Chat.ProcessUrls(new[] { contentUrl }, _hubContext.Clients, _resourceProcessor, roomName, clientMessageId);
+            Chat.ProcessUrls(new[] { contentUrl }, _hubContext.Clients, _resourceProcessor, roomName, message.Id);
         }
     }
 }
