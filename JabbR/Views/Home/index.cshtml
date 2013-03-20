@@ -234,12 +234,19 @@
       <div id="message-box">
         <textarea id="new-message" autocomplete="off" aria-autocomplete="none" accesskey="m"></textarea>
       </div>
+      <input type="button" id="upload-file-button" value="*" />
       <input type="submit" id="send" value="Send" class="send" />
       <div id="message-instruction">
         Type @@ then press TAB to auto-complete nicknames
       </div>
       </form>
     </div>
+    <form id="upload" action="@Url.Content("~/upload")" method="post" enctype="multipart/form-data" target="upload-frame">
+        <input type="hidden" id="file-message-id" name="messageId" />
+        <input type="hidden" id="file-room" name="room" />
+        <input type="file" id="hidden-file" name="data" style="display:none;">
+    </form>
+    <iframe id="upload-frame" name="upload-frame" style="position:absolute;top:0;left:0;width:0;height:0;visibility:hidden;"></iframe>
     @if (Model.ShowDetails)
     {
     <div id="releaseArea">
@@ -354,7 +361,7 @@
   <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
      @{
          
-        WriteLiteral(Bundle.JavaScript()
+        WriteLiteral(Bundle.JavaScript().ForceDebug()
             .Add("~/Scripts/jQuery.tmpl.min.js")
             .Add("~/Scripts/jquery.cookie.js")
             .Add("~/Scripts/jquery.autotabcomplete.js")

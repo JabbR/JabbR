@@ -10,6 +10,7 @@ using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Hubs;
 using Newtonsoft.Json;
 
 namespace JabbR
@@ -157,7 +158,7 @@ namespace JabbR
             var urls = UrlExtractor.ExtractUrls(chatMessage.Content);
             if (urls.Count > 0)
             {
-                ProcessUrls(urls, room.Name, clientMessageId, message.Id);
+                ProcessUrls(urls, room.Name, clientMessageId);
             }
 
             return outOfSync;
@@ -358,9 +359,21 @@ namespace JabbR
             _repository.CommitChanges();
         }
 
-        private void ProcessUrls(IEnumerable<string> links, string roomName, string clientMessageId, string messageId)
+        private void ProcessUrls(IEnumerable<string> links,
+                                       string roomName,
+                                       string clientMessageId)
         {
-            var contentTasks = links.Select(_resourceProcessor.ExtractResource).ToArray();
+            ProcessUrls(links, Clients, _resourceProcessor, roomName, clientMessageId);
+        }
+
+        // REVIEW: Move this
+        public static void ProcessUrls(IEnumerable<string> links, 
+                                       IHubConnectionContext clients,
+                                       IResourceProcessor resourceProcessor,
+                                       string roomName, 
+                                       string clientMessageId)
+        {
+            var contentTasks = links.Select(resourceProcessor.ExtractResource).ToArray();
             Task.Factory.ContinueWhenAll(contentTasks, tasks =>
             {
                 foreach (var task in tasks)
@@ -377,7 +390,7 @@ namespace JabbR
                     }
 
                     // Notify the room
-                    Clients.Group(roomName).addMessageContent(clientMessageId, task.Result.Content, roomName);
+                    clients.Group(roomName).addMessageContent(clientMessageId, task.Result.Content, roomName);
                 }
             });
         }

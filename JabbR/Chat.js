@@ -347,6 +347,16 @@
         ui.watchMessageScroll([id], room);
     };
 
+    chat.client.appendMessage = function (id, content, room) {
+        scrollIfNecessary(function () {
+            ui.appendChatMessageContent(id, content, room);
+        }, room);
+
+        updateUnread(room, false /* isMentioned: this is outside normal messages and user shouldn't be mentioned */);
+
+        ui.watchMessageScroll([id], room);
+    };
+
     chat.client.addMessage = function (message, room) {
         var viewModel = getMessageViewModel(message);
 
@@ -769,8 +779,9 @@
         }
     });
 
-    $ui.bind(ui.events.sendMessage, function (ev, msg) {
+    $ui.bind(ui.events.sendMessage, function (ev, arg) {
         var id = utility.newId(),
+            msg = arg.message,
             clientMessage = {
                 id: id,
                 content: msg,
@@ -798,6 +809,12 @@
             };
 
             ui.addChatMessage(viewModel, clientMessage.room);
+
+            arg.submitFile(id, clientMessage.room);
+
+            if (!clientMessage.message) {
+                return;
+            }
 
             // If there's a significant delay in getting the message sent
             // mark it as pending

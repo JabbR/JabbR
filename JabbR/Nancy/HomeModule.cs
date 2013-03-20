@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Configuration;
+using System.Linq;
+using JabbR.Services;
 using JabbR.ViewModels;
 using Nancy;
 using Nancy.Helpers;
@@ -8,7 +10,7 @@ namespace JabbR.Nancy
 {
     public class HomeModule : JabbRModule
     {
-        public HomeModule()
+        public HomeModule(UploadCallbackHandler uploadHandler)
         {
             Get["/"] = _ =>
             {
@@ -26,6 +28,27 @@ namespace JabbR.Nancy
                 }
 
                 return Response.AsRedirect(String.Format("~/account/login?returnUrl={0}", HttpUtility.UrlEncode(Request.Path)));
+            };
+
+            Post["/upload"] = _ =>
+            {
+                if (Context.CurrentUser == null)
+                {
+                    return 403;
+                }
+
+                string roomName = Request.Form.room;
+                string clientMessageId = Request.Form.messageId;
+                HttpFile file = Request.Files.First();
+
+                uploadHandler.Upload(Context.CurrentUser.UserName, 
+                                     roomName, 
+                                     clientMessageId,
+                                     file.Name, 
+                                     file.ContentType,
+                                     file.Value);
+
+                return 200;
             };
         }
     }

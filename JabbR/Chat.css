@@ -95,6 +95,14 @@ form#send-message {
   z-index: -1; 
 }
 
+#upload-file-button
+{
+    padding: 5px;
+    position: absolute;
+    right: 70px;
+    width: 30px;
+}
+
 #heading
 {
   background-color: #00103f;
@@ -537,7 +545,7 @@ li.room
   padding: 5px;
   position: absolute;
   right: 0;
-  width: 100px;
+  width: 70px;
 }
 
 #enable-disable-toast

@@ -12,5 +12,7 @@ namespace JabbR.Services
 
         bool RequireHttps { get; }
         bool MigrateDatabase { get; }
+
+        string ImagurClientId { get; }
     }
 }

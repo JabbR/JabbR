@@ -17,6 +17,7 @@ namespace JabbR.Services
 
         // Messages
         ChatMessage AddMessage(ChatUser user, ChatRoom room, string id, string content);
+        ChatMessage AddMessage(string userId, string roomName, string url);
 
         // Owner commands
         void AddOwner(ChatUser user, ChatUser targetUser, ChatRoom targetRoom);

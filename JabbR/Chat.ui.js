@@ -57,6 +57,11 @@
         connectionStateIcon = null,
         $connectionInfoPopover = null,
         $connectionInfoContent = null,
+        $fileUploadButton = null,
+        $hiddenFile = null,
+        $uploadForm = null,
+        $fileRoom = null,
+        $fileMessageId = null,
         connectionInfoStatus = null,
         connectionInfoTransport = null;
 
@@ -677,14 +682,26 @@
     }
 
     function triggerSend() {
-        var msg = $.trim($newMessage.val());
+        var msg = $.trim($newMessage.val()),
+            file = $hiddenFile.val();
 
-        if (msg) {
+        var arg = {
+            message: msg,
+            submitFile: function (messageId, room) {
+                $fileRoom.val(room);
+
+                $fileMessageId.val(messageId);
+
+                $uploadForm.submit();
+            }
+        };
+
+        if (msg || file) {
             if (msg.toLowerCase() == '/login') {
                 ui.showLogin();
             }
             else {
-                $ui.trigger(ui.events.sendMessage, [msg]);
+                $ui.trigger(ui.events.sendMessage, [arg]);
             }
         }
 
@@ -888,6 +905,11 @@
                 multiline: $('#multiline-content-template')
             };
             $reloadMessageNotification = $('#reloadMessageNotification');
+            $fileUploadButton = $('#upload-file-button');
+            $hiddenFile = $('#hidden-file');
+            $uploadForm = $('#upload');
+            $fileRoom = $('#file-room');
+            $fileMessageId = $('#file-message-id');
             $connectionStatus = $('#connectionStatus');
             $connectionSlowNotification = $('#connectionSlowNotification');
             $connectionLostNotification = $('#connectionLostNotification');
@@ -1285,6 +1307,24 @@
 
                 // show it
                 $theListItem.show();
+            });
+
+            // Handle file uploads
+            $fileUploadButton.click(function () {
+                $hiddenFile.click();
+            });
+
+            $hiddenFile.change(function () {
+                if (!$hiddenFile.val()) {
+                    return;
+                }
+
+                var path = $hiddenFile.val(),
+                    slash = path.lastIndexOf('\\'),
+                    name = path.substring(slash + 1);
+
+                // TODO: Change the message type
+                ui.addMessage('\'' + name + '\' ready for upload.', 'broadcast');
             });
 
             // Start cycling the messages once the document has finished loading.
@@ -1758,6 +1798,11 @@
         messageExists: function (id) {
             return $('#m-' + id).length > 0;
         },
+        appendChatMessageContent: function (id, content, roomName) {
+            var $message = $('#m-' + id);
+
+            $message.find('.middle').append(ui.processContent(content));
+        },
         addChatMessageContent: function (id, content, roomName) {
             var $message = $('#m-' + id);
 
@@ -2093,6 +2138,8 @@
             room.setListState(room.owners);
         },
         processContent: function (content) {
+            content = content || '';
+
             var hasNewline = content.indexOf('\n') != -1;
 
             if (hasNewline) {

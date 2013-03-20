@@ -4,6 +4,7 @@ using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Nancy;
 using JabbR.Services;
+using JabbR.UploadHandlers;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Json;
 using Nancy.Authentication.WorldDomination;
@@ -100,6 +101,14 @@ namespace JabbR
 
             kernel.Bind<IJsonSerializer>()
                   .ToConstant(serializer);
+
+            kernel.Bind<UploadCallbackHandler>()
+                  .ToSelf()
+                  .InSingletonScope();
+
+            kernel.Bind<UploadProcessor>()
+                  .ToSelf()
+                  .InSingletonScope();
 
             return kernel;
         }

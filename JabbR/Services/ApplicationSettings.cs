@@ -79,5 +79,13 @@ namespace JabbR.Services
                 return false;
             }
         }
+
+        public string ImagurClientId
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["jabbr:imagurClientId"];                
+            }
+        }
     }
 }
