@@ -211,5 +211,9 @@ namespace JabbR.Services
 
             room.Users.Remove(user);
         }
+
+        public void Reload(object entity)
+        {
+        }
     }
 }

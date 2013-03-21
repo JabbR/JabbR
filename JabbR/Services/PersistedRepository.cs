@@ -254,5 +254,11 @@ namespace JabbR.Services
                       .Select(r => r.Name)
                       .FirstOrDefault() != null;
         }
+
+
+        public void Reload(object entity)
+        {
+            _db.Entry(entity).Reload();
+        }
     }
 }

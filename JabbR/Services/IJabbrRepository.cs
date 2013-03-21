@@ -45,5 +45,8 @@ namespace JabbR.Services
         void CommitChanges();
 
         bool IsUserInRoom(ChatUser user, ChatRoom room);
+
+        // Reload entities from the store
+        void Reload(object entity);
     }
 }

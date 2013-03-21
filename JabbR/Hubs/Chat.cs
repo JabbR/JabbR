@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using JabbR.Commands;
 using JabbR.ContentProviders.Core;
@@ -413,14 +414,20 @@ namespace JabbR
                 return;
             }
 
+            // To avoid the leave/join that happens when a user refreshes the page
+            // we sleep for a second before we check the status.
+            Thread.Sleep(1000);
+
             // Query for the user to get the updated status
             ChatUser user = _repository.GetUserById(userId);
-
+            
             // There's no associated user for this client id
             if (user == null)
             {
                 return;
             }
+
+            _repository.Reload(user);
 
             // The user will be marked as offline if all clients leave
             if (user.Status == (int)UserStatus.Offline)
