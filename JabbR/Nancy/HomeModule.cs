@@ -38,7 +38,6 @@ namespace JabbR.Nancy
                 }
 
                 string roomName = Request.Form.room;
-                string clientMessageId = Request.Form.messageId;
                 string connectionId = Request.Form.connectionId;
                 HttpFile file = Request.Files.First();
 

@@ -783,6 +783,11 @@
             },
             messageCompleteTimeout = null;
 
+        arg.submitFile(connection.hub.id, clientMessage.room);
+
+        if (!msg) {
+            return;
+        }
 
         if (msg[0] !== '/') {
 
@@ -792,25 +797,17 @@
                 return false;
             }
 
-            var uploadMessage = 'Uploading ' + arg.getFileName() + '...';
-
             // Added the message to the ui first
             var viewModel = {
                 name: chat.state.name,
                 hash: chat.state.hash,
-                message: ui.processContent(clientMessage.content || uploadMessage),
+                message: ui.processContent(clientMessage.content),
                 id: clientMessage.id,
                 date: new Date(),
                 highlight: ''
             };
 
             ui.addChatMessage(viewModel, clientMessage.room);
-
-            arg.submitFile(connection.hub.id, id, clientMessage.room);
-
-            if (!clientMessage.content) {
-                return;
-            }
 
             // If there's a significant delay in getting the message sent
             // mark it as pending

@@ -21,21 +21,14 @@ namespace JabbR.UploadHandlers
 
         public async Task<string> HandleUpload(string fileName, string contentType, Stream stream)
         {
-            try
-            {
-                IUploadHandler handler = _fileUploadHandlers.FirstOrDefault(c => c.IsValid(fileName, contentType));
+            IUploadHandler handler = _fileUploadHandlers.FirstOrDefault(c => c.IsValid(fileName, contentType));
 
-                if (handler == null)
-                {
-                    return null;
-                }
-
-                return await handler.UploadFile(fileName, stream);
-            }
-            catch
+            if (handler == null)
             {
                 return null;
             }
+
+            return await handler.UploadFile(fileName, stream);
         }
 
         private static IList<IUploadHandler> GetUploadHandlers(IApplicationSettings settings)

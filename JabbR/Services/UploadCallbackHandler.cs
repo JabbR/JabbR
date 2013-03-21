@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
 using JabbR.Models;
@@ -27,18 +28,35 @@ namespace JabbR.Services
             _service = service;
         }
 
-        public async Task Upload(string userId, string connectionId, string roomName, string file, string contentType, Stream stream)
+        public async Task Upload(string userId,
+                                 string connectionId,
+                                 string roomName,
+                                 string file,
+                                 string contentType,
+                                 Stream stream)
         {
-            string contentUrl = await _processor.HandleUpload(file, contentType, stream);
+            string contentUrl = null;
 
-            if (contentUrl == null)
+            try
             {
-                _hubContext.Clients.Client(connectionId).postMessage("Failed to upload " + Path.GetFileName(file) + ".", "error", roomName);
+                contentUrl = await _processor.HandleUpload(file, contentType, stream);
+
+                if (contentUrl == null)
+                {
+                    _hubContext.Clients.Client(connectionId).postMessage("Failed to upload " + Path.GetFileName(file) + ".", "error", roomName);
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                _hubContext.Clients.Client(connectionId).postMessage("Failed to upload " + Path.GetFileName(file) + ". " + ex.Message, "error", roomName);
                 return;
             }
 
+            string content = String.Format("{0} ({1}) {2}", Path.GetFileName(file), contentUrl, FormatBytes(stream.Length));
+
             // Add the message to the persistent chat
-            ChatMessage message = _service.AddMessage(userId, roomName, contentUrl);
+            ChatMessage message = _service.AddMessage(userId, roomName, content);
 
             var messageViewModel = new MessageViewModel(message);
 
@@ -47,6 +65,24 @@ namespace JabbR.Services
 
             // Run the content providers (I wish this happened client side :))
             Chat.ProcessUrls(new[] { contentUrl }, _hubContext.Clients, _resourceProcessor, roomName, message.Id);
+        }
+
+        private static string FormatBytes(long bytes)
+        {
+            const int scale = 1024;
+            string[] orders = new string[] { "GB", "MB", "KB", "Bytes" };
+            long max = (long)Math.Pow(scale, orders.Length - 1);
+
+            foreach (string order in orders)
+            {
+                if (bytes > max)
+                {
+                    return String.Format("{0:##.##} {1}", Decimal.Divide(bytes, max), order);
+                }
+
+                max /= scale;
+            }
+            return "0 Bytes";
         }
     }
 }

@@ -61,7 +61,6 @@
         $hiddenFile = null,
         $uploadForm = null,
         $fileRoom = null,
-        $fileMessageId = null,
         $fileConnectionId = null,
         connectionInfoStatus = null,
         connectionInfoTransport = null;
@@ -699,7 +698,7 @@
 
                 return name;
             },
-            submitFile: function (connectionId, messageId, room) {
+            submitFile: function (connectionId, room) {
                 if (!this.file) {
                     return;
                 }
@@ -707,8 +706,6 @@
                 $fileConnectionId.val(connectionId);
 
                 $fileRoom.val(room);
-
-                $fileMessageId.val(messageId);
 
                 $uploadForm.submit();
 
@@ -929,7 +926,6 @@
             $hiddenFile = $('#hidden-file');
             $uploadForm = $('#upload');
             $fileRoom = $('#file-room');
-            $fileMessageId = $('#file-message-id');
             $fileConnectionId = $('#file-connection-id');
             $connectionStatus = $('#connectionStatus');
             $connectionSlowNotification = $('#connectionSlowNotification');
