@@ -266,9 +266,12 @@ namespace JabbR
                 return null;
             }
 
+            string userId = Context.User.Identity.Name;
+            ChatUser user = _repository.VerifyUserId(userId);
+
             ChatRoom room = _repository.GetRoomByName(roomName);
 
-            if (room == null)
+            if (room == null || (room.Private && !user.AllowedRooms.Contains(room)))
             {
                 return null;
             }
