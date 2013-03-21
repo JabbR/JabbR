@@ -2824,7 +2824,7 @@ h3.userlist-header
 }
 
 #preferences .download:hover .icon-download {
-    background-image: url('Content/images/download-icon-white.png');
+    /*background-image: url('Content/images/download-icon-white.png');*/
     background-repeat: no-repeat;
 }
 
