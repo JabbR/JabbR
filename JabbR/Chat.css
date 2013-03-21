@@ -2737,10 +2737,12 @@ h3.userlist-header
     background-size: 12px 16px;
     height: 16px;
     width: 12px;
+    background-repeat: no-repeat;
 }
 
 #preferences .logout:hover .icon-logout {
     background-image: url('Content/images/logout-white.png');
+    background-repeat: no-repeat;
 }
 
 .icon-sound {
@@ -2749,18 +2751,22 @@ h3.userlist-header
     background-size: 14px 14px;
     height: 14px;
     width: 14px;
+    background-repeat: no-repeat;
 }
 
 #preferences .sound:hover .icon-sound {
     background-image: url('Content/images/sound-on-white.png');
+    background-repeat: no-repeat;
 }
 
 #preferences .sound.off .icon-sound {
     background-image: url('Content/images/sound-off.png');
+    background-repeat: no-repeat;
 }
 
 #preferences .sound.off:hover .icon-sound {
     background-image: url('Content/images/sound-off-white.png');
+    background-repeat: no-repeat;
 }
 
 .icon-toast {
@@ -2770,18 +2776,22 @@ h3.userlist-header
     height: 14px;
     width: 10px;
     margin-right: 8px;
+    background-repeat: no-repeat;
 }
 
 #preferences .toast:hover .icon-toast {
     background-image: url('Content/images/toast-on-white.png');
+    background-repeat: no-repeat;
 }
 
 #preferences .toast.off .icon-toast {
     background-image: url('Content/images/toast-off.png');
+    background-repeat: no-repeat;
 }
 
 #preferences .toast.off:hover .icon-toast {
     background-image: url('Content/images/toast-off-white.png');
+    background-repeat: no-repeat;
 }
 
 .icon-richness {
@@ -2790,31 +2800,36 @@ h3.userlist-header
     background-size: 14px 14px;
     height: 14px;
     width: 14px;
+    background-repeat: no-repeat;
 }
 
 #preferences .richness:hover .icon-richness {
     background-image: url('Content/images/richness-on-white.png');
+    background-repeat: no-repeat;
 }
 
 #preferences .richness.off .icon-richness {
     background-image: url('Content/images/richness-off.png');
+    background-repeat: no-repeat;
 }
 
 #preferences .richness.off:hover .icon-richness {
     background-image: url('Content/images/richness-off-white.png');
+    background-repeat: no-repeat;
 }
 
-.icon-download {
-    background-image: url('Content/images/download-icon.png');
+#preferences .icon-download {
     background-position: 0 0;
     background-size: 10px 14px;
     height: 14px;
     width: 10px;
     margin-right: 8px;
+    background-repeat: no-repeat;
 }
 
 #preferences .download:hover .icon-download {
     background-image: url('Content/images/download-icon-white.png');
+    background-repeat: no-repeat;
 }
 
 .icon-help {
@@ -2824,10 +2839,12 @@ h3.userlist-header
     height: 14px;
     width: 10px;
     margin-right: 8px;
+    background-repeat: no-repeat;
 }
 
 #preferences .help:hover .icon-help {
     background-image: url('Content/images/question-icon-white.png');
+    background-repeat: no-repeat;
 }
 
 .git-hub-issue .starting-comment .author {
