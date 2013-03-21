@@ -14,6 +14,7 @@
     @{ 
         WriteLiteral(Bundle.Css()
             .Add("~/Content/bootstrap.min.css")
+            .Add("~/Content/font-awesome.min.css")
             .Add("~/Chat.css")
             .Add("~/Chat.nuget.css")
             .Add("~/Chat.bbcnews.css")
@@ -234,18 +235,19 @@
       <div id="message-box">
         <textarea id="new-message" autocomplete="off" aria-autocomplete="none" accesskey="m"></textarea>
       </div>
-      <input type="button" id="upload-file-button" value="*" />
-      <input type="submit" id="send" value="Send" class="send" />
+      <input type="submit" id="send" value="Send" class="send btn" />
       <div id="message-instruction">
         Type @@ then press TAB to auto-complete nicknames
       </div>
       </form>
     </div>
     <form id="upload" action="@Url.Content("~/upload")" method="post" enctype="multipart/form-data" target="upload-frame">
-        <input type="hidden" id="file-connection-id" name="connectionId" />
-        <input type="hidden" id="file-message-id" name="messageId" />
-        <input type="hidden" id="file-room" name="room" />
-        <input type="file" id="hidden-file" name="data" style="display:none;">
+      <input type="hidden" id="file-connection-id" name="connectionId" />
+      <input type="hidden" id="file-message-id" name="messageId" />
+      <input type="hidden" id="file-room" name="room" />
+      <div class="btn upload-button icon-cloud-upload icon-large">
+        <input type="file" id="hidden-file" name="data">
+      </div>
     </form>
     <iframe id="upload-frame" name="upload-frame" style="position:absolute;top:0;left:0;width:0;height:0;visibility:hidden;"></iframe>
     @if (Model.ShowDetails)

@@ -95,12 +95,25 @@ form#send-message {
   z-index: -1; 
 }
 
-#upload-file-button
+.upload-button
 {
-    padding: 5px;
+    display: inline-block;
     position: absolute;
-    right: 70px;
-    width: 30px;
+    right: 340px;
+    bottom: 48px;
+    margin: 0 3px;
+    padding: 6px;
+    overflow: hidden;
+}
+
+.upload-button input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 0;
+    font-size: 70px;
+    opacity: 0;
+    filter: alpha(opacity=0);
 }
 
 #heading
@@ -524,7 +537,7 @@ li.room
 {
   position: absolute;
   left: 0;
-  right: 115px;
+  right: 122px;
   padding: 0;
   margin: 0;
 }
@@ -2847,4 +2860,8 @@ h3.userlist-header
 
 #connection-state-changed-popover .popover-content {
     margin: 0 15px;
+}
+
+.icon-white {
+    color: white;
 }

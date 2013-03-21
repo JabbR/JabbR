@@ -922,7 +922,7 @@
                 multiline: $('#multiline-content-template')
             };
             $reloadMessageNotification = $('#reloadMessageNotification');
-            $fileUploadButton = $('#upload-file-button');
+            $fileUploadButton = $('.upload-button');
             $hiddenFile = $('#hidden-file');
             $uploadForm = $('#upload');
             $fileRoom = $('#file-room');
@@ -1326,10 +1326,8 @@
                 $theListItem.show();
             });
 
-            // Handle file uploads
-            $fileUploadButton.click(function () {
-                $hiddenFile.click();
-            });
+            // Crazy browser hack
+            $hiddenFile[0].style.left = '-800px';
 
             $hiddenFile.change(function () {
                 if (!$hiddenFile.val()) {
