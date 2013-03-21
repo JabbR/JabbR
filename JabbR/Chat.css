@@ -297,6 +297,7 @@ form#send-message {
     position: relative;
     padding:4px;
     top: 2px;
+    margin-right: 5px;
 }
 
 .users .idle .user-status {
