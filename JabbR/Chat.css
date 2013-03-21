@@ -95,6 +95,10 @@ form#send-message {
   z-index: -1; 
 }
 
+#upload {
+    width: 10px;
+}
+
 .upload-button
 {
     display: inline-block;
@@ -2851,6 +2855,14 @@ h3.userlist-header
 
 #connection-info-popover .popover-title {
     font-weight: bold;
+}
+
+#connection-info-popover .popover-content {
+    padding: 4px 14px;
+}
+
+#connection-info-popover p {
+    margin: 0;
 }
 
 #connection-state-changed-popover #popover-content-icon {

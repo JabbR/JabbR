@@ -1017,6 +1017,8 @@
                 else if (change.newState === $.connection.connectionState.connected) {
                     if (!initial) {
                         ui.showStatus(0, $.connection.hub.transport.name);                        
+                    } else {
+                        ui.initialiseConnectionStatus($.connection.hub.transport.name);
                     }
 
                     initial = false;

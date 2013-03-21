@@ -838,7 +838,7 @@
     function getConnectionInfoPopoverOptions(transport) {
         var options = {
             html: true,
-            trigger: 'hover',
+            trigger: 'click',
             delay: {
                 show: 0,
                 hide: 500
@@ -2032,7 +2032,7 @@
                         $connectionStatus.popover('show');
                         setTimeout(function () {
                             $connectionStatus.popover('destroy');
-                            $connectionStatus.popover(getConnectionInfoPopoverOptions(transport));
+                            initialiseConnectionStatus(transport);
                         }, 2000);
                         break;
                     case 1: // Reconnecting
@@ -2061,6 +2061,9 @@
                         break;
                 }
             }
+        },
+        initialiseConnectionStatus: function(transport) {
+            $connectionStatus.popover(getConnectionInfoPopoverOptions(transport));
         },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
