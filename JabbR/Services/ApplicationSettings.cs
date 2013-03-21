@@ -95,5 +95,19 @@ namespace JabbR.Services
                 return ConfigurationManager.AppSettings["jabbr:azureblobStorageConnectionString"];
             }
         }
+
+        public int MaxFileUploadBytes
+        {
+            get
+            {
+                string maxFileUploadBytesValue = ConfigurationManager.AppSettings["jabbr:maxFileUploadBytes"];
+                int maxFileUploadBytes;
+                if (Int32.TryParse(maxFileUploadBytesValue, out maxFileUploadBytes))
+                {
+                    return maxFileUploadBytes;
+                }
+                return 0;
+            }
+        }
     }
 }

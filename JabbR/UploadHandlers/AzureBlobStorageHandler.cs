@@ -22,7 +22,7 @@ namespace JabbR.UploadHandlers
 
         public bool IsValid(string fileName, string contentType)
         {
-            // Blobl storage can handle any content
+            // Blob storage can handle any content
             return !String.IsNullOrEmpty(_settings.AzureblobStorageConnectionString);
         }
 
