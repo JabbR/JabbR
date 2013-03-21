@@ -8,6 +8,6 @@ namespace JabbR.UploadHandlers
     public interface IUploadHandler
     {
         bool IsValid(string fileName, string contentType);
-        Task<string> UploadFile(string fileName, Stream stream);
+        Task<string> UploadFile(string fileName, string contentType, Stream stream);
     }
 }

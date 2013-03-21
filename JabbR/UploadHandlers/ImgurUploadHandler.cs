@@ -22,16 +22,12 @@ namespace JabbR.UploadHandlers
 
         public bool IsValid(string fileName, string contentType)
         {
-            return ImageContentProvider.IsValidContentType(contentType);
+            return !String.IsNullOrEmpty(_settings.ImagurClientId) &&
+                   ImageContentProvider.IsValidContentType(contentType);
         }
 
-        public async Task<string> UploadFile(string fileName, Stream stream)
+        public async Task<string> UploadFile(string fileName, string contentType, Stream stream)
         {
-            if (String.IsNullOrEmpty(_settings.ImagurClientId))
-            {
-                return null;
-            }
-
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Client-ID", _settings.ImagurClientId);
 

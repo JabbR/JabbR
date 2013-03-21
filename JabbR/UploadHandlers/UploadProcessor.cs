@@ -28,7 +28,7 @@ namespace JabbR.UploadHandlers
                 return null;
             }
 
-            return await handler.UploadFile(fileName, stream);
+            return await handler.UploadFile(fileName, contentType, stream);
         }
 
         private static IList<IUploadHandler> GetUploadHandlers(IApplicationSettings settings)

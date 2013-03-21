@@ -14,5 +14,6 @@ namespace JabbR.Services
         bool MigrateDatabase { get; }
 
         string ImagurClientId { get; }
+        string AzureblobStorageConnectionString { get; }
     }
 }

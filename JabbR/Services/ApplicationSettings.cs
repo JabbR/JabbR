@@ -84,7 +84,15 @@ namespace JabbR.Services
         {
             get
             {
-                return ConfigurationManager.AppSettings["jabbr:imagurClientId"];                
+                return ConfigurationManager.AppSettings["jabbr:imagurClientId"];
+            }
+        }
+
+        public string AzureblobStorageConnectionString
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["jabbr:azureblobStorageConnectionString"];
             }
         }
     }
