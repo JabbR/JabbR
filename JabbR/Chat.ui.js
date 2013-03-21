@@ -49,9 +49,8 @@
         lastPrivate = null,
         roomCache = {},
         $reloadMessageNotification = null,
+        popoverTimer = null,
         $connectionStatus = null,
-        $connectionSlowNotification = null,
-        $connectionLostNotification = null,
         connectionState = -1,
         $connectionStateChangedPopover = null,
         connectionStateIcon = null,
@@ -928,8 +927,6 @@
             $fileRoom = $('#file-room');
             $fileConnectionId = $('#file-connection-id');
             $connectionStatus = $('#connectionStatus');
-            $connectionSlowNotification = $('#connectionSlowNotification');
-            $connectionLostNotification = $('#connectionLostNotification');
 
             $connectionStateChangedPopover = $('#connection-state-changed-popover');
             connectionStateIcon = '#popover-content-icon';
@@ -2020,43 +2017,41 @@
         showStatus: function (status, transport) {
             // Change the status indicator here
             if (connectionState !== status) {
+                if (popoverTimer) {
+                    clearTimeout(popoverTimer);
+                }
+                connectionState = status;
+                $connectionStatus.popover('destroy');
                 switch (status) {
                     case 0: // Connected
-                        connectionState = status;
-                        $connectionLostNotification.hide();
-                        $connectionSlowNotification.hide();
-                        $connectionStatus.show();
-                        $connectionStatus.popover('destroy');
+                        $connectionStatus.removeClass('reconnecting disconnected');
                         $connectionStatus.popover(getConnectionStateChangedPopoverOptions('You\'re connected.'));
                         $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-ok-sign');
                         $connectionStatus.popover('show');
-                        setTimeout(function () {
+                        popoverTimer = setTimeout(function () {
                             $connectionStatus.popover('destroy');
                             initialiseConnectionStatus(transport);
+                            popoverTimer = null;
                         }, 2000);
                         break;
                     case 1: // Reconnecting
-                        connectionState = status;
-                        $connectionStatus.hide();
-                        $connectionLostNotification.hide();
-                        $connectionSlowNotification.show();
-                        $connectionSlowNotification.popover(getConnectionStateChangedPopoverOptions('The connection to JabbR has been temporarily lost, trying to reconnect.'));
+                        $connectionStatus.removeClass('disconnected').addClass('reconnecting');
+                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions('The connection to JabbR has been temporarily lost, trying to reconnect.'));
                         $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-question-sign');
-                        $connectionSlowNotification.popover('show');
-                        setTimeout(function () {
-                            $connectionSlowNotification.popover('hide');
+                        $connectionStatus.popover('show');
+                        popoverTimer = setTimeout(function () {
+                            $connectionStatus.popover('hide');
+                            popoverTimer = null;
                         }, 5000);
                         break;
                     case 2: // Disconnected
-                        connectionState = status;
-                        $connectionStatus.hide();
-                        $connectionSlowNotification.hide();
-                        $connectionLostNotification.show();
-                        $connectionLostNotification.popover(getConnectionStateChangedPopoverOptions('The connection to JabbR has been lost, trying to reconnect.'));
+                        $connectionStatus.removeClass('reconnecting').addClass('disconnected');
+                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions('The connection to JabbR has been lost, trying to reconnect.'));
                         $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-exclamation-sign');
-                        $connectionLostNotification.popover('show');
-                        setTimeout(function () {
-                            $connectionLostNotification.popover('hide');
+                        $connectionStatus.popover('show');
+                        popoverTimer = setTimeout(function () {
+                            $connectionStatus.popover('hide');
+                            popoverTimer = null;
                         }, 5000);
                         break;
                 }

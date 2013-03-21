@@ -2857,8 +2857,47 @@ h3.userlist-header
 
 .connection-status {
     position: absolute;
-    top: 20px;
-    right: 80px;
+    top: 17px;
+    right: 70px;
+}
+
+.icon-connection-status {
+	-webkit-box-shadow:inset 0px 1px 0px 0px #caefab;
+  	   -moz-box-shadow:inset 0px 1px 0px 0px #caefab;
+	        box-shadow:inset 0px 1px 0px 0px #caefab;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #77d42a), color-stop(1, #5cb811) );
+	background:-moz-linear-gradient( center top, #77d42a 5%, #5cb811 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#77d42a', endColorstr='#5cb811');
+	background-color:#77d42a;
+	-webkit-border-radius:8px;
+  	   -moz-border-radius:8px;
+	        border-radius:8px;
+	border:1px solid #268a16;
+	display:inline-block;
+	color:#306108;
+    padding:6px;
+}
+
+.reconnecting .icon-connection-status {
+	-webkit-box-shadow:inset 0px 1px 0px 0px #fff6af;
+       -moz-box-shadow:inset 0px 1px 0px 0px #fff6af;
+	        box-shadow:inset 0px 1px 0px 0px #fff6af;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffec64), color-stop(1, #ffab23) );
+	background:-moz-linear-gradient( center top, #ffec64 5%, #ffab23 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffec64', endColorstr='#ffab23');
+	background-color:#ffec64;
+	border:1px solid #ffaa22;
+}
+
+.disconnected .icon-connection-status {
+	-webkit-box-shadow:inset 0px 1px 0px 0px #f29c93;
+  	   -moz-box-shadow:inset 0px 1px 0px 0px #f29c93;
+	        box-shadow:inset 0px 1px 0px 0px #f29c93;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fe1a00), color-stop(1, #ce0100) );
+	background:-moz-linear-gradient( center top, #fe1a00 5%, #ce0100 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fe1a00', endColorstr='#ce0100');
+	background-color:#fe1a00;
+	border:1px solid #d83526;
 }
 
 #connection-info-popover .popover-title-icon {
@@ -2870,7 +2909,7 @@ h3.userlist-header
     font-weight: bold;
 }
 
-#connection-info-popover .popover-content {
+.popover-content {
     padding: 4px 14px;
 }
 
@@ -2890,3 +2929,4 @@ h3.userlist-header
 .icon-white {
     color: white;
 }
+

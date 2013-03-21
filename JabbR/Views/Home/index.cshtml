@@ -335,14 +335,8 @@
       <div id="reloadMessageNotification" class="reload-message alert alert-info">
         <button type="button" class="close" data-dismiss="alert">&times;</button><a href="#">Load missing messages</a>
       </div>
-        <div id="connectionStatus" class="connection-status" data-toggle="popover" data-placement="left" data-original-title="JabbR Connection Status">
-            <i class="icon-signal icon-white"></i>
-        </div>
-        <div id="connectionSlowNotification" class="connection-status" style="display: none;" data-toggle="popover" data-placement="left">
-            <i class="icon-signal icon-white"></i><i class="icon-question-sign icon-white"></i>
-        </div>
-        <div id="connectionLostNotification" class="connection-status" style="display: none;" data-toggle="popover" data-placement="left">
-            <i class="icon-signal icon-white"></i><i class="icon-exclamation-sign icon-white"></i>
+        <div id="connectionStatus" class="connection-status" data-toggle="popover" data-placement="left">
+            <i class="icon-connection-status"></i>
         </div>
         <div id="connection-info-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><i class="popover-title-icon icon-globe" style="display: none;"></i><h3 class="popover-title" style="display: none;"></h3><div class="popover-content"><p></p></div></div></div>
         <div id="connection-info-content" style="display: none;"><p id="connection-status"></p><p id="connection-transport"></p></div>
@@ -364,28 +358,29 @@
   <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
      @{
          
-        WriteLiteral(Bundle.JavaScript().ForceDebug()
-            .Add("~/Scripts/jQuery.tmpl.min.js")
-            .Add("~/Scripts/jquery.cookie.js")
-            .Add("~/Scripts/jquery.autotabcomplete.js")
-            .Add("~/Scripts/jquery.timeago.0.10.js")
-            .Add("~/Scripts/jquery.captureDocumentWrite.min.js")
-            .Add("~/Scripts/jquery.sortElements.js")
-            .Add("~/Scripts/ba-linkify.min.js")
-            .Add("~/Scripts/quicksilver.js")
-            .Add("~/Scripts/jquery.livesearch.js")
-            .Add("~/Scripts/Markdown.Converter.js")
-            .Add("~/Scripts/jquery.history.js")
-            .Add("~/Chat.utility.js")
-            .Add("~/Chat.emoji.js")
-            .Add("~/Chat.toast.js")
-            .Add("~/Chat.ui.js")
-            .Add("~/Chat.documentOnWrite.js")
-            .Add("~/Chat.twitter.js")
-            .Add("~/Chat.pinnedWindows.js")
-            .Add("~/Chat.githubissues.js")
-            .Add("~/Chat.js")
-            .Render("~/Scripts/JabbR2_#.js"));
+         WriteLiteral(Bundle.JavaScript().ForceDebug()
+             .Add("~/Scripts/jQuery.tmpl.min.js")
+             .Add("~/Scripts/jquery.cookie.js")
+             .Add("~/Scripts/jquery.autotabcomplete.js")
+             .Add("~/Scripts/jquery.timeago.0.10.js")
+             .Add("~/Scripts/jquery.captureDocumentWrite.min.js")
+             .Add("~/Scripts/jquery.sortElements.js")
+             .Add("~/Scripts/ba-linkify.min.js")
+             .Add("~/Scripts/quicksilver.js")
+             .Add("~/Scripts/jquery.livesearch.js")
+             .Add("~/Scripts/Markdown.Converter.js")
+             .Add("~/Scripts/jquery.history.js")
+             .Add("~/Chat.utility.js")
+             .Add("~/Chat.emoji.js")
+             .Add("~/Chat.toast.js")
+             .Add("~/Chat.ui.js")
+             .Add("~/Chat.documentOnWrite.js")
+             .Add("~/Chat.twitter.js")
+             .Add("~/Chat.pinnedWindows.js")
+             .Add("~/Chat.githubissues.js")
+             .Add("~/Chat.js")
+             .Add("~/Scripts/jquery.network.mock.js")
+             .Render("~/Scripts/JabbR2_#.js"));
     }
 </body>
 </html>
