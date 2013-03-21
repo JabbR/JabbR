@@ -95,16 +95,12 @@ form#send-message {
   z-index: -1; 
 }
 
-#upload {
-    width: 10px;
-}
-
 .upload-button
 {
     display: inline-block;
     position: absolute;
-    right: 340px;
-    bottom: 48px;
+    right: 330px;
+    bottom: 38px;
     margin: 0 3px;
     padding: 6px;
     overflow: hidden;

@@ -240,7 +240,6 @@
         Type @@ then press TAB to auto-complete nicknames
       </div>
       </form>
-    </div>
     <form id="upload" action="@Url.Content("~/upload")" method="post" enctype="multipart/form-data" target="upload-frame">
       <input type="hidden" id="file-connection-id" name="connectionId" />
       <input type="hidden" id="file-message-id" name="messageId" />
@@ -250,6 +249,7 @@
       </div>
     </form>
     <iframe id="upload-frame" name="upload-frame" style="position:absolute;top:0;left:0;width:0;height:0;visibility:hidden;"></iframe>
+    </div>
     @if (Model.ShowDetails)
     {
     <div id="releaseArea">
