@@ -263,10 +263,13 @@
         ui.setActiveRoom(this.state.activeRoom || 'Lobby');
 
         if (this.state.activeRoom) {
+            // Populate lobby rooms for intellisense
+            populateLobbyRooms();
+
             // Always populate the active room first then load the other rooms so it looks fast :)
             populateRoom(this.state.activeRoom).done(loadRooms);
         }
-        else {
+        else { 
             // There's no active room so we don't care
             loadRooms();
         }
