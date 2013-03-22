@@ -89,7 +89,7 @@ form#send-message {
   position: absolute;
   top: 45px;
   bottom: 10px;
-  left: 30px;
+  left: 0px;
   right: 0px;
   min-height: 450px;
   z-index: -1; 
@@ -193,6 +193,7 @@ form#send-message {
 {
   position: absolute;
   top: 25px;
+    left: 5px;
 }
 
 .users
@@ -383,11 +384,18 @@ form#send-message {
   {
     display: inline-block;
     padding: 0;
-    margin: 0px 4px 0px 0px;
+    margin: 0px 2px 0px 0px;
     height: 30px;
     border-bottom: 0px;
     position: relative;
-    background-color: #164c85;
+background: #164c85; /* Old browsers */
+background: -moz-linear-gradient(top,  #164c85 0%, #103760 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#164c85), color-stop(100%,#103760)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #164c85 0%,#103760 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #164c85 0%,#103760 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #164c85 0%,#103760 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #164c85 0%,#103760 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#164c85', endColorstr='#103760',GradientType=0 ); /* IE6-9 */
     color: #fff;
     font-weight: bold;
     cursor: pointer;
@@ -535,7 +543,7 @@ li.room
   position: absolute;
   bottom: 20px;
   height: 50px;
-  left: 0;
+  left: 5px;
   right: 235px;
 }
 
