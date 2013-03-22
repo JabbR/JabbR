@@ -704,7 +704,7 @@
     }
 
     function updateNote(userViewModel, $user) {
-        var $note = $user.find('.note'),
+        var $title = $user.find('.name'),
             noteText = userViewModel.note,
             noteTextEncoded = null,
             requireRoomUpdate = false;
@@ -723,13 +723,10 @@
         noteTextEncoded = $('<div/>').html(noteText).text();
 
         // Remove all classes and the text
-        $note.removeClass('afk message');
-        $note.removeAttr('title');
+        $title.removeAttr('title');
 
-        $note.addClass(userViewModel.noteClass);
         if (userViewModel.note) {
-            $note.attr('title', noteTextEncoded);
-            $user.find('.name').attr('title', noteTextEncoded);
+            $title.attr('title', noteTextEncoded);
         }
 
         if (requireRoomUpdate) {
@@ -2060,6 +2057,7 @@
             var room = getRoomElements(roomName),
                 $user = room.getUser(userViewModel.name);
 
+            console.log('changeNote');
             updateNote(userViewModel, $user);
         },
         changeFlag: function (userViewModel, roomName) {
