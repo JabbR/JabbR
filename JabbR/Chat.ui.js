@@ -729,6 +729,7 @@
         $note.addClass(userViewModel.noteClass);
         if (userViewModel.note) {
             $note.attr('title', noteTextEncoded);
+            $user.find('.name').attr('title', noteTextEncoded);
         }
 
         if (requireRoomUpdate) {
@@ -1579,6 +1580,7 @@
             }
             $user.attr('data-active', false);
             $user.data('active', false);
+            $user.addClass('idle');
             return true;
         },
         changeUserName: function (oldName, user, roomName) {
