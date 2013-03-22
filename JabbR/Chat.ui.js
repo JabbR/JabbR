@@ -583,7 +583,7 @@
     }
 
     function navigateToRoom(roomName) {
-        $.history.load('/rooms/' + roomName);
+        document.location.hash = '#/rooms/' + roomName;
     }
 
     function processMessage(message, roomName) {
@@ -959,14 +959,6 @@
 
             $document.on('click', '#tabs li', function () {
                 ui.setActiveRoom($(this).data('name'));
-            });
-
-            $document.on('click', 'li.room', function () {
-                var roomName = $(this).data('name');
-
-                navigateToRoom(roomName);
-
-                return false;
             });
 
             $document.on('click', '#tabs li .close', function (ev) {
@@ -1352,12 +1344,11 @@
                 if (parts[0] === 'rooms') {
                     var roomName = parts[1];
 
-                    if (ui.setActiveRoom(roomName) === false) {
+                    if (ui.setActiveRoomCore(roomName) === false) {
                         $ui.trigger(ui.events.openRoom, [roomName]);
                     }
                 }
-            },
-            { unescape: ',/' });
+            });
         },
         setMessage: function (value) {
             $newMessage.val(value);
@@ -1384,7 +1375,8 @@
                  .data('owner', false);
             room.updateUserStatus($user);
         },
-        setActiveRoom: function (roomName) {
+        setActiveRoom: navigateToRoom,
+        setActiveRoomCore: function (roomName) {
             var room = getRoomElements(roomName);
 
             loadRoomPreferences(roomName);
@@ -1403,8 +1395,7 @@
                 room.makeActive();
 
                 ui.toggleMessageSection(room.isClosed());
-
-                document.location.hash = '#/rooms/' + roomName;
+                
                 $ui.trigger(ui.events.activeRoomChanged, [roomName]);
                 return true;
             }

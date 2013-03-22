@@ -259,10 +259,8 @@
         // Process any urls that may contain room names
         ui.run();
 
-        // If the active room didn't change then set the active room (since no navigation happened)
-        if (activeRoom === this.state.activeRoom) {
-            ui.setActiveRoom(this.state.activeRoom || 'Lobby');
-        }
+        // Otherwise set the active room
+        ui.setActiveRoom(this.state.activeRoom || 'Lobby');
 
         if (this.state.activeRoom) {
             // Always populate the active room first then load the other rooms so it looks fast :)
@@ -292,7 +290,6 @@
     };
 
     chat.client.roomClosed = function (room) {
-        populateLobbyRooms();
         ui.addMessage('Room \'' + room + '\' is now closed', 'notification', this.state.activeRoom);
 
         ui.closeRoom(room);
@@ -303,7 +300,6 @@
     };
 
     chat.client.roomUnClosed = function (room) {
-        populateLobbyRooms();
         ui.addMessage('Room \'' + room + '\' is now open', 'notification', this.state.activeRoom);
 
         ui.unCloseRoom(room);
@@ -898,7 +894,7 @@
         ui.setMessage(messageHistory[historyLocation]);
     });
 
-    $ui.bind(ui.events.activeRoomChanged, function (ev, room) {
+    $ui.bind(ui.events.activeRoomChanged, function (ev, room) {        
         if (room === 'Lobby') {
             populateLobbyRooms();
 
@@ -984,9 +980,6 @@
                         .done(function (shortcuts) {
                             ui.setShortcuts(shortcuts);
                         });
-
-                    // populate the lobby rooms
-                    populateLobbyRooms();
                 });
             });
 
@@ -1016,7 +1009,7 @@
                 }
                 else if (change.newState === $.connection.connectionState.connected) {
                     if (!initial) {
-                        ui.showStatus(0, $.connection.hub.transport.name);                        
+                        ui.showStatus(0, $.connection.hub.transport.name);
                     } else {
                         ui.initializeConnectionStatus($.connection.hub.transport.name);
                     }
