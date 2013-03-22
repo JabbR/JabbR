@@ -346,6 +346,7 @@ form#send-message {
 .users .admin
 {
   vertical-align: middle;
+  position: absolute;
 }
 
 .note
