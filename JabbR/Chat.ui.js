@@ -933,6 +933,18 @@
                 ui.setActiveRoom($(this).data('name'));
             });
 
+            $document.on('click', 'li.room', function () {
+                var roomName = $(this).data('name'),
+                    room = getRoomElements(roomName);
+
+                if (room.exists()) {
+                    ui.setActiveRoom(roomName);
+                }
+                else {
+                    $ui.trigger(ui.events.openRoom, [roomName]);
+                }
+            });
+
             $document.on('click', '#tabs li .close', function (ev) {
                 var roomName = $(this).closest('li').data('name');
 
@@ -1328,7 +1340,7 @@
                 if (parts[0] === 'rooms') {
                     var roomName = parts[1];
 
-                    if (ui.setActiveRoomCore(roomName) === false) {
+                    if (ui.setActiveRoomCore(roomName) === false && roomName !== 'Lobby') {
                         $ui.trigger(ui.events.openRoom, [roomName]);
                     }
                 }
@@ -1373,8 +1385,11 @@
 
             var currentRoom = getCurrentRoomElements();
 
-            if (room.exists() && currentRoom.exists()) {
-                currentRoom.makeInactive();
+            if (room.exists()) {
+                if (currentRoom.exists()) {
+                    currentRoom.makeInactive();
+                }
+
                 triggerFocus();
                 room.makeActive();
 

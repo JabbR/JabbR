@@ -443,23 +443,6 @@
         ui.addMessage(msg, type, room);
     };
 
-    // Called when you created a new user
-    chat.client.userCreated = function () {
-        ui.setUserName(this.state.name);
-        ui.addMessage('Your nick is ' + this.state.name, 'notification');
-
-        // Process any urls that may contain room names
-        ui.run();
-
-        if (!this.state.activeRoom) {
-            // Set the active room to the lobby so the rooms on the right load
-            ui.setActiveRoom('Lobby');
-        }
-
-        // Update the cookie
-        updateCookie();
-    };
-
     chat.client.forceUpdate = function () {
         ui.showUpdateUI();
     };
