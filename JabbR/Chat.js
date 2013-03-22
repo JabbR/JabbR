@@ -842,6 +842,8 @@
         focus = true;
         unread = 0;
         updateTitle();
+
+        chat.server.updateActivity();
     });
 
     $ui.bind(ui.events.blurit, function () {

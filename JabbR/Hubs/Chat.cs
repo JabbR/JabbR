@@ -319,6 +319,18 @@ namespace JabbR
             Clients.Group(room.Name).setTyping(userViewModel, room.Name);
         }
 
+        public void UpdateActivity()
+        {
+            string userId = Context.User.Identity.Name;
+
+            ChatUser user = _repository.GetUserById(userId);
+
+            foreach (var room in user.Rooms)
+            {
+                UpdateActivity(user, room);   
+            }            
+        }
+
         private void LogOn(ChatUser user, string clientId)
         {
             // Update the client state
