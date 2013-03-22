@@ -90,7 +90,7 @@ form#send-message {
   top: 45px;
   bottom: 10px;
   left: 30px;
-  right: 10px;
+  right: 0px;
   min-height: 450px;
   z-index: -1; 
 }
@@ -99,7 +99,7 @@ form#send-message {
 {
     display: inline-block;
     position: absolute;
-    right: 330px;
+    right: 305px;
     bottom: 38px;
     margin: 0 3px;
     padding: 6px;
@@ -156,7 +156,7 @@ form#send-message {
   margin-top: 0px;
   padding-left: 0px;
   left: 0;
-  right: 260px;
+  right: 236px;
   position: absolute;
   top: 55px;
   bottom: 70px;
@@ -197,17 +197,16 @@ form#send-message {
 
 .users
 {
-  margin-left: 0px;
-  padding-left: 0px;
   font-size: small;
   position: absolute;
-  top: 35px;
+  top: 55px;
   right: 0;
-  width: 250px;
-  bottom: 70px;
-  margin-left: 2px; /* for #messages border */
-  margin-top: 0px;
+  width: 235px;
+  bottom: 80px;
+    margin-top: 0px;
   overflow: auto;
+  background: #FFFFFF;
+  border: 1px solid #ccc;
 }
 
 #userlist-lobby
@@ -234,8 +233,13 @@ form#send-message {
 
 .users li
 {
+    margin-left: 0;
   padding: 6px;
   list-style: none;
+}
+
+.users li:hover {
+    background: #f1f1f1;    
 }
 
   .users li.empty
@@ -530,7 +534,7 @@ li.room
   bottom: 20px;
   height: 50px;
   left: 0;
-  right: 260px;
+  right: 235px;
 }
 
 #message-box
@@ -2687,10 +2691,17 @@ pre
     border-radius: 0;
 }
 
+.users > .userlist-header:first-child {
+    margin: 0;
+}
+
 h3.userlist-header
 {
-    padding: 3px 0;
+    padding: 3px 5px;
     margin: 16px 0 0 0;
+    cursor: pointer;
+    font-weight: normal;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .modal, .modal-header
@@ -2824,7 +2835,6 @@ h3.userlist-header
 }
 
 #preferences .download:hover .icon-download {
-    /*background-image: url('Content/images/download-icon-white.png');*/
     background-repeat: no-repeat;
 }
 

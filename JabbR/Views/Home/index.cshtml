@@ -85,9 +85,8 @@
             <i class="user-status"></i>
             <img class="gravatar" src="https://secure.gravatar.com/avatar/${hash}?s=16&d=mm" />
             <div class="details">
-                <div class="name">${name}</div>
+                <div class="name" {{if note}}title="${note}"{{/if}}>${name}</div>
                 <span class="admin">{{if admin}}(admin){{/if}}</span>
-                <span class="note{{if noteClass}} ${noteClass}{{/if}}" {{if note}}title="${note}"{{/if}}></span>
                 <span class="flag{{if flagClass}} ${flagClass}{{/if}}" {{if flag}}title="${country}"{{/if}}></span>
             </div>
         </li>
