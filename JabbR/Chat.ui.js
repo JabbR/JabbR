@@ -2024,7 +2024,7 @@
                         $connectionStatus.popover('show');
                         popoverTimer = setTimeout(function () {
                             $connectionStatus.popover('destroy');
-                            initializeConnectionStatus(transport);
+                            ui.initializeConnectionStatus(transport);
                             popoverTimer = null;
                         }, 2000);
                         break;
