@@ -13,13 +13,13 @@ namespace JabbR.Services
     public class UploadCallbackHandler
     {
         private readonly UploadProcessor _processor;
-        private readonly IResourceProcessor _resourceProcessor;
+        private readonly ContentProviderProcessor _resourceProcessor;
         private readonly IHubContext _hubContext;
         private readonly IChatService _service;
         private readonly IApplicationSettings _settings;
 
         public UploadCallbackHandler(UploadProcessor processor,
-                                     IResourceProcessor resourceProcessor,
+                                     ContentProviderProcessor resourceProcessor,
                                      IConnectionManager connectionManager,
                                      IChatService service,
                                      IApplicationSettings settings)
@@ -73,8 +73,7 @@ namespace JabbR.Services
             // Notify all clients for the uploaded url
             _hubContext.Clients.Group(roomName).addMessage(messageViewModel, roomName);
 
-            // Run the content providers (I wish this happened client side :))
-            Chat.ProcessUrls(new[] { contentUrl }, _hubContext.Clients, _resourceProcessor, roomName, message.Id);
+            _resourceProcessor.ProcessUrls(new[] { contentUrl }, _hubContext.Clients, roomName, message.Id, message.Id);
         }
 
         private static string FormatBytes(long bytes)

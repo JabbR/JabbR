@@ -22,12 +22,15 @@ namespace JabbR
         private readonly IJabbrRepository _repository;
         private readonly IChatService _service;
         private readonly ICache _cache;
-        private readonly IResourceProcessor _resourceProcessor;
+        private readonly ContentProviderProcessor _resourceProcessor;
 
         private static readonly Version _version = typeof(Chat).Assembly.GetName().Version;
         private static readonly string _versionString = _version.ToString();
 
-        public Chat(IResourceProcessor resourceProcessor, IChatService service, IJabbrRepository repository, ICache cache)
+        public Chat(ContentProviderProcessor resourceProcessor, 
+                    IChatService service, 
+                    IJabbrRepository repository, 
+                    ICache cache)
         {
             _resourceProcessor = resourceProcessor;
             _service = service;
@@ -159,7 +162,7 @@ namespace JabbR
             var urls = UrlExtractor.ExtractUrls(chatMessage.Content);
             if (urls.Count > 0)
             {
-                ProcessUrls(urls, room.Name, clientMessageId);
+                _resourceProcessor.ProcessUrls(urls, Clients, room.Name, clientMessageId, chatMessage.Id);
             }
 
             return outOfSync;
@@ -361,43 +364,7 @@ namespace JabbR
             _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
 
             _repository.CommitChanges();
-        }
-
-        private void ProcessUrls(IEnumerable<string> links,
-                                       string roomName,
-                                       string clientMessageId)
-        {
-            ProcessUrls(links, Clients, _resourceProcessor, roomName, clientMessageId);
-        }
-
-        // REVIEW: Move this
-        public static void ProcessUrls(IEnumerable<string> links, 
-                                       IHubConnectionContext clients,
-                                       IResourceProcessor resourceProcessor,
-                                       string roomName, 
-                                       string clientMessageId)
-        {
-            var contentTasks = links.Select(resourceProcessor.ExtractResource).ToArray();
-            Task.Factory.ContinueWhenAll(contentTasks, tasks =>
-            {
-                foreach (var task in tasks)
-                {
-                    if (task.IsFaulted)
-                    {
-                        Trace.TraceError(task.Exception.GetBaseException().Message);
-                        continue;
-                    }
-
-                    if (task.Result == null || String.IsNullOrEmpty(task.Result.Content))
-                    {
-                        continue;
-                    }
-
-                    // Notify the room
-                    clients.Group(roomName).addMessageContent(clientMessageId, task.Result.Content, roomName);
-                }
-            });
-        }
+        }        
 
         private bool TryHandleCommand(string command, string room)
         {

@@ -1753,7 +1753,11 @@
                 room.addSeparator();
             }
 
-            this.appendMessage(templates.message.tmpl(message), room);
+            var $message = this.appendMessage(templates.message.tmpl(message), room);
+
+            if (message.htmlContent) {
+                ui.addChatMessageContent(message.id, message.htmlContent, room);
+            }
 
             if (room.isInitialized()) {
                 if (isMention) {

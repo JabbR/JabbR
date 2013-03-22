@@ -400,7 +400,7 @@ namespace JabbR.Services
 
         public void AppendMessage(string id, string content)
         {
-            ChatMessage message = _repository.GetMessagesById(id);
+            ChatMessage message = _repository.GetMessageById(id);
 
             message.Content += content;
 

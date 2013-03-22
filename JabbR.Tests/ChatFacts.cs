@@ -20,7 +20,7 @@ namespace JabbR.Test
         {
             // setup things needed for chat
             var repository = new InMemoryRepository();
-            var resourceProcessor = new Mock<IResourceProcessor>();
+            var resourceProcessor = new Mock<ContentProviderProcessor>();
             var chatService = new Mock<IChatService>();
             var connection = new Mock<IConnection>();
             var settings = new Mock<IApplicationSettings>();
@@ -49,12 +49,12 @@ namespace JabbR.Test
 
         public class TestableChat : Chat
         {
-            public Mock<IResourceProcessor> MockedResourceProcessor { get; private set; }
+            public Mock<ContentProviderProcessor> MockedResourceProcessor { get; private set; }
             public Mock<IChatService> MockedChatService { get; private set; }
             public IJabbrRepository Repository { get; private set; }
             public Mock<IConnection> MockedConnection { get; private set; }
 
-            public TestableChat(Mock<IApplicationSettings> mockSettings, Mock<IResourceProcessor> mockedResourceProcessor, Mock<IChatService> mockedChatService, IJabbrRepository repository, Mock<IConnection> connection)
+            public TestableChat(Mock<IApplicationSettings> mockSettings, Mock<ContentProviderProcessor> mockedResourceProcessor, Mock<IChatService> mockedChatService, IJabbrRepository repository, Mock<IConnection> connection)
                 : base(mockedResourceProcessor.Object, mockedChatService.Object, repository, new Mock<ICache>().Object)
             {
                 MockedResourceProcessor = mockedResourceProcessor;

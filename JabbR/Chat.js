@@ -164,6 +164,7 @@
             name: message.User.Name,
             hash: message.User.Hash,
             message: message.HtmlEncoded ? message.Content : ui.processContent(message.Content),
+            htmlContent: message.HtmlContent,
             id: message.Id,
             date: message.When.fromJsonDate(),
             highlight: re.test(message.Content) ? 'highlight' : '',
@@ -771,7 +772,7 @@
             3000);
         }
     });
- 
+
     $ui.bind(ui.events.fileUploaded, function (ev, uploader) {
         uploader.submitFile(connection.hub.id, chat.state.activeRoom);
     });

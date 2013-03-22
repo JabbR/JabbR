@@ -4,6 +4,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNet.SignalR.Hubs;
 
 namespace JabbR.ContentProviders.Core
 {

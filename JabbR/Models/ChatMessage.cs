@@ -15,6 +15,9 @@ namespace JabbR.Models
         public DateTimeOffset When { get; set; }
         public bool HtmlEncoded { get; set; }
 
+        // After content providers run this is updated with the content
+        public string HtmlContent { get; set; }
+
         public int? RoomKey { get; set; }
         public int? UserKey { get; set; }
     }

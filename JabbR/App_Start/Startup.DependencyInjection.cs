@@ -38,7 +38,7 @@ namespace JabbR
             kernel.Bind<Chat>()
                   .ToMethod(context =>
                   {
-                      var resourceProcessor = context.Kernel.Get<IResourceProcessor>();
+                      var resourceProcessor = context.Kernel.Get<ContentProviderProcessor>();
                       var repository = context.Kernel.Get<IJabbrRepository>();
                       var cache = context.Kernel.Get<ICache>();
 
@@ -109,6 +109,9 @@ namespace JabbR
             kernel.Bind<UploadProcessor>()
                   .ToSelf()
                   .InSingletonScope();
+
+            kernel.Bind<ContentProviderProcessor>()
+                  .ToConstant(new ContentProviderProcessor(kernel));
 
             return kernel;
         }
