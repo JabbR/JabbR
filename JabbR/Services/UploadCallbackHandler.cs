@@ -63,10 +63,8 @@ namespace JabbR.Services
                 return;
             }
 
-            string content = String.Format("{0} ({1}) {2}", Path.GetFileName(file), contentUrl, FormatBytes(stream.Length));
-
             // Add the message to the persistent chat
-            ChatMessage message = _service.AddMessage(userId, roomName, content);
+            ChatMessage message = _service.AddMessage(userId, roomName, contentUrl);
 
             var messageViewModel = new MessageViewModel(message);
 
