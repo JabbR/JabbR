@@ -16,7 +16,7 @@ namespace JabbR
         // Background task info
         private static volatile bool _sweeping;
         private static Timer _backgroundTimer;
-        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(10);
+        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(2);
 
         private static void StartBackgroundWork(IKernel kernel, IDependencyResolver resolver)
         {
@@ -97,7 +97,7 @@ namespace JabbR
                     // Fix users that are marked as inactive but have no clients
                     user.Status = (int)UserStatus.Offline;
                 }
-                else if (elapsed.TotalMinutes > 15)
+                else if (elapsed.TotalMinutes > 5)
                 {
                     user.Status = (int)UserStatus.Inactive;
                     inactiveUsers.Add(user);
