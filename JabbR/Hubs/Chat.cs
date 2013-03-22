@@ -19,6 +19,8 @@ namespace JabbR
     [Authorize]
     public class Chat : Hub, INotificationService
     {
+        private static readonly TimeSpan _disconnectThreshold = TimeSpan.FromSeconds(10);
+
         private readonly IJabbrRepository _repository;
         private readonly IChatService _service;
         private readonly ICache _cache;
@@ -386,7 +388,7 @@ namespace JabbR
 
             // To avoid the leave/join that happens when a user refreshes the page
             // we sleep for a second before we check the status.
-            Thread.Sleep(1000);
+            Thread.Sleep(_disconnectThreshold);
 
             // Query for the user to get the updated status
             ChatUser user = _repository.GetUserById(userId);
