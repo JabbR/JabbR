@@ -681,43 +681,14 @@
     }
 
     function triggerSend() {
-        var msg = $.trim($newMessage.val()),
-            file = $hiddenFile.val();
+        var msg = $.trim($newMessage.val());
 
-        var arg = {
-            message: msg,
-            file: file,
-            getFileName: function () {
-                if (!this.file) {
-                    return;
-                }
-
-                var slash = file.lastIndexOf('\\'),
-                    name = file.substring(slash + 1);
-
-                return name;
-            },
-            submitFile: function (connectionId, room) {
-                if (!this.file) {
-                    return;
-                }
-
-                $fileConnectionId.val(connectionId);
-
-                $fileRoom.val(room);
-
-                $uploadForm.submit();
-
-                $hiddenFile.val('');
-            }
-        };
-
-        if (msg || file) {
+        if (msg) {
             if (msg.toLowerCase() == '/login') {
                 ui.showLogin();
             }
             else {
-                $ui.trigger(ui.events.sendMessage, [arg]);
+                $ui.trigger(ui.events.sendMessage, [msg]);
             }
         }
 
@@ -870,7 +841,8 @@
             blurit: 'jabbr.ui.blurit',
             preferencesChanged: 'jabbr.ui.preferencesChanged',
             loggedOut: 'jabbr.ui.loggedOut',
-            reloadMessages: 'jabbr.ui.reloadMessages'
+            reloadMessages: 'jabbr.ui.reloadMessages',
+            fileUploaded: 'jabbr.ui.fileUploaded',
         },
 
         help: {
@@ -1325,10 +1297,22 @@
 
                 var path = $hiddenFile.val(),
                     slash = path.lastIndexOf('\\'),
-                    name = path.substring(slash + 1);
+                    name = path.substring(slash + 1),
+                    uploader = {
+                        submitFile: function (connectionId, room) {                            
+                            $fileConnectionId.val(connectionId);
 
-                // TODO: Change the message type
-                ui.addMessage('\'' + name + '\' ready for upload.', 'broadcast');
+                            $fileRoom.val(room);
+
+                            $uploadForm.submit();
+
+                            $hiddenFile.val('');
+                        }
+                    };
+
+                ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
+
+                $ui.trigger(ui.events.fileUploaded, [uploader]);
             });
 
             // Start cycling the messages once the document has finished loading.
@@ -1395,7 +1379,7 @@
                 room.makeActive();
 
                 ui.toggleMessageSection(room.isClosed());
-                
+
                 $ui.trigger(ui.events.activeRoomChanged, [roomName]);
                 return true;
             }
@@ -2048,7 +2032,7 @@
                 }
             }
         },
-        initializeConnectionStatus: function(transport) {
+        initializeConnectionStatus: function (transport) {
             $connectionStatus.popover(getConnectionInfoPopoverOptions(transport));
         },
         changeNote: function (userViewModel, roomName) {

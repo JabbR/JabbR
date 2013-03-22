@@ -269,7 +269,7 @@
             // Always populate the active room first then load the other rooms so it looks fast :)
             populateRoom(this.state.activeRoom).done(loadRooms);
         }
-        else { 
+        else {
             // There's no active room so we don't care
             loadRooms();
         }
@@ -771,22 +771,19 @@
             3000);
         }
     });
+ 
+    $ui.bind(ui.events.fileUploaded, function (ev, uploader) {
+        uploader.submitFile(connection.hub.id, chat.state.activeRoom);
+    });
 
-    $ui.bind(ui.events.sendMessage, function (ev, arg) {
+    $ui.bind(ui.events.sendMessage, function (ev, msg) {
         var id = utility.newId(),
-            msg = arg.message,
             clientMessage = {
                 id: id,
                 content: msg,
                 room: chat.state.activeRoom
             },
             messageCompleteTimeout = null;
-
-        arg.submitFile(connection.hub.id, clientMessage.room);
-
-        if (!msg) {
-            return;
-        }
 
         if (msg[0] !== '/') {
 
@@ -897,7 +894,7 @@
         ui.setMessage(messageHistory[historyLocation]);
     });
 
-    $ui.bind(ui.events.activeRoomChanged, function (ev, room) {        
+    $ui.bind(ui.events.activeRoomChanged, function (ev, room) {
         if (room === 'Lobby') {
             populateLobbyRooms();
 
