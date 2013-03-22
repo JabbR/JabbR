@@ -950,7 +950,7 @@
                 chat.server.join()
                 .fail(function (e) {
                     // So refresh the page, our auth token is probably gone
-                    document.location = document.location.pathname;
+                    performLogout();
                 })
                 .done(function () {
                     // get list of available commands
