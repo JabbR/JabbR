@@ -12,7 +12,7 @@
     <link href="@Url.Content("~/Content/images/logo64.png")" rel="icon" type="image/png" sizes="64x64">
     <link href="@Url.Content("~/favicon.ico")" rel="shortcut icon" type="image/x-icon" sizes="16x16">
     @{ 
-        WriteLiteral(Bundle.Css()
+        WriteLiteral(Bundle.Css().ForceDebugIf(() => Model.DebugMode)
             .Add("~/Content/bootstrap.min.css")
             .Add("~/Content/font-awesome.min.css")
             .Add("~/Chat.css")
@@ -344,7 +344,7 @@
   </section> 
 
      @{
-         WriteLiteral(Bundle.JavaScript()
+         WriteLiteral(Bundle.JavaScript().ForceDebugIf(() => Model.DebugMode)
             .Add("~/Scripts/jquery-1.9.0.min.js")
             .Add("~/Scripts/jquery-migrate-1.0.0.min.js")
             .Add("~/Scripts/json2.min.js")
@@ -357,7 +357,7 @@
   <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
      @{
          
-         WriteLiteral(Bundle.JavaScript()
+         WriteLiteral(Bundle.JavaScript().ForceDebugIf(() => Model.DebugMode)
              .Add("~/Scripts/jQuery.tmpl.min.js")
              .Add("~/Scripts/jquery.cookie.js")
              .Add("~/Scripts/jquery.autotabcomplete.js")

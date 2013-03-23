@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Principal;
 using Nancy;
 using Nancy.Bootstrapper;
@@ -39,6 +40,18 @@ namespace JabbR.Nancy
                 if (principal != null && principal.Identity.IsAuthenticated)
                 {
                     context.CurrentUser = new PrincipalIdentity(principal);
+                }
+
+                var appMode = Get<string>(env, "host.AppMode");
+
+                if (!String.IsNullOrEmpty(appMode) && 
+                    appMode.Equals("development", StringComparison.OrdinalIgnoreCase))
+                {
+                    context.Items["_debugMode"] = true;
+                }
+                else
+                {
+                    context.Items["_debugMode"] = false;
                 }
             }
 

@@ -9,6 +9,8 @@ namespace JabbR.ViewModels
         public string Sha { get; set; }
         public string Branch { get; set; }
         public string Time { get; set; }
+        public bool DebugMode { get; set; }
+
         public bool ShowDetails
         {
             get

@@ -21,7 +21,8 @@ namespace JabbR.Nancy
                         GoogleAnalytics = ConfigurationManager.AppSettings["jabbr:googleAnalytics"],
                         Sha = ConfigurationManager.AppSettings["jabbr:releaseSha"],
                         Branch = ConfigurationManager.AppSettings["jabbr:releaseBranch"],
-                        Time = ConfigurationManager.AppSettings["jabbr:releaseTime"]
+                        Time = ConfigurationManager.AppSettings["jabbr:releaseTime"],
+                        DebugMode = (bool)Context.Items["_debugMode"]
                     };
 
                     return View["index", viewModel];
