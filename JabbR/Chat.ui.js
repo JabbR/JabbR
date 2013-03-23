@@ -96,7 +96,7 @@
             }
 
             // Go light
-            $tab.animate({ backgroundColor: '#e5e5e5', color: '#000000' }, 800, function () {
+            $tab.animate({ backgroundColor: '#e5e5e5', color: '#77d42a' }, 800, function () {
                 // Stop if we're not unread anymore
                 if (!$tab.hasClass('unread')) {
                     return;
