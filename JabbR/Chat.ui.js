@@ -62,7 +62,8 @@
         $fileRoom = null,
         $fileConnectionId = null,
         connectionInfoStatus = null,
-        connectionInfoTransport = null;
+        connectionInfoTransport = null,
+        $topicBar;
 
     function getRoomId(roomName) {
         return window.escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
@@ -488,7 +489,7 @@
 
         $roomTopic = $('<div/>').attr('id', 'roomTopic-' + roomId)
                               .addClass('roomTopic')
-                              .appendTo($chatArea)
+                              .appendTo($topicBar)
                               .hide();
 
         if (roomName !== "lobby") {
@@ -754,7 +755,7 @@
     function updateRoomTopic(roomViewModel) {
         var room = getRoomElements(roomViewModel.Name);
         var topic = roomViewModel.Topic;
-        var topicHtml = '<span>' + (topic === '' ? 'You\'re chatting in ' + roomViewModel.Name : '<strong>Topic: </strong>' + ui.processContent(topic)) + '</span>';
+        var topicHtml = topic === '' ? 'You\'re chatting in ' + roomViewModel.Name : '<strong>Topic: </strong>' + ui.processContent(topic);
         var roomTopic = room.roomTopic;
         var isVisibleRoom = getCurrentRoomElements().getName() === roomViewModel.Name;
         if (isVisibleRoom) {
@@ -879,7 +880,8 @@
             $connectionInfoContent = $('#connection-info-content');
             connectionInfoStatus = '#connection-status';
             connectionInfoTransport = '#connection-transport';
-
+            $topicBar = $('#topic-bar');
+            
             if (toast.canToast()) {
                 $toast.show();
             }
