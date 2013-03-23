@@ -607,15 +607,6 @@ li.room
   left: 71%;
 }
 
-#message-instruction
-{
-  color: #999;
-  font-style: italic;
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-}
-
 li.error
 {
   padding: 5px;
@@ -2209,11 +2200,6 @@ li.clearfix
     margin-bottom: 10px;
     margin-right: 0px;
     padding: 5px;
-  }
-
-  #message-instruction
-  {
-    display: none;
   }
 
   #tabs

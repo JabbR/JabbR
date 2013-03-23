@@ -766,31 +766,6 @@
         }
     }
 
-    // Rotating Tips.
-    var messages = [
-                'Type @ then press TAB to auto-complete nicknames',
-                'Use ? or type /? to display the FAQ and list of commands',
-                'Type : then press TAB to auto-complete emoji icons',
-                'You can create your own private rooms. Use ? or type /? for more info'
-    ];
-
-    var cycleTimeInMilliseconds = 60 * 1000; // 1 minute.
-    var messageIndex = 0;
-
-    function cycleMessages() {
-        setTimeout(function () {
-            messageIndex++;
-            if (messageIndex >= messages.length) {
-                messageIndex = 0;
-            }
-            $('#message-instruction').fadeOut(2000, function () {
-                $('#message-instruction').html(messages[messageIndex]);
-            });
-
-            $('#message-instruction').fadeIn(2000, cycleMessages);
-        }, cycleTimeInMilliseconds);
-    }
-
     function getConnectionStateChangedPopoverOptions(statusText) {
         var options = {
             html: true,
@@ -1324,9 +1299,6 @@
 
                 $ui.trigger(ui.events.fileUploaded, [uploader]);
             });
-
-            // Start cycling the messages once the document has finished loading.
-            cycleMessages();
         },
         run: function () {
             $.history.init(function (hash) {
