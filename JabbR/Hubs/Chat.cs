@@ -26,9 +26,6 @@ namespace JabbR
         private readonly ICache _cache;
         private readonly ContentProviderProcessor _resourceProcessor;
 
-        private static readonly Version _version = typeof(Chat).Assembly.GetName().Version;
-        private static readonly string _versionString = _version.ToString();
-
         public Chat(ContentProviderProcessor resourceProcessor, 
                     IChatService service, 
                     IJabbrRepository repository, 
@@ -56,16 +53,26 @@ namespace JabbR
         {
             get
             {
-                string version = Clients.Caller.version;
-                return String.IsNullOrEmpty(version) ||
-                        new Version(version) != _version;
+                string version = Context.QueryString["version"];
+
+                if (String.IsNullOrEmpty(version))
+                {
+                    return false;
+                }
+
+                return new Version(version) != Constants.JabbRVersion;
             }
+        }
+
+        public override Task OnConnected()
+        {
+            CheckStatus();
+
+            return base.OnConnected();
         }
 
         public void Join()
         {
-            SetVersion();
-
             // Get the client state
             var userId = Context.User.Identity.Name;
 
@@ -83,20 +90,10 @@ namespace JabbR
 
         private void CheckStatus()
         {
-            bool outOfSync = OutOfSync;
-
-            // Set the version on the client
-            SetVersion();
-
-            if (outOfSync)
+            if (OutOfSync)
             {
                 Clients.Caller.outOfSync();
             }
-        }
-
-        private void SetVersion()
-        {
-            Clients.Caller.version = _versionString;
         }
 
         private void OnUserInitialize(ClientState clientState, ChatUser user)

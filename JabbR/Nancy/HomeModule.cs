@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Linq;
+using JabbR.Infrastructure;
 using JabbR.Services;
 using JabbR.ViewModels;
 using Nancy;
@@ -22,7 +23,8 @@ namespace JabbR.Nancy
                         Sha = ConfigurationManager.AppSettings["jabbr:releaseSha"],
                         Branch = ConfigurationManager.AppSettings["jabbr:releaseBranch"],
                         Time = ConfigurationManager.AppSettings["jabbr:releaseTime"],
-                        DebugMode = (bool)Context.Items["_debugMode"]
+                        DebugMode = (bool)Context.Items["_debugMode"],
+                        Version = Constants.JabbRVersion
                     };
 
                     return View["index", viewModel];

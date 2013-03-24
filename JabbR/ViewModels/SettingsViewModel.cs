@@ -10,6 +10,7 @@ namespace JabbR.ViewModels
         public string Branch { get; set; }
         public string Time { get; set; }
         public bool DebugMode { get; set; }
+        public Version Version { get; set; }
 
         public bool ShowDetails
         {

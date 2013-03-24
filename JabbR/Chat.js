@@ -948,6 +948,7 @@
             }
 
             connection.hub.logging = logging;
+            connection.hub.qs = "version=" + window.jabbrVersion;
             connection.hub.start(options)
                           .done(function () {
                               chat.server.join()
