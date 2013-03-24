@@ -733,6 +733,10 @@
         ui.addMessage('ADMIN: ' + message, 'broadcast', room);
     };
 
+    chat.client.outOfSync = function () {
+        ui.showUpdateUI();
+    };
+
     $ui.bind(ui.events.typing, function () {
         // If not in a room, don't try to send typing notifications
         if (!chat.state.activeRoom) {
@@ -807,11 +811,7 @@
 
         try {
             chat.server.send(clientMessage)
-                .done(function (requiresUpdate) {
-                    if (requiresUpdate === true) {
-                        ui.showUpdateUI();
-                    }
-
+                .done(function () {
                     if (messageCompleteTimeout) {
                         clearTimeout(messageCompleteTimeout);
                         delete pendingMessages[id];
@@ -969,24 +969,6 @@
                                       });
                               });
                           });
-
-            connection.hub.reconnected(function () {
-                if (checkingStatus === true) {
-                    return;
-                }
-
-                checkingStatus = true;
-
-                chat.server.checkStatus()
-                    .done(function (requiresUpdate) {
-                        if (requiresUpdate === true) {
-                            ui.showUpdateUI();
-                        }
-                    })
-                    .always(function () {
-                        checkingStatus = false;
-                    });
-            });
 
             connection.hub.stateChanged(function (change) {
                 if (change.newState === $.connection.connectionState.reconnecting) {

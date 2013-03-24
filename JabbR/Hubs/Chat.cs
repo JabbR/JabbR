@@ -64,7 +64,7 @@ namespace JabbR
 
         public void Join()
         {
-            SetVersion();
+            CheckStatus();
 
             // Get the client state
             var userId = Context.User.Identity.Name;
@@ -81,19 +81,17 @@ namespace JabbR
             OnUserInitialize(clientState, user);
         }
 
-        private void SetVersion()
-        {
-            // Set the version on the client
-            Clients.Caller.version = _versionString;
-        }
-
-        public bool CheckStatus()
+        private void CheckStatus()
         {
             bool outOfSync = OutOfSync;
 
-            SetVersion();
+            // Set the version on the client
+            Clients.Caller.version = _versionString;
 
-            return outOfSync;
+            if (outOfSync)
+            {
+                Clients.Caller.outOfSync();
+            }
         }
 
         private void OnUserInitialize(ClientState clientState, ChatUser user)
@@ -122,14 +120,12 @@ namespace JabbR
 
         public bool Send(ClientMessage message)
         {
-            bool outOfSync = OutOfSync;
-
-            SetVersion();
+            CheckStatus();
 
             // See if this is a valid command (starts with /)
             if (TryHandleCommand(message.Content, message.Room))
             {
-                return outOfSync;
+                return true;
             }
 
             var userId = Context.User.Identity.Name;
@@ -167,7 +163,7 @@ namespace JabbR
                 _resourceProcessor.ProcessUrls(urls, Clients, room.Name, clientMessageId, chatMessage.Id);
             }
 
-            return outOfSync;
+            return true;
         }
 
         public UserViewModel GetUserInfo()
@@ -181,6 +177,8 @@ namespace JabbR
 
         public override Task OnReconnected()
         {
+            CheckStatus();
+
             var userId = Context.User.Identity.Name;
 
             ChatUser user = _repository.VerifyUserId(userId);
@@ -321,6 +319,8 @@ namespace JabbR
 
         public void UpdateActivity()
         {
+            CheckStatus();
+
             string userId = Context.User.Identity.Name;
 
             ChatUser user = _repository.GetUserById(userId);
