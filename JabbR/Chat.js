@@ -948,26 +948,27 @@
             }
 
             connection.hub.logging = logging;
-            connection.hub.start(options, function () {
-                chat.server.join()
-                .fail(function (e) {
-                    // So refresh the page, our auth token is probably gone
-                    performLogout();
-                })
-                .done(function () {
-                    // get list of available commands
-                    chat.server.getCommands()
-                        .done(function (commands) {
-                            ui.setCommands(commands);
-                        });
+            connection.hub.start(options)
+                          .done(function () {
+                              chat.server.join()
+                              .fail(function (e) {
+                                  // So refresh the page, our auth token is probably gone
+                                  performLogout();
+                              })
+                              .done(function () {
+                                  // get list of available commands
+                                  chat.server.getCommands()
+                                      .done(function (commands) {
+                                          ui.setCommands(commands);
+                                      });
 
-                    // get list of available shortcuts
-                    chat.server.getShortcuts()
-                        .done(function (shortcuts) {
-                            ui.setShortcuts(shortcuts);
-                        });
-                });
-            });
+                                  // get list of available shortcuts
+                                  chat.server.getShortcuts()
+                                      .done(function (shortcuts) {
+                                          ui.setShortcuts(shortcuts);
+                                      });
+                              });
+                          });
 
             connection.hub.reconnected(function () {
                 if (checkingStatus === true) {
