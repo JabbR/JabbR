@@ -64,7 +64,7 @@ namespace JabbR
 
         public void Join()
         {
-            CheckStatus();
+            SetVersion();
 
             // Get the client state
             var userId = Context.User.Identity.Name;
@@ -86,12 +86,17 @@ namespace JabbR
             bool outOfSync = OutOfSync;
 
             // Set the version on the client
-            Clients.Caller.version = _versionString;
+            SetVersion();
 
             if (outOfSync)
             {
                 Clients.Caller.outOfSync();
             }
+        }
+
+        private void SetVersion()
+        {
+            Clients.Caller.version = _versionString;
         }
 
         private void OnUserInitialize(ClientState clientState, ChatUser user)
