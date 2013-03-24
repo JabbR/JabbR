@@ -67,7 +67,7 @@ namespace JabbR
             {
                 using (var repo = kernel.Get<IJabbrRepository>())
                 {
-                    MarkInactiveUsers(repo, hubContext);
+                    CheckUserStatus(repo, hubContext);
 
                     repo.CommitChanges();
                 }
@@ -82,7 +82,7 @@ namespace JabbR
             }
         }
 
-        private static void MarkInactiveUsers(IJabbrRepository repo, IHubContext hubContext)
+        private static void CheckUserStatus(IJabbrRepository repo, IHubContext hubContext)
         {
             var inactiveUsers = new List<ChatUser>();
             var offlineUsers = new List<ChatUser>();
