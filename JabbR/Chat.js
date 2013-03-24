@@ -201,7 +201,7 @@
         isUnreadMessageForUser = false;
         focus = true;
         unread = 0;
-        updateTitle();
+        updateUnread(chat.state.activeRoom, false);
     }
 
     function updateUnread(room, isMentioned) {
