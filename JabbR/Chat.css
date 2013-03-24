@@ -196,6 +196,10 @@ form#send-message {
       border-left: 175px solid #f1f1f1; /* background color for left column (user info) */
     }
 
+    .messages li.message.my-message {
+        border-color: #E4ECF1;
+    }
+
     .messages li img.gravatar
     {
       height: 16px;
