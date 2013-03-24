@@ -1800,8 +1800,7 @@
                 content = collapseRichContent(content);
             }
 
-            $(content).appendTo($message.find('.middle'))
-                      .wrap('<p/>');
+            $message.find('.middle').append('<p>' + content + '</p>');
         },
         addPrivateMessage: function (content, type) {
             var rooms = getAllRoomElements();
