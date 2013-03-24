@@ -777,6 +777,9 @@
     });
 
     $ui.bind(ui.events.sendMessage, function (ev, msg) {
+        unread = 0;
+        updateTitle();
+
         var id = utility.newId(),
             clientMessage = {
                 id: id,
