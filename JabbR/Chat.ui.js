@@ -81,12 +81,11 @@
         return $closedRoomFilter.is(':checked');
     }
 
-    function Room($tab, $usersContainer, $usersOwners, $usersActive, $usersIdle, $messages, $roomTopic) {
+    function Room($tab, $usersContainer, $usersOwners, $usersActive, $messages, $roomTopic) {
         this.tab = $tab;
         this.users = $usersContainer;
         this.owners = $usersOwners;
         this.activeUsers = $usersActive;
-        this.idleUsers = $usersIdle;
         this.messages = $messages;
         this.roomTopic = $roomTopic;
 
@@ -237,7 +236,6 @@
             this.messages.empty();
             this.owners.empty();
             this.activeUsers.empty();
-            this.idleUsers.empty();
         };
 
         this.makeInactive = function () {
@@ -330,13 +328,13 @@
         };
 
         this.addUser = function (userViewModel, $user) {
-            if (userViewModel.active) {
-                this.addUserToList($user, this.activeUsers);
-            } else if (userViewModel.owner) {
+            if (userViewModel.owner) {
                 this.addUserToList($user, this.owners);
-            }
-            else {
-                this.addUserToList($user, this.idleUsers);
+            } else {
+                userViewModel.active ? $user.removeClass('idle') : $user.addClass('idle');
+                
+                this.addUserToList($user, this.activeUsers);
+                
             }
         };
 
@@ -369,13 +367,14 @@
             }
 
             if (!this.appearsInList($user, this.activeUsers)) {
+                status ? $user.removeClass('idle') : $user.addClass('idle');
+
                 this.addUserToList($user, this.activeUsers);
             }
         };
 
         this.sortLists = function () {
             this.sortList(this.activeUsers);
-            this.sortList(this.idleUsers);
         };
 
         this.sortList = function (listToSort) {
@@ -399,7 +398,6 @@
                         $('#userlist-' + roomId),
                         $('#userlist-' + roomId + '-owners'),
                         $('#userlist-' + roomId + '-active'),
-                        $('#userlist-' + roomId + '-idle'),
                         $('#messages-' + roomId),
                         $('#roomTopic-' + roomId));
         return room;
@@ -410,7 +408,6 @@
                         $('.users.current'),
                         $('.userlist.current .owners'),
                         $('.userlist.current .active'),
-                        $('.userlist.current .idle'),
                         $('.messages.current'),
                         $('.roomTopic.current'));
         return room;
@@ -1543,6 +1540,7 @@
             }
             $user.attr('data-active', true);
             $user.data('active', true);
+            $user.removeClass('idle');
             return true;
         },
         setUserInActive: function ($user) {
