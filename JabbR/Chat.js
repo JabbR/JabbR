@@ -802,7 +802,8 @@
                 message: ui.processContent(clientMessage.content),
                 id: clientMessage.id,
                 date: new Date(),
-                highlight: ''
+                highlight: '',
+                isMine: true
             };
 
             ui.addChatMessage(viewModel, clientMessage.room);
