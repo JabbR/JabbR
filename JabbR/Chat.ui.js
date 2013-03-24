@@ -635,8 +635,8 @@
     }
 
     function triggerFocus() {
-        if (ui.focus === false) {
-            ui.focus = true;
+        if (focus === false) {
+            focus = true;
             $ui.trigger(ui.events.focusit);
         }
     }
@@ -704,7 +704,7 @@
     function triggerSend() {
         var msg = $.trim($newMessage.val());
 
-        ui.focus = true;
+        focus = true;
 
         if (msg) {
             if (msg.toLowerCase() == '/login') {
@@ -1177,7 +1177,7 @@
             });
 
             $window.blur(function () {
-                ui.focus = false;
+                focus = false;
                 $ui.trigger(ui.events.blurit);
             });
 
@@ -1770,14 +1770,14 @@
                         ui.notify(true);
                     }
 
-                    if (ui.focus === false && anyRoomPreference('canToast') === true) {
+                    if (focus === false && anyRoomPreference('canToast') === true) {
                         // Only toast if there's no focus (even on mentions)
                         ui.toast(message, true, roomName);
                     }
                 }
                 else {
                     // Only toast if chat isn't focused
-                    if (ui.focus === false) {
+                    if (focus === false) {
                         ui.notifyRoom(roomName);
                         ui.toastRoom(roomName, message);
                     }
@@ -1875,7 +1875,7 @@
             $(newMessage).appendTo(room.messages);
         },
         hasFocus: function () {
-            return ui.focus;
+            return focus;
         },
         getShortcuts: function () {
             return ui.shortcuts;
