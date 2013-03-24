@@ -43,7 +43,7 @@ namespace JabbR
 
             SetupSignalR(kernel, app);
             SetupWebApi(kernel, app);
-            SetupMiddleware(app);
+            SetupMiddleware(settings, app);
             SetupNancy(kernel, app);
 
             SetupErrorHandling();
@@ -55,9 +55,13 @@ namespace JabbR
             app.UseNancy(bootstrapper);
         }
 
-        private static void SetupMiddleware(IAppBuilder app)
+        private static void SetupMiddleware(IApplicationSettings settings, IAppBuilder app)
         {
-            app.MapPath("/proxy", subApp => subApp.Use(typeof(ImageProxyHandler)));
+            if (settings.ProxyImages)
+            {
+                app.MapPath("/proxy", subApp => subApp.Use(typeof(ImageProxyHandler)));
+            }
+
             app.UseStaticFiles();
         }
 

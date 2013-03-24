@@ -11,11 +11,9 @@ namespace JabbR.UploadHandlers
     public class UploadProcessor
     {
         private readonly IList<IUploadHandler> _fileUploadHandlers;
-        private readonly IApplicationSettings _settings;
 
         public UploadProcessor(IApplicationSettings settings)
         {
-            _settings = settings;
             _fileUploadHandlers = GetUploadHandlers(settings);
         }
 

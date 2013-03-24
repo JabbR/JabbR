@@ -1,20 +1,41 @@
 ﻿using System;
+using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
+using JabbR.Services;
 using Microsoft.Security.Application;
 
 namespace JabbR.ContentProviders
 {
     public class ImageContentProvider : CollapsibleContentProvider
     {
+        private readonly IApplicationSettings _settings;
+
+        [ImportingConstructor]
+        public ImageContentProvider(IApplicationSettings settings)
+        {
+            _settings = settings;
+        }
+
         protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
+            string format = @"<img src=""{0}"" />";
+            if (_settings.ProxyImages)
+            {
+                // If we're proxying images, only proxy what we need to (non https images)
+                if (_settings.RequireHttps &&
+                    !request.RequestUri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
+                {
+                    format = @"<img src=""proxy?url={0}"" />";
+                }
+            }
+
             string url = request.RequestUri.ToString();
             return TaskAsyncHelper.FromResult(new ContentProviderResult()
-             {
-                 Content = String.Format(@"<img src=""proxy?url={0}"" />", Encoder.HtmlAttributeEncode(url)),
-                 Title = url
-             });
+            {
+                Content = String.Format(format, Encoder.HtmlAttributeEncode(url)),
+                Title = url
+            });
         }
 
         public override bool IsValidContent(Uri uri)
@@ -41,7 +62,7 @@ namespace JabbR.ContentProviders
                    contentType.Equals("image/tiff", StringComparison.OrdinalIgnoreCase) ||
                    contentType.Equals("image/x-tiff", StringComparison.OrdinalIgnoreCase) ||
                    contentType.Equals("image/png", StringComparison.OrdinalIgnoreCase) ||
-                   contentType.Equals("image/svg+xml", StringComparison.OrdinalIgnoreCase);                   
+                   contentType.Equals("image/svg+xml", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

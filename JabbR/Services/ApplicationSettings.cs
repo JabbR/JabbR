@@ -80,6 +80,20 @@ namespace JabbR.Services
             }
         }
 
+        public bool ProxyImages
+        {
+            get
+            {
+                string proxyImagesValue = ConfigurationManager.AppSettings["jabbr:proxyImages"];
+                bool proxyImages;
+                if (Boolean.TryParse(proxyImagesValue, out proxyImages))
+                {
+                    return proxyImages;
+                }
+                return false;
+            }
+        }
+
         public string ImagurClientId
         {
             get
