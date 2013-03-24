@@ -123,11 +123,16 @@
     }
 
     function populateLobbyRooms() {
-        // Populate the user list with room names
-        chat.server.getRooms()
-            .done(function (rooms) {
-                ui.populateLobbyRooms(rooms);
-            });
+        try {
+            // Populate the user list with room names
+            chat.server.getRooms()
+                .done(function (rooms) {
+                    ui.populateLobbyRooms(rooms);
+                });
+        }
+        catch (e) {
+            connection.hub.log('getRooms failed');
+        }
     }
 
     function scrollIfNecessary(callback, room) {
@@ -850,7 +855,12 @@
         unread = 0;
         updateTitle();
 
-        chat.server.updateActivity();
+        try {
+            chat.server.updateActivity();
+        }
+        catch (e) {
+            connection.hub.log('updateActivity failed');
+        }
     });
 
     $ui.bind(ui.events.blurit, function () {
@@ -860,18 +870,29 @@
     });
 
     $ui.bind(ui.events.openRoom, function (ev, room) {
-        chat.server.send('/join ' + room, chat.state.activeRoom)
-            .fail(function (e) {
-                ui.setActiveRoom('Lobby');
-                ui.addMessage(e, 'error');
-            });
+        try {
+            chat.server.send('/join ' + room, chat.state.activeRoom)
+                .fail(function (e) {
+                    ui.setActiveRoom('Lobby');
+                    ui.addMessage(e, 'error');
+                });
+        }
+        catch (e) {
+            connection.hub.log('openRoom failed');
+        }
     });
 
     $ui.bind(ui.events.closeRoom, function (ev, room) {
-        chat.server.send('/leave ' + room, chat.state.activeRoom)
-            .fail(function (e) {
-                ui.addMessage(e, 'error');
-            });
+        try {
+            chat.server.send('/leave ' + room, chat.state.activeRoom)
+                .fail(function (e) {
+                    ui.addMessage(e, 'error');
+                });
+        }
+        catch (e) {
+            // This can fail if the server is offline
+            connection.hub.log('closeRoom room failed');
+        }
     });
 
     $ui.bind(ui.events.prevMessage, function () {
@@ -911,15 +932,20 @@
 
         loadingHistory = true;
 
-        // TODO: Show a little animation so the user experience looks fancy
-        chat.server.getPreviousMessages(roomInfo.messageId)
-            .done(function (messages) {
-                ui.prependChatMessages($.map(messages, getMessageViewModel), roomInfo.name);
-                loadingHistory = false;
-            })
-            .fail(function () {
-                loadingHistory = false;
-            });
+        try {
+            // TODO: Show a little animation so the user experience looks fancy
+            chat.server.getPreviousMessages(roomInfo.messageId)
+                .done(function (messages) {
+                    ui.prependChatMessages($.map(messages, getMessageViewModel), roomInfo.name);
+                    loadingHistory = false;
+                })
+                .fail(function () {
+                    loadingHistory = false;
+                });
+        }
+        catch (e) {
+            connection.hub.log('getPreviousMessages failed');
+        }
     });
 
     $(ui).bind(ui.events.reloadMessages, function () {
