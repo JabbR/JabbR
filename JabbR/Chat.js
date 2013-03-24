@@ -197,6 +197,13 @@
         }
     }
 
+    function clearUnread() {
+        isUnreadMessageForUser = false;
+        focus = true;
+        unread = 0;
+        updateTitle();
+    }
+
     function updateUnread(room, isMentioned) {
         if (focus === false) {
             isUnreadMessageForUser = (isUnreadMessageForUser || isMentioned);
@@ -777,8 +784,7 @@
     });
 
     $ui.bind(ui.events.sendMessage, function (ev, msg) {
-        unread = 0;
-        updateTitle();
+        clearUnread();
 
         var id = utility.newId(),
             clientMessage = {
@@ -853,10 +859,7 @@
     });
 
     $ui.bind(ui.events.focusit, function () {
-        isUnreadMessageForUser = false;
-        focus = true;
-        unread = 0;
-        updateTitle();
+        clearUnread();
 
         try {
             chat.server.updateActivity();
