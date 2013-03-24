@@ -57,7 +57,7 @@ namespace JabbR
 
                 if (String.IsNullOrEmpty(version))
                 {
-                    return false;
+                    return true;
                 }
 
                 return new Version(version) != Constants.JabbRVersion;
