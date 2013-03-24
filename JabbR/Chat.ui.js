@@ -614,8 +614,10 @@
     }
 
     function triggerFocus() {
-        ui.focus = true;
-        $ui.trigger(ui.events.focusit);
+        if (ui.focus === false) {
+            ui.focus = true;
+            $ui.trigger(ui.events.focusit);
+        }
     }
 
     function loadPreferences() {
