@@ -17,6 +17,7 @@ namespace JabbR
         private static volatile bool _sweeping;
         private static Timer _backgroundTimer;
         private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(2);
+        private static readonly TimeSpan _sweepStart = TimeSpan.FromMinutes(8);
 
         private static void StartBackgroundWork(IKernel kernel, IDependencyResolver resolver)
         {
@@ -29,8 +30,8 @@ namespace JabbR
                 var hubContext = connectionManager.GetHubContext<Chat>();
                 Sweep(kernel, hubContext);
             }, 
-            null, 
-            _sweepInterval, 
+            null,
+            _sweepStart,
             _sweepInterval);
 
             // Clear all connections on app start
