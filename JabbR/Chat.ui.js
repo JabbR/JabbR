@@ -65,6 +65,19 @@
         connectionInfoTransport = null,
         $topicBar;
 
+    function getRoomNameFromHash(hash) {
+        if (hash.length && hash[0] == '/') {
+            hash = hash.substr(1);
+        }
+
+        var parts = hash.split('/');
+        if (parts[0] === 'rooms') {
+            return parts[1];
+        }
+
+        return null;
+    }
+
     function getRoomId(roomName) {
         return window.escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
     }
@@ -332,9 +345,9 @@
                 this.addUserToList($user, this.owners);
             } else {
                 userViewModel.active ? $user.removeClass('idle') : $user.addClass('idle');
-                
+
                 this.addUserToList($user, this.activeUsers);
-                
+
             }
         };
 
@@ -581,7 +594,15 @@
     }
 
     function navigateToRoom(roomName) {
-        document.location.hash = '#/rooms/' + roomName;
+        var hash = (document.location.hash || '#').substr(1),
+            hashRoomName = getRoomNameFromHash(hash);
+
+        if (hashRoomName && hashRoomName === roomName) {
+            ui.setActiveRoomCore(roomName);
+        }
+        else {
+            document.location.hash = '#/rooms/' + roomName;
+        }
     }
 
     function processMessage(message, roomName) {
@@ -880,7 +901,7 @@
             connectionInfoStatus = '#connection-status';
             connectionInfoTransport = '#connection-transport';
             $topicBar = $('#topic-bar');
-            
+
             if (toast.canToast()) {
                 $toast.show();
             }
@@ -1285,7 +1306,7 @@
                     slash = path.lastIndexOf('\\'),
                     name = path.substring(slash + 1),
                     uploader = {
-                        submitFile: function (connectionId, room) {                            
+                        submitFile: function (connectionId, room) {
                             $fileConnectionId.val(connectionId);
 
                             $fileRoom.val(room);
@@ -1303,14 +1324,9 @@
         },
         run: function () {
             $.history.init(function (hash) {
-                if (hash.length && hash[0] == '/') {
-                    hash = hash.substr(1);
-                }
+                var roomName = getRoomNameFromHash(hash);
 
-                var parts = hash.split('/');
-                if (parts[0] === 'rooms') {
-                    var roomName = parts[1];
-
+                if (roomName) {
                     if (ui.setActiveRoomCore(roomName) === false && roomName !== 'Lobby') {
                         $ui.trigger(ui.events.openRoom, [roomName]);
                     }

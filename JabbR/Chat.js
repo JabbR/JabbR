@@ -224,12 +224,7 @@
     chat.client.joinRoom = function (room) {
         var added = ui.addRoom(room);
 
-        if (added) {
-            ui.setActiveRoomCore(room.Name);
-        }
-        else {
-            ui.setActiveRoom(room.Name);
-        }
+        ui.setActiveRoom(room.Name);
 
         if (room.Private) {
             ui.setRoomLocked(room.Name);
@@ -640,7 +635,6 @@
         if (isSelf(user)) {
             ui.setActiveRoom('Lobby');
             ui.removeRoom(room);
-            ui.addMessage('You have left ' + room, 'notification');
         }
         else {
             ui.removeUser(user, room);
