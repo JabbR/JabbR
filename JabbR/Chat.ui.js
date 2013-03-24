@@ -683,6 +683,8 @@
     function triggerSend() {
         var msg = $.trim($newMessage.val());
 
+        ui.focus = true;
+
         if (msg) {
             if (msg.toLowerCase() == '/login') {
                 ui.showLogin();
@@ -694,8 +696,6 @@
 
         $newMessage.val('');
         $newMessage.focus();
-
-        triggerFocus();
 
         // always scroll to bottom after new message sent
         var room = getCurrentRoomElements();

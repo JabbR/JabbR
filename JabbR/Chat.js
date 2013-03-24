@@ -12,7 +12,6 @@
         originalTitle = document.title,
         unread = 0,
         isUnreadMessageForUser = false,
-        focus = true,
         loadingHistory = false,
         checkingStatus = false,
         typing = false,
@@ -199,13 +198,12 @@
 
     function clearUnread() {
         isUnreadMessageForUser = false;
-        focus = true;
         unread = 0;
         updateUnread(chat.state.activeRoom, false);
     }
 
     function updateUnread(room, isMentioned) {
-        if (focus === false) {
+        if (ui.hasFocus() === false) {
             isUnreadMessageForUser = (isUnreadMessageForUser || isMentioned);
 
             unread = unread + 1;
@@ -870,8 +868,6 @@
     });
 
     $ui.bind(ui.events.blurit, function () {
-        focus = false;
-
         updateTitle();
     });
 
