@@ -742,7 +742,7 @@
     function updateFlag(userViewModel, $user) {
         var $flag = $user.find('.flag');
 
-        $flag.removeClass();
+        $flag.removeAttr('class');
         $flag.addClass('flag');
         $flag.removeAttr('title');
 
