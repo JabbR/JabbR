@@ -1011,8 +1011,9 @@
                 else if (change.newState === $.connection.connectionState.connected) {
                     if (!initial) {
                         ui.showStatus(0, $.connection.hub.transport.name);
+                        ui.setReadOnly(false);
                     } else {
-                        ui.initializeConnectionStatus($.connection.hub.transport.name);
+                        ui.initializeConnectionStatus($.connection.hub.transport.name);                        
                     }
 
                     initial = false;
@@ -1025,6 +1026,7 @@
                 failPendingMessages();
 
                 ui.showStatus(2, '');
+                ui.setReadOnly(true);
 
                 // Restart the connection
                 setTimeout(function () {

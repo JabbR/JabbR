@@ -22,6 +22,7 @@
         $sound = null,
         templates = null,
         focus = true,
+        readOnly = false,
         commands = [],
         shortcuts = [],
         Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13, Slash: 47, Space: 32, Tab: 9, Question: 191 },
@@ -272,7 +273,7 @@
             var currUnread = this.getUnread(),
                 lastUnread = this.messages.find('.message-separator').data('unread') || 0;
 
-            if (!utility.isMobile) {
+            if (!utility.isMobile && !readOnly) {
                 $newMessage.focus();
             }
 
@@ -702,6 +703,10 @@
     }
 
     function triggerSend() {
+        if (readOnly) {
+            return;
+        }
+
         var msg = $.trim($newMessage.val());
 
         focus = true;
@@ -982,7 +987,9 @@
                     }
 
                     ui.setActiveRoom($tabs.children().eq(index).data('name'));
-                    $newMessage.focus();
+                    if (!readOnly) {
+                        $newMessage.focus();
+                    }
                 }
 
                 if (!$newMessage.is(':focus') && ev.shiftKey && ev.keyCode === Keys.Question) {
@@ -1009,6 +1016,10 @@
 
             // handle click on names in chat / room list
             var prepareMessage = function (ev) {
+                if (readOnly) {
+                    return;
+                }
+
                 var message = $newMessage.val().trim();
 
                 // If it was a message to another person, replace that
@@ -1276,7 +1287,9 @@
                 }
             });
 
-            $newMessage.focus();
+            if (!readOnly) {
+                $newMessage.focus();
+            }
 
             // Make sure we can toast at all
             toast.ensureToast(preferences);
@@ -2039,6 +2052,20 @@
                 }
             }
         },
+        setReadOnly: function (isReadOnly) {
+            readOnly = isReadOnly;
+
+            if (readOnly === true) {
+                $hiddenFile.attr('disabled', 'disabled');
+                $submitButton.attr('disabled', 'disabled');
+                $newMessage.attr('disabled', 'disabled');
+            }
+            else {
+                $hiddenFile.removeAttr('disabled');
+                $submitButton.removeAttr('disabled');
+                $newMessage.removeAttr('disabled');
+            }
+        },
         initializeConnectionStatus: function (transport) {
             $connectionStatus.popover(getConnectionInfoPopoverOptions(transport));
         },
@@ -2103,7 +2130,7 @@
                 $newMessage.attr('disabled', 'disabled');
                 $submitButton.attr('disabled', 'disabled');
 
-            } else {
+            } else if (!readOnly) {
                 // re-enable textarea button
                 $newMessage.attr('disabled', '');
                 $newMessage.removeAttr('disabled');
