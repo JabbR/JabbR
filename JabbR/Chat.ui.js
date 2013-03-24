@@ -2031,7 +2031,6 @@
             var room = getRoomElements(roomName),
                 $user = room.getUser(userViewModel.name);
 
-            console.log('changeNote');
             updateNote(userViewModel, $user);
         },
         changeFlag: function (userViewModel, roomName) {
