@@ -205,7 +205,7 @@ namespace JabbR
                     var isOwner = user.OwnedRooms.Contains(room);
 
                     // Tell the people in this room that you've joined
-                    Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner).Wait();
+                    Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner);
 
                     // Add the caller to the group so they receive messages
                     Groups.Add(Context.ConnectionId, room.Name);
@@ -348,7 +348,7 @@ namespace JabbR
                 var isOwner = ownedRooms.Contains(room.Key);
 
                 // Tell the people in this room that you've joined
-                Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner).Wait();
+                Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner);
 
                 // Add the caller to the group so they receive messages
                 Groups.Add(clientId, room.Name);
@@ -434,7 +434,7 @@ namespace JabbR
         private void LeaveRoom(ChatUser user, ChatRoom room)
         {
             var userViewModel = new UserViewModel(user);
-            Clients.Group(room.Name).leave(userViewModel, room.Name).Wait();
+            Clients.Group(room.Name).leave(userViewModel, room.Name);
 
             foreach (var client in user.ConnectedClients)
             {
@@ -505,7 +505,7 @@ namespace JabbR
             }
 
             // Tell the people in this room that you've joined
-            Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner).Wait();
+            Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner);
 
             // Notify users of the room count change
             OnRoomChanged(room);

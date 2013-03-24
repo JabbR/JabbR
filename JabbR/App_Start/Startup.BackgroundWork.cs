@@ -17,7 +17,7 @@ namespace JabbR
         private static volatile bool _sweeping;
         private static Timer _backgroundTimer;
         private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(2);
-        private static readonly TimeSpan _sweepStart = TimeSpan.FromMinutes(8);
+        private static readonly TimeSpan _sweepStart = TimeSpan.FromMinutes(10);
 
         private static void StartBackgroundWork(IKernel kernel, IDependencyResolver resolver)
         {
@@ -119,7 +119,7 @@ namespace JabbR
 
                 foreach (var roomGroup in roomGroups)
                 {
-                    hubContext.Clients.Group(roomGroup.Room.Name).markInactive(roomGroup.Users).Wait();
+                    hubContext.Clients.Group(roomGroup.Room.Name).markInactive(roomGroup.Users);
                 }
             }
         }
