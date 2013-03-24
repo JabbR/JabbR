@@ -15,7 +15,7 @@
   $encryptionKey                      = $env:JABBR_ENCRYPTION_KEY,
   $verificationKey                    = $env:JABBR_VERIFICATION_KEY,
   $imgurClientId                      = $env:JABBR_IMGUR_CLIENT_ID,
-  $blobStoragfeConnectionString        = $env:JABBR_BLOB_STORAGE_CONNECTION_STRING,
+  $blobStorageConnectionString        = $env:JABBR_BLOB_STORAGE_CONNECTION_STRING,
   $maxFileUploadBytes                 = $env:JABBR_MAX_UPLOAD_FILE_BYTES,
   $commitSha,
   $commitBranch
