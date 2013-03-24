@@ -213,7 +213,14 @@
     // When the /join command gets raised this is called
     chat.client.joinRoom = function (room) {
         var added = ui.addRoom(room);
-        ui.setActiveRoom(room.Name);
+
+        if (added) {
+            ui.setActiveRoomCore(room.Name);
+        }
+        else {
+            ui.setActiveRoom(room.Name);
+        }
+
         if (room.Private) {
             ui.setRoomLocked(room.Name);
         }
