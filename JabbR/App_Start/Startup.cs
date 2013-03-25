@@ -59,7 +59,7 @@ namespace JabbR
         {
             if (settings.ProxyImages)
             {
-                app.MapPath("/proxy", subApp => subApp.Use(typeof(ImageProxyHandler)));
+                app.MapPath("/proxy", subApp => subApp.Use(typeof(ImageProxyHandler), settings));
             }
 
             app.UseStaticFiles();

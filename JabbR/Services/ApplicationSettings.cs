@@ -94,6 +94,20 @@ namespace JabbR.Services
             }
         }
 
+        public int ProxyImageMaxSizeBytes
+        {
+            get
+            {
+                string proxyImageMaxSizeBytesValue = ConfigurationManager.AppSettings["jabbr:proxyImageMaxSizeBytes"];
+                int proxyImageMaxSizeBytes;
+                if (Int32.TryParse(proxyImageMaxSizeBytesValue, out proxyImageMaxSizeBytes))
+                {
+                    return proxyImageMaxSizeBytes;
+                }
+                return 0;
+            }
+        }
+
         public string ImagurClientId
         {
             get

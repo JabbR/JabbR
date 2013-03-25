@@ -6,6 +6,7 @@ using System.Net.Cache;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using JabbR.ContentProviders;
+using JabbR.Services;
 using Owin.Types;
 
 namespace JabbR.Middleware
@@ -18,10 +19,12 @@ namespace JabbR.Middleware
     public class ImageProxyHandler
     {
         private readonly AppFunc _next;
+        private readonly IApplicationSettings _settings;
 
-        public ImageProxyHandler(AppFunc next)
+        public ImageProxyHandler(AppFunc next, IApplicationSettings settings)
         {
             _next = next;
+            _settings = settings;
         }
 
         public async Task Invoke(IDictionary<string, object> env)
@@ -47,7 +50,8 @@ namespace JabbR.Middleware
                 request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.Default);
                 var response = (HttpWebResponse)await request.GetResponseAsync();
 
-                if (!ImageContentProvider.IsValidContentType(response.ContentType))
+                if (!ImageContentProvider.IsValidContentType(response.ContentType) &&
+                    response.ContentLength > _settings.ProxyImageMaxSizeBytes)
                 {
                     httpResponse.StatusCode = 404;
                     return;
