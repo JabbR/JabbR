@@ -370,6 +370,7 @@ form#send-message {
 {
   vertical-align: middle;
   position: relative;
+  float: left;
 }
 
 .note
@@ -928,7 +929,8 @@ li.clearfix
 
 .flag
 {
-  position: absolute;
+  position: relative;
+  float: left;
   width: 16px;
   height: 11px;
   margin-left: 5px;
