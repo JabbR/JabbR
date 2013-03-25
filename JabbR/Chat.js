@@ -189,12 +189,14 @@
     }
 
     function updateTitle() {
-        if (unread === 0) {
-            document.title = originalTitle;
-        }
-        else {
-            document.title = (isUnreadMessageForUser ? '*' : '') + '(' + unread + ') ' + originalTitle;
-        }
+        // ugly hack via http://stackoverflow.com/a/2952386/188039
+        setTimeout(function() {
+            if (unread === 0) {
+                document.title = originalTitle;
+            } else {
+                document.title = (isUnreadMessageForUser ? '*' : '') + '(' + unread + ') ' + originalTitle;
+            }
+        }, 200);
     }
 
     function clearUnread() {
