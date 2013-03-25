@@ -73,7 +73,7 @@ form#send-message {
     margin: -4px 4px 0;
 }
 
-#preferences a
+#preferences a, #room-preferences a
 {
   cursor: pointer;
 }
