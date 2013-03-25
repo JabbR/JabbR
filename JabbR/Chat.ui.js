@@ -858,10 +858,10 @@
             $tabs = $('#tabs');
             $submitButton = $('#send');
             $newMessage = $('#new-message');
-            $toast = $('#preferences .toast');
-            $sound = $('#preferences .sound');
-            $richness = $('#preferences .richness');
-            $downloadIcon = $('#preferences .download');
+            $toast = $('#room-preferences .toast');
+            $sound = $('#room-preferences .sound');
+            $richness = $('#room-preferences .richness');
+            $downloadIcon = $('#room-preferences .download');
             $downloadDialog = $('#download-dialog');
             $downloadDialogButton = $('#download-dialog-button');
             $downloadRange = $('#download-range');
@@ -915,6 +915,7 @@
                 $downloadIcon.css({ left: '90px' });
                 // We need to set the toast setting to false
                 preferences.canToast = false;
+                $toast.hide();
             }
 
             // DOM events

@@ -2782,17 +2782,17 @@ h3.userlist-header
     background-repeat: no-repeat;
 }
 
-#preferences .sound:hover .icon-sound {
+#room-preferences .sound:hover .icon-sound {
     background-image: url('Content/images/sound-on-white.png');
     background-repeat: no-repeat;
 }
 
-#preferences .sound.off .icon-sound {
+#room-preferences .sound.off .icon-sound {
     background-image: url('Content/images/sound-off.png');
     background-repeat: no-repeat;
 }
 
-#preferences .sound.off:hover .icon-sound {
+#room-preferences .sound.off:hover .icon-sound {
     background-image: url('Content/images/sound-off-white.png');
     background-repeat: no-repeat;
 }
@@ -2807,17 +2807,17 @@ h3.userlist-header
     background-repeat: no-repeat;
 }
 
-#preferences .toast:hover .icon-toast {
+#room-preferences .toast:hover .icon-toast {
     background-image: url('Content/images/toast-on-white.png');
     background-repeat: no-repeat;
 }
 
-#preferences .toast.off .icon-toast {
+#room-preferences .toast.off .icon-toast {
     background-image: url('Content/images/toast-off.png');
     background-repeat: no-repeat;
 }
 
-#preferences .toast.off:hover .icon-toast {
+#room-preferences .toast.off:hover .icon-toast {
     background-image: url('Content/images/toast-off-white.png');
     background-repeat: no-repeat;
 }
@@ -2831,22 +2831,22 @@ h3.userlist-header
     background-repeat: no-repeat;
 }
 
-#preferences .richness:hover .icon-richness {
+#room-preferences .richness:hover .icon-richness {
     background-image: url('Content/images/richness-on-white.png');
     background-repeat: no-repeat;
 }
 
-#preferences .richness.off .icon-richness {
+#room-preferences .richness.off .icon-richness {
     background-image: url('Content/images/richness-off.png');
     background-repeat: no-repeat;
 }
 
-#preferences .richness.off:hover .icon-richness {
+#room-preferences .richness.off:hover .icon-richness {
     background-image: url('Content/images/richness-off-white.png');
     background-repeat: no-repeat;
 }
 
-#preferences .icon-download {
+#room-preferences .icon-download {
     background-position: 0 0;
     background-size: 10px 14px;
     height: 14px;
@@ -2855,7 +2855,7 @@ h3.userlist-header
     background-repeat: no-repeat;
 }
 
-#preferences .download:hover .icon-download {
+#room-preferences .download:hover .icon-download {
     background-repeat: no-repeat;
 }
 
@@ -2889,7 +2889,7 @@ h3.userlist-header
 .connection-status {
     position: absolute;
     top: 17px;
-    right: 70px;
+    right: 130px;
 }
 
 .icon-connection-status {

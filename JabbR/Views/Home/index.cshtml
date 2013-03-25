@@ -196,17 +196,10 @@
         <h1>Jabb</h1>
         <div class="jabbrLogo" id="logo"></div>
       </div>
-        <div class="btn-group account pull-right">
-            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#"><i class="icon-cog"></i><span class="caret"></span></a>
-            <ul id="preferences" class="dropdown-menu">
-                <li><a href="@Url.Content("~/account")" target="_blank"><i class="icon-user"></i> Account</a></li>
-                <li><a class="logout" title="logout"><i class="icon-logout"></i> Logout</a></li>
-                <li><a class="sound" title="audible notifications"><i class="icon-sound"></i> Audible Notifications</a></li>
-                <li><a class="richness" title="toggle rich-content"><i class="icon-richness"></i> Toggle Rich-content</a></li>
-                <li><a class="toast" title="popup notifications" aria-haspopup="true"><i class="icon-toast"></i>Popup Notifications</a></li>
-                <li><a class="download" title="download messages" aria-haspopup="true"><i class="icon-download"></i>Download Messages</a></li>
-                <li><a class="help" title="display help" aria-haspopup="true"><i class="icon-help"></i>Display help</a></li>
-            </ul>
+        <div id="preferences" class="btn-group account pull-right">
+            <a class="btn help" aria-haspopup="true" title="display help"><i class="icon-question-sign"></i></a>
+            <a class="btn" title="account settings" href="@Url.Content("~/account")" target="_blank"><i class="icon-user"></i></a>
+            <a class="btn logout" title="sign out"><i class="icon-signout"></i></a>
         </div>
     <nav>
       <ul id="tabs" role="tablist">
@@ -218,7 +211,17 @@
       </ul>
     </nav>
     </header>
-    <div id="topic-bar"></div>
+      <div id="topic-bar">
+        <div class="btn-group pull-right" style="margin-right: 10px;">
+            <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">Room Actions<span class="caret"></span></a>
+            <ul id="room-preferences" class="dropdown-menu">
+                <li><a class="sound" title="audible notifications"><i class="icon-sound"></i> Audible Notifications</a></li>
+                <li><a class="richness" title="toggle rich-content"><i class="icon-richness"></i> Toggle Rich-content</a></li>
+                <li><a class="toast" title="popup notifications" aria-haspopup="true"><i class="icon-toast"></i>Popup Notifications</a></li>
+                <li><a class="download" title="download messages" aria-haspopup="true"><i class="icon-download"></i>Download Messages</a></li>
+            </ul>
+        </div>
+      </div>
     <div id="chat-area" role="tabpanel">
       <ul id="messages-lobby" class="messages current" role="log">
       </ul>
