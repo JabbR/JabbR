@@ -32,6 +32,11 @@ namespace JabbR.Middleware
             {
                 env["server.User"] = new GenericPrincipal(new GenericIdentity(userId), new string[0]);
             }
+            else
+            {
+                env["windows.User"] = env["server.User"] as WindowsPrincipal;
+                env["server.User"] = null;
+            }
 
             return _next(env);
         }

@@ -2,7 +2,6 @@
 {
     public enum AuthenticationMode
     {
-        Default,
-        Windows,
+        Default
     }
 }

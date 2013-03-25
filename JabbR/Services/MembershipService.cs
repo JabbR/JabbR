@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using JabbR.Infrastructure;
 using JabbR.Models;
@@ -15,6 +16,31 @@ namespace JabbR.Services
         {
             _repository = repository;
             _crypto = crypto;
+        }
+
+        public ChatUser AddUser(WindowsPrincipal windowsPrincipal)
+        {
+            string fullName = windowsPrincipal.Identity.Name;
+            int domainSlash = fullName.IndexOf('\\');
+            string userName = domainSlash != -1 ? fullName.Substring(domainSlash + 1) : fullName;
+
+            if (UserExists(userName))
+            {
+                userName = fullName;
+            }
+
+            var user = new ChatUser
+            {
+                Name = userName,
+                Status = (int)UserStatus.Active,
+                Id = fullName,
+                LastActivity = DateTime.UtcNow
+            };
+
+            _repository.Add(user);
+            _repository.CommitChanges();
+
+            return user;
         }
 
         public ChatUser AddUser(string userName, string providerName, string identity, string email)

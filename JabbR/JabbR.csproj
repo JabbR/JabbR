@@ -929,7 +929,6 @@
     <Content Include="Views\Account\register.cshtml" />
     <Content Include="Views\Home\index.cshtml" />
     <Content Include="Views\Account\_layout.cshtml" />
-    <Content Include="Views\Account\_windows.cshtml" />
     <Content Include="Views\Account\_social.cshtml" />
     <Content Include="Views\Account\login.cshtml" />
     <Content Include="Views\Account\index.cshtml" />

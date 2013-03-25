@@ -42,9 +42,11 @@ namespace JabbR.Nancy
                     context.CurrentUser = new PrincipalIdentity(principal);
                 }
 
+                context.Items["windows.User"] = Get<IPrincipal>(env, "windows.User");
+
                 var appMode = Get<string>(env, "host.AppMode");
 
-                if (!String.IsNullOrEmpty(appMode) && 
+                if (!String.IsNullOrEmpty(appMode) &&
                     appMode.Equals("development", StringComparison.OrdinalIgnoreCase))
                 {
                     context.Items["_debugMode"] = true;

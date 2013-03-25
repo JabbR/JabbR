@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Principal;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
@@ -37,6 +38,18 @@ namespace JabbR.Nancy
                 if (Context.CurrentUser != null)
                 {
                     return Response.AsRedirect("~/");
+                }
+
+                var windowsPrincipal = Context.Items["windows.User"] as WindowsPrincipal;
+
+                if (windowsPrincipal != null && 
+                    windowsPrincipal.Identity.IsAuthenticated)
+                {
+                    // Detect windows authentication and automatically create a user or lookup a user
+                    // based on the identity
+                    ChatUser user = repository.GetUserById(windowsPrincipal.Identity.Name) ?? 
+                                    membershipService.AddUser(windowsPrincipal);
+                    return this.CompleteLogin(authenticationTokenService, user);
                 }
 
                 return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
@@ -326,7 +339,7 @@ namespace JabbR.Nancy
             return View["index", new ProfilePageViewModel(user, authService.GetProviders())];
         }
 
-        private LoginViewModel GetLoginViewModel(IApplicationSettings applicationSettings, 
+        private LoginViewModel GetLoginViewModel(IApplicationSettings applicationSettings,
                                                  IJabbrRepository repository,
                                                  IAuthenticationService authService)
         {

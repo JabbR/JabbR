@@ -1,4 +1,5 @@
-﻿using JabbR.Models;
+﻿using System.Security.Principal;
+using JabbR.Models;
 
 namespace JabbR.Services
 {
@@ -6,6 +7,9 @@ namespace JabbR.Services
     {
         // Add a user without a password (identity)
         ChatUser AddUser(string userName, string provider, string identity, string email);
+
+        // Windows auth
+        ChatUser AddUser(WindowsPrincipal windowsPrincipal);
 
         // User name password functions
         ChatUser AddUser(string userName, string email, string password);
