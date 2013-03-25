@@ -581,6 +581,7 @@
             room.tab.remove();
             room.messages.remove();
             room.users.remove();
+            room.roomTopic.remove();
             setAccessKeys();
         }
     }
