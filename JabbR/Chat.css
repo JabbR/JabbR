@@ -2252,15 +2252,12 @@ li.clearfix
 
 #releaseArea
 {
-  position: fixed;
-  bottom: 0px;
-  right: 0px;
+    padding: 10px 0;
 }
 
   #releaseTag
   {
     font-size: smaller;
-    padding: 10px;
     margin: 0;
   }
 

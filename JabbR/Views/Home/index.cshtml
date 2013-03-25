@@ -250,16 +250,6 @@
     </form>
     <iframe id="upload-frame" name="upload-frame" style="position:absolute;top:0;left:0;width:0;height:0;visibility:hidden;"></iframe>
     </div>
-    @if (Model.ShowDetails)
-    {
-    <div id="releaseArea">
-        <p id="releaseTag">
-            Deployed from <a target="_blank" href="https://github.com/davidfowl/JabbR/commit/@Model.Sha" title="View the commit.">@Model.Sha.Substring(0, 10)</a>
-            on <a target="_blank" href="https://github.com/davidfowl/JabbR/branches/@Model.Branch" title="View the branch.">@Model.Branch</a> 
-            at @Model.Time.
-        </p>
-    </div>
-    }
     <audio src="Content/sounds/notification.wav" id="noftificationSound" hidden="hidden" aria-hidden="true">
     </audio>
     <section aria-hidden="true" aria-haspopup="true">
@@ -304,6 +294,16 @@
         </div>
         <div class="modal-body">
             <div class="help-body">
+                @if (Model.ShowDetails)
+                {
+                    <div id="releaseArea">
+                        <p id="releaseTag">
+                            Deployed from <a target="_blank" href="https://github.com/davidfowl/JabbR/commit/@Model.Sha" title="View the commit.">@Model.Sha.Substring(0, 10)</a>
+                            on <a target="_blank" href="https://github.com/davidfowl/JabbR/branches/@Model.Branch" title="View the branch.">@Model.Branch</a> 
+                            at @Model.Time.
+                        </p>
+                    </div>
+                }
                 <div class="command-list">
                     <h3>FAQ</h3>
                     <p>Click on a user to send message.</p>
