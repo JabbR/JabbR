@@ -88,6 +88,7 @@
                 <div class="name" {{if note}}title="${note}"{{/if}}>${name}</div>
                 <span class="admin"> {{if admin}}(admin){{/if}}</span>
                 <span class="flag{{if flagClass}} ${flagClass}{{/if}}" {{if flag}}title="${country}"{{/if}}></span>
+                <span class="idle-since">{{if !active}} ${idleSince}{{/if}}</span>
             </div>
         </li>
     </script>

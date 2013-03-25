@@ -1576,7 +1576,8 @@
         },
         setUserActivity: function (userViewModel) {
             var $user = $('.users').find(getUserClassName(userViewModel.name)),
-                active = $user.data('active');
+                active = $user.data('active'),
+                $idleSince = $user.find('.idle-since');
 
             var fadeSpeed = 'slow';
             // If the states match it means they're not changing and the user
@@ -1587,8 +1588,10 @@
 
             if (userViewModel.active === true) {
                 $user.removeClass('idle');
+                $idleSince.text('');
             } else {
                 $user.addClass('idle');
+                $idleSince.text(userViewModel.idleSince);
             }
 
             updateNote(userViewModel, $user);
