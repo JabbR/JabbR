@@ -2778,6 +2778,11 @@ h3.userlist-header
     background-repeat: no-repeat;
 }
 
+#room-actions {
+    margin-right: 10px;
+    display: none;
+}
+
 #room-preferences .sound:hover .icon-sound {
     background-image: url('Content/images/sound-on-white.png');
     background-repeat: no-repeat;

@@ -10,6 +10,7 @@
         $tabs = null,
         $submitButton = null,
         $newMessage = null,
+        $roomActions = null,
         $toast = null,
         $disconnectDialog = null,
         $downloadIcon = null,
@@ -266,6 +267,7 @@
 
             if (this.isLobby()) {
                 $lobbyRoomFilterForm.hide();
+                $roomActions.show();
             }
         };
 
@@ -297,7 +299,9 @@
                       .show();
 
             if (this.isLobby()) {
+                $roomActions.hide();
                 $lobbyRoomFilterForm.show();
+                
             }
             // if no unread since last separator
             // remove previous separator
@@ -858,6 +862,7 @@
             $tabs = $('#tabs');
             $submitButton = $('#send');
             $newMessage = $('#new-message');
+            $roomActions = $('#room-actions');
             $toast = $('#room-preferences .toast');
             $sound = $('#room-preferences .sound');
             $richness = $('#room-preferences .richness');
