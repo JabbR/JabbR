@@ -73,6 +73,11 @@ namespace JabbR
 
         public void Join()
         {
+            Join(login: true);
+        }
+
+        public void Join(bool login)
+        {
             // Get the client state
             var userId = Context.User.Identity.Name;
 
@@ -85,7 +90,7 @@ namespace JabbR
 
             ClientState clientState = GetClientState();
 
-            OnUserInitialize(clientState, user);
+            OnUserInitialize(clientState, user, login);
         }
 
         private void CheckStatus()
@@ -96,7 +101,7 @@ namespace JabbR
             }
         }
 
-        private void OnUserInitialize(ClientState clientState, ChatUser user)
+        private void OnUserInitialize(ClientState clientState, ChatUser user, bool login)
         {
             // Update the active room on the client (only if it's still a valid room)
             if (user.Rooms.Any(room => room.Name.Equals(clientState.ActiveRoom, StringComparison.OrdinalIgnoreCase)))
@@ -105,7 +110,7 @@ namespace JabbR
                 Clients.Caller.activeRoom = clientState.ActiveRoom;
             }
 
-            LogOn(user, Context.ConnectionId);
+            LogOn(user, Context.ConnectionId, login);
         }
 
         public bool Send(string content, string roomName)
@@ -333,16 +338,18 @@ namespace JabbR
             }            
         }
 
-        private void LogOn(ChatUser user, string clientId)
+        private void LogOn(ChatUser user, string clientId, bool login)
         {
-            // Update the client state
-            Clients.Caller.id = user.Id;
-            Clients.Caller.name = user.Name;
-            Clients.Caller.hash = user.Hash;
+            if (login)
+            {
+                // Update the client state
+                Clients.Caller.id = user.Id;
+                Clients.Caller.name = user.Name;
+                Clients.Caller.hash = user.Hash;
+            }
 
-            var userViewModel = new UserViewModel(user);
             var rooms = new List<RoomViewModel>();
-
+            var userViewModel = new UserViewModel(user);
             var ownedRooms = user.OwnedRooms.Select(r => r.Key);
 
             foreach (var room in user.Rooms)
@@ -355,17 +362,23 @@ namespace JabbR
                 // Add the caller to the group so they receive messages
                 Groups.Add(clientId, room.Name);
 
-                // Add to the list of room names
-                rooms.Add(new RoomViewModel
+                if (login)
                 {
-                    Name = room.Name,
-                    Private = room.Private,
-                    Closed = room.Closed
-                });
+                    // Add to the list of room names
+                    rooms.Add(new RoomViewModel
+                    {
+                        Name = room.Name,
+                        Private = room.Private,
+                        Closed = room.Closed
+                    });
+                }
             }
 
-            // Initialize the chat with the rooms the user is in
-            Clients.Caller.logOn(rooms);
+            if (login)
+            {
+                // Initialize the chat with the rooms the user is in
+                Clients.Caller.logOn(rooms);
+            }
         }
 
         private void UpdateActivity(ChatUser user, ChatRoom room)
@@ -448,7 +461,7 @@ namespace JabbR
 
         void INotificationService.LogOn(ChatUser user, string clientId)
         {
-            LogOn(user, clientId);
+            LogOn(user, clientId, login: true);
         }
 
         void INotificationService.ChangePassword()

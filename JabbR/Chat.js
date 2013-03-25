@@ -190,7 +190,7 @@
 
     function updateTitle() {
         // ugly hack via http://stackoverflow.com/a/2952386/188039
-        setTimeout(function() {
+        setTimeout(function () {
             if (unread === 0) {
                 document.title = originalTitle;
             } else {
@@ -1015,7 +1015,7 @@
                         ui.showStatus(0, $.connection.hub.transport.name);
                         ui.setReadOnly(false);
                     } else {
-                        ui.initializeConnectionStatus($.connection.hub.transport.name);                        
+                        ui.initializeConnectionStatus($.connection.hub.transport.name);
                     }
 
                     initial = false;
@@ -1032,7 +1032,11 @@
 
                 // Restart the connection
                 setTimeout(function () {
-                    connection.hub.start();
+                    connection.hub.start(options)
+                                  .done(function () {
+                                      // Turn the firehose back on
+                                      chat.server.join(false);
+                                  });
                 }, 5000);
             });
 
