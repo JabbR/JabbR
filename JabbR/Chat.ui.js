@@ -363,6 +363,7 @@
             if (typeof oldParentList !== undefined) {
                 this.setListState(oldParentList);
             }
+            this.sortList(list);
         };
 
         this.appearsInList = function ($user, list) {
