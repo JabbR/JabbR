@@ -1034,8 +1034,11 @@
                 setTimeout(function () {
                     connection.hub.start(options)
                                   .done(function () {
+                                      // When this works uncomment it.
+                                      // ui.showReloadMessageNotification();
+
                                       // Turn the firehose back on
-                                      chat.server.join(false);
+                                      chat.server.join(true);
                                   });
                 }, 5000);
             });

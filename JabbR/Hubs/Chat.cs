@@ -73,10 +73,10 @@ namespace JabbR
 
         public void Join()
         {
-            Join(login: true);
+            Join(reconnecting: false);
         }
 
-        public void Join(bool login)
+        public void Join(bool reconnecting)
         {
             // Get the client state
             var userId = Context.User.Identity.Name;
@@ -84,13 +84,16 @@ namespace JabbR
             // Try to get the user from the client state
             ChatUser user = _repository.GetUserById(userId);
 
-            // Update some user values
-            _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
-            _repository.CommitChanges();
+            if (!reconnecting)
+            {
+                // Update some user values
+                _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
+                _repository.CommitChanges();
+            }
 
             ClientState clientState = GetClientState();
 
-            OnUserInitialize(clientState, user, login);
+            OnUserInitialize(clientState, user, reconnecting);
         }
 
         private void CheckStatus()
@@ -101,7 +104,7 @@ namespace JabbR
             }
         }
 
-        private void OnUserInitialize(ClientState clientState, ChatUser user, bool login)
+        private void OnUserInitialize(ClientState clientState, ChatUser user, bool reconnecting)
         {
             // Update the active room on the client (only if it's still a valid room)
             if (user.Rooms.Any(room => room.Name.Equals(clientState.ActiveRoom, StringComparison.OrdinalIgnoreCase)))
@@ -110,7 +113,7 @@ namespace JabbR
                 Clients.Caller.activeRoom = clientState.ActiveRoom;
             }
 
-            LogOn(user, Context.ConnectionId, login);
+            LogOn(user, Context.ConnectionId, reconnecting);
         }
 
         public bool Send(string content, string roomName)
@@ -338,9 +341,9 @@ namespace JabbR
             }            
         }
 
-        private void LogOn(ChatUser user, string clientId, bool login)
+        private void LogOn(ChatUser user, string clientId, bool reconnecting)
         {
-            if (login)
+            if (!reconnecting)
             {
                 // Update the client state
                 Clients.Caller.id = user.Id;
@@ -362,7 +365,7 @@ namespace JabbR
                 // Add the caller to the group so they receive messages
                 Groups.Add(clientId, room.Name);
 
-                if (login)
+                if (!reconnecting)
                 {
                     // Add to the list of room names
                     rooms.Add(new RoomViewModel
@@ -374,7 +377,7 @@ namespace JabbR
                 }
             }
 
-            if (login)
+            if (!reconnecting)
             {
                 // Initialize the chat with the rooms the user is in
                 Clients.Caller.logOn(rooms);
@@ -461,7 +464,7 @@ namespace JabbR
 
         void INotificationService.LogOn(ChatUser user, string clientId)
         {
-            LogOn(user, clientId, login: true);
+            LogOn(user, clientId, reconnecting: true);
         }
 
         void INotificationService.ChangePassword()
