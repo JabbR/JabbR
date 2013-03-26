@@ -116,7 +116,7 @@ namespace JabbR
                 defaults: new { controller = "ApiFrontPage" }
             );
 
-            app.UseHttpServer(config);
+            app.UseWebApi(config);
         }
     }
 }
