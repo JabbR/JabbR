@@ -384,5 +384,9 @@
              .Add("~/Chat.js")
              .Render("~/Scripts/JabbR2_#.js"));
     }
+    @if(Model.DebugMode)
+    {
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.network.mock.js")"></script>
+    }
 </body>
 </html>
