@@ -410,8 +410,6 @@
                     idleUsers.push(item);
                 }
             });
-            console.log(activeUsers.length);
-            console.log(idleUsers.length);
 
             activeUsers.sort(function (a, b) {
                 var compA = $(a).data('name').toString().toUpperCase();
