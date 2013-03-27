@@ -973,6 +973,10 @@
         logout();
     });
 
+    $(ui).bind(ui.events.trimMessageHistory, function(ev, roomName) {
+        ui.trimRoomMessageHistory(roomName);
+    });
+
     $(function () {
         var stateCookie = $.cookie('jabbr.state'),
             state = stateCookie ? JSON.parse(stateCookie) : {},
