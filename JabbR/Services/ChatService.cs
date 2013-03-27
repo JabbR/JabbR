@@ -388,8 +388,15 @@ namespace JabbR.Services
 
         public ChatMessage AddMessage(string userId, string roomName, string content)
         {
-            var user = _repository.GetUserById(userId);
-            var room = _repository.GetRoomByName(roomName);
+            ChatUser user = _repository.VerifyUserId(userId);
+            ChatRoom room = _repository.VerifyUserRoom(_cache, user, roomName);
+
+            // REVIEW: Is it better to use _repository.VerifyRoom(message.Room, mustBeOpen: false)
+            // here?
+            if (room.Closed)
+            {
+                throw new InvalidOperationException(String.Format("You cannot post messages to '{0}'. The room is closed.", roomName));
+            }
 
             var message = AddMessage(user, room, Guid.NewGuid().ToString("d"), content);
 

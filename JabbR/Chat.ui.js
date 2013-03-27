@@ -2066,11 +2066,13 @@
                 $hiddenFile.attr('disabled', 'disabled');
                 $submitButton.attr('disabled', 'disabled');
                 $newMessage.attr('disabled', 'disabled');
+                $fileUploadButton.attr('disabled', 'disabled');
             }
             else {
                 $hiddenFile.removeAttr('disabled');
                 $submitButton.removeAttr('disabled');
                 $newMessage.removeAttr('disabled');
+                $fileUploadButton.removeAttr('disabled');
             }
         },
         initializeConnectionStatus: function (transport) {
@@ -2133,10 +2135,11 @@
         collapseRichContent: collapseRichContent,
         toggleMessageSection: function (disabledIt) {
             if (disabledIt) {
-                // disable button and textarea
+                // disable send button, textarea and file upload
                 $newMessage.attr('disabled', 'disabled');
                 $submitButton.attr('disabled', 'disabled');
-
+                $fileUploadButton.attr('disabled', 'disabled');
+                $hiddenFile.attr('disabled', 'disabled');
             } else if (!readOnly) {
                 // re-enable textarea button
                 $newMessage.attr('disabled', '');
@@ -2145,6 +2148,12 @@
                 // re-enable submit button
                 $submitButton.attr('disabled', '');
                 $submitButton.removeAttr('disabled');
+                
+                // re-enable file upload button
+                $fileUploadButton.attr('disabled', '');
+                $fileUploadButton.removeAttr('disabled');
+                $hiddenFile.attr('disabled', '');
+                $hiddenFile.removeAttr('disabled');
             }
         },
         closeRoom: function (roomName) {
