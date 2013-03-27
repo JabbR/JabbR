@@ -401,7 +401,8 @@
             var listItems = listToSort.children('li').get();
 
             var activeUsers = [],
-                idleUsers = [];
+                idleUsers = [],
+                sortedUsers = [];
 
             $.each(listItems, function (index, item) {
                 if ($(item).data('active')) {
@@ -421,14 +422,16 @@
                 var compB = $(b).data('name').toString().toUpperCase();
                 return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
             });
+            
             $.each(activeUsers, function (index, item) {
-                listItems.push(item);
+                sortedUsers.push(item);
             });
             $.each(idleUsers, function (index, item) {
-                listItems.push(item);
+                sortedUsers.push(item);
             });
-
-            $.each(listItems, function (index, item) {
+            
+            console.log(sortedUsers.length);
+            $.each(sortedUsers, function (index, item) {
                 listToSort.append(item);
             });
         };
