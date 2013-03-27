@@ -430,7 +430,6 @@
                 sortedUsers.push(item);
             });
             
-            console.log(sortedUsers.length);
             $.each(sortedUsers, function (index, item) {
                 listToSort.append(item);
             });
