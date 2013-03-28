@@ -392,6 +392,14 @@
             }
         };
 
+        this.sortUsersByName = function(userListToSort) {
+            return userListToSort.sort(function(a, b) {
+                var compA = $(a).data('name').toString().toUpperCase();
+                var compB = $(b).data('name').toString().toUpperCase();
+                return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
+            });
+        };
+
         this.sortLists = function () {
             this.sortList(this.owners);
             this.sortList(this.activeUsers);
@@ -412,23 +420,10 @@
                 }
             });
 
-            activeUsers.sort(function (a, b) {
-                var compA = $(a).data('name').toString().toUpperCase();
-                var compB = $(b).data('name').toString().toUpperCase();
-                return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
-            });
-            idleUsers.sort(function (a, b) {
-                var compA = $(a).data('name').toString().toUpperCase();
-                var compB = $(b).data('name').toString().toUpperCase();
-                return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
-            });
-            
-            $.each(activeUsers, function (index, item) {
-                sortedUsers.push(item);
-            });
-            $.each(idleUsers, function (index, item) {
-                sortedUsers.push(item);
-            });
+            activeUsers = this.sortUsersByName(activeUsers);
+            idleUsers = this.sortUsersByName(idleUsers);
+
+            sortedUsers = activeUsers.concat(idleUsers);
             
             $.each(sortedUsers, function (index, item) {
                 listToSort.append(item);
