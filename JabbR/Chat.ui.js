@@ -1631,6 +1631,8 @@
 
                     if (owner === true) {
                         room.setListState(room.owners);
+                    } else {
+                        room.setListState(room.activeUsers);
                     }
                 });
         },
