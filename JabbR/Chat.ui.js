@@ -363,6 +363,7 @@
             if (typeof oldParentList !== undefined) {
                 this.setListState(oldParentList);
             }
+            this.sortList(list);
         };
 
         this.appearsInList = function ($user, list) {
@@ -391,22 +392,42 @@
             }
         };
 
+        this.sortUsersByName = function(userListToSort) {
+            return userListToSort.sort(function(a, b) {
+                var compA = $(a).data('name').toString().toUpperCase();
+                var compB = $(b).data('name').toString().toUpperCase();
+                return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
+            });
+        };
+
         this.sortLists = function () {
+            this.sortList(this.owners);
             this.sortList(this.activeUsers);
         };
 
         this.sortList = function (listToSort) {
             var listItems = listToSort.children('li').get();
-            listItems.sort(function (a, b) {
-                var compA = $(a).data('name').toString().toUpperCase();
-                var compB = $(b).data('name').toString().toUpperCase();
-                return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
-            }).sort(function (a, b) {
-                var compA = $(a).data('active');
-                var compB = $(b).data('active');
-                return (compA > compB) ? -1 : (compA < compB) ? 1 : 0;
+
+            var activeUsers = [],
+                idleUsers = [],
+                sortedUsers = [];
+
+            $.each(listItems, function (index, item) {
+                if ($(item).data('active')) {
+                    activeUsers.push(item);
+                } else {
+                    idleUsers.push(item);
+                }
             });
-            $.each(listItems, function (index, item) { listToSort.append(item); });
+
+            activeUsers = this.sortUsersByName(activeUsers);
+            idleUsers = this.sortUsersByName(idleUsers);
+
+            sortedUsers = activeUsers.concat(idleUsers);
+            
+            $.each(sortedUsers, function (index, item) {
+                listToSort.append(item);
+            });
         };
     }
 
