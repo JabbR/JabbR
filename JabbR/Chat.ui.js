@@ -2,6 +2,8 @@
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 /// <reference path="Chat.toast.js" />
+/// <reference path="Scripts/livestamp.min.js" />
+
 /*global Emoji:true*/
 (function ($, window, document, utility) {
     "use strict";
@@ -1588,10 +1590,10 @@
 
             if (userViewModel.active === true) {
                 $user.removeClass('idle');
-                $idleSince.text('');
+                $idleSince.livestamp('destroy');
             } else {
                 $user.addClass('idle');
-                $idleSince.text(userViewModel.idleSince);
+                $idleSince.livestamp(userViewModel.lastActive);
             }
 
             updateNote(userViewModel, $user);

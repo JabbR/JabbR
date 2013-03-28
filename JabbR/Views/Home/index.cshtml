@@ -88,7 +88,7 @@
                 <div class="name" {{if note}}title="${note}"{{/if}}>${name}</div>
                 <span class="admin"> {{if admin}}(admin){{/if}}</span>
                 <span class="flag{{if flagClass}} ${flagClass}{{/if}}" {{if flag}}title="${country}"{{/if}}></span>
-                <span class="idle-since">{{if !active}} ${idleSince}{{/if}}</span>
+                <span class="idle-since"></span>
             </div>
         </li>
     </script>
@@ -374,6 +374,8 @@
              .Add("~/Scripts/jquery.livesearch.js")
              .Add("~/Scripts/Markdown.Converter.js")
              .Add("~/Scripts/jquery.history.js")
+             .Add("~/Scripts/moment.min.js")
+             .Add("~/Scripts/livestamp.min.js")
              .Add("~/Chat.utility.js")
              .Add("~/Chat.emoji.js")
              .Add("~/Chat.toast.js")

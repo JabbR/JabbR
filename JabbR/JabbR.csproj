@@ -912,8 +912,11 @@
     <Content Include="Scripts\json2.min.js">
       <DependentUpon>json2.js</DependentUpon>
     </Content>
+    <Content Include="Scripts\livestamp.js" />
+    <Content Include="Scripts\livestamp.min.js" />
     <Content Include="Scripts\Markdown.Converter.js" />
     <Content Include="Scripts\modernizr.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\quicksilver.js" />
     <Content Include="Scripts\qunit.js" />
     <Content Include="Chat.dictionary.css" />
@@ -935,6 +938,9 @@
     <Content Include="Views\Account\_social.cshtml" />
     <Content Include="Views\Account\login.cshtml" />
     <Content Include="Views\Account\index.cshtml" />
+    <Content Include="Scripts\livestamp.min.js.map">
+      <DependentUpon>livestamp.js</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\Startup.DependencyInjection.cs" />

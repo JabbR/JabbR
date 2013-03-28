@@ -2,6 +2,7 @@
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 /// <reference path="Chat.ui.js" />
+/// <reference path="Scripts/moment.min.js" />
 
 (function ($, connection, window, ui, utility) {
     "use strict";
@@ -149,30 +150,8 @@
         }
     }
 
-    function timeSince(date) {
-        var seconds = Math.floor((new Date(new Date().toUTCString()) - date) / 1000);
-
-        var interval = Math.floor(seconds / 31536000);
-        if (interval > 1) { return interval + "y"; }
-
-        interval = Math.floor(seconds / 2592000);
-        if (interval > 1) { return interval + "mths"; }
-
-        interval = Math.floor(seconds / 86400);
-        if (interval > 1) { return interval + "d"; }
-
-        interval = Math.floor(seconds / 3600);
-        if (interval > 1) { return interval + "h"; }
-
-        interval = Math.floor(seconds / 60);
-        if (interval > 1) { return interval + "m"; }
-
-        return Math.floor(seconds) + "s";
-    }
-
     function getUserViewModel(user, isOwner) {
         var lastActive = user.LastActivity.fromJsonDate();
-        var idleSince = timeSince(lastActive);
         return {
             name: user.Name,
             hash: user.Hash,
@@ -185,8 +164,7 @@
             country: user.Country,
             lastActive: lastActive,
             timeAgo: $.timeago(lastActive),
-            admin: user.IsAdmin,
-            idleSince: idleSince
+            admin: user.IsAdmin
         };
     }
 

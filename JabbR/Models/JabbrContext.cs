@@ -1,4 +1,6 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using JabbR.Models.Mapping;
 
 namespace JabbR.Models
@@ -8,6 +10,16 @@ namespace JabbR.Models
         public JabbrContext()
             : base("Jabbr")
         {
+            ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
+        }
+
+        void ObjectContext_ObjectMaterialized(object sender, System.Data.Objects.ObjectMaterializedEventArgs e)
+        {
+            var entityChatUser = e.Entity as ChatUser;
+            if (entityChatUser != null)
+            {
+                entityChatUser.LastActivity = DateTime.SpecifyKind(entityChatUser.LastActivity, DateTimeKind.Utc);
+            }
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
