@@ -113,7 +113,7 @@ namespace JabbR.Commands
             }
             catch (CommandNotFoundException)
             {
-                return false;
+                throw new InvalidOperationException(String.Format("'{0}' is not a valid command.", commandName));
             }
             catch (CommandAmbiguityException e)
             {

@@ -128,7 +128,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void ReturnsFalseIfCommandDoesntExists()
+            public void ThrowsIfCommandDoesntExist ()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -151,9 +151,7 @@ namespace JabbR.Test
                 repository.Add(room);
                 var commandManager = new CommandManager("1", "1", "room", service, repository, cache, notificationService.Object);
 
-                bool result = commandManager.TryHandleCommand("/foo");
-
-                Assert.False(result);
+                Assert.Throws<InvalidOperationException> (() => commandManager.TryHandleCommand ("/message"));
             }
 
             [Fact]
