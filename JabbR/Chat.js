@@ -79,9 +79,13 @@
     function populateRoom(room) {
         var d = $.Deferred();
 
+        connection.hub.log('getRoomInfo(' + room + ')');
+
         // Populate the list of users rooms and messages 
         chat.server.getRoomInfo(room)
                 .done(function (roomInfo) {
+                    connection.hub.log('getRoomInfo.done(' + room + ')');
+
                     $.each(roomInfo.Users, function () {
                         var userViewModel = getUserViewModel(this);
                         ui.addUser(userViewModel, room);
@@ -114,7 +118,8 @@
                     // may be appended if we are just joining the room
                     ui.watchMessageScroll(messageIds, room);
                 })
-                .fail(function () {
+                .fail(function (e) {
+                    connection.hub.log('getRoomInfo.failed(' + room + ', ' + e + ')');
                     d.rejectWith(chat);
                 });
 
@@ -934,12 +939,15 @@
 
         try {
             // TODO: Show a little animation so the user experience looks fancy
+            connection.hub.log('getPreviousMessages(' + roomInfo.name + ')');
             chat.server.getPreviousMessages(roomInfo.messageId)
                 .done(function (messages) {
+                    connection.hub.log('getPreviousMessages.done(' + roomInfo.name + ')');
                     ui.prependChatMessages($.map(messages, getMessageViewModel), roomInfo.name);
                     loadingHistory = false;
                 })
-                .fail(function () {
+                .fail(function (e) {
+                    connection.hub.log('getPreviousMessages.failed(' + roomInfo.name + ', ' + e + ')');
                     loadingHistory = false;
                 });
         }
