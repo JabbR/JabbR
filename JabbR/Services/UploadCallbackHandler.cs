@@ -45,7 +45,8 @@ namespace JabbR.Services
                 return;
             }
 
-            string contentUrl = null;
+            string contentUrl;
+            ChatMessage message;
 
             try
             {
@@ -56,15 +57,15 @@ namespace JabbR.Services
                     _hubContext.Clients.Client(connectionId).postMessage("Failed to upload " + Path.GetFileName(file) + ".", "error", roomName);
                     return;
                 }
+
+                // Add the message to the persistent chat
+                message = _service.AddMessage(userId, roomName, contentUrl);
             }
             catch (Exception ex)
             {
                 _hubContext.Clients.Client(connectionId).postMessage("Failed to upload " + Path.GetFileName(file) + ". " + ex.Message, "error", roomName);
                 return;
             }
-
-            // Add the message to the persistent chat
-            ChatMessage message = _service.AddMessage(userId, roomName, contentUrl);
 
             var messageViewModel = new MessageViewModel(message);
 
