@@ -148,7 +148,7 @@ namespace JabbR.Commands
 
             IList<string> candidates = null;
 
-            var exactMatches = _commandCache.Keys.Where(comm => comm.Equals(commandName))
+            var exactMatches = _commandCache.Keys.Where(comm => comm.Equals(commandName, StringComparison.OrdinalIgnoreCase))
                                                  .ToList();
 
             if (exactMatches.Count == 1)
@@ -157,7 +157,7 @@ namespace JabbR.Commands
             }
             else
             {
-                candidates = _commandCache.Keys.Where(comm => comm.StartsWith(commandName))
+                candidates = _commandCache.Keys.Where(comm => comm.StartsWith(commandName, StringComparison.OrdinalIgnoreCase))
                                                .ToList();
             }
 
