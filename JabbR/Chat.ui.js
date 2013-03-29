@@ -1599,12 +1599,16 @@
             updateNote(userViewModel, $user);
         },
         setUserActive: function ($user) {
+            var $idleSince = $user.find('.idle-since');
             if ($user.data('active') === true) {
                 return false;
             }
             $user.attr('data-active', true);
             $user.data('active', true);
             $user.removeClass('idle');
+            if ($idleSince.livestamp('isLiveStamp')) {
+                $idleSince.livestamp('destroy');
+            }
             return true;
         },
         setUserInActive: function ($user) {
