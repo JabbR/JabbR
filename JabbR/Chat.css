@@ -180,14 +180,12 @@ form#send-message {
 {
   border: 1px solid #ccc;
   overflow: auto;
-  margin-left: 0px;
-  margin-top: 0px;
-  padding-left: 0px;
+  margin: 0;
   left: 0;
   right: 236px;
   position: absolute;
   top: 55px;
-  bottom: 40px;
+  bottom: 50px;
   background-color: #fff;
 }
 
@@ -236,7 +234,7 @@ form#send-message {
 {
   font-size: small;
   position: absolute;
-  top: 56px;
+  top: 55px;
   right: 0;
   width: 235px;
   bottom: 50px;
