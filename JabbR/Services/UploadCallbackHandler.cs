@@ -62,7 +62,7 @@ namespace JabbR.Services
                 message = _service.AddMessage(userId, roomName, result.Url);
 
                 // Keep track of this attachment
-                _service.AddAttachment(message, result);
+                _service.AddAttachment(message, file, contentType, stream.Length, result);
             }
             catch (Exception ex)
             {

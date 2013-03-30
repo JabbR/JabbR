@@ -16,6 +16,9 @@ namespace JabbR.Models.Mapping
             this.Property(m => m.Id).HasColumnName("Id");
             this.Property(m => m.Url).HasColumnName("Url");
             this.Property(m => m.When).HasColumnName("When");
+            this.Property(m => m.FileName).HasColumnName("FileName");
+            this.Property(m => m.ContentType).HasColumnName("ContentType");
+            this.Property(m => m.Size).HasColumnName("Size");
 
             this.HasRequired(a => a.Room)
                 .WithMany(r => r.Attachments)

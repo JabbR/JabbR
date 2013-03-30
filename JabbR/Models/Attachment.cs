@@ -10,6 +10,9 @@ namespace JabbR.Models
         
         public string Url { get; set; }
         public string Id { get; set; }
+        public string FileName { get; set; }
+        public string ContentType { get; set; }
+        public long Size { get; set; }
 
         public int RoomKey { get; set; }
         public int OwnerKey { get; set; }

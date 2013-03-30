@@ -884,6 +884,9 @@
     <EmbeddedResource Include="Migrations\201303302002539_Attachments.resx">
       <DependentUpon>201303302002539_Attachments.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201303302058326_AttachmentMetadata.resx">
+      <DependentUpon>201303302058326_AttachmentMetadata.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -959,6 +962,10 @@
     <Compile Include="Migrations\201303302002539_Attachments.cs" />
     <Compile Include="Migrations\201303302002539_Attachments.Designer.cs">
       <DependentUpon>201303302002539_Attachments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201303302058326_AttachmentMetadata.cs" />
+    <Compile Include="Migrations\201303302058326_AttachmentMetadata.Designer.cs">
+      <DependentUpon>201303302058326_AttachmentMetadata.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\Mapping\AttachmentMap.cs" />

@@ -7,7 +7,7 @@ namespace JabbR.Models.Migrations
     {
         public MigrationsConfiguration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
         }
     }
 }

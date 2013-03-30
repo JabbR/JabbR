@@ -370,12 +370,15 @@ namespace JabbR.Services
             _repository.RemoveUserRoom(user, room);
         }
 
-        public void AddAttachment(ChatMessage message, UploadResult result)
+        public void AddAttachment(ChatMessage message, string fileName, string contentType, long size, UploadResult result)
         {
             var attachment = new Attachment
             {
                 Id = result.Identifier,
                 Url = result.Url,
+                FileName = fileName,
+                ContentType = contentType,
+                Size = size,
                 Room = message.Room,
                 Owner = message.User,
                 When = DateTimeOffset.UtcNow
