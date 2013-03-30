@@ -199,6 +199,11 @@ form#send-message {
     .messages li.message.my-message {
         border-color: #E4ECF1;
     }
+    
+    .messages li.message.my-message .middle,
+    .messages li.message.my-message .right {
+        background: #f5f5f5;
+    }
 
     .messages li img.gravatar
     {
