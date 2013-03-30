@@ -1,4 +1,5 @@
 ﻿using JabbR.Models;
+using JabbR.UploadHandlers;
 
 namespace JabbR.Services
 {
@@ -36,5 +37,7 @@ namespace JabbR.Services
         void AddAdmin(ChatUser admin, ChatUser targetUser);
         void RemoveAdmin(ChatUser admin, ChatUser targetUser);
         void BanUser(ChatUser callingUser, ChatUser targetUser);
+
+        void AddAttachment(ChatMessage message, UploadResult result);
     }
 }

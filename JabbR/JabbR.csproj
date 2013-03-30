@@ -881,6 +881,9 @@
     <EmbeddedResource Include="Migrations\201303220549121_ContentProviderContent.resx">
       <DependentUpon>201303220549121_ContentProviderContent.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201303302002539_Attachments.resx">
+      <DependentUpon>201303302002539_Attachments.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -953,6 +956,12 @@
     <Compile Include="Migrations\201303220549121_ContentProviderContent.Designer.cs">
       <DependentUpon>201303220549121_ContentProviderContent.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201303302002539_Attachments.cs" />
+    <Compile Include="Migrations\201303302002539_Attachments.Designer.cs">
+      <DependentUpon>201303302002539_Attachments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Attachment.cs" />
+    <Compile Include="Models\Mapping\AttachmentMap.cs" />
     <Compile Include="Nancy\HtmlHelperExtensions.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.Designer.cs">
@@ -1017,8 +1026,8 @@
     <Compile Include="Services\MembershipService.cs" />
     <Compile Include="Services\ChatNotificationService.cs" />
     <Compile Include="Services\UploadCallbackHandler.cs" />
-    <Compile Include="UploadHandlers\ImgurUploadHandler.cs" />
     <Compile Include="UploadHandlers\UploadProcessor.cs" />
+    <Compile Include="UploadHandlers\UploadResult.cs" />
     <Compile Include="ViewModels\LobbyRoomViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\ProfilePageViewModel.cs" />

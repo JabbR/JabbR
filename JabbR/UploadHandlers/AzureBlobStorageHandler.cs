@@ -26,7 +26,7 @@ namespace JabbR.UploadHandlers
             return !String.IsNullOrEmpty(_settings.AzureblobStorageConnectionString);
         }
 
-        public async Task<string> UploadFile(string fileName, string contentType, Stream stream)
+        public async Task<UploadResult> UploadFile(string fileName, string contentType, Stream stream)
         {
             var account = CloudStorageAccount.Parse(_settings.AzureblobStorageConnectionString);
             var client = account.CreateCloudBlobClient();
@@ -51,7 +51,13 @@ namespace JabbR.UploadHandlers
 
             await Task.Factory.FromAsync((cb, state) => blockBlob.BeginUploadFromStream(stream, cb, state), ar => blockBlob.EndUploadFromStream(ar), null);
 
-            return blockBlob.Uri.OriginalString;
+            var result = new UploadResult
+            {
+                Url = blockBlob.Uri.OriginalString,
+                Identifier = randomFile
+            };
+
+            return result;
         }
     }
 }

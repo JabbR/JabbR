@@ -17,7 +17,7 @@ namespace JabbR.UploadHandlers
             _fileUploadHandlers = GetUploadHandlers(settings);
         }
 
-        public async Task<string> HandleUpload(string fileName, string contentType, Stream stream)
+        public async Task<UploadResult> HandleUpload(string fileName, string contentType, Stream stream)
         {
             IUploadHandler handler = _fileUploadHandlers.FirstOrDefault(c => c.IsValid(fileName, contentType));
 

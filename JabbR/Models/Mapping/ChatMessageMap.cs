@@ -17,6 +17,8 @@ namespace JabbR.Models.Mapping
             this.Property(m => m.Content).HasColumnName("Content");
             this.Property(m => m.Id).HasColumnName("Id");
             this.Property(m => m.When).HasColumnName("When");
+            this.Property(m => m.HtmlContent).HasColumnName("HtmlContent");
+            this.Property(m => m.HtmlEncoded).HasColumnName("HtmlEncoded");
             this.Property(m => m.RoomKey).HasColumnName("Room_Key");
             this.Property(m => m.UserKey).HasColumnName("User_Key");
 

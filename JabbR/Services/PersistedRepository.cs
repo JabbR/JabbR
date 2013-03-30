@@ -46,6 +46,12 @@ namespace JabbR.Services
             _db.SaveChanges();
         }
 
+        public void Add(Attachment attachment)
+        {
+            _db.Attachments.Add(attachment);
+            _db.SaveChanges();
+        }
+
         public void Add(ChatUserIdentity identity)
         {
             _db.Identities.Add(identity);

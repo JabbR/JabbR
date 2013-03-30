@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using JabbR.Infrastructure;
 using JabbR.Models;
+using JabbR.UploadHandlers;
 
 namespace JabbR.Services
 {
@@ -278,7 +279,7 @@ namespace JabbR.Services
             _cache = cache;
             _repository = repository;
         }
-        
+
         public ChatRoom AddRoom(ChatUser user, string name)
         {
             if (name.Equals("Lobby", StringComparison.OrdinalIgnoreCase))
@@ -367,6 +368,20 @@ namespace JabbR.Services
 
             // Remove the user from this room
             _repository.RemoveUserRoom(user, room);
+        }
+
+        public void AddAttachment(ChatMessage message, UploadResult result)
+        {
+            var attachment = new Attachment
+            {
+                Id = result.Identifier,
+                Url = result.Url,
+                Room = message.Room,
+                Owner = message.User,
+                When = DateTimeOffset.UtcNow
+            };
+
+            _repository.Add(attachment);
         }
 
         public ChatMessage AddMessage(ChatUser user, ChatRoom room, string id, string content)
@@ -545,7 +560,7 @@ namespace JabbR.Services
         {
             return roomName.StartsWith("#") ? roomName.Substring(1) : roomName;
         }
-        
+
         private bool IsUserAllowed(ChatRoom room, ChatUser user)
         {
             return room.AllowedUsers.Contains(user) || user.IsAdmin;
@@ -804,7 +819,7 @@ namespace JabbR.Services
                     "Sorry, but the country ISO code you requested doesn't exist. Please refer to http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 for a proper list of country ISO codes.");
             }
         }
-         
+
         internal static string GetCountry(string isoCode)
         {
             if (String.IsNullOrEmpty(isoCode))

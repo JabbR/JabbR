@@ -36,6 +36,7 @@ namespace JabbR.Services
         void Add(ChatRoom room);
         void Add(ChatUser user);
         void Add(ChatUserIdentity identity);
+        void Add(Attachment attachment);
 
         void Remove(ChatClient client);
         void Remove(ChatRoom room);

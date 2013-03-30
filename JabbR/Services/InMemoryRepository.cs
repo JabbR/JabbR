@@ -11,17 +11,24 @@ namespace JabbR.Services
         private readonly ICollection<ChatUser> _users;
         private readonly ICollection<ChatUserIdentity> _identities;
         private readonly ICollection<ChatRoom> _rooms;
+        private readonly ICollection<Attachment> _attachments;
 
         public InMemoryRepository()
         {
             _users = new SafeCollection<ChatUser>();
             _rooms = new SafeCollection<ChatRoom>();
             _identities = new SafeCollection<ChatUserIdentity>();
+            _attachments = new SafeCollection<Attachment>();
         }
 
         public IQueryable<ChatRoom> Rooms { get { return _rooms.AsQueryable(); } }
 
         public IQueryable<ChatUser> Users { get { return _users.AsQueryable(); } }
+
+        public void Add(Attachment attachment)
+        {
+            _attachments.Add(attachment);   
+        }
 
         public void Add(ChatRoom room)
         {
