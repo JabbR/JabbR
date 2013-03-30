@@ -939,21 +939,25 @@
         loadingHistory = true;
 
         try {
-            // TODO: Show a little animation so the user experience looks fancy
+            // Show a little animation so the user experience looks fancy
+            ui.setLoadingHistory(loadingHistory);
             connection.hub.log('getPreviousMessages(' + roomInfo.name + ')');
             chat.server.getPreviousMessages(roomInfo.messageId)
                 .done(function (messages) {
                     connection.hub.log('getPreviousMessages.done(' + roomInfo.name + ')');
                     ui.prependChatMessages($.map(messages, getMessageViewModel), roomInfo.name);
                     loadingHistory = false;
+                    ui.setLoadingHistory(loadingHistory);
                 })
                 .fail(function (e) {
                     connection.hub.log('getPreviousMessages.failed(' + roomInfo.name + ', ' + e + ')');
                     loadingHistory = false;
+                    ui.setLoadingHistory(loadingHistory);
                 });
         }
         catch (e) {
             connection.hub.log('getPreviousMessages failed');
+            ui.setLoadingHistory(false);
         }
     });
 

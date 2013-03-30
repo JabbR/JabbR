@@ -2986,3 +2986,15 @@ h3.userlist-header
     padding: 2px 2px;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+
+#loadingRoomHistory {
+    display: none;
+    text-align: center;
+    right: 0px;
+    position: absolute;
+    top: 0px;
+    z-index: 1000;
+    -webkit-border-radius: 0;
+       -moz-border-radius: 0;
+            border-radius: 0;
+}

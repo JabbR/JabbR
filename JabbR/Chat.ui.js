@@ -67,7 +67,8 @@
         $fileConnectionId = null,
         connectionInfoStatus = null,
         connectionInfoTransport = null,
-        $topicBar;
+        $topicBar = null,
+        $loadingHistoryIndicator = null;
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] == '/') {
@@ -935,7 +936,8 @@
             connectionInfoStatus = '#connection-status';
             connectionInfoTransport = '#connection-transport';
             $topicBar = $('#topic-bar');
-
+            $loadingHistoryIndicator = $('#loadingRoomHistory');
+            
             if (toast.canToast()) {
                 $toast.show();
             }
@@ -1695,6 +1697,15 @@
             3000);
 
             $user.data('typing', timeout);
+        },
+        setLoadingHistory: function (loadingHistory) {
+            if (loadingHistory) {
+                var room = getCurrentRoomElements();
+                $loadingHistoryIndicator.appendTo(room.messages);
+                $loadingHistoryIndicator.fadeIn('slow');
+            } else {
+                $loadingHistoryIndicator.hide();
+            }
         },
         prependChatMessages: function (messages, roomName) {
             var room = getRoomElements(roomName),
