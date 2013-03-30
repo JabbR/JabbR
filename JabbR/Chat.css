@@ -160,12 +160,15 @@ form#send-message {
     margin-left: 0px;
     margin-top: 0px;
     padding-left: 0px;
-    left: 30px;
-    right: 250px;
+    left: 0px;
+    right: 236px;
     position: fixed;
-    top: 150px;
+    top: 101px;
     z-index: 1000;
     opacity: 0.85;
+    -webkit-border-radius: 0;
+       -moz-border-radius: 0;
+            border-radius: 0;
 }
 
 .messages
