@@ -2988,9 +2988,10 @@ h3.userlist-header
 #loadingRoomHistory {
     display: none;
     text-align: center;
-    right: 0px;
-    position: absolute;
-    top: 0px;
+    right: 236px;
+    position: fixed;
+    padding-right: 10px;
+    top: 101px;
     z-index: 1000;
     -webkit-border-radius: 0;
        -moz-border-radius: 0;
