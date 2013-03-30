@@ -127,6 +127,7 @@ form#send-message {
 }
 
 .upload-button input {
+    cursor: pointer;
     position: absolute;
     top: 0;
     left: 0;
@@ -134,6 +135,10 @@ form#send-message {
     font-size: 70px;
     opacity: 0;
     filter: alpha(opacity=0);
+}
+
+.upload-button input[disabled] {
+    cursor: inherit;
 }
 
 #heading
