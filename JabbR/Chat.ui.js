@@ -800,7 +800,12 @@
         $flag.addClass('flag');
         $flag.removeAttr('title');
 
-        $flag.addClass(userViewModel.flagClass);
+        if (userViewModel.flagClass) {
+            $flag.addClass(userViewModel.flagClass);
+            $flag.show();
+        } else {
+            $flag.hide();
+        }
         if (userViewModel.country) {
             $flag.attr('title', userViewModel.country);
         }
