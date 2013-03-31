@@ -53,7 +53,7 @@ namespace JabbR.UploadHandlers
 
             var result = new UploadResult
             {
-                Url = blockBlob.Uri.OriginalString,
+                Url = blockBlob.Uri.ToString(),
                 Identifier = randomFile
             };
 

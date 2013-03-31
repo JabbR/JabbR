@@ -15,7 +15,6 @@ namespace JabbR.Services
         bool ProxyImages { get; }
         int ProxyImageMaxSizeBytes { get; }
 
-        string ImagurClientId { get; }
         string AzureblobStorageConnectionString { get; }
 
         int MaxFileUploadBytes { get; }

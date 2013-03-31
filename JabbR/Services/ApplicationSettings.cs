@@ -108,14 +108,6 @@ namespace JabbR.Services
             }
         }
 
-        public string ImagurClientId
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["jabbr:imagurClientId"];
-            }
-        }
-
         public string AzureblobStorageConnectionString
         {
             get
