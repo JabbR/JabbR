@@ -810,16 +810,6 @@ li.clearfix {
         margin-top: 0px;
     }
 
-.collapsible_pin {
-    width: 20px;
-    height: 20px;
-    float: right;
-    background-image: url('Content/images/pop-out-icon.png');
-    background-repeat: no-repeat;
-    margin-top: 8px;
-    cursor: pointer;
-}
-
 .flag {
     position: relative;
     float: left;
