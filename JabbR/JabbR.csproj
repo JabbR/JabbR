@@ -1020,7 +1020,6 @@
     <Compile Include="Nancy\HomeModule.cs" />
     <Compile Include="Nancy\SessionExtensions.cs" />
     <Compile Include="Services\AppSettingKeyProvider.cs" />
-    <Compile Include="Services\AuthenticationMode.cs" />
     <Compile Include="Services\AuthenticationTokenService.cs" />
     <Compile Include="Services\DefaultCache.cs" />
     <Compile Include="Services\FileBasedKeyProvider.cs" />

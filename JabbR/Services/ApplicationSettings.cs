@@ -37,21 +37,6 @@ namespace JabbR.Services
             }
         }
 
-        public AuthenticationMode AuthenticationMode
-        {
-            get
-            {
-                string modeValue = ConfigurationManager.AppSettings["jabbr:authenticationMode"];
-                AuthenticationMode mode;
-                if (Enum.TryParse<AuthenticationMode>(modeValue, out mode))
-                {
-                    return mode;
-                }
-
-                return AuthenticationMode.Default;
-            }
-        }
-
         public bool RequireHttps
         {
             get

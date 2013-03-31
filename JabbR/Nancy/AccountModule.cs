@@ -350,9 +350,7 @@ namespace JabbR.Nancy
                 user = repository.GetUserById(Context.CurrentUser.UserName);
             }
 
-            var viewModel = new LoginViewModel(applicationSettings.AuthenticationMode,
-                                               authService.GetProviders(),
-                                               user != null ? user.Identities : null);
+            var viewModel = new LoginViewModel(authService.GetProviders(), user != null ? user.Identities : null);
             return viewModel;
         }
     }
