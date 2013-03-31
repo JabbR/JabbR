@@ -26,9 +26,9 @@ namespace JabbR
         private readonly ICache _cache;
         private readonly ContentProviderProcessor _resourceProcessor;
 
-        public Chat(ContentProviderProcessor resourceProcessor, 
-                    IChatService service, 
-                    IJabbrRepository repository, 
+        public Chat(ContentProviderProcessor resourceProcessor,
+                    IChatService service,
+                    IJabbrRepository repository,
                     ICache cache)
         {
             _resourceProcessor = resourceProcessor;
@@ -151,7 +151,7 @@ namespace JabbR
             }
 
             // Update activity *after* ensuring the user, this forces them to be active
-            UpdateActivity(user, room);
+            UpdateActivity(user);
 
             ChatMessage chatMessage = _service.AddMessage(user, room, message.Id, message.Content);
 
@@ -321,9 +321,10 @@ namespace JabbR
 
             ChatRoom room = _repository.VerifyUserRoom(_cache, user, roomName);
 
-            UpdateActivity(user, room);
+            UpdateActivity(user);
 
             var userViewModel = new UserViewModel(user);
+
             Clients.Group(room.Name).setTyping(userViewModel, room.Name);
         }
 
@@ -335,10 +336,7 @@ namespace JabbR
 
             ChatUser user = _repository.GetUserById(userId);
 
-            foreach (var room in user.Rooms)
-            {
-                UpdateActivity(user, room);   
-            }            
+            UpdateActivity(user);
         }
 
         private void LogOn(ChatUser user, string clientId, bool reconnecting)
@@ -384,19 +382,14 @@ namespace JabbR
             }
         }
 
-        private void UpdateActivity(ChatUser user, ChatRoom room)
-        {
-            UpdateActivity(user);
-
-            OnUpdateActivity(user, room);
-        }
-
         private void UpdateActivity(ChatUser user)
         {
             _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
 
             _repository.CommitChanges();
-        }        
+
+            OnUpdateActivity(user);
+        }
 
         private bool TryHandleCommand(string command, string room)
         {
@@ -422,7 +415,7 @@ namespace JabbR
 
             // Query for the user to get the updated status
             ChatUser user = _repository.GetUserById(userId);
-            
+
             // There's no associated user for this client id
             if (user == null)
             {
@@ -443,10 +436,14 @@ namespace JabbR
             }
         }
 
-        private void OnUpdateActivity(ChatUser user, ChatRoom room)
+        private void OnUpdateActivity(ChatUser user)
         {
             var userViewModel = new UserViewModel(user);
-            Clients.Group(room.Name).updateActivity(userViewModel, room.Name);
+
+            foreach (var client in user.ConnectedClients)
+            {
+                Clients.Client(client.Id).updateActivity(userViewModel);
+            }
         }
 
         private void LeaveRoom(ChatUser user, ChatRoom room)
