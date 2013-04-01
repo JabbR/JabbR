@@ -304,7 +304,7 @@
             if (this.isLobby()) {
                 $roomActions.hide();
                 $lobbyRoomFilterForm.show();
-                
+
             }
             // if no unread since last separator
             // remove previous separator
@@ -395,8 +395,8 @@
             }
         };
 
-        this.sortUsersByName = function(userListToSort) {
-            return userListToSort.sort(function(a, b) {
+        this.sortUsersByName = function (userListToSort) {
+            return userListToSort.sort(function (a, b) {
                 var compA = $(a).data('name').toString().toUpperCase();
                 var compB = $(b).data('name').toString().toUpperCase();
                 return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
@@ -427,7 +427,7 @@
             idleUsers = this.sortUsersByName(idleUsers);
 
             sortedUsers = activeUsers.concat(idleUsers);
-            
+
             $.each(sortedUsers, function (index, item) {
                 listToSort.append(item);
             });
@@ -942,7 +942,7 @@
             connectionInfoTransport = '#connection-transport';
             $topicBar = $('#topic-bar');
             $loadingHistoryIndicator = $('#loadingRoomHistory');
-            
+
             if (toast.canToast()) {
                 $toast.show();
             }
@@ -1588,17 +1588,12 @@
                 active = $user.data('active'),
                 $idleSince = $user.find('.idle-since');
 
-            var fadeSpeed = 'slow';
-            // If the states match it means they're not changing and the user
-            // is joining a room. In that case, set the fade time to be 1ms.
-            if (userViewModel.active === active) {
-                fadeSpeed = 1;
-            }
-
             if (userViewModel.active === true) {
-                $user.removeClass('idle');
-                $idleSince.livestamp('destroy');
-            } else {
+                if ($user.hasClass('idle')) {
+                    $user.removeClass('idle');
+                    $idleSince.livestamp('destroy');
+                }
+            } else if (!$user.hasClass('idle')) {
                 $user.addClass('idle');
                 $idleSince.livestamp(userViewModel.lastActive);
             }
@@ -2196,7 +2191,7 @@
                 // re-enable submit button
                 $submitButton.attr('disabled', '');
                 $submitButton.removeAttr('disabled');
-                
+
                 // re-enable file upload button
                 $fileUploadButton.attr('disabled', '');
                 $fileUploadButton.removeAttr('disabled');
