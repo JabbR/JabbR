@@ -1593,9 +1593,14 @@
                     $user.removeClass('idle');
                     $idleSince.livestamp('destroy');
                 }
-            } else if (!$user.hasClass('idle')) {
-                $user.addClass('idle');
-                $idleSince.livestamp(userViewModel.lastActive);
+            } else {
+                if (!$user.hasClass('idle')) {
+                    $user.addClass('idle');
+                }
+
+                if (!$idleSince.html()) {
+                    $idleSince.livestamp(userViewModel.lastActive);
+                }
             }
 
             updateNote(userViewModel, $user);
