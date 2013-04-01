@@ -130,7 +130,7 @@ set-appsetting -path $webConfigPath -name "jabbr:proxyImages" -value $true
 set-appsetting -path $webConfigPath -name "jabbr:googleAnalytics" -value $googleAnalyticsToken
 set-appsetting -path $webConfigPath -name "jabbr:releaseBranch" -value $commitBranch
 set-appsetting -path $webConfigPath -name "jabbr:releaseSha" -value $commitSha
-set-appsetting -path $webConfigPath -name "jabbr:releaseTime" -value (Get-Date -format "dd/MM/yyyy HH:mm")
+set-appsetting -path $webConfigPath -name "jabbr:releaseTime" -value (Get-Date -format "MM/dd/yyyy HH:mm")
 
 # Set encryption keys
 set-appsetting -path $webConfigPath -name "jabbr:encryptionKey" -value $encryptionKey
@@ -177,13 +177,10 @@ if($sslCertificateThumbprint) {
   set-certificatethumbprint -path $cscfgPath -name "jabbr" -value $sslCertificateThumbprint
 }
 
-$paths = @("C:\Program Files\Microsoft SDKs\Windows Azure\.NET SDK\2012-10\bin\cspack.exe",
-           "C:\Program Files\Microsoft SDKs\Windows Azure\.NET SDK\2012-06\bin\cspack.exe",
-           "C:\Program Files\Windows Azure SDK\v1.6\bin\cspack.exe")
+# Find the most recent SDK version
+$azureSdkPath = Get-AzureSdkPath $azureSdkPath
 
-$exe = @($paths | ?{ Test-Path $_ })[0]
-
-& $exe "$csdefFile" /out:"$cspkgFile" /role:"Website;$websitePath" /sites:"Website;Web;$websitePath" /rolePropertiesFile:"Website;$rolePropertiesPath"
+& "$azureSdkPath\bin\cspack.exe" "$csdefFile" /out:"$cspkgFile" /role:"Website;$websitePath" /sites:"Website;Web;$websitePath" /rolePropertiesFile:"Website;$rolePropertiesPath"
 
 cp $cscfgPath $cspkgFolder
 
