@@ -16,7 +16,7 @@ namespace JabbR
         // Background task info
         private static volatile bool _sweeping;
         private static Timer _backgroundTimer;
-        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(2);
+        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(1);
         private static readonly TimeSpan _sweepStart = TimeSpan.FromMinutes(10);
 
         private static void StartBackgroundWork(IKernel kernel, IDependencyResolver resolver)
