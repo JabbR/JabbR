@@ -881,6 +881,9 @@
     <EmbeddedResource Include="Migrations\201303220549121_ContentProviderContent.resx">
       <DependentUpon>201303220549121_ContentProviderContent.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201303302002539_Attachments.resx">
+        <DependentUpon>201303302002539_Attachments.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201303302058326_AttachmentMetadata.resx">
       <DependentUpon>201303302058326_AttachmentMetadata.cs</DependentUpon>
     </EmbeddedResource>
@@ -959,6 +962,10 @@
     <Compile Include="Migrations\201303220549121_ContentProviderContent.cs" />
     <Compile Include="Migrations\201303220549121_ContentProviderContent.Designer.cs">
       <DependentUpon>201303220549121_ContentProviderContent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201303302002539_Attachments.cs" />
+    <Compile Include="Migrations\201303302002539_Attachments.Designer.cs">
+        <DependentUpon>201303302002539_Attachments.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201303302058326_AttachmentMetadata.cs" />
     <Compile Include="Migrations\201303302058326_AttachmentMetadata.Designer.cs">
