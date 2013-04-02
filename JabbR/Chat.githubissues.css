@@ -207,14 +207,29 @@
 }
 
 .avatar-bubble {
-    background: url("https://github.com/images/modules/comments/bubble-arrow.png") no-repeat scroll 51px 20px transparent;
     margin: 20px 0;
     padding-left: 60px;
+    position: relative;
 }
 .avatar-bubble .avatar {
     float: left;
     margin-left: -60px;
     position: relative;
+}
+.avatar-bubble .avatar img {
+    border-radius: 3px;
+}
+.avatar-bubble .bubble:before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 10px 10px 10px 0;
+    border-color: transparent #EEEEEE transparent transparent;
+    left: 50px;
+    top: 15px;
 }
 .avatar-bubble .bubble {
     background: none repeat scroll 0 0 #EEEEEE;
