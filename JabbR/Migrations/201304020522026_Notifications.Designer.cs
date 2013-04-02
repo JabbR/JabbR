@@ -5,13 +5,13 @@ namespace JabbR.Models.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    public sealed partial class Attachments : IMigrationMetadata
+    public sealed partial class Notifications : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(Attachments));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Notifications));
         
         string IMigrationMetadata.Id
         {
-            get { return "201303302002539_Attachments"; }
+            get { return "201304020522026_Notifications"; }
         }
         
         string IMigrationMetadata.Source

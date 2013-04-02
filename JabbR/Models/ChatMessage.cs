@@ -12,6 +12,7 @@ namespace JabbR.Models
         public string Id { get; set; }        
         public virtual ChatRoom Room { get; set; }
         public virtual ChatUser User { get; set; }
+        public virtual Notification Notification { get; set; }
         public DateTimeOffset When { get; set; }
         public bool HtmlEncoded { get; set; }
 
