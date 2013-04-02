@@ -39,5 +39,8 @@ namespace JabbR.Services
         void BanUser(ChatUser callingUser, ChatUser targetUser);
 
         void AddAttachment(ChatMessage message, string fileName, string contentType, long size, UploadResult result);
+
+        // Add mention
+        void AddNotification(ChatUser mentionedUser, ChatMessage message);
     }
 }

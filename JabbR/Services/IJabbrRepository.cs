@@ -49,5 +49,8 @@ namespace JabbR.Services
 
         // Reload entities from the store
         void Reload(object entity);
+
+        void Add(Notification notification);
+        void Remove(Notification notification);
     }
 }

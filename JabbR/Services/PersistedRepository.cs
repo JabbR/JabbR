@@ -63,6 +63,11 @@ namespace JabbR.Services
             _db.Messages.Add(message);
         }
 
+        public void Add(Notification notification)
+        {
+            _db.Notifications.Add(notification);
+        }
+
         public void Remove(ChatRoom room)
         {
             _db.Rooms.Remove(room);
@@ -78,6 +83,12 @@ namespace JabbR.Services
         public void Remove(ChatUserIdentity identity)
         {
             _db.Identities.Remove(identity);
+            _db.SaveChanges();
+        }
+
+        public void Remove(Notification notification)
+        {
+            _db.Notifications.Remove(notification);
             _db.SaveChanges();
         }
 
@@ -265,6 +276,6 @@ namespace JabbR.Services
         public void Reload(object entity)
         {
             _db.Entry(entity).Reload();
-        }
+        }        
     }
 }

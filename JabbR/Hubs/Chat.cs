@@ -26,9 +26,9 @@ namespace JabbR
         private readonly ICache _cache;
         private readonly ContentProviderProcessor _resourceProcessor;
 
-        public Chat(ContentProviderProcessor resourceProcessor, 
-                    IChatService service, 
-                    IJabbrRepository repository, 
+        public Chat(ContentProviderProcessor resourceProcessor,
+                    IChatService service,
+                    IJabbrRepository repository,
                     ICache cache)
         {
             _resourceProcessor = resourceProcessor;
@@ -155,7 +155,6 @@ namespace JabbR
 
             ChatMessage chatMessage = _service.AddMessage(user, room, message.Id, message.Content);
 
-
             var messageViewModel = new MessageViewModel(chatMessage);
             Clients.Group(room.Name).addMessage(messageViewModel, room.Name);
 
@@ -167,6 +166,10 @@ namespace JabbR
             chatMessage.Id = Guid.NewGuid().ToString("d");
             _repository.CommitChanges();
 
+            // Add mentions
+            AddMentions(chatMessage);
+            _repository.CommitChanges();
+            
             var urls = UrlExtractor.ExtractUrls(chatMessage.Content);
             if (urls.Count > 0)
             {
@@ -174,6 +177,21 @@ namespace JabbR
             }
 
             return true;
+        }
+
+        private void AddMentions(ChatMessage message)
+        {
+            foreach (var userName in MentionExtractor.ExtractMentions(message.Content))
+            {
+                ChatUser mentionedUser = _repository.GetUserByName(userName);
+
+                if (mentionedUser == null)
+                {
+                    continue;
+                }
+
+                _service.AddNotification(mentionedUser, message);
+            }
         }
 
         public UserViewModel GetUserInfo()

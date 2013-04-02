@@ -16,7 +16,8 @@ namespace JabbR.Models.Mapping
             this.Property(m => m.Read).HasColumnName("Read");
 
             this.HasRequired(a => a.Message)
-                .WithOptional(m => m.Notification);
+                .WithMany(u => u.Notifications)
+                .HasForeignKey(a => a.MessageKey);
 
             this.HasRequired(a => a.User)
                 .WithMany(u => u.Notifications)

@@ -11,7 +11,7 @@ namespace JabbR.Models.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201304020522026_Notifications"; }
+            get { return "201304020629255_Notifications"; }
         }
         
         string IMigrationMetadata.Source
