@@ -68,7 +68,9 @@
         connectionInfoStatus = null,
         connectionInfoTransport = null,
         $topicBar = null,
-        $loadingHistoryIndicator = null;
+        $loadingHistoryIndicator = null,
+        trimRoomHistoryMaxMessages = 500,
+        trimRoomHistoryFrequency = 1000 * 60 * 2; // 2 minutes in ms
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] == '/') {
@@ -433,16 +435,28 @@
             });
         };
 
+        this.canTrimHistory = function() {
+            return this.tab.data('trimmable') !== false;
+        };
+
+        this.setTrimmable = function(canTrimMessages) {
+            this.tab.data('trimmable', canTrimMessages);
+        };
+
         this.trimHistory = function (numberOfMessagesToKeep) {
             var lastIndex = null,
                 $messagesToRemove = null,
                 $roomMessages = this.messages.find('li'),
                 messageCount = $roomMessages.length;
-            
-            numberOfMessagesToKeep = numberOfMessagesToKeep || 500;
 
-            if (numberOfMessagesToKeep < 500) {
-                numberOfMessagesToKeep = 500;
+            numberOfMessagesToKeep = numberOfMessagesToKeep || trimRoomHistoryMaxMessages;
+
+            if (this.isLobby() || !this.canTrimHistory()) {
+                return;
+            }
+
+            if (numberOfMessagesToKeep < trimRoomHistoryMaxMessages) {
+                numberOfMessagesToKeep = trimRoomHistoryMaxMessages;
             }
             
             if (messageCount < numberOfMessagesToKeep) {
@@ -1394,6 +1408,10 @@
 
                 $ui.trigger(ui.events.fileUploaded, [uploader]);
             });
+
+            setInterval(function() {
+                $ui.trigger(ui.events.trimMessageHistory);
+            }, trimRoomHistoryFrequency);
         },
         run: function () {
             $.history.init(function (hash) {
@@ -1734,6 +1752,10 @@
             } else {
                 $loadingHistoryIndicator.hide();
             }
+        },
+        setRoomTrimmable: function(roomName, canTrimMessages) {
+            var room = getRoomElements(roomName);
+            room.setTrimmable(canTrimMessages);
         },
         prependChatMessages: function (messages, roomName) {
             var room = getRoomElements(roomName),
@@ -2281,12 +2303,11 @@
             }
         },
         trimRoomMessageHistory: function(roomName) {
-            var room = getRoomElements(roomName);
+            var rooms = roomName ? [getRoomElements(roomName)] : getAllRoomElements();
 
-            // ensure room history should actually be trimmed...
-            // user is idle?
-
-            room.trimHistory();
+            for (var i = 0; i < rooms.length; i++) {
+                rooms[i].trimHistory();
+            }
         }
     };
 

@@ -101,7 +101,7 @@
         </div>
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">
-        <li id="tabs-${id}" class="room" data-name="${name}" data-closed="${closed}" role="tab">
+        <li id="tabs-${id}" class="room" data-name="${name}" data-closed="${closed}" data-trimmable="true" role="tab">
             <span class="lock"></span>
             <span class="readonly"></span>
             <button> 
@@ -202,7 +202,7 @@
         </div>
     <nav>
       <ul id="tabs" role="tablist">
-        <li id="tabs-lobby" class="current lobby" data-name="Lobby" role="tab">
+        <li id="tabs-lobby" class="current lobby" data-name="Lobby" data-trimmable="false" role="tab">
           <button accesskey="l">
             <span class="content">Lobby</span>
           </button>
