@@ -912,7 +912,6 @@
             loggedOut: 'jabbr.ui.loggedOut',
             reloadMessages: 'jabbr.ui.reloadMessages',
             fileUploaded: 'jabbr.ui.fileUploaded',
-            trimMessageHistory: 'jabbr.ui.trimMessageHistory',
         },
 
         help: {
@@ -1410,7 +1409,7 @@
             });
 
             setInterval(function() {
-                $ui.trigger(ui.events.trimMessageHistory);
+	            ui.trimRoomMessageHistory();
             }, trimRoomHistoryFrequency);
         },
         run: function () {
