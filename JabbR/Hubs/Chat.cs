@@ -185,7 +185,7 @@ namespace JabbR
             {
                 ChatUser mentionedUser = _repository.GetUserByName(userName);
 
-                if (mentionedUser == null)
+                if (mentionedUser == null || mentionedUser == message.User)
                 {
                     continue;
                 }
