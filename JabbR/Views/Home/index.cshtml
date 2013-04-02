@@ -80,6 +80,35 @@
             </div>
         </div>
     </script>
+    <script id="new-lobby-room-template" type="text/x-jquery-tmpl">
+        <li class="room {{if Private}}locked{{/if}} {{if Closed}}closed{{/if}}" data-room="${Name}" data-name="${Name}">
+            <div class="room-row">
+                <span class="name">${Name}</span>
+                <span class="lock"><i class="icon-lock"></i></span>
+                <span class="readonly"><i class="icon-remove-sign"></i></span>
+                <p class="clearfix"></p>
+                <p class="count" data-count="${Count}">{{if Count == 0}}Unoccupied{{else}}${Count} occupant{{if Count > 1}}s{{/if}}{{/if}}</p>
+                <span class="topic">${Topic}</span>
+            </div>
+        </li>
+    </script>
+    <script id="new-other-lobby-room-template" type="text/x-jquery-tmpl">
+        <li class="room {{if Private}}locked{{/if}} {{if Closed}}closed{{/if}}" data-room="${Name}" data-name="${Name}">
+            <div class="row-fluid room-row">
+                <div class="span3">
+                    <span class="name">${Name}</span>
+                    <span class="lock"><i class="icon-lock"></i></span>
+                    <span class="readonly"><i class="icon-remove-sign"></i></span>
+                </div>
+                <div class="span4">
+                    <span class="topic">${Topic}</span>
+                </div>
+                <div class="span2">
+                    <span class="count" data-count="${Count}">{{if Count == 0}}Unoccupied{{else}}${Count} occupant{{if Count > 1}}s{{/if}}{{/if}}</span>
+                </div>
+            </div>
+        </li>
+    </script>
     <script id="new-user-template" type="text/x-jquery-tmpl">
         <li class="user" data-name="${name}">
             <i class="user-status"></i>
@@ -242,6 +271,13 @@
     </nav>
     </header>
       <div id="topic-bar">
+        <form id="users-filter-form" action="#" class="form-inline">
+            <input id="users-filter" class="filter input-xlarge" type="text" placeholder="Start typing to filter room list..." />
+            <label id="users-filter-closed-area" class="checkbox inline">
+                <input id="users-filter-closed" type="checkbox" />
+                Show Closed Rooms?
+            </label>
+        </form>
         <div id="room-actions" class="btn-group pull-right">
             <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">Room Settings <span class="caret"></span></a>
             <ul id="room-preferences" class="dropdown-menu">
@@ -253,17 +289,14 @@
         </div>
       </div>
     <div id="chat-area" role="tabpanel">
-      <ul id="messages-lobby" class="messages current" role="log">
-      </ul>
-      <form id="users-filter-form" action="#">
-        <input id="users-filter" class="filter" type="text" />
-        <label id="users-filter-closed-area">
-          <input id="users-filter-closed" type="checkbox" />
-          Show Closed Rooms?
-        </label>
-      </form>
-      <ul id="userlist-lobby" class="users current">
-      </ul>
+        <div id="lobby-wrapper">
+            <h2 class="userlist-header nav-header">Your Allowed Private Rooms</h2>
+            <ul id="userlist-lobby-owners"></ul>
+            <h2 class="userlist-header nav-header">Other Rooms</h2>
+            <ul id="userlist-lobby"></ul>
+            <ul id="messages-lobby" class="messages current" role="log" style="visibility: hidden;">
+            </ul>
+        </div>
       <form id="send-message" action="#">
       <div id="message-box">
         <textarea id="new-message" autocomplete="off" aria-autocomplete="none" accesskey="m"></textarea>

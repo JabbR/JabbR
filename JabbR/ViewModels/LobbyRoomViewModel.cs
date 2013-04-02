@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace JabbR.ViewModels
 {
@@ -8,5 +9,6 @@ namespace JabbR.ViewModels
         public int Count { get; set; }
         public bool Private { get; set; }
         public bool Closed { get; set; }
+        public string Topic { get; set; }
     }
 }

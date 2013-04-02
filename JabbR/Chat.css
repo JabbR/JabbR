@@ -39,29 +39,25 @@ form#send-message {
     text-decoration: none;
 }
 
-#users-filter-form {
-    display: none;
-}
-
-#users-filter {
+#lobby-wrapper {
     position: absolute;
     top: 55px;
-    width: 212px;
-    right: 5px;
-    margin-top: 4px;
+    left: 0;
+    right: 0;
+    padding: 5px;
+    bottom: 50px;
+    background: #fff;
+    overflow: auto;
+}
+
+#users-filter-form {
+    display: none;
+    margin: -4px 5px;
 }
 
 #users-filter-closed-area {
-    position: absolute;
-    top: 90px;
-    right: 0;
-    width: 235px;
-    margin-top: 4px;
+    margin: 0px 5px;
     font-size: 13px;
-}
-
-#users-filter-closed {
-    margin: -4px 4px 0;
 }
 
 #preferences a, #room-preferences a {
@@ -160,10 +156,16 @@ form#send-message {
     border-radius: 0;
 }
 
+#messages-lobby {
+    position: relative;
+}
+
 .messages {
     border: 1px solid #ccc;
     overflow: auto;
-    margin: 0;
+    margin-left: 0px;
+    margin-top: 0px;
+    padding-left: 0px;
     left: 0;
     right: 236px;
     position: absolute;
@@ -217,11 +219,126 @@ form#send-message {
     border: 1px solid #ccc;
 }
 
-#userlist-lobby {
-    top: 120px;
-    background: none;
-    border: none;
+#lobby-wrapper .nav-header {
+    line-height: normal;
+    font-size: 1.25em;
+    font-weight: normal;
+    margin: 25px 0 0 0;
 }
+
+    #lobby-wrapper .nav-header:first-child {
+        margin: 10px 0 0 0;
+    }
+
+#lobby-wrapper hr {
+    margin: 0;
+}
+
+#userlist-lobby,
+#userlist-lobby-active,
+#userlist-lobby-owners {
+    position: relative;
+    margin: 0 5px;
+    top: 10px;
+    background: none;
+}
+
+    #userlist-lobby li,
+    #userlist-lobby-active li,
+    #userlist-lobby-owners li {
+        display: inline;
+    }
+
+        #userlist-lobby li:hover,
+        #userlist-lobby-active li:hover,
+        #userlist-lobby-owners li:hover {
+            background: none;
+        }
+
+
+    #userlist-lobby div.room-row {
+        height: 25px;
+        border-color: #EEEEEE;
+        border-style: solid;
+        border-width: 1px 0;
+        margin: 5px 5px 0 -5px;
+        padding-top: 5px;
+        padding-bottom: 2px;
+        padding-left: 15px;
+    }
+
+    #userlist-lobby div:hover {
+        background: #f1f1f1;
+    }
+
+    #userlist-lobby-active li div.room-row,
+    #userlist-lobby-owners li div.room-row {
+        display: inline-block;
+        height: 100px;
+        width: 250px;
+        margin: 10px 5px;
+        padding: 5px;
+        -webkit-border-radius: 2px;
+        -moz-border-radius: 2px;
+        border-radius: 2px;
+        -webkit-box-shadow: 0px 0px 2px 1px #888;
+        -moz-box-shadow: 0px 0px 2px 1px #888;
+        box-shadow: 0px 0px 2px 1px #888;
+    }
+
+    #userlist-lobby-active li div:hover,
+    #userlist-lobby-owners li div:hover {
+        border: rgba(82, 168, 236, 0.8);
+        -webkit-box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
+        -moz-box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
+        box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
+        background: #fcfcfc;
+    }
+
+    #userlist-lobby-active span,
+    #userlist-lobby-owners span {
+        float: left;
+    }
+
+    #userlist-lobby .name,
+    #userlist-lobby-active .name,
+    #userlist-lobby-owners .name {
+        font-size: 1.25em;
+        overflow: hidden;
+    }
+
+    #userlist-lobby .count,
+    #userlist-lobby-active .count,
+    #userlist-lobby-owners .count {
+        font-style: italic;
+        color: #999;
+        font-size: 0.85em;
+    }
+
+    #userlist-lobby .topic,
+    #userlist-lobby-active .topic,
+    #userlist-lobby-owners .topic {
+        font-size: 1em;
+        overflow: hidden;
+    }
+
+    #userlist-lobby .lock,
+    #userlist-lobby .readonly,
+    #userlist-lobby-active .lock,
+    #userlist-lobby-active .readonly,
+    #userlist-lobby-owners .lock,
+    #userlist-lobby-owners .readonly {
+        display: none;
+    }
+
+    #userlist-lobby .locked .lock,
+    #userlist-lobby .closed .readonly,
+    #userlist-lobby-active .locked .lock,
+    #userlist-lobby-active .closed .readonly,
+    #userlist-lobby-owners .locked .lock,
+    #userlist-lobby-owners .closed .readonly {
+        display: initial;
+    }
 
 .users ul {
     margin-left: 0px;
@@ -260,15 +377,15 @@ form#send-message {
     }
 
     .users li.room.closed .name {
-        margin-left: 23px;
+        margin-right: 23px;
     }
 
     .users li.room.locked .name {
-        margin-left: 20px;
+        margin-right: 20px;
     }
 
     .users li.room.closed.locked .name {
-        margin-left: 43px;
+        margin-right: 43px;
     }
 
     .users li.typing {
@@ -292,7 +409,7 @@ form#send-message {
     }
 
     .users li.room.closed.locked .readonly {
-        margin-left: 20px;
+        margin-right: 20px;
     }
 
 .user-status {
