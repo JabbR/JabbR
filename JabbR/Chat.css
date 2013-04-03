@@ -455,7 +455,7 @@ li.user.typing .user-status {
 }
 
 .users .details {
-    width: 190px;
+    width: 189px;
     display: inline-block;
     vertical-align: top;
 }
@@ -2008,11 +2008,11 @@ li.clearfix {
     }
 
     .users .details {
-        width: 155px;
+        width: 150px;
     }
 
     .users .details .name {
-        width: 105px;
+        width: 100px;
     }
 }
 
@@ -2054,11 +2054,11 @@ li.clearfix {
     }
     
     .users .details {
-        width: 105px;
+        width: 100px;
     }
 
     .users .details .name {
-        width: 55px;
+        width: 50px;
     }
 
 }
