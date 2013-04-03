@@ -954,6 +954,7 @@
   <ItemGroup>
     <Compile Include="App_Start\Startup.DependencyInjection.cs" />
     <Compile Include="ContentProviders\Core\ContentProviderProcessor.cs" />
+    <Compile Include="ContentProviders\GitHubIssueCommentsContentProvider.cs" />
     <Compile Include="Infrastructure\AuthenticationServiceExtensions.cs" />
     <Compile Include="Infrastructure\CryptoHelper.cs" />
     <Compile Include="Infrastructure\IdentityUtility.cs" />
