@@ -882,10 +882,13 @@
       <DependentUpon>201303220549121_ContentProviderContent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201303302002539_Attachments.resx">
-      <DependentUpon>201303302002539_Attachments.cs</DependentUpon>
+        <DependentUpon>201303302002539_Attachments.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201303302058326_AttachmentMetadata.resx">
       <DependentUpon>201303302058326_AttachmentMetadata.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201304020629255_Notifications.resx">
+      <DependentUpon>201304020629255_Notifications.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
@@ -956,20 +959,27 @@
     <Compile Include="Infrastructure\CryptoHelper.cs" />
     <Compile Include="Infrastructure\IdentityUtility.cs" />
     <Compile Include="Infrastructure\AlertMessageStore.cs" />
+    <Compile Include="Infrastructure\MentionExtractor.cs" />
     <Compile Include="Migrations\201303220549121_ContentProviderContent.cs" />
     <Compile Include="Migrations\201303220549121_ContentProviderContent.Designer.cs">
       <DependentUpon>201303220549121_ContentProviderContent.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201303302002539_Attachments.cs" />
     <Compile Include="Migrations\201303302002539_Attachments.Designer.cs">
-      <DependentUpon>201303302002539_Attachments.cs</DependentUpon>
+        <DependentUpon>201303302002539_Attachments.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201303302058326_AttachmentMetadata.cs" />
     <Compile Include="Migrations\201303302058326_AttachmentMetadata.Designer.cs">
       <DependentUpon>201303302058326_AttachmentMetadata.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201304020629255_Notifications.cs" />
+    <Compile Include="Migrations\201304020629255_Notifications.Designer.cs">
+      <DependentUpon>201304020629255_Notifications.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\Mapping\AttachmentMap.cs" />
+    <Compile Include="Models\Mapping\NotificationMap.cs" />
+    <Compile Include="Models\Notification.cs" />
     <Compile Include="Nancy\HtmlHelperExtensions.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.Designer.cs">

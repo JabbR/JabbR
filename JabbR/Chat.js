@@ -767,6 +767,7 @@
             typing = true;
 
             try {
+                ui.setRoomTrimmable(chat.state.activeRoom, typing);
                 chat.server.typing(chat.state.activeRoom);
             }
             catch (e) {
@@ -941,6 +942,7 @@
         try {
             // Show a little animation so the user experience looks fancy
             ui.setLoadingHistory(loadingHistory);
+            ui.setRoomTrimmable(roomInfo.name, false);
             connection.hub.log('getPreviousMessages(' + roomInfo.name + ')');
             chat.server.getPreviousMessages(roomInfo.messageId)
                 .done(function (messages) {

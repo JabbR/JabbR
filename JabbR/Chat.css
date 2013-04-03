@@ -5,7 +5,6 @@
 }
 
 input, button, select, textarea {
-    font-family: Lucida Grande, Trebuchet MS;
     font-size: 13px;
 }
 
@@ -140,7 +139,6 @@ form#send-message {
 
     #heading h1 {
         margin-left: 5px;
-        font-family: 'Lucida Grande', 'Trebuchet MS';
         line-height: normal;
         font-size: 20px;
     }
@@ -526,7 +524,6 @@ li.room {
 }
 
 #new-message {
-    font-family: Trebuchet MS;
     font-size: 13px;
     border: 1px solid #ccc;
     width: 100%;
@@ -639,6 +636,10 @@ li.error {
         .message .left .name {
             font-weight: bold;
             cursor: pointer;
+            overflow: hidden;
+            max-width: 140px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
     .message.failed .left .state {
@@ -662,6 +663,42 @@ li.error {
         padding: 5px;
         word-wrap: break-word;
     }
+
+        .message .middle.first:before {
+            content: "";
+            position: absolute;
+            left: -5px;
+            top: 8px;
+            width: 8px;
+            height: 8px;
+            background: inherit;
+            background-color: white;
+            border-bottom: inherit;
+            border-left: inherit;
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
+
+        .message.my-message .middle.first:before {
+            content: "";
+            position: absolute;
+            left: -5px;
+            top: 8px;
+            width: 8px;
+            height: 8px;
+            background: inherit;
+            background-color: #f5f5f5;
+            border-bottom: inherit;
+            border-left: inherit;
+            -webkit-transform: rotate(45deg);
+            -moz-transform: rotate(45deg);
+            -ms-transform: rotate(45deg);
+            -o-transform: rotate(45deg);
+            transform: rotate(45deg);
+        }
 
 .messages li .right {
     position: absolute;
@@ -1802,6 +1839,39 @@ li.clearfix {
         background-position: -80px -165px;
     }
 
+@media (max-width:900px) {
+    .messages li.message {
+        border-left: 115px solid #f1f1f1;
+    }
+
+    .message .left {
+        margin-left: -115px;
+        width: 100px;
+    }
+
+        .message .left .name {
+            width: 79px;
+            max-width: 79px;
+        }
+}
+
+
+@media (max-width:700px) {
+    .messages li.message {
+        border-left: 95px solid #f1f1f1;
+    }
+
+    .message .left {
+        margin-left: -95px;
+        width: 90px;
+    }
+
+        .message .left .name {
+            width: 65px;
+            max-width: 65px;
+        }
+}
+
 @media screen and (max-width:480px) {
     .messages {
         width: auto;
@@ -1810,8 +1880,18 @@ li.clearfix {
     }
 
         .messages li.message {
-            border-left: inherit;
+            border-left: 30px solid #f1f1f1;
         }
+
+    .message .left {
+        margin-left: -32px;
+        width: 30px;
+    }
+
+        .message .left .name {
+            display: none;
+        }
+
 
     .users {
         top: 24px;
@@ -1826,23 +1906,18 @@ li.clearfix {
             display: none;
         }
 
-    .message .left {
-        float: inherit;
-        width: inherit;
-        margin-left: inherit;
-    }
-
-    .message .middle {
-        position: relative;
-        top: 0.5em;
-        margin-bottom: 10px;
-        margin-right: 0px;
-        padding: 5px;
-    }
 
     #tabs {
         overflow: auto;
     }
+}
+
+body, div {
+    -webkit-transition: width .2s ease, height .2s ease;
+    -moz-transition: width .2s ease, height .2s ease;
+    -o-transition: width .2s ease, height .2s ease;
+    -ms-transition: width .2s ease, height .2s ease;
+    transition: width .2s ease, height .2s ease;
 }
 
 .gravatarProfile {
@@ -2288,7 +2363,6 @@ h3.userlist-header {
     margin: 16px 0 0 0;
     cursor: pointer;
     font-weight: normal;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 .modal, .modal-header {

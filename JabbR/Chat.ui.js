@@ -68,7 +68,9 @@
         connectionInfoStatus = null,
         connectionInfoTransport = null,
         $topicBar = null,
-        $loadingHistoryIndicator = null;
+        $loadingHistoryIndicator = null,
+        trimRoomHistoryMaxMessages = 150,
+        trimRoomHistoryFrequency = 1000 * 60 * 2; // 2 minutes in ms
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] == '/') {
@@ -431,6 +433,40 @@
             $.each(sortedUsers, function (index, item) {
                 listToSort.append(item);
             });
+        };
+
+        this.canTrimHistory = function() {
+            return this.tab.data('trimmable') !== false;
+        };
+
+        this.setTrimmable = function(canTrimMessages) {
+            this.tab.data('trimmable', canTrimMessages);
+        };
+
+        this.trimHistory = function (numberOfMessagesToKeep) {
+            var lastIndex = null,
+                $messagesToRemove = null,
+                $roomMessages = this.messages.find('li'),
+                messageCount = $roomMessages.length;
+
+            numberOfMessagesToKeep = numberOfMessagesToKeep || trimRoomHistoryMaxMessages;
+
+            if (this.isLobby() || !this.canTrimHistory()) {
+                return;
+            }
+
+            if (numberOfMessagesToKeep < trimRoomHistoryMaxMessages) {
+                numberOfMessagesToKeep = trimRoomHistoryMaxMessages;
+            }
+            
+            if (messageCount < numberOfMessagesToKeep) {
+                return;
+            }
+
+            lastIndex = messageCount - numberOfMessagesToKeep;
+            $messagesToRemove = $roomMessages.filter('li:lt(' + lastIndex + ')');
+
+            $messagesToRemove.remove();
         };
     }
 
@@ -1371,6 +1407,10 @@
 
                 $ui.trigger(ui.events.fileUploaded, [uploader]);
             });
+
+            setInterval(function() {
+	            ui.trimRoomMessageHistory();
+            }, trimRoomHistoryFrequency);
         },
         run: function () {
             $.history.init(function (hash) {
@@ -1711,6 +1751,10 @@
             } else {
                 $loadingHistoryIndicator.hide();
             }
+        },
+        setRoomTrimmable: function(roomName, canTrimMessages) {
+            var room = getRoomElements(roomName);
+            room.setTrimmable(canTrimMessages);
         },
         prependChatMessages: function (messages, roomName) {
             var room = getRoomElements(roomName),
@@ -2255,6 +2299,13 @@
                 });
 
                 return content;
+            }
+        },
+        trimRoomMessageHistory: function(roomName) {
+            var rooms = roomName ? [getRoomElements(roomName)] : getAllRoomElements();
+
+            for (var i = 0; i < rooms.length; i++) {
+                rooms[i].trimHistory();
             }
         }
     };

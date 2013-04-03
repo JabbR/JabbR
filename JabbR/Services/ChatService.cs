@@ -423,6 +423,18 @@ namespace JabbR.Services
             return message;
         }
 
+        public void AddNotification(ChatUser mentionedUser, ChatMessage message)
+        { 
+            // We need to use the key here since messages might be a new entity
+            var notification = new Notification
+            {
+                User = mentionedUser,
+                Message = message
+            };
+
+            _repository.Add(notification);
+        }
+
         public void AppendMessage(string id, string content)
         {
             ChatMessage message = _repository.GetMessageById(id);

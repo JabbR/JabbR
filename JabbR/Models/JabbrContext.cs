@@ -34,6 +34,8 @@ namespace JabbR.Models
 
             modelBuilder.Configurations.Add(new AttachmentMap());
 
+            modelBuilder.Configurations.Add(new NotificationMap());
+
             base.OnModelCreating(modelBuilder);
         }
 
@@ -43,5 +45,6 @@ namespace JabbR.Models
         public DbSet<ChatUser> Users { get; set; }
         public DbSet<ChatUserIdentity> Identities { get; set; }
         public DbSet<Attachment> Attachments { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
     }
 }
