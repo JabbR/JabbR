@@ -490,10 +490,9 @@ li.user.typing .user-status {
 
 #tabs {
     padding: 0;
-    margin: 30px 0px 0px 5px;
+    margin: 30px 0px 0px 90px;
     z-index: 1000;
     height: 30px;
-    left: 10px;
     position: relative;
     min-width: 120px;
 }
