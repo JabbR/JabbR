@@ -1027,6 +1027,12 @@
                 $toast.hide();
             }
 
+            if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+                var msViewportStyle = $("style");
+                msViewportStyle.append($("@-ms-viewport{width:auto!important}"));
+                $("head").append(msViewportStyle);
+            }
+            
             // DOM events
             $document.on('click', 'h3.collapsible_title', function () {
                 var $message = $(this).closest('.message'),
