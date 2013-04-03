@@ -41,7 +41,7 @@
     </script>
     }
     <script id="new-message-template" type="text/x-jquery-tmpl">
-        <li class="message ${highlight} clearfix{{if isMine}} my-message{{/if}}" id="m-${id}" data-name="${name}" data-timestamp="${date}">
+        <li class="message ${highlight} clearfix{{if isMine}} my-message{{/if}}{{if showUser}} first{{/if}}" id="m-${id}" data-name="${name}" data-timestamp="${date}">
             <div class="left">
                 {{if showUser}}
                 <img src="https://secure.gravatar.com/avatar/${hash}?s=16&d=mm" class="gravatar" />
@@ -49,10 +49,10 @@
                 {{/if}}
                 <span class="state"></span>
             </div>
-            <div class="middle">
+            <div class="middle{{if showUser}} first{{/if}}">
                 {{html message}}
             </div>
-            <div class="right">
+            <div class="right{{if showUser}} first{{/if}}">
                 <span id="t-${id}" class="time" title="${fulldate}">${when}</span>
             </div>
         </li>
