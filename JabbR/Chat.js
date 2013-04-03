@@ -20,7 +20,7 @@
         $ui = $(ui),
         messageSendingDelay = 1500,
         pendingMessages = {},
-        roomsAllowed = null;
+        privateRooms = null;
 
     function failPendingMessages() {
         for (var id in pendingMessages) {
@@ -133,7 +133,7 @@
             // Populate the user list with room names
             chat.server.getRooms()
                 .done(function (rooms) {
-                    ui.populateLobbyRooms(rooms, roomsAllowed);
+                    ui.populateLobbyRooms(rooms, privateRooms);
                 });
         }
         catch (e) {
@@ -255,11 +255,10 @@
     };
 
     // Called when a returning users join chat
-    chat.client.logOn = function (rooms, allowedRooms) {
-        roomsAllowed = allowedRooms;
+    chat.client.logOn = function (rooms, myRooms) {
+        privateRooms = myRooms;
 
-        var activeRoom = this.state.activeRoom,
-            loadRooms = function () {
+           var loadRooms = function () {
                 $.each(rooms, function (index, room) {
                     if (chat.state.activeRoom !== room.Name) {
                         populateRoom(room.Name);

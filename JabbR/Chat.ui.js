@@ -1581,16 +1581,16 @@
 
             return room.isNearTheEnd();
         },
-        populateLobbyRooms: function (rooms, allowedRooms) {
+        populateLobbyRooms: function (rooms, privateRooms) {
             var lobby = getLobby(),
                 showClosedRooms = $closedRoomFilter.is(':checked'),
-                //sort lobby by room open ascending then count descending
-                allowedSorted = sortRoomList(allowedRooms),
-                //sort lobby by room open ascending then count descending and
-                //filter the other rooms so that there is no duplication 
-                //between the lobby lists
+                // sort lobby by room open ascending then count descending
+                privateSorted = sortRoomList(privateRooms),
+                // sort lobby by room open ascending then count descending and
+                // filter the other rooms so that there is no duplication 
+                // between the lobby lists
                 sorted = sortRoomList(rooms).filter(function(room) {
-                    return !allowedSorted.some(function(allowed) {
+                    return !privateSorted.some(function(allowed) {
                         return allowed.Name === room.Name;
                     });
                 });
@@ -1598,7 +1598,7 @@
             lobby.owners.empty();
             lobby.users.empty();
 
-            $.each(allowedSorted, function () {
+            $.each(privateSorted, function () {
                 populateLobbyRoomList(this, templates.lobbyroom, lobby.owners, showClosedRooms);
                 roomCache[this.Name.toLowerCase()] = true;
             });
