@@ -6,6 +6,7 @@
 <head>
     <title>JabbR</title>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
     <meta name="description" content="A real-time chat application." />
     <meta name="keywords" content="chat,realtime chat,signalr,jabbr" />
     <link href="@Url.Content("~/Content/images/logo32.png")" rel="icon" type="image/png" sizes="32x32">
@@ -14,6 +15,7 @@
     @{ 
         WriteLiteral(Bundle.Css().ForceDebugIf(() => Model.DebugMode)
             .Add("~/Content/bootstrap.min.css")
+            .Add("~/Content/bootstrap-responsive.min.css")
             .Add("~/Content/font-awesome.min.css")
             .Add("~/Chat.css")
             .Add("~/Chat.nuget.css")
