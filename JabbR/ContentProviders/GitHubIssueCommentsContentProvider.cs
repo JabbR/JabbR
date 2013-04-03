@@ -1,10 +1,10 @@
-﻿namespace JabbR.ContentProviders
-{
-    using System;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-    using JabbR.ContentProviders.Core;
+﻿using System;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using JabbR.ContentProviders.Core;
 
+namespace JabbR.ContentProviders
+{
     public class GitHubIssueCommentsContentProvider : CollapsibleContentProvider
     {
         //api request url
