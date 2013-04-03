@@ -114,10 +114,14 @@
             <i class="user-status"></i>
             <img class="gravatar" src="https://secure.gravatar.com/avatar/${hash}?s=16&d=mm" />
             <div class="details">
-                <div class="name" {{if note}}title="${note}"{{/if}}>${name}</div>
-                <span class="admin"> {{if admin}}(admin){{/if}}</span>
-                <span class="flag{{if flagClass}} ${flagClass}{{/if}}" {{if flag}}title="${country}"{{/if}}></span>
-                <span class="idle-since"></span>
+                <div class="name" {{if note}}title="${note}"{{else}}title="${name}"{{/if}}>${name}</div>
+                <div class="admin"> {{if admin}}(admin){{/if}}</div>
+                <div class="flag-container">
+                    <div class="flag{{if flagClass}} ${flagClass}{{/if}}" {{if flag}}title="${country}"{{/if}}></div>
+                </div>
+                <div class="idle-container">
+                    <div class="idle-since"></div>
+                </div>
             </div>
         </li>
     </script>

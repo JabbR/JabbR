@@ -349,18 +349,18 @@ form#send-message {
 }
 
 .user .details .name {
-    max-width: 70px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     float: left;
     margin-top: 2px;
     padding-right: 2px;
+    width: 140px;
 }
 
 .users li {
     margin-left: 0;
-    padding: 6px;
+    padding: 3px;
     list-style: none;
 }
 
@@ -393,7 +393,8 @@ form#send-message {
     .users li.typing {
         background-image: url('Content/images/typing.png');
         background-repeat: no-repeat;
-        background-position: right center;
+        background-position: 3px 7px;
+        background-size:17px auto;
     }
 
     .users li.room.locked .lock {
@@ -433,7 +434,15 @@ form#send-message {
     top: 2px;
     margin-right: 5px;
 }
-
+li.user.typing .user-status {
+    border: inherit;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    background: none;
+    padding-left: 5px;
+    padding-right: 5px;
+}
 .users .idle .user-status {
     -webkit-box-shadow: inset 0px 1px 0px 0px #fff6af;
     -moz-box-shadow: inset 0px 1px 0px 0px #fff6af;
@@ -446,7 +455,7 @@ form#send-message {
 }
 
 .users .details {
-    width: 80%;
+    width: 189px;
     display: inline-block;
     vertical-align: top;
 }
@@ -481,12 +490,11 @@ form#send-message {
 
 #tabs {
     padding: 0;
-    margin: 30px 0px 0px 5px;
+    margin: 30px 0px 0px 90px;
     z-index: 1000;
     height: 30px;
-    left: 10px;
     position: relative;
-    width: 90%;
+    min-width: 120px;
 }
 
     #tabs li {
@@ -966,13 +974,18 @@ li.clearfix {
         margin-top: 0px;
     }
 
-.flag {
+.flag-container {
     position: relative;
-    float: left;
+    float: right;
+    width: 16px;
+    height: 16px;
+    margin-top: 5px;
+    margin-left: 2px;
+}
+.flag {
     width: 16px;
     height: 11px;
-    margin-left: 5px;
-    margin-top: 5px;
+    margin-left: auto;
     background: url('Content/images/flags.png') no-repeat;
 }
 
@@ -1959,6 +1972,10 @@ li.clearfix {
     }
 
 @media (max-width:900px) {
+    .messages {
+        right: 200px;
+    }
+
     .messages li.message {
         border-left: 115px solid #f1f1f1;
     }
@@ -1986,10 +2003,25 @@ li.clearfix {
         padding: 5px;
         overflow: hidden;
     }
+    .users {
+        width: 200px;
+    }
+
+    .users .details {
+        width: 150px;
+    }
+
+    .users .details .name {
+        width: 100px;
+    }
 }
 
 
 @media (max-width:700px) {
+    .messages {
+        right: 150px;
+    }
+
     .messages li.message {
         border-left: 95px solid #f1f1f1;
     }
@@ -2016,6 +2048,19 @@ li.clearfix {
         padding: 5px;
         overflow: hidden;
     }
+
+    .users {
+        width: 150px;
+    }
+    
+    .users .details {
+        width: 100px;
+    }
+
+    .users .details .name {
+        width: 50px;
+    }
+
 }
 
 @media screen and (max-width:480px) {
@@ -2038,18 +2083,35 @@ li.clearfix {
             display: none;
         }
 
-
     .users {
         width: 50px;
         right: 0px;
         left: auto;
     }
 
+    .users li.empty {
+        font-size: 80%;
+    }
+    
+    .users .details {
+        width: 45px;
+    }
 
-        .users span {
-            display: none;
-        }
+    .users .details .name {
+        width: 45px;
+    }
 
+    .user-status {
+        margin: 0;
+    }
+
+    .flag-container {
+        display: none;
+    }
+
+    .idle-container {
+        display: none;
+    }
 
     #tabs {
         overflow: auto;
@@ -2747,7 +2809,7 @@ h3.userlist-header {
 
 .idle-since {
     position: relative;
-    float: left;
+    float: right;
     font-size: 11px;
     font-weight: bold;
     color: #ccc;
