@@ -190,7 +190,10 @@ namespace JabbR
                     continue;
                 }
 
-                _service.AddNotification(mentionedUser, message);
+                // Mark the notification as read if the user is online
+                bool markAsRead = mentionedUser.Status == (int)UserStatus.Active;
+
+                _service.AddNotification(mentionedUser, message, markAsRead);
             }
         }
 
