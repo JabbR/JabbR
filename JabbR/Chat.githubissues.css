@@ -218,6 +218,8 @@
 }
 .avatar-bubble .avatar img {
     border-radius: 3px;
+    height: 48px;
+    width: 48px;
 }
 .avatar-bubble .bubble:before {
     content: '';
