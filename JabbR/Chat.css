@@ -170,7 +170,7 @@ form#send-message {
     right: 236px;
     position: absolute;
     top: 55px;
-    bottom: 50px;
+    bottom: 40px;
     background-color: #fff;
 }
 
@@ -1972,6 +1972,20 @@ li.clearfix {
             width: 79px;
             max-width: 79px;
         }
+
+    #send-message {
+        right: 200px;
+    }
+
+    .upload-button {
+        display: inline-block;
+        position: absolute;
+        right: 270px;
+        bottom: 10px;
+        margin: 0 3px;
+        padding: 5px;
+        overflow: hidden;
+    }
 }
 
 
@@ -1989,6 +2003,19 @@ li.clearfix {
             width: 65px;
             max-width: 65px;
         }
+    
+    #send-message {
+        right: 5px;
+    }
+    .upload-button {
+        display: inline-block;
+        position: absolute;
+        right: 75px;
+        bottom: 10px;
+        margin: 0 3px;
+        padding: 5px;
+        overflow: hidden;
+    }
 }
 
 @media screen and (max-width:480px) {
@@ -2013,11 +2040,9 @@ li.clearfix {
 
 
     .users {
-        top: 24px;
         width: 50px;
         right: 0px;
         left: auto;
-        bottom: 70px;
     }
 
 
