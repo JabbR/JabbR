@@ -170,6 +170,37 @@
         </div>   
     </script>
     <!-- /Github Issus Content Provider -->
+    <!-- /GitHub Issues Comment Content Provider -->
+    <script id="github-issues-comment-template" type="text/x-jquery-tmpl">
+        <div class="new-comments">
+            <div class="avatar-bubble js-comment-container">
+                <span class="avatar">
+                    <img height="48" width="48" src="${user.avatar_url}">
+                    <span class="overlay size-48"></span>
+                </span>
+                <div class="bubble">
+                    <div class="comment starting-comment ">
+                        <div class="body">
+                            <p class="author">
+                                <a href="#" class='github-issue-user-${user.login}' target="_blank">${user.login}</a> commented
+                                <time class="js-relative-date" datetime="${created_at}">${created_at}</time>
+                            </p>
+                            <a href="${html_url}" target="_blank"><h2 class="content-title">${title}</h2></a>
+                            <div class="formatted-content">
+                                <div class="content-body wikistyle markdown-format">
+                                    <p>
+                                        {{html body}}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+    </script>
+    <!-- /Github Issus Comment Content Provider -->
     <!--Gravatar Profile Template for Who command-->
     <script id="gravatar-profile-template" type="text/x-jquery-tmpl">
         <div class="collapsible_content">
