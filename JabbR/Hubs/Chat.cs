@@ -313,7 +313,7 @@ namespace JabbR
 
             var recentMessages = (from m in _repository.GetMessagesByRoom(room)
                                   orderby m.When descending
-                                  select m).Take(30).ToList();
+                                  select m).Take(50).ToList();
 
             // Reverse them since we want to get them in chronological order
             recentMessages.Reverse();

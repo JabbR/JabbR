@@ -69,7 +69,7 @@
         connectionInfoTransport = null,
         $topicBar = null,
         $loadingHistoryIndicator = null,
-        trimRoomHistoryMaxMessages = 150,
+        trimRoomHistoryMaxMessages = 200,
         trimRoomHistoryFrequency = 1000 * 60 * 2; // 2 minutes in ms
 
     function getRoomNameFromHash(hash) {
