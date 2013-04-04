@@ -1,0 +1,76 @@
+﻿@using JabbR
+@using JabbR.ViewModels
+@model dynamic
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>JabbR</title>
+    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Chat.css")" rel="stylesheet" />
+</head>
+<body>
+    <section id="page" role="application">
+        <header id="heading" role="heading">
+            <div class="banner" role="banner">
+                <h1>Jabb</h1>
+                <div class="jabbrLogo" id="logo"></div>
+                <div>
+                    Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a>
+                </div>
+            </div>
+            <div style="clear: both"></div>
+        </header>
+        <div class="container">
+            <div class="row" style="padding-top: 75px;">
+                @Html.AlertMessages()
+                <div class="span4 user-details-sidenav">
+                    <div class="user-details">
+                        <img class="gravatar" src="@gravatar" />
+                        <span class="name">@userModel.Name</span>
+                    </div>
+                    <ul id="accountmenu" class="nav nav-list">
+                        <li class="active"><a href="#profile" data-toggle="tab"><i class="icon-chevron-right"></i>Profile</a></li>
+                        <li><a href="#changeUsername" data-toggle="tab"><i class="icon-chevron-right"></i>Username</a></li>
+                        <li><a href="#changePassword" data-toggle="tab"><i class="icon-chevron-right"></i>Password</a></li>
+                        @if(userModel.SocialDetails.ConfiguredProviders.Any())
+                        {
+                            <li><a href="#identityProviders" data-toggle="tab"><i class="icon-chevron-right"></i>Identity Providers</a></li>
+                        }
+                    </ul>
+                </div>
+                <div class="span8 tab-content">
+                    <div class="account-details tab-pane active" id="profile">
+                        <div class="account-details-header">
+                            <h1>Profile</h1>
+                        </div>
+                        <div class="account-details-body">
+                            <form class="form-horizontal">
+                                <div class="control-group">
+                                    <label class="control-label" for="note">Note</label>
+                                    <div class="controls">
+                                        <label class="control-label label-align-left">@(userModel.Note ?? "-")</label>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="country">Country</label>
+                                    <div class="controls">
+                                        <label class="control-label label-align-left">@(userModel.Country ?? "-") <span class="flag flag-@userModel.Flag"></span></label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="@Url.Content("~/Scripts/jquery-1.9.0.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+    <script type="text/javascript">
+        (function ($) {
+
+        }(jQuery));
+    </script>
+</body>
+</html>

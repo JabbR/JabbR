@@ -173,6 +173,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Owin.Types.0.8.3-alpha\lib\net40\Owin.Types.dll</HintPath>
     </Reference>
+    <Reference Include="PagedList">
+      <HintPath>..\packages\PagedList.1.15.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
     <Reference Include="RestSharp">
       <HintPath>..\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
     </Reference>
@@ -951,6 +954,7 @@
     <Content Include="Scripts\livestamp.min.js.map">
       <DependentUpon>livestamp.js</DependentUpon>
     </Content>
+    <Content Include="Views\Notifications\index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\Startup.DependencyInjection.cs" />
@@ -1033,6 +1037,7 @@
     <Compile Include="Models\ChatUserIdentity.cs" />
     <Compile Include="Nancy\AccountModule.cs" />
     <Compile Include="Nancy\HomeModule.cs" />
+    <Compile Include="Nancy\NotificationsModule.cs" />
     <Compile Include="Nancy\SessionExtensions.cs" />
     <Compile Include="Services\AppSettingKeyProvider.cs" />
     <Compile Include="Services\AuthenticationTokenService.cs" />
