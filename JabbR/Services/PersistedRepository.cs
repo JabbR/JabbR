@@ -244,6 +244,11 @@ namespace JabbR.Services
             return null;
         }
 
+        public Notification GetNotificationById(int notificationId)
+        {
+            return _db.Notifications.SingleOrDefault(n => n.Key == notificationId);
+        }
+
         public ChatUser GetUserByLegacyIdentity(string userIdentity)
         {
             return _db.Users.FirstOrDefault(u => u.Identity == userIdentity);

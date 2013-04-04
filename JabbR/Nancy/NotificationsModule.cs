@@ -12,7 +12,7 @@ namespace JabbR.Nancy
 {
     public class NotificationsModule : JabbRModule
     {
-        public NotificationsModule(IJabbrRepository repository)
+        public NotificationsModule(IJabbrRepository repository, IChatService chatService)
             : base("/notifications")
         {
             Get["/"] = _ =>
@@ -34,6 +34,37 @@ namespace JabbR.Nancy
                 };
 
                 return View["index", viewModel];
+            };
+
+            Post["/markasread"] = _ =>
+            {
+                if (Context.CurrentUser == null)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
+                int notificationId = Request.Form.notificationId;
+
+                Notification notification = repository.GetNotificationById(notificationId);
+
+                if (notification == null)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
+                ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
+
+                if (notification.UserKey != user.Key)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
+                notification.Read = true;
+                repository.CommitChanges();
+
+                var response = Response.AsJson(new { success = true });
+
+                return response;
             };
         }
 

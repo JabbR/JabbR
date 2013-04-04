@@ -26,6 +26,7 @@ namespace JabbR.Services
         ChatUser GetUserByClientId(string clientId);
         ChatUser GetUserByLegacyIdentity(string userIdentity);
         ChatUser GetUserByIdentity(string providerName, string userIdentity);
+        Notification GetNotificationById(int notificationId);
 
         ChatClient GetClientById(string clientId, bool includeUser = false);
 

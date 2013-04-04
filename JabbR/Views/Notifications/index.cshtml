@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>JabbR</title>
+    <title>JabbR - notifications</title>
     <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" />
     <link href="@Url.Content("~/Content/font-awesome.min.css")" rel="stylesheet" />
     <link href="@Url.Content("~/Chat.css")" rel="stylesheet" />
@@ -29,12 +29,12 @@
                 <div class="span2">
                     <ul class="nav nav-list">
                         <li class="nav-header">List header</li>
-                        <li class="active">Unread <span id="js-unread-counter" class="pull-right">@Model.TotalCount</span></li>
+                        <li class="active">Unread <span id="js-unread-counter" data-unread="@Model.TotalCount" class="pull-right">@Model.TotalCount</span></li>
                         <li>All Notifications</li>
                     </ul>
                 </div>
                 <div class="span10">
-                    <ul>
+                    <ul id="notifications-container">
                         @foreach (var notification in Model.Notifications)
                         {
                             var note = notification as JabbR.Models.Notification;
@@ -45,9 +45,12 @@
                                     <li class="user">
                                         <img class="gravatar" src="https://secure.gravatar.com/avatar/@note.Message.User.Hash?s=16&amp;d=mm" />
                                     </li>
-                                    <li>
-                                        <a href="#" class="js-mark-as-read"><i class="icon-remove-circle"></i></a>
-                                    </li>
+                                    @if (!note.Read)
+                                    {
+                                        <li>
+                                            <a href="#" class="js-mark-as-read" data-action-url="@Url.Content("~/notifications/markasread")" data-notification-id="@note.Key"><i class="icon-remove-circle"></i></a>
+                                        </li>
+                                    }
                                 </ul>
                                 <h4>@note.Message.Content</h4>
                             </li>
@@ -61,7 +64,56 @@
     <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
     <script type="text/javascript">
         (function ($) {
+            var UnreadCounter = (function () {
+                var $unreadCounter = null,
+                    count = null;
 
+                return {
+                    init: function(selector) {
+                        $unreadCounter = $(selector);
+                        count = $unreadCounter.data('unread');
+                        return this;
+                    },
+                    set: function (newCount) {
+                        count = newCount;
+                        $unreadCounter.text(count);
+                        $unreadCounter.data('unread', count);
+                    },
+                    get: function() {
+                        return count;
+                    }
+                };
+            }());
+
+            var unreadCounter = UnreadCounter.init('#js-unread-counter');
+
+            $('#notifications-container').on('click', '.js-mark-as-read', function(ev) {
+                var $this = $(this),
+                    dataUrl = $this.data('actionUrl'),
+                    notificationId = $this.data('notificationId');
+
+                ev.preventDefault();
+
+                var readMention = $.ajax(dataUrl, {
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        notificationId: notificationId
+                    }
+                });
+
+                readMention.done(function () {
+                    var $notificationToRemove = $('li[data-notification-id="' + notificationId + '"]');
+                    $notificationToRemove.fadeOut('slow', function () {
+                        $notificationToRemove.remove();
+                        unreadCounter.set(unreadCounter.get() - 1);
+                    });
+                });
+
+                readMention.fail(function() {
+                    console.log('failed to mark notification as read', 'notification id: ', notificationId);
+                });
+            });
         }(jQuery));
     </script>
 </body>
