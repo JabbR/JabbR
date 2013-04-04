@@ -1056,6 +1056,7 @@
     <Compile Include="UploadHandlers\UploadResult.cs" />
     <Compile Include="ViewModels\LobbyRoomViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\NotificationsViewModel.cs" />
     <Compile Include="ViewModels\ProfilePageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SocialLoginViewModel.cs" />

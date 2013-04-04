@@ -1,6 +1,7 @@
 ﻿@using JabbR
 @using JabbR.ViewModels
-@model dynamic
+@using PagedList
+@model NotificationsViewModel
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -24,43 +25,24 @@
         <div class="container">
             <div class="row" style="padding-top: 75px;">
                 @Html.AlertMessages()
-                <div class="span4 user-details-sidenav">
+                <div class="span2 user-details-sidenav">
                     <div class="user-details">
-                        <img class="gravatar" src="@gravatar" />
-                        <span class="name">@userModel.Name</span>
+                        <span class="name">notifications</span>
                     </div>
-                    <ul id="accountmenu" class="nav nav-list">
-                        <li class="active"><a href="#profile" data-toggle="tab"><i class="icon-chevron-right"></i>Profile</a></li>
-                        <li><a href="#changeUsername" data-toggle="tab"><i class="icon-chevron-right"></i>Username</a></li>
-                        <li><a href="#changePassword" data-toggle="tab"><i class="icon-chevron-right"></i>Password</a></li>
-                        @if(userModel.SocialDetails.ConfiguredProviders.Any())
-                        {
-                            <li><a href="#identityProviders" data-toggle="tab"><i class="icon-chevron-right"></i>Identity Providers</a></li>
-                        }
+                    <ul class="nav nav-pills nav-stacked">
+                        <li>
+                            Total <span class="pull-right">@Model.TotalCount</span>
+                        </li>
                     </ul>
                 </div>
-                <div class="span8 tab-content">
-                    <div class="account-details tab-pane active" id="profile">
-                        <div class="account-details-header">
-                            <h1>Profile</h1>
-                        </div>
-                        <div class="account-details-body">
-                            <form class="form-horizontal">
-                                <div class="control-group">
-                                    <label class="control-label" for="note">Note</label>
-                                    <div class="controls">
-                                        <label class="control-label label-align-left">@(userModel.Note ?? "-")</label>
-                                    </div>
-                                </div>
-                                <div class="control-group">
-                                    <label class="control-label" for="country">Country</label>
-                                    <div class="controls">
-                                        <label class="control-label label-align-left">@(userModel.Country ?? "-") <span class="flag flag-@userModel.Flag"></span></label>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                <div class="span10">
+                    <ul>
+                        @foreach (var notification in Model.Notifications)
+                        {
+                            var note = notification as JabbR.Models.Notification;
+                            <li>@note.Message.Room.Name - @note.Message.Content</li>
+                        }
+                    </ul>
                 </div>
             </div>
         </div>

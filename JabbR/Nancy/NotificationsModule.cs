@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using JabbR.Models;
 using JabbR.Services;
+using JabbR.ViewModels;
 using Nancy;
 using Nancy.Helpers;
+using Nancy.ModelBinding;
 using PagedList;
 
 namespace JabbR.Nancy
@@ -21,14 +22,12 @@ namespace JabbR.Nancy
                     return Response.AsRedirect(String.Format("~/account/login?returnUrl={0}", HttpUtility.UrlEncode(Request.Path)));
                 }
 
-                bool showAll = (Request.Query.all as bool?) ?? false;
-                string roomName = Request.Query.room;
-                int currentPage = (Request.Query.page as int?) ?? 1;
+                var request = this.Bind<NotificationRequestModel>();
 
                 ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
-                IPagedList<Notification> notifications = GetNotifications(repository, user, all: showAll, page: currentPage, roomName: roomName);
+                IPagedList<Notification> notifications = GetNotifications(repository, user, all: request.All, page: request.Page, roomName: request.Room);
 
-                var viewModel = new
+                var viewModel = new NotificationsViewModel
                 {
                     TotalCount = notifications.TotalItemCount,
                     Notifications = notifications,
@@ -58,7 +57,21 @@ namespace JabbR.Nancy
                 }
             }
 
-            return notificationsQuery.ToPagedList(page, take);
+            return notificationsQuery.OrderByDescending(n => n.Message.When).ToPagedList(page, take);
+        }
+
+        private class NotificationRequestModel
+        {
+            public NotificationRequestModel()
+            {
+                All = false;
+                Page = 1;
+                Room = null;
+            }
+
+            public bool All { get; set; }
+            public int Page { get; set; }
+            public string Room { get; set; }
         }
     }
 }

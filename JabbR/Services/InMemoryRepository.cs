@@ -138,6 +138,11 @@ namespace JabbR.Services
                 .AsQueryable();
         }
 
+        public IQueryable<Notification> GetNotificationsByUser(ChatUser user)
+        {
+            return _notifications.Where(n => n.UserKey == user.Key).AsQueryable();
+        }
+
         public IQueryable<ChatMessage> GetMessagesByRoom(ChatRoom room)
         {
             return room.Messages.AsQueryable();
