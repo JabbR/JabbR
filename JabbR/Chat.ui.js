@@ -1825,7 +1825,7 @@
         },
         notifyRoom: function (roomName) {
             if (getRoomPreference(roomName, 'hasSound') === true) {
-                $('#noftificationSound')[0].play();
+                $('#notificationSound')[0].play();
             }
         },
         toastRoom: function (roomName, message) {
@@ -1835,7 +1835,7 @@
         },
         notify: function (force) {
             if (getActiveRoomPreference('hasSound') === true || force) {
-                $('#noftificationSound')[0].play();
+                $('#notificationSound')[0].play();
             }
         },
         toast: function (message, force, roomName) {
