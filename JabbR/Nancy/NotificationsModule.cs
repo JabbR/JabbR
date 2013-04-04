@@ -26,7 +26,7 @@ namespace JabbR.Nancy
 
                 ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
                 int unreadCount = repository.GetNotificationsByUser(user).Count(n => !n.Read);
-                IPagedList<Notification> notifications = GetNotifications(repository, user, all: request.All, page: request.Page, roomName: request.Room);
+                IPagedList<NotificationViewModel> notifications = GetNotifications(repository, user, all: request.All, page: request.Page, roomName: request.Room);
 
                 var viewModel = new NotificationsViewModel
                 {
@@ -70,7 +70,7 @@ namespace JabbR.Nancy
             };
         }
 
-        private static IPagedList<Notification> GetNotifications(IJabbrRepository repository, ChatUser user, bool all = false, int page = 1, int take = 20,
+        private static IPagedList<NotificationViewModel> GetNotifications(IJabbrRepository repository, ChatUser user, bool all = false, int page = 1, int take = 20,
                                                                  string roomName = null)
         {
             IQueryable<Notification> notificationsQuery = repository.GetNotificationsByUser(user);
@@ -90,7 +90,17 @@ namespace JabbR.Nancy
                 }
             }
 
-            return notificationsQuery.OrderByDescending(n => n.Message.When).ToPagedList(page, take);
+            return notificationsQuery.OrderByDescending(n => n.Message.When)
+                                    .Select(n => new NotificationViewModel()
+                                    {
+                                        NotificationKey = n.Key,
+                                        FromUserName = n.User.Name,
+                                        FromUserImage = n.Message.User.Hash,
+                                        Message = n.Message.Content,
+                                        RoomName = n.Message.Room.Name,
+                                        Read = n.Read
+                                    })
+                                    .ToPagedList(page, take);
         }
 
         private class NotificationRequestModel

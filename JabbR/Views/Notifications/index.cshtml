@@ -38,25 +38,25 @@
                     </ul>
                 </div>
                 <div class="span10">
-                    <ul id="notifications-container">
+                    <ul id="notifications-container" data-mode="@(Model.ShowAll ? "all" : "unread")">
                         @foreach (var notification in Model.Notifications)
                         {
-                            var note = notification as JabbR.Models.Notification;
-                            <li data-notification-id="@note.Key">
+                            var note = notification as NotificationViewModel;
+                            <li data-notification-id="@note.NotificationKey">
                                 <ul class="inline">
-                                    <li>@note.Message.Room.Name</li>
-                                    <li>@note.Message.User.Name</li>
+                                    <li>@note.RoomName</li>
+                                    <li>@note.FromUserName</li>
                                     <li class="user">
-                                        <img class="gravatar" src="https://secure.gravatar.com/avatar/@note.Message.User.Hash?s=16&amp;d=mm" />
+                                        <img class="gravatar" src="https://secure.gravatar.com/avatar/@note.FromUserImage?s=16&amp;d=mm" />
                                     </li>
                                     @if (!note.Read)
                                     {
                                         <li>
-                                            <a href="#" class="js-mark-as-read" data-action-url="@Url.Content("~/notifications/markasread")" data-notification-id="@note.Key"><i class="icon-remove-circle"></i></a>
+                                            <a href="#" class="js-mark-as-read" data-action-url="@Url.Content("~/notifications/markasread")" data-notification-id="@note.NotificationKey"><i class="icon-remove-circle"></i></a>
                                         </li>
                                     }
                                 </ul>
-                                <h4>@note.Message.Content</h4>
+                                <h4>@note.Message</h4>
                             </li>
                         }
                     </ul>
@@ -68,6 +68,9 @@
     <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
     <script type="text/javascript">
         (function ($) {
+            var unreadCounter = null,
+                notificationsMode = null;
+            
             var UnreadCounter = (function () {
                 var $unreadCounter = null,
                     count = null;
@@ -89,7 +92,8 @@
                 };
             }());
 
-            var unreadCounter = UnreadCounter.init('#js-unread-counter');
+            unreadCounter = UnreadCounter.init('#js-unread-counter');
+            notificationsMode = $('#notifications-container').data('mode');
 
             $('#notifications-container').on('click', '.js-mark-as-read', function(ev) {
                 var $this = $(this),
@@ -107,11 +111,23 @@
                 });
 
                 readMention.done(function () {
-                    var $notificationToRemove = $('li[data-notification-id="' + notificationId + '"]');
-                    $notificationToRemove.fadeOut('slow', function () {
-                        $notificationToRemove.remove();
-                        unreadCounter.set(unreadCounter.get() - 1);
-                    });
+                    var $anchorParent = null,
+                        $notificationToRemove = null;
+                    
+                    if (notificationsMode === 'unread') {
+                        $notificationToRemove = $('li[data-notification-id="' + notificationId + '"]');
+
+                        $notificationToRemove.fadeOut('slow', function() {
+                            $notificationToRemove.remove();
+                            unreadCounter.set(unreadCounter.get() - 1);
+                        });
+                    } else { // remove the action anchor
+                        $anchorParent = $this.parent();
+                        
+                        $anchorParent.fadeOut('slow', function () {
+                            $anchorParent.remove();
+                        });
+                    }
                 });
 
                 readMention.fail(function() {
