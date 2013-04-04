@@ -28,9 +28,13 @@
                 @Html.AlertMessages()
                 <div class="span2">
                     <ul class="nav nav-list">
-                        <li class="nav-header">List header</li>
-                        <li class="active">Unread <span id="js-unread-counter" data-unread="@Model.TotalCount" class="pull-right">@Model.TotalCount</span></li>
-                        <li>All Notifications</li>
+                        <li class="nav-header">Notifications</li>
+                        <li class="@(!Model.ShowAll ? "active" : "")">
+                            <a href="@Url.Content("~/notifications")">Unread <span id="js-unread-counter" data-unread="@Model.UnreadCount" class="pull-right">@Model.UnreadCount</span></a>
+                        </li>
+                        <li class="@(Model.ShowAll ? "active" : "")">
+                            <a href="@Url.Content("~/notifications?all=true")">All Notifications</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="span10">

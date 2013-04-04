@@ -25,11 +25,13 @@ namespace JabbR.Nancy
                 var request = this.Bind<NotificationRequestModel>();
 
                 ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
+                int unreadCount = repository.GetNotificationsByUser(user).Count(n => !n.Read);
                 IPagedList<Notification> notifications = GetNotifications(repository, user, all: request.All, page: request.Page, roomName: request.Room);
 
                 var viewModel = new NotificationsViewModel
                 {
-                    TotalCount = notifications.TotalItemCount,
+                    ShowAll = request.All,
+                    UnreadCount = unreadCount,
                     Notifications = notifications,
                 };
 
