@@ -1459,7 +1459,7 @@
             });
 
             setInterval(function() {
-	            ui.trimRoomMessageHistory();
+                ui.trimRoomMessageHistory();
             }, trimRoomHistoryFrequency);
         },
         run: function () {
@@ -1931,6 +1931,14 @@
                     }
                 }
             }
+        },
+        overwriteMessage: function (id, message) {
+            var $message = $('#m-' + id);
+            processMessage(message);
+
+            $message.find('.middle').html(message.message);
+            $message.attr('id', 'm-' + message.id);
+
         },
         replaceMessage: function (message) {
             processMessage(message);

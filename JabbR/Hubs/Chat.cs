@@ -121,19 +121,18 @@ namespace JabbR
             var message = new ClientMessage
             {
                 Content = content,
-                Id = Guid.NewGuid().ToString("d"),
                 Room = roomName
             };
 
             return Send(message);
         }
 
-        public bool Send(ClientMessage message)
+        public bool Send(ClientMessage clientMessage)
         {
             CheckStatus();
 
             // See if this is a valid command (starts with /)
-            if (TryHandleCommand(message.Content, message.Room))
+            if (TryHandleCommand(clientMessage.Content, clientMessage.Room))
             {
                 return true;
             }
@@ -141,39 +140,50 @@ namespace JabbR
             var userId = Context.User.Identity.Name;
 
             ChatUser user = _repository.VerifyUserId(userId);
-            ChatRoom room = _repository.VerifyUserRoom(_cache, user, message.Room);
+            ChatRoom room = _repository.VerifyUserRoom(_cache, user, clientMessage.Room);
 
             // REVIEW: Is it better to use _repository.VerifyRoom(message.Room, mustBeOpen: false)
             // here?
             if (room.Closed)
             {
-                throw new InvalidOperationException(String.Format("You cannot post messages to '{0}'. The room is closed.", message.Room));
+                throw new InvalidOperationException(String.Format("You cannot post messages to '{0}'. The room is closed.", clientMessage.Room));
             }
 
             // Update activity *after* ensuring the user, this forces them to be active
             UpdateActivity(user, room);
 
-            ChatMessage chatMessage = _service.AddMessage(user, room, message.Id, message.Content);
+            // Create a true unique id and save the message to the db
+            string id = Guid.NewGuid().ToString("d");
+            ChatMessage chatMessage = _service.AddMessage(user, room, id, clientMessage.Content);
+            _repository.CommitChanges();
+
 
             var messageViewModel = new MessageViewModel(chatMessage);
-            Clients.Group(room.Name).addMessage(messageViewModel, room.Name);
 
-            _repository.CommitChanges();
+            if (clientMessage.Id == null)
+            {
+                // If the client didn't generate an id for the message then just
+                // send it to everyone. The assumption is that the client has some ui
+                // that it wanted to update immediately showing the message and
+                // then when the actual message is roundtripped it would "solidify it".
+                Clients.Group(room.Name).addMessage(messageViewModel, room.Name);
+            }
+            else
+            {
+                // If the client did set an id then we need to give everyone the real id first
+                Clients.OthersInGroup(room.Name).addMessage(messageViewModel, room.Name);
 
-            string clientMessageId = chatMessage.Id;
-
-            // Update the id on the message
-            chatMessage.Id = Guid.NewGuid().ToString("d");
-            _repository.CommitChanges();
+                // Now tell the caller to replace the message
+                Clients.Caller.replaceMessage(clientMessage.Id, messageViewModel, room.Name);
+            }
 
             // Add mentions
             AddMentions(chatMessage);
-            _repository.CommitChanges();
             
             var urls = UrlExtractor.ExtractUrls(chatMessage.Content);
             if (urls.Count > 0)
             {
-                _resourceProcessor.ProcessUrls(urls, Clients, room.Name, clientMessageId, chatMessage.Id);
+                _resourceProcessor.ProcessUrls(urls, Clients, room.Name, chatMessage.Id);
             }
 
             return true;
@@ -195,6 +205,8 @@ namespace JabbR
 
                 _service.AddNotification(mentionedUser, message, markAsRead);
             }
+
+            _repository.CommitChanges();
         }
 
         public UserViewModel GetUserInfo()

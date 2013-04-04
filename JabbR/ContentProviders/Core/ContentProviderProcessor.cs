@@ -21,7 +21,6 @@ namespace JabbR.ContentProviders.Core
         public void ProcessUrls(IEnumerable<string> links,
                                 IHubConnectionContext clients,
                                 string roomName,
-                                string clientMessageId,
                                 string messageId)
         {
 
@@ -58,7 +57,7 @@ namespace JabbR.ContentProviders.Core
                     }
 
                     // Notify the room
-                    clients.Group(roomName).addMessageContent(clientMessageId, task.Result.Content, roomName);
+                    clients.Group(roomName).addMessageContent(messageId, task.Result.Content, roomName);
                 }
             });
         }

@@ -367,6 +367,19 @@
         ui.watchMessageScroll([id], room);
     };
 
+    chat.client.replaceMessage = function (id, message, room) {
+        var viewModel = getMessageViewModel(message);
+
+        scrollIfNecessary(function () {
+            // Update your message when it comes from the server
+            ui.overwriteMessage(id, viewModel);
+        }, room);
+
+        var isMentioned = viewModel.highlight === 'highlight';
+
+        updateUnread(room, isMentioned);
+    };
+
     chat.client.addMessage = function (message, room) {
         var viewModel = getMessageViewModel(message);
 
