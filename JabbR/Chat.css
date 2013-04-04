@@ -347,14 +347,35 @@ form#send-message {
     margin-top: 0px;
 }
 
-.user .details .name {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+.user .details .name-container {
     float: left;
+    white-space: nowrap;
+    overflow: hidden;
     margin-top: 2px;
     padding-right: 2px;
-    width: 140px;
+    width: 167px;
+}
+
+    .user .details .name-container .name {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        float: left;
+        margin-top: 2px;
+        padding-right: 2px;
+        width: 145px;
+    }
+
+.user .details.admin .name-container .name {
+    width: 102px;
+}
+
+.user .details .name-container .admin {
+    float: left;
+    margin-top: 2px;
+    font-size: 11px;
+    font-weight: bold;
+    color: #999999;
 }
 
 .users li {
@@ -431,7 +452,6 @@ form#send-message {
     position: relative;
     padding: 4px;
     top: 2px;
-    margin-right: 5px;
 }
 
 li.user.typing .user-status {
@@ -456,19 +476,13 @@ li.user.typing .user-status {
 }
 
 .users .details {
-    width: 189px;
+    width: 194px;
     display: inline-block;
     vertical-align: top;
 }
 
 .users .owner {
     vertical-align: middle;
-}
-
-.users .admin {
-    vertical-align: middle;
-    position: relative;
-    float: left;
 }
 
 .note {
@@ -980,7 +994,7 @@ li.clearfix {
     float: right;
     width: 16px;
     height: 16px;
-    margin-top: 5px;
+    margin-top: 8px;
     margin-left: 2px;
 }
 
@@ -2663,13 +2677,10 @@ h3.userlist-header {
 }
 
 .idle-since {
-    position: relative;
     float: right;
     font-size: 11px;
     font-weight: bold;
     color: #ccc;
-    padding: 2px 2px;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 #loadingRoomHistory {
@@ -2745,12 +2756,24 @@ h3.userlist-header {
     }
 
         .users .details {
-            width: 150px;
+            width: 159px;
         }
 
-            .users .details .name {
-                width: 100px;
+            .users .details .name-container {
+                width: 139px;
             }
+
+    .user .details .name-container .name {
+        width: 115px;
+    }
+
+    .user .details.admin .name-container .name {
+        width: 97px;
+    }
+
+    .user .details.admin .name-container .idle-since {
+        display: none;
+    }
 }
 
 
@@ -2792,12 +2815,20 @@ h3.userlist-header {
     }
 
         .users .details {
-            width: 100px;
+            width: 109px;
         }
 
-            .users .details .name {
-                width: 50px;
+            .users .details .name-container {
+                width: 89px;
             }
+
+    .user .details .name-container .name {
+        width: 67px;
+    }
+
+    .user .details.admin .name-container .name {
+        width: 90px;
+    }
 }
 
 @media screen and (max-width:480px) {
@@ -2834,19 +2865,27 @@ h3.userlist-header {
             width: 45px;
         }
 
-            .users .details .name {
+            .users .details .name-container {
                 width: 45px;
             }
+
+    .user .details .name-container .name {
+        width: 45px;
+    }
+
+    .user .details.admin .name-container .name {
+        width: 45px;
+    }
+    
+    .user .details .name-container .idle-since {
+        float: left;
+    }
 
     .user-status {
         margin: 0;
     }
 
     .flag-container {
-        display: none;
-    }
-
-    .idle-container {
         display: none;
     }
 
