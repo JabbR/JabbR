@@ -7,7 +7,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>JabbR</title>
-    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/font-awesome.min.css")" rel="stylesheet" />
     <link href="@Url.Content("~/Chat.css")" rel="stylesheet" />
 </head>
 <body>
@@ -25,14 +26,11 @@
         <div class="container">
             <div class="row" style="padding-top: 75px;">
                 @Html.AlertMessages()
-                <div class="span2 user-details-sidenav">
-                    <div class="user-details">
-                        <span class="name">notifications</span>
-                    </div>
-                    <ul class="nav nav-pills nav-stacked">
-                        <li>
-                            Total <span class="pull-right">@Model.TotalCount</span>
-                        </li>
+                <div class="span2">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">List header</li>
+                        <li class="active">Unread <span id="js-unread-counter" class="pull-right">@Model.TotalCount</span></li>
+                        <li>All Notifications</li>
                     </ul>
                 </div>
                 <div class="span10">
@@ -40,7 +38,19 @@
                         @foreach (var notification in Model.Notifications)
                         {
                             var note = notification as JabbR.Models.Notification;
-                            <li>@note.Message.Room.Name - @note.Message.Content</li>
+                            <li data-notification-id="@note.Key">
+                                <ul class="inline">
+                                    <li>@note.Message.Room.Name</li>
+                                    <li>@note.Message.User.Name</li>
+                                    <li class="user">
+                                        <img class="gravatar" src="https://secure.gravatar.com/avatar/@note.Message.User.Hash?s=16&amp;d=mm" />
+                                    </li>
+                                    <li>
+                                        <a href="#" class="js-mark-as-read"><i class="icon-remove-circle"></i></a>
+                                    </li>
+                                </ul>
+                                <h4>@note.Message.Content</h4>
+                            </li>
                         }
                     </ul>
                 </div>
