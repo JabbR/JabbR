@@ -42,7 +42,7 @@
                         @foreach (var notification in Model.Notifications)
                         {
                             var note = notification as NotificationViewModel;
-                            <li data-notification-id="@note.NotificationKey">
+                            <li data-notification-id="@note.NotificationKey" class="notification-item @(!note.Read ? "notification-unread" : "")">
                                 <ul class="inline">
                                     <li>@note.RoomName</li>
                                     <li>@note.FromUserName</li>
@@ -111,21 +111,20 @@
                 });
 
                 readMention.done(function () {
-                    var $anchorParent = null,
-                        $notificationToRemove = null;
+                    var $anchorParent = $this.parent(),
+                        $targetNotification = $('li[data-notification-id="' + notificationId + '"]');
                     
                     if (notificationsMode === 'unread') {
-                        $notificationToRemove = $('li[data-notification-id="' + notificationId + '"]');
-
-                        $notificationToRemove.fadeOut('slow', function() {
-                            $notificationToRemove.remove();
+                        $targetNotification.fadeOut('slow', function() {
+                            $targetNotification.remove();
                             unreadCounter.set(unreadCounter.get() - 1);
                         });
                     } else { // remove the action anchor
-                        $anchorParent = $this.parent();
-                        
+                        $targetNotification.removeClass('notification-unread');
+
                         $anchorParent.fadeOut('slow', function () {
                             $anchorParent.remove();
+                            unreadCounter.set(unreadCounter.get() - 1);
                         });
                     }
                 });
