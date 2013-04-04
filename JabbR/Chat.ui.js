@@ -489,7 +489,14 @@
                 return -1;
             }
 
-            return a.Count > b.Count ? -1 : 1;
+            if (a.Count > b.Count) {
+                return -1;
+            } else if (b.Count > a.Count) {
+                return 1;
+            }
+            var compA = a.Name.toString().toUpperCase();
+            var compB = b.Name.toString().toUpperCase();
+            return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
         });
         return sortedList;
     }
@@ -1049,7 +1056,7 @@
                 ui.setActiveRoom($(this).data('name'));
             });
 
-            $document.on('click', 'li.room div', function () {
+            $document.on('click', 'li.room .room-row', function () {
                 var roomName = $(this).parent().data('name'),
                     room = getRoomElements(roomName);
 
@@ -1604,10 +1611,15 @@
             lobby.owners.empty();
             lobby.users.empty();
 
-            $.each(privateSorted, function () {
-                populateLobbyRoomList(this, templates.lobbyroom, lobby.owners, showClosedRooms);
-                roomCache[this.Name.toLowerCase()] = true;
-            });
+            if (privateSorted.length > 0) {
+                $.each(privateSorted, function() {
+                    populateLobbyRoomList(this, templates.lobbyroom, lobby.owners, showClosedRooms);
+                    roomCache[this.Name.toLowerCase()] = true;
+                });
+                $('#lobby-private').show();
+            } else {
+                $('#lobby-private').hide();
+            }
 
             $.each(sorted, function () {
                 populateLobbyRoomList(this, templates.otherlobbyroom, lobby.users, showClosedRooms);
