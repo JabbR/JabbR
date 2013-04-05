@@ -71,7 +71,11 @@
         $topicBar = null,
         $loadingHistoryIndicator = null,
         trimRoomHistoryMaxMessages = 200,
-        trimRoomHistoryFrequency = 1000 * 60 * 2; // 2 minutes in ms
+        trimRoomHistoryFrequency = 1000 * 60 * 2, // 2 minutes in ms
+        $loadMoreRooms = null,
+        sortedRoomList = null,
+        maxRoomsToLoad = 100,
+        lastLoadedRoomIndex = 0;
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] == '/') {
@@ -473,12 +477,13 @@
     }
 
     function populateLobbyRoomList(item, template, listToPopulate, showClosedRooms) {
-        var $li = template.tmpl(item).appendTo(listToPopulate);
+        $.tmpl(template, item).appendTo(listToPopulate);
 
-        if (item.Closed) {
-            if (!showClosedRooms) {
-                $li.hide();
-            }
+        if (!showClosedRooms) {
+            var closedRooms = listToPopulate.children('li.closed');
+            closedRooms.each(function() {
+                $(this).hide();
+            });
         }
     }
 
@@ -660,6 +665,7 @@
                     $ui.trigger(ui.events.scrollRoomTop, [{ name: roomName, messageId: messageId }]);
                 }
             }
+            lobbyLoaded = false;
         };
 
         // Hookup the scroll handler since event delegation doesn't work with scroll events
@@ -936,6 +942,19 @@
         return options;
     }
 
+    function loadMoreLobbyRooms() {
+        var deferred = $.Deferred(),
+            lobby = getLobby(),
+            showClosedRooms = $closedRoomFilter.is(':checked'),
+            moreRooms = sortedRoomList.slice(lastLoadedRoomIndex, lastLoadedRoomIndex + maxRoomsToLoad);
+
+        populateLobbyRoomList(moreRooms, templates.otherlobbyroom, lobby.users, showClosedRooms);
+        lastLoadedRoomIndex = lastLoadedRoomIndex + maxRoomsToLoad;
+        deferred.resolve();
+
+        return deferred;
+    }
+
     var ui = {
 
         //lets store any events to be triggered as constants here to aid intellisense and avoid
@@ -1023,7 +1042,9 @@
             connectionInfoTransport = '#connection-transport';
             $topicBar = $('#topic-bar');
             $loadingHistoryIndicator = $('#loadingRoomHistory');
-            
+
+            $loadMoreRooms = $('#load-more-rooms-item');
+
             if (toast.canToast()) {
                 $toast.show();
             }
@@ -1067,6 +1088,25 @@
                 else {
                     $ui.trigger(ui.events.openRoom, [roomName]);
                 }
+            });
+
+            $document.on('click', '#load-more-rooms-item', function () {
+                var spinner = $loadMoreRooms.find('i'),
+                    lobby = getLobby();
+                spinner.addClass('icon-spin');
+                spinner.show();
+                var loader = $loadMoreRooms.find('.load-more-rooms a');
+                loader.html(' Loading more rooms...');
+                loadMoreLobbyRooms().done(function() {
+                    spinner.hide();
+                    spinner.removeClass('icon-spin');
+                    loader.html('Load More...');
+                    if (lastLoadedRoomIndex < sortedRoomList.length) {
+                        $loadMoreRooms.appendTo(lobby.users);
+                    } else {
+                        $loadMoreRooms.hide();
+                    }
+                });
             });
 
             $document.on('click', '#tabs li .close', function (ev) {
@@ -1511,10 +1551,6 @@
                 return true;
             }
 
-            if (roomName === 'Lobby') {
-                lobbyLoaded = false;
-            }
-            
             var currentRoom = getCurrentRoomElements();
 
             if (room.exists()) {
@@ -1604,11 +1640,11 @@
             if (!lobbyLoaded) {
                 var showClosedRooms = $closedRoomFilter.is(':checked'),
                     // sort lobby by room open ascending then count descending
-                    privateSorted = sortRoomList(privateRooms),
+                    privateSorted = sortRoomList(privateRooms);
                     // sort lobby by room open ascending then count descending and
                     // filter the other rooms so that there is no duplication 
                     // between the lobby lists
-                    sorted = sortRoomList(rooms).filter(function(room) {
+                    sortedRoomList = sortRoomList(rooms).filter(function(room) {
                         return !privateSorted.some(function(allowed) {
                             return allowed.Name === room.Name;
                         });
@@ -1616,21 +1652,28 @@
 
                 lobby.owners.empty();
                 lobby.users.empty();
-
+                
                 var listOfPrivateRooms = $('<ul/>');
                 if (privateSorted.length > 0) {
                     populateLobbyRoomList(privateSorted, templates.lobbyroom, listOfPrivateRooms, showClosedRooms);
                     listOfPrivateRooms.children('li').appendTo(lobby.owners);
-                    listOfPrivateRooms.empty();
                     $('#lobby-private').show();
                 } else {
                     $('#lobby-private').hide();
                 }
 
                 var listOfRooms = $('<ul/>');
-                populateLobbyRoomList(sorted, templates.otherlobbyroom, listOfRooms, showClosedRooms);
+                populateLobbyRoomList(sortedRoomList.filter(
+                    function (room) {
+                        return room.Count > 0;
+                    }),
+                    templates.otherlobbyroom, listOfRooms, showClosedRooms);
+                lastLoadedRoomIndex = listOfRooms.children('li').length;
                 listOfRooms.children('li').appendTo(lobby.users);
-                listOfRooms.empty();
+                if (lastLoadedRoomIndex < sortedRoomList.length) {
+                    $loadMoreRooms.appendTo(lobby.users);
+                    $loadMoreRooms.show();
+                }
                 lobbyLoaded = true;
             }
             if (lobby.isActive()) {

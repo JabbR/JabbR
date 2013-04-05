@@ -259,7 +259,7 @@ form#send-message {
 
 
     #userlist-lobby div.room-row {
-        height: 30px;
+        min-height: 30px;
         border-color: #EEEEEE;
         border-style: solid;
         border-width: 1px 0;
@@ -272,10 +272,23 @@ form#send-message {
         background: #f1f1f1;
     }
 
+    #load-more-rooms-item {
+        cursor: pointer;
+    }
+
+    #userlist-lobby .load-more-rooms {
+        text-align: center;
+    }
+
+    #userlist-lobby .load-more-rooms a {
+        text-decoration: none;
+        color: #999;
+    }
+
     #userlist-lobby-active li div.room-row,
     #userlist-lobby-owners li div.room-row {
         display: inline-block;
-        height: 100px;
+        min-height: 100px;
         width: 250px;
         margin: 10px 5px;
         padding: 5px;
