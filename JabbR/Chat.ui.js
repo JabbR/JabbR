@@ -46,6 +46,7 @@
         $window = $(window),
         $document = $(document),
         $lobbyRoomFilterForm = null,
+        lobbyLoaded = false,
         $roomFilterInput = null,
         $closedRoomFilter = null,
         updateTimeout = 15000,
@@ -1022,7 +1023,7 @@
             connectionInfoTransport = '#connection-transport';
             $topicBar = $('#topic-bar');
             $loadingHistoryIndicator = $('#loadingRoomHistory');
-
+            
             if (toast.canToast()) {
                 $toast.show();
             }
@@ -1510,6 +1511,10 @@
                 return true;
             }
 
+            if (roomName === 'Lobby') {
+                lobbyLoaded = false;
+            }
+            
             var currentRoom = getCurrentRoomElements();
 
             if (room.exists()) {
@@ -1595,37 +1600,39 @@
             return room.isNearTheEnd();
         },
         populateLobbyRooms: function (rooms, privateRooms) {
-            var lobby = getLobby(),
-                showClosedRooms = $closedRoomFilter.is(':checked'),
-                // sort lobby by room open ascending then count descending
-                privateSorted = sortRoomList(privateRooms),
-                // sort lobby by room open ascending then count descending and
-                // filter the other rooms so that there is no duplication 
-                // between the lobby lists
-                sorted = sortRoomList(rooms).filter(function(room) {
-                    return !privateSorted.some(function(allowed) {
-                        return allowed.Name === room.Name;
+            var lobby = getLobby();
+            if (!lobbyLoaded) {
+                var showClosedRooms = $closedRoomFilter.is(':checked'),
+                    // sort lobby by room open ascending then count descending
+                    privateSorted = sortRoomList(privateRooms),
+                    // sort lobby by room open ascending then count descending and
+                    // filter the other rooms so that there is no duplication 
+                    // between the lobby lists
+                    sorted = sortRoomList(rooms).filter(function(room) {
+                        return !privateSorted.some(function(allowed) {
+                            return allowed.Name === room.Name;
+                        });
                     });
-                });
 
-            lobby.owners.empty();
-            lobby.users.empty();
+                lobby.owners.empty();
+                lobby.users.empty();
 
-            if (privateSorted.length > 0) {
-                $.each(privateSorted, function() {
-                    populateLobbyRoomList(this, templates.lobbyroom, lobby.owners, showClosedRooms);
-                    roomCache[this.Name.toLowerCase()] = true;
-                });
-                $('#lobby-private').show();
-            } else {
-                $('#lobby-private').hide();
+                var listOfPrivateRooms = $('<ul/>');
+                if (privateSorted.length > 0) {
+                    populateLobbyRoomList(privateSorted, templates.lobbyroom, listOfPrivateRooms, showClosedRooms);
+                    listOfPrivateRooms.children('li').appendTo(lobby.owners);
+                    listOfPrivateRooms.empty();
+                    $('#lobby-private').show();
+                } else {
+                    $('#lobby-private').hide();
+                }
+
+                var listOfRooms = $('<ul/>');
+                populateLobbyRoomList(sorted, templates.otherlobbyroom, listOfRooms, showClosedRooms);
+                listOfRooms.children('li').appendTo(lobby.users);
+                listOfRooms.empty();
+                lobbyLoaded = true;
             }
-
-            $.each(sorted, function () {
-                populateLobbyRoomList(this, templates.otherlobbyroom, lobby.users, showClosedRooms);
-                roomCache[this.Name.toLowerCase()] = true;
-            });
-
             if (lobby.isActive()) {
                 // update cache of room names
                 $lobbyRoomFilterForm.show();
