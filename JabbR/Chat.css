@@ -353,7 +353,13 @@ form#send-message {
     overflow: hidden;
     margin-top: 2px;
     padding-right: 2px;
-    width: 167px;
+    width: 174px;
+}
+
+.user .gravatar {
+    width: 16px;
+    height: 16px;
+    background-color: #C5C5C5
 }
 
     .user .details .name-container .name {
@@ -476,7 +482,6 @@ li.user.typing .user-status {
 }
 
 .users .details {
-    width: 194px;
     display: inline-block;
     vertical-align: top;
 }
@@ -995,7 +1000,6 @@ li.clearfix {
     width: 16px;
     height: 16px;
     margin-top: 8px;
-    margin-left: 2px;
 }
 
 .flag {
@@ -2655,7 +2659,7 @@ h3.userlist-header {
     font-weight: bold;
 }
 
-.popover-content {
+.popover-content {}
     padding: 4px 14px;
 }
 
@@ -2681,6 +2685,8 @@ h3.userlist-header {
     font-size: 11px;
     font-weight: bold;
     color: #ccc;
+    width: 25px;
+    margin-top: 2px;
 }
 
 #loadingRoomHistory {
