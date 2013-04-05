@@ -115,16 +115,17 @@ namespace JabbR
                 });
             }
 
-            if (offlineUsers.Count > 0)
-            {
-                PerformRoomAction(offlineUsers, roomGroup =>
-                {
-                    foreach (var user in roomGroup.Users)
-                    {
-                        hubContext.Clients.Group(roomGroup.Room.Name).leave(user, roomGroup.Room.Name);
-                    }
-                });
-            }
+            // TODO: Only remove users relevant to this server.
+            //if (offlineUsers.Count > 0)
+            //{
+            //    PerformRoomAction(offlineUsers, roomGroup =>
+            //    {
+            //        foreach (var user in roomGroup.Users)
+            //        {
+            //            hubContext.Clients.Group(roomGroup.Room.Name).leave(user, roomGroup.Room.Name);
+            //        }
+            //    });
+            //}
         }
 
         private static void PerformRoomAction(List<ChatUser> users, Action<RoomGroup> action)
