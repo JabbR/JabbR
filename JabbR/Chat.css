@@ -236,6 +236,10 @@ form#send-message {
     margin: 0;
 }
 
+#lobby-private {
+    display: none;
+}
+
 #userlist-lobby,
 #userlist-lobby-active,
 #userlist-lobby-owners {
