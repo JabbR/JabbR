@@ -1664,10 +1664,7 @@
                 }
 
                 var listOfRooms = $('<ul/>');
-                populateLobbyRoomList(sortedRoomList.filter(
-                    function (room) {
-                        return room.Count > 0;
-                    }),
+                populateLobbyRoomList(sortedRoomList.splice(lastLoadedRoomIndex, maxRoomsToLoad),
                     templates.otherlobbyroom, listOfRooms, showClosedRooms);
                 lastLoadedRoomIndex = listOfRooms.children('li').length;
                 listOfRooms.children('li').appendTo(lobby.users);
