@@ -2772,16 +2772,16 @@ h3.userlist-header {
         width: 200px;
     }
 
+    .user.idle .details.admin .name-container .name {
+        width: 72px;
+    }
+
     .user .details .name-container .name {
         width: 110px;
     }
 
     .user .details.admin .name-container .name {
-        width: 97px;
-    }
-
-    .user .details.admin .name-container .idle-since {
-        display: none;
+        width: 95px;
     }
 }
 
