@@ -343,6 +343,12 @@ form#send-message {
     overflow: hidden;
 }
 
+#userlist-lobby-owners .topic {
+    width: 250px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 #userlist-lobby .lock,
 #userlist-lobby .readonly,
 #userlist-lobby-active .lock,
