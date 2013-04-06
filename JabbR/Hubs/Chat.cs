@@ -142,6 +142,11 @@ namespace JabbR
             ChatUser user = _repository.VerifyUserId(userId);
             ChatRoom room = _repository.VerifyUserRoom(_cache, user, clientMessage.Room);
 
+            if (room == null || (room.Private && !user.AllowedRooms.Contains(room)))
+            {
+                return false;
+            }
+
             // REVIEW: Is it better to use _repository.VerifyRoom(message.Room, mustBeOpen: false)
             // here?
             if (room.Closed)
@@ -352,8 +357,12 @@ namespace JabbR
             string userId = Context.User.Identity.Name;
 
             ChatUser user = _repository.GetUserById(userId);
-
             ChatRoom room = _repository.VerifyUserRoom(_cache, user, roomName);
+
+            if (room == null || (room.Private && !user.AllowedRooms.Contains(room)))
+            {
+                return;
+            }
 
             UpdateActivity(user, room);
 
