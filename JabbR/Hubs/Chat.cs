@@ -141,12 +141,6 @@ namespace JabbR
                 return false;
             }
 
-            // See if this is a valid command (starts with /)
-            if (TryHandleCommand(clientMessage.Content, clientMessage.Room))
-            {
-                return true;
-            }
-
             // REVIEW: Is it better to use _repository.VerifyRoom(message.Room, mustBeOpen: false)
             // here?
             if (room.Closed)
@@ -156,6 +150,13 @@ namespace JabbR
 
             // Update activity *after* ensuring the user, this forces them to be active
             UpdateActivity(user, room);
+
+
+            // See if this is a valid command (starts with /)
+            if (TryHandleCommand(clientMessage.Content, clientMessage.Room))
+            {
+                return true;
+            }
 
             // Create a true unique id and save the message to the db
             string id = Guid.NewGuid().ToString("d");
