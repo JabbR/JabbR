@@ -2009,14 +2009,6 @@ li.clearfix {
         background-position: -80px -165px;
     }
 
-/*body, div {
-    -webkit-transition: width .2s ease, height .2s ease;
-    -moz-transition: width .2s ease, height .2s ease;
-    -o-transition: width .2s ease, height .2s ease;
-    -ms-transition: width .2s ease, height .2s ease;
-    transition: width .2s ease, height .2s ease;
-}*/
-
 .gravatarProfile {
     margin-left: 30px;
     margin-right: 10px;
