@@ -403,7 +403,7 @@ form#send-message {
 
 .users li {
     margin-left: 0;
-    padding: 3px;
+    padding: 8px 6px;
     list-style: none;
 }
 
