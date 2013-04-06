@@ -943,16 +943,12 @@
     }
 
     function loadMoreLobbyRooms() {
-        var deferred = $.Deferred(),
-            lobby = getLobby(),
+        var lobby = getLobby(),
             showClosedRooms = $closedRoomFilter.is(':checked'),
             moreRooms = sortedRoomList.slice(lastLoadedRoomIndex, lastLoadedRoomIndex + maxRoomsToLoad);
 
         populateLobbyRoomList(moreRooms, templates.otherlobbyroom, lobby.users, showClosedRooms);
         lastLoadedRoomIndex = lastLoadedRoomIndex + maxRoomsToLoad;
-        deferred.resolve();
-
-        return deferred;
     }
 
     var ui = {
@@ -1097,16 +1093,15 @@
                 spinner.show();
                 var loader = $loadMoreRooms.find('.load-more-rooms a');
                 loader.html(' Loading more rooms...');
-                loadMoreLobbyRooms().done(function() {
-                    spinner.hide();
-                    spinner.removeClass('icon-spin');
-                    loader.html('Load More...');
-                    if (lastLoadedRoomIndex < sortedRoomList.length) {
-                        $loadMoreRooms.appendTo(lobby.users);
-                    } else {
-                        $loadMoreRooms.hide();
-                    }
-                });
+                loadMoreLobbyRooms();
+                spinner.hide();
+                spinner.removeClass('icon-spin');
+                loader.html('Load More...');
+                if (lastLoadedRoomIndex < sortedRoomList.length) {
+                    $loadMoreRooms.appendTo(lobby.users);
+                } else {
+                    $loadMoreRooms.hide();
+                }
             });
 
             $document.on('click', '#tabs li .close', function (ev) {
