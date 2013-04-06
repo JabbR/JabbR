@@ -276,87 +276,87 @@ form#send-message {
         background: #f1f1f1;
     }
 
-    #load-more-rooms-item {
-        cursor: pointer;
-    }
+#load-more-rooms-item {
+    cursor: pointer;
+}
 
-    #userlist-lobby .load-more-rooms {
-        text-align: center;
-    }
+#userlist-lobby .load-more-rooms {
+    text-align: center;
+}
 
     #userlist-lobby .load-more-rooms a {
         text-decoration: none;
         color: #999;
     }
 
-    #userlist-lobby-active li div.room-row,
-    #userlist-lobby-owners li div.room-row {
-        display: inline-block;
-        min-height: 100px;
-        width: 250px;
-        margin: 10px 5px;
-        padding: 5px;
-        -webkit-border-radius: 2px;
-        -moz-border-radius: 2px;
-        border-radius: 2px;
-        -webkit-box-shadow: 0px 0px 2px 1px #888;
-        -moz-box-shadow: 0px 0px 2px 1px #888;
-        box-shadow: 0px 0px 2px 1px #888;
-    }
+#userlist-lobby-active li div.room-row,
+#userlist-lobby-owners li div.room-row {
+    display: inline-block;
+    min-height: 100px;
+    width: 250px;
+    margin: 10px 5px;
+    padding: 5px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0px 0px 2px 1px #888;
+    -moz-box-shadow: 0px 0px 2px 1px #888;
+    box-shadow: 0px 0px 2px 1px #888;
+}
 
-    #userlist-lobby-active li div:hover,
-    #userlist-lobby-owners li div:hover {
-        border: rgba(82, 168, 236, 0.8);
-        -webkit-box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
-        -moz-box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
-        box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
-        background: #fcfcfc;
-    }
+#userlist-lobby-active li div:hover,
+#userlist-lobby-owners li div:hover {
+    border: rgba(82, 168, 236, 0.8);
+    -webkit-box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
+    -moz-box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
+    box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
+    background: #fcfcfc;
+}
 
-    #userlist-lobby-active span,
-    #userlist-lobby-owners span {
-        float: left;
-    }
+#userlist-lobby-active span,
+#userlist-lobby-owners span {
+    float: left;
+}
 
-    #userlist-lobby .name,
-    #userlist-lobby-active .name,
-    #userlist-lobby-owners .name {
-        font-size: 1.25em;
-        overflow: hidden;
-    }
+#userlist-lobby .name,
+#userlist-lobby-active .name,
+#userlist-lobby-owners .name {
+    font-size: 1.25em;
+    overflow: hidden;
+}
 
-    #userlist-lobby .count,
-    #userlist-lobby-active .count,
-    #userlist-lobby-owners .count {
-        font-style: italic;
-        color: #999;
-        font-size: 0.85em;
-    }
+#userlist-lobby .count,
+#userlist-lobby-active .count,
+#userlist-lobby-owners .count {
+    font-style: italic;
+    color: #999;
+    font-size: 0.85em;
+}
 
-    #userlist-lobby .topic,
-    #userlist-lobby-active .topic,
-    #userlist-lobby-owners .topic {
-        font-size: 1em;
-        overflow: hidden;
-    }
+#userlist-lobby .topic,
+#userlist-lobby-active .topic,
+#userlist-lobby-owners .topic {
+    font-size: 1em;
+    overflow: hidden;
+}
 
-    #userlist-lobby .lock,
-    #userlist-lobby .readonly,
-    #userlist-lobby-active .lock,
-    #userlist-lobby-active .readonly,
-    #userlist-lobby-owners .lock,
-    #userlist-lobby-owners .readonly {
-        display: none;
-    }
+#userlist-lobby .lock,
+#userlist-lobby .readonly,
+#userlist-lobby-active .lock,
+#userlist-lobby-active .readonly,
+#userlist-lobby-owners .lock,
+#userlist-lobby-owners .readonly {
+    display: none;
+}
 
-    #userlist-lobby .locked .lock,
-    #userlist-lobby .closed .readonly,
-    #userlist-lobby-active .locked .lock,
-    #userlist-lobby-active .closed .readonly,
-    #userlist-lobby-owners .locked .lock,
-    #userlist-lobby-owners .closed .readonly {
-        display: initial;
-    }
+#userlist-lobby .locked .lock,
+#userlist-lobby .closed .readonly,
+#userlist-lobby-active .locked .lock,
+#userlist-lobby-active .closed .readonly,
+#userlist-lobby-owners .locked .lock,
+#userlist-lobby-owners .closed .readonly {
+    display: initial;
+}
 
 .users ul {
     margin-left: 0px;
@@ -365,26 +365,29 @@ form#send-message {
 }
 
 .user .details .name-container {
-    float: left;
-    white-space: nowrap;
     overflow: hidden;
-    margin-top: 2px;
-    padding-right: 2px;
-    width: 167px;
+    margin-left: 2px;
+    height: 20px;
 }
 
-    .user .details .name-container .name {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        float: left;
-        margin-top: 2px;
-        padding-right: 2px;
-        width: 145px;
-    }
+.user .gravatar {
+    width: 16px;
+    height: 16px;
+    float: left;
+    background-color: #C5C5C5;
+}
+
+.user .details .name-container .name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    float: left;
+    padding-right: 2px;
+    width: 135px;
+}
 
 .user .details.admin .name-container .name {
-    width: 102px;
+    width: 105px;
 }
 
 .user .details .name-container .admin {
@@ -393,6 +396,7 @@ form#send-message {
     font-size: 11px;
     font-weight: bold;
     color: #999999;
+    padding: 0 2px;
 }
 
 .users li {
@@ -452,6 +456,11 @@ form#send-message {
         margin-right: 20px;
     }
 
+.user-status-container {
+    width: 15px;
+    float: left;
+}
+
 .user-status {
     -webkit-box-shadow: inset 0px 1px 0px 0px #caefab;
     -moz-box-shadow: inset 0px 1px 0px 0px #caefab;
@@ -468,7 +477,6 @@ form#send-message {
     color: #306108;
     position: relative;
     padding: 4px;
-    top: 2px;
 }
 
 li.user.typing .user-status {
@@ -493,9 +501,7 @@ li.user.typing .user-status {
 }
 
 .users .details {
-    width: 194px;
-    display: inline-block;
-    vertical-align: top;
+    overflow: hidden;
 }
 
 .users .owner {
@@ -1011,8 +1017,7 @@ li.clearfix {
     float: right;
     width: 16px;
     height: 16px;
-    margin-top: 8px;
-    margin-left: 2px;
+    margin-top: 3px;
 }
 
 .flag {
@@ -2004,14 +2009,6 @@ li.clearfix {
         background-position: -80px -165px;
     }
 
-body, div {
-    -webkit-transition: width .2s ease, height .2s ease;
-    -moz-transition: width .2s ease, height .2s ease;
-    -o-transition: width .2s ease, height .2s ease;
-    -ms-transition: width .2s ease, height .2s ease;
-    transition: width .2s ease, height .2s ease;
-}
-
 .gravatarProfile {
     margin-left: 30px;
     margin-right: 10px;
@@ -2698,6 +2695,7 @@ h3.userlist-header {
     font-size: 11px;
     font-weight: bold;
     color: #ccc;
+    width: 25px;
 }
 
 #loadingRoomHistory {
@@ -2772,16 +2770,8 @@ h3.userlist-header {
         width: 200px;
     }
 
-        .users .details {
-            width: 159px;
-        }
-
-            .users .details .name-container {
-                width: 139px;
-            }
-
     .user .details .name-container .name {
-        width: 115px;
+        width: 110px;
     }
 
     .user .details.admin .name-container .name {
@@ -2827,31 +2817,30 @@ h3.userlist-header {
         overflow: hidden;
     }
 
+    .user .details .name-container .admin {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 27px;
+    }
+
     .users {
         width: 150px;
     }
 
-        .users .details {
-            width: 109px;
-        }
-
-            .users .details .name-container {
-                width: 89px;
-            }
-
     .user .details .name-container .name {
-        width: 67px;
+        width: 65px;
     }
 
     .user .details.admin .name-container .name {
-        width: 90px;
+        width: 55px;
     }
 }
 
 @media screen and (max-width:480px) {
     .messages {
         width: auto;
-        right: 50px;
+        right: 100px;
         left: 0px;
     }
 
@@ -2869,22 +2858,18 @@ h3.userlist-header {
         }
 
     .users {
-        width: 50px;
+        width: 100px;
         right: 0px;
         left: auto;
     }
-
+    .users ul
         .users li.empty {
             font-size: 80%;
         }
 
-        .users .details {
+        .users .details .name-container {
             width: 45px;
         }
-
-            .users .details .name-container {
-                width: 45px;
-            }
 
     .user .details .name-container .name {
         width: 45px;
@@ -2893,7 +2878,7 @@ h3.userlist-header {
     .user .details.admin .name-container .name {
         width: 45px;
     }
-    
+
     .user .details .name-container .idle-since {
         float: left;
     }

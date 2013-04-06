@@ -113,18 +113,22 @@
     </script>
     <script id="new-user-template" type="text/x-jquery-tmpl">
         <li class="user" data-name="${name}">
-            <i class="user-status"></i>
+            <div class="user-status-container">
+                <i class="user-status"></i>
+            </div>
             <img class="gravatar" src="https://secure.gravatar.com/avatar/${hash}?s=16&d=mm" />
             <div class="details {{if admin}}admin{{/if}}">
-                <div class="name-container">
-                    <div class="name" {{if note}}title="${note}"{{else}}title="${name}"{{/if}}>${name}</div>
-                    <div class="admin">{{if admin}}(admin){{/if}}</div>
-                    <div class="idle-since"></div>
-                </div>
                 <div class="flag-container">
                     <div class="flag{{if flagClass}} ${flagClass}{{/if}}" {{if flag}}title="${country}"{{/if}}></div>
                 </div>
+                <div class="name-container">
+                    <div class="name" {{if note}}title="${note}"{{else}}title="${name}"{{/if}}>${name}</div>
+                    {{if admin}}<div class="admin">(admin)</div>{{/if}}
+                    <div class="idle-since"></div>
+                </div>
+                <div style="clear:both"></div>
             </div>
+            <div style="clear:both"></div>
         </li>
     </script>
     <script id="new-userlist-template" type="text/x-jquery-tmpl">
