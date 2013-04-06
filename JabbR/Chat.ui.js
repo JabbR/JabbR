@@ -75,7 +75,9 @@
         $loadMoreRooms = null,
         sortedRoomList = null,
         maxRoomsToLoad = 100,
-        lastLoadedRoomIndex = 0;
+        lastLoadedRoomIndex = 0,
+        $lobbyPrivateRooms = null,
+        $lobbyOtherRooms = null;
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] == '/') {
@@ -1040,7 +1042,9 @@
             $loadingHistoryIndicator = $('#loadingRoomHistory');
 
             $loadMoreRooms = $('#load-more-rooms-item');
-
+            $lobbyPrivateRooms = $('#lobby-private');
+            $lobbyOtherRooms = $('#lobby-other');
+            
             if (toast.canToast()) {
                 $toast.show();
             }
@@ -1652,9 +1656,11 @@
                 if (privateSorted.length > 0) {
                     populateLobbyRoomList(privateSorted, templates.lobbyroom, listOfPrivateRooms, showClosedRooms);
                     listOfPrivateRooms.children('li').appendTo(lobby.owners);
-                    $('#lobby-private').show();
+                    $lobbyPrivateRooms.show();
+                    $lobbyOtherRooms.find('nav-header').html('Other Rooms');
                 } else {
-                    $('#lobby-private').hide();
+                    $lobbyPrivateRooms.hide();
+                    $lobbyOtherRooms.find('nav-header').html('Rooms');
                 }
 
                 var listOfRooms = $('<ul/>');
@@ -1669,6 +1675,7 @@
                     $loadMoreRooms.appendTo(lobby.users);
                     $loadMoreRooms.show();
                 }
+                $lobbyOtherRooms.show();
                 lobbyLoaded = true;
             }
             if (lobby.isActive()) {

@@ -236,7 +236,8 @@ form#send-message {
     margin: 0;
 }
 
-#lobby-private {
+#lobby-private,
+#lobby-other {
     display: none;
 }
 
