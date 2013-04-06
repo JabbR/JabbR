@@ -196,14 +196,24 @@ namespace JabbR
 
         private void AddMentions(ChatMessage message)
         {
+            bool anyMentions = false;
+
             foreach (var userName in MentionExtractor.ExtractMentions(message.Content))
             {
                 ChatUser mentionedUser = _repository.GetUserByName(userName);
 
-                if (mentionedUser == null || mentionedUser == message.User)
+                // Don't create a mention if
+                // 1. If the mentioned user doesn't exist.
+                // 2. If you mention yourself
+                // 3. If you're mentioned in a private room that you don't have access to
+                if (mentionedUser == null || 
+                    mentionedUser == message.User || 
+                    (message.Room.Private && !mentionedUser.AllowedRooms.Contains(message.Room)))
                 {
                     continue;
                 }
+
+                anyMentions = true;
 
                 // Mark the notification as read if the user is online
                 bool markAsRead = mentionedUser.Status == (int)UserStatus.Active;
@@ -211,7 +221,10 @@ namespace JabbR
                 _service.AddNotification(mentionedUser, message, markAsRead);
             }
 
-            _repository.CommitChanges();
+            if (anyMentions)
+            {
+                _repository.CommitChanges();
+            }
         }
 
         public UserViewModel GetUserInfo()
