@@ -323,6 +323,9 @@ form#send-message {
 #userlist-lobby-owners .name {
     font-size: 1.25em;
     overflow: hidden;
+    width: 215px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 #userlist-lobby .count,
