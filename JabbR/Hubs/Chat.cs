@@ -131,12 +131,6 @@ namespace JabbR
         {
             CheckStatus();
 
-            // See if this is a valid command (starts with /)
-            if (TryHandleCommand(clientMessage.Content, clientMessage.Room))
-            {
-                return true;
-            }
-
             var userId = Context.User.Identity.Name;
 
             ChatUser user = _repository.VerifyUserId(userId);
@@ -145,6 +139,12 @@ namespace JabbR
             if (room == null || (room.Private && !user.AllowedRooms.Contains(room)))
             {
                 return false;
+            }
+
+            // See if this is a valid command (starts with /)
+            if (TryHandleCommand(clientMessage.Content, clientMessage.Room))
+            {
+                return true;
             }
 
             // REVIEW: Is it better to use _repository.VerifyRoom(message.Room, mustBeOpen: false)
