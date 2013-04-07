@@ -305,7 +305,7 @@ form#send-message {
     box-shadow: 0px 0px 2px 1px #888;
 }
 
-#userlist-lobby-owners li div:hover {
+#userlist-lobby-owners li div.room-row:hover {
     border: rgba(82, 168, 236, 0.8);
     -webkit-box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
     -moz-box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
