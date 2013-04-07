@@ -1970,7 +1970,7 @@
             var $message = this.appendMessage(templates.message.tmpl(message), room);
 
             if (message.htmlContent) {
-                ui.addChatMessageContent(message.id, message.htmlContent, room);
+                ui.addChatMessageContent(message.id, message.htmlContent, room.getName());
             }
 
             if (room.isInitialized()) {
