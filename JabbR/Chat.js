@@ -134,7 +134,7 @@
             chat.server.getRooms()
                 .done(function (rooms) {
                     ui.populateLobbyRooms(rooms, privateRooms);
-                    ui.setLobbyLoading(false);
+                    ui.setRoomLoading(false);
                 });
         }
         catch (e) {
@@ -245,7 +245,9 @@
         }
 
         if (added) {
+            ui.setRoomLoading(true);
             populateRoom(room.Name).done(function () {
+                ui.setRoomLoading(false);
                 ui.addMessage('You just entered ' + room.Name, 'notification', room.Name);
 
                 if (room.Welcome) {
@@ -257,7 +259,7 @@
 
     // Called when a returning users join chat
     chat.client.logOn = function (rooms, myRooms) {
-        ui.setLobbyLoading(true);
+        ui.setRoomLoading(true);
         privateRooms = myRooms;
 
            var loadRooms = function () {

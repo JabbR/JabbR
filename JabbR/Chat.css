@@ -236,17 +236,20 @@ form#send-message {
     margin: 0;
 }
 
-#lobby-loading {
+#room-loading {
     display: none;
     margin: 10px 0;
+    position: relative;
+    top: 50px;
+    z-index: 1000;
 }
 
-    #lobby-loading i {
+    #room-loading i {
         float: left;
         margin: 0 10px;
     }
 
-    #lobby-loading h3 {
+    #room-loading h3 {
         font-weight: lighter;
     }
 

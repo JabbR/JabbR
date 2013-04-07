@@ -78,7 +78,7 @@
         lastLoadedRoomIndex = 0,
         $lobbyPrivateRooms = null,
         $lobbyOtherRooms = null,
-        $lobbyLoadingIndicator = null;
+        $roomLoadingIndicator = null;
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] == '/') {
@@ -479,13 +479,13 @@
         };
     }
 
-    function setLobbyLoading(isLoading) {
-        if (!lobbyLoaded && isLoading) {
-            $lobbyLoadingIndicator.find('i').addClass('icon-spin');
-            $lobbyLoadingIndicator.show();
+    function setRoomLoading(isLoading) {
+        if (isLoading) {
+            $roomLoadingIndicator.find('i').addClass('icon-spin');
+            $roomLoadingIndicator.show();
         } else {
-            $lobbyLoadingIndicator.hide();
-            $lobbyLoadingIndicator.find('i').removeClass('icon-spin');
+            $roomLoadingIndicator.hide();
+            $roomLoadingIndicator.find('i').removeClass('icon-spin');
         }
 
     }
@@ -1056,7 +1056,7 @@
             $loadMoreRooms = $('#load-more-rooms-item');
             $lobbyPrivateRooms = $('#lobby-private');
             $lobbyOtherRooms = $('#lobby-other');
-            $lobbyLoadingIndicator = $('#lobby-loading');
+            $roomLoadingIndicator = $('#room-loading');
             
             if (toast.canToast()) {
                 $toast.show();
@@ -1647,7 +1647,7 @@
 
             return room.isNearTheEnd();
         },
-        setLobbyLoading: setLobbyLoading,
+        setRoomLoading: setRoomLoading,
         populateLobbyRooms: function (rooms, privateRooms) {
             var lobby = getLobby();
             if (!lobbyLoaded) {
