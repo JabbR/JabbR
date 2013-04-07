@@ -961,7 +961,7 @@
             showClosedRooms = $closedRoomFilter.is(':checked'),
             moreRooms = sortedRoomList.slice(lastLoadedRoomIndex, lastLoadedRoomIndex + maxRoomsToLoad);
 
-        populateLobbyRoomList(moreRooms, templates.otherlobbyroom, lobby.users, showClosedRooms);
+        populateLobbyRoomList(moreRooms, templates.lobbyroom, lobby.users, showClosedRooms);
         lastLoadedRoomIndex = lastLoadedRoomIndex + maxRoomsToLoad;
     }
 
@@ -1069,6 +1069,12 @@
                 $toast.hide();
             }
 
+            if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
+                var msViewportStyle = $("style");
+                msViewportStyle.append($("@-ms-viewport{width:auto!important}"));
+                $("head").append(msViewportStyle);
+            }
+            
             // DOM events
             $document.on('click', 'h3.collapsible_title', function () {
                 var $message = $(this).closest('.message'),
