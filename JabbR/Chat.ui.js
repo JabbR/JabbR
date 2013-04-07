@@ -77,7 +77,8 @@
         maxRoomsToLoad = 100,
         lastLoadedRoomIndex = 0,
         $lobbyPrivateRooms = null,
-        $lobbyOtherRooms = null;
+        $lobbyOtherRooms = null,
+        $lobbyLoadingIndicator = null;
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] == '/') {
@@ -1044,6 +1045,7 @@
             $loadMoreRooms = $('#load-more-rooms-item');
             $lobbyPrivateRooms = $('#lobby-private');
             $lobbyOtherRooms = $('#lobby-other');
+            $lobbyLoadingIndicator = $('#lobby-loading');
             
             if (toast.canToast()) {
                 $toast.show();
@@ -1640,9 +1642,20 @@
 
             return room.isNearTheEnd();
         },
+        setLobbyLoading: function (isLoading) {
+            if (isLoading) {
+                $lobbyLoadingIndicator.find('i').addClass('icon-spin');
+                $lobbyLoadingIndicator.show();
+            } else {
+                $lobbyLoadingIndicator.hide();
+                $lobbyLoadingIndicator.find('i').removeClass('icon-spin');
+            }
+
+        },
         populateLobbyRooms: function (rooms, privateRooms) {
             var lobby = getLobby();
             if (!lobbyLoaded) {
+                ui.setLobbyLoading(true);
                 var showClosedRooms = $closedRoomFilter.is(':checked'),
                     // sort lobby by room open ascending then count descending
                     privateSorted = sortRoomList(privateRooms);
@@ -1687,6 +1700,8 @@
 
             ui.$roomFilter.update();
             $roomFilterInput.val('');
+            
+            ui.setLobbyLoading(false);
         },
         addUser: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),

@@ -236,6 +236,11 @@ form#send-message {
     margin: 0;
 }
 
+#lobby-loading {
+    display: none;
+    text-align: center;
+}
+
 #lobby-private,
 #lobby-other {
     display: none;
