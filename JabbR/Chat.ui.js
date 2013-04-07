@@ -4,8 +4,8 @@
 /// <reference path="Chat.toast.js" />
 /// <reference path="Scripts/livestamp.min.js" />
 
-/*global Emoji:true*/
-(function ($, window, document, utility) {
+/*jshint bitwise:false */
+(function ($, window, document, utility, emoji, linkify) {
     "use strict";
 
     var $chatArea = null,
@@ -80,7 +80,7 @@
         roomLoadingTimeout = null;
 
     function getRoomNameFromHash(hash) {
-        if (hash.length && hash[0] == '/') {
+        if (hash.length && hash[0] === '/') {
             hash = hash.substr(1);
         }
 
@@ -380,7 +380,7 @@
         };
 
         this.appearsInList = function ($user, list) {
-            return $user.parent('ul').attr('id') == list.attr('id');
+            return $user.parent('ul').attr('id') === list.attr('id');
         };
 
         this.updateUserStatus = function ($user) {
@@ -786,7 +786,7 @@
     }
 
     function toggleRichness($element, roomName) {
-        var blockRichness = roomName ? getRoomPreference(roomName, 'blockRichness') : preferences['blockRichness'];
+        var blockRichness = roomName ? getRoomPreference(roomName, 'blockRichness') : preferences.blockRichness;
 
         if (blockRichness === true) {
             $element.addClass('off');
@@ -863,7 +863,7 @@
         focus = true;
 
         if (msg) {
-            if (msg.toLowerCase() == '/login') {
+            if (msg.toLowerCase() === '/login') {
                 ui.showLogin();
             }
             else {
@@ -1454,12 +1454,11 @@
                             return getRoomsNames();
 
                         case '/':
-                            var commands = ui.getCommands();
                             return ui.getCommands()
                                          .map(function (cmd) { return cmd.Name + ' '; });
 
                         case ':':
-                            return Emoji.getIcons();
+                            return emoji.getIcons();
                         default:
                             return [];
                     }
@@ -2406,7 +2405,7 @@
         processContent: function (content) {
             content = content || '';
 
-            var hasNewline = content.indexOf('\n') != -1;
+            var hasNewline = content.indexOf('\n') !== -1;
 
             if (hasNewline) {
                 // Multiline detection
@@ -2455,4 +2454,4 @@
         window.chat = {};
     }
     window.chat.ui = ui;
-})(jQuery, window, window.document, window.chat.utility);
+})(jQuery, window, window.document, window.chat.utility, window.Emoji, window.linkify);

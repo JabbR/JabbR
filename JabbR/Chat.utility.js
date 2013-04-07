@@ -1,9 +1,9 @@
 ﻿/// <reference path="Scripts/jquery-1.7.js" />
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
-/*jshint evil:true*/
-/*global Emoji:true, Markdown:true */
-(function ($, window) {
+
+/*jshint evil:true bitwise:false*/
+(function ($, window, emoji, markdown) {
     "use strict";
 
     // getting the browser's name for use in isMobile
@@ -16,7 +16,7 @@
 
     function padZero(s) {
         s = s.toString();
-        if (s.length == 1) {
+        if (s.length === 1) {
             return "0" + s;
         }
         return s;
@@ -126,16 +126,16 @@
             return prefix + n;
         },
         markdownToHtml: function (content) {
-            var converter = new Markdown.Converter().makeHtml;
+            var converter = new markdown.Converter().makeHtml;
             return (converter(content));
         },
         isMobile: isMobile,
         parseEmojis: function (content) {
-            var parser = new Emoji.Parser().parse;
+            var parser = new emoji.Parser().parse;
             return (parser(content));
         },
         transformEmojis: function (content) {
-            var transformToHtml = new Emoji.Parser().transformToHtml;
+            var transformToHtml = new emoji.Parser().transformToHtml;
             return (transformToHtml(content));
         },
         decodeHtml: decodeHtml,
@@ -149,4 +149,4 @@
 
     window.chat.utility = utility;
 
-})(jQuery, window);
+})(jQuery, window, window.Emoji, window.Markdown);
