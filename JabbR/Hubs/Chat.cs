@@ -134,23 +134,27 @@ namespace JabbR
             var userId = Context.User.Identity.Name;
 
             ChatUser user = _repository.VerifyUserId(userId);
-            ChatRoom room = _repository.VerifyUserRoom(_cache, user, clientMessage.Room);
+            ChatRoom room = null;
 
-            if (room == null || (room.Private && !user.AllowedRooms.Contains(room)))
+            if (clientMessage.Room != null)
             {
-                return false;
+                room = _repository.VerifyUserRoom(_cache, user, clientMessage.Room);
+
+                if (room == null || (room.Private && !user.AllowedRooms.Contains(room)))
+                {
+                    return false;
+                }
+
+                // REVIEW: Is it better to use _repository.VerifyRoom(message.Room, mustBeOpen: false)
+                // here?
+                if (room.Closed)
+                {
+                    throw new InvalidOperationException(String.Format("You cannot post messages to '{0}'. The room is closed.", clientMessage.Room));
+                }
+
+                // Update activity *after* ensuring the user, this forces them to be active
+                UpdateActivity(user, room);
             }
-
-            // REVIEW: Is it better to use _repository.VerifyRoom(message.Room, mustBeOpen: false)
-            // here?
-            if (room.Closed)
-            {
-                throw new InvalidOperationException(String.Format("You cannot post messages to '{0}'. The room is closed.", clientMessage.Room));
-            }
-
-            // Update activity *after* ensuring the user, this forces them to be active
-            UpdateActivity(user, room);
-
 
             // See if this is a valid command (starts with /)
             if (TryHandleCommand(clientMessage.Content, clientMessage.Room))
