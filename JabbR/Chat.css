@@ -238,8 +238,17 @@ form#send-message {
 
 #lobby-loading {
     display: none;
-    text-align: center;
+    margin: 10px 0;
 }
+
+    #lobby-loading i {
+        float: left;
+        margin: 0 10px;
+    }
+
+    #lobby-loading h3 {
+        font-weight: lighter;
+    }
 
 #lobby-private,
 #lobby-other {
@@ -305,13 +314,13 @@ form#send-message {
     box-shadow: 0px 0px 2px 1px #888;
 }
 
-#userlist-lobby-owners li div.room-row:hover {
-    border: rgba(82, 168, 236, 0.8);
-    -webkit-box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
-    -moz-box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
-    box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
-    background: #fcfcfc;
-}
+    #userlist-lobby-owners li div.room-row:hover {
+        border: rgba(82, 168, 236, 0.8);
+        -webkit-box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
+        -moz-box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
+        box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
+        background: #fcfcfc;
+    }
 
     #userlist-lobby-owners li div.room-row div {
         width: 100%;
@@ -2863,11 +2872,11 @@ h3.userlist-header {
             display: none;
         }
 
-        .message.loading .left .state,
-        .message.failed .left .state {
-            margin-top: 5px;
-            margin-right: 8px;
-        }
+    .message.loading .left .state,
+    .message.failed .left .state {
+        margin-top: 5px;
+        margin-right: 8px;
+    }
 
     .users {
         width: 100px;
