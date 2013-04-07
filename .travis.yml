@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - 0.8
+install:
+  - npm install jshint -g
+script:
+  - cd JabbR
+  - jshint .
