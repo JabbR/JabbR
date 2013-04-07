@@ -444,11 +444,11 @@
             });
         };
 
-        this.canTrimHistory = function() {
+        this.canTrimHistory = function () {
             return this.tab.data('trimmable') !== false;
         };
 
-        this.setTrimmable = function(canTrimMessages) {
+        this.setTrimmable = function (canTrimMessages) {
             this.tab.data('trimmable', canTrimMessages);
         };
 
@@ -467,7 +467,7 @@
             if (numberOfMessagesToKeep < trimRoomHistoryMaxMessages) {
                 numberOfMessagesToKeep = trimRoomHistoryMaxMessages;
             }
-            
+
             if (messageCount < numberOfMessagesToKeep) {
                 return;
             }
@@ -495,14 +495,14 @@
 
         if (!showClosedRooms) {
             var closedRooms = listToPopulate.children('li.closed');
-            closedRooms.each(function() {
+            closedRooms.each(function () {
                 $(this).hide();
             });
         }
     }
 
     function sortRoomList(listToSort) {
-        var sortedList = listToSort.sort(function(a, b) {
+        var sortedList = listToSort.sort(function (a, b) {
             if (a.Closed && !b.Closed) {
                 return 1;
             } else if (b.Closed && !a.Closed) {
@@ -774,8 +774,20 @@
         // Restore the global preferences
     }
 
+    function toggleRichness($element, roomName) {
+        var blockRichness = roomName ? getRoomPreference(roomName, 'blockRichness') : preferences['blockRichness'];
+
+        if (blockRichness === true) {
+            $element.addClass('off');
+        }
+        else {
+            $element.removeClass('off');
+        }
+    }
+
     function toggleElement($element, preferenceName, roomName) {
         var value = roomName ? getRoomPreference(roomName, preferenceName) : preferences[preferenceName];
+
         if (value === true) {
             $element.removeClass('off');
         }
@@ -790,7 +802,7 @@
         // Placeholder for room level preferences
         toggleElement($sound, 'hasSound', roomName);
         toggleElement($toast, 'canToast', roomName);
-        toggleElement($richness, 'blockRichness', roomName);
+        toggleRichness($richness, roomName);
     }
 
     function setPreference(name, value) {
@@ -1057,7 +1069,7 @@
             $lobbyPrivateRooms = $('#lobby-private');
             $lobbyOtherRooms = $('#lobby-other');
             $roomLoadingIndicator = $('#room-loading');
-            
+
             if (toast.canToast()) {
                 $toast.show();
             }
@@ -1068,7 +1080,7 @@
                 preferences.canToast = false;
                 $toast.hide();
             }
-            
+
             // DOM events
             $document.on('click', 'h3.collapsible_title', function () {
                 var $message = $(this).closest('.message'),
@@ -1248,7 +1260,7 @@
                 var enabled = !$(this).hasClass('off');
 
                 // Store the preference
-                setRoomPreference(room.getName(), 'blockRichness', enabled);
+                setRoomPreference(room.getName(), 'blockRichness', !enabled);
 
                 // toggle all rich-content for current room
                 $richContentMessages.each(function (index) {
@@ -1261,7 +1273,7 @@
                         $this.removeAttr('title');
                     }
 
-                    if (!(isCurrentlyVisible ^ enabled)) {
+                    if (isCurrentlyVisible ^ enabled) {
                         $this.trigger('click');
                     }
                 });
@@ -1505,7 +1517,7 @@
                 $ui.trigger(ui.events.fileUploaded, [uploader]);
             });
 
-            setInterval(function() {
+            setInterval(function () {
                 ui.trimRoomMessageHistory();
             }, trimRoomHistoryFrequency);
         },
@@ -1586,7 +1598,7 @@
             room.close();
         },
         updateLobbyRoomCount: updateLobbyRoomCount,
-        updatePrivateLobbyRooms: function(roomName) {
+        updatePrivateLobbyRooms: function (roomName) {
             var lobby = getLobby(),
                 $room = lobby.users.find('li[data-name="' + roomName + '"]');
 
@@ -1654,18 +1666,18 @@
                 var showClosedRooms = $closedRoomFilter.is(':checked'),
                     // sort lobby by room open ascending then count descending
                     privateSorted = sortRoomList(privateRooms);
-                    // sort lobby by room open ascending then count descending and
-                    // filter the other rooms so that there is no duplication 
-                    // between the lobby lists
-                    sortedRoomList = sortRoomList(rooms).filter(function(room) {
-                        return !privateSorted.some(function(allowed) {
-                            return allowed.Name === room.Name;
-                        });
+                // sort lobby by room open ascending then count descending and
+                // filter the other rooms so that there is no duplication 
+                // between the lobby lists
+                sortedRoomList = sortRoomList(rooms).filter(function (room) {
+                    return !privateSorted.some(function (allowed) {
+                        return allowed.Name === room.Name;
                     });
+                });
 
                 lobby.owners.empty();
                 lobby.users.empty();
-                
+
                 var listOfPrivateRooms = $('<ul/>');
                 if (privateSorted.length > 0) {
                     populateLobbyRoomList(privateSorted, templates.lobbyroom, listOfPrivateRooms, showClosedRooms);
@@ -1850,7 +1862,7 @@
                 $loadingHistoryIndicator.hide();
             }
         },
-        setRoomTrimmable: function(roomName, canTrimMessages) {
+        setRoomTrimmable: function (roomName, canTrimMessages) {
             var room = getRoomElements(roomName);
             room.setTrimmable(canTrimMessages);
         },
@@ -2407,7 +2419,7 @@
                 return content;
             }
         },
-        trimRoomMessageHistory: function(roomName) {
+        trimRoomMessageHistory: function (roomName) {
             var rooms = roomName ? [getRoomElements(roomName)] : getAllRoomElements();
 
             for (var i = 0; i < rooms.length; i++) {
