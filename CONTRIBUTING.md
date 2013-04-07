@@ -18,7 +18,7 @@ The master branch is always stable and deployable.
 Make sure you can build the code. Familiarize yourself with the project workflow and our coding conventions. If you don't know what a pull request is
 read this https://help.github.com/articles/using-pull-requests.
 
-Before submitting a feature or substantial code contribution please discuss it with the team and ensure it follows the product roadmap. Note that all code submissions will be rigorously reviewed and tested by the ASP.NET SignalR Team, and only those that meet an extremely high bar for both quality and design/roadmap appropriateness will be merged into the source.
+Before submitting a feature or substantial code contribution please discuss it with the team and ensure it follows the product roadmap. 
 [Don't "Push" Your Pull Requests](http://www.igvita.com/2011/12/19/dont-push-your-pull-requests/)
 
 When making CSS changes or changes to any styles, an image must be submitted with the pull request.
