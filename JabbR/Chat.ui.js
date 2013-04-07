@@ -576,8 +576,13 @@
 
     function getRoomsNames() {
         var lobby = getLobby();
+
         return lobby.users.find('li')
-                     .map(function () { return $(this).data('name') + ' '; });
+                     .map(function () {
+                         var room = $(this).data('name');
+                         roomCache[room] = true;
+                         return room + ' ';
+                     });
     }
 
     function updateLobbyRoomCount(room, count) {
@@ -1672,6 +1677,16 @@
         populateLobbyRooms: function (rooms, privateRooms) {
             var lobby = getLobby();
             if (!lobby.isInitialized()) {
+
+                // Populate the room cache
+                for (var i = 0; i < rooms.length; ++i) {
+                    roomCache[rooms[i].Name] = true;
+                }
+
+                for (var i = 0; i < privateRooms.length; ++i) {
+                    roomCache[privateRooms[i].Name] = true;
+                }
+
                 var showClosedRooms = $closedRoomFilter.is(':checked'),
                     // sort lobby by room open ascending then count descending
                     privateSorted = sortRoomList(privateRooms);
@@ -1708,6 +1723,7 @@
                 }
                 $lobbyOtherRooms.show();
             }
+
             if (lobby.isActive()) {
                 // update cache of room names
                 $lobbyRoomFilterForm.show();
