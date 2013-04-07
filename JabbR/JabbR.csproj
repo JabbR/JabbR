@@ -226,6 +226,7 @@
     <Content Include="Chat.toast.js" />
     <Content Include="Chat.twitter.js" />
     <Content Include="Chat.ui.js" />
+    <Content Include="chat.ui.room.js" />
     <Content Include="Chat.utility.js" />
     <Content Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-responsive.min.css" />
@@ -882,7 +883,7 @@
       <DependentUpon>201303220549121_ContentProviderContent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201303302002539_Attachments.resx">
-        <DependentUpon>201303302002539_Attachments.cs</DependentUpon>
+      <DependentUpon>201303302002539_Attachments.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201303302058326_AttachmentMetadata.resx">
       <DependentUpon>201303302058326_AttachmentMetadata.cs</DependentUpon>
@@ -966,7 +967,7 @@
     </Compile>
     <Compile Include="Migrations\201303302002539_Attachments.cs" />
     <Compile Include="Migrations\201303302002539_Attachments.Designer.cs">
-        <DependentUpon>201303302002539_Attachments.cs</DependentUpon>
+      <DependentUpon>201303302002539_Attachments.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\201303302058326_AttachmentMetadata.cs" />
     <Compile Include="Migrations\201303302058326_AttachmentMetadata.Designer.cs">

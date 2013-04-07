@@ -5,7 +5,7 @@
 /// <reference path="Scripts/livestamp.min.js" />
 
 /*jshint bitwise:false */
-(function ($, window, document, utility, emoji, linkify) {
+(function ($, window, document, chat, utility, emoji, linkify) {
     "use strict";
 
     var $chatArea = null,
@@ -67,7 +67,6 @@
         connectionInfoTransport = null,
         $topicBar = null,
         $loadingHistoryIndicator = null,
-        trimRoomHistoryMaxMessages = 200,
         trimRoomHistoryFrequency = 1000 * 60 * 2, // 2 minutes in ms
         $loadMoreRooms = null,
         sortedRoomList = null,
@@ -77,7 +76,8 @@
         $lobbyOtherRooms = null,
         $roomLoadingIndicator = null,
         roomLoadingDelay = 250,
-        roomLoadingTimeout = null;
+        roomLoadingTimeout = null,
+        Room = chat.Room;
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] === '/') {
@@ -106,383 +106,6 @@
 
     function showClosedRoomsInLobby() {
         return $closedRoomFilter.is(':checked');
-    }
-
-    function Room($tab, $usersContainer, $usersOwners, $usersActive, $messages, $roomTopic) {
-        this.tab = $tab;
-        this.users = $usersContainer;
-        this.owners = $usersOwners;
-        this.activeUsers = $usersActive;
-        this.messages = $messages;
-        this.roomTopic = $roomTopic;
-
-        function glowTab(n) {
-            // Stop if we're not unread anymore
-            if (!$tab.hasClass('unread')) {
-                return;
-            }
-
-            // Go light
-            $tab.animate({ backgroundColor: '#e5e5e5', color: '#77d42a' }, 800, function () {
-                // Stop if we're not unread anymore
-                if (!$tab.hasClass('unread')) {
-                    return;
-                }
-
-                n--;
-
-                // Check if we're on our last glow
-                if (n !== 0) {
-                    // Go dark
-                    $tab.animate({ backgroundColor: '#164C85', color: '#ffffff' }, 800, function () {
-                        // Glow the tab again
-                        glowTab(n);
-                    });
-                }
-                else {
-                    // Leave the tab highlighted
-                    $tab.animate({ backgroundColor: '#043C4C', color: '#ffffff' }, 800);
-                }
-            });
-        }
-
-        this.isLocked = function () {
-            return this.tab.hasClass('locked');
-        };
-
-        this.isLobby = function () {
-            return this.tab.hasClass('lobby');
-        };
-
-        this.hasUnread = function () {
-            return this.tab.hasClass('unread');
-        };
-
-        this.hasMessages = function () {
-            return this.tab.data('messages');
-        };
-
-        this.updateMessages = function (value) {
-            this.tab.data('messages', value);
-        };
-
-        this.getUnread = function () {
-            return $tab.data('unread') || 0;
-        };
-
-        this.hasSeparator = function () {
-            return this.messages.find('.message-separator').length > 0;
-        };
-
-        this.needsSeparator = function () {
-            if (this.isActive()) {
-                return false;
-            }
-            return this.isInitialized() && this.getUnread() === 5;
-        };
-
-        this.addSeparator = function () {
-            if (this.isLobby()) {
-                return;
-            }
-
-            // find first correct unread message
-            var n = this.getUnread(),
-                $unread = this.messages.find('.message').eq(-(n + 1));
-
-            $unread.after(templates.separator.tmpl())
-                .data('unread', n); // store unread count
-
-            this.scrollToBottom();
-        };
-
-        this.removeSeparator = function () {
-            this.messages.find('.message-separator').fadeOut(2000, function () {
-                $(this).remove();
-            });
-        };
-
-        this.updateUnread = function (isMentioned) {
-            var $tab = this.tab.addClass('unread'),
-                $content = $tab.find('.content'),
-                unread = ($tab.data('unread') || 0) + 1,
-                hasMentions = $tab.data('hasMentions') || isMentioned; // Whether or not the user already has unread messages to him/her
-
-            $content.text((hasMentions ? '*' : '') + '(' + unread + ') ' + this.getName());
-
-            $tab.data('unread', unread);
-            $tab.data('hasMentions', hasMentions);
-
-            if (!this.isActive() && unread === 1) {
-                // If this room isn't active then we're going to glow the tab
-                // to get the user's attention
-                glowTab(6);
-            }
-        };
-
-        this.scrollToBottom = function () {
-            // IE will repaint if we do the Chrome bugfix and look jumpy
-            if ($.browser.webkit) {
-                // Chrome fix for hiding and showing scroll areas
-                this.messages.scrollTop(this.messages.scrollTop() - 1);
-            }
-            this.messages.scrollTop(this.messages[0].scrollHeight);
-        };
-
-        this.isNearTheEnd = function () {
-            return this.messages.isNearTheEnd();
-        };
-
-        this.getName = function () {
-            return this.tab.data('name');
-        };
-
-        this.isActive = function () {
-            return this.tab.hasClass('current');
-        };
-
-        this.exists = function () {
-            return this.tab.length > 0;
-        };
-
-        this.isClosed = function () {
-            return this.tab.attr('data-closed') === 'true';
-        };
-
-        this.close = function () {
-            this.tab.attr('data-closed', true);
-            this.tab.addClass('closed');
-        };
-
-        this.unClose = function () {
-            this.tab.attr('data-closed', false);
-            this.tab.removeClass('closed');
-        };
-
-        this.clear = function () {
-            this.messages.empty();
-            this.owners.empty();
-            this.activeUsers.empty();
-        };
-
-        this.makeInactive = function () {
-            this.tab.removeClass('current');
-
-            this.messages.removeClass('current')
-                         .hide();
-
-            this.users.removeClass('current')
-                      .hide();
-
-            this.roomTopic.removeClass('current')
-                      .hide();
-
-            if (this.isLobby()) {
-                $lobbyRoomFilterForm.hide();
-                $roomActions.show();
-            }
-        };
-
-        this.makeActive = function () {
-            var currUnread = this.getUnread(),
-                lastUnread = this.messages.find('.message-separator').data('unread') || 0;
-
-            if (!utility.isMobile && !readOnly) {
-                $newMessage.focus();
-            }
-
-            this.tab.addClass('current')
-                    .removeClass('unread')
-                    .stop(true, true)
-                    .css('backgroundColor', '')
-                    .css('color', '')
-                    .data('unread', 0)
-                    .data('hasMentions', false)
-                    .find('.content')
-                    .text(this.getName());
-
-            this.messages.addClass('current')
-                         .show();
-
-            this.users.addClass('current')
-                      .show();
-
-            this.roomTopic.addClass('current')
-                      .show();
-
-            if (this.isLobby()) {
-                $roomActions.hide();
-                $lobbyRoomFilterForm.show();
-
-                $messages.hide();
-            }
-            // if no unread since last separator
-            // remove previous separator
-            if (currUnread <= lastUnread) {
-                this.removeSeparator();
-            }
-        };
-
-        this.setInitialized = function () {
-            this.tab.data('initialized', true);
-        };
-
-        this.isInitialized = function () {
-            return this.tab.data('initialized') === true;
-        };
-
-        // Users
-        this.getUser = function (userName) {
-            return this.users.find(getUserClassName(userName));
-        };
-
-        this.getUserReferences = function (userName) {
-            return $.merge(this.getUser(userName),
-                           this.messages.find(getUserClassName(userName)));
-        };
-
-        this.setLocked = function () {
-            this.tab.addClass('locked');
-        };
-
-        this.setListState = function (list) {
-            if (list.children('li').length > 0) {
-                var roomEmptyStatus = list.children('li.empty');
-                if (roomEmptyStatus.length === 0) {
-                    return;
-                } else {
-                    roomEmptyStatus.remove();
-                    return;
-                }
-            }
-            list.append($('<li class="empty">No users</li>'));
-        };
-
-        this.addUser = function (userViewModel, $user) {
-            if (userViewModel.owner) {
-                this.addUserToList($user, this.owners);
-            } else {
-                this.changeIdle($user, userViewModel.active);
-
-                this.addUserToList($user, this.activeUsers);
-
-            }
-        };
-
-        this.changeIdle = function ($user, isActive) {
-            if (isActive) {
-                $user.removeClass('idle');
-            } else {
-                $user.addClass('idle');
-            }
-        };
-
-        this.addUserToList = function ($user, list) {
-            var oldParentList = $user.parent('ul');
-            $user.appendTo(list);
-            this.setListState(list);
-            if (oldParentList.length > 0) {
-                this.setListState(oldParentList);
-            }
-            this.sortList(list);
-        };
-
-        this.appearsInList = function ($user, list) {
-            return $user.parent('ul').attr('id') === list.attr('id');
-        };
-
-        this.updateUserStatus = function ($user) {
-            var owner = $user.data('owner') || false;
-
-            if (owner === true) {
-                if (!this.appearsInList($user, this.owners)) {
-                    this.addUserToList($user, this.owners);
-                }
-                return;
-            }
-
-            var status = $user.data('active');
-            if (typeof status === "undefined") {
-                return;
-            }
-
-            if (!this.appearsInList($user, this.activeUsers)) {
-                this.changeIdle($user, status);
-                this.addUserToList($user, this.activeUsers);
-            }
-        };
-
-        this.sortUsersByName = function (userListToSort) {
-            return userListToSort.sort(function (a, b) {
-                var compA = $(a).data('name').toString().toUpperCase();
-                var compB = $(b).data('name').toString().toUpperCase();
-                return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
-            });
-        };
-
-        this.sortLists = function () {
-            this.sortList(this.owners);
-            this.sortList(this.activeUsers);
-        };
-
-        this.sortList = function (listToSort) {
-            var listItems = listToSort.children('li').get();
-
-            var activeUsers = [],
-                idleUsers = [],
-                sortedUsers = [];
-
-            $.each(listItems, function (index, item) {
-                if ($(item).data('active')) {
-                    activeUsers.push(item);
-                } else {
-                    idleUsers.push(item);
-                }
-            });
-
-            activeUsers = this.sortUsersByName(activeUsers);
-            idleUsers = this.sortUsersByName(idleUsers);
-
-            sortedUsers = activeUsers.concat(idleUsers);
-
-            $.each(sortedUsers, function (index, item) {
-                listToSort.append(item);
-            });
-        };
-
-        this.canTrimHistory = function () {
-            return this.tab.data('trimmable') !== false;
-        };
-
-        this.setTrimmable = function (canTrimMessages) {
-            this.tab.data('trimmable', canTrimMessages);
-        };
-
-        this.trimHistory = function (numberOfMessagesToKeep) {
-            var lastIndex = null,
-                $messagesToRemove = null,
-                $roomMessages = this.messages.find('li'),
-                messageCount = $roomMessages.length;
-
-            numberOfMessagesToKeep = numberOfMessagesToKeep || trimRoomHistoryMaxMessages;
-
-            if (this.isLobby() || !this.canTrimHistory()) {
-                return;
-            }
-
-            if (numberOfMessagesToKeep < trimRoomHistoryMaxMessages) {
-                numberOfMessagesToKeep = trimRoomHistoryMaxMessages;
-            }
-
-            if (messageCount < numberOfMessagesToKeep) {
-                return;
-            }
-
-            lastIndex = messageCount - numberOfMessagesToKeep;
-            $messagesToRemove = $roomMessages.filter('li:lt(' + lastIndex + ')');
-
-            $messagesToRemove.remove();
-        };
     }
 
     function setRoomLoading(isLoading, roomName) {
@@ -782,6 +405,10 @@
     }
 
     function triggerFocus() {
+        if (!utility.isMobile && !readOnly) {
+            $newMessage.focus();
+        }
+
         if (focus === false) {
             focus = true;
             $ui.trigger(ui.events.focusit);
@@ -1399,6 +1026,7 @@
                 // clear unread count in active room
                 var room = getCurrentRoomElements();
                 room.makeActive();
+
                 triggerFocus();
             });
 
@@ -1594,10 +1222,21 @@
             if (room.exists()) {
                 if (currentRoom.exists()) {
                     currentRoom.makeInactive();
+                    if (currentRoom.isLobby()) {
+                        $lobbyRoomFilterForm.hide();
+                        $roomActions.show();
+                    }
                 }
 
                 triggerFocus();
                 room.makeActive();
+
+                if (room.isLobby()) {
+                    $roomActions.hide();
+                    $lobbyRoomFilterForm.show();
+
+                    room.messages.hide();
+                }
 
                 ui.toggleMessageSection(room.isClosed());
 
@@ -2462,4 +2101,4 @@
         window.chat = {};
     }
     window.chat.ui = ui;
-})(jQuery, window, window.document, window.chat.utility, window.Emoji, window.linkify);
+})(jQuery, window, window.document, window.chat, window.chat.utility, window.Emoji, window.linkify);
