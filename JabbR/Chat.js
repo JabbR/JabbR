@@ -80,6 +80,10 @@
 
     function populateRoom(room) {
         var d = $.Deferred();
+        
+        if (chat.state.activeRoom === undefined || chat.state.activeRoom === room) {
+            ui.setRoomLoading(true, room);
+        }
 
         connection.hub.log('getRoomInfo(' + room + ')');
 
@@ -87,6 +91,7 @@
         chat.server.getRoomInfo(room)
                 .done(function (roomInfo) {
                     connection.hub.log('getRoomInfo.done(' + room + ')');
+                    ui.setRoomLoading(false);
 
                     $.each(roomInfo.Users, function () {
                         var userViewModel = getUserViewModel(this);
@@ -130,11 +135,14 @@
 
     function populateLobbyRooms() {
         try {
+            ui.setRoomLoading(true, 'Lobby');
+            
             // Populate the user list with room names
             chat.server.getRooms()
                 .done(function (rooms) {
-                    ui.populateLobbyRooms(rooms, privateRooms);
                     ui.setRoomLoading(false);
+                    ui.populateLobbyRooms(rooms, privateRooms);
+                    ui.setInitialized('Lobby');
                 });
         }
         catch (e) {
@@ -245,9 +253,7 @@
         }
 
         if (added) {
-            ui.setRoomLoading(true);
             populateRoom(room.Name).done(function () {
-                ui.setRoomLoading(false);
                 ui.addMessage('You just entered ' + room.Name, 'notification', room.Name);
 
                 if (room.Welcome) {
@@ -259,7 +265,6 @@
 
     // Called when a returning users join chat
     chat.client.logOn = function (rooms, myRooms) {
-        ui.setRoomLoading(true);
         privateRooms = myRooms;
 
            var loadRooms = function () {
