@@ -81,17 +81,12 @@
     function populateRoom(room) {
         var d = $.Deferred();
         
-        if (chat.state.activeRoom === undefined || chat.state.activeRoom === room) {
-            ui.setRoomLoading(true, room);
-        }
-
         connection.hub.log('getRoomInfo(' + room + ')');
 
         // Populate the list of users rooms and messages 
         chat.server.getRoomInfo(room)
                 .done(function (roomInfo) {
                     connection.hub.log('getRoomInfo.done(' + room + ')');
-                    ui.setRoomLoading(false);
 
                     $.each(roomInfo.Users, function () {
                         var userViewModel = getUserViewModel(this);
@@ -134,13 +129,10 @@
     }
 
     function populateLobbyRooms() {
-        try {
-            ui.setRoomLoading(true, 'Lobby');
-            
+        try { 
             // Populate the user list with room names
             chat.server.getRooms()
                 .done(function (rooms) {
-                    ui.setRoomLoading(false);
                     ui.populateLobbyRooms(rooms, privateRooms);
                     ui.setInitialized('Lobby');
                 });
