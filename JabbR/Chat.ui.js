@@ -679,7 +679,6 @@
                     $ui.trigger(ui.events.scrollRoomTop, [{ name: roomName, messageId: messageId }]);
                 }
             }
-            lobbyLoaded = false;
         };
 
         // Hookup the scroll handler since event delegation doesn't work with scroll events
@@ -689,6 +688,7 @@
         $messages.data('scrollHandler', scrollHandler);
 
         setAccessKeys();
+        lobbyLoaded = false;
         return true;
     }
 
@@ -1678,7 +1678,7 @@
                 }
 
                 var listOfRooms = $('<ul/>');
-                populateLobbyRoomList(sortedRoomList.splice(lastLoadedRoomIndex, maxRoomsToLoad), templates.lobbyroom, listOfRooms, showClosedRooms);
+                populateLobbyRoomList(sortedRoomList.splice(0, maxRoomsToLoad), templates.lobbyroom, listOfRooms, showClosedRooms);
                 lastLoadedRoomIndex = listOfRooms.children('li').length;
                 listOfRooms.children('li').appendTo(lobby.users);
                 if (lastLoadedRoomIndex < sortedRoomList.length) {
