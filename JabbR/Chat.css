@@ -242,7 +242,6 @@ form#send-message {
 }
 
 #userlist-lobby,
-#userlist-lobby-active,
 #userlist-lobby-owners {
     position: relative;
     margin: 0 5px;
@@ -251,13 +250,11 @@ form#send-message {
 }
 
     #userlist-lobby li,
-    #userlist-lobby-active li,
     #userlist-lobby-owners li {
         display: inline;
     }
 
         #userlist-lobby li:hover,
-        #userlist-lobby-active li:hover,
         #userlist-lobby-owners li:hover {
             background: none;
         }
@@ -290,10 +287,8 @@ form#send-message {
         color: #999;
     }
 
-#userlist-lobby-active li div.room-row,
 #userlist-lobby-owners li div.room-row {
     display: inline-block;
-    min-height: 100px;
     width: 250px;
     margin: 10px 5px;
     padding: 5px;
@@ -305,7 +300,6 @@ form#send-message {
     box-shadow: 0px 0px 2px 1px #888;
 }
 
-#userlist-lobby-active li div:hover,
 #userlist-lobby-owners li div:hover {
     border: rgba(82, 168, 236, 0.8);
     -webkit-box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
@@ -314,13 +308,17 @@ form#send-message {
     background: #fcfcfc;
 }
 
-#userlist-lobby-active span,
+    #userlist-lobby-owners li div.room-row div {
+        width: 100%;
+        margin: 0;
+    }
+
+
 #userlist-lobby-owners span {
     float: left;
 }
 
 #userlist-lobby .name,
-#userlist-lobby-active .name,
 #userlist-lobby-owners .name {
     font-size: 1.25em;
     overflow: hidden;
@@ -330,7 +328,6 @@ form#send-message {
 }
 
 #userlist-lobby .count,
-#userlist-lobby-active .count,
 #userlist-lobby-owners .count {
     font-style: italic;
     color: #999;
@@ -338,7 +335,6 @@ form#send-message {
 }
 
 #userlist-lobby .topic,
-#userlist-lobby-active .topic,
 #userlist-lobby-owners .topic {
     font-size: 1em;
     overflow: hidden;
@@ -352,8 +348,6 @@ form#send-message {
 
 #userlist-lobby .lock,
 #userlist-lobby .readonly,
-#userlist-lobby-active .lock,
-#userlist-lobby-active .readonly,
 #userlist-lobby-owners .lock,
 #userlist-lobby-owners .readonly {
     display: none;
@@ -361,8 +355,6 @@ form#send-message {
 
 #userlist-lobby .locked .lock,
 #userlist-lobby .closed .readonly,
-#userlist-lobby-active .locked .lock,
-#userlist-lobby-active .closed .readonly,
 #userlist-lobby-owners .locked .lock,
 #userlist-lobby-owners .closed .readonly {
     display: initial;

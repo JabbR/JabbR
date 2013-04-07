@@ -1579,6 +1579,12 @@
             room.close();
         },
         updateLobbyRoomCount: updateLobbyRoomCount,
+        updatePrivateLobbyRooms: function(roomName) {
+            var lobby = getLobby(),
+                $room = lobby.users.find('li[data-name="' + roomName + '"]');
+
+            $room.appendTo(lobby.owners);
+        },
         updateUnread: function (roomName, isMentioned) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
 
@@ -1664,8 +1670,7 @@
                 }
 
                 var listOfRooms = $('<ul/>');
-                populateLobbyRoomList(sortedRoomList.splice(lastLoadedRoomIndex, maxRoomsToLoad),
-                    templates.otherlobbyroom, listOfRooms, showClosedRooms);
+                populateLobbyRoomList(sortedRoomList.splice(lastLoadedRoomIndex, maxRoomsToLoad), templates.lobbyroom, listOfRooms, showClosedRooms);
                 lastLoadedRoomIndex = listOfRooms.children('li').length;
                 listOfRooms.children('li').appendTo(lobby.users);
                 if (lastLoadedRoomIndex < sortedRoomList.length) {

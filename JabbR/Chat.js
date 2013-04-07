@@ -306,6 +306,7 @@
         }
 
         ui.setRoomLocked(room);
+        ui.updatePrivateLobbyRooms(room);
     };
 
     // Called when this user locked a room
