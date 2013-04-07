@@ -480,7 +480,7 @@
     }
 
     function setLobbyLoading(isLoading) {
-        if (isLoading) {
+        if (!lobbyLoaded && isLoading) {
             $lobbyLoadingIndicator.find('i').addClass('icon-spin');
             $lobbyLoadingIndicator.show();
         } else {
@@ -1653,10 +1653,10 @@
 
             return room.isNearTheEnd();
         },
+        setLobbyLoading: setLobbyLoading,
         populateLobbyRooms: function (rooms, privateRooms) {
             var lobby = getLobby();
             if (!lobbyLoaded) {
-                setLobbyLoading(true);
                 var showClosedRooms = $closedRoomFilter.is(':checked'),
                     // sort lobby by room open ascending then count descending
                     privateSorted = sortRoomList(privateRooms);
@@ -1701,8 +1701,6 @@
 
             ui.$roomFilter.update();
             $roomFilterInput.val('');
-            
-            setLobbyLoading(false);
         },
         addUser: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
