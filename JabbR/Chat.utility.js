@@ -2,7 +2,7 @@
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 
-/*jshint evil:true bitwise:false*/
+/*jshint evil:true, bitwise:false*/
 (function ($, window, emoji, markdown) {
     "use strict";
 

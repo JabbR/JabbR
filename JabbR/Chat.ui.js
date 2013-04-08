@@ -362,10 +362,18 @@
             if (userViewModel.owner) {
                 this.addUserToList($user, this.owners);
             } else {
-                userViewModel.active ? $user.removeClass('idle') : $user.addClass('idle');
+                this.changeIdle(userViewModel.active);
 
                 this.addUserToList($user, this.activeUsers);
 
+            }
+        };
+
+        this.changeIdle = function (isActive) {
+            if (isActive) {
+                $user.removeClass('idle');
+            } else {
+                $user.addClass('idle');
             }
         };
 
@@ -399,8 +407,7 @@
             }
 
             if (!this.appearsInList($user, this.activeUsers)) {
-                status ? $user.removeClass('idle') : $user.addClass('idle');
-
+                this.changeIdle(status);
                 this.addUserToList($user, this.activeUsers);
             }
         };
@@ -1010,7 +1017,7 @@
             preferencesChanged: 'jabbr.ui.preferencesChanged',
             loggedOut: 'jabbr.ui.loggedOut',
             reloadMessages: 'jabbr.ui.reloadMessages',
-            fileUploaded: 'jabbr.ui.fileUploaded',
+            fileUploaded: 'jabbr.ui.fileUploaded'
         },
 
         help: {
@@ -1674,15 +1681,16 @@
         },
         setRoomLoading: setRoomLoading,
         populateLobbyRooms: function (rooms, privateRooms) {
-            var lobby = getLobby();
+            var lobby = getLobby(),
+                i;
             if (!lobby.isInitialized()) {
 
                 // Populate the room cache
-                for (var i = 0; i < rooms.length; ++i) {
+                for (i = 0; i < rooms.length; ++i) {
                     roomCache[rooms[i].Name] = true;
                 }
 
-                for (var i = 0; i < privateRooms.length; ++i) {
+                for (i = 0; i < privateRooms.length; ++i) {
                     roomCache[privateRooms[i].Name] = true;
                 }
 
