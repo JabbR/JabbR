@@ -362,14 +362,14 @@
             if (userViewModel.owner) {
                 this.addUserToList($user, this.owners);
             } else {
-                this.changeIdle(userViewModel.active);
+                this.changeIdle($user, userViewModel.active);
 
                 this.addUserToList($user, this.activeUsers);
 
             }
         };
 
-        this.changeIdle = function (isActive) {
+        this.changeIdle = function ($user, isActive) {
             if (isActive) {
                 $user.removeClass('idle');
             } else {
@@ -407,7 +407,7 @@
             }
 
             if (!this.appearsInList($user, this.activeUsers)) {
-                this.changeIdle(status);
+                this.changeIdle($user, status);
                 this.addUserToList($user, this.activeUsers);
             }
         };
@@ -489,7 +489,7 @@
         if (isLoading) {
             var room = getRoomElements(roomName);
             if (!room.isInitialized()) {
-                roomLoadingTimeout = window.setTimeout(function() {
+                roomLoadingTimeout = window.setTimeout(function () {
                     $roomLoadingIndicator.find('i').addClass('icon-spin');
                     $roomLoadingIndicator.show();
                 }, roomLoadingDelay);
