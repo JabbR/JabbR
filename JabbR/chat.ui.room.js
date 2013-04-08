@@ -246,10 +246,18 @@
         if (userViewModel.owner) {
             this.addUserToList($user, this.owners);
         } else {
-            userViewModel.active ? $user.removeClass('idle') : $user.addClass('idle');
+            this.changeIdle($user, userViewModel.active);
 
             this.addUserToList($user, this.activeUsers);
 
+        }
+    };
+	
+    Room.prototype.changeIdle = function ($user, isActive) {
+        if (isActive) {
+            $user.removeClass('idle');
+        } else {
+            $user.addClass('idle');
         }
     };
 
@@ -283,7 +291,7 @@
         }
 
         if (!this.appearsInList($user, this.activeUsers)) {
-            status ? $user.removeClass('idle') : $user.addClass('idle');
+            this.changeIdle($user, status);
 
             this.addUserToList($user, this.activeUsers);
         }

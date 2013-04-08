@@ -226,7 +226,7 @@
     <Content Include="Chat.toast.js" />
     <Content Include="Chat.twitter.js" />
     <Content Include="Chat.ui.js" />
-    <Content Include="chat.ui.room.js" />
+    <Content Include="Chat.ui.room.js" />
     <Content Include="Chat.utility.js" />
     <Content Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-responsive.min.css" />
