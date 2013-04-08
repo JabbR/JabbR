@@ -1,7 +1,6 @@
-﻿/*jshint */
-(function ($, window, chat) {
+﻿(function ($, window, chat) {
     var trimRoomHistoryMaxMessages = 200;
-    
+
     function glowTab($tab, n) {
         // Stop if we're not unread anymore
         if (!$tab.hasClass('unread')) {
@@ -44,7 +43,7 @@
         this.messages = $messages;
         this.roomTopic = $roomTopic;
     }
-    
+
     Room.prototype.isLocked = function () {
         return this.tab.hasClass('locked');
     };
@@ -252,7 +251,7 @@
 
         }
     };
-	
+
     Room.prototype.changeIdle = function ($user, isActive) {
         if (isActive) {
             $user.removeClass('idle');
@@ -370,4 +369,4 @@
     };
 
     chat.Room = Room;
-}(jQuery, window, window.chat))
+}(jQuery, window, window.chat));
