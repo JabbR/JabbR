@@ -4,7 +4,6 @@
 /// <reference path="Chat.ui.js" />
 /// <reference path="Scripts/moment.min.js" />
 
-/*jshint */
 (function ($, connection, window, ui, utility) {
     "use strict";
 
