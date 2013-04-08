@@ -2,6 +2,9 @@
 @using JabbR.ViewModels
 @using PagedList
 @model NotificationsViewModel
+@{
+    var notificationsViewModel = Model as NotificationsViewModel;
+}
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -38,28 +41,35 @@
                     </ul>
                 </div>
                 <div class="span10">
-                    <ul id="notifications-container" data-mode="@(Model.ShowAll ? "all" : "unread")">
-                        @foreach (var notification in Model.Notifications)
-                        {
-                            var note = notification as NotificationViewModel;
-                            <li data-notification-id="@note.NotificationKey" class="notification-item @(!note.Read ? "notification-unread" : "")">
-                                <ul class="inline">
-                                    <li>@note.RoomName</li>
-                                    <li>@note.FromUserName</li>
-                                    <li class="user">
-                                        <img class="gravatar" src="https://secure.gravatar.com/avatar/@note.FromUserImage?s=16&amp;d=mm" />
-                                    </li>
-                                    @if (!note.Read)
-                                    {
-                                        <li>
-                                            <a href="#" class="js-mark-as-read" data-action-url="@Url.Content("~/notifications/markasread")" data-notification-id="@note.NotificationKey"><i class="icon-remove-circle"></i></a>
+                    @if (notificationsViewModel.Notifications.Count > 0)
+                    {
+                        <ul id="notifications-container" data-mode="@(Model.ShowAll ? "all" : "unread")">
+                            @foreach (var notification in notificationsViewModel.Notifications)
+                            {
+                                <li data-notification-id="@notification.NotificationKey" class="notification-item @(!notification.Read ? "notification-unread" : "")">
+                                    <ul class="inline">
+                                        <li>@notification.RoomName</li>
+                                        <li>@notification.FromUserName</li>
+                                        <li class="user">
+                                            <img class="gravatar" src="https://secure.gravatar.com/avatar/@notification.FromUserImage?s=16&amp;d=mm" />
                                         </li>
-                                    }
-                                </ul>
-                                <h4>@note.Message</h4>
-                            </li>
-                        }
-                    </ul>
+                                        @if (!notification.Read)
+                                        {
+                                            <li>
+                                                <a href="#" class="js-mark-as-read" data-action-url="@Url.Content("~/notifications/markasread")" data-notification-id="@notification.NotificationKey"><i class="icon-remove-circle"></i></a>
+                                            </li>
+                                        }
+                                    </ul>
+                                    <h4>@notification.Message</h4>
+                                </li>
+                            }
+                        </ul>
+                        @Html.SimplePager(notificationsViewModel.Notifications, Model.ShowAll ? "?all=true&" : "")
+                    }
+                    else
+                    {
+                        <p class="alert alert-block alert-info">No notifications!</p>
+                    }
                 </div>
             </div>
         </div>
