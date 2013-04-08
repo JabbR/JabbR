@@ -218,7 +218,7 @@ namespace JabbR
                 // Mark the notification as read if the user is online
                 bool markAsRead = mentionedUser.Status == (int)UserStatus.Active;
 
-                _service.AddNotification(mentionedUser, message, markAsRead);
+                _service.AddNotification(mentionedUser, message, message.Room, markAsRead);
             }
 
             if (anyMentions)

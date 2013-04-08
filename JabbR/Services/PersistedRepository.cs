@@ -133,9 +133,9 @@ namespace JabbR.Services
 
         public IQueryable<Notification> GetNotificationsByUser(ChatUser user)
         {
-            return _db.Notifications.Include(n => n.Message)
+            return _db.Notifications.Include(n => n.Room)
+                                    .Include(n => n.Message)
                                     .Include(n => n.Message.User)
-                                    .Include(n => n.Message.Room)
                                     .Where(n => n.UserKey == user.Key);
         }
 

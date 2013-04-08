@@ -894,6 +894,9 @@
     <EmbeddedResource Include="Migrations\201304020629255_Notifications.resx">
       <DependentUpon>201304020629255_Notifications.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201304082240509_AddRoomToNotification.resx">
+      <DependentUpon>201304082240509_AddRoomToNotification.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -982,6 +985,10 @@
     <Compile Include="Migrations\201304020629255_Notifications.cs" />
     <Compile Include="Migrations\201304020629255_Notifications.Designer.cs">
       <DependentUpon>201304020629255_Notifications.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201304082240509_AddRoomToNotification.cs" />
+    <Compile Include="Migrations\201304082240509_AddRoomToNotification.Designer.cs">
+      <DependentUpon>201304082240509_AddRoomToNotification.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\Mapping\AttachmentMap.cs" />

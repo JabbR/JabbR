@@ -120,7 +120,7 @@ namespace JabbR.Models
 
         public static IQueryable<Notification> ByRoom(this IQueryable<Notification> source, string roomName)
         {
-            return source.Where(n => n.Message.Room.Name == roomName);
+            return source.Where(n => n.Room.Name == roomName);
         }
     }
 }
