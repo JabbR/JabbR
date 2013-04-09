@@ -15,7 +15,7 @@ namespace JabbR.Nancy
         {
             Get["/"] = _ =>
             {
-                if (Context.CurrentUser != null)
+                if(IsAuthenticated)
                 {
                     var viewModel = new SettingsViewModel
                     {
@@ -35,7 +35,7 @@ namespace JabbR.Nancy
 
             Post["/upload"] = _ =>
             {
-                if (Context.CurrentUser == null)
+                if(!IsAuthenticated)
                 {
                     return 403;
                 }

@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Principal;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using JabbR.Infrastructure;
 using JabbR.Services;
-using Ninject;
 
 namespace JabbR.Middleware
 {
@@ -30,12 +29,24 @@ namespace JabbR.Middleware
             if (request.Cookies.TryGetValue(Constants.UserTokenCookie, out userToken) &&
                 _authenticationTokenService.TryGetUserId(userToken, out userId))
             {
-                env["server.User"] = new GenericPrincipal(new GenericIdentity(userId), new string[0]);
-            }
-            else
-            {
-                env["windows.User"] = env["server.User"] as WindowsPrincipal;
-                env["server.User"] = null;
+                // Add the JabbR user id claim
+                var claims = new List<Claim>();
+                claims.Add(new Claim(JabbRClaimsTypes.UserId, userId));
+                var identity = new ClaimsIdentity(claims, "JabbR");
+
+                var principal = (ClaimsPrincipal)env["server.User"];
+
+                if (principal == null)
+                {
+                    principal = new ClaimsPrincipal(identity);
+                }
+                else
+                {
+                    // Add the jabbr identity to the current claims principal
+                    principal.AddIdentity(identity);
+                }
+
+                env["server.User"] = principal;
             }
 
             return _next(env);

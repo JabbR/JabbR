@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 
 namespace JabbR
 {
-    [Authorize]
+    [JabbRAuthorize]
     public class Chat : Hub, INotificationService
     {
         private static readonly TimeSpan _disconnectThreshold = TimeSpan.FromSeconds(10);
@@ -79,7 +79,7 @@ namespace JabbR
         public void Join(bool reconnecting)
         {
             // Get the client state
-            var userId = Context.User.Identity.Name;
+            var userId = Context.User.GetUserId();
 
             // Try to get the user from the client state
             ChatUser user = _repository.GetUserById(userId);
@@ -137,7 +137,7 @@ namespace JabbR
                 return true;
             }
 
-            var userId = Context.User.Identity.Name;
+            var userId = Context.User.GetUserId();
 
             ChatUser user = _repository.VerifyUserId(userId);
             ChatRoom room = _repository.VerifyUserRoom(_cache, user, clientMessage.Room);
@@ -229,7 +229,7 @@ namespace JabbR
 
         public UserViewModel GetUserInfo()
         {
-            var userId = Context.User.Identity.Name;
+            var userId = Context.User.GetUserId();
 
             ChatUser user = _repository.VerifyUserId(userId);
 
@@ -240,7 +240,7 @@ namespace JabbR
         {
             CheckStatus();
 
-            var userId = Context.User.Identity.Name;
+            var userId = Context.User.GetUserId();
 
             ChatUser user = _repository.VerifyUserId(userId);
 
@@ -297,7 +297,7 @@ namespace JabbR
 
         public IEnumerable<LobbyRoomViewModel> GetRooms()
         {
-            string userId = Context.User.Identity.Name;
+            string userId = Context.User.GetUserId();
             ChatUser user = _repository.VerifyUserId(userId);
 
             var rooms = _repository.GetAllowedRooms(user).Select(r => new LobbyRoomViewModel
@@ -331,7 +331,7 @@ namespace JabbR
                 return null;
             }
 
-            string userId = Context.User.Identity.Name;
+            string userId = Context.User.GetUserId();
             ChatUser user = _repository.VerifyUserId(userId);
 
             ChatRoom room = _repository.GetRoomByName(roomName);
@@ -367,7 +367,7 @@ namespace JabbR
 
         public void Typing(string roomName)
         {
-            string userId = Context.User.Identity.Name;
+            string userId = Context.User.GetUserId();
 
             ChatUser user = _repository.GetUserById(userId);
             ChatRoom room = _repository.VerifyUserRoom(_cache, user, roomName);
@@ -387,7 +387,7 @@ namespace JabbR
         {
             CheckStatus();
 
-            string userId = Context.User.Identity.Name;
+            string userId = Context.User.GetUserId();
 
             ChatUser user = _repository.GetUserById(userId);
 
@@ -471,7 +471,7 @@ namespace JabbR
         private bool TryHandleCommand(string command, string room)
         {
             string clientId = Context.ConnectionId;
-            string userId = Context.User.Identity.Name;
+            string userId = Context.User.GetUserId();
 
             var commandManager = new CommandManager(clientId, UserAgent, userId, room, _service, _repository, _cache, this);
             return commandManager.TryHandleCommand(command);
@@ -722,7 +722,7 @@ namespace JabbR
 
         void INotificationService.ListRooms(ChatUser user)
         {
-            string userId = Context.User.Identity.Name;
+            string userId = Context.User.GetUserId();
 
             var userModel = new UserViewModel(user);
 
@@ -794,7 +794,7 @@ namespace JabbR
 
         void INotificationService.ShowUserInfo(ChatUser user)
         {
-            string userId = Context.User.Identity.Name;
+            string userId = Context.User.GetUserId();
 
             Clients.Caller.showUserInfo(new
             {

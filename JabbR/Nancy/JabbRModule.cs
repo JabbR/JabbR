@@ -1,4 +1,5 @@
-﻿using JabbR.Infrastructure;
+﻿using System.Security.Claims;
+using JabbR.Infrastructure;
 using Nancy;
 
 namespace JabbR.Nancy
@@ -15,6 +16,28 @@ namespace JabbR.Nancy
             : base(modulePath)
         {
             Before.AddItemToEndOfPipeline(AlertsToViewBag);
+        }
+
+        protected ClaimsPrincipal Principal
+        {
+            get
+            {
+                var userIdentity = Context.CurrentUser as ClaimsPrincipalUserIdentity;
+                if (userIdentity == null)
+                {
+                    return null;
+                }
+
+                return userIdentity.ClaimsPrincipal;
+            }
+        }
+
+        protected bool IsAuthenticated
+        {
+            get
+            {
+                return Principal.IsAuthenticated();
+            }
         }
 
         internal static Response AlertsToViewBag(NancyContext context)
