@@ -25,7 +25,7 @@ namespace JabbR.Nancy
 
         protected bool IsAuthenticated
         {
-            get { return this.GetPrincipal().IsAuthenticated(); }
+            get { return this.IsAuthenticated(); }
         }
 
         internal static Response AlertsToViewBag(NancyContext context)

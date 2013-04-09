@@ -86,7 +86,7 @@ namespace JabbR.Nancy
                 {
                     // You can't link an account that's already attached to another user
                     nancyModule.AddAlertMessage("error", String.Format("This {0} account has already been linked to another user.", providerName));
-                    
+
                     // If a user is logged in then we know they got here from the account page, and we should redirect them back there
                     return nancyModule.Response.AsRedirect("~/account/#identityProviders");
                 }

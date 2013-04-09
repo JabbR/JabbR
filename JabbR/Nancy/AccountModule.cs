@@ -24,7 +24,7 @@ namespace JabbR.Nancy
         {
             Get["/"] = _ =>
             {
-                if(!IsAuthenticated)
+                if (!IsAuthenticated)
                 {
                     return HttpStatusCode.Forbidden;
                 }
@@ -58,7 +58,7 @@ namespace JabbR.Nancy
 
             Post["/login"] = param =>
             {
-                if(IsAuthenticated)
+                if (IsAuthenticated)
                 {
                     return Response.AsRedirect("~/");
                 }
@@ -97,7 +97,7 @@ namespace JabbR.Nancy
 
             Post["/logout"] = _ =>
             {
-                if(!IsAuthenticated)
+                if (!IsAuthenticated)
                 {
                     return HttpStatusCode.Forbidden;
                 }
@@ -114,7 +114,7 @@ namespace JabbR.Nancy
 
             Get["/register"] = _ =>
             {
-                if(IsAuthenticated)
+                if (IsAuthenticated)
                 {
                     return Response.AsRedirect("~/");
                 }
@@ -124,7 +124,7 @@ namespace JabbR.Nancy
 
             Post["/create"] = _ =>
             {
-                if(IsAuthenticated)
+                if (IsAuthenticated)
                 {
                     return Response.AsRedirect("~/");
                 }
@@ -164,7 +164,7 @@ namespace JabbR.Nancy
 
             Post["/unlink"] = param =>
             {
-                if(!IsAuthenticated)
+                if (!IsAuthenticated)
                 {
                     return HttpStatusCode.Forbidden;
                 }
@@ -193,7 +193,7 @@ namespace JabbR.Nancy
 
             Post["/newpassword"] = _ =>
             {
-                if(!IsAuthenticated)
+                if (!IsAuthenticated)
                 {
                     return HttpStatusCode.Forbidden;
                 }
@@ -229,7 +229,7 @@ namespace JabbR.Nancy
 
             Post["/changepassword"] = _ =>
             {
-                if(!IsAuthenticated)
+                if (!IsAuthenticated)
                 {
                     return HttpStatusCode.Forbidden;
                 }
@@ -271,7 +271,7 @@ namespace JabbR.Nancy
 
             Post["/changeusername"] = _ =>
             {
-                if(!IsAuthenticated)
+                if (!IsAuthenticated)
                 {
                     return HttpStatusCode.Forbidden;
                 }
@@ -346,7 +346,7 @@ namespace JabbR.Nancy
         {
             ChatUser user = null;
 
-            if(IsAuthenticated)
+            if (IsAuthenticated)
             {
                 user = repository.GetUserById(Principal.GetUserId());
             }
