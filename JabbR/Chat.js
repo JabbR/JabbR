@@ -369,9 +369,12 @@
     };
 
     chat.client.replaceMessage = function (id, message, room) {
+        ui.confirmMessage(id);
+
         var viewModel = getMessageViewModel(message);
 
-        scrollIfNecessary(function () {
+        scrollIfNecessary(function () { 
+
             // Update your message when it comes from the server
             ui.overwriteMessage(id, viewModel);
         }, room);
@@ -857,6 +860,7 @@
                     ui.confirmMessage(id);
                 })
                 .fail(function (e) {
+                    ui.failMessage(id);
                     ui.addMessage(e, 'error');
                 });
         }
