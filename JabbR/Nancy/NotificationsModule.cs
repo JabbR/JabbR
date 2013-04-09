@@ -94,10 +94,10 @@ namespace JabbR.Nancy
                                     .Select(n => new NotificationViewModel()
                                     {
                                         NotificationKey = n.Key,
-                                        FromUserName = n.User.Name,
+                                        FromUserName = n.Message.User.Name,
                                         FromUserImage = n.Message.User.Hash,
                                         Message = n.Message.Content,
-                                        RoomName = n.Message.Room.Name,
+                                        RoomName = n.Room.Name,
                                         Read = n.Read
                                     })
                                     .ToPagedList(page, take);
