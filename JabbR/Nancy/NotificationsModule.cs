@@ -17,7 +17,7 @@ namespace JabbR.Nancy
         {
             Get["/"] = _ =>
             {
-                if (Context.CurrentUser == null)
+                if (!IsAuthenticated)
                 {
                     return Response.AsRedirect(String.Format("~/account/login?returnUrl={0}", HttpUtility.UrlEncode(Request.Path)));
                 }
@@ -40,7 +40,7 @@ namespace JabbR.Nancy
 
             Post["/markasread"] = _ =>
             {
-                if (Context.CurrentUser == null)
+                if (!IsAuthenticated)
                 {
                     return HttpStatusCode.Forbidden;
                 }
