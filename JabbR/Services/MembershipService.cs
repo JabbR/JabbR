@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Claims;
-using System.Security.Principal;
 using System.Text.RegularExpressions;
 using JabbR.Infrastructure;
 using JabbR.Models;
@@ -25,12 +24,21 @@ namespace JabbR.Services
             var name = claimsPrincipal.GetClaimValue(ClaimTypes.Name);
             var email = claimsPrincipal.GetClaimValue(ClaimTypes.Email);
 
+            if (String.IsNullOrEmpty(id))
+            {
+                throw new InvalidOperationException("Unable find the identifier claim");
+            }
+
+            if (String.IsNullOrEmpty(name))
+            {
+                throw new InvalidOperationException("Unable find the name claim");
+            }
+
             // This method is used in the auth workflow. If the username is taken it will add a number
             // to the user name.
             if (UserExists(name))
             {
-                var usersWithNameLikeMine = _repository.Users.Count(u => u.Name.StartsWith(name));
-                name += usersWithNameLikeMine;
+                name = id;
             }
 
             var user = new ChatUser
