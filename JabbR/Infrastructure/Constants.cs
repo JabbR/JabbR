@@ -5,10 +5,6 @@ namespace JabbR.Infrastructure
     {
         public static readonly string UserTokenCookie = "jabbr.userToken";
         public static readonly Version JabbRVersion = typeof(Constants).Assembly.GetName().Version;
-    }
-
-    public static class JabbRClaimsTypes
-    {
-        public static readonly string UserId = "urn:JabbRId";
+        public static readonly string JabbRAuthType = "JabbR";
     }
 }

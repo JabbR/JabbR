@@ -24,10 +24,17 @@ namespace JabbR.Infrastructure
 
             if (claimsPrincipal != null)
             {
-                var userIdClaim = claimsPrincipal.FindFirst(JabbRClaimsTypes.UserId);
-                if (userIdClaim != null)
+                foreach (var identity in claimsPrincipal.Identities)
                 {
-                    return userIdClaim.Value;
+                    if (identity.AuthenticationType == Constants.JabbRAuthType)
+                    {
+                        Claim claim = identity.FindFirst(ClaimTypes.NameIdentifier);
+
+                        if (claim != null)
+                        {
+                            return claim.Value;
+                        }
+                    }
                 }
             }
 

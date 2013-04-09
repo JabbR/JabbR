@@ -31,8 +31,8 @@ namespace JabbR.Middleware
             {
                 // Add the JabbR user id claim
                 var claims = new List<Claim>();
-                claims.Add(new Claim(JabbRClaimsTypes.UserId, userId));
-                var identity = new ClaimsIdentity(claims, "JabbR");
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, userId));
+                var identity = new ClaimsIdentity(claims, Constants.JabbRAuthType);
 
                 var principal = (ClaimsPrincipal)env["server.User"];
 
