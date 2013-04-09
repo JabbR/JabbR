@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
@@ -24,7 +25,7 @@ namespace JabbR.Nancy
 
                 var request = this.Bind<NotificationRequestModel>();
 
-                ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
+                ChatUser user = repository.GetUserById(Principal.GetUserId());
                 int unreadCount = repository.GetNotificationsByUser(user).Count(n => !n.Read);
                 IPagedList<NotificationViewModel> notifications = GetNotifications(repository, user, all: request.All, page: request.Page, roomName: request.Room);
 
@@ -54,7 +55,7 @@ namespace JabbR.Nancy
                     return HttpStatusCode.NotFound;
                 }
 
-                ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
+                ChatUser user = repository.GetUserById(Principal.GetUserId());
 
                 if (notification.UserKey != user.Key)
                 {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
@@ -63,6 +64,22 @@ namespace JabbR.Nancy
             container.AddMessage(messageType, alertMessage);
 
             module.Request.Session.SetSessionValue(AlertMessageStore.AlertMessageKey, container);
+        }
+
+        public static ClaimsPrincipal GetPrincipal(this NancyModule module)
+        {
+            var userIdentity = module.Context.CurrentUser as ClaimsPrincipalUserIdentity;
+                if (userIdentity == null)
+                {
+                    return null;
+                }
+
+                return userIdentity.ClaimsPrincipal;
+        }
+
+        public static bool IsAuthenticated(this NancyModule module)
+        {
+            return module.GetPrincipal().IsAuthenticated();
         }
     }
 }

@@ -45,7 +45,7 @@ namespace JabbR.Nancy
                 HttpFile file = Request.Files.First();
 
                 // This blocks since we're not using nancy's async support yet
-                uploadHandler.Upload(Context.CurrentUser.UserName,
+                uploadHandler.Upload(Principal.GetUserId(),
                                      connectionId,
                                      roomName,
                                      file.Name,

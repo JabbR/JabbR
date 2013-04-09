@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Claims;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
@@ -27,9 +28,9 @@ namespace JabbR.Nancy
         {
             ChatUser loggedInUser = null;
 
-            if (nancyModule.Context.CurrentUser != null)
+            if (nancyModule.IsAuthenticated())
             {
-                loggedInUser = _repository.GetUserById(nancyModule.Context.CurrentUser.UserName);
+                loggedInUser = _repository.GetUserById(nancyModule.GetPrincipal().GetUserId());
             }
 
             if (model.Exception == null)

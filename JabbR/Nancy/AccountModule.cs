@@ -29,7 +29,7 @@ namespace JabbR.Nancy
                     return HttpStatusCode.Forbidden;
                 }
 
-                ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
+                ChatUser user = repository.GetUserById(Principal.GetUserId());
 
                 return GetProfileView(authService, user);
             };
@@ -170,7 +170,7 @@ namespace JabbR.Nancy
                 }
 
                 string provider = Request.Form.provider;
-                ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
+                ChatUser user = repository.GetUserById(Principal.GetUserId());
 
                 if (user.Identities.Count == 1 && !user.HasUserNameAndPasswordCredentials())
                 {
@@ -203,7 +203,7 @@ namespace JabbR.Nancy
 
                 ValidatePassword(password, confirmPassword);
 
-                ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
+                ChatUser user = repository.GetUserById(Principal.GetUserId());
 
                 try
                 {
@@ -245,7 +245,7 @@ namespace JabbR.Nancy
 
                 ValidatePassword(password, confirmPassword);
 
-                ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
+                ChatUser user = repository.GetUserById(Principal.GetUserId());
 
                 try
                 {
@@ -281,7 +281,7 @@ namespace JabbR.Nancy
 
                 ValidateUsername(username, confirmUsername);
 
-                ChatUser user = repository.GetUserById(Context.CurrentUser.UserName);
+                ChatUser user = repository.GetUserById(Principal.GetUserId());
                 string oldUsername = user.Name;
 
                 try
@@ -348,7 +348,7 @@ namespace JabbR.Nancy
 
             if(IsAuthenticated)
             {
-                user = repository.GetUserById(Context.CurrentUser.UserName);
+                user = repository.GetUserById(Principal.GetUserId());
             }
 
             var viewModel = new LoginViewModel(authService.GetProviders(), user != null ? user.Identities : null);

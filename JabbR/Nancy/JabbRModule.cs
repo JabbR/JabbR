@@ -20,24 +20,12 @@ namespace JabbR.Nancy
 
         protected ClaimsPrincipal Principal
         {
-            get
-            {
-                var userIdentity = Context.CurrentUser as ClaimsPrincipalUserIdentity;
-                if (userIdentity == null)
-                {
-                    return null;
-                }
-
-                return userIdentity.ClaimsPrincipal;
-            }
+            get { return this.GetPrincipal(); }
         }
 
         protected bool IsAuthenticated
         {
-            get
-            {
-                return Principal.IsAuthenticated();
-            }
+            get { return this.GetPrincipal().IsAuthenticated(); }
         }
 
         internal static Response AlertsToViewBag(NancyContext context)
