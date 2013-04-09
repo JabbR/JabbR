@@ -862,6 +862,7 @@
     <Content Include="Content\images\logo32.png" />
     <Content Include="Content\images\small-logo.png" />
     <Content Include="Content\sounds\notification.wav" />
+    <Content Include="notifications.js" />
     <Content Include="robots.txt" />
     <EmbeddedResource Include="Migrations\201208211555032_BanUser.resx">
       <DependentUpon>201208211555032_BanUser.cs</DependentUpon>
