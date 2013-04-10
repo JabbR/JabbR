@@ -2919,3 +2919,10 @@ h3.userlist-header {
         overflow: auto;
     }
 }
+
+#clipboard-upload-preview {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 300px;
+}
