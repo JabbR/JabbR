@@ -84,7 +84,8 @@
                                 });
                             };
                             stream.readAsDataURL(file);
-                            return (haveData = true);
+                            haveData = true;
+                            return true;
                         }
                     });
                 });
