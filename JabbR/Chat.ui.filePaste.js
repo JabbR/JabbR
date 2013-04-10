@@ -2,14 +2,14 @@
     function match() {
         var ua = navigator.userAgent.toLowerCase();
 
-        var match = /(chrome)[ \/]([\w.]+)/.exec(ua) ||
+        var result = /(chrome)[ \/]([\w.]+)/.exec(ua) ||
             /(webkit)[ \/]([\w.]+)/.exec(ua) ||
             /(opera)(?:.*version|)[ \/]([\w.]+)/.exec(ua) ||
             /(msie) ([\w.]+)/.exec(ua) ||
             ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec(ua) || [];
         return {
-            browser: match[1] || "",
-            version: match[2] || "0"
+            browser: result[1] || "",
+            version: result[2] || "0"
         };
     }
     var browser = {};
@@ -70,7 +70,7 @@
                     return Array.prototype.forEach.call(clipboard.types, function (type, index) {
                         var file, stream;
                         if (haveData) {
-                            return;
+                            return true;
                         }
                         if (type.match(options.matchType) || clipboard.items[index].type.match(options.matchType)) {
                             file = clipboard.items[index].getAsFile();
@@ -84,7 +84,7 @@
                                 });
                             };
                             stream.readAsDataURL(file);
-                            return haveData = true;
+                            return (haveData = true);
                         }
                     });
                 });
@@ -117,15 +117,15 @@
                     waitForPasteData(pasteDiv);
                 }, 20);
             }
-        };
+        }
 
         function processPaste(pasteDiv) {
             
             var innerHtml = pasteDiv.innerHTML;
             var data = {
-                image: innerHtml.indexOf("<img") != -1 && innerHtml.indexOf("src=") != -1,
-                base64: innerHtml.indexOf("base64,") != -1,
-                png: innerHtml.indexOf("iVBORw0K") != -1
+                image: innerHtml.indexOf("<img") !== -1 && innerHtml.indexOf("src=") !== -1,
+                base64: innerHtml.indexOf("base64,") !== -1,
+                png: innerHtml.indexOf("iVBORw0K") !== -1
             };
 
             if (data.image && data.base64) {
@@ -148,7 +148,7 @@
                 
                 pasteDiv.innerHTML = "";
             }
-        };
+        }
 
         function handlePaste(event, pasteDiv) {
             if (event && event.clipboardData && event.clipboardData.getData) {
@@ -164,7 +164,7 @@
             }
         }
 
-        document.onpaste = function (event) {
+        document.onpaste = function(event) {
             pasteDiv.focus();
             handlePaste(event, pasteDiv);
         };
