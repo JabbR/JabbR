@@ -1473,7 +1473,59 @@
 
             // Crazy browser hack
             $hiddenFile[0].style.left = '-800px';
+            
+            $.imagePaste(function (file) {
+                console.log(file);
+                function dataURItoBlob(dataURI) {
+                    var binary = atob(dataURI.split(',')[1]);
+                    var array = [];
+                    for (var i = 0; i < binary.length; i++) {
+                        array.push(binary.charCodeAt(i));
+                    }
+                    return new Blob([new Uint8Array(array)], { type: 'image/jpeg' });
+                }
+                
+                var blob = dataURItoBlob(file.dataURL);
+                var fd = new FormData($uploadForm[0]);
+                fd.append("hidden-file", blob);
+                
+                var name = "clipboard-data",
+                    uploader = {
+                        submitFile: function (connectionId, room) {
+                            $fileConnectionId.val(connectionId);
 
+                            $fileRoom.val(room);
+
+                            //$uploadForm.submit();
+                            $.ajax({
+                                url: '/upload-clipboard',
+                                dataType: 'json',
+                                type: 'POST',
+                                data: {
+                                    file: file.dataURL,
+                                    room: room,
+                                    connectionId: connectionId
+                                    //string roomName = Request.Form.room;
+                                    //string connectionId = Request.Form.connectionId;
+                                    //string file = Request.Form.file;
+                                    //string fileName = "clipboard_" + Guid.NewGuid().ToString("N");
+                                    //string contentType = "image/jpeg";
+                                    
+                                }
+                            }).done(function(result) {
+
+                            });
+
+                            $hiddenFile.val('');
+                        }
+                    };
+
+                ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
+
+                $ui.trigger(ui.events.fileUploaded, [uploader]);
+
+            });
+            
             $hiddenFile.change(function () {
                 if (!$hiddenFile.val()) {
                     return;

@@ -421,6 +421,7 @@
         <div id="connection-state-changed-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title" style="display: none;"></h3><i id="popover-content-icon"></i><div class="popover-content"><p></p></div></div></div>
     </section>
   </section> 
+  <div id="paste" contenteditable="true" style="height: 1px; width: 1px;"></div>
 
      @{
          WriteLiteral(Bundle.JavaScript().ForceDebugIf(() => Model.DebugMode)
@@ -462,7 +463,8 @@
              .Add("~/Chat.pinnedWindows.js")
              .Add("~/Chat.githubissues.js")
              .Add("~/Chat.js")
-             .Render("~/Scripts/JabbR2_#.js"));
+             .Add("~/Chat.ui.filePaste.js")
+                .Render("~/Scripts/JabbR2_#.js"));
     }
     @if(Model.DebugMode)
     {
