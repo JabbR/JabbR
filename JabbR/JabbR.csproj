@@ -896,7 +896,6 @@
     <EmbeddedResource Include="Migrations\201304020629255_Notifications.resx">
       <DependentUpon>201304020629255_Notifications.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="Properties\PublishProfiles\Local.pubxml" />
     <EmbeddedResource Include="Migrations\201304082240509_AddRoomToNotification.resx">
       <DependentUpon>201304082240509_AddRoomToNotification.cs</DependentUpon>
     </EmbeddedResource>
