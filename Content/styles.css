@@ -1,0 +1,116 @@
+@import url(https://fonts.googleapis.com/css?family=Lato:300italic,700italic,300,700);
+
+html
+{
+    height: 100%;
+}
+
+body
+{
+    font-family: Lato;
+    color: #888;
+    height: 100%;
+    background: rgba(245,245,245,1);
+}
+
+.navbar-static-top .navbar-inner
+{
+    background: rgba(0,15,63,1);
+    padding: 0 10px;
+    border: 1px solid #888;
+    box-shadow: 0 2px 10px #888;
+    -moz-box-shadow: 0 2px 10px #888;
+    -webkit-box-shadow: 0 2px 10px #888;
+    filter: none;
+}
+
+.navbar .brand
+{
+    float: none;
+    margin-bottom: 0;
+    text-shadow: none;
+    font-weight: lighter;
+    color: #fcfcfc;
+    padding-bottom: 0px;
+}
+
+.navbar .subheader
+{
+    color: #cfcfcf;
+}
+
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:active,
+.dropdown-menu > li > a:focus
+{
+    background: rgba(37, 45, 70, 1);
+}
+
+.source-menu
+{
+    padding-top: 5px;
+}
+
+    .source-menu .btn
+    {
+        color: #fcfcfc;
+        background: rgba(37, 45, 70,1);
+        border-bottom: #888;
+    }
+
+        .source-menu .btn:hover
+        {
+            color: #888;
+        }
+
+		.btn-group.open 
+		.btn.dropdown-toggle {
+			background: #46547f
+		}
+.btn.demo {
+	background: #00103F;
+	color: #fcfcfc;
+	text-shadow: none;
+}
+
+.btn.demo:hover {
+	background: #164C85;
+}
+
+.container
+{
+	padding-bottom: 60px;
+}
+
+.feature-wrapper
+{
+    margin-top: 20px;
+}
+
+    .feature-wrapper h4,
+    .feature-wrapper h5
+    {
+        font-weight: lighter;
+    }
+
+.navbar-fixed-bottom p
+{
+    padding-top: 10px;
+	margin: 0 10px 10px;
+}
+
+@media print, screen and (max-width: 960px)
+{
+}
+
+@media print, screen and (max-width: 720px)
+{
+}
+
+@media print, screen and (max-width: 480px)
+{
+}
+
+@media print
+{
+}
