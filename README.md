@@ -31,8 +31,11 @@ Assign a gravatar to your nick. Be recognized, even in JabbR!
 Inline image and content support for your favorite sites:
 
 * CollegeHumor
-* GitHub 
+* GitHub Issues
+* NuGet Packages
+* GISTs
 * Google Docs
+* Google Maps
 * imgur
 * join.me
 * NerdDinner
@@ -42,6 +45,12 @@ Inline image and content support for your favorite sites:
 * UStream
 * Vimeo
 * Youtube
+* BBC News
+* SoundCloud
+* MixCloud
+* Spotify
+* Twitter
+* Uservoice
 
 #### And if you ever happen to get lost...
     Type /? - to show the full list of JabbR Commands
