@@ -1,0 +1,81 @@
+﻿@using JabbR
+@using JabbR.ViewModels
+@using PagedList
+@model NotificationsViewModel
+@{
+    var notificationsViewModel = Model as NotificationsViewModel;
+}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>JabbR - notifications</title>
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/font-awesome.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Chat.css")" rel="stylesheet" />
+</head>
+<body>
+    <section id="page" role="application">
+        <header id="heading" role="heading">
+            <div class="banner" role="banner">
+                <h1>Jabb</h1>
+                <div class="jabbrLogo" id="logo"></div>
+                <div>
+                    Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a>
+                </div>
+            </div>
+            <div style="clear: both"></div>
+        </header>
+        <div class="container">
+            <div class="row" style="padding-top: 75px;">
+                @Html.AlertMessages()
+                <div class="span2">
+                    <ul class="nav nav-list">
+                        <li class="nav-header">Notifications</li>
+                        <li class="@(!Model.ShowAll ? "active" : "")">
+                            <a href="@Url.Content("~/notifications")">Unread <span id="js-unread-counter" data-unread="@Model.UnreadCount" class="pull-right">@Model.UnreadCount</span></a>
+                        </li>
+                        <li class="@(Model.ShowAll ? "active" : "")">
+                            <a href="@Url.Content("~/notifications?all=true")">All Notifications</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="span10">
+                    @if (notificationsViewModel.Notifications.Count > 0)
+                    {
+                        <ul id="notifications-container" data-mode="@(Model.ShowAll ? "all" : "unread")">
+                            @foreach (var notification in notificationsViewModel.Notifications)
+                            {
+                                <li data-notification-id="@notification.NotificationKey" class="notification-item @(!notification.Read ? "notification-unread" : "")">
+                                    <ul class="inline">
+                                        <li>@notification.RoomName</li>
+                                        <li>@notification.FromUserName</li>
+                                        <li class="user">
+                                            <img class="gravatar" src="https://secure.gravatar.com/avatar/@notification.FromUserImage?s=16&amp;d=mm" />
+                                        </li>
+                                        @if (!notification.Read)
+                                        {
+                                            <li>
+                                                <a href="#" class="js-mark-as-read" data-action-url="@Url.Content("~/notifications/markasread")" data-notification-id="@notification.NotificationKey"><i class="icon-remove-circle"></i></a>
+                                            </li>
+                                        }
+                                    </ul>
+                                    <h4>@notification.Message</h4>
+                                </li>
+                            }
+                        </ul>
+                        @Html.SimplePager(notificationsViewModel.Notifications, Model.ShowAll ? "?all=true&" : "")
+                    }
+                    else
+                    {
+                        <p class="alert alert-block alert-info">No notifications!</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="@Url.Content("~/Scripts/jquery-1.9.0.min.js")"></script>
+	<script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/notifications.js")"></script>
+</body>
+</html>

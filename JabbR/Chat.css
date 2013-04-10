@@ -236,12 +236,29 @@ form#send-message {
     margin: 0;
 }
 
-#lobby-private {
+#room-loading {
+    display: none;
+    margin: 10px 0;
+    position: relative;
+    top: 50px;
+    z-index: 1000;
+}
+
+    #room-loading i {
+        float: left;
+        margin: 0 10px;
+    }
+
+    #room-loading h3 {
+        font-weight: lighter;
+    }
+
+#lobby-private,
+#lobby-other {
     display: none;
 }
 
 #userlist-lobby,
-#userlist-lobby-active,
 #userlist-lobby-owners {
     position: relative;
     margin: 0 5px;
@@ -250,13 +267,11 @@ form#send-message {
 }
 
     #userlist-lobby li,
-    #userlist-lobby-active li,
     #userlist-lobby-owners li {
         display: inline;
     }
 
         #userlist-lobby li:hover,
-        #userlist-lobby-active li:hover,
         #userlist-lobby-owners li:hover {
             background: none;
         }
@@ -276,36 +291,33 @@ form#send-message {
         background: #f1f1f1;
     }
 
-    #load-more-rooms-item {
-        cursor: pointer;
-    }
+#load-more-rooms-item {
+    cursor: pointer;
+}
 
-    #userlist-lobby .load-more-rooms {
-        text-align: center;
-    }
+#userlist-lobby .load-more-rooms {
+    text-align: center;
+}
 
     #userlist-lobby .load-more-rooms a {
         text-decoration: none;
         color: #999;
     }
 
-    #userlist-lobby-active li div.room-row,
-    #userlist-lobby-owners li div.room-row {
-        display: inline-block;
-        min-height: 100px;
-        width: 250px;
-        margin: 10px 5px;
-        padding: 5px;
-        -webkit-border-radius: 2px;
-        -moz-border-radius: 2px;
-        border-radius: 2px;
-        -webkit-box-shadow: 0px 0px 2px 1px #888;
-        -moz-box-shadow: 0px 0px 2px 1px #888;
-        box-shadow: 0px 0px 2px 1px #888;
-    }
+#userlist-lobby-owners li div.room-row {
+    display: inline-block;
+    width: 250px;
+    margin: 10px 5px;
+    padding: 5px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    -webkit-box-shadow: 0px 0px 2px 1px #888;
+    -moz-box-shadow: 0px 0px 2px 1px #888;
+    box-shadow: 0px 0px 2px 1px #888;
+}
 
-    #userlist-lobby-active li div:hover,
-    #userlist-lobby-owners li div:hover {
+    #userlist-lobby-owners li div.room-row:hover {
         border: rgba(82, 168, 236, 0.8);
         -webkit-box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
         -moz-box-shadow: 0px 0px 5px 1px rgba(82, 168, 236, 0.6);
@@ -313,50 +325,57 @@ form#send-message {
         background: #fcfcfc;
     }
 
-    #userlist-lobby-active span,
-    #userlist-lobby-owners span {
-        float: left;
+    #userlist-lobby-owners li div.room-row div {
+        width: 100%;
+        margin: 0;
     }
 
-    #userlist-lobby .name,
-    #userlist-lobby-active .name,
-    #userlist-lobby-owners .name {
-        font-size: 1.25em;
-        overflow: hidden;
-    }
 
-    #userlist-lobby .count,
-    #userlist-lobby-active .count,
-    #userlist-lobby-owners .count {
-        font-style: italic;
-        color: #999;
-        font-size: 0.85em;
-    }
+#userlist-lobby-owners span {
+    float: left;
+}
 
-    #userlist-lobby .topic,
-    #userlist-lobby-active .topic,
-    #userlist-lobby-owners .topic {
-        font-size: 1em;
-        overflow: hidden;
-    }
+#userlist-lobby .name,
+#userlist-lobby-owners .name {
+    font-size: 1.25em;
+    overflow: hidden;
+    width: 215px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
-    #userlist-lobby .lock,
-    #userlist-lobby .readonly,
-    #userlist-lobby-active .lock,
-    #userlist-lobby-active .readonly,
-    #userlist-lobby-owners .lock,
-    #userlist-lobby-owners .readonly {
-        display: none;
-    }
+#userlist-lobby .count,
+#userlist-lobby-owners .count {
+    font-style: italic;
+    color: #999;
+    font-size: 0.85em;
+}
 
-    #userlist-lobby .locked .lock,
-    #userlist-lobby .closed .readonly,
-    #userlist-lobby-active .locked .lock,
-    #userlist-lobby-active .closed .readonly,
-    #userlist-lobby-owners .locked .lock,
-    #userlist-lobby-owners .closed .readonly {
-        display: initial;
-    }
+#userlist-lobby .topic,
+#userlist-lobby-owners .topic {
+    font-size: 1em;
+    overflow: hidden;
+}
+
+#userlist-lobby-owners .topic {
+    width: 250px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#userlist-lobby .lock,
+#userlist-lobby .readonly,
+#userlist-lobby-owners .lock,
+#userlist-lobby-owners .readonly {
+    display: none;
+}
+
+#userlist-lobby .locked .lock,
+#userlist-lobby .closed .readonly,
+#userlist-lobby-owners .locked .lock,
+#userlist-lobby-owners .closed .readonly {
+    display: initial;
+}
 
 .users ul {
     margin-left: 0px;
@@ -365,39 +384,42 @@ form#send-message {
 }
 
 .user .details .name-container {
-    float: left;
-    white-space: nowrap;
     overflow: hidden;
-    margin-top: 2px;
-    padding-right: 2px;
-    width: 167px;
+    margin-left: 2px;
+    height: 20px;
 }
 
-    .user .details .name-container .name {
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        float: left;
-        margin-top: 2px;
-        padding-right: 2px;
-        width: 145px;
-    }
+.user .gravatar {
+    width: 16px;
+    height: 16px;
+    float: left;
+    background-color: #C5C5C5;
+}
+
+.user .details .name-container .name {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    float: left;
+    padding-right: 2px;
+    width: 135px;
+}
 
 .user .details.admin .name-container .name {
-    width: 102px;
+    width: 90px;
 }
 
 .user .details .name-container .admin {
-    float: left;
-    margin-top: 2px;
+    float: right;
     font-size: 11px;
     font-weight: bold;
     color: #999999;
+    padding-right: 5px;
 }
 
 .users li {
     margin-left: 0;
-    padding: 3px;
+    padding: 8px 6px;
     list-style: none;
 }
 
@@ -430,8 +452,8 @@ form#send-message {
     .users li.typing {
         background-image: url('Content/images/typing.png');
         background-repeat: no-repeat;
-        background-position: 3px 7px;
-        background-size: 17px auto;
+        background-position: 5px 12px;
+        background-size: 12px auto;
     }
 
     .users li.room.locked .lock {
@@ -452,6 +474,11 @@ form#send-message {
         margin-right: 20px;
     }
 
+.user-status-container {
+    width: 15px;
+    float: left;
+}
+
 .user-status {
     -webkit-box-shadow: inset 0px 1px 0px 0px #caefab;
     -moz-box-shadow: inset 0px 1px 0px 0px #caefab;
@@ -468,7 +495,6 @@ form#send-message {
     color: #306108;
     position: relative;
     padding: 4px;
-    top: 2px;
 }
 
 li.user.typing .user-status {
@@ -493,9 +519,7 @@ li.user.typing .user-status {
 }
 
 .users .details {
-    width: 194px;
-    display: inline-block;
-    vertical-align: top;
+    overflow: hidden;
 }
 
 .users .owner {
@@ -799,22 +823,24 @@ li.error {
             max-width: 140px;
             white-space: nowrap;
             text-overflow: ellipsis;
+            float: left;
         }
 
+    .message.loading .left .state,
     .message.failed .left .state {
         width: 20px;
         height: 20px;
         float: right;
-        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAASCAYAAAC9+TVUAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABh0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjEwcrIlkgAAAmRJREFUOE+llE1IVGEUhm+GEBUItdBdO7Ma09QU04LI0lL8GQktDDMDMwtzDDWnQVMzXRQpRpYONakJomlDumhwYZMmKampMxFW0qIWKS2KSNF5ut+luXkZIsgLh8u3eJ9z3vf7WQNIq/4EZLXlAfjgdOLssjBeY2D4XDKDZ5MYrsxnrN3M26lpuZ9nUw3kjc3KpOkU7wuSmCtOYbEsjZ+lej5lBDGq12HLTWHE2ukBUiHOp1YcBj1zZRnQfBlar0GTEWqz4aQO4jYyHeNLT1Iozx91aEAKxDHl4LUxi3nTcWiTxT23wWyCK+lwYT+cCIDDPvzYK/EiehNtxw7xcnRCBSmQ8Y77zOTFQmMxtFSz5FpSymWpxNVUqq6/R0vMRki0R/jR3VCnhYxUF8gZ6OF6DtTn4+q+pQpVYEMBX6MkZnZL9IVsoC5TnvJ3yMokQ3nJLBhToTwNjCmKheXBxypo2dbGomzlc6SEQ4bYd3lRFB6ohdhzE1koPAIl8ZAdpGSwPGT9A+kzM79H4l24xFioxLNgL/J2btVCBsrPMxvnBwe8lV1wNRZ52PlSkclkmMRIiETHdm8M8XLDlXb6791hMMFf8SzCc+fwzRDLXE6UuhYAUVVb1nH1UrkW0msf5cnpRIb3bVbS/yiX+IsQRQbCghtg8V9LVuA2zNYBLUSM1fWglc6EYPojfZiQRUL4aoVYQBSAnw+mipueh83traXZgvloDA/DfekNWa/sgghRZCAsZO4IoKTsxt+PvRt012qnvqqGqvRUCsN05Oj8OXMwlov5Rmrbbf++gP/7JKz6LRGNfwFSXSktqxuLhQAAAABJRU5ErkJggg==');
         background-repeat: no-repeat;
+        margin-right: 5px;
+    }
+
+    .message.failed .left .state {
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAASCAYAAAC9+TVUAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAgY0hSTQAAeiYAAICEAAD6AAAAgOgAAHUwAADqYAAAOpgAABdwnLpRPAAAABh0RVh0U29mdHdhcmUAUGFpbnQuTkVUIHYzLjEwcrIlkgAAAmRJREFUOE+llE1IVGEUhm+GEBUItdBdO7Ma09QU04LI0lL8GQktDDMDMwtzDDWnQVMzXRQpRpYONakJomlDumhwYZMmKampMxFW0qIWKS2KSNF5ut+luXkZIsgLh8u3eJ9z3vf7WQNIq/4EZLXlAfjgdOLssjBeY2D4XDKDZ5MYrsxnrN3M26lpuZ9nUw3kjc3KpOkU7wuSmCtOYbEsjZ+lej5lBDGq12HLTWHE2ukBUiHOp1YcBj1zZRnQfBlar0GTEWqz4aQO4jYyHeNLT1Iozx91aEAKxDHl4LUxi3nTcWiTxT23wWyCK+lwYT+cCIDDPvzYK/EiehNtxw7xcnRCBSmQ8Y77zOTFQmMxtFSz5FpSymWpxNVUqq6/R0vMRki0R/jR3VCnhYxUF8gZ6OF6DtTn4+q+pQpVYEMBX6MkZnZL9IVsoC5TnvJ3yMokQ3nJLBhToTwNjCmKheXBxypo2dbGomzlc6SEQ4bYd3lRFB6ohdhzE1koPAIl8ZAdpGSwPGT9A+kzM79H4l24xFioxLNgL/J2btVCBsrPMxvnBwe8lV1wNRZ52PlSkclkmMRIiETHdm8M8XLDlXb6791hMMFf8SzCc+fwzRDLXE6UuhYAUVVb1nH1UrkW0msf5cnpRIb3bVbS/yiX+IsQRQbCghtg8V9LVuA2zNYBLUSM1fWglc6EYPojfZiQRUL4aoVYQBSAnw+mipueh83traXZgvloDA/DfekNWa/sgghRZCAsZO4IoKTsxt+PvRt012qnvqqGqvRUCsN05Oj8OXMwlov5Rmrbbf++gP/7JKz6LRGNfwFSXSktqxuLhQAAAABJRU5ErkJggg==');
     }
 
     .message.loading .left .state {
-        width: 20px;
-        height: 20px;
-        float: right;
         background-image: url('data:image/gif;base64,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');
-        background-repeat: no-repeat;
     }
 
     .message .middle {
@@ -1009,10 +1035,7 @@ li.clearfix {
 .flag-container {
     position: relative;
     float: right;
-    width: 16px;
-    height: 16px;
-    margin-top: 8px;
-    margin-left: 2px;
+    margin-top: 4px;
 }
 
 .flag {
@@ -2004,14 +2027,6 @@ li.clearfix {
         background-position: -80px -165px;
     }
 
-body, div {
-    -webkit-transition: width .2s ease, height .2s ease;
-    -moz-transition: width .2s ease, height .2s ease;
-    -o-transition: width .2s ease, height .2s ease;
-    -ms-transition: width .2s ease, height .2s ease;
-    transition: width .2s ease, height .2s ease;
-}
-
 .gravatarProfile {
     margin-left: 30px;
     margin-right: 10px;
@@ -2621,7 +2636,7 @@ h3.userlist-header {
 .connection-status {
     position: absolute;
     top: 17px;
-    right: 130px;
+    right: 170px;
 }
 
 .icon-connection-status {
@@ -2698,6 +2713,7 @@ h3.userlist-header {
     font-size: 11px;
     font-weight: bold;
     color: #ccc;
+    padding-right: 5px;
 }
 
 #loadingRoomHistory {
@@ -2750,8 +2766,8 @@ h3.userlist-header {
     }
 
         .message .left .name {
-            width: 79px;
-            max-width: 79px;
+            width: 55px;
+            max-width: 55px;
         }
 
     #send-message {
@@ -2772,24 +2788,16 @@ h3.userlist-header {
         width: 200px;
     }
 
-        .users .details {
-            width: 159px;
-        }
-
-            .users .details .name-container {
-                width: 139px;
-            }
+    .user.idle .details.admin .name-container .name {
+        width: 72px;
+    }
 
     .user .details .name-container .name {
-        width: 115px;
+        width: 110px;
     }
 
     .user .details.admin .name-container .name {
-        width: 97px;
-    }
-
-    .user .details.admin .name-container .idle-since {
-        display: none;
+        width: 95px;
     }
 }
 
@@ -2809,8 +2817,8 @@ h3.userlist-header {
     }
 
         .message .left .name {
-            width: 65px;
-            max-width: 65px;
+            width: 45px;
+            max-width: 45px;
         }
 
     #send-message {
@@ -2827,31 +2835,30 @@ h3.userlist-header {
         overflow: hidden;
     }
 
+    .user .details .name-container .admin {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 27px;
+    }
+
     .users {
         width: 150px;
     }
 
-        .users .details {
-            width: 109px;
-        }
-
-            .users .details .name-container {
-                width: 89px;
-            }
-
     .user .details .name-container .name {
-        width: 67px;
+        width: 65px;
     }
 
     .user .details.admin .name-container .name {
-        width: 90px;
+        width: 55px;
     }
 }
 
 @media screen and (max-width:480px) {
     .messages {
         width: auto;
-        right: 50px;
+        right: 100px;
         left: 0px;
     }
 
@@ -2868,23 +2875,25 @@ h3.userlist-header {
             display: none;
         }
 
+    .message.loading .left .state,
+    .message.failed .left .state {
+        margin-top: 5px;
+        margin-right: 8px;
+    }
+
     .users {
-        width: 50px;
+        width: 100px;
         right: 0px;
         left: auto;
     }
 
-        .users li.empty {
+        .users ul .users li.empty {
             font-size: 80%;
         }
 
-        .users .details {
+        .users .details .name-container {
             width: 45px;
         }
-
-            .users .details .name-container {
-                width: 45px;
-            }
 
     .user .details .name-container .name {
         width: 45px;
@@ -2893,7 +2902,7 @@ h3.userlist-header {
     .user .details.admin .name-container .name {
         width: 45px;
     }
-    
+
     .user .details .name-container .idle-since {
         float: left;
     }

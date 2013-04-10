@@ -16,7 +16,6 @@
         loadingHistory = false,
         checkingStatus = false,
         typing = false,
-        typingTimeoutId = null,
         $ui = $(ui),
         messageSendingDelay = 1500,
         pendingMessages = {},
@@ -80,7 +79,7 @@
 
     function populateRoom(room) {
         var d = $.Deferred();
-
+        
         connection.hub.log('getRoomInfo(' + room + ')');
 
         // Populate the list of users rooms and messages 
@@ -129,11 +128,12 @@
     }
 
     function populateLobbyRooms() {
-        try {
+        try { 
             // Populate the user list with room names
             chat.server.getRooms()
                 .done(function (rooms) {
                     ui.populateLobbyRooms(rooms, privateRooms);
+                    ui.setInitialized('Lobby');
                 });
         }
         catch (e) {
@@ -180,7 +180,7 @@
             date: message.When.fromJsonDate(),
             highlight: re.test(message.Content) ? 'highlight' : '',
             isOwn: re.test(message.User.name),
-            isMine: message.User.Name == chat.state.name
+            isMine: message.User.Name === chat.state.name
         };
     }
 
@@ -306,6 +306,7 @@
         }
 
         ui.setRoomLocked(room);
+        ui.updatePrivateLobbyRooms(room);
     };
 
     // Called when this user locked a room
@@ -368,9 +369,12 @@
     };
 
     chat.client.replaceMessage = function (id, message, room) {
+        ui.confirmMessage(id);
+
         var viewModel = getMessageViewModel(message);
 
-        scrollIfNecessary(function () {
+        scrollIfNecessary(function () { 
+
             // Update your message when it comes from the server
             ui.overwriteMessage(id, viewModel);
         }, room);
@@ -484,7 +488,7 @@
         var lastActivityDate = userInfo.LastActivity.fromJsonDate();
         var status = "Currently " + userInfo.Status;
         if (userInfo.IsAfk) {
-            status += userInfo.Status == 'Active' ? ' but ' : ' and ';
+            status += userInfo.Status === 'Active' ? ' but ' : ' and ';
             status += ' is Afk';
         }
         ui.addMessage('User information for ' + userInfo.Name +
@@ -856,6 +860,7 @@
                     ui.confirmMessage(id);
                 })
                 .fail(function (e) {
+                    ui.failMessage(id);
                     ui.addMessage(e, 'error');
                 });
         }

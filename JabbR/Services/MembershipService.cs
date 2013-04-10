@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Principal;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using JabbR.Infrastructure;
 using JabbR.Models;
@@ -18,22 +18,35 @@ namespace JabbR.Services
             _crypto = crypto;
         }
 
-        public ChatUser AddUser(WindowsPrincipal windowsPrincipal)
+        public ChatUser AddUser(ClaimsPrincipal claimsPrincipal)
         {
-            string fullName = windowsPrincipal.Identity.Name;
-            int domainSlash = fullName.IndexOf('\\');
-            string userName = domainSlash != -1 ? fullName.Substring(domainSlash + 1) : fullName;
+            var id = claimsPrincipal.GetClaimValue(ClaimTypes.NameIdentifier);
+            var name = claimsPrincipal.GetClaimValue(ClaimTypes.Name);
+            var email = claimsPrincipal.GetClaimValue(ClaimTypes.Email);
 
-            if (UserExists(userName))
+            if (String.IsNullOrEmpty(id))
             {
-                userName = fullName;
+                throw new InvalidOperationException("Unable find the identifier claim");
+            }
+
+            if (String.IsNullOrEmpty(name))
+            {
+                throw new InvalidOperationException("Unable find the name claim");
+            }
+
+            // This method is used in the auth workflow. If the username is taken it will add a number
+            // to the user name.
+            if (UserExists(name))
+            {
+                name = id;
             }
 
             var user = new ChatUser
             {
-                Name = userName,
+                Name = name,
                 Status = (int)UserStatus.Active,
-                Id = fullName,
+                Id = id,
+                Email = email,
                 LastActivity = DateTime.UtcNow
             };
 

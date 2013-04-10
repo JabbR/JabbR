@@ -11,6 +11,7 @@ namespace JabbR.Nancy
 {
     using System.IO;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
 
     public class HomeModule : JabbRModule
     {
@@ -18,7 +19,7 @@ namespace JabbR.Nancy
         {
             Get["/"] = _ =>
             {
-                if (Context.CurrentUser != null)
+                if (IsAuthenticated)
                 {
                     var viewModel = new SettingsViewModel
                     {
@@ -38,7 +39,7 @@ namespace JabbR.Nancy
 
             Post["/upload"] = _ =>
             {
-                if (Context.CurrentUser == null)
+                if (!IsAuthenticated)
                 {
                     return 403;
                 }
@@ -48,15 +49,14 @@ namespace JabbR.Nancy
                 HttpFile file = Request.Files.First();
 
                 // This blocks since we're not using nancy's async support yet
-
                 UploadFile(
-                    uploadHandler, 
-                    Context.CurrentUser.UserName, 
-                    connectionId, 
-                    roomName, 
-                    file.Name, 
-                    file.ContentType, 
-                    file.Value);
+                    uploadHandler,
+                    Principal.GetUserId(),
+                    connectionId,
+                    roomName,
+                    file.Name,
+                    file.ContentType,
+                    file.Value).Wait();
 
                 return 200;
             };
@@ -83,25 +83,25 @@ namespace JabbR.Nancy
 
                     UploadFile(
                         uploadHandler, 
-                        Context.CurrentUser.UserName, 
+                        Principal.GetUserId(), 
                         connectionId, 
                         roomName, 
                         fileName, 
                         contentType, 
-                        new MemoryStream(binData));
+                        new MemoryStream(binData)).Wait();
 
                     return 200;
                 };
         }
 
-        private static void UploadFile(UploadCallbackHandler uploadHandler, string userName, string connectionId, string roomName, string fileName, string contentType, Stream value)
+        private static Task UploadFile(UploadCallbackHandler uploadHandler, string userName, string connectionId, string roomName, string fileName, string contentType, Stream value)
         {
-            uploadHandler.Upload(userName,
+            return uploadHandler.Upload(userName,
                                  connectionId,
                                  roomName,
                                  fileName,
                                  contentType,
-                                 value).Wait();
+                                 value);
         }
     }
 }

@@ -13,6 +13,9 @@ namespace JabbR.Models
         public int MessageKey { get; set; }
         public virtual ChatMessage Message { get; set; }
 
+        public int RoomKey { get; set; }
+        public virtual ChatRoom Room { get; set; }
+
         public bool Read { get; set; }
     }
 }

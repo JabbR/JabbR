@@ -173,6 +173,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Owin.Types.0.8.3-alpha\lib\net40\Owin.Types.dll</HintPath>
     </Reference>
+    <Reference Include="PagedList">
+      <HintPath>..\packages\PagedList.1.15.0.0\lib\net40\PagedList.dll</HintPath>
+    </Reference>
     <Reference Include="RestSharp">
       <HintPath>..\packages\RestSharp.104.1\lib\net4\RestSharp.dll</HintPath>
     </Reference>
@@ -227,6 +230,7 @@
     <Content Include="Chat.twitter.js" />
     <Content Include="Chat.ui.filePaste.js" />
     <Content Include="Chat.ui.js" />
+    <Content Include="Chat.ui.room.js" />
     <Content Include="Chat.utility.js" />
     <Content Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-responsive.min.css" />
@@ -859,6 +863,7 @@
     <Content Include="Content\images\logo32.png" />
     <Content Include="Content\images\small-logo.png" />
     <Content Include="Content\sounds\notification.wav" />
+    <Content Include="notifications.js" />
     <Content Include="robots.txt" />
     <EmbeddedResource Include="Migrations\201208211555032_BanUser.resx">
       <DependentUpon>201208211555032_BanUser.cs</DependentUpon>
@@ -892,6 +897,9 @@
       <DependentUpon>201304020629255_Notifications.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\PublishProfiles\Local.pubxml" />
+    <EmbeddedResource Include="Migrations\201304082240509_AddRoomToNotification.resx">
+      <DependentUpon>201304082240509_AddRoomToNotification.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -952,6 +960,7 @@
     <Content Include="Scripts\livestamp.min.js.map">
       <DependentUpon>livestamp.js</DependentUpon>
     </Content>
+    <Content Include="Views\Notifications\index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\Startup.DependencyInjection.cs" />
@@ -961,6 +970,8 @@
     <Compile Include="Infrastructure\CryptoHelper.cs" />
     <Compile Include="Infrastructure\IdentityUtility.cs" />
     <Compile Include="Infrastructure\AlertMessageStore.cs" />
+    <Compile Include="Infrastructure\PrincipalExtensions.cs" />
+    <Compile Include="Infrastructure\JabbRAuthorizeAttribute.cs" />
     <Compile Include="Infrastructure\MentionExtractor.cs" />
     <Compile Include="Migrations\201303220549121_ContentProviderContent.cs" />
     <Compile Include="Migrations\201303220549121_ContentProviderContent.Designer.cs">
@@ -978,10 +989,15 @@
     <Compile Include="Migrations\201304020629255_Notifications.Designer.cs">
       <DependentUpon>201304020629255_Notifications.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201304082240509_AddRoomToNotification.cs" />
+    <Compile Include="Migrations\201304082240509_AddRoomToNotification.Designer.cs">
+      <DependentUpon>201304082240509_AddRoomToNotification.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\Mapping\AttachmentMap.cs" />
     <Compile Include="Models\Mapping\NotificationMap.cs" />
     <Compile Include="Models\Notification.cs" />
+    <Compile Include="Nancy\ClaimsPrincipalUserIdentity.cs" />
     <Compile Include="Nancy\HtmlHelperExtensions.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.Designer.cs">
@@ -1031,6 +1047,7 @@
     <Compile Include="Models\ChatUserIdentity.cs" />
     <Compile Include="Nancy\AccountModule.cs" />
     <Compile Include="Nancy\HomeModule.cs" />
+    <Compile Include="Nancy\NotificationsModule.cs" />
     <Compile Include="Nancy\SessionExtensions.cs" />
     <Compile Include="Services\AppSettingKeyProvider.cs" />
     <Compile Include="Services\AuthenticationTokenService.cs" />
@@ -1049,6 +1066,7 @@
     <Compile Include="UploadHandlers\UploadResult.cs" />
     <Compile Include="ViewModels\LobbyRoomViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
+    <Compile Include="ViewModels\NotificationsViewModel.cs" />
     <Compile Include="ViewModels\ProfilePageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SocialLoginViewModel.cs" />

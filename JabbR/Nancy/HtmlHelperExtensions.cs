@@ -5,6 +5,7 @@ using System.Text;
 using JabbR.Infrastructure;
 using Nancy.Validation;
 using Nancy.ViewEngines.Razor;
+using PagedList;
 
 namespace JabbR
 {
@@ -80,6 +81,27 @@ namespace JabbR
                     x => x.MemberNames.Any(y => y.Equals(propertyName, StringComparison.InvariantCultureIgnoreCase)));
 
             return errorsForField;
+        }
+
+        public static IHtmlString SimplePager<TModel>(this HtmlHelpers<TModel> htmlHelper, IPagedList pagedList, string baseUrl)
+        {
+            var pagerBuilder = new StringBuilder();
+
+            pagerBuilder.Append(@"<ul class=""inline"">");
+            
+            if (pagedList.HasPreviousPage)
+            {
+                pagerBuilder.AppendFormat(@"<li class=""pull-left""><a href=""{0}page={1}"" class=""btn btn-small"">prev</a></li>", baseUrl, pagedList.PageNumber - 1);
+            }
+
+            if (pagedList.HasNextPage)
+            {
+                pagerBuilder.AppendFormat(@"<li class=""pull-right""><a href=""{0}page={1}"" class=""btn btn-small"">next</a></li>", baseUrl, pagedList.PageNumber + 1);
+            }
+            
+            pagerBuilder.Append(@"</ul>");
+
+            return new NonEncodedHtmlString(pagerBuilder.ToString());
         }
     }
 }

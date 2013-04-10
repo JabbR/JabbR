@@ -4,8 +4,8 @@
 /// <reference path="Chat.toast.js" />
 /// <reference path="Scripts/livestamp.min.js" />
 
-/*global Emoji:true*/
-(function ($, window, document, utility) {
+/*jshint bitwise:false */
+(function ($, window, document, chat, utility, emoji, linkify) {
     "use strict";
 
     var $chatArea = null,
@@ -26,14 +26,11 @@
         templates = null,
         focus = true,
         readOnly = false,
-        commands = [],
-        shortcuts = [],
         Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13, Slash: 47, Space: 32, Tab: 9, Question: 191 },
         scrollTopThreshold = 75,
         toast = window.chat.toast,
         preferences = null,
         $login = null,
-        name,
         lastCycledMessage = null,
         $helpPopup = null,
         $helpBody = null,
@@ -70,15 +67,20 @@
         connectionInfoTransport = null,
         $topicBar = null,
         $loadingHistoryIndicator = null,
-        trimRoomHistoryMaxMessages = 200,
         trimRoomHistoryFrequency = 1000 * 60 * 2, // 2 minutes in ms
         $loadMoreRooms = null,
         sortedRoomList = null,
         maxRoomsToLoad = 100,
-        lastLoadedRoomIndex = 0;
+        lastLoadedRoomIndex = 0,
+        $lobbyPrivateRooms = null,
+        $lobbyOtherRooms = null,
+        $roomLoadingIndicator = null,
+        roomLoadingDelay = 250,
+        roomLoadingTimeout = null,
+        Room = chat.Room;
 
     function getRoomNameFromHash(hash) {
-        if (hash.length && hash[0] == '/') {
+        if (hash.length && hash[0] === '/') {
             hash = hash.substr(1);
         }
 
@@ -106,374 +108,22 @@
         return $closedRoomFilter.is(':checked');
     }
 
-    function Room($tab, $usersContainer, $usersOwners, $usersActive, $messages, $roomTopic) {
-        this.tab = $tab;
-        this.users = $usersContainer;
-        this.owners = $usersOwners;
-        this.activeUsers = $usersActive;
-        this.messages = $messages;
-        this.roomTopic = $roomTopic;
-
-        function glowTab(n) {
-            // Stop if we're not unread anymore
-            if (!$tab.hasClass('unread')) {
-                return;
+    function setRoomLoading(isLoading, roomName) {
+        if (isLoading) {
+            var room = getRoomElements(roomName);
+            if (!room.isInitialized()) {
+                roomLoadingTimeout = window.setTimeout(function () {
+                    $roomLoadingIndicator.find('i').addClass('icon-spin');
+                    $roomLoadingIndicator.show();
+                }, roomLoadingDelay);
             }
-
-            // Go light
-            $tab.animate({ backgroundColor: '#e5e5e5', color: '#77d42a' }, 800, function () {
-                // Stop if we're not unread anymore
-                if (!$tab.hasClass('unread')) {
-                    return;
-                }
-
-                n--;
-
-                // Check if we're on our last glow
-                if (n !== 0) {
-                    // Go dark
-                    $tab.animate({ backgroundColor: '#164C85', color: '#ffffff' }, 800, function () {
-                        // Glow the tab again
-                        glowTab(n);
-                    });
-                }
-                else {
-                    // Leave the tab highlighted
-                    $tab.animate({ backgroundColor: '#043C4C', color: '#ffffff' }, 800);
-                }
-            });
+        } else {
+            if (roomLoadingTimeout) {
+                clearTimeout(roomLoadingDelay);
+            }
+            $roomLoadingIndicator.hide();
+            $roomLoadingIndicator.find('i').removeClass('icon-spin');
         }
-
-        this.isLocked = function () {
-            return this.tab.hasClass('locked');
-        };
-
-        this.isLobby = function () {
-            return this.tab.hasClass('lobby');
-        };
-
-        this.hasUnread = function () {
-            return this.tab.hasClass('unread');
-        };
-
-        this.hasMessages = function () {
-            return this.tab.data('messages');
-        };
-
-        this.updateMessages = function (value) {
-            this.tab.data('messages', value);
-        };
-
-        this.getUnread = function () {
-            return $tab.data('unread') || 0;
-        };
-
-        this.hasSeparator = function () {
-            return this.messages.find('.message-separator').length > 0;
-        };
-
-        this.needsSeparator = function () {
-            if (this.isActive()) {
-                return false;
-            }
-            return this.isInitialized() && this.getUnread() === 5;
-        };
-
-        this.addSeparator = function () {
-            if (this.isLobby()) {
-                return;
-            }
-
-            // find first correct unread message
-            var n = this.getUnread(),
-                $unread = this.messages.find('.message').eq(-(n + 1));
-
-            $unread.after(templates.separator.tmpl())
-                .data('unread', n); // store unread count
-
-            this.scrollToBottom();
-        };
-
-        this.removeSeparator = function () {
-            this.messages.find('.message-separator').fadeOut(2000, function () {
-                $(this).remove();
-            });
-        };
-
-        this.updateUnread = function (isMentioned) {
-            var $tab = this.tab.addClass('unread'),
-                $content = $tab.find('.content'),
-                unread = ($tab.data('unread') || 0) + 1,
-                hasMentions = $tab.data('hasMentions') || isMentioned; // Whether or not the user already has unread messages to him/her
-
-            $content.text((hasMentions ? '*' : '') + '(' + unread + ') ' + this.getName());
-
-            $tab.data('unread', unread);
-            $tab.data('hasMentions', hasMentions);
-
-            if (!this.isActive() && unread === 1) {
-                // If this room isn't active then we're going to glow the tab
-                // to get the user's attention
-                glowTab(6);
-            }
-        };
-
-        this.scrollToBottom = function () {
-            // IE will repaint if we do the Chrome bugfix and look jumpy
-            if ($.browser.webkit) {
-                // Chrome fix for hiding and showing scroll areas
-                this.messages.scrollTop(this.messages.scrollTop() - 1);
-            }
-            this.messages.scrollTop(this.messages[0].scrollHeight);
-        };
-
-        this.isNearTheEnd = function () {
-            return this.messages.isNearTheEnd();
-        };
-
-        this.getName = function () {
-            return this.tab.data('name');
-        };
-
-        this.isActive = function () {
-            return this.tab.hasClass('current');
-        };
-
-        this.exists = function () {
-            return this.tab.length > 0;
-        };
-
-        this.isClosed = function () {
-            return this.tab.attr('data-closed') === 'true';
-        };
-
-        this.close = function () {
-            this.tab.attr('data-closed', true);
-            this.tab.addClass('closed');
-        };
-
-        this.unClose = function () {
-            this.tab.attr('data-closed', false);
-            this.tab.removeClass('closed');
-        };
-
-        this.clear = function () {
-            this.messages.empty();
-            this.owners.empty();
-            this.activeUsers.empty();
-        };
-
-        this.makeInactive = function () {
-            this.tab.removeClass('current');
-
-            this.messages.removeClass('current')
-                         .hide();
-
-            this.users.removeClass('current')
-                      .hide();
-
-            this.roomTopic.removeClass('current')
-                      .hide();
-
-            if (this.isLobby()) {
-                $lobbyRoomFilterForm.hide();
-                $roomActions.show();
-            }
-        };
-
-        this.makeActive = function () {
-            var currUnread = this.getUnread(),
-                lastUnread = this.messages.find('.message-separator').data('unread') || 0;
-
-            if (!utility.isMobile && !readOnly) {
-                $newMessage.focus();
-            }
-
-            this.tab.addClass('current')
-                    .removeClass('unread')
-                    .stop(true, true)
-                    .css('backgroundColor', '')
-                    .css('color', '')
-                    .data('unread', 0)
-                    .data('hasMentions', false)
-                    .find('.content')
-                    .text(this.getName());
-
-            this.messages.addClass('current')
-                         .show();
-
-            this.users.addClass('current')
-                      .show();
-
-            this.roomTopic.addClass('current')
-                      .show();
-
-            if (this.isLobby()) {
-                $roomActions.hide();
-                $lobbyRoomFilterForm.show();
-
-                $messages.hide();
-            }
-            // if no unread since last separator
-            // remove previous separator
-            if (currUnread <= lastUnread) {
-                this.removeSeparator();
-            }
-        };
-
-        this.setInitialized = function () {
-            this.tab.data('initialized', true);
-        };
-
-        this.isInitialized = function () {
-            return this.tab.data('initialized') === true;
-        };
-
-        // Users
-        this.getUser = function (userName) {
-            return this.users.find(getUserClassName(userName));
-        };
-
-        this.getUserReferences = function (userName) {
-            return $.merge(this.getUser(userName),
-                           this.messages.find(getUserClassName(userName)));
-        };
-
-        this.setLocked = function () {
-            this.tab.addClass('locked');
-        };
-
-        this.setListState = function (list) {
-            if (list.children('li').length > 0) {
-                var roomEmptyStatus = list.children('li.empty');
-                if (roomEmptyStatus.length === 0) {
-                    return;
-                } else {
-                    roomEmptyStatus.remove();
-                    return;
-                }
-            }
-            list.append($('<li class="empty">No users</li>'));
-        };
-
-        this.addUser = function (userViewModel, $user) {
-            if (userViewModel.owner) {
-                this.addUserToList($user, this.owners);
-            } else {
-                userViewModel.active ? $user.removeClass('idle') : $user.addClass('idle');
-
-                this.addUserToList($user, this.activeUsers);
-
-            }
-        };
-
-        this.addUserToList = function ($user, list) {
-            var oldParentList = $user.parent('ul');
-            $user.appendTo(list);
-            this.setListState(list);
-            if (typeof oldParentList !== undefined) {
-                this.setListState(oldParentList);
-            }
-            this.sortList(list);
-        };
-
-        this.appearsInList = function ($user, list) {
-            return $user.parent('ul').attr('id') == list.attr('id');
-        };
-
-        this.updateUserStatus = function ($user) {
-            var owner = $user.data('owner') || false;
-
-            if (owner === true) {
-                if (!this.appearsInList($user, this.owners)) {
-                    this.addUserToList($user, this.owners);
-                }
-                return;
-            }
-
-            var status = $user.data('active');
-            if (typeof status === "undefined") {
-                return;
-            }
-
-            if (!this.appearsInList($user, this.activeUsers)) {
-                status ? $user.removeClass('idle') : $user.addClass('idle');
-
-                this.addUserToList($user, this.activeUsers);
-            }
-        };
-
-        this.sortUsersByName = function (userListToSort) {
-            return userListToSort.sort(function (a, b) {
-                var compA = $(a).data('name').toString().toUpperCase();
-                var compB = $(b).data('name').toString().toUpperCase();
-                return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
-            });
-        };
-
-        this.sortLists = function () {
-            this.sortList(this.owners);
-            this.sortList(this.activeUsers);
-        };
-
-        this.sortList = function (listToSort) {
-            var listItems = listToSort.children('li').get();
-
-            var activeUsers = [],
-                idleUsers = [],
-                sortedUsers = [];
-
-            $.each(listItems, function (index, item) {
-                if ($(item).data('active')) {
-                    activeUsers.push(item);
-                } else {
-                    idleUsers.push(item);
-                }
-            });
-
-            activeUsers = this.sortUsersByName(activeUsers);
-            idleUsers = this.sortUsersByName(idleUsers);
-
-            sortedUsers = activeUsers.concat(idleUsers);
-
-            $.each(sortedUsers, function (index, item) {
-                listToSort.append(item);
-            });
-        };
-
-        this.canTrimHistory = function() {
-            return this.tab.data('trimmable') !== false;
-        };
-
-        this.setTrimmable = function(canTrimMessages) {
-            this.tab.data('trimmable', canTrimMessages);
-        };
-
-        this.trimHistory = function (numberOfMessagesToKeep) {
-            var lastIndex = null,
-                $messagesToRemove = null,
-                $roomMessages = this.messages.find('li'),
-                messageCount = $roomMessages.length;
-
-            numberOfMessagesToKeep = numberOfMessagesToKeep || trimRoomHistoryMaxMessages;
-
-            if (this.isLobby() || !this.canTrimHistory()) {
-                return;
-            }
-
-            if (numberOfMessagesToKeep < trimRoomHistoryMaxMessages) {
-                numberOfMessagesToKeep = trimRoomHistoryMaxMessages;
-            }
-            
-            if (messageCount < numberOfMessagesToKeep) {
-                return;
-            }
-
-            lastIndex = messageCount - numberOfMessagesToKeep;
-            $messagesToRemove = $roomMessages.filter('li:lt(' + lastIndex + ')');
-
-            $messagesToRemove.remove();
-        };
     }
 
     function populateLobbyRoomList(item, template, listToPopulate, showClosedRooms) {
@@ -481,14 +131,14 @@
 
         if (!showClosedRooms) {
             var closedRooms = listToPopulate.children('li.closed');
-            closedRooms.each(function() {
+            closedRooms.each(function () {
                 $(this).hide();
             });
         }
     }
 
     function sortRoomList(listToSort) {
-        var sortedList = listToSort.sort(function(a, b) {
+        var sortedList = listToSort.sort(function (a, b) {
             if (a.Closed && !b.Closed) {
                 return 1;
             } else if (b.Closed && !a.Closed) {
@@ -553,8 +203,13 @@
 
     function getRoomsNames() {
         var lobby = getLobby();
+
         return lobby.users.find('li')
-                     .map(function () { return $(this).data('name') + ' '; });
+                     .map(function () {
+                         var room = $(this).data('name');
+                         roomCache[room] = true;
+                         return room + ' ';
+                     });
     }
 
     function updateLobbyRoomCount(room, count) {
@@ -665,7 +320,6 @@
                     $ui.trigger(ui.events.scrollRoomTop, [{ name: roomName, messageId: messageId }]);
                 }
             }
-            lobbyLoaded = false;
         };
 
         // Hookup the scroll handler since event delegation doesn't work with scroll events
@@ -675,6 +329,7 @@
         $messages.data('scrollHandler', scrollHandler);
 
         setAccessKeys();
+        lobbyLoaded = false;
         return true;
     }
 
@@ -750,6 +405,10 @@
     }
 
     function triggerFocus() {
+        if (!utility.isMobile && !readOnly) {
+            $newMessage.focus();
+        }
+
         if (focus === false) {
             focus = true;
             $ui.trigger(ui.events.focusit);
@@ -760,8 +419,20 @@
         // Restore the global preferences
     }
 
+    function toggleRichness($element, roomName) {
+        var blockRichness = roomName ? getRoomPreference(roomName, 'blockRichness') : preferences.blockRichness;
+
+        if (blockRichness === true) {
+            $element.addClass('off');
+        }
+        else {
+            $element.removeClass('off');
+        }
+    }
+
     function toggleElement($element, preferenceName, roomName) {
         var value = roomName ? getRoomPreference(roomName, preferenceName) : preferences[preferenceName];
+
         if (value === true) {
             $element.removeClass('off');
         }
@@ -776,7 +447,7 @@
         // Placeholder for room level preferences
         toggleElement($sound, 'hasSound', roomName);
         toggleElement($toast, 'canToast', roomName);
-        toggleElement($richness, 'blockRichness', roomName);
+        toggleRichness($richness, roomName);
     }
 
     function setPreference(name, value) {
@@ -826,7 +497,7 @@
         focus = true;
 
         if (msg) {
-            if (msg.toLowerCase() == '/login') {
+            if (msg.toLowerCase() === '/login') {
                 ui.showLogin();
             }
             else {
@@ -891,6 +562,7 @@
         } else {
             $flag.hide();
         }
+
         if (userViewModel.country) {
             $flag.attr('title', userViewModel.country);
         }
@@ -902,10 +574,13 @@
         var topicHtml = topic === '' ? 'You\'re chatting in ' + roomViewModel.Name : ui.processContent(topic);
         var roomTopic = room.roomTopic;
         var isVisibleRoom = getCurrentRoomElements().getName() === roomViewModel.Name;
+
         if (isVisibleRoom) {
             roomTopic.hide();
         }
+
         roomTopic.html(topicHtml);
+
         if (isVisibleRoom) {
             roomTopic.fadeIn(2000);
         }
@@ -943,16 +618,12 @@
     }
 
     function loadMoreLobbyRooms() {
-        var deferred = $.Deferred(),
-            lobby = getLobby(),
+        var lobby = getLobby(),
             showClosedRooms = $closedRoomFilter.is(':checked'),
             moreRooms = sortedRoomList.slice(lastLoadedRoomIndex, lastLoadedRoomIndex + maxRoomsToLoad);
 
-        populateLobbyRoomList(moreRooms, templates.otherlobbyroom, lobby.users, showClosedRooms);
+        populateLobbyRoomList(moreRooms, templates.lobbyroom, lobby.users, showClosedRooms);
         lastLoadedRoomIndex = lastLoadedRoomIndex + maxRoomsToLoad;
-        deferred.resolve();
-
-        return deferred;
     }
 
     var ui = {
@@ -973,7 +644,7 @@
             preferencesChanged: 'jabbr.ui.preferencesChanged',
             loggedOut: 'jabbr.ui.loggedOut',
             reloadMessages: 'jabbr.ui.reloadMessages',
-            fileUploaded: 'jabbr.ui.fileUploaded',
+            fileUploaded: 'jabbr.ui.fileUploaded'
         },
 
         help: {
@@ -1044,6 +715,9 @@
             $loadingHistoryIndicator = $('#loadingRoomHistory');
 
             $loadMoreRooms = $('#load-more-rooms-item');
+            $lobbyPrivateRooms = $('#lobby-private');
+            $lobbyOtherRooms = $('#lobby-other');
+            $roomLoadingIndicator = $('#room-loading');
 
             if (toast.canToast()) {
                 $toast.show();
@@ -1056,16 +730,9 @@
                 $toast.hide();
             }
 
-            if (navigator.userAgent.match(/IEMobile\/10\.0/)) {
-                var msViewportStyle = $("style");
-                msViewportStyle.append($("@-ms-viewport{width:auto!important}"));
-                $("head").append(msViewportStyle);
-            }
-            
             // DOM events
             $document.on('click', 'h3.collapsible_title', function () {
-                var $message = $(this).closest('.message'),
-                    nearEnd = ui.isNearTheEnd();
+                var nearEnd = ui.isNearTheEnd();
 
                 $(this).next().toggle(0, function () {
                     if (nearEnd) {
@@ -1097,16 +764,15 @@
                 spinner.show();
                 var loader = $loadMoreRooms.find('.load-more-rooms a');
                 loader.html(' Loading more rooms...');
-                loadMoreLobbyRooms().done(function() {
-                    spinner.hide();
-                    spinner.removeClass('icon-spin');
-                    loader.html('Load More...');
-                    if (lastLoadedRoomIndex < sortedRoomList.length) {
-                        $loadMoreRooms.appendTo(lobby.users);
-                    } else {
-                        $loadMoreRooms.hide();
-                    }
-                });
+                loadMoreLobbyRooms();
+                spinner.hide();
+                spinner.removeClass('icon-spin');
+                loader.html('Load More...');
+                if (lastLoadedRoomIndex < sortedRoomList.length) {
+                    $loadMoreRooms.appendTo(lobby.users);
+                } else {
+                    $loadMoreRooms.hide();
+                }
             });
 
             $document.on('click', '#tabs li .close', function (ev) {
@@ -1181,7 +847,7 @@
             // handle click on names in chat / room list
             var prepareMessage = function (ev) {
                 if (readOnly) {
-                    return;
+                    return false;
                 }
 
                 var message = $newMessage.val().trim();
@@ -1242,7 +908,7 @@
                 var enabled = !$(this).hasClass('off');
 
                 // Store the preference
-                setRoomPreference(room.getName(), 'blockRichness', enabled);
+                setRoomPreference(room.getName(), 'blockRichness', !enabled);
 
                 // toggle all rich-content for current room
                 $richContentMessages.each(function (index) {
@@ -1255,7 +921,7 @@
                         $this.removeAttr('title');
                     }
 
-                    if (!(isCurrentlyVisible ^ enabled)) {
+                    if (isCurrentlyVisible ^ enabled) {
                         $this.trigger('click');
                     }
                 });
@@ -1360,6 +1026,7 @@
                 // clear unread count in active room
                 var room = getCurrentRoomElements();
                 room.makeActive();
+
                 triggerFocus();
             });
 
@@ -1422,12 +1089,11 @@
                             return getRoomsNames();
 
                         case '/':
-                            var commands = ui.getCommands();
                             return ui.getCommands()
                                          .map(function (cmd) { return cmd.Name + ' '; });
 
                         case ':':
-                            return Emoji.getIcons();
+                            return emoji.getIcons();
                         default:
                             return [];
                     }
@@ -1551,7 +1217,7 @@
                 $ui.trigger(ui.events.fileUploaded, [uploader]);
             });
 
-            setInterval(function() {
+            setInterval(function () {
                 ui.trimRoomMessageHistory();
             }, trimRoomHistoryFrequency);
         },
@@ -1608,10 +1274,21 @@
             if (room.exists()) {
                 if (currentRoom.exists()) {
                     currentRoom.makeInactive();
+                    if (currentRoom.isLobby()) {
+                        $lobbyRoomFilterForm.hide();
+                        $roomActions.show();
+                    }
                 }
 
                 triggerFocus();
                 room.makeActive();
+
+                if (room.isLobby()) {
+                    $roomActions.hide();
+                    $lobbyRoomFilterForm.show();
+
+                    room.messages.hide();
+                }
 
                 ui.toggleMessageSection(room.isClosed());
 
@@ -1632,6 +1309,12 @@
             room.close();
         },
         updateLobbyRoomCount: updateLobbyRoomCount,
+        updatePrivateLobbyRooms: function (roomName) {
+            var lobby = getLobby(),
+                $room = lobby.users.find('li[data-name="' + roomName + '"]');
+
+            $room.appendTo(lobby.owners);
+        },
         updateUnread: function (roomName, isMentioned) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
 
@@ -1687,47 +1370,58 @@
 
             return room.isNearTheEnd();
         },
+        setRoomLoading: setRoomLoading,
         populateLobbyRooms: function (rooms, privateRooms) {
-            var lobby = getLobby();
-            if (!lobbyLoaded) {
+            var lobby = getLobby(),
+                i;
+            if (!lobby.isInitialized()) {
+
+                // Populate the room cache
+                for (i = 0; i < rooms.length; ++i) {
+                    roomCache[rooms[i].Name] = true;
+                }
+
+                for (i = 0; i < privateRooms.length; ++i) {
+                    roomCache[privateRooms[i].Name] = true;
+                }
+
                 var showClosedRooms = $closedRoomFilter.is(':checked'),
                     // sort lobby by room open ascending then count descending
                     privateSorted = sortRoomList(privateRooms);
-                    // sort lobby by room open ascending then count descending and
-                    // filter the other rooms so that there is no duplication 
-                    // between the lobby lists
-                    sortedRoomList = sortRoomList(rooms).filter(function(room) {
-                        return !privateSorted.some(function(allowed) {
-                            return allowed.Name === room.Name;
-                        });
+                // sort lobby by room open ascending then count descending and
+                // filter the other rooms so that there is no duplication 
+                // between the lobby lists
+                sortedRoomList = sortRoomList(rooms).filter(function (room) {
+                    return !privateSorted.some(function (allowed) {
+                        return allowed.Name === room.Name;
                     });
+                });
 
                 lobby.owners.empty();
                 lobby.users.empty();
-                
+
                 var listOfPrivateRooms = $('<ul/>');
                 if (privateSorted.length > 0) {
                     populateLobbyRoomList(privateSorted, templates.lobbyroom, listOfPrivateRooms, showClosedRooms);
                     listOfPrivateRooms.children('li').appendTo(lobby.owners);
-                    $('#lobby-private').show();
+                    $lobbyPrivateRooms.show();
+                    $lobbyOtherRooms.find('nav-header').html('Other Rooms');
                 } else {
-                    $('#lobby-private').hide();
+                    $lobbyPrivateRooms.hide();
+                    $lobbyOtherRooms.find('nav-header').html('Rooms');
                 }
 
                 var listOfRooms = $('<ul/>');
-                populateLobbyRoomList(sortedRoomList.filter(
-                    function (room) {
-                        return room.Count > 0;
-                    }),
-                    templates.otherlobbyroom, listOfRooms, showClosedRooms);
+                populateLobbyRoomList(sortedRoomList.splice(0, maxRoomsToLoad), templates.lobbyroom, listOfRooms, showClosedRooms);
                 lastLoadedRoomIndex = listOfRooms.children('li').length;
                 listOfRooms.children('li').appendTo(lobby.users);
                 if (lastLoadedRoomIndex < sortedRoomList.length) {
                     $loadMoreRooms.appendTo(lobby.users);
                     $loadMoreRooms.show();
                 }
-                lobbyLoaded = true;
+                $lobbyOtherRooms.show();
             }
+
             if (lobby.isActive()) {
                 // update cache of room names
                 $lobbyRoomFilterForm.show();
@@ -1890,7 +1584,7 @@
                 $loadingHistoryIndicator.hide();
             }
         },
-        setRoomTrimmable: function(roomName, canTrimMessages) {
+        setRoomTrimmable: function (roomName, canTrimMessages) {
             var room = getRoomElements(roomName);
             room.setTrimmable(canTrimMessages);
         },
@@ -1899,7 +1593,6 @@
                 $messages = room.messages,
                 $target = $messages.children().first(),
                 $previousMessage = null,
-                $current = null,
                 previousUser = null,
                 previousTimestamp = new Date().addDays(1); // Tomorrow so we always see a date line
 
@@ -1923,7 +1616,7 @@
             }
 
             // Populate the old messages
-            $.each(messages, function (index) {
+            $.each(messages, function () {
                 processMessage(this, roomName);
 
                 if ($previousMessage) {
@@ -2007,10 +1700,10 @@
                 room.addSeparator();
             }
 
-            var $message = this.appendMessage(templates.message.tmpl(message), room);
+            $message = this.appendMessage(templates.message.tmpl(message), room);
 
             if (message.htmlContent) {
-                ui.addChatMessageContent(message.id, message.htmlContent, room);
+                ui.addChatMessageContent(message.id, message.htmlContent, room.getName());
             }
 
             if (room.isInitialized()) {
@@ -2184,7 +1877,7 @@
         },
         notifyRoom: function (roomName) {
             if (getRoomPreference(roomName, 'hasSound') === true) {
-                $('#noftificationSound')[0].play();
+                $('#notificationSound')[0].play();
             }
         },
         toastRoom: function (roomName, message) {
@@ -2194,7 +1887,7 @@
         },
         notify: function (force) {
             if (getActiveRoomPreference('hasSound') === true || force) {
-                $('#noftificationSound')[0].play();
+                $('#notificationSound')[0].play();
             }
         },
         toast: function (message, force, roomName) {
@@ -2411,7 +2104,7 @@
         processContent: function (content) {
             content = content || '';
 
-            var hasNewline = content.indexOf('\n') != -1;
+            var hasNewline = content.indexOf('\n') !== -1;
 
             if (hasNewline) {
                 // Multiline detection
@@ -2447,7 +2140,7 @@
                 return content;
             }
         },
-        trimRoomMessageHistory: function(roomName) {
+        trimRoomMessageHistory: function (roomName) {
             var rooms = roomName ? [getRoomElements(roomName)] : getAllRoomElements();
 
             for (var i = 0; i < rooms.length; i++) {
@@ -2460,4 +2153,4 @@
         window.chat = {};
     }
     window.chat.ui = ui;
-})(jQuery, window, window.document, window.chat.utility);
+})(jQuery, window, window.document, window.chat, window.chat.utility, window.Emoji, window.linkify);

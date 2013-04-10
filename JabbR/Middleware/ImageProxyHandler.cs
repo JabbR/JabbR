@@ -6,6 +6,7 @@ using System.Net.Cache;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using JabbR.ContentProviders;
+using JabbR.Infrastructure;
 using JabbR.Services;
 using Owin.Types;
 
@@ -79,7 +80,7 @@ namespace JabbR.Middleware
             object principal;
             if (env.TryGetValue("server.User", out principal))
             {
-                return ((IPrincipal)principal).Identity.IsAuthenticated;
+                return ((IPrincipal)principal).IsAuthenticated();
             }
             return false;
         }

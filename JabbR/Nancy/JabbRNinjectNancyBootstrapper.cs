@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Security.Principal;
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Bootstrappers.Ninject;
 using Nancy.Owin;
-using Nancy.Security;
 using Ninject;
 
 namespace JabbR.Nancy
@@ -36,13 +36,11 @@ namespace JabbR.Nancy
             var env = Get<IDictionary<string, object>>(context.Items, NancyOwinHost.RequestEnvironmentKey);
             if (env != null)
             {
-                var principal = Get<IPrincipal>(env, "server.User");
-                if (principal != null && principal.Identity.IsAuthenticated)
+                var principal = Get<IPrincipal>(env, "server.User") as ClaimsPrincipal;
+                if (principal != null)
                 {
-                    context.CurrentUser = new PrincipalIdentity(principal);
+                    context.CurrentUser = new ClaimsPrincipalUserIdentity(principal);
                 }
-
-                context.Items["windows.User"] = Get<IPrincipal>(env, "windows.User");
 
                 var appMode = Get<string>(env, "host.AppMode");
 
@@ -68,27 +66,6 @@ namespace JabbR.Nancy
                 return (T)value;
             }
             return default(T);
-        }
-
-        private class PrincipalIdentity : IUserIdentity
-        {
-            public PrincipalIdentity(IPrincipal principal)
-            {
-                // This is actually the Id
-                UserName = principal.Identity.Name;
-            }
-
-            public IEnumerable<string> Claims
-            {
-                get;
-                set;
-            }
-
-            public string UserName
-            {
-                get;
-                set;
-            }
         }
     }
 }

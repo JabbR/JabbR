@@ -112,5 +112,15 @@ namespace JabbR.Models
 
             return user;
         }
+
+        public static IQueryable<Notification> Unread(this IQueryable<Notification> source)
+        {
+            return source.Where(n => !n.Read);
+        }
+
+        public static IQueryable<Notification> ByRoom(this IQueryable<Notification> source, string roomName)
+        {
+            return source.Where(n => n.Room.Name == roomName);
+        }
     }
 }

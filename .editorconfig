@@ -1,0 +1,7 @@
+; editor configuration powered by http://editorconfig.org/
+root = true
+
+; use 4 spaces for indentation for all files
+[*]
+indent_style = space
+indent_size = 4
