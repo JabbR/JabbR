@@ -43,6 +43,8 @@
                 <div class="span10">
                     @if (notificationsViewModel.Notifications.Count > 0)
                     {
+                        <a href="#" class="btn pull-right js-mark-all-as-read" data-action-url="@Url.Content("~/notifications/markallasread")">Mark All as Read</a>
+
                         <ul id="notifications-container" data-mode="@(Model.ShowAll ? "all" : "unread")">
                             @foreach (var notification in notificationsViewModel.Notifications)
                             {
@@ -56,7 +58,7 @@
                                         @if (!notification.Read)
                                         {
                                             <li>
-                                                <a href="#" class="js-mark-as-read" data-action-url="@Url.Content("~/notifications/markasread")" data-notification-id="@notification.NotificationKey"><i class="icon-remove-circle"></i></a>
+                                                <a href="#" title="mark notification as read" class="js-mark-as-read" data-action-url="@Url.Content("~/notifications/markasread")" data-notification-id="@notification.NotificationKey"><i class="icon-remove-circle"></i></a>
                                             </li>
                                         }
                                     </ul>
@@ -64,18 +66,18 @@
                                 </li>
                             }
                         </ul>
-                        @Html.SimplePager(notificationsViewModel.Notifications, Model.ShowAll ? "?all=true&" : "")
+                        <div id="notifications-pager">
+                            @Html.SimplePager(notificationsViewModel.Notifications, Model.ShowAll ? "?all=true&" : "")
+                        </div>
                     }
-                    else
-                    {
-                        <p class="alert alert-block alert-info">No notifications!</p>
-                    }
+                    <p id="no-notifications" class="alert alert-block alert-info" @Html.DisplayNoneIf(model => model.Notifications.Count > 0)>No notifications!</p>
                 </div>
             </div>
         </div>
     </section>
     <script src="@Url.Content("~/Scripts/jquery-1.9.0.min.js")"></script>
-	<script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.pubsub.js")"></script>
     <script src="@Url.Content("~/notifications.js")"></script>
 </body>
 </html>

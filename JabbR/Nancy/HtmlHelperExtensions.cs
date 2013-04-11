@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using JabbR.Infrastructure;
 using Nancy.Validation;
@@ -102,6 +103,14 @@ namespace JabbR
             pagerBuilder.Append(@"</ul>");
 
             return new NonEncodedHtmlString(pagerBuilder.ToString());
+        }
+
+        public static IHtmlString DisplayNoneIf<TModel>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, bool>> expression)
+        {
+            if (expression.Compile()(htmlHelper.Model))
+                return new NonEncodedHtmlString(@" style=""display:none;"" ");
+
+            return NonEncodedHtmlString.Empty;
         }
     }
 }

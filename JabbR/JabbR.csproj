@@ -920,6 +920,7 @@
     </Content>
     <Content Include="Scripts\jquery.livesearch.js" />
     <Content Include="Scripts\jquery.network.mock.js" />
+    <Content Include="Scripts\jquery.pubsub.js" />
     <Content Include="Scripts\jquery.signalR-1.1.0-beta1-130401.js" />
     <Content Include="Scripts\jquery.signalR-1.1.0-beta1-130401.min.js" />
     <Content Include="Scripts\jquery.sortElements.js" />

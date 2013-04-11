@@ -67,9 +67,35 @@ namespace JabbR.Nancy
                 notification.Read = true;
                 repository.CommitChanges();
 
-                // Update the count of unread notifications
-                var unread = repository.GetUnreadNotificationsCount(user);
-                notificationService.UpdateUnreadMentions(user, unread);
+                UpdateUnreadCountInChat(repository, notificationService, user);
+
+                var response = Response.AsJson(new { success = true });
+
+                return response;
+            };
+
+            Post["/markallasread"] = _ =>
+            {
+                if (!IsAuthenticated)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
+                ChatUser user = repository.GetUserById(Principal.GetUserId());
+
+                if (!user.Notifications.Any())
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
+                foreach (var notification in user.Notifications)
+                {
+                    notification.Read = true;
+                }
+
+                repository.CommitChanges();
+
+                UpdateUnreadCountInChat(repository, notificationService, user);
 
                 var response = Response.AsJson(new { success = true });
 
@@ -77,8 +103,15 @@ namespace JabbR.Nancy
             };
         }
 
-        private static IPagedList<NotificationViewModel> GetNotifications(IJabbrRepository repository, ChatUser user, bool all = false, int page = 1, int take = 20,
-                                                                 string roomName = null)
+        private static void UpdateUnreadCountInChat(IJabbrRepository repository, IChatNotificationService notificationService,
+                                                    ChatUser user)
+        {
+            var unread = repository.GetUnreadNotificationsCount(user);
+            notificationService.UpdateUnreadMentions(user, unread);
+        }
+
+        private static IPagedList<NotificationViewModel> GetNotifications(IJabbrRepository repository, ChatUser user, bool all = false,
+                                                                          int page = 1, int take = 20, string roomName = null)
         {
             IQueryable<Notification> notificationsQuery = repository.GetNotificationsByUser(user);
 
@@ -98,16 +131,16 @@ namespace JabbR.Nancy
             }
 
             return notificationsQuery.OrderByDescending(n => n.Message.When)
-                                    .Select(n => new NotificationViewModel()
-                                    {
-                                        NotificationKey = n.Key,
-                                        FromUserName = n.Message.User.Name,
-                                        FromUserImage = n.Message.User.Hash,
-                                        Message = n.Message.Content,
-                                        RoomName = n.Room.Name,
-                                        Read = n.Read
-                                    })
-                                    .ToPagedList(page, take);
+                                     .Select(n => new NotificationViewModel()
+                                     {
+                                         NotificationKey = n.Key,
+                                         FromUserName = n.Message.User.Name,
+                                         FromUserImage = n.Message.User.Hash,
+                                         Message = n.Message.Content,
+                                         RoomName = n.Room.Name,
+                                         Read = n.Read
+                                     })
+                                     .ToPagedList(page, take);
         }
 
         private class NotificationRequestModel

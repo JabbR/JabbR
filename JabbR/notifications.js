@@ -1,29 +1,29 @@
 ﻿(function ($) {
-    var unreadCounter = null,
-        notificationsMode = null;
+    var $unreadCounter = null,
+        count = null;
 
-    var UnreadCounter = (function () {
-        var $unreadCounter = null,
-            count = null;
+    function set(newCount) {
+        count = newCount;
+        $unreadCounter.text(count);
+        $unreadCounter.data('unread', count);
+    }
+    
+    $.subscribe('notifications.read', function (ev) {
+        set(count - 1);
+    });
+    
+    $.subscribe('notifications.readAll', function (ev) {
+        set(0);
+    });
+    
+    $unreadCounter = $('#js-unread-counter');
+    count = $unreadCounter.data('unread');
+}(jQuery));
 
-        return {
-            init: function (selector) {
-                $unreadCounter = $(selector);
-                count = $unreadCounter.data('unread');
-                return this;
-            },
-            set: function (newCount) {
-                count = newCount;
-                $unreadCounter.text(count);
-                $unreadCounter.data('unread', count);
-            },
-            get: function () {
-                return count;
-            }
-        };
-    }());
 
-    unreadCounter = UnreadCounter.init('#js-unread-counter');
+(function ($) {
+    var notificationsMode = null;
+
     notificationsMode = $('#notifications-container').data('mode');
 
     $('#notifications-container').on('click', '.js-mark-as-read', function (ev) {
@@ -33,35 +33,85 @@
 
         ev.preventDefault();
 
-        var readMention = $.ajax(dataUrl, {
+        $.publish('notifications.mark', [{ url: dataUrl, notificationId: notificationId }]);
+    });
+
+    $('.js-mark-all-as-read').on('click', function (ev) {
+        var $this = $(this),
+            dataUrl = $this.data('actionUrl');
+
+        ev.preventDefault();
+
+        $.publish('notifications.markAll', [{ url: dataUrl }]);
+    });
+
+    $.subscribe('notifications.mark', function (ev, markAsReadRequest) {
+        var readMention = $.ajax(markAsReadRequest.url, {
             type: "POST",
             dataType: "json",
             data: {
-                notificationId: notificationId
+                notificationId: markAsReadRequest.notificationId
             }
         });
 
         readMention.done(function () {
-            var $anchorParent = $this.parent(),
-                $targetNotification = $('li[data-notification-id="' + notificationId + '"]');
-
-            if (notificationsMode === 'unread') {
-                $targetNotification.fadeOut('slow', function () {
-                    $targetNotification.remove();
-                    unreadCounter.set(unreadCounter.get() - 1);
-                });
-            } else { // remove the action anchor
-                $targetNotification.removeClass('notification-unread');
-
-                $anchorParent.fadeOut('slow', function () {
-                    $anchorParent.remove();
-                    unreadCounter.set(unreadCounter.get() - 1);
-                });
-            }
+            $.publish('notifications.read', [markAsReadRequest.notificationId]);
         });
 
         readMention.fail(function () {
             console.log('failed to mark notification as read', 'notification id: ', notificationId);
         });
+    });
+
+    $.subscribe('notifications.read', function (ev, notificationId) {
+        var $targetNotification = $('li[data-notification-id="' + notificationId + '"]'),
+            $anchor = $targetNotification.find('.js-mark-as-read');
+
+        if (notificationsMode === 'unread') {
+            $targetNotification.fadeOut('slow', function () {
+                $targetNotification.remove();
+            });
+        } else { // remove the action anchor
+            $targetNotification.removeClass('notification-unread');
+
+            $anchor.fadeOut('slow', function () {
+                $anchor.remove();
+            });
+        }
+    });
+
+    $.subscribe('notifications.markAll', function (ev, request) {
+        var readMention = $.ajax(request.url, {
+            type: "POST",
+            dataType: "json"
+        });
+
+        readMention.done(function () {
+            $.publish('notifications.readAll');
+        });
+
+        readMention.fail(function () {
+            console.log('failed to mark ALL notifications as read');
+        });
+    });
+
+    $.subscribe('notifications.readAll', function (ev) {
+        var $targetNotifications = $('.notification-unread'),
+            $anchor = $targetNotifications.find('.js-mark-as-read');
+
+        if (notificationsMode === 'unread') {
+            $targetNotifications.fadeOut('slow', function () {
+                $targetNotifications.remove();
+            });
+
+            $('#notifications-pager').fadeOut('fast');
+            $('#no-notifications').fadeIn('fast');
+        } else { // remove the action anchor
+            $targetNotifications.removeClass('notification-unread');
+
+            $anchor.fadeOut('slow', function () {
+                $anchor.remove();
+            });
+        }
     });
 }(jQuery));
