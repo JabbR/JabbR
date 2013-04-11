@@ -235,7 +235,7 @@ namespace JabbR
 
         private void UpdateUnreadMentions(ChatUser mentionedUser)
         {
-            var unread = _repository.GetNotificationsByUser(mentionedUser).Count(n => !n.Read);
+            var unread = _repository.GetUnreadNotificationsCount(mentionedUser);
 
             foreach (var client in mentionedUser.ConnectedClients)
             {

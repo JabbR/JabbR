@@ -113,6 +113,11 @@ namespace JabbR.Models
             return user;
         }
 
+        public static int GetUnreadNotificationsCount(this IJabbrRepository repository, ChatUser user)
+        {
+            return repository.GetNotificationsByUser(user).Unread().Count();
+        }
+
         public static IQueryable<Notification> Unread(this IQueryable<Notification> source)
         {
             return source.Where(n => !n.Read);

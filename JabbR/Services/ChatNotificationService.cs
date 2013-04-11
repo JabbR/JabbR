@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using JabbR.Models;
 using JabbR.ViewModels;
 using Microsoft.AspNet.SignalR;
@@ -30,6 +31,14 @@ namespace JabbR.Services
             foreach (var room in user.Rooms)
             {
                 HubContext.Clients.Group(room.Name).changeUserName(oldUserName, userViewModel, room.Name);
+            }
+        }
+
+        public void UpdateUnreadMentions(ChatUser mentionedUser, int unread)
+        {
+            foreach (var client in mentionedUser.ConnectedClients)
+            {
+                HubContext.Clients.Client(client.Id).updateUnreadNotifications(unread);
             }
         }
 

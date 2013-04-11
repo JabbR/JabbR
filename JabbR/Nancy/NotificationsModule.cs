@@ -13,7 +13,9 @@ namespace JabbR.Nancy
 {
     public class NotificationsModule : JabbRModule
     {
-        public NotificationsModule(IJabbrRepository repository, IChatService chatService)
+        public NotificationsModule(IJabbrRepository repository, 
+                                   IChatService chatService, 
+                                   IChatNotificationService notificationService)
             : base("/notifications")
         {
             Get["/"] = _ =>
@@ -64,6 +66,10 @@ namespace JabbR.Nancy
 
                 notification.Read = true;
                 repository.CommitChanges();
+
+                // Update the count of unread notifications
+                var unread = repository.GetUnreadNotificationsCount(user);
+                notificationService.UpdateUnreadMentions(user, unread);
 
                 var response = Response.AsJson(new { success = true });
 

@@ -6,5 +6,6 @@ namespace JabbR.Services
     public interface IChatNotificationService
     {
         void OnUserNameChanged(ChatUser user, string oldUserName, string newUserName);
+        void UpdateUnreadMentions(ChatUser mentionedUser, int unread);
     }
 }
