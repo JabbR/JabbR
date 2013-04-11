@@ -774,6 +774,10 @@
         ui.showUpdateUI();
     };
 
+    chat.client.updateUnreadNotifications = function (read) {
+        ui.setUnreadNotifications(read);
+    };
+
     $ui.bind(ui.events.typing, function () {
         // If not in a room, don't try to send typing notifications
         if (!chat.state.activeRoom) {

@@ -197,8 +197,7 @@ namespace JabbR
 
         private void AddMentions(ChatMessage message)
         {
-            bool anyMentions = false;
-
+            var mentionedUsers = new List<ChatUser>();
             foreach (var userName in MentionExtractor.ExtractMentions(message.Content))
             {
                 ChatUser mentionedUser = _repository.GetUserByName(userName);
@@ -214,17 +213,33 @@ namespace JabbR
                     continue;
                 }
 
-                anyMentions = true;
 
                 bool markAsRead = mentionedUser.Status != (int)UserStatus.Offline &&
                                   _repository.IsUserInRoom(_cache, mentionedUser, message.Room);
 
                 _service.AddNotification(mentionedUser, message, message.Room, markAsRead);
+
+                mentionedUsers.Add(mentionedUser);
             }
 
-            if (anyMentions)
+            if (mentionedUsers.Count > 0)
             {
                 _repository.CommitChanges();
+            }
+
+            foreach (var user in mentionedUsers)
+            {
+                UpdateUnreadMentions(user);
+            }
+        }
+
+        private void UpdateUnreadMentions(ChatUser mentionedUser)
+        {
+            var unread = _repository.GetNotificationsByUser(mentionedUser).Count(n => !n.Read);
+
+            foreach (var client in mentionedUser.ConnectedClients)
+            {
+                Clients.Client(client.Id).updateUnreadNotifications(unread);
             }
         }
 
