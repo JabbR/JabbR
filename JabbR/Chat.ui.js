@@ -235,6 +235,17 @@
         $room.animate({ backgroundColor: '#e5e5e5' }, 800);
     }
 
+    function addRoomToLobby(roomViewModel) {
+        var lobby = getLobby();
+        
+        templates.lobbyroom.tmpl(roomViewModel).appendTo(lobby.users);
+        lobby.users.find('li').sortElements(function (a, b) {
+            return $(a).data('name').toLowerCase() > $(b).data('name').toLowerCase() ? 1 : -1;
+        });
+        if (lobby.users.find($loadMoreRooms)) {
+            $loadMoreRooms.appendTo(lobby.users);
+        }
+    }
 
     function addRoom(roomViewModel) {
         // Do nothing if the room exists
@@ -333,6 +344,8 @@
         $messages.data('scrollHandler', scrollHandler);
 
         setAccessKeys();
+        addRoomToLobby(roomViewModel);
+        
         lobbyLoaded = false;
         return true;
     }
