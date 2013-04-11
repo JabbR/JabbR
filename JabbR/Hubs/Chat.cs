@@ -216,11 +216,14 @@ namespace JabbR
 
                 anyMentions = true;
 
-                // Mark the notification as read if the user is online
-                bool markAsRead = mentionedUser.Status == (int)UserStatus.Active;
+                // Mark the notification as read if the user is online and the user
+                // is in the room where they have been mentioned
+                bool markAsRead = mentionedUser.Status == (int)UserStatus.Active &&
+                                  _repository.IsUserInRoom(_cache, mentionedUser, message.Room);
 
                 _service.AddNotification(mentionedUser, message, message.Room, markAsRead);
             }
+
 
             if (anyMentions)
             {
