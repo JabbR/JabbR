@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Configuration;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using JabbR.Infrastructure;
 using JabbR.Services;
 using JabbR.ViewModels;
@@ -9,10 +12,6 @@ using Nancy.Helpers;
 
 namespace JabbR.Nancy
 {
-    using System.IO;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
-
     public class HomeModule : JabbRModule
     {
         public HomeModule(UploadCallbackHandler uploadHandler)
