@@ -185,7 +185,7 @@ namespace JabbR
 
             // Add mentions
             AddMentions(chatMessage);
-            
+
             var urls = UrlExtractor.ExtractUrls(chatMessage.Content);
             if (urls.Count > 0)
             {
@@ -207,8 +207,8 @@ namespace JabbR
                 // 1. If the mentioned user doesn't exist.
                 // 2. If you mention yourself
                 // 3. If you're mentioned in a private room that you don't have access to
-                if (mentionedUser == null || 
-                    mentionedUser == message.User || 
+                if (mentionedUser == null ||
+                    mentionedUser == message.User ||
                     (message.Room.Private && !mentionedUser.AllowedRooms.Contains(message.Room)))
                 {
                     continue;
@@ -216,14 +216,11 @@ namespace JabbR
 
                 anyMentions = true;
 
-                // Mark the notification as read if the user is online and the user
-                // is in the room where they have been mentioned
-                bool markAsRead = mentionedUser.Status == (int)UserStatus.Active &&
+                bool markAsRead = mentionedUser.Status != (int)UserStatus.Offline &&
                                   _repository.IsUserInRoom(_cache, mentionedUser, message.Room);
 
                 _service.AddNotification(mentionedUser, message, message.Room, markAsRead);
             }
-
 
             if (anyMentions)
             {
