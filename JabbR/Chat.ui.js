@@ -61,6 +61,9 @@
         $fileUploadButton = null,
         $hiddenFile = null,
         $uploadForm = null,
+        $clipboardUpload = null,
+        $clipboardUploadPreview = null,
+        $clipboardUploadButton = null,
         $fileRoom = null,
         $fileConnectionId = null,
         connectionInfoStatus = null,
@@ -674,6 +677,9 @@
             $disconnectDialog = $('#disconnect-dialog');
             $login = $('#jabbr-login');
             $helpPopup = $('#jabbr-help');
+            $clipboardUpload = $('#jabbr-clipboard-upload');
+            $clipboardUploadPreview = $('#jabbr-clipboard-upload #clipboard-upload-preview');
+            $clipboardUploadButton = $('#jabbr-clipboard-upload #clipboard-upload');
             $helpBody = $('#jabbr-help .help-body');
             $shortCutHelp = $('#jabbr-help #shortcut');
             $globalCmdHelp = $('#jabbr-help #global');
@@ -1140,6 +1146,43 @@
             // Crazy browser hack
             $hiddenFile[0].style.left = '-800px';
 
+            $clipboardUploadButton.on("click", function () {
+                var name = "clipboard-data",
+                    uploader = {
+                        submitFile: function (connectionId, room) {
+                            $fileConnectionId.val(connectionId);
+
+                            $fileRoom.val(room);
+
+                            //$uploadForm.submit();
+                            $.ajax({
+                                url: '/upload-clipboard',
+                                dataType: 'json',
+                                type: 'POST',
+                                data: {
+                                    file: $clipboardUploadPreview.attr("src"),
+                                    room: room,
+                                    connectionId: connectionId
+                                }
+                            }).done(function (result) {
+                                //remove image from preview
+                                $clipboardUploadPreview.attr("src", "");
+                            });
+
+                            $hiddenFile.val(''); //hide upload dialog
+                        }
+                    };
+
+                ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
+
+                $ui.trigger(ui.events.fileUploaded, [uploader]);
+                $clipboardUpload.modal('hide');
+            });
+
+            $.imagePaste(function (file) {
+                ui.showClipboardUpload(file);
+            });
+            
             $hiddenFile.change(function () {
                 if (!$hiddenFile.val()) {
                     return;
@@ -1881,6 +1924,11 @@
                 $shortCutHelp.append(templates.commandhelp.tmpl(this));
             });
             $helpPopup.modal();
+        },
+        showClipboardUpload: function (file) {
+            //set image url
+            $clipboardUploadPreview.attr("src", file.dataURL);
+            $clipboardUpload.modal();
         },
         showUpdateUI: function () {
             $updatePopup.modal();
