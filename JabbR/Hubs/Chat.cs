@@ -83,7 +83,6 @@ namespace JabbR
 
             // Try to get the user from the client state
             ChatUser user = _repository.GetUserById(userId);
-            user.Notifications = _repository.GetNotificationsByUser(user).ToList();
 
             if (!reconnecting)
             {
