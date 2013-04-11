@@ -80,7 +80,8 @@
         $roomLoadingIndicator = null,
         roomLoadingDelay = 250,
         roomLoadingTimeout = null,
-        Room = chat.Room;
+        Room = chat.Room,
+        $unreadNotificationCount = null;
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] === '/') {
@@ -725,6 +726,8 @@
             $lobbyOtherRooms = $('#lobby-other');
             $roomLoadingIndicator = $('#room-loading');
 
+            $unreadNotificationCount = $('#notification-unread-count');
+            
             if (toast.canToast()) {
                 $toast.show();
             }
@@ -1888,6 +1891,15 @@
         },
         setUserName: function (name) {
             ui.name = name;
+        },
+        setUnreadNotifications: function (unreadCount) {
+            if (unreadCount > 0) {
+                $unreadNotificationCount.text(unreadCount);
+                $unreadNotificationCount.show();
+            } else {
+                $unreadNotificationCount.text('');
+                $unreadNotificationCount.hide();
+            }
         },
         getUserName: function () {
             return ui.name;

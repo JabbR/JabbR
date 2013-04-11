@@ -801,6 +801,30 @@ li.error {
         opacity: 0.4;
     }
 
+#notifications {
+    /*padding: 4px 2px;*/
+}
+
+    #notifications i {
+        /*position: relative;
+        padding: 3px 3px;
+        left: 5px;*/
+    }
+
+#notification-unread-count.badge {
+    display: none;
+    position: fixed;
+    right: 90px;
+    top: 12px;
+    font-size: 0.55em;
+    padding: 0 0;
+    padding-left: 4px;
+    padding-right: 4px;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+}
+
 .message {
     border-bottom: 1px solid #eee;
 }

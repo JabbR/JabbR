@@ -83,6 +83,7 @@ namespace JabbR
 
             // Try to get the user from the client state
             ChatUser user = _repository.GetUserById(userId);
+            user.Notifications = _repository.GetNotificationsByUser(user).ToList();
 
             if (!reconnecting)
             {
@@ -405,6 +406,7 @@ namespace JabbR
                 Clients.Caller.id = user.Id;
                 Clients.Caller.name = user.Name;
                 Clients.Caller.hash = user.Hash;
+                Clients.Caller.unreadNotifications = user.Notifications.Count(n => !n.Read);
             }
 
             var rooms = new List<RoomViewModel>();

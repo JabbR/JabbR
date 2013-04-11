@@ -276,7 +276,8 @@
             }
         });
         ui.setUserName(chat.state.name);
-
+        ui.setUnreadNotifications(chat.state.unreadNotifications);
+        
         // Process any urls that may contain room names
         ui.run();
 
