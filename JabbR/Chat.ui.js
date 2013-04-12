@@ -271,6 +271,10 @@
             closed: roomViewModel.Closed
         };
 
+        if (!roomCache[roomName.toString().toLowerCase()]) {
+            addRoomToLobby(roomViewModel);
+        }
+
         roomCache[roomName.toLowerCase()] = true;
 
         templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabs);
@@ -344,7 +348,6 @@
         $messages.data('scrollHandler', scrollHandler);
 
         setAccessKeys();
-        addRoomToLobby(roomViewModel);
         
         lobbyLoaded = false;
         return true;
