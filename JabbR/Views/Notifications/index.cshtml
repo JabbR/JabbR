@@ -46,11 +46,11 @@
                     </ul>
                 </div>
                 <div class="span10">
+                    <a href="#" class="btn pull-right js-mark-all-as-read @(notificationsViewModel.UnreadCount == 0 ? "disabled" : "")" data-action-url="@Url.Content("~/notifications/markallasread")">Mark All as Read</a>
+                    <br />
+                    <hr />
                     @if (notificationsViewModel.Notifications.Count > 0)
                     {
-                        <a href="#" class="btn pull-right js-mark-all-as-read" data-action-url="@Url.Content("~/notifications/markallasread")">Mark All as Read</a>
-                        <br />
-                        <hr />
                         <ul id="notifications-container" data-mode="@(Model.ShowAll ? "all" : "unread")">
                             @foreach (var notification in notificationsViewModel.Notifications)
                             {
@@ -75,7 +75,7 @@
                             @Html.SimplePager(notificationsViewModel.Notifications, Model.ShowAll ? "?all=true&" : "")
                         </div>
                     }
-                    <p id="no-notifications" class="alert alert-block alert-info" @Html.DisplayNoneIf(model => model.Notifications.Count > 0)>No notifications!</p>
+                    <p id="no-notifications" class="alert alert-block alert-info" @Html.DisplayNoneIf(model => model.Notifications.Count > 0)>No unread notifications!</p>
                 </div>
             </div>
         </div>

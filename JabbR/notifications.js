@@ -9,6 +9,10 @@
             notificationId = $this.data('notificationId');
 
         ev.preventDefault();
+        
+        if ($this.hasClass('disabled')) {
+            return false;
+        }
 
         $.publish('notifications.mark', [{ url: dataUrl, notificationId: notificationId }]);
     });
@@ -79,10 +83,9 @@
         if (notificationsMode === 'unread') {
             $targetNotifications.fadeOut('slow', function () {
                 $targetNotifications.remove();
+                $('#no-notifications').fadeIn('fast');
+                $('#notifications-pager').fadeOut('fast');
             });
-
-            $('#notifications-pager').fadeOut('fast');
-            $('#no-notifications').fadeIn('fast');
         } else { // remove the action anchor
             $targetNotifications.removeClass('notification-unread');
 
@@ -90,5 +93,9 @@
                 $anchor.remove();
             });
         }
+    });
+
+    $.subscribe('notifications.empty', function (ev) {
+        $('.js-mark-all-as-read').addClass('disabled');
     });
 }(jQuery));
