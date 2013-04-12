@@ -14,11 +14,6 @@
     <link href="@Url.Content("~/Content/bootstrap-responsive.min.css")" rel="stylesheet" />
     <link href="@Url.Content("~/Content/font-awesome.min.css")" rel="stylesheet" />
     <link href="@Url.Content("~/Chat.css")" rel="stylesheet" />
-    <style>
-        ul {
-            list-style-type: none;
-        }
-    </style>
 </head>
 <body class="notifications">
     <section id="page" role="application">
@@ -58,7 +53,7 @@
                 <div class="tab-content">
                     @if (notificationsViewModel.Notifications.Count > 0)
                     {
-                        <ul id="notifications-container" data-mode="@(Model.ShowAll ? "all" : "unread")">
+                        <ul id="notifications-container" class="unstyled" data-mode="@(Model.ShowAll ? "all" : "unread")">
                             @foreach (var notification in notificationsViewModel.Notifications)
                             {
                                 <li data-notification-id="@notification.NotificationKey" class="notification-item @(!notification.Read ? "notification-unread" : "")">
