@@ -13,6 +13,11 @@
     <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" />
     <link href="@Url.Content("~/Content/font-awesome.min.css")" rel="stylesheet" />
     <link href="@Url.Content("~/Chat.css")" rel="stylesheet" />
+    <style>
+        ul {
+            list-style-type: none;
+        }
+    </style>
 </head>
 <body>
     <section id="page" role="application">
@@ -44,25 +49,25 @@
                     @if (notificationsViewModel.Notifications.Count > 0)
                     {
                         <a href="#" class="btn pull-right js-mark-all-as-read" data-action-url="@Url.Content("~/notifications/markallasread")">Mark All as Read</a>
-
+                        <br />
+                        <hr />
                         <ul id="notifications-container" data-mode="@(Model.ShowAll ? "all" : "unread")">
                             @foreach (var notification in notificationsViewModel.Notifications)
                             {
                                 <li data-notification-id="@notification.NotificationKey" class="notification-item @(!notification.Read ? "notification-unread" : "")">
-                                    <ul class="inline">
-                                        <li>@notification.RoomName</li>
-                                        <li>@notification.FromUserName</li>
-                                        <li class="user">
-                                            <img class="gravatar" src="https://secure.gravatar.com/avatar/@notification.FromUserImage?s=16&amp;d=mm" />
-                                        </li>
-                                        @if (!notification.Read)
-                                        {
-                                            <li>
-                                                <a href="#" title="mark notification as read" class="js-mark-as-read" data-action-url="@Url.Content("~/notifications/markasread")" data-notification-id="@notification.NotificationKey"><i class="icon-remove-circle"></i></a>
-                                            </li>
-                                        }
-                                    </ul>
-                                    <h4>@notification.Message</h4>
+                                    @if (!notification.Read)
+                                    {
+                                        <a href="#" title="mark notification as read" class="pull-right js-mark-as-read" data-action-url="@Url.Content("~/notifications/markasread")" data-notification-id="@notification.NotificationKey">
+                                            <i class="icon-2x icon-ok"></i>
+                                        </a>
+                                    }
+                                    <blockquote>
+                                        <p>@notification.Message</p>
+                                        <small>
+                                            <img class="gravatar" src="https://secure.gravatar.com/avatar/@notification.FromUserImage?s=16&amp;d=mm" /> 
+                                            @notification.FromUserName in <strong><cite>@notification.RoomName</cite></strong>
+                                        </small>
+                                    </blockquote>
                                 </li>
                             }
                         </ul>
