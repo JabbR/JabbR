@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JabbR.Infrastructure;
 using JabbR.Models;
@@ -82,13 +83,14 @@ namespace JabbR.Nancy
                 }
 
                 ChatUser user = repository.GetUserById(Principal.GetUserId());
+                IList<Notification> unReadNotifications = repository.GetNotificationsByUser(user).Unread().ToList();
 
                 if (!user.Notifications.Any())
                 {
                     return HttpStatusCode.NotFound;
                 }
 
-                foreach (var notification in user.Notifications)
+                foreach (var notification in unReadNotifications)
                 {
                     notification.Read = true;
                 }
