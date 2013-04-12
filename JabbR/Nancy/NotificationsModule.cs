@@ -139,6 +139,7 @@ namespace JabbR.Nancy
                                          FromUserName = n.Message.User.Name,
                                          FromUserImage = n.Message.User.Hash,
                                          Message = n.Message.Content,
+                                         HtmlEncoded = n.Message.HtmlEncoded,
                                          RoomName = n.Room.Name,
                                          Read = n.Read
                                      })

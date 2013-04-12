@@ -1,4 +1,5 @@
-﻿@using JabbR
+﻿@using SquishIt.Framework;
+@using JabbR
 @using JabbR.ViewModels
 @using PagedList
 @model NotificationsViewModel
@@ -10,10 +11,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>JabbR - notifications</title>
-    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/Content/bootstrap-responsive.min.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/Content/font-awesome.min.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/Chat.css")" rel="stylesheet" />
+    @{ 
+        WriteLiteral(Bundle.Css()
+            .Add("~/Content/bootstrap.min.css")
+            .Add("~/Content/bootstrap-responsive.min.css")
+            .Add("~/Content/font-awesome.min.css")
+            .Add("~/Chat.css")
+            .Add("~/Content/emoji20.css")
+            .Render("~/Content/JabbR_#.css"));
+    }
 </head>
 <body class="notifications">
     <section id="page" role="application">
@@ -64,7 +70,7 @@
                                         </a>
                                     }
                                     <blockquote>
-                                        <p>@notification.Message</p>
+                                        <p class="@(!notification.HtmlEncoded ? "linkify" : "")">@notification.Message</p>
                                         <small>
                                             <img class="gravatar" src="https://secure.gravatar.com/avatar/@notification.FromUserImage?s=16&amp;d=mm" />
                                             @notification.FromUserName in <strong><cite>@notification.RoomName</cite></strong>
@@ -82,10 +88,27 @@
             </div>
         </div>
     </section>
-    <script src="@Url.Content("~/Scripts/jquery-1.9.0.min.js")"></script>
-    <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
-    <script src="@Url.Content("~/Scripts/jquery.pubsub.js")"></script>
-    <script src="@Url.Content("~/notifications.unreadcounter.js")"></script>
-    <script src="@Url.Content("~/notifications.js")"></script>
+    <script id="multiline-content-template" type="text/x-jquery-tmpl">
+        <pre class="multiline">${content}</pre>
+    </script>
+    @{
+        WriteLiteral(Bundle.JavaScript()
+            .Add("~/Scripts/jquery-1.9.0.min.js")
+            .Add("~/Scripts/json2.min.js")
+            .Add("~/Scripts/bootstrap.js")
+            .Add("~/Scripts/jQuery.tmpl.min.js")
+            .Render("~/Scripts/JabbR1_#.js"));
+    }
+    @{
+        WriteLiteral(Bundle.JavaScript()
+            .Add("~/Scripts/ba-linkify.min.js")
+            .Add("~/Scripts/Markdown.Converter.js")
+            .Add("~/Scripts/jquery.pubsub.js")
+            .Add("~/Chat.emoji.js")
+            .Add("~/Chat.utility.js")
+            .Add("~/notifications.unreadcounter.js")
+            .Add("~/notifications.js")
+            .Render("~/Scripts/JabbR2_#.js"));
+    }
 </body>
 </html>

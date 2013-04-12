@@ -3,7 +3,7 @@
 /// <reference path="Scripts/jquery.cookie.js" />
 
 /*jshint evil:true, bitwise:false*/
-(function ($, window, emoji, markdown) {
+(function ($, window, emoji, markdown, linkify) {
     "use strict";
 
     // getting the browser's name for use in isMobile
@@ -112,6 +112,47 @@
         return new Date(this.getTime() + 1000 * 3600 * 24 * days);
     };
 
+    function processContent(content, templates, roomCache) {
+        content = content || '';
+
+        var hasNewline = content.indexOf('\n') !== -1;
+
+        if (hasNewline) {
+            // Multiline detection
+            return $('<div />').append(templates.multiline.tmpl({ content: content })).html();
+        } else {
+            // Emoji
+            content = utility.parseEmojis(content);
+
+            // Html encode
+            content = utility.encodeHtml(content);
+
+            // Transform emoji to html
+            content = utility.transformEmojis(content);
+
+            // Create rooms links, only if we actually have a room cache
+            if (roomCache) {
+                content = content.replace(/#([A-Za-z0-9-_]{1,30}\w*)/g, function (m) {
+                    var roomName = m.substr(1);
+
+                    if (roomCache[roomName.toLowerCase()]) {
+                        return '<a href="#/rooms/' + roomName + '" title="' + roomName + '">' + m + '</a>';
+                    }
+                    return m;
+                });
+            }
+                
+            // Convert normal links
+            content = linkify(content, {
+                callback: function (text, href) {
+                    return href ? '<a rel="nofollow external" target="_blank" href="' + href + '" title="' + href + '">' + text + '</a>' : text;
+                }
+            });
+
+            return content;
+        }
+    }
+
     var utility = {
         trim: function (value, length) {
             if (value.length > length) {
@@ -140,7 +181,8 @@
         },
         decodeHtml: decodeHtml,
         encodeHtml: encodeHtml,
-        newId: guidGenerator
+        newId: guidGenerator,
+        processContent: processContent
     };
 
     if (!window.chat) {
@@ -149,4 +191,4 @@
 
     window.chat.utility = utility;
 
-})(jQuery, window, window.Emoji, window.Markdown);
+})(jQuery, window, window.Emoji, window.Markdown, window.linkify);

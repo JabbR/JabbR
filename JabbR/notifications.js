@@ -1,5 +1,8 @@
-﻿(function ($) {
-    var notificationsMode = null;
+﻿(function ($, utility) {
+    var notificationsMode = null,
+        templates = {
+            multiline: $('#multiline-content-template')
+        };
 
     notificationsMode = $('#notifications-container').data('mode');
 
@@ -24,6 +27,14 @@
         ev.preventDefault();
 
         $.publish('notifications.markAll', [{ url: dataUrl }]);
+    });
+
+    $('.linkify').each(function () {
+        var $this = $(this),
+            content = $this.html();
+
+        content = utility.processContent(content, templates);
+        $this.html(content);
     });
 
     $.subscribe('notifications.mark', function (ev, markAsReadRequest) {
@@ -98,4 +109,4 @@
     $.subscribe('notifications.empty', function (ev) {
         $('.js-mark-all-as-read').addClass('disabled');
     });
-}(jQuery));
+}(jQuery, window.chat.utility));

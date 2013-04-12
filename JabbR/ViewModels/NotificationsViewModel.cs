@@ -20,5 +20,6 @@ namespace JabbR.ViewModels
         public string FromUserImage { get; set; }
         public string RoomName { get; set; }
         public bool Read { get; set; }
+        public bool HtmlEncoded { get; set; }
     }
 }
