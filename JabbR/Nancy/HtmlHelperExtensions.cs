@@ -88,19 +88,19 @@ namespace JabbR
         {
             var pagerBuilder = new StringBuilder();
 
-            pagerBuilder.Append(@"<ul class=""inline"">");
-            
-            if (pagedList.HasPreviousPage)
-            {
-                pagerBuilder.AppendFormat(@"<li class=""pull-left""><a href=""{0}page={1}"" class=""btn btn-small"">prev</a></li>", baseUrl, pagedList.PageNumber - 1);
-            }
+            pagerBuilder.Append(@"<div class=""pager"">");
+            pagerBuilder.Append(@"<ul>");
 
-            if (pagedList.HasNextPage)
-            {
-                pagerBuilder.AppendFormat(@"<li class=""pull-right""><a href=""{0}page={1}"" class=""btn btn-small"">next</a></li>", baseUrl, pagedList.PageNumber + 1);
-            }
-            
+            pagerBuilder.AppendFormat(@"<li class=""previous {0}"">", !pagedList.HasPreviousPage ? "disabled" : "");
+            pagerBuilder.AppendFormat(@"<a href=""{0}"">&larr; Prev</a>", pagedList.HasPreviousPage ? String.Format("{0}page={1}", baseUrl, pagedList.PageNumber - 1) : "#");
+            pagerBuilder.Append(@"</li>");
+
+            pagerBuilder.AppendFormat(@"<li class=""next {0}"">", !pagedList.HasNextPage ? "disabled" : "");
+            pagerBuilder.AppendFormat(@"<a href=""{0}"">Next &rarr;</a>", pagedList.HasNextPage ? String.Format("{0}page={1}", baseUrl, pagedList.PageNumber + 1) : "#");
+            pagerBuilder.Append(@"</li>");
+
             pagerBuilder.Append(@"</ul>");
+            pagerBuilder.Append(@"</div>");
 
             return new NonEncodedHtmlString(pagerBuilder.ToString());
         }

@@ -74,7 +74,7 @@
                             }
                         </ul>
                         <div id="notifications-pager">
-                            @Html.SimplePager(notificationsViewModel.Notifications, Model.ShowAll ? "?all=true&" : "")
+                            @Html.SimplePager(notificationsViewModel.Notifications, Model.ShowAll ? "?all=true&" : "?")
                         </div>
                     }
                     <p id="no-notifications" class="well well-large" @Html.DisplayNoneIf(model => model.Notifications.Count > 0)>No unread notifications!</p>

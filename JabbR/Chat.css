@@ -817,12 +817,33 @@ li.error {
     background: #fcfcfc;
 }
 
-.notification-item .js-mark-as-read {
-    margin: 14px;
+    .notification-item .js-mark-as-read {
+        margin: 14px;
+        text-decoration: none;
+    }
+
+    .notification-item .js-mark-as-read:hover {
+        color: #00103f;
+    }
+
+    .notification-item blockquote small {
+        padding-bottom: 5px;
+    }
+
+#notifications-pager .pager ul {
+    margin: 0 0 10px 0;
 }
 
-.notification-item blockquote small {
-    padding-bottom: 5px;
+#notifications-pager .pager a {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    color: #00103f;
+    padding: 0px 6px;
+}
+
+#notifications-pager .pager .disabled > a, #notifications-pager .pager .disabled > a:hover {
+    color: #999;
 }
 
 #no-notifications {
