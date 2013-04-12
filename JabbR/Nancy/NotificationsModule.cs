@@ -85,7 +85,7 @@ namespace JabbR.Nancy
                 ChatUser user = repository.GetUserById(Principal.GetUserId());
                 IList<Notification> unReadNotifications = repository.GetNotificationsByUser(user).Unread().ToList();
 
-                if (!user.Notifications.Any())
+                if (!unReadNotifications.Any())
                 {
                     return HttpStatusCode.NotFound;
                 }
