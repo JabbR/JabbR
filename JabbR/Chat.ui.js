@@ -240,7 +240,7 @@
         
         templates.lobbyroom.tmpl(roomViewModel).appendTo(lobby.users);
         lobby.users.find('li').sortElements(function (a, b) {
-            return $(a).data('name').toLowerCase() > $(b).data('name').toLowerCase() ? 1 : -1;
+            return $(a).data('name').toString().toLowerCase() > $(b).data('name').toString().toLowerCase() ? 1 : -1;
         });
         if (lobby.users.find($loadMoreRooms)) {
             $loadMoreRooms.appendTo(lobby.users);
