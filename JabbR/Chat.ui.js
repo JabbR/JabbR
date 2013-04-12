@@ -271,7 +271,7 @@
             closed: roomViewModel.Closed
         };
 
-        if (!roomCache[roomName.toString().toLowerCase()]) {
+        if (!roomCache[roomName.toLowerCase()]) {
             addRoomToLobby(roomViewModel);
         }
 
