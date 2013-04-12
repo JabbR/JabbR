@@ -801,15 +801,34 @@ li.error {
         opacity: 0.4;
     }
 
-#notifications {
-    /*padding: 4px 2px;*/
+.notifications {
+    background: #fff;
 }
 
-    #notifications i {
-        /*position: relative;
-        padding: 3px 3px;
-        left: 5px;*/
-    }
+.notifications-title {
+    font-size: 2em;
+}
+
+.notifications .tabbable {
+    height: 100%;
+}
+
+.notification-item {
+    background: #fcfcfc;
+}
+
+.notification-item .js-mark-as-read {
+    margin: 14px;
+}
+
+.notification-item blockquote small {
+    padding-bottom: 5px;
+}
+
+#no-notifications {
+    text-align: center;
+    font-size: 1.25em;
+}
 
 #notification-unread-count.badge {
     display: none;
