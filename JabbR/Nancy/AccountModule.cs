@@ -38,13 +38,6 @@ namespace JabbR.Nancy
                     return Response.AsRedirect("~/");
                 }
 
-                // If there's a claims principal but there's no jabbrId for this principal,
-                // create a user based on some known claims
-                if (Principal.Identity.IsAuthenticated)
-                {
-                    return this.SignIn(Principal.Claims);
-                }
-
                 return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
             };
 

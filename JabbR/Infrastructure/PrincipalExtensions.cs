@@ -28,11 +28,11 @@ namespace JabbR.Infrastructure
                 {
                     if (identity.AuthenticationType == Constants.JabbRAuthType)
                     {
-                        Claim claim = identity.FindFirst(ClaimTypes.NameIdentifier);
-
-                        if (claim != null)
+                        Claim idClaim = identity.FindFirst(JabbRClaimTypes.Identifier);
+                        
+                        if (idClaim != null)
                         {
-                            return claim.Value;
+                            return idClaim.Value;
                         }
                     }
                 }

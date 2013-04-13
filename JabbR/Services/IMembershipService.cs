@@ -6,9 +6,6 @@ namespace JabbR.Services
 {
     public interface IMembershipService
     {
-        // Add a user without a password (identity)
-        ChatUser AddUser(string userName, string provider, string identity, string email);
-
         // Creates an account form a ClaimsPrincipal
         ChatUser GetOrAddUser(ClaimsPrincipal claimsPrincipal);
 

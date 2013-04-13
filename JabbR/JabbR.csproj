@@ -121,18 +121,18 @@
     </Reference>
     <Reference Include="Microsoft.Owin.Security, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.0.22.0-pre-20413-186\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.0.22.0-pre-20413-188\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Federation">
       <HintPath>..\packages\Microsoft.Owin.Security.Federation.0.22.0-pre-20412-184\lib\net45\Microsoft.Owin.Security.Federation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Forms, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.Forms.0.22.0-pre-20413-186\lib\net45\Microsoft.Owin.Security.Forms.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.Forms.0.22.0-pre-20413-188\lib\net45\Microsoft.Owin.Security.Forms.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Serialization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.Serialization.0.22.0-pre-20413-186\lib\net45\Microsoft.Owin.Security.Serialization.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.Serialization.0.22.0-pre-20413-188\lib\net45\Microsoft.Owin.Security.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.StaticFiles, Version=0.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -999,7 +999,7 @@
     <Compile Include="Infrastructure\PrincipalExtensions.cs" />
     <Compile Include="Infrastructure\JabbRAuthorizeAttribute.cs" />
     <Compile Include="Infrastructure\MentionExtractor.cs" />
-    <Compile Include="Middleware\NormalizeWindowsPrincipalHandler.cs" />
+    <Compile Include="Middleware\WindowsPrincipalHandler.cs" />
     <Compile Include="Migrations\201303220549121_ContentProviderContent.cs" />
     <Compile Include="Migrations\201303220549121_ContentProviderContent.Designer.cs">
       <DependentUpon>201303220549121_ContentProviderContent.cs</DependentUpon>

@@ -20,21 +20,14 @@ namespace JabbR.Services
 
         public ChatUser GetOrAddUser(ClaimsPrincipal claimsPrincipal)
         {
-            var id = claimsPrincipal.GetClaimValue(ClaimTypes.NameIdentifier);
+            var identity = claimsPrincipal.GetClaimValue(ClaimTypes.NameIdentifier);
             var name = claimsPrincipal.GetClaimValue(ClaimTypes.Name);
             var email = claimsPrincipal.GetClaimValue(ClaimTypes.Email);
+            var providerName = claimsPrincipal.GetClaimValue(ClaimTypes.AuthenticationMethod);
 
-            if (String.IsNullOrEmpty(id))
+            if (String.IsNullOrEmpty(identity))
             {
                 throw new InvalidOperationException("Unable find the identifier claim");
-            }
-
-            // If the user exists don't create a new one
-            ChatUser user = _repository.GetUserById(id);
-
-            if (user != null)
-            {
-                return user;
             }
 
             if (String.IsNullOrEmpty(name))
@@ -42,29 +35,16 @@ namespace JabbR.Services
                 throw new InvalidOperationException("Unable find the name claim");
             }
 
-            // This method is used in the auth workflow. If the username is taken it will add a number
-            // to the user name.
-            if (UserExists(name))
+            if (String.IsNullOrEmpty(providerName))
             {
-                name = id;
+                throw new InvalidOperationException("Unable find the authentication method claim");
             }
 
-            user = new ChatUser
-            {
-                Name = name,
-                Status = (int)UserStatus.Active,
-                Id = id,
-                Email = email,
-                LastActivity = DateTime.UtcNow
-            };
-
-            _repository.Add(user);
-            _repository.CommitChanges();
-
-            return user;
+            return _repository.GetUserByIdentity(providerName, identity) ?? 
+                   AddUser(name, providerName, identity, email);
         }
 
-        public ChatUser AddUser(string userName, string providerName, string identity, string email)
+        private ChatUser AddUser(string userName, string providerName, string identity, string email)
         {
             if (!IsValidUserName(userName))
             {

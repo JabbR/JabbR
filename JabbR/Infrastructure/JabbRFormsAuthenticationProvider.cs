@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
+using JabbR.Models;
 using JabbR.Services;
 using Microsoft.Owin.Security.Forms;
 
@@ -23,6 +25,17 @@ namespace JabbR.Infrastructure
         public Task ValidateLogin(FormsValidateLoginContext context)
         {
             return TaskAsyncHelper.Empty;
+        }
+
+        public void ResponseSignIn(FormsResponseSignInContext context)
+        {
+            var identity = context.Identity as ClaimsIdentity;
+
+            var principal = new ClaimsPrincipal(identity);
+
+            ChatUser user = _membershipService.GetOrAddUser(principal);
+
+            identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
         }
     }
 }

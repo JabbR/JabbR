@@ -50,9 +50,6 @@ namespace JabbR
 
         private static void SetupAuth(IAppBuilder app, KernelBase kernel)
         {
-            // This needs to run before everything
-            app.Use(typeof(NormalizeWindowsPrincipalHandler));
-
             app.UseFormsAuthentication(new FormsAuthenticationOptions
             {
                 LoginPath = "/account/login",
@@ -64,6 +61,8 @@ namespace JabbR
                 DataProtection = kernel.Get<IDataProtection>(),
                 Provider = kernel.Get<IFormsAuthenticationProvider>()
             });
+
+            app.Use(typeof(WindowsPrincipalHandler));
 
             //var config = new FederationConfiguration(loadConfig: false);
             //config.WsFederationConfiguration.Issuer = "";
