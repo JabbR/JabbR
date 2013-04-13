@@ -386,6 +386,25 @@ namespace JabbR
             };
         }
 
+        public void PostNotification(string roomName, string image, string source, string message)
+        {
+            string userId = Context.User.GetUserId();
+
+            ChatUser user = _repository.GetUserById(userId);
+            ChatRoom room = _repository.VerifyUserRoom(_cache, user, roomName);
+
+            // User must be an owner
+            if (room == null || 
+                !room.Owners.Contains(user) || 
+                (room.Private && !user.AllowedRooms.Contains(room)))
+            {
+                throw new InvalidOperationException("You're not allowed to post a notification");
+            }
+
+            // TODO: Persist this in the db
+            Clients.Group(room.Name).notify(roomName, image, source, message);
+        }
+
         public void Typing(string roomName)
         {
             string userId = Context.User.GetUserId();

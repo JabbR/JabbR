@@ -79,7 +79,7 @@
 
     function populateRoom(room) {
         var d = $.Deferred();
-        
+
         connection.hub.log('getRoomInfo(' + room + ')');
 
         // Populate the list of users rooms and messages 
@@ -128,7 +128,7 @@
     }
 
     function populateLobbyRooms() {
-        try { 
+        try {
             // Populate the user list with room names
             chat.server.getRooms()
                 .done(function (rooms) {
@@ -258,13 +258,13 @@
     chat.client.logOn = function (rooms, myRooms) {
         privateRooms = myRooms;
 
-           var loadRooms = function () {
-                $.each(rooms, function (index, room) {
-                    if (chat.state.activeRoom !== room.Name) {
-                        populateRoom(room.Name);
-                    }
-                });
-            };
+        var loadRooms = function () {
+            $.each(rooms, function (index, room) {
+                if (chat.state.activeRoom !== room.Name) {
+                    populateRoom(room.Name);
+                }
+            });
+        };
 
         $.each(rooms, function (index, room) {
             ui.addRoom(room);
@@ -277,7 +277,7 @@
         });
         ui.setUserName(chat.state.name);
         ui.setUnreadNotifications(chat.state.unreadNotifications);
-        
+
         // Process any urls that may contain room names
         ui.run();
 
@@ -374,7 +374,7 @@
 
         var viewModel = getMessageViewModel(message);
 
-        scrollIfNecessary(function () { 
+        scrollIfNecessary(function () {
 
             // Update your message when it comes from the server
             ui.overwriteMessage(id, viewModel);
@@ -475,6 +475,10 @@
     // Called when the server sends a notification message
     chat.client.postNotification = function (msg, room) {
         ui.addMessage(msg, 'notification', room);
+    };
+
+    chat.client.notify = function (roomName, imageUrl, source, message) {
+        ui.addNotification(roomName, imageUrl, source, message);
     };
 
     chat.client.postMessage = function (msg, type, room) {

@@ -237,7 +237,7 @@
 
     function addRoomToLobby(roomViewModel) {
         var lobby = getLobby();
-        
+
         templates.lobbyroom.tmpl(roomViewModel).appendTo(lobby.users);
         lobby.users.find('li').sortElements(function (a, b) {
             return $(a).data('name').toString().toLowerCase() > $(b).data('name').toString().toLowerCase() ? 1 : -1;
@@ -348,7 +348,7 @@
         $messages.data('scrollHandler', scrollHandler);
 
         setAccessKeys();
-        
+
         lobbyLoaded = false;
         return true;
     }
@@ -743,7 +743,7 @@
             $roomLoadingIndicator = $('#room-loading');
 
             $unreadNotificationCount = $('#notification-unread-count');
-            
+
             if (toast.canToast()) {
                 $toast.show();
             }
@@ -1201,7 +1201,7 @@
             $.imagePaste(function (file) {
                 ui.showClipboardUpload(file);
             });
-            
+
             $hiddenFile.change(function () {
                 if (!$hiddenFile.val()) {
                     return;
@@ -1782,6 +1782,9 @@
                 };
 
             return templates.notification.tmpl(message);
+        },
+        addNotification: function (roomName, imageUrl, source, message) {
+
         },
         addMessageBeforeTarget: function (content, type, $target) {
             var $element = null;
