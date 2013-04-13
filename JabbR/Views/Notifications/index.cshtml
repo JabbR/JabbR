@@ -27,11 +27,7 @@
             <div class="banner" role="banner">
                 <h1>Jabb</h1>
                 <div class="jabbrLogo" id="logo"></div>
-                <div>
-                    Powered by <a href="https://github.com/SignalR/SignalR" target="_blank">SignalR</a>
-                </div>
             </div>
-            <div style="clear: both"></div>
         </header>
         <div class="container">
             <div class="row" style="padding-top: 75px;">
@@ -70,7 +66,7 @@
                                         </a>
                                     }
                                     <blockquote>
-                                        <p class="@(!notification.HtmlEncoded ? "linkify" : "")">@notification.Message</p>
+                                        <p class="@(notification.HtmlEncoded ? "" : "linkify")">@notification.Message</p>
                                         <small>
                                             <img class="gravatar" src="https://secure.gravatar.com/avatar/@notification.FromUserImage?s=16&amp;d=mm" />
                                             @notification.FromUserName in <strong><cite>@notification.RoomName</cite></strong>
