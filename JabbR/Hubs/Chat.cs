@@ -212,9 +212,15 @@ namespace JabbR
                     continue;
                 }
 
-
-                bool markAsRead = mentionedUser.Status != (int)UserStatus.Offline &&
-                                  _repository.IsUserInRoom(_cache, mentionedUser, message.Room);
+                // mark as read if ALL of the following
+                // 1. user is not offline
+                // 2. user is not AFK
+                // 3. user has been active within the last 10 minutes
+                // 4. user is currently in the room
+                bool markAsRead = mentionedUser.Status != (int)UserStatus.Offline
+                                  && !mentionedUser.IsAfk
+                                  && (DateTimeOffset.UtcNow - mentionedUser.LastActivity) < TimeSpan.FromMinutes(10)
+                                  && _repository.IsUserInRoom(_cache, mentionedUser, message.Room);
 
                 _service.AddNotification(mentionedUser, message, message.Room, markAsRead);
 
