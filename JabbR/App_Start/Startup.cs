@@ -67,7 +67,7 @@ namespace JabbR
                 LogoutPath = "/account/logout",
                 CookieHttpOnly = true,
                 AuthenticationType = Constants.JabbRAuthType,
-                CookieName = "JabbR",
+                CookieName = "jabbr.id",
                 ExpireTimeSpan = TimeSpan.FromDays(30),
                 DataProtection = kernel.Get<IDataProtection>()
             });
