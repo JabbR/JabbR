@@ -18,7 +18,7 @@ namespace JabbR.Services
             _crypto = crypto;
         }
 
-        public ChatUser AddUser(ClaimsPrincipal claimsPrincipal)
+        public ChatUser GetOrAddUser(ClaimsPrincipal claimsPrincipal)
         {
             var id = claimsPrincipal.GetClaimValue(ClaimTypes.NameIdentifier);
             var name = claimsPrincipal.GetClaimValue(ClaimTypes.Name);
@@ -27,6 +27,14 @@ namespace JabbR.Services
             if (String.IsNullOrEmpty(id))
             {
                 throw new InvalidOperationException("Unable find the identifier claim");
+            }
+
+            // If the user exists don't create a new one
+            ChatUser user = _repository.GetUserById(id);
+
+            if (user != null)
+            {
+                return user;
             }
 
             if (String.IsNullOrEmpty(name))
@@ -41,7 +49,7 @@ namespace JabbR.Services
                 name = id;
             }
 
-            var user = new ChatUser
+            user = new ChatUser
             {
                 Name = name,
                 Status = (int)UserStatus.Active,

@@ -42,10 +42,7 @@ namespace JabbR.Nancy
                 // create a user based on some known claims
                 if (Principal.Identity.IsAuthenticated)
                 {
-                    var id = Principal.GetClaimValue(ClaimTypes.NameIdentifier);
-
-                    ChatUser user = repository.GetUserById(id) ??
-                                    membershipService.AddUser(Principal);
+                    ChatUser user = membershipService.GetOrAddUser(Principal);
 
                     return this.SignIn(user);
                 }

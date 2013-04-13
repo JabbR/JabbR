@@ -10,7 +10,7 @@ namespace JabbR.Services
         ChatUser AddUser(string userName, string provider, string identity, string email);
 
         // Creates an account form a ClaimsPrincipal
-        ChatUser AddUser(ClaimsPrincipal claimsPrincipal);
+        ChatUser GetOrAddUser(ClaimsPrincipal claimsPrincipal);
 
         // User name password functions
         ChatUser AddUser(string userName, string email, string password);

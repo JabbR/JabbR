@@ -1,10 +1,7 @@
 ﻿using System;
-using System.IdentityModel.Configuration;
 using System.IdentityModel.Selectors;
 using System.IdentityModel.Services.Configuration;
-using System.IdentityModel.Tokens;
 using System.Net.Http.Formatting;
-using System.ServiceModel.Security;
 using System.Web.Http;
 using JabbR.Infrastructure;
 using JabbR.Middleware;
@@ -13,11 +10,9 @@ using JabbR.Services;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.SystemWeb.Infrastructure;
-using Microsoft.Owin.Mapping;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Security.Federation;
 using Microsoft.Owin.Security.Forms;
-using Microsoft.Owin.StaticFiles;
 using Newtonsoft.Json.Serialization;
 using Ninject;
 using Owin;
@@ -72,23 +67,16 @@ namespace JabbR
                 DataProtection = kernel.Get<IDataProtection>()
             });
 
-            /*
-             * TODO: Wsfed
-            var config = new FederationConfiguration(loadConfig: true);
-            config.IdentityConfiguration.CertificateValidator = X509CertificateValidator.None;
+            //var config = new FederationConfiguration(loadConfig: true);
+            //config.IdentityConfiguration.CertificateValidator = X509CertificateValidator.None;
 
-            app.UseFederationAuthentication(new FederationAuthenticationOptions
-            {
-                ReturnPath = "/wsfederation",
-                FederationConfiguration = config,
-                Provider = new FederationAuthenticationProvider
-                {
-                    OnSecurityTokenValidated = context =>
-                    {
-                        return TaskAsyncHelper.Empty;
-                    }
-                }
-            });*/
+            //app.UseFederationAuthentication(new FederationAuthenticationOptions
+            //{
+            //    ReturnPath = "/wsfederation",
+            //    SigninAsAuthenticationType = Constants.JabbRAuthType,
+            //    FederationConfiguration = config,
+            //    Provider = kernel.Get<JabbRFederationAuthenticationProvider>()
+            //});
         }
 
         private static void SetupNancy(IKernel kernel, IAppBuilder app)
