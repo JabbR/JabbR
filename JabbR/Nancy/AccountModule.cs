@@ -42,9 +42,7 @@ namespace JabbR.Nancy
                 // create a user based on some known claims
                 if (Principal.Identity.IsAuthenticated)
                 {
-                    ChatUser user = membershipService.GetOrAddUser(Principal);
-
-                    return this.SignIn(user);
+                    return this.SignIn(Principal.Claims);
                 }
 
                 return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
@@ -142,6 +140,7 @@ namespace JabbR.Nancy
                     if (ModelValidationResult.IsValid)
                     {
                         ChatUser user = membershipService.AddUser(username, email, password);
+
                         return this.SignIn(user);
                     }
                 }

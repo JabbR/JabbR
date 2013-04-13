@@ -12,14 +12,23 @@ namespace JabbR.Nancy
 {
     public static class NancyExtensions
     {
-        /// <summary>
-        /// Sets the Auth Cookie and Redirects
-        /// </summary>
-        /// <param name="module"></param>
-        /// 
-        /// <param name="user">the User to be logged in</param>
-        /// <param name="redirectUrl">optional URL to redirect to, default is querystring returnUrl, if present, otherwise the root</param>
-        /// <returns></returns>
+        public static Response SignIn(this NancyModule module, IEnumerable<Claim> claims)
+        {
+            var env = Get<IDictionary<string, object>>(module.Context.Items, NancyOwinHost.RequestEnvironmentKey);
+            var owinResponse = new OwinResponse(env);
+
+            var identity = new ClaimsIdentity(claims, Constants.JabbRAuthType);
+            owinResponse.SignIn(new ClaimsPrincipal(identity));
+
+            string returnUrl = module.Request.Query.redirect_uri;
+            if (String.IsNullOrWhiteSpace(returnUrl))
+            {
+                returnUrl = "~/";
+            }
+
+            return module.Response.AsRedirect(returnUrl);
+        }
+
         public static Response SignIn(this NancyModule module, ChatUser user, string redirectUrl = null)
         {
             var env = Get<IDictionary<string, object>>(module.Context.Items, NancyOwinHost.RequestEnvironmentKey);
@@ -31,7 +40,7 @@ namespace JabbR.Nancy
             var identity = new ClaimsIdentity(claims, Constants.JabbRAuthType);
             owinResponse.SignIn(new ClaimsPrincipal(identity));
 
-            string returnUrl = redirectUrl ?? module.Request.Query.return_Url;
+            string returnUrl = redirectUrl ?? module.Request.Query.redirect_uri;
             if (String.IsNullOrWhiteSpace(returnUrl))
             {
                 returnUrl = "~/";

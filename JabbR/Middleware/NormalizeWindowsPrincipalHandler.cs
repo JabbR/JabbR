@@ -43,6 +43,7 @@ namespace JabbR.Middleware
                     var claims = new List<Claim>();
                     claims.Add(new Claim(ClaimTypes.NameIdentifier, name));
                     claims.Add(new Claim(ClaimTypes.Name, shortName));
+                    claims.Add(new Claim(ClaimTypes.AuthenticationMethod, "Windows"));
                     var identity = new ClaimsIdentity(claims, windowsPrincipal.Identity.AuthenticationType);
                     var claimsPrincipal = new ClaimsPrincipal(identity);
 

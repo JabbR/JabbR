@@ -35,9 +35,6 @@ namespace JabbR
             kernel.Bind<IDataProtection>()
                   .To<JabbRDataProtection>();
 
-            kernel.Bind<FederationAuthenticationProvider>()
-                  .To<JabbRFederationAuthenticationProvider>();
-
             // We're doing this manually since we want the chat repository to be shared
             // between the chat service and the chat hub itself
             kernel.Bind<Chat>()

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IdentityModel.Selectors;
-using System.IdentityModel.Services.Configuration;
 using System.Net.Http.Formatting;
 using System.Web.Http;
 using JabbR.Infrastructure;
@@ -11,7 +9,6 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.SystemWeb.Infrastructure;
 using Microsoft.Owin.Security.DataProtection;
-using Microsoft.Owin.Security.Federation;
 using Microsoft.Owin.Security.Forms;
 using Newtonsoft.Json.Serialization;
 using Ninject;
@@ -64,18 +61,36 @@ namespace JabbR
                 AuthenticationType = Constants.JabbRAuthType,
                 CookieName = "jabbr.id",
                 ExpireTimeSpan = TimeSpan.FromDays(30),
-                DataProtection = kernel.Get<IDataProtection>()
+                DataProtection = kernel.Get<IDataProtection>(),
+                Provider = new FormsAuthenticationProvider
+                {
+                    OnValidateIdentity = context =>
+                    {
+                        return TaskAsyncHelper.Empty;
+                    },
+                    OnValidateLogin = context =>
+                    {
+                        return TaskAsyncHelper.Empty;
+                    }
+                }
             });
 
-            //var config = new FederationConfiguration(loadConfig: true);
+            //var config = new FederationConfiguration(loadConfig: false);
+            //config.WsFederationConfiguration.Issuer = "";
+            //config.WsFederationConfiguration.Realm = "http://localhost:16207/";
+            //config.WsFederationConfiguration.Reply = "http://localhost:16207/wsfederation";
+            //var cbi = new ConfigurationBasedIssuerNameRegistry();
+            //cbi.AddTrustedIssuer("", "");
+            //config.IdentityConfiguration.AudienceRestriction.AllowedAudienceUris.Add(new Uri("http://localhost:16207/"));
+            //config.IdentityConfiguration.IssuerNameRegistry = cbi;
+            //config.IdentityConfiguration.CertificateValidationMode = X509CertificateValidationMode.None;
             //config.IdentityConfiguration.CertificateValidator = X509CertificateValidator.None;
 
             //app.UseFederationAuthentication(new FederationAuthenticationOptions
             //{
             //    ReturnPath = "/wsfederation",
             //    SigninAsAuthenticationType = Constants.JabbRAuthType,
-            //    FederationConfiguration = config,
-            //    Provider = kernel.Get<JabbRFederationAuthenticationProvider>()
+            //    FederationConfiguration = config
             //});
         }
 
