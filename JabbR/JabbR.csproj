@@ -121,16 +121,18 @@
     </Reference>
     <Reference Include="Microsoft.Owin.Security, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.0.22.0-pre-20413-185\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.0.22.0-pre-20413-186\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Federation">
       <HintPath>..\packages\Microsoft.Owin.Security.Federation.0.22.0-pre-20412-184\lib\net45\Microsoft.Owin.Security.Federation.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.Forms">
-      <HintPath>..\packages\Microsoft.Owin.Security.Forms.0.22.0-pre-20412-184\lib\net45\Microsoft.Owin.Security.Forms.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security.Forms, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Forms.0.22.0-pre-20413-186\lib\net45\Microsoft.Owin.Security.Forms.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.Serialization">
-      <HintPath>..\packages\Microsoft.Owin.Security.Serialization.0.22.0-pre-20412-184\lib\net45\Microsoft.Owin.Security.Serialization.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security.Serialization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Serialization.0.22.0-pre-20413-186\lib\net45\Microsoft.Owin.Security.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.StaticFiles, Version=0.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -993,6 +995,7 @@
     <Compile Include="Infrastructure\IdentityUtility.cs" />
     <Compile Include="Infrastructure\AlertMessageStore.cs" />
     <Compile Include="Infrastructure\JabbRDataProtection.cs" />
+    <Compile Include="Infrastructure\JabbRFormsAuthenticationProvider.cs" />
     <Compile Include="Infrastructure\PrincipalExtensions.cs" />
     <Compile Include="Infrastructure\JabbRAuthorizeAttribute.cs" />
     <Compile Include="Infrastructure\MentionExtractor.cs" />

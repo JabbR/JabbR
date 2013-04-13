@@ -62,17 +62,7 @@ namespace JabbR
                 CookieName = "jabbr.id",
                 ExpireTimeSpan = TimeSpan.FromDays(30),
                 DataProtection = kernel.Get<IDataProtection>(),
-                Provider = new FormsAuthenticationProvider
-                {
-                    OnValidateIdentity = context =>
-                    {
-                        return TaskAsyncHelper.Empty;
-                    },
-                    OnValidateLogin = context =>
-                    {
-                        return TaskAsyncHelper.Empty;
-                    }
-                }
+                Provider = kernel.Get<IFormsAuthenticationProvider>()
             });
 
             //var config = new FederationConfiguration(loadConfig: false);
