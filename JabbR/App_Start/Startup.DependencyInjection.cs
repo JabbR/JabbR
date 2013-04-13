@@ -7,6 +7,7 @@ using JabbR.Services;
 using JabbR.UploadHandlers;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Json;
+using Microsoft.Owin.Security.DataProtection;
 using Nancy.Authentication.WorldDomination;
 using Nancy.Bootstrappers.Ninject;
 using Newtonsoft.Json;
@@ -30,8 +31,9 @@ namespace JabbR
             kernel.Bind<IChatService>()
                   .To<ChatService>();
 
-            kernel.Bind<IAuthenticationTokenService>()
-                  .To<AuthenticationTokenService>();
+            kernel.Bind<IDataProtection>()
+                  .To<JabbRDataProtection>()
+                  .InSingletonScope();
 
             // We're doing this manually since we want the chat repository to be shared
             // between the chat service and the chat hub itself

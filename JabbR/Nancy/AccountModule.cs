@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Claims;
-using System.Security.Principal;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
 using Nancy;
-using Nancy.Cookies;
 using WorldDomination.Web.Authentication;
 
 namespace JabbR.Nancy
@@ -15,7 +12,6 @@ namespace JabbR.Nancy
     public class AccountModule : JabbRModule
     {
         public AccountModule(IApplicationSettings applicationSettings,
-                             IAuthenticationTokenService authenticationTokenService,
                              IMembershipService membershipService,
                              IJabbrRepository repository,
                              IAuthenticationService authService,
@@ -39,18 +35,6 @@ namespace JabbR.Nancy
                 if (IsAuthenticated)
                 {
                     return Response.AsRedirect("~/");
-                }
-
-                // If there's a claims principal but there's no jabbrId for this principal,
-                // create a user based on some known claims
-                if (Principal.Identity.IsAuthenticated)
-                {
-                    var id = Principal.GetClaimValue(ClaimTypes.NameIdentifier);
-
-                    ChatUser user = repository.GetUserById(id) ??
-                                    membershipService.AddUser(Principal);
-
-                    return this.CompleteLogin(authenticationTokenService, user);
                 }
 
                 return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
@@ -81,7 +65,7 @@ namespace JabbR.Nancy
                     if (ModelValidationResult.IsValid)
                     {
                         ChatUser user = membershipService.AuthenticateUser(username, password);
-                        return this.CompleteLogin(authenticationTokenService, user);
+                        return this.SignIn(user);
                     }
                     else
                     {
@@ -104,10 +88,7 @@ namespace JabbR.Nancy
 
                 var response = Response.AsJson(new { success = true });
 
-                response.AddCookie(new NancyCookie(Constants.UserTokenCookie, null)
-                {
-                    Expires = DateTime.Now.AddDays(-1)
-                });
+                this.SignOut();
 
                 return response;
             };
@@ -151,7 +132,7 @@ namespace JabbR.Nancy
                     if (ModelValidationResult.IsValid)
                     {
                         ChatUser user = membershipService.AddUser(username, email, password);
-                        return this.CompleteLogin(authenticationTokenService, user);
+                        return this.SignIn(user);
                     }
                 }
                 catch (Exception ex)

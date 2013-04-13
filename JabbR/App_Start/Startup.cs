@@ -1,4 +1,10 @@
-﻿using System.Net.Http.Formatting;
+﻿using System;
+using System.IdentityModel.Configuration;
+using System.IdentityModel.Selectors;
+using System.IdentityModel.Services.Configuration;
+using System.IdentityModel.Tokens;
+using System.Net.Http.Formatting;
+using System.ServiceModel.Security;
 using System.Web.Http;
 using JabbR.Infrastructure;
 using JabbR.Middleware;
@@ -8,6 +14,9 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.SystemWeb.Infrastructure;
 using Microsoft.Owin.Mapping;
+using Microsoft.Owin.Security.DataProtection;
+using Microsoft.Owin.Security.Federation;
+using Microsoft.Owin.Security.Forms;
 using Microsoft.Owin.StaticFiles;
 using Newtonsoft.Json.Serialization;
 using Ninject;
@@ -38,15 +47,46 @@ namespace JabbR
 
             app.UseShowExceptions();
 
-            // This needs to run before everything
-            app.Use(typeof(AuthorizationHandler), kernel.Get<IAuthenticationTokenService>());
-
+            SetupAuth(app, kernel);
             SetupSignalR(kernel, app);
             SetupWebApi(kernel, app);
             SetupMiddleware(settings, app);
             SetupNancy(kernel, app);
 
             SetupErrorHandling();
+        }
+
+        private static void SetupAuth(IAppBuilder app, KernelBase kernel)
+        {
+            // This needs to run before everything
+
+            app.UseFormsAuthentication(new FormsAuthenticationOptions
+            {
+                LoginPath = "/account/login",
+                LogoutPath = "/account/logout",
+                CookieHttpOnly = true,
+                AuthenticationType = Constants.JabbRAuthType,
+                CookieName = "JabbR",
+                DataProtection = kernel.Get<IDataProtection>()
+            });
+
+            /*
+             * TODO: Wsfed
+            var config = new FederationConfiguration(loadConfig: true);
+            config.IdentityConfiguration.CertificateValidator = X509CertificateValidator.None;
+
+            app.UseFederationAuthentication(new FederationAuthenticationOptions
+            {
+                ReturnPath = "/wsfederation",
+                FederationConfiguration = config,
+                Provider = new FederationAuthenticationProvider
+                {
+                    OnSecurityTokenValidated = context =>
+                    {
+                        return TaskAsyncHelper.Empty;
+                    }
+                }
+            });*/
         }
 
         private static void SetupNancy(IKernel kernel, IAppBuilder app)
@@ -97,13 +137,6 @@ namespace JabbR
             jsonFormatter.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             config.Formatters.Add(jsonFormatter);
             config.DependencyResolver = new NinjectWebApiDependencyResolver(kernel);
-
-
-            config.Routes.MapHttpRoute(
-                name: "LoginV1",
-                routeTemplate: "api/v1/authenticate",
-                defaults: new { controller = "Authenticate" }
-             );
 
             config.Routes.MapHttpRoute(
                 name: "MessagesV1",

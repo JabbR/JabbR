@@ -119,6 +119,19 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Owin.Mapping.0.21.0-pre-20319-141\lib\net40\Microsoft.Owin.Mapping.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.0.22.0-pre-20413-185\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Federation">
+      <HintPath>..\packages\Microsoft.Owin.Security.Federation.0.22.0-pre-20412-184\lib\net45\Microsoft.Owin.Security.Federation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Forms">
+      <HintPath>..\packages\Microsoft.Owin.Security.Forms.0.22.0-pre-20412-184\lib\net45\Microsoft.Owin.Security.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Serialization">
+      <HintPath>..\packages\Microsoft.Owin.Security.Serialization.0.22.0-pre-20412-184\lib\net45\Microsoft.Owin.Security.Serialization.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin.StaticFiles, Version=0.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Owin.StaticFiles.0.21.0-pre-20319-141\lib\net40\Microsoft.Owin.StaticFiles.dll</HintPath>
@@ -169,9 +182,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Owin.Types, Version=0.8.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Owin.Types, Version=0.9.9.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Owin.Types.0.8.3-alpha\lib\net40\Owin.Types.dll</HintPath>
+      <HintPath>..\packages\Owin.Types.0.9.9\lib\net40\Owin.Types.dll</HintPath>
     </Reference>
     <Reference Include="PagedList">
       <HintPath>..\packages\PagedList.1.15.0.0\lib\net40\PagedList.dll</HintPath>
@@ -187,6 +200,8 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Services.Client" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.identitymodel.services" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
@@ -977,6 +992,7 @@
     <Compile Include="Infrastructure\CryptoHelper.cs" />
     <Compile Include="Infrastructure\IdentityUtility.cs" />
     <Compile Include="Infrastructure\AlertMessageStore.cs" />
+    <Compile Include="Infrastructure\JabbRDataProtection.cs" />
     <Compile Include="Infrastructure\PrincipalExtensions.cs" />
     <Compile Include="Infrastructure\JabbRAuthorizeAttribute.cs" />
     <Compile Include="Infrastructure\MentionExtractor.cs" />
@@ -1042,7 +1058,6 @@
     <Compile Include="Commands\WelcomeCommand.cs" />
     <Compile Include="Commands\UpdateCommand.cs" />
     <Compile Include="ContentProviders\SpotifyContentProvider.cs" />
-    <Compile Include="Middleware\AuthorizationHandler.cs" />
     <Compile Include="Middleware\DetectSchemeHandler.cs" />
     <Compile Include="Middleware\RequireHttpsHandler.cs" />
     <Compile Include="Migrations\201206201924146_RoomWelcome.cs" />
@@ -1068,10 +1083,8 @@
     <Compile Include="Nancy\NotificationsModule.cs" />
     <Compile Include="Nancy\SessionExtensions.cs" />
     <Compile Include="Services\AppSettingKeyProvider.cs" />
-    <Compile Include="Services\AuthenticationTokenService.cs" />
     <Compile Include="Services\DefaultCache.cs" />
     <Compile Include="Services\FileBasedKeyProvider.cs" />
-    <Compile Include="Services\IAuthenticationTokenService.cs" />
     <Compile Include="Services\IChatNotificationService.cs" />
     <Compile Include="UploadHandlers\AzureBlobStorageHandler.cs" />
     <Compile Include="UploadHandlers\IUploadHandler.cs" />
@@ -1088,7 +1101,6 @@
     <Compile Include="ViewModels\ProfilePageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SocialLoginViewModel.cs" />
-    <Compile Include="WebApi\AuthenticateController.cs" />
     <Compile Include="WebApi\Model\ErrorModel.cs" />
     <Compile Include="Infrastructure\HttpRequestExtensions.cs" />
     <Compile Include="WebApi\MessagesController.cs" />

@@ -11,15 +11,12 @@ namespace JabbR.Nancy
 {
     public class JabbRAuthenticationCallbackProvider : IAuthenticationCallbackProvider
     {
-        private readonly IAuthenticationTokenService _authenticationTokenService;
         private readonly IMembershipService _membershipService;
         private readonly IJabbrRepository _repository;
 
-        public JabbRAuthenticationCallbackProvider(IAuthenticationTokenService authenticationTokenService,
-                                                   IMembershipService membershipService,
+        public JabbRAuthenticationCallbackProvider(IMembershipService membershipService,
                                                    IJabbrRepository repository)
         {
-            _authenticationTokenService = authenticationTokenService;
             _membershipService = membershipService;
             _repository = repository;
         }
@@ -91,7 +88,7 @@ namespace JabbR.Nancy
                     return nancyModule.Response.AsRedirect("~/account/#identityProviders");
                 }
 
-                return nancyModule.CompleteLogin(_authenticationTokenService, user);
+                return nancyModule.SignIn(user);
             }
 
             nancyModule.AddAlertMessage("error", model.Exception.Message);

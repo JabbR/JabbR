@@ -33,7 +33,7 @@ namespace JabbR.Nancy
                     return View["index", viewModel];
                 }
 
-                return Response.AsRedirect(String.Format("~/account/login?returnUrl={0}", HttpUtility.UrlEncode(Request.Path)));
+                return HttpStatusCode.Unauthorized;
             };
 
             Post["/upload"] = _ =>

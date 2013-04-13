@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using JabbR.Infrastructure;
 using JabbR.Models;
-using JabbR.Services;
 using Nancy;
-using Nancy.Cookies;
+using Nancy.Owin;
+using Owin.Types;
+using Owin.Types.Extensions;
 
 namespace JabbR.Nancy
 {
@@ -14,37 +16,37 @@ namespace JabbR.Nancy
         /// Sets the Auth Cookie and Redirects
         /// </summary>
         /// <param name="module"></param>
-        /// <param name="authenticationTokenService"></param>
+        /// 
         /// <param name="user">the User to be logged in</param>
         /// <param name="redirectUrl">optional URL to redirect to, default is querystring returnUrl, if present, otherwise the root</param>
         /// <returns></returns>
-        public static Response CompleteLogin(this NancyModule module,
-                                             IAuthenticationTokenService authenticationTokenService,
-                                             ChatUser user,
-                                             string redirectUrl = null)
+        public static Response SignIn(this NancyModule module, ChatUser user, string redirectUrl = null)
         {
-            string returnUrl = redirectUrl ?? module.Request.Query.returnUrl;
+            var env = Get<IDictionary<string, object>>(module.Context.Items, NancyOwinHost.RequestEnvironmentKey);
+            var owinResponse = new OwinResponse(env);
+
+
+            var claims = new List<Claim>();
+            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
+            var identity = new ClaimsIdentity(claims, Constants.JabbRAuthType);
+            owinResponse.SignIn(new ClaimsPrincipal(identity));
+
+            string returnUrl = redirectUrl ?? module.Request.Query.return_Url;
             if (String.IsNullOrWhiteSpace(returnUrl))
             {
                 returnUrl = "~/";
             }
 
             var response = module.Response.AsRedirect(returnUrl);
-            response.AddAuthenticationCookie(authenticationTokenService, user);
             return response;
         }
 
-        private static void AddAuthenticationCookie(this Response response,
-                                                   IAuthenticationTokenService authenticationTokenService,
-                                                   ChatUser user)
+        public static void SignOut(this NancyModule module)
         {
-            string userToken = authenticationTokenService.GetAuthenticationToken(user);
-            var cookie = new NancyCookie(Constants.UserTokenCookie, userToken, httpOnly: true)
-            {
-                Expires = DateTime.Now + TimeSpan.FromDays(30)
-            };
+            var env = Get<IDictionary<string, object>>(module.Context.Items, NancyOwinHost.RequestEnvironmentKey);
+            var owinResponse = new OwinResponse(env);
 
-            response.AddCookie(cookie);
+            owinResponse.SignOut(Constants.JabbRAuthType);
         }
 
         public static void AddValidationError(this NancyModule module, string propertyName, string errorMessage)
@@ -81,6 +83,16 @@ namespace JabbR.Nancy
         public static bool IsAuthenticated(this NancyModule module)
         {
             return module.GetPrincipal().IsAuthenticated();
+        }
+
+        private static T Get<T>(IDictionary<string, object> env, string key)
+        {
+            object value;
+            if (env.TryGetValue(key, out value))
+            {
+                return (T)value;
+            }
+            return default(T);
         }
     }
 }
