@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IdentityModel.Claims;
 using System.Linq;
 using JabbR.Infrastructure;
 using JabbR.Models;
@@ -35,6 +36,18 @@ namespace JabbR.Nancy
                 if (IsAuthenticated)
                 {
                     return Response.AsRedirect("~/");
+                }
+
+                // If there's a claims principal but there's no jabbrId for this principal,
+                // create a user based on some known claims
+                if (Principal.Identity.IsAuthenticated)
+                {
+                    var id = Principal.GetClaimValue(ClaimTypes.NameIdentifier);
+
+                    ChatUser user = repository.GetUserById(id) ??
+                                    membershipService.AddUser(Principal);
+
+                    return this.SignIn(user);
                 }
 
                 return View["login", GetLoginViewModel(applicationSettings, repository, authService)];

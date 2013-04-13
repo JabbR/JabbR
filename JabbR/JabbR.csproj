@@ -996,6 +996,7 @@
     <Compile Include="Infrastructure\PrincipalExtensions.cs" />
     <Compile Include="Infrastructure\JabbRAuthorizeAttribute.cs" />
     <Compile Include="Infrastructure\MentionExtractor.cs" />
+    <Compile Include="Middleware\NormalizeWindowsPrincipalHandler.cs" />
     <Compile Include="Migrations\201303220549121_ContentProviderContent.cs" />
     <Compile Include="Migrations\201303220549121_ContentProviderContent.Designer.cs">
       <DependentUpon>201303220549121_ContentProviderContent.cs</DependentUpon>

@@ -59,6 +59,7 @@ namespace JabbR
         private static void SetupAuth(IAppBuilder app, KernelBase kernel)
         {
             // This needs to run before everything
+            app.Use(typeof(NormalizeWindowsPrincipalHandler));
 
             app.UseFormsAuthentication(new FormsAuthenticationOptions
             {
@@ -67,6 +68,7 @@ namespace JabbR
                 CookieHttpOnly = true,
                 AuthenticationType = Constants.JabbRAuthType,
                 CookieName = "JabbR",
+                ExpireTimeSpan = TimeSpan.FromDays(30),
                 DataProtection = kernel.Get<IDataProtection>()
             });
 
