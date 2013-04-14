@@ -1716,7 +1716,7 @@
                     content: message.message,
                     img: message.imageUrl,
                     source: message.source,
-                    encoded: true,
+                    encoded: true
                 };
 
                 ui.addMessage(model, 'postedNotification', roomName);
@@ -1776,7 +1776,7 @@
                 content = collapseRichContent(content);
             }
 
-            if ($middle.length == 0) {
+            if ($middle.length === 0) {
                 $body.append('<p>' + content + '</p>');
             }
             else {
