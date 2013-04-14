@@ -1712,6 +1712,7 @@
 
             if (isNotification === true) {
                 var model = {
+                    id: message.id,
                     content: message.message,
                     img: message.imageUrl,
                     source: message.source,
@@ -1722,10 +1723,10 @@
             }
             else {
                 this.appendMessage(templates.message.tmpl(message), room);
+            }
 
-                if (message.htmlContent) {
-                    ui.addChatMessageContent(message.id, message.htmlContent, room.getName());
-                }
+            if (message.htmlContent) {
+                ui.addChatMessageContent(message.id, message.htmlContent, room.getName());
             }
 
             if (room.isInitialized()) {
@@ -1767,13 +1768,20 @@
             return $('#m-' + id).length > 0;
         },
         addChatMessageContent: function (id, content, roomName) {
-            var $message = $('#m-' + id);
+            var $message = $('#m-' + id),
+                $middle = $message.find('.middle'),
+                $body = $message.find('.content');
 
             if (shouldCollapseContent(content, roomName)) {
                 content = collapseRichContent(content);
             }
 
-            $message.find('.middle').append('<p>' + content + '</p>');
+            if ($middle.length == 0) {
+                $body.append('<p>' + content + '</p>');
+            }
+            else {
+                $middle.append('<p>' + content + '</p>');
+            }
         },
         addPrivateMessage: function (content, type) {
             var rooms = getAllRoomElements();
@@ -1796,7 +1804,8 @@
                 when: now.formatTime(true),
                 fulldate: now.toLocaleString(),
                 img: options.img,
-                source: options.source
+                source: options.source,
+                id: options.id
             };
 
             return templates.notification.tmpl(message);

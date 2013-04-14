@@ -386,12 +386,17 @@ namespace JabbR
             };
         }
 
-        public void PostNotification(string roomName, string image, string source, string content)
+        public void PostNotification(ClientNotification notification)
+        {
+            PostNotification(notification, executeContentProviders: true);
+        }
+
+        public void PostNotification(ClientNotification notification, bool executeContentProviders)
         {
             string userId = Context.User.GetUserId();
 
             ChatUser user = _repository.GetUserById(userId);
-            ChatRoom room = _repository.VerifyUserRoom(_cache, user, roomName);
+            ChatRoom room = _repository.VerifyUserRoom(_cache, user, notification.Room);
 
             // User must be an owner
             if (room == null ||
@@ -401,22 +406,32 @@ namespace JabbR
                 throw new InvalidOperationException("You're not allowed to post a notification");
             }
 
-            var message = new ChatMessage
+            var chatMessage = new ChatMessage
             {
-                Content = content,
+                Id = Guid.NewGuid().ToString("d"),
+                Content = notification.Content,
                 User = user,
                 Room = room,
                 HtmlEncoded = false,
-                ImageUrl = image,
-                Source = source,
+                ImageUrl = notification.ImageUrl,
+                Source = notification.Source,
                 When = DateTimeOffset.UtcNow,
                 MessageType = (int)MessageType.Notification
             };
 
-            _repository.Add(message);
+            _repository.Add(chatMessage);
             _repository.CommitChanges();
 
-            Clients.Group(room.Name).addMessage(new MessageViewModel(message), roomName);
+            Clients.Group(room.Name).addMessage(new MessageViewModel(chatMessage), room.Name);
+
+            if (executeContentProviders)
+            {
+                var urls = UrlExtractor.ExtractUrls(chatMessage.Content);
+                if (urls.Count > 0)
+                {
+                    _resourceProcessor.ProcessUrls(urls, Clients, room.Name, chatMessage.Id);
+                }
+            }
         }
 
         public void Typing(string roomName)

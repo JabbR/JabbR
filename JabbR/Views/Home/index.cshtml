@@ -59,7 +59,7 @@
         </li>
     </script>
     <script id="new-notification-template" type="text/x-jquery-tmpl">
-        <li class="${type}" data-timestamp="${date}">
+        <li class="${type}" data-timestamp="${date}"{{if id}} id="m-${id}"{{/if}}>
             <div class="content">
                 {{if img}}
                 <img src="${img}" />

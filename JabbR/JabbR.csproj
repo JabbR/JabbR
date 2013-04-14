@@ -1009,6 +1009,7 @@
       <DependentUpon>201304140935434_MessageTypes.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Attachment.cs" />
+    <Compile Include="Models\ClientNotification.cs" />
     <Compile Include="Models\Mapping\AttachmentMap.cs" />
     <Compile Include="Models\Mapping\NotificationMap.cs" />
     <Compile Include="Models\MessageType.cs" />
