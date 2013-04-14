@@ -2461,7 +2461,7 @@ li.clearfix {
 }
 
 .social-auth .btn-provider {
-    margin-left: 1;
+    margin-left: 1px;
 }
 
 .provider {
