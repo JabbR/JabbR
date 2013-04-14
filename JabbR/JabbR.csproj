@@ -1015,6 +1015,7 @@
     <Compile Include="Models\MessageType.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Nancy\ClaimsPrincipalUserIdentity.cs" />
+    <Compile Include="Infrastructure\DateTimeOffsetExtensions.cs" />
     <Compile Include="Nancy\HtmlHelperExtensions.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.Designer.cs">

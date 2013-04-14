@@ -69,7 +69,7 @@
                                         <p class="@(notification.HtmlEncoded ? "" : "linkify")">@notification.Message</p>
                                         <small>
                                             <img class="gravatar" src="https://secure.gravatar.com/avatar/@notification.FromUserImage?s=16&amp;d=mm" />
-                                            @notification.FromUserName in <strong><cite>@notification.RoomName</cite></strong>
+                                            @notification.FromUserName in <strong><cite>@notification.RoomName</cite></strong> on <span class="time" data-timestamp="@notification.When.ToJavaScriptMilliseconds()"></span>
                                         </small>
                                     </blockquote>
                                 </li>
@@ -96,7 +96,7 @@
             .Render("~/Scripts/JabbR1_#.js"));
     }
     @{
-        WriteLiteral(Bundle.JavaScript()
+        WriteLiteral(Bundle.JavaScript().ForceDebug()
             .Add("~/Scripts/ba-linkify.min.js")
             .Add("~/Scripts/Markdown.Converter.js")
             .Add("~/Scripts/jquery.pubsub.js")

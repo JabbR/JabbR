@@ -141,7 +141,8 @@ namespace JabbR.Nancy
                                          Message = n.Message.Content,
                                          HtmlEncoded = n.Message.HtmlEncoded,
                                          RoomName = n.Room.Name,
-                                         Read = n.Read
+                                         Read = n.Read,
+                                         When = n.Message.When
                                      })
                                      .ToPagedList(page, take);
         }

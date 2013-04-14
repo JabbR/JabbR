@@ -37,6 +37,14 @@
         $this.html(content);
     });
 
+    $('.notification-item .time').each(function () {
+        var $time = $(this),
+            dateString = $time.data('timestamp'),
+            date = new Date(dateString);
+
+        $time.text(date.toLocaleString());
+    });
+
     $.subscribe('notifications.mark', function (ev, markAsReadRequest) {
         var readMention = $.ajax(markAsReadRequest.url, {
             type: "POST",

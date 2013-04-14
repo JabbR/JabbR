@@ -1,5 +1,4 @@
 ﻿using System;
-using JabbR.Models;
 using PagedList;
 
 namespace JabbR.ViewModels
@@ -21,5 +20,6 @@ namespace JabbR.ViewModels
         public string RoomName { get; set; }
         public bool Read { get; set; }
         public bool HtmlEncoded { get; set; }
+        public DateTimeOffset When { get; set; }
     }
 }
