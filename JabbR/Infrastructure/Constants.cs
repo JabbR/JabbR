@@ -11,6 +11,7 @@ namespace JabbR.Infrastructure
     public static class JabbRClaimTypes
     {
         public static readonly string Identifier = "urn:jabbr:id";
+        public static readonly string PartialIdentity = "urn:jabbr:partialid";
     }
 
     public static class AcsClaimTypes

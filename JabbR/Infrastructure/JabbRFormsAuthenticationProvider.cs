@@ -51,6 +51,11 @@ namespace JabbR.Infrastructure
 
                 identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
             }
+            else
+            {
+                // A partial identity means the user needs to add more claims to login
+                identity.AddClaim(new Claim(JabbRClaimTypes.PartialIdentity, "true"));
+            }
         }
     }
 }

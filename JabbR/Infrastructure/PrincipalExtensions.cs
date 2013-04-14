@@ -60,5 +60,10 @@ namespace JabbR.Infrastructure
                    !String.IsNullOrEmpty(principal.GetClaimValue(ClaimTypes.Name)) &&
                    !String.IsNullOrEmpty(principal.GetIdentityProvider());
         }
+
+        public static bool HasPartialIdentity(this ClaimsPrincipal principal)
+        {
+            return !String.IsNullOrEmpty(principal.GetClaimValue(JabbRClaimTypes.PartialIdentity));
+        }
     }
 }

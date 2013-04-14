@@ -12,7 +12,6 @@ using JabbR.Services;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.SystemWeb.Infrastructure;
-using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Security.Federation;
 using Microsoft.Owin.Security.Forms;
@@ -81,7 +80,6 @@ namespace JabbR
 
             //app.UseFederationAuthentication(new FederationAuthenticationOptions
             //{
-            //    AuthenticationMode = AuthenticationMode.Passive,
             //    ReturnPath = "/wsfederation",
             //    SigninAsAuthenticationType = Constants.JabbRAuthType,
             //    FederationConfiguration = config,

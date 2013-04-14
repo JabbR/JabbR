@@ -8,7 +8,6 @@ using JabbR.Infrastructure;
 using JabbR.Services;
 using JabbR.ViewModels;
 using Nancy;
-using Nancy.Helpers;
 
 namespace JabbR.Nancy
 {
@@ -31,6 +30,12 @@ namespace JabbR.Nancy
                     };
 
                     return View["index", viewModel];
+                }
+
+                if (Principal.HasPartialIdentity())
+                {
+                    // If the user is partially authenticated then take them to the register page
+                    return Response.AsRedirect("~/account/register");
                 }
 
                 return HttpStatusCode.Unauthorized;
@@ -62,7 +67,7 @@ namespace JabbR.Nancy
 
             Post["/upload-clipboard"] = _ =>
                 {
-                    if (Context.CurrentUser == null)
+                    if (!IsAuthenticated)
                     {
                         return 403;
                     }
@@ -81,12 +86,12 @@ namespace JabbR.Nancy
                     fileName = fileName + "." + contentType.Substring(contentType.IndexOf("/") + 1);
 
                     UploadFile(
-                        uploadHandler, 
-                        Principal.GetUserId(), 
-                        connectionId, 
-                        roomName, 
-                        fileName, 
-                        contentType, 
+                        uploadHandler,
+                        Principal.GetUserId(),
+                        connectionId,
+                        roomName,
+                        fileName,
+                        contentType,
                         new MemoryStream(binData)).Wait();
 
                     return 200;

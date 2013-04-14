@@ -30,6 +30,7 @@ namespace JabbR.Middleware
                 {
                     await _next(env);
 
+                    var request = new OwinRequest(env);
                     var response = new OwinResponse(env);
 
                     if (response.StatusCode == 401)
@@ -57,6 +58,9 @@ namespace JabbR.Middleware
                         var claimsPrincipal = new ClaimsPrincipal(identity);
 
                         response.SignIn(claimsPrincipal);
+
+                        response.StatusCode = 302;
+                        response.SetHeader("Location", request.PathBase + request.Path);
                     }
 
                     return;
