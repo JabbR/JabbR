@@ -409,7 +409,8 @@ namespace JabbR
                 HtmlEncoded = false,
                 ImageUrl = image,
                 Source = source,
-                When = DateTimeOffset.UtcNow
+                When = DateTimeOffset.UtcNow,
+                MessageType = (int)MessageType.Notification
             };
 
             _repository.Add(message);

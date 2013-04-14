@@ -1674,7 +1674,7 @@
                 previousTimestamp = new Date().addDays(1), // Tomorrow so we always see a date line
                 showUserName = true,
                 isMention = message.highlight,
-                isNotification = message.isNotification;
+                isNotification = message.messageType === 1;
 
             // bounce out of here if the room is closed
             if (room.isClosed()) {

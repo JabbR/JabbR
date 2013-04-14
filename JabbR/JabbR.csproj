@@ -903,6 +903,9 @@
     <EmbeddedResource Include="Migrations\201304140908488_PersistNotification.resx">
       <DependentUpon>201304140908488_PersistNotification.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201304140935434_MessageTypes.resx">
+      <DependentUpon>201304140935434_MessageTypes.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -1001,9 +1004,14 @@
     <Compile Include="Migrations\201304140908488_PersistNotification.Designer.cs">
       <DependentUpon>201304140908488_PersistNotification.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201304140935434_MessageTypes.cs" />
+    <Compile Include="Migrations\201304140935434_MessageTypes.Designer.cs">
+      <DependentUpon>201304140935434_MessageTypes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\Mapping\AttachmentMap.cs" />
     <Compile Include="Models\Mapping\NotificationMap.cs" />
+    <Compile Include="Models\MessageType.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Nancy\ClaimsPrincipalUserIdentity.cs" />
     <Compile Include="Nancy\HtmlHelperExtensions.cs" />

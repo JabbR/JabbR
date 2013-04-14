@@ -183,7 +183,7 @@
             isMine: message.User.Name === chat.state.name,
             imageUrl: message.ImageUrl,
             source: message.Source,
-            isNotification: (message.Source !== null && message.ImageUrl !== null)
+            messageType: message.MessageType
         };
     }
 

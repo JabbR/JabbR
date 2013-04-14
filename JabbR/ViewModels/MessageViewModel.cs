@@ -13,6 +13,7 @@ namespace JabbR.ViewModels
             User = new UserViewModel(message.User);
             When = message.When;
             HtmlEncoded = message.HtmlEncoded;
+            MessageType = message.MessageType;
             Source = message.Source;
             ImageUrl = message.ImageUrl;
         }
@@ -23,6 +24,8 @@ namespace JabbR.ViewModels
         public string HtmlContent { get; set; }
         public DateTimeOffset When { get; set; }
         public UserViewModel User { get; set; }
+        public int MessageType { get; set; }
+
         public string ImageUrl { get; set; }
         public string Source { get; set; }
     }
