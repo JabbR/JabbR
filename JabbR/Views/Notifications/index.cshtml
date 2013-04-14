@@ -96,7 +96,7 @@
             .Render("~/Scripts/JabbR1_#.js"));
     }
     @{
-        WriteLiteral(Bundle.JavaScript().ForceDebug()
+        WriteLiteral(Bundle.JavaScript()
             .Add("~/Scripts/ba-linkify.min.js")
             .Add("~/Scripts/Markdown.Converter.js")
             .Add("~/Scripts/jquery.pubsub.js")
