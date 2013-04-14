@@ -782,6 +782,10 @@ li.error {
     padding: 5px;
 }
 
+    .postedNotification .content {
+        margin-right: 95px;
+    }
+
     .postedNotification img {
         width: 16px;
         height: 16px;
@@ -833,9 +837,9 @@ li.error {
         text-decoration: none;
     }
 
-    .notification-item .js-mark-as-read:hover {
-        color: #00103f;
-    }
+        .notification-item .js-mark-as-read:hover {
+            color: #00103f;
+        }
 
     .notification-item blockquote small {
         padding-bottom: 5px;

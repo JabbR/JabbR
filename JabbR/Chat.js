@@ -966,7 +966,8 @@
 
         try {
             // Show a little animation so the user experience looks fancy
-            ui.setLoadingHistory(loadingHistory);
+            ui.setLoadingHistory(true);
+
             ui.setRoomTrimmable(roomInfo.name, false);
             connection.hub.log('getPreviousMessages(' + roomInfo.name + ')');
             chat.server.getPreviousMessages(roomInfo.messageId)
@@ -974,12 +975,14 @@
                     connection.hub.log('getPreviousMessages.done(' + roomInfo.name + ')');
                     ui.prependChatMessages($.map(messages, getMessageViewModel), roomInfo.name);
                     loadingHistory = false;
-                    ui.setLoadingHistory(loadingHistory);
+
+                    ui.setLoadingHistory(false);
                 })
                 .fail(function (e) {
                     connection.hub.log('getPreviousMessages.failed(' + roomInfo.name + ', ' + e + ')');
                     loadingHistory = false;
-                    ui.setLoadingHistory(loadingHistory);
+
+                    ui.setLoadingHistory(false);
                 });
         }
         catch (e) {
