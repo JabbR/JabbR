@@ -33,6 +33,12 @@ namespace JabbR.Infrastructure
 
             var principal = new ClaimsPrincipal(identity);
 
+            // Do nothing if it's authenticated
+            if (principal.IsAuthenticated())
+            {
+                return;
+            }
+
             ChatUser user = _membershipService.GetOrAddUser(principal);
 
             identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));

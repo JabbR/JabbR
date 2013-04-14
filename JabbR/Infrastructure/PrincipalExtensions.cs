@@ -47,5 +47,11 @@ namespace JabbR.Infrastructure
 
             return claim != null ? claim.Value : null;
         }
+
+        public static bool HasRequiredCalims(this ClaimsPrincipal principal)
+        {
+            return !String.IsNullOrEmpty(principal.GetClaimValue(ClaimTypes.NameIdentifier)) &&
+                   !String.IsNullOrEmpty(principal.GetClaimValue(ClaimTypes.Name));
+        }
     }
 }

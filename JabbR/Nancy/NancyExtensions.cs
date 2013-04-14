@@ -29,25 +29,11 @@ namespace JabbR.Nancy
             return module.Response.AsRedirect(returnUrl);
         }
 
-        public static Response SignIn(this NancyModule module, ChatUser user, string redirectUrl = null)
+        public static Response SignIn(this NancyModule module, ChatUser user)
         {
-            var env = Get<IDictionary<string, object>>(module.Context.Items, NancyOwinHost.RequestEnvironmentKey);
-            var owinResponse = new OwinResponse(env);
-
-
             var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
-            var identity = new ClaimsIdentity(claims, Constants.JabbRAuthType);
-            owinResponse.SignIn(new ClaimsPrincipal(identity));
-
-            string returnUrl = redirectUrl ?? module.Request.Query.redirect_uri;
-            if (String.IsNullOrWhiteSpace(returnUrl))
-            {
-                returnUrl = "~/";
-            }
-
-            var response = module.Response.AsRedirect(returnUrl);
-            return response;
+            claims.Add(new Claim(JabbRClaimTypes.Identifier, user.Id));
+            return module.SignIn(claims);
         }
 
         public static void SignOut(this NancyModule module)
