@@ -1,6 +1,6 @@
 ﻿using System;
-using System.IdentityModel.Claims;
 using System.Linq;
+using System.Security.Claims;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
@@ -36,6 +36,12 @@ namespace JabbR.Nancy
                 if (IsAuthenticated)
                 {
                     return Response.AsRedirect("~/");
+                }
+
+                // If the user is partially authenticated then take them to the register page
+                if (Principal.Identity.IsAuthenticated)
+                {
+                    return Response.AsRedirect("~/account/register");
                 }
 
                 return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
@@ -101,6 +107,8 @@ namespace JabbR.Nancy
                     return Response.AsRedirect("~/");
                 }
 
+                ViewBag.requirePassword = !Principal.Identity.IsAuthenticated;
+
                 return View["register"];
             };
 
@@ -116,6 +124,8 @@ namespace JabbR.Nancy
                 string password = Request.Form.password;
                 string confirmPassword = Request.Form.confirmPassword;
 
+                bool requirePassword = !Principal.Identity.IsAuthenticated;
+
                 if (String.IsNullOrEmpty(username))
                 {
                     this.AddValidationError("username", "Name is required");
@@ -126,15 +136,30 @@ namespace JabbR.Nancy
                     this.AddValidationError("email", "Email is required");
                 }
 
-                ValidatePassword(password, confirmPassword);
-
                 try
                 {
+                    if (requirePassword)
+                    {
+                        ValidatePassword(password, confirmPassword);
+                    }
+
                     if (ModelValidationResult.IsValid)
                     {
-                        ChatUser user = membershipService.AddUser(username, email, password);
+                        if (requirePassword)
+                        {
+                            ChatUser user = membershipService.AddUser(username, email, password);
 
-                        return this.SignIn(user);
+                            return this.SignIn(user);
+                        }
+                        else
+                        {
+                            // Add the required claims to this identity
+                            var identity = Principal.Identity as ClaimsIdentity;
+                            identity.AddClaim(new Claim(ClaimTypes.Name, username));
+                            identity.AddClaim(new Claim(ClaimTypes.Email, email));
+
+                            return this.SignIn(Principal.Claims);
+                        }
                     }
                 }
                 catch (Exception ex)

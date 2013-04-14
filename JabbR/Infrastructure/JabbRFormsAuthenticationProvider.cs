@@ -39,9 +39,12 @@ namespace JabbR.Infrastructure
                 return;
             }
 
-            ChatUser user = _membershipService.GetOrAddUser(principal);
+            if (principal.HasRequiredClaims())
+            {
+                ChatUser user = _membershipService.GetOrAddUser(principal);
 
-            identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
+                identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
+            }
         }
     }
 }
