@@ -109,10 +109,6 @@
         return '_room_' + roomName;
     }
 
-    function showClosedRoomsInLobby() {
-        return $closedRoomFilter.is(':checked');
-    }
-
     function setRoomLoading(isLoading, roomName) {
         if (isLoading) {
             var room = getRoomElements(roomName);
@@ -131,15 +127,8 @@
         }
     }
 
-    function populateLobbyRoomList(item, template, listToPopulate, showClosedRooms) {
+    function populateLobbyRoomList(item, template, listToPopulate) {
         $.tmpl(template, item).appendTo(listToPopulate);
-
-        if (!showClosedRooms) {
-            var closedRooms = listToPopulate.children('li.closed');
-            closedRooms.each(function () {
-                $(this).hide();
-            });
-        }
     }
 
     function sortRoomList(listToSort) {
@@ -290,30 +279,24 @@
                               .appendTo($topicBar)
                               .hide();
 
-        if (roomName !== "lobby") {
-            userContainer = $('<div/>').attr('id', 'userlist-' + roomId)
-                .addClass('users')
-                .appendTo($chatArea).hide();
-            templates.userlist.tmpl({ listname: '- Room Owners', id: 'userlist-' + roomId + '-owners' })
-                .addClass('owners')
-                .appendTo(userContainer);
-            templates.userlist.tmpl({ listname: '- Users', id: 'userlist-' + roomId + '-active' })
-                .appendTo(userContainer);
-            userContainer.find('h3').click(function () {
-                if ($.trim($(this).text())[0] === '-') {
-                    $(this).text($(this).text().replace('-', '+'));
-                } else {
-                    $(this).text($(this).text().replace('+', '-'));
-                }
-                $(this).next().toggle(0);
-                return false;
-            });
-        } else {
-            $('<ul/>').attr('id', 'userlist-' + roomId)
-                .addClass('users')
-                .appendTo($chatArea).hide();
-        }
-
+        userContainer = $('<div/>').attr('id', 'userlist-' + roomId)
+            .addClass('users')
+            .appendTo($chatArea).hide();
+        templates.userlist.tmpl({ listname: '- Room Owners', id: 'userlist-' + roomId + '-owners' })
+            .addClass('owners')
+            .appendTo(userContainer);
+        templates.userlist.tmpl({ listname: '- Users', id: 'userlist-' + roomId + '-active' })
+            .appendTo(userContainer);
+        userContainer.find('h3').click(function () {
+            if ($.trim($(this).text())[0] === '-') {
+                $(this).text($(this).text().replace('-', '+'));
+            } else {
+                $(this).text($(this).text().replace('+', '-'));
+            }
+            $(this).next().toggle(0);
+            return false;
+        });
+        
         $tabs.find('li')
             .not('.lobby')
             .sortElements(function (a, b) {
@@ -640,11 +623,13 @@
 
     function loadMoreLobbyRooms() {
         var lobby = getLobby(),
-            showClosedRooms = $closedRoomFilter.is(':checked'),
             moreRooms = sortedRoomList.slice(lastLoadedRoomIndex, lastLoadedRoomIndex + maxRoomsToLoad);
 
-        populateLobbyRoomList(moreRooms, templates.lobbyroom, lobby.users, showClosedRooms);
+        populateLobbyRoomList(moreRooms, templates.lobbyroom, lobby.users);
         lastLoadedRoomIndex = lastLoadedRoomIndex + maxRoomsToLoad;
+        
+        // re-filter lists
+        $lobbyRoomFilterForm.submit();
     }
 
     var ui = {
@@ -705,9 +690,9 @@
             $userCmdHelp = $('#jabbr-help #user');
             $updatePopup = $('#jabbr-update');
             focus = true;
-            $lobbyRoomFilterForm = $('#users-filter-form'),
-            $roomFilterInput = $('#users-filter'),
-            $closedRoomFilter = $('#users-filter-closed');
+            $lobbyRoomFilterForm = $('#room-filter-form'),
+            $roomFilterInput = $('#room-filter'),
+            $closedRoomFilter = $('#room-filter-closed');
             templates = {
                 userlist: $('#new-userlist-template'),
                 user: $('#new-user-template'),
@@ -1022,25 +1007,41 @@
             $help.click(function () {
                 ui.showHelp();
             });
+            
+            $roomFilterInput.bind('input', function () { $lobbyRoomFilterForm.submit(); })
+                .keyup(function () { $lobbyRoomFilterForm.submit(); });
 
-            $closedRoomFilter.click(function () {
+            $closedRoomFilter.click(function() { $lobbyRoomFilterForm.submit(); });
+
+            $lobbyRoomFilterForm.submit(function () {
                 var room = getCurrentRoomElements(),
-                    show = $(this).is(':checked');
+                    filter = $roomFilterInput.val().toLowerCase(),
+                    showClosedRooms = $closedRoomFilter.is(':checked'),
+                    $lobbyRoomsLists = $lobbyPrivateRooms.add($lobbyOtherRooms);
 
                 // bounce on any room other than lobby
                 if (!room.isLobby()) {
                     return false;
                 }
 
-                // hide the closed rooms from lobby list
-                if (show) {
-                    room.users.find('.closed').show();
-                } else {
-                    room.users.find('.closed').hide();
-                }
+                // hide all elements except those that match the input filter
+                $lobbyRoomsLists
+                    .find('li:not(.empty)')
+                    .hide()
+                    .filter(function() {
+                         return $(this).data('room').toLowerCase().score(filter) > 0.0;
+                    })
+                    .show();
 
-                // clear the search text and update search list
-                ui.$roomFilter.update();
+                // redact closed rooms if we're not showing them
+                if (!showClosedRooms) {
+                    $lobbyRoomsLists.find('.closed').hide();
+                }
+                
+                $lobbyRoomsLists.find('ul').each(function () {
+                    room.setListState($(this));
+                });
+                return false;
             });
 
             $window.blur(function () {
@@ -1152,16 +1153,6 @@
 
             // Load preferences
             loadPreferences();
-
-            // Initilize liveUpdate plugin for room search
-            ui.$roomFilter = $roomFilterInput.liveUpdate('#userlist-lobby', function ($theListItem) {
-                if ($theListItem.hasClass('closed') && !showClosedRoomsInLobby()) {
-                    return;
-                }
-
-                // show it
-                $theListItem.show();
-            });
 
             // Crazy browser hack
             $hiddenFile[0].style.left = '-800px';
@@ -1397,11 +1388,10 @@
                 }
 
                 var showClosedRooms = $closedRoomFilter.is(':checked'),
-                    // sort lobby by room open ascending then count descending
-                    privateSorted = sortRoomList(privateRooms);
-                // sort lobby by room open ascending then count descending and
-                // filter the other rooms so that there is no duplication 
-                // between the lobby lists
+                // sort private lobby rooms
+                privateSorted = sortRoomList(privateRooms);
+                
+                // sort other lobby rooms but filter out private rooms
                 sortedRoomList = sortRoomList(rooms).filter(function (room) {
                     return !privateSorted.some(function (allowed) {
                         return allowed.Name === room.Name;
@@ -1413,7 +1403,7 @@
 
                 var listOfPrivateRooms = $('<ul/>');
                 if (privateSorted.length > 0) {
-                    populateLobbyRoomList(privateSorted, templates.lobbyroom, listOfPrivateRooms, showClosedRooms);
+                    populateLobbyRoomList(privateSorted, templates.lobbyroom, listOfPrivateRooms);
                     listOfPrivateRooms.children('li').appendTo(lobby.owners);
                     $lobbyPrivateRooms.show();
                     $lobbyOtherRooms.find('nav-header').html('Other Rooms');
@@ -1423,7 +1413,7 @@
                 }
 
                 var listOfRooms = $('<ul/>');
-                populateLobbyRoomList(sortedRoomList.splice(0, maxRoomsToLoad), templates.lobbyroom, listOfRooms, showClosedRooms);
+                populateLobbyRoomList(sortedRoomList.splice(0, maxRoomsToLoad), templates.lobbyroom, listOfRooms);
                 lastLoadedRoomIndex = listOfRooms.children('li').length;
                 listOfRooms.children('li').appendTo(lobby.users);
                 if (lastLoadedRoomIndex < sortedRoomList.length) {
@@ -1438,8 +1428,8 @@
                 $lobbyRoomFilterForm.show();
             }
 
-            ui.$roomFilter.update();
-            $roomFilterInput.val('');
+            // re-filter lists
+            $lobbyRoomFilterForm.submit();
         },
         addUser: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),

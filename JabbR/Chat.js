@@ -684,9 +684,16 @@
             ui.addMessage('No rooms available', 'list-item');
         }
         else {
-            // sort rooms by count descending
+            // sort rooms by count descending then name
             var sorted = rooms.sort(function (a, b) {
-                return a.Count > b.Count ? -1 : 1;
+                if (a.Count > b.Count) {
+                    return -1;
+                }
+                if (a.Count < b.Count) {
+                    return 1;
+                }
+                
+                return a.Name.toLowerCase().localeCompare(b.Name.toLowerCase());
             });
 
             $.each(sorted, function () {

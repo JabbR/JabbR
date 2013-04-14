@@ -50,12 +50,12 @@ form#send-message {
     overflow: auto;
 }
 
-#users-filter-form {
+#room-filter-form {
     display: none;
     margin: -4px 5px;
 }
 
-#users-filter-closed-area {
+#room-filter-closed-area {
     margin: 0px 5px;
     font-size: 13px;
 }
@@ -270,6 +270,15 @@ form#send-message {
     #userlist-lobby-owners li {
         display: inline;
     }
+
+        #userlist-lobby li.empty,
+        #userlist-lobby-owners li.empty {
+            color: #909090;
+            display: inline-block;
+            font-style: italic;
+            margin-bottom: 10px;
+            margin-left: 10px;
+        }
 
         #userlist-lobby li:hover,
         #userlist-lobby-owners li:hover {
