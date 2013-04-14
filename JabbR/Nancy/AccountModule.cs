@@ -38,12 +38,6 @@ namespace JabbR.Nancy
                     return Response.AsRedirect("~/");
                 }
 
-                // If the user is partially authenticated then take them to the register page
-                if (Principal.Identity.IsAuthenticated)
-                {
-                    return Response.AsRedirect("~/account/register");
-                }
-
                 return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
             };
 

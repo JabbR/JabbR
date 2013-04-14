@@ -18,7 +18,7 @@ namespace JabbR.Services
             _crypto = crypto;
         }
 
-        public ChatUser GetOrAddUser(ClaimsPrincipal claimsPrincipal)
+        public ChatUser AddUser(ClaimsPrincipal claimsPrincipal)
         {
             var identity = claimsPrincipal.GetClaimValue(ClaimTypes.NameIdentifier);
             var name = claimsPrincipal.GetClaimValue(ClaimTypes.Name);
@@ -40,8 +40,7 @@ namespace JabbR.Services
                 throw new InvalidOperationException("Unable find the provider claim");
             }
 
-            return _repository.GetUserByIdentity(providerName, identity) ?? 
-                   AddUser(name, providerName, identity, email);
+            return AddUser(name, providerName, identity, email);
         }
 
         private ChatUser AddUser(string userName, string providerName, string identity, string email)

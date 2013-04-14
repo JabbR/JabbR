@@ -1,5 +1,9 @@
 ﻿using System;
+using System.IdentityModel.Selectors;
+using System.IdentityModel.Services.Configuration;
+using System.IdentityModel.Tokens;
 using System.Net.Http.Formatting;
+using System.ServiceModel.Security;
 using System.Web.Http;
 using JabbR.Infrastructure;
 using JabbR.Middleware;
@@ -8,7 +12,9 @@ using JabbR.Services;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.SystemWeb.Infrastructure;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.DataProtection;
+using Microsoft.Owin.Security.Federation;
 using Microsoft.Owin.Security.Forms;
 using Newtonsoft.Json.Serialization;
 using Ninject;
@@ -62,8 +68,6 @@ namespace JabbR
                 Provider = kernel.Get<IFormsAuthenticationProvider>()
             });
 
-            app.Use(typeof(WindowsPrincipalHandler));
-
             //var config = new FederationConfiguration(loadConfig: false);
             //config.WsFederationConfiguration.Issuer = "";
             //config.WsFederationConfiguration.Realm = "http://localhost:16207/";
@@ -77,10 +81,14 @@ namespace JabbR
 
             //app.UseFederationAuthentication(new FederationAuthenticationOptions
             //{
+            //    AuthenticationMode = AuthenticationMode.Passive,
             //    ReturnPath = "/wsfederation",
             //    SigninAsAuthenticationType = Constants.JabbRAuthType,
-            //    FederationConfiguration = config
+            //    FederationConfiguration = config,
+            //    Provider = new FederationAuthenticationProvider()
             //});
+
+            app.Use(typeof(WindowsPrincipalHandler));
         }
 
         private static void SetupNancy(IKernel kernel, IAppBuilder app)

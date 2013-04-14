@@ -121,10 +121,11 @@
     </Reference>
     <Reference Include="Microsoft.Owin.Security, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.0.22.0-pre-20413-188\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.0.22.0-pre-20413-189\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.Federation">
-      <HintPath>..\packages\Microsoft.Owin.Security.Federation.0.22.0-pre-20412-184\lib\net45\Microsoft.Owin.Security.Federation.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Security.Federation, Version=0.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Federation.0.22.0-pre-20413-189\lib\net45\Microsoft.Owin.Security.Federation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Forms, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

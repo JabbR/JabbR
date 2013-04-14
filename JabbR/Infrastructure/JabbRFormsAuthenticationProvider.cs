@@ -39,9 +39,15 @@ namespace JabbR.Infrastructure
                 return;
             }
 
-            if (principal.HasRequiredClaims())
+            ChatUser user = _repository.GetUser(principal);
+
+            if (user != null)
             {
-                ChatUser user = _membershipService.GetOrAddUser(principal);
+                identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
+            }
+            else if (principal.HasRequiredClaims())
+            {
+                user = _membershipService.AddUser(principal);
 
                 identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
             }

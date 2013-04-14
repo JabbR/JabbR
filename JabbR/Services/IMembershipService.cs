@@ -7,7 +7,7 @@ namespace JabbR.Services
     public interface IMembershipService
     {
         // Creates an account form a ClaimsPrincipal
-        ChatUser GetOrAddUser(ClaimsPrincipal claimsPrincipal);
+        ChatUser AddUser(ClaimsPrincipal claimsPrincipal);
 
         // User name password functions
         ChatUser AddUser(string userName, string email, string password);

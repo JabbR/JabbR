@@ -1,12 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using JabbR.Services;
+using JabbR.Infrastructure;
 
 namespace JabbR.Models
 {
     public static class RepositoryExtensions
     {
+        public static ChatUser GetUser(this IJabbrRepository repository, ClaimsPrincipal principal)
+        {
+            string identity = principal.GetClaimValue(ClaimTypes.NameIdentifier);
+            string providerName = principal.GetIdentityProvider();
+
+            return repository.GetUserByIdentity(providerName, identity);
+        }
+
         public static IQueryable<ChatUser> Online(this IQueryable<ChatUser> source)
         {
             return source.Where(u => u.Status != (int)UserStatus.Offline);

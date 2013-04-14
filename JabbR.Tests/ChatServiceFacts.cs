@@ -98,7 +98,7 @@ namespace JabbR.Test
                 var claimsIdentity = new ClaimsIdentity(claims);
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                service.GetOrAddUser(claimsPrincipal);
+                service.AddUser(claimsPrincipal);
 
                 var user = repository.GetUserByIdentity("provider", "identity");
                 Assert.NotNull(user);
@@ -129,7 +129,7 @@ namespace JabbR.Test
                 var claimsIdentity = new ClaimsIdentity(claims);
                 var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                service.GetOrAddUser(claimsPrincipal);
+                service.AddUser(claimsPrincipal);
 
                 var user = repository.GetUserByIdentity("provider", "identity");
                 Assert.NotNull(user);
