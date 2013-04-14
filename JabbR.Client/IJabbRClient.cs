@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using JabbR.Client.Models;
+using JabbR.Models;
 using Microsoft.AspNet.SignalR.Client;
 
 namespace JabbR.Client
@@ -49,6 +50,8 @@ namespace JabbR.Client
         Task Kick(string userName, string roomName);
         Task<bool> CheckStatus();
         Task SetTyping(string roomName);
+        Task PostNotification(ClientNotification notification);
+        Task PostNotification(ClientNotification notification, bool executeContentProviders);
         Task<IEnumerable<Message>> GetPreviousMessages(string fromId);
         Task<Room> GetRoomInfo(string roomName);
         Task<IEnumerable<Room>> GetRooms();

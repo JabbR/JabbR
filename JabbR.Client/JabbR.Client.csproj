@@ -51,6 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\JabbR\Models\ClientMessage.cs">
+      <Link>Models\ClientMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR\Models\ClientNotification.cs">
+      <Link>Models\ClientNotification.cs</Link>
+    </Compile>
     <Compile Include="ClientEvents.cs" />
     <Compile Include="DefaultAuthenticationProvider.cs" />
     <Compile Include="HttpHelper.cs" />
@@ -65,7 +71,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StreamExtensions.cs" />
     <Compile Include="TaskAsyncHelper.cs" />
-    <Compile Include="Models\ClientMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

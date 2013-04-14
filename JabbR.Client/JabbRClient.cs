@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using JabbR.Client.Models;
+using JabbR.Models;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Http;
 using Microsoft.AspNet.SignalR.Client.Hubs;
@@ -177,6 +178,16 @@ namespace JabbR.Client
         public Task<bool> Send(ClientMessage message)
         {
             return _chat.Invoke<bool>("Send", message);
+        }
+
+        public Task PostNotification(ClientNotification notification, bool executeContentProviders)
+        {
+            return _chat.Invoke("PostNotification", notification, executeContentProviders);
+        }
+
+        public Task PostNotification(ClientNotification notification)
+        {
+            return _chat.Invoke("PostNotification", notification);
         }
 
         public Task CreateRoom(string roomName)
