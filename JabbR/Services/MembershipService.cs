@@ -23,7 +23,7 @@ namespace JabbR.Services
             var identity = claimsPrincipal.GetClaimValue(ClaimTypes.NameIdentifier);
             var name = claimsPrincipal.GetClaimValue(ClaimTypes.Name);
             var email = claimsPrincipal.GetClaimValue(ClaimTypes.Email);
-            var providerName = claimsPrincipal.GetClaimValue(ClaimTypes.AuthenticationMethod);
+            var providerName = claimsPrincipal.GetIdentityProvider();
 
             if (String.IsNullOrEmpty(identity))
             {
@@ -37,7 +37,7 @@ namespace JabbR.Services
 
             if (String.IsNullOrEmpty(providerName))
             {
-                throw new InvalidOperationException("Unable find the authentication method claim");
+                throw new InvalidOperationException("Unable find the provider claim");
             }
 
             return _repository.GetUserByIdentity(providerName, identity) ?? 

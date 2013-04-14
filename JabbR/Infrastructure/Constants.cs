@@ -12,4 +12,9 @@ namespace JabbR.Infrastructure
     {
         public static readonly string Identifier = "urn:jabbr:id";
     }
+
+    public static class AcsClaimTypes
+    {
+        public static readonly string IdentityProvider = "http://schemas.microsoft.com/accesscontrolservice/2010/07/claims/IdentityProvider";
+    }
 }

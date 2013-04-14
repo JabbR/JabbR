@@ -48,11 +48,17 @@ namespace JabbR.Infrastructure
             return claim != null ? claim.Value : null;
         }
 
+        public static string GetIdentityProvider(this ClaimsPrincipal principal)
+        {
+            return principal.GetClaimValue(ClaimTypes.AuthenticationMethod) ??
+                   principal.GetClaimValue(AcsClaimTypes.IdentityProvider);
+        }
+
         public static bool HasRequiredClaims(this ClaimsPrincipal principal)
         {
             return !String.IsNullOrEmpty(principal.GetClaimValue(ClaimTypes.NameIdentifier)) &&
                    !String.IsNullOrEmpty(principal.GetClaimValue(ClaimTypes.Name)) &&
-                   !String.IsNullOrEmpty(principal.GetClaimValue(ClaimTypes.AuthenticationMethod));
+                   !String.IsNullOrEmpty(principal.GetIdentityProvider());
         }
     }
 }
