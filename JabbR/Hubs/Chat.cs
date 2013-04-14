@@ -386,7 +386,7 @@ namespace JabbR
             };
         }
 
-        public void PostNotification(string roomName, string image, string source, string message)
+        public void PostNotification(string roomName, string image, string source, string content)
         {
             string userId = Context.User.GetUserId();
 
@@ -394,15 +394,28 @@ namespace JabbR
             ChatRoom room = _repository.VerifyUserRoom(_cache, user, roomName);
 
             // User must be an owner
-            if (room == null || 
-                !room.Owners.Contains(user) || 
+            if (room == null ||
+                !room.Owners.Contains(user) ||
                 (room.Private && !user.AllowedRooms.Contains(room)))
             {
                 throw new InvalidOperationException("You're not allowed to post a notification");
             }
 
-            // TODO: Persist this in the db
-            Clients.Group(room.Name).notify(roomName, image, source, message);
+            var message = new ChatMessage
+            {
+                Content = content,
+                User = user,
+                Room = room,
+                HtmlEncoded = false,
+                ImageUrl = image,
+                Source = source,
+                When = DateTimeOffset.UtcNow
+            };
+
+            _repository.Add(message);
+            _repository.CommitChanges();
+
+            Clients.Group(room.Name).addMessage(new MessageViewModel(message), roomName);
         }
 
         public void Typing(string roomName)

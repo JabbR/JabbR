@@ -1673,8 +1673,8 @@
                 previousUser = null,
                 previousTimestamp = new Date().addDays(1), // Tomorrow so we always see a date line
                 showUserName = true,
-                $message = null,
-                isMention = message.highlight;
+                isMention = message.highlight,
+                isNotification = message.isNotification;
 
             // bounce out of here if the room is closed
             if (room.isClosed()) {
@@ -1692,7 +1692,7 @@
             }
 
             // Determine if we need to show the user name next to the message
-            showUserName = previousUser !== message.name;
+            showUserName = previousUser !== message.name && !isNotification;
             message.showUser = showUserName;
 
             processMessage(message, roomName);
@@ -1710,10 +1710,22 @@
                 room.addSeparator();
             }
 
-            $message = this.appendMessage(templates.message.tmpl(message), room);
+            if (isNotification === true) {
+                var model = {
+                    content: message.message,
+                    img: message.imageUrl,
+                    source: message.source,
+                    encoded: true,
+                };
 
-            if (message.htmlContent) {
-                ui.addChatMessageContent(message.id, message.htmlContent, room.getName());
+                ui.addMessage(model, 'postedNotification', roomName);
+            }
+            else {
+                this.appendMessage(templates.message.tmpl(message), room);
+
+                if (message.htmlContent) {
+                    ui.addChatMessageContent(message.id, message.htmlContent, room.getName());
+                }
             }
 
             if (room.isInitialized()) {
@@ -1773,12 +1785,12 @@
         },
         prepareNotificationMessage: function (options, type) {
             if (typeof options === 'string') {
-                options = { content: options };
+                options = { content: options, encoded: false };
             }
 
             var now = new Date(),
             message = {
-                message: ui.processContent(options.content),
+                message: options.encoded ? options.content : ui.processContent(options.content),
                 type: type,
                 date: now,
                 when: now.formatTime(true),
@@ -1788,15 +1800,6 @@
             };
 
             return templates.notification.tmpl(message);
-        },
-        addNotification: function (roomName, imageUrl, source, message) {
-            var model = {
-                content: message,
-                img: imageUrl,
-                source: source
-            };
-
-            ui.addMessage(model, 'postedNotification', roomName);
         },
         addMessageBeforeTarget: function (content, type, $target) {
             var $element = null;

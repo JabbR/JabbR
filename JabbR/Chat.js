@@ -180,7 +180,10 @@
             date: message.When.fromJsonDate(),
             highlight: re.test(message.Content) ? 'highlight' : '',
             isOwn: re.test(message.User.name),
-            isMine: message.User.Name === chat.state.name
+            isMine: message.User.Name === chat.state.name,
+            imageUrl: message.ImageUrl,
+            source: message.Source,
+            isNotification: (message.Source !== null && message.ImageUrl !== null)
         };
     }
 
@@ -475,10 +478,6 @@
     // Called when the server sends a notification message
     chat.client.postNotification = function (msg, room) {
         ui.addMessage(msg, 'notification', room);
-    };
-
-    chat.client.notify = function (roomName, imageUrl, source, message) {
-        ui.addNotification(roomName, imageUrl, source, message);
     };
 
     chat.client.postMessage = function (msg, type, room) {

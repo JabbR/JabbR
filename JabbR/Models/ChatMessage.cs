@@ -23,6 +23,10 @@ namespace JabbR.Models
         public int? RoomKey { get; set; }
         public int? UserKey { get; set; }
 
+        // Notificaitons
+        public string ImageUrl { get; set; }
+        public string Source { get; set; }
+
         public virtual ICollection<Notification> Notifications { get; set; }
 
         public ChatMessage()
