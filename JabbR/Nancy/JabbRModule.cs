@@ -30,7 +30,7 @@ namespace JabbR.Nancy
 
         internal static Response AlertsToViewBag(NancyContext context)
         {
-            var item = context.Request.Session.GetSessionVaue<AlertMessageStore>(AlertMessageStore.AlertMessageKey);
+            var item = context.Request.Session.GetSessionValue<AlertMessageStore>(AlertMessageStore.AlertMessageKey);
             context.ViewBag.Alerts = item;
 
             context.Request.Session.Delete(AlertMessageStore.AlertMessageKey);

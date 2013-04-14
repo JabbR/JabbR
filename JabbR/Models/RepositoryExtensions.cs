@@ -9,6 +9,11 @@ namespace JabbR.Models
 {
     public static class RepositoryExtensions
     {
+        public static ChatUser GetLoggedInUser(this IJabbrRepository repository, ClaimsPrincipal principal)
+        {
+            return repository.GetUserById(principal.GetUserId());
+        }
+
         public static ChatUser GetUser(this IJabbrRepository repository, ClaimsPrincipal principal)
         {
             string identity = principal.GetClaimValue(ClaimTypes.NameIdentifier);

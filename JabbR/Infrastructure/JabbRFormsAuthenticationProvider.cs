@@ -1,8 +1,10 @@
-﻿using System.Security.Claims;
+﻿using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using JabbR.Models;
 using JabbR.Services;
 using Microsoft.Owin.Security.Forms;
+using Owin.Types;
 
 namespace JabbR.Infrastructure
 {
@@ -29,6 +31,8 @@ namespace JabbR.Infrastructure
 
         public void ResponseSignIn(FormsResponseSignInContext context)
         {
+            ChatUser loggedInUser = GetLoggedInUser(context.Environment);
+
             var identity = context.Identity as ClaimsIdentity;
 
             var principal = new ClaimsPrincipal(identity);
@@ -41,21 +45,54 @@ namespace JabbR.Infrastructure
 
             ChatUser user = _repository.GetUser(principal);
 
+            // The user exists so add the claim
             if (user != null)
             {
                 identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
             }
             else if (principal.HasRequiredClaims())
             {
-                user = _membershipService.AddUser(principal);
+                // The user doesn't exist but the claims to create the user do exist
+                string userId = null;
 
-                identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
+                if (loggedInUser == null)
+                {
+                    // New user so add them
+                    user = _membershipService.AddUser(principal);
+
+                    userId = user.Id;
+                }
+                else
+                {
+                    // If the user is logged in then link
+                    _membershipService.LinkIdentity(loggedInUser, principal);
+
+                    _repository.CommitChanges();
+
+                    userId = loggedInUser.Id;
+                }
+
+                identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, userId));
             }
             else
             {
                 // A partial identity means the user needs to add more claims to login
                 identity.AddClaim(new Claim(JabbRClaimTypes.PartialIdentity, "true"));
             }
+        }
+
+        private ChatUser GetLoggedInUser(IDictionary<string, object> env)
+        {
+            var request = new OwinRequest(env);
+
+            var principal = request.User as ClaimsPrincipal;
+
+            if (principal != null)
+            {
+                return _repository.GetLoggedInUser(principal);
+            }
+
+            return null;
         }
     }
 }

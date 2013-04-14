@@ -16,7 +16,7 @@ namespace JabbR.Nancy
             session[key] = JsonConvert.SerializeObject(entry);
         }
 
-        public static T GetSessionVaue<T>(this ISession session, string key)
+        public static T GetSessionValue<T>(this ISession session, string key)
         {
             if (String.IsNullOrWhiteSpace(key))
             {

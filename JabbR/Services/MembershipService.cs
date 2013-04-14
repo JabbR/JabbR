@@ -25,21 +25,6 @@ namespace JabbR.Services
             var email = claimsPrincipal.GetClaimValue(ClaimTypes.Email);
             var providerName = claimsPrincipal.GetIdentityProvider();
 
-            if (String.IsNullOrEmpty(identity))
-            {
-                throw new InvalidOperationException("Unable find the identifier claim");
-            }
-
-            if (String.IsNullOrEmpty(name))
-            {
-                throw new InvalidOperationException("Unable find the name claim");
-            }
-
-            if (String.IsNullOrEmpty(providerName))
-            {
-                throw new InvalidOperationException("Unable find the provider claim");
-            }
-
             return AddUser(name, providerName, identity, email);
         }
 
@@ -82,6 +67,21 @@ namespace JabbR.Services
             _repository.CommitChanges();
 
             return user;
+        }
+
+        public void LinkIdentity(ChatUser user, ClaimsPrincipal claimsPrincipal)
+        {
+            var identity = claimsPrincipal.GetClaimValue(ClaimTypes.NameIdentifier);
+            var email = claimsPrincipal.GetClaimValue(ClaimTypes.Email);
+            var providerName = claimsPrincipal.GetIdentityProvider();
+
+            // Link this new identity
+            user.Identities.Add(new ChatUserIdentity
+            {
+                Email = email,
+                Identity = identity,
+                ProviderName = providerName
+            });
         }
 
         public ChatUser AddUser(string userName, string email, string password)

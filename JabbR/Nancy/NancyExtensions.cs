@@ -51,7 +51,7 @@ namespace JabbR.Nancy
 
         public static void AddAlertMessage(this NancyModule module, string messageType, string alertMessage)
         {
-            var container = module.Request.Session.GetSessionVaue<AlertMessageStore>(AlertMessageStore.AlertMessageKey);
+            var container = module.Request.Session.GetSessionValue<AlertMessageStore>(AlertMessageStore.AlertMessageKey);
 
             if (container == null)
             {

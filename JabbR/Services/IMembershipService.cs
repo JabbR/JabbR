@@ -8,6 +8,7 @@ namespace JabbR.Services
     {
         // Creates an account form a ClaimsPrincipal
         ChatUser AddUser(ClaimsPrincipal claimsPrincipal);
+        void LinkIdentity(ChatUser user, ClaimsPrincipal principal);
 
         // User name password functions
         ChatUser AddUser(string userName, string email, string password);
