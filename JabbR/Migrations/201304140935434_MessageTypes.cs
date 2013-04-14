@@ -7,7 +7,7 @@ namespace JabbR.Models.Migrations
     {
         public override void Up()
         {
-            AddColumn("dbo.ChatMessages", "MessageType", c => c.Int(nullable: false));
+            AddColumn("dbo.ChatMessages", "MessageType", c => c.Int(nullable: false, defaultValue: 0));
         }
         
         public override void Down()
