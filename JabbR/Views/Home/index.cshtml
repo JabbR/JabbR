@@ -61,6 +61,12 @@
     <script id="new-notification-template" type="text/x-jquery-tmpl">
         <li class="${type}" data-timestamp="${date}">
             <div class="content">
+                {{if img}}
+                <img src="${img}" />
+                {{/if}}
+                {{if source}}
+                <strong>${source}:</strong>
+                {{/if}}
                 {{html message}}
                 <a class="info" href="#"></a>
             </div>

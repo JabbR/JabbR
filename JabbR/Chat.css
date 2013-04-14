@@ -777,6 +777,17 @@ li.error {
             color: inherit;
         }
 
+.postedNotification {
+    border-bottom: 1px solid #eee;
+    padding: 5px;
+}
+
+    .postedNotification img {
+        width: 16px;
+        height: 16px;
+        margin-top: -5px;
+    }
+
 .notification {
     color: #bbb;
     border-bottom: 1px solid #eee;

@@ -1771,20 +1771,32 @@
                 }
             }
         },
-        prepareNotificationMessage: function (content, type) {
+        prepareNotificationMessage: function (options, type) {
+            if (typeof options === 'string') {
+                options = { content: options };
+            }
+
             var now = new Date(),
-                message = {
-                    message: ui.processContent(content),
-                    type: type,
-                    date: now,
-                    when: now.formatTime(true),
-                    fulldate: now.toLocaleString()
-                };
+            message = {
+                message: ui.processContent(options.content),
+                type: type,
+                date: now,
+                when: now.formatTime(true),
+                fulldate: now.toLocaleString(),
+                img: options.img,
+                source: options.source
+            };
 
             return templates.notification.tmpl(message);
         },
         addNotification: function (roomName, imageUrl, source, message) {
+            var model = {
+                content: message,
+                img: imageUrl,
+                source: source
+            };
 
+            ui.addMessage(model, 'postedNotification', roomName);
         },
         addMessageBeforeTarget: function (content, type, $target) {
             var $element = null;
