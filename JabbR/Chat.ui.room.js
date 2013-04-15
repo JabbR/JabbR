@@ -234,7 +234,7 @@
         
         if (visibleItems.length > 0) {
             emptyStatus.remove();
-        } else if (emptyStatus.length == 0) {
+        } else if (emptyStatus.length === 0) {
             list.append($('<li class="empty" />').text(list.data('empty-message')));
         }
     };
