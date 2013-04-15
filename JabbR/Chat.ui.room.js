@@ -229,8 +229,10 @@
     };
 
     Room.prototype.setListState = function (list) {
-        var emptyStatus = list.children('li.empty');
-        if (list.children('li:not(.empty)').filter(function () { return (this.style && this.style.display !== 'none') || $.css(this, 'display') !== "none"; }).length > 0) {
+        var emptyStatus = list.children('li.empty'),
+            visibleItems = list.children('li:not(.empty):visible');
+        
+        if (visibleItems.length > 0) {
             emptyStatus.remove();
         } else if (emptyStatus.length == 0) {
             list.append($('<li class="empty" />').text(list.data('empty-message')));

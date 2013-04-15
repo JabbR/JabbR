@@ -266,7 +266,10 @@ form#send-message {
     background: none;
 }
 
-    #userlist-lobby li,
+    #userlist-lobby li {
+        display: block;
+    }
+
     #userlist-lobby-owners li {
         display: inline;
     }
