@@ -95,6 +95,16 @@ namespace JabbR.Services
             _notifications.Remove(notification);
         }
 
+        public int GetMessageCountSince(DateTime? lastIndexTime)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryable<ChatMessage> GetMessagesToIndex(DateTime? lastIndexTime, int skip, int take)
+        {
+            throw new NotImplementedException();
+        }
+
         public void CommitChanges()
         {
             // no-op since this is an in-memory impl' of the repo

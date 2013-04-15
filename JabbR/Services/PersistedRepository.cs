@@ -92,6 +92,32 @@ namespace JabbR.Services
             _db.SaveChanges();
         }
 
+        public int GetMessageCountSince(DateTime? lastIndexTime)
+        {
+            if (lastIndexTime.HasValue)
+            {
+                var offset = new DateTimeOffset(lastIndexTime.Value);
+                return _db.Messages.Count(m => m.When > offset);
+            }
+
+            return _db.Messages.Count();
+        }
+
+        public IQueryable<ChatMessage> GetMessagesToIndex(DateTime? lastIndexTime, int skip, int take)
+        {
+            IQueryable<ChatMessage> query = _db.Messages;
+
+            if (lastIndexTime.HasValue)
+            {
+                var offset = new DateTimeOffset(lastIndexTime.Value);
+                query = query.Where(m => m.When > offset);
+            }
+
+            return query.OrderByDescending(m => m.When)
+                      .Skip(skip)
+                      .Take(take);
+        }
+
         public void CommitChanges()
         {
             _db.SaveChanges();
@@ -289,6 +315,6 @@ namespace JabbR.Services
         public void Reload(object entity)
         {
             _db.Entry(entity).Reload();
-        }        
+        }
     }
 }

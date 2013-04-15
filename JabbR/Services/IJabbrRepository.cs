@@ -54,5 +54,8 @@ namespace JabbR.Services
 
         void Add(Notification notification);
         void Remove(Notification notification);
+
+        int GetMessageCountSince(DateTime? lastIndexTime);
+        IQueryable<ChatMessage> GetMessagesToIndex(DateTime? lastIndexTime, int skip, int take);
     }
 }

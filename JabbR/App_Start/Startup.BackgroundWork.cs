@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
@@ -33,6 +34,9 @@ namespace JabbR
             null,
             _sweepStart,
             _sweepInterval);
+
+            var indexer = resolver.Resolve<ISearchIndexingService>();
+            var index = new Timer(_ => indexer.UpdateIndex(), null, TimeSpan.FromSeconds(0), TimeSpan.FromMinutes(5));
 
             // Clear all connections on app start
             ClearConnectedClients(kernel);
