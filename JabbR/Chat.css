@@ -386,7 +386,7 @@ form#send-message {
 #userlist-lobby .closed .readonly,
 #userlist-lobby-owners .locked .lock,
 #userlist-lobby-owners .closed .readonly {
-    display: initial;
+    display: inline-block;
 }
 
 .users ul {
