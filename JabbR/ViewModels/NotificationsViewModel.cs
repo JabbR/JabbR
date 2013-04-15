@@ -21,5 +21,12 @@ namespace JabbR.ViewModels
         public bool Read { get; set; }
         public bool HtmlEncoded { get; set; }
         public DateTimeOffset When { get; set; }
+        public string WhenAsJsonString
+        {
+            get
+            {
+                return JsonSerializer.Serialize(When).Trim('\"');
+            }
+        }
     }
 }

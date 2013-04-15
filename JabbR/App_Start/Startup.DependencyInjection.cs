@@ -101,7 +101,7 @@ namespace JabbR
 
             var serializer = new JsonNetSerializer(new JsonSerializerSettings()
             {
-                DateFormatHandling = DateFormatHandling.MicrosoftDateFormat
+                DateFormatHandling = DateFormatHandling.IsoDateFormat
             });
 
             kernel.Bind<IJsonSerializer>()

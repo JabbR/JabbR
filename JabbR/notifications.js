@@ -39,8 +39,7 @@
 
     $('.notification-item .time').each(function () {
         var $time = $(this),
-            dateString = $time.data('timestamp'),
-            date = new Date(dateString);
+            date = $time.data('timestamp').fromJsonDate();
 
         $time.text(date.toLocaleString());
     });
