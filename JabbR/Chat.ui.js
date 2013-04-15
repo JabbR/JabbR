@@ -98,7 +98,7 @@
     }
 
     function getRoomId(roomName) {
-        return window.escape(roomName.toLowerCase()).replace(/[^a-z0-9]/, '_');
+        return window.escape(roomName.toString().toLowerCase()).replace(/[^a-z0-9]/, '_');
     }
 
     function getUserClassName(userName) {
@@ -300,7 +300,7 @@
         $tabs.find('li')
             .not('.lobby')
             .sortElements(function (a, b) {
-                return $(a).data('name').toLowerCase() > $(b).data('name').toLowerCase() ? 1 : -1;
+                return $(a).data('name').toString().toLowerCase() > $(b).data('name').toString().toLowerCase() ? 1 : -1;
             });
 
         scrollHandler = function (ev) {
@@ -1029,7 +1029,7 @@
                     .find('li:not(.empty)')
                     .hide()
                     .filter(function() {
-                         return $(this).data('room').toLowerCase().score(filter) > 0.0;
+                        return $(this).data('room').toString().toLowerCase().score(filter) > 0.0;
                     })
                     .show();
 
