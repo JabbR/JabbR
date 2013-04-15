@@ -69,7 +69,7 @@
                                         <p class="@(notification.HtmlEncoded ? "" : "linkify")">@notification.Message</p>
                                         <small>
                                             <img class="gravatar" src="https://secure.gravatar.com/avatar/@notification.FromUserImage?s=16&amp;d=mm" />
-                                            @notification.FromUserName in <strong><cite>@notification.RoomName</cite></strong> on <span class="time" data-timestamp="@Html.Raw(notification.WhenAsJsonString)"></span>
+                                            @notification.FromUserName in <strong><cite>@notification.RoomName</cite></strong> on <span class="time" data-timestamp="@notification.WhenString"></span>
                                         </small>
                                     </blockquote>
                                 </li>

@@ -997,7 +997,6 @@
     <Compile Include="Infrastructure\AlertMessageStore.cs" />
     <Compile Include="Infrastructure\JabbRDataProtection.cs" />
     <Compile Include="Infrastructure\JabbRFormsAuthenticationProvider.cs" />
-    <Compile Include="Infrastructure\JsonSerializer.cs" />
     <Compile Include="Infrastructure\PrincipalExtensions.cs" />
     <Compile Include="Infrastructure\JabbRAuthorizeAttribute.cs" />
     <Compile Include="Infrastructure\MentionExtractor.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using PagedList;
 
 namespace JabbR.ViewModels
@@ -21,12 +22,10 @@ namespace JabbR.ViewModels
         public bool Read { get; set; }
         public bool HtmlEncoded { get; set; }
         public DateTimeOffset When { get; set; }
-        public string WhenAsJsonString
+
+        public string WhenString
         {
-            get
-            {
-                return JsonSerializer.Serialize(When).Trim('\"');
-            }
+            get { return When.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss.FFFFFFFK", CultureInfo.InvariantCulture); }
         }
     }
 }
