@@ -7,13 +7,14 @@ using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.QueryParsers;
 using Lucene.Net.Search;
+using Lucene.Net.Store;
 using PagedList;
 
 namespace JabbR.Infrastructure
 {
     public class LuceneSearchService : ISearchService
     {
-        private readonly Lucene.Net.Store.Directory _directory;
+        private readonly ILuceneFileSystem _fileSystem;
 
         private static readonly Dictionary<string, float> SearchFields = new Dictionary<string, float> 
         {
@@ -24,7 +25,7 @@ namespace JabbR.Infrastructure
 
         public LuceneSearchService(ILuceneFileSystem fileSystem)
         {
-            _directory = fileSystem.IndexDirectory;
+            _fileSystem = fileSystem;
         }
 
         public IPagedList<SearchMessageViewModel> Search(SearchRequest request)
@@ -32,7 +33,7 @@ namespace JabbR.Infrastructure
             int skip = (request.CurrentPage-1) * request.PerPage;
             int numRecords = skip + request.PerPage;
 
-            var searcher = new IndexSearcher(_directory, readOnly: true);
+            var searcher = new IndexSearcher(_fileSystem.IndexDirectory, readOnly: true);
             var query = BuildSearchQuery(request.SearchQuery);
 
             var results = searcher.Search(query, n: numRecords, sort: new Sort(SortField.FIELD_SCORE), filter: null);
