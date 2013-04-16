@@ -88,7 +88,7 @@
         </div>
     </script>
     <script id="new-lobby-room-template" type="text/x-jquery-tmpl">
-        <li class="room {{if Private}}locked{{/if}} {{if Closed}}closed{{/if}}" data-room="${Name}" data-name="${Name}">
+        <li class="room {{if Private}}locked{{/if}} {{if Closed}}closed{{/if}}" data-room="${Name}" data-name="${Name}" data-count="${Count}" display="none;">
             <div class="row-fluid room-row">
                 <div class="span3">
                     <span class="name">${Name}</span>
@@ -99,7 +99,7 @@
                     <span class="topic">${Topic}</span>
                 </div>
                 <div class="span2">
-                    <span class="count" data-count="${Count}">{{if Count == 0}}Unoccupied{{else}}${Count} occupant{{if Count > 1}}s{{/if}}{{/if}}</span>
+                    <span class="count">{{if Count == 0}}Unoccupied{{else}}${Count} occupant{{if Count > 1}}s{{/if}}{{/if}}</span>
                 </div>
             </div>
         </li>
@@ -295,11 +295,11 @@
                 <i class="icon-spinner icon-3x"> </i><h3>Loading...</h3>
             </div>
             <div id="lobby-wrapper">
-                <div id="lobby-private">
+                <div id="lobby-private" style="display:none;">
                     <h2 class="userlist-header nav-header">Your Private Rooms</h2>
                     <ul id="userlist-lobby-owners" data-empty-message="No matching rooms"></ul>
                 </div>
-                <div id="lobby-other">
+                <div id="lobby-other" style="display:none;">
                     <h2 class="userlist-header nav-header">Rooms</h2>
                     <ul id="userlist-lobby" data-empty-message="No matching rooms">
                     </ul>

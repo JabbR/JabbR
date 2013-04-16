@@ -144,9 +144,8 @@
             } else if (b.Count > a.Count) {
                 return 1;
             }
-            var compA = a.Name.toString().toUpperCase();
-            var compB = b.Name.toString().toUpperCase();
-            return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
+
+            return a.Name.toString().toUpperCase().localeCompare(b.Name.toString().toUpperCase());
         });
         return sortedList;
     }
@@ -209,10 +208,18 @@
     function updateLobbyRoomCount(room, count) {
         var lobby = getLobby(),
             $room = lobby.users.find('[data-room="' + room.Name + '"]'),
-            $count = $room.find('.count');
+            $count = $room.find('.count'),
+            roomName = room.Name.toString().toUpperCase(),
+            nextListElement = null;
 
         $room.css('background-color', '#f5f5f5');
-        $count.text(' (' + count + ')');
+        if (count === 0) {
+            $count.text('Unoccupied');
+        } else if (count === 1) {
+            $count.text('1 occupant');
+        } else {
+            $count.text(count + ' occupants');
+        }
 
         if (room.Private === true) {
             $room.addClass('locked');
@@ -220,20 +227,56 @@
         if (room.Closed === true) {
             $room.addClass('closed');
         }
+        
+        // move the item to before the 
+        lobby.users.find('li').each(function () {
+            var $this = $(this),
+                liRoomCount = $this.data('count');
+            
+            if (liRoomCount < count ||
+                (liRoomCount == count && $this.data('name').toString().toUpperCase().localeCompare(roomName) > 0)) {
+                nextListElement = $this;
+                return false;
+            }
+
+            return true;
+        });
+
+        if (nextListElement !== null) {
+            $room.insertBefore(nextListElement);
+        } else {
+            $room.appendTo(lobby.users);
+        }
 
         // Do a little animation
-        $room.animate({ backgroundColor: '#e5e5e5' }, 800);
+        $room.animate({ backgroundColor: '#ffffff' }, 800);
     }
 
     function addRoomToLobby(roomViewModel) {
-        var lobby = getLobby();
-
-        templates.lobbyroom.tmpl(roomViewModel).appendTo(lobby.users);
-        lobby.users.find('li').sortElements(function (a, b) {
-            return $(a).data('name').toString().toLowerCase() > $(b).data('name').toString().toLowerCase() ? 1 : -1;
+        var lobby = getLobby(),
+            $room = templates.lobbyroom.tmpl(roomViewModel),
+            roomName = roomViewModel.Name.toString().toUpperCase(),
+            count = roomViewModel.Count,
+            nextListElement = null;
+        
+        // find the element to put the new item before
+        lobby.users.find('li').each(function() {
+            var $this = $(this),
+                liRoomCount = $this.data('count');
+            
+            if (liRoomCount < count ||
+                (liRoomCount === count && $this.data('name').toString().toUpperCase().localeCompare(roomName) > 0)) {
+                nextListElement = $this;
+                return false;
+            }
+            
+            return true;
         });
-        if (lobby.users.find($loadMoreRooms)) {
-            $loadMoreRooms.appendTo(lobby.users);
+
+        if (nextListElement !== null) {
+            $room.insertBefore(nextListElement);
+        } else {
+            $room.appendTo(lobby.users);
         }
     }
 
@@ -780,7 +823,7 @@
                 spinner.removeClass('icon-spin');
                 loader.html('Load More...');
                 if (lastLoadedRoomIndex < sortedRoomList.length) {
-                    $loadMoreRooms.appendTo(lobby.users);
+                    $loadMoreRooms.show();
                 } else {
                     $loadMoreRooms.hide();
                 }
@@ -1015,7 +1058,7 @@
 
             $lobbyRoomFilterForm.submit(function () {
                 var room = getCurrentRoomElements(),
-                    filter = $roomFilterInput.val().toLowerCase(),
+                    filter = $roomFilterInput.val().toUpperCase(),
                     showClosedRooms = $closedRoomFilter.is(':checked'),
                     $lobbyRoomsLists = $lobbyPrivateRooms.add($lobbyOtherRooms);
 
@@ -1024,19 +1067,17 @@
                     return false;
                 }
 
-                // hide all elements except those that match the input filter
+                // hide all elements except those that match the input / closed filters
                 $lobbyRoomsLists
                     .find('li:not(.empty)')
-                    .hide()
-                    .filter(function() {
-                        return $(this).data('room').toString().toLowerCase().score(filter) > 0.0;
-                    })
-                    .show();
-
-                // redact closed rooms if we're not showing them
-                if (!showClosedRooms) {
-                    $lobbyRoomsLists.find('.closed').hide();
-                }
+                    .each(function() {
+                        var $this = $(this);
+                        if ($this.data('room').toString().toUpperCase().score(filter) > 0.0 && (showClosedRooms || !$this.is('.closed'))) {
+                            $this.show();
+                        } else {
+                            $this.hide();
+                        }
+                    });
                 
                 $lobbyRoomsLists.find('ul').each(function () {
                     room.setListState($(this));
@@ -1315,7 +1356,7 @@
             var lobby = getLobby(),
                 $room = lobby.users.find('li[data-name="' + roomName + '"]');
 
-            $room.appendTo(lobby.owners);
+            $room.addClass('locked').appendTo(lobby.owners);
         },
         updateUnread: function (roomName, isMentioned) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
@@ -1387,9 +1428,8 @@
                     roomCache[privateRooms[i].Name] = true;
                 }
 
-                var showClosedRooms = $closedRoomFilter.is(':checked'),
                 // sort private lobby rooms
-                privateSorted = sortRoomList(privateRooms);
+                var privateSorted = sortRoomList(privateRooms);
                 
                 // sort other lobby rooms but filter out private rooms
                 sortedRoomList = sortRoomList(rooms).filter(function (room) {
@@ -1417,7 +1457,6 @@
                 lastLoadedRoomIndex = listOfRooms.children('li').length;
                 listOfRooms.children('li').appendTo(lobby.users);
                 if (lastLoadedRoomIndex < sortedRoomList.length) {
-                    $loadMoreRooms.appendTo(lobby.users);
                     $loadMoreRooms.show();
                 }
                 $lobbyOtherRooms.show();

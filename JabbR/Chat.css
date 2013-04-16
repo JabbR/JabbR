@@ -305,15 +305,27 @@ form#send-message {
 
 #load-more-rooms-item {
     cursor: pointer;
+    margin: 0 5px;
 }
 
-#userlist-lobby .load-more-rooms {
+.load-more-rooms {
+    min-height: 30px;
+    border-color: #EEEEEE;
+    border-style: solid;
+    border-width: 1px 0;
+    margin: 15px 5px 0 -5px;
+    padding-top: 8px;
+    padding-left: 15px;
     text-align: center;
 }
 
-    #userlist-lobby .load-more-rooms a {
+    .load-more-rooms a {
         text-decoration: none;
         color: #999;
+    }
+
+    .load-more-rooms:hover {
+        background: #f1f1f1;
     }
 
 #userlist-lobby-owners li div.room-row {

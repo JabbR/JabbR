@@ -346,7 +346,7 @@
         ui.clearRoomOwner(user.Name, room);
     };
 
-    chat.updateRoomCount = function (room, count) {
+    chat.client.updateRoomCount = function (room, count) {
         ui.updateLobbyRoomCount(room, count);
     };
 
@@ -686,14 +686,19 @@
         else {
             // sort rooms by count descending then name
             var sorted = rooms.sort(function (a, b) {
-                if (a.Count > b.Count) {
+                if (a.Closed && !b.Closed) {
+                    return 1;
+                } else if (b.Closed && !a.Closed) {
                     return -1;
                 }
-                if (a.Count < b.Count) {
+
+                if (a.Count > b.Count) {
+                    return -1;
+                } else if (b.Count > a.Count) {
                     return 1;
                 }
                 
-                return a.Name.toLowerCase().localeCompare(b.Name.toLowerCase());
+                return a.Name.toString().toUpperCase().localeCompare(b.Name.toString().toUpperCase());
             });
 
             $.each(sorted, function () {
