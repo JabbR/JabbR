@@ -100,11 +100,39 @@ namespace JabbR.Infrastructure
         {
             var document = new Document();
 
-            var field = new Field("Id", chatMessage.Id.ToLowerInvariant(), Field.Store.NO, Field.Index.NOT_ANALYZED);
+            var field = new Field("Id", chatMessage.Id.ToStringSafe().ToLowerInvariant(), Field.Store.YES, Field.Index.NOT_ANALYZED);
             document.Add(field);
 
-            field = new Field("Content", chatMessage.Content, Field.Store.YES, Field.Index.ANALYZED);
+            field = new Field("Content", chatMessage.Content.ToStringSafe(), Field.Store.YES, Field.Index.ANALYZED);
+            document.Add(field);
+
+            field = new Field("RoomName", chatMessage.Room.Name.ToStringSafe(), Field.Store.YES, Field.Index.ANALYZED);
             field.Boost = 0.1f;
+            document.Add(field);
+
+            field = new Field("UserName", chatMessage.User.Name.ToStringSafe(), Field.Store.YES, Field.Index.ANALYZED);
+            document.Add(field);
+
+            field = new Field("UserId", chatMessage.User.Name.ToStringSafe(), Field.Store.YES, Field.Index.NOT_ANALYZED);
+            document.Add(field);
+
+            field = new Field("HtmlContent", chatMessage.HtmlContent.ToStringSafe(), Field.Store.YES, Field.Index.NOT_ANALYZED);
+            document.Add(field);
+
+            field = new Field("HtmlEncoded", chatMessage.HtmlEncoded.ToStringSafe().ToLowerInvariant(), Field.Store.YES, Field.Index.NOT_ANALYZED);
+            document.Add(field);
+
+            field = new Field("MessageType", chatMessage.MessageType.ToStringSafe(), Field.Store.YES, Field.Index.NOT_ANALYZED);
+            document.Add(field);
+
+            field = new Field("ImageUrl", chatMessage.ImageUrl.ToStringSafe(), Field.Store.YES, Field.Index.NOT_ANALYZED);
+            document.Add(field);
+
+            field = new Field("When", chatMessage.When.ToString("s"), Field.Store.YES, Field.Index.ANALYZED);
+            document.Add(field);
+
+            field = new Field("Source", chatMessage.Source.ToStringSafe(), Field.Store.YES, Field.Index.ANALYZED);
+            field.Boost = 0.025f;
             document.Add(field);
 
             _indexWriter.AddDocument(document);

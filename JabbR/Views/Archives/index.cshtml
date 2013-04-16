@@ -1,6 +1,7 @@
-﻿@using SquishIt.Framework;
+﻿@using SquishIt.Framework
 @using JabbR
 @using JabbR.ViewModels
+@model SearchResultsViewModel
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -36,7 +37,7 @@
             </div>
             <div class="tab-content">
                 <ul>
-                    @foreach (var m in Model)
+                    @foreach (var m in Model.Results)
                     {
                         <li>@m.Content</li>
                     }

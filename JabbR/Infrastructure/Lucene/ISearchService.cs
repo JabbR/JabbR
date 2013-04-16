@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using JabbR.Models;
+using JabbR.ViewModels;
+using PagedList;
 
 namespace JabbR.Infrastructure
 {
     public interface ISearchService
     {
-        IList<ChatMessage> Search(string text, int skip, int take, out int totalHits);
+        IPagedList<SearchMessageViewModel> Search(SearchRequest request);
     }
 }

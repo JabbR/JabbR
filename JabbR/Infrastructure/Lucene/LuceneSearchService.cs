@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using JabbR.Models;
+using JabbR.ViewModels;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 using Lucene.Net.Index;
 using Lucene.Net.QueryParsers;
 using Lucene.Net.Search;
+using PagedList;
 
 namespace JabbR.Infrastructure
 {
@@ -17,6 +18,8 @@ namespace JabbR.Infrastructure
         private static readonly Dictionary<string, float> SearchFields = new Dictionary<string, float> 
         {
             { "Content", 1.5f },
+            { "RoomName", 0.1f },
+            { "UserName", 0.025f },
         };
 
         public LuceneSearchService(Lucene.Net.Store.Directory directory)
@@ -24,19 +27,20 @@ namespace JabbR.Infrastructure
             _directory = directory;
         }
 
-        public IList<ChatMessage> Search(string text, int skip, int take, out int totalHits)
+        public IPagedList<SearchMessageViewModel> Search(SearchRequest request)
         {
-            int numRecords = skip + take;
+            int skip = (request.CurrentPage-1) * request.PerPage;
+            int numRecords = skip + request.PerPage;
 
             var searcher = new IndexSearcher(_directory, readOnly: true);
-            var query = MoreComplexQuery(QueryParser.Escape(text));
+            var query = BuildSearchQuery(request.SearchQuery);
 
             var results = searcher.Search(query, n: numRecords, sort: new Sort(SortField.FIELD_SCORE), filter: null);
-            totalHits = results.TotalHits;
+            int totalHits = results.TotalHits;
 
             if (totalHits == 0)
             {
-                return new List<ChatMessage>(0);
+                return new StaticPagedList<SearchMessageViewModel>(Enumerable.Empty<SearchMessageViewModel>(), request.CurrentPage, request.PerPage, 0);
             }
 
             var chatMessages = results.ScoreDocs
@@ -44,18 +48,33 @@ namespace JabbR.Infrastructure
                                   .Select(sd => GetChatMessage(searcher.Doc(sd.Doc)))
                                   .ToList();
 
-            return chatMessages;
+            return new StaticPagedList<SearchMessageViewModel>(chatMessages, request.CurrentPage, request.PerPage, totalHits);
         }
 
-        private ChatMessage GetChatMessage(Document doc)
+        private SearchMessageViewModel GetChatMessage(Document doc)
         {
-            return new ChatMessage()
+            return new SearchMessageViewModel()
             {
                 Content = doc.GetField("Content").StringValue,
+                Id = doc.GetField("Id").StringValue,
+
+                RoomName = doc.GetField("RoomName").StringValue,
+
+                UserName = doc.GetField("UserName").StringValue,
+                UserId = doc.GetField("UserId").StringValue,
+
+                HtmlContent = doc.GetField("HtmlContent").StringValue,
+                HtmlEncoded = Boolean.Parse(doc.GetField("HtmlEncoded").StringValue),
+
+                MessageType = Int32.Parse(doc.GetField("MessageType").StringValue),
+
+                ImageUrl = doc.GetField("ImageUrl").StringValue,
+                When = DateTimeOffset.Parse(doc.GetField("When").StringValue),
+                Source = doc.GetField("Source").StringValue,
             };
         }
 
-        private static Query MoreComplexQuery(string searchTerm)
+        private static Query BuildSearchQuery(string searchTerm)
         {
             var analyzer = new StandardAnalyzer(LuceneCommon.LuceneVersion);
             searchTerm = QueryParser.Escape(searchTerm).ToLowerInvariant();

@@ -1016,6 +1016,7 @@
     <Compile Include="Infrastructure\Lucene\LuceneCommon.cs" />
     <Compile Include="Infrastructure\Lucene\LuceneIndexingService.cs" />
     <Compile Include="Infrastructure\Lucene\LuceneSearchService.cs" />
+    <Compile Include="Infrastructure\Lucene\SearchRequest.cs" />
     <Compile Include="Infrastructure\PrincipalExtensions.cs" />
     <Compile Include="Infrastructure\MentionExtractor.cs" />
     <Compile Include="Middleware\LoggingHandler.cs" />
@@ -1123,6 +1124,7 @@
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\NotificationsViewModel.cs" />
     <Compile Include="ViewModels\ProfilePageViewModel.cs" />
+    <Compile Include="ViewModels\SearchMessageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SocialLoginViewModel.cs" />
     <Compile Include="WebApi\Model\ErrorModel.cs" />

@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using JabbR.Infrastructure;
 using JabbR.Models;
+using JabbR.ViewModels;
+using Nancy.ModelBinding;
+using PagedList;
 
 namespace JabbR.Nancy
 {
@@ -12,11 +14,33 @@ namespace JabbR.Nancy
         {
             Get["/"] = _ =>
             {
-                int totalHits;
-                IList<ChatMessage> results = searchService.Search(Request.Query.q, 0, 50, out totalHits);
+                var input = this.Bind<SearchRequestModel>();
 
-                return View["index", results];
+                IPagedList<SearchMessageViewModel> results = searchService.Search(new SearchRequest()
+                {
+                    SearchQuery = input.q,
+                    CurrentPage = input.page,
+                    PerPage = 50,
+                });
+
+                var viewModel = new SearchResultsViewModel()
+                {
+                    Results = results
+                };
+
+                return View["index", viewModel];
             };
+        }
+
+        private class SearchRequestModel
+        {
+            public SearchRequestModel()
+            {
+                page = 1;
+            }
+
+            public string q { get; set; }
+            public int page { get; set; }
         }
     }
 }

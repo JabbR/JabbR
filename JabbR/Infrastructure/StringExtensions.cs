@@ -27,5 +27,14 @@ namespace JabbR.Infrastructure
                          .ComputeHash(Encoding.Default.GetBytes(saltedValue))
                          .Select(b => b.ToString("x2")));
         }
+
+        public static string ToStringSafe(this object obj)
+        {
+            if (obj != null)
+            {
+                return obj.ToString();
+            }
+            return String.Empty;
+        }
     }
 }
