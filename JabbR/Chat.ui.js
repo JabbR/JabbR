@@ -234,7 +234,7 @@
                 liRoomCount = $this.data('count');
             
             if (liRoomCount < count ||
-                (liRoomCount == count && $this.data('name').toString().toUpperCase().localeCompare(roomName) > 0)) {
+                (liRoomCount === count && $this.data('name').toString().toUpperCase().localeCompare(roomName) > 0)) {
                 nextListElement = $this;
                 return false;
             }
