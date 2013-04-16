@@ -1,9 +1,10 @@
 ﻿/// <reference path="Scripts/jquery-1.7.js" />
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
+/// <reference path="Scripts/moment.min.js" />
 
 /*jshint evil:true, bitwise:false*/
-(function ($, window, emoji, markdown, linkify) {
+(function ($, window, emoji, markdown, linkify, moment) {
     "use strict";
 
     // getting the browser's name for use in isMobile
@@ -59,7 +60,7 @@
     }
 
     String.prototype.fromJsonDate = function () {
-        return new Date(this);
+        return new Date(moment(this.toString()).valueOf());
     };
 
     Date.prototype.formatDate = function () {
@@ -191,4 +192,4 @@
 
     window.chat.utility = utility;
 
-})(jQuery, window, window.Emoji, window.Markdown, window.linkify);
+})(jQuery, window, window.Emoji, window.Markdown, window.linkify, window.moment);
