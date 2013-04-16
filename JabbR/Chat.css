@@ -984,7 +984,8 @@ li.error {
 }
 
 .list-header {
-    padding: 5px;
+    padding: 3px 5px;
+    color: #c5c5c5;
     border-bottom: 1px solid #eee;
 }
 
@@ -996,7 +997,7 @@ li.error {
 
 
 .list-header .content {
-    font-weight: bold;
+    font-size: 0.9em;
 }
 
 .list-item .right {

@@ -3,6 +3,7 @@
 /// <reference path="Scripts/jquery.cookie.js" />
 /// <reference path="Chat.toast.js" />
 /// <reference path="Scripts/livestamp.min.js" />
+/// <reference path="Scripts/moment.min.js" />
 
 /*jshint bitwise:false */
 (function ($, window, document, chat, utility, emoji, linkify) {
@@ -1850,7 +1851,8 @@
                     thisDate = new Date($(newMessage).data('timestamp'));
 
                 if (!lastMessage.length || thisDate.toDate().diffDays(lastDate.toDate())) {
-                    ui.addMessage(thisDate.toLocaleDateString(), 'date-header list-header', room.getName())
+                    var dateDisplay = moment(thisDate);
+                    ui.addMessage(dateDisplay.format('dddd, MMMM Do YYYY'), 'date-header list-header', room.getName())
                       .find('.right').remove(); // remove timestamp on date indicator
                 }
             }
