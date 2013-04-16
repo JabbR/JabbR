@@ -200,14 +200,15 @@
         return lobby.users.find('li')
                      .map(function () {
                          var room = $(this).data('name');
-                         roomCache[room] = true;
+                         roomCache[room.toString().toUpperCase()] = true;
                          return room + ' ';
                      });
     }
 
     function updateLobbyRoomCount(room, count) {
         var lobby = getLobby(),
-            $room = lobby.users.find('[data-room="' + room.Name + '"]'),
+            $targetList = room.Private === true ? lobby.owners : lobby.users,
+            $room = $targetList.find('[data-room="' + room.Name + '"]'),
             $count = $room.find('.count'),
             roomName = room.Name.toString().toUpperCase(),
             nextListElement = null;
@@ -223,18 +224,24 @@
 
         if (room.Private === true) {
             $room.addClass('locked');
+        } else {
+            $room.removeClass('locked');
         }
+        
         if (room.Closed === true) {
             $room.addClass('closed');
+        } else {
+            $room.removeClass('closed');
         }
         
         // move the item to before the 
-        lobby.users.find('li').each(function () {
+        $targetList.find('li').each(function () {
             var $this = $(this),
-                liRoomCount = $this.data('count');
+                liRoomCount = $this.data('count'),
+                nameComparison = $this.data('name').toString().toUpperCase().localeCompare(roomName);
             
-            if (liRoomCount < count ||
-                (liRoomCount === count && $this.data('name').toString().toUpperCase().localeCompare(roomName) > 0)) {
+            if ((liRoomCount < count && nameComparison !== 0) ||
+                (liRoomCount === count && nameComparison > 0)) {
                 nextListElement = $this;
                 return false;
             }
@@ -242,10 +249,11 @@
             return true;
         });
 
+        $room.data('count', count);
         if (nextListElement !== null) {
             $room.insertBefore(nextListElement);
         } else {
-            $room.appendTo(lobby.users);
+            $room.appendTo($targetList);
         }
 
         // Do a little animation
@@ -257,10 +265,11 @@
             $room = templates.lobbyroom.tmpl(roomViewModel),
             roomName = roomViewModel.Name.toString().toUpperCase(),
             count = roomViewModel.Count,
-            nextListElement = null;
+            nextListElement = null,
+            $targetList = roomViewModel.Private ? lobby.owners : lobby.users;
         
         // find the element to put the new item before
-        lobby.users.find('li').each(function() {
+        $targetList.find('li').each(function () {
             var $this = $(this),
                 liRoomCount = $this.data('count');
             
@@ -276,7 +285,7 @@
         if (nextListElement !== null) {
             $room.insertBefore(nextListElement);
         } else {
-            $room.appendTo(lobby.users);
+            $room.appendTo($targetList);
         }
     }
 
@@ -304,11 +313,11 @@
             closed: roomViewModel.Closed
         };
 
-        if (!roomCache[roomName.toLowerCase()]) {
+        if (!roomCache[roomName.toString().toUpperCase()]) {
             addRoomToLobby(roomViewModel);
         }
 
-        roomCache[roomName.toLowerCase()] = true;
+        roomCache[roomName.toString().toUpperCase()] = true;
 
         templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabs);
 
@@ -1421,11 +1430,11 @@
 
                 // Populate the room cache
                 for (i = 0; i < rooms.length; ++i) {
-                    roomCache[rooms[i].Name] = true;
+                    roomCache[rooms[i].Name.toString().toUpperCase()] = true;
                 }
 
                 for (i = 0; i < privateRooms.length; ++i) {
-                    roomCache[privateRooms[i].Name] = true;
+                    roomCache[privateRooms[i].Name.toString().toUpperCase()] = true;
                 }
 
                 // sort private lobby rooms

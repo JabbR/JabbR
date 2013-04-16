@@ -136,7 +136,7 @@
                 content = content.replace(/#([A-Za-z0-9-_]{1,30}\w*)/g, function (m) {
                     var roomName = m.substr(1);
 
-                    if (roomCache[roomName.toLowerCase()]) {
+                    if (roomCache[roomName.toUpperCase()]) {
                         return '<a href="#/rooms/' + roomName + '" title="' + roomName + '">' + m + '</a>';
                     }
                     return m;
