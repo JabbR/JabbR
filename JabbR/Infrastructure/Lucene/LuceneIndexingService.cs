@@ -36,43 +36,48 @@ namespace JabbR.Infrastructure
 
         internal void UpdateIndex(bool forceRefresh)
         {
-            DateTime? lastWriteTime = GetLastWriteTime();
+            int? lastMessageKey = _fileSystem.MetaData.LastMessageKey;
 
-            if ((lastWriteTime == null) || IndexRequiresRefresh() || forceRefresh)
+            if (lastMessageKey == null || _fileSystem.MetaData.RequiresRefresh() || forceRefresh)
             {
                 EnsureIndexWriter(creatingIndex: true);
                 _indexWriter.DeleteAll();
                 _indexWriter.Commit();
 
-                // Reset the lastWriteTime to null. This will allow us to get a fresh copy of all the latest \ latest successful chatMessages
-                lastWriteTime = null;
-
                 // Set the index create time to now. This would tell us when we last rebuilt the index.
                 UpdateIndexRefreshTime();
             }
 
-            var count = GetChatMessagesCountSinceLastIndex(lastWriteTime);
-            if (count > 0)
+            IndexTaskMetaData indexTask = GetIndexTaskMetaData(lastMessageKey);
+            if (indexTask.TotalItemsToIndex > 0)
             {
-                EnsureIndexWriter(creatingIndex: lastWriteTime == null);
-                AddChatMessages(lastWriteTime, count);
+                EnsureIndexWriter(creatingIndex: lastMessageKey == null);
+                AddChatMessages(indexTask);
             }
 
-            UpdateLastWriteTime();
+            UpdateLastWriteTime(indexTask);
         }
 
-        private int GetChatMessagesCountSinceLastIndex(DateTime? lastIndexTime)
+        private IndexTaskMetaData GetIndexTaskMetaData(int? lastMessageKey)
         {
             using (var repo = _repositoryFunc())
             {
-                return repo.GetMessageCountSince(lastIndexTime);
+                int newestMessageKey;
+                int messageCountToIndex = repo.GetMessageCountSince(lastMessageKey, out newestMessageKey);
+                
+                return new IndexTaskMetaData()
+                {
+                    LowerBoundMessageKey = lastMessageKey,
+                    UpperBoundMessageKey = newestMessageKey,
+                    TotalItemsToIndex = messageCountToIndex,
+                };
             }
         }
 
-        private void AddChatMessages(DateTime? lastWriteTime, int totalCount)
+        private void AddChatMessages(IndexTaskMetaData indexTaskMetaData)
         {
             const int perPage = 100;
-            int totalPages = (int)Math.Ceiling((double)totalCount / perPage);
+            int totalPages = (int)Math.Ceiling((double)indexTaskMetaData.TotalItemsToIndex / perPage);
 
             // As per http://stackoverflow.com/a/3894582. The IndexWriter is CPU bound, so we can try and write multiple chatMessages in parallel.
             // The IndexWriter is thread safe and is primarily CPU-bound.
@@ -81,7 +86,7 @@ namespace JabbR.Infrastructure
             {
                 using (var repo = _repositoryFunc())
                 {
-                    var messages = repo.GetMessagesToIndex(lastWriteTime, i * perPage, perPage).ToList();
+                    var messages = repo.GetMessagesToIndex(indexTaskMetaData.LowerBoundMessageKey, indexTaskMetaData.UpperBoundMessageKey, i * perPage, perPage).ToList();
                     foreach (var chatMessage in messages)
                     {
                         AddChatMessage(chatMessage);
@@ -162,27 +167,24 @@ namespace JabbR.Infrastructure
             _indexWriter = new IndexWriter(_fileSystem.IndexDirectory, analyzer, create: creatingIndex, mfl: IndexWriter.MaxFieldLength.UNLIMITED);
 
             // Should always be add, due to locking
-            var got = WriterCache.GetOrAdd(_fileSystem, _indexWriter);
+            WriterCache.GetOrAdd(_fileSystem, _indexWriter);
         }
 
-        protected internal bool IndexRequiresRefresh()
+        private void UpdateLastWriteTime(IndexTaskMetaData indexTaskMetaData)
         {
-            return _fileSystem.MetaData.RequiresRefresh();
+            _fileSystem.MetaData.UpdateLastWriteTime(DateTime.UtcNow, indexTaskMetaData.UpperBoundMessageKey);
         }
 
-        protected internal DateTime? GetLastWriteTime()
-        {
-            return _fileSystem.MetaData.LastWriteTime;
-        }
-
-        protected internal void UpdateLastWriteTime()
-        {
-            _fileSystem.MetaData.UpdateLastWriteTime(DateTime.UtcNow);
-        }
-
-        protected internal void UpdateIndexRefreshTime()
+        private void UpdateIndexRefreshTime()
         {
             _fileSystem.MetaData.UpdateCreationTime(DateTime.UtcNow);
+        }
+
+        private class IndexTaskMetaData
+        {
+            public int? LowerBoundMessageKey { get; set; }
+            public int UpperBoundMessageKey { get; set; }
+            public int TotalItemsToIndex { get; set; }
         }
     }
 }

@@ -36,7 +36,7 @@ namespace JabbR
             _sweepInterval);
 
             var indexer = resolver.Resolve<ISearchIndexingService>();
-            var index = new Timer(_ => indexer.UpdateIndex(), null, TimeSpan.FromSeconds(0), TimeSpan.FromMinutes(5));
+            var index = new Timer(_ => indexer.UpdateIndex(), null, TimeSpan.FromSeconds(0), TimeSpan.FromMinutes(1));
 
             // Clear all connections on app start
             ClearConnectedClients(kernel);

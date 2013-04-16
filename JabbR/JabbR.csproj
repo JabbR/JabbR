@@ -1018,10 +1018,13 @@
     <Compile Include="Infrastructure\LoggingExtensions.cs" />
     <Compile Include="Infrastructure\LogType.cs" />
     <Compile Include="Infrastructure\Lucene\ILuceneFileSystem.cs" />
+    <Compile Include="Infrastructure\Lucene\ILuceneIndexMetaData.cs" />
     <Compile Include="Infrastructure\Lucene\ISearchIndexingService.cs" />
     <Compile Include="Infrastructure\Lucene\ISearchService.cs" />
+    <Compile Include="Infrastructure\Lucene\LuceneAzureBlobFileSystem.cs" />
     <Compile Include="Infrastructure\Lucene\LuceneCommon.cs" />
     <Compile Include="Infrastructure\Lucene\LuceneIndexingService.cs" />
+    <Compile Include="Infrastructure\Lucene\LuceneLocalFileSystem.cs" />
     <Compile Include="Infrastructure\Lucene\LuceneSearchService.cs" />
     <Compile Include="Infrastructure\Lucene\SearchRequest.cs" />
     <Compile Include="Infrastructure\PrincipalExtensions.cs" />

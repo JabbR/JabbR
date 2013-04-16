@@ -95,12 +95,12 @@ namespace JabbR.Services
             _notifications.Remove(notification);
         }
 
-        public int GetMessageCountSince(DateTime? lastIndexTime)
+        public int GetMessageCountSince(int? lastMessageKey, out int newestMessageKey)
         {
             throw new NotImplementedException();
         }
 
-        public IQueryable<ChatMessage> GetMessagesToIndex(DateTime? lastIndexTime, int skip, int take)
+        public IQueryable<ChatMessage> GetMessagesToIndex(int? lowerBoundKey, int upperBoundKey, int skip, int take)
         {
             throw new NotImplementedException();
         }

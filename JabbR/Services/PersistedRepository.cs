@@ -92,28 +92,30 @@ namespace JabbR.Services
             _db.SaveChanges();
         }
 
-        public int GetMessageCountSince(DateTime? lastIndexTime)
+        public int GetMessageCountSince(int? lastMessageKey, out int newestMessageKey)
         {
-            if (lastIndexTime.HasValue)
+            newestMessageKey = _db.Messages.Max(m => m.Key);
+
+            if (lastMessageKey.HasValue)
             {
-                var offset = new DateTimeOffset(lastIndexTime.Value);
-                return _db.Messages.Count(m => m.When > offset);
+                newestMessageKey = _db.Messages.Max(m => m.Key);
+                return _db.Messages.Count(m => m.Key > lastMessageKey);
             }
 
             return _db.Messages.Count();
         }
 
-        public IQueryable<ChatMessage> GetMessagesToIndex(DateTime? lastIndexTime, int skip, int take)
+        public IQueryable<ChatMessage> GetMessagesToIndex(int? lowerBoundKey, int upperBoundKey, int skip, int take)
         {
             IQueryable<ChatMessage> query = _db.Messages;
 
-            if (lastIndexTime.HasValue)
+            if (lowerBoundKey.HasValue)
             {
-                var offset = new DateTimeOffset(lastIndexTime.Value);
-                query = query.Where(m => m.When > offset);
+                query = query.Where(m => m.Key > lowerBoundKey.Value);
             }
 
-            return query.OrderByDescending(m => m.When)
+            return query.Where(m => m.Key <= upperBoundKey)
+                      .OrderByDescending(m => m.When)
                       .Skip(skip)
                       .Take(take);
         }
