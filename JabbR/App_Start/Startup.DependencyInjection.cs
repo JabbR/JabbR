@@ -121,11 +121,16 @@ namespace JabbR
             kernel.Bind<ContentProviderProcessor>()
                   .ToConstant(new ContentProviderProcessor(kernel));
 
+            kernel.Bind<ILuceneFileSystem>()
+                  .To<LuceneLocalFileSystem>()
+                  .InSingletonScope();
+
             kernel.Bind<ISearchIndexingService>()
-                  .ToMethod(context => new LuceneIndexingService(() => new PersistedRepository(new JabbrContext()), LuceneCommon.LuceneDirectory.Value));
+                  .ToMethod(context => new LuceneIndexingService(() => new PersistedRepository(new JabbrContext()), context.Kernel.Get<ILuceneFileSystem>()))
+                  .InSingletonScope();
 
             kernel.Bind<ISearchService>()
-                  .ToMethod(context => new LuceneSearchService(LuceneCommon.LuceneDirectory.Value));
+                  .To<LuceneSearchService>();
 
             return kernel;
         }

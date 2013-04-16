@@ -22,9 +22,9 @@ namespace JabbR.Infrastructure
             { "UserName", 0.025f },
         };
 
-        public LuceneSearchService(Lucene.Net.Store.Directory directory)
+        public LuceneSearchService(ILuceneFileSystem fileSystem)
         {
-            _directory = directory;
+            _directory = fileSystem.IndexDirectory;
         }
 
         public IPagedList<SearchMessageViewModel> Search(SearchRequest request)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using JabbR.Models;
@@ -15,21 +14,19 @@ namespace JabbR.Infrastructure
     {
         private static readonly object IndexWriterLock = new object();
 
-        private static readonly TimeSpan IndexRecreateInterval = TimeSpan.FromDays(3);
+        private static readonly ConcurrentDictionary<ILuceneFileSystem, IndexWriter> WriterCache =
+            new ConcurrentDictionary<ILuceneFileSystem, IndexWriter>();
 
-        private static readonly ConcurrentDictionary<Lucene.Net.Store.Directory, IndexWriter> WriterCache =
-            new ConcurrentDictionary<Lucene.Net.Store.Directory, IndexWriter>();
-
-        private readonly Lucene.Net.Store.Directory _directory;
+        private readonly ILuceneFileSystem _fileSystem;
 
         private readonly Func<IJabbrRepository> _repositoryFunc;
 
         private IndexWriter _indexWriter;
 
-        public LuceneIndexingService(Func<IJabbrRepository> repositoryFunc, Lucene.Net.Store.Directory directory)
+        public LuceneIndexingService(Func<IJabbrRepository> repositoryFunc, ILuceneFileSystem fileSystem)
         {
             _repositoryFunc = repositoryFunc;
-            _directory = directory;
+            _fileSystem = fileSystem;
         }
 
         public void UpdateIndex()
@@ -142,14 +139,14 @@ namespace JabbR.Infrastructure
         {
             if (_indexWriter == null)
             {
-                if (WriterCache.TryGetValue(_directory, out _indexWriter))
+                if (WriterCache.TryGetValue(_fileSystem, out _indexWriter))
                 {
                     return;
                 }
 
                 lock (IndexWriterLock)
                 {
-                    if (WriterCache.TryGetValue(_directory, out _indexWriter))
+                    if (WriterCache.TryGetValue(_fileSystem, out _indexWriter))
                     {
                         return;
                     }
@@ -162,52 +159,30 @@ namespace JabbR.Infrastructure
         private void EnsureIndexWriterCore(bool creatingIndex)
         {
             var analyzer = new StandardAnalyzer(LuceneCommon.LuceneVersion);
-            _indexWriter = new IndexWriter(_directory, analyzer, create: creatingIndex, mfl: IndexWriter.MaxFieldLength.UNLIMITED);
+            _indexWriter = new IndexWriter(_fileSystem.IndexDirectory, analyzer, create: creatingIndex, mfl: IndexWriter.MaxFieldLength.UNLIMITED);
 
             // Should always be add, due to locking
-            var got = WriterCache.GetOrAdd(_directory, _indexWriter);
+            var got = WriterCache.GetOrAdd(_fileSystem, _indexWriter);
         }
 
-        protected internal static bool IndexRequiresRefresh()
+        protected internal bool IndexRequiresRefresh()
         {
-            if (File.Exists(LuceneCommon.IndexMetadataPath))
-            {
-                var creationTime = File.GetCreationTimeUtc(LuceneCommon.IndexMetadataPath);
-                return (DateTime.UtcNow - creationTime) > IndexRecreateInterval;
-            }
-
-            // If we've never created the index, it needs to be refreshed.
-            return true;
+            return _fileSystem.MetaData.RequiresRefresh();
         }
 
-        protected internal virtual DateTime? GetLastWriteTime()
+        protected internal DateTime? GetLastWriteTime()
         {
-            if (!File.Exists(LuceneCommon.IndexMetadataPath))
-            {
-                return null;
-            }
-            return File.GetLastWriteTimeUtc(LuceneCommon.IndexMetadataPath);
+            return _fileSystem.MetaData.LastWriteTime;
         }
 
-        protected internal virtual void UpdateLastWriteTime()
+        protected internal void UpdateLastWriteTime()
         {
-            if (!File.Exists(LuceneCommon.IndexMetadataPath))
-            {
-                // Create the index and add a timestamp to it that specifies the time at which it was created.
-                File.WriteAllBytes(LuceneCommon.IndexMetadataPath, new byte[0]);
-            }
-            else
-            {
-                File.SetLastWriteTimeUtc(LuceneCommon.IndexMetadataPath, DateTime.UtcNow);
-            }
+            _fileSystem.MetaData.UpdateLastWriteTime(DateTime.UtcNow);
         }
 
-        protected static void UpdateIndexRefreshTime()
+        protected internal void UpdateIndexRefreshTime()
         {
-            if (File.Exists(LuceneCommon.IndexMetadataPath))
-            {
-                File.SetCreationTimeUtc(LuceneCommon.IndexMetadataPath, DateTime.UtcNow);
-            }
+            _fileSystem.MetaData.UpdateCreationTime(DateTime.UtcNow);
         }
     }
 }
