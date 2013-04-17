@@ -886,7 +886,6 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
-    <Content Include="Eula.htm" />
     <Content Include="favicon.ico" />
     <Content Include="Content\images\big-logo.png" />
     <Content Include="Content\images\logo32.png" />
@@ -894,7 +893,6 @@
     <Content Include="Content\sounds\notification.wav" />
     <Content Include="notifications.js" />
     <Content Include="notifications.unreadcounter.js" />
-    <Content Include="Readme.html" />
     <Content Include="robots.txt" />
     <EmbeddedResource Include="Migrations\201208211555032_BanUser.resx">
       <DependentUpon>201208211555032_BanUser.cs</DependentUpon>

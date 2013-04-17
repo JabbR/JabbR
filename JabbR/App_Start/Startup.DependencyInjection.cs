@@ -121,9 +121,18 @@ namespace JabbR
             kernel.Bind<ContentProviderProcessor>()
                   .ToConstant(new ContentProviderProcessor(kernel));
 
+            ILuceneFileSystem luceneFileSystem = null;
+            if (String.IsNullOrEmpty(settings.AzureblobStorageConnectionString))
+            {
+                luceneFileSystem = new LuceneLocalFileSystem();
+            }
+            else
+            {
+                luceneFileSystem = new LuceneAzureBlobFileSystem(settings);
+            }
+
             kernel.Bind<ILuceneFileSystem>()
-                  .To<LuceneLocalFileSystem>()
-                  .InSingletonScope();
+                  .ToConstant(luceneFileSystem);
 
             kernel.Bind<ISearchIndexingService>()
                   .ToMethod(context => new LuceneIndexingService(() => new PersistedRepository(new JabbrContext()), context.Kernel.Get<ILuceneFileSystem>()))
