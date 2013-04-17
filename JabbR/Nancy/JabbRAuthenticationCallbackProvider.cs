@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using JabbR.Infrastructure;
-using JabbR.Models;
 using JabbR.Services;
 using Nancy;
 using Nancy.Authentication.WorldDomination;
+using WorldDomination.Web.Authentication;
 
 namespace JabbR.Nancy
 {
@@ -33,11 +32,21 @@ namespace JabbR.Nancy
             }
             else
             {
+                UserInformation information = model.AuthenticatedClient.UserInformation;
                 var claims = new List<Claim>();
-                claims.Add(new Claim(ClaimTypes.NameIdentifier, model.AuthenticatedClient.UserInformation.Id));
-                claims.Add(new Claim(ClaimTypes.Name, model.AuthenticatedClient.UserInformation.UserName));
-                claims.Add(new Claim(ClaimTypes.Email, model.AuthenticatedClient.UserInformation.Email));
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, information.Id));
                 claims.Add(new Claim(ClaimTypes.AuthenticationMethod, model.AuthenticatedClient.ProviderName));
+
+                if (!String.IsNullOrEmpty(information.UserName))
+                {
+                    claims.Add(new Claim(ClaimTypes.Name, information.UserName));
+                }
+
+                if (!String.IsNullOrEmpty(information.Email))
+                {
+                    claims.Add(new Claim(ClaimTypes.Email, information.Email));
+                }
+
 
                 nancyModule.SignIn(claims);
             }
