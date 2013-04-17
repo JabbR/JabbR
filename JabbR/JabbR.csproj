@@ -239,6 +239,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebBackgrounder">
+      <HintPath>..\packages\WebBackgrounder.0.2.0\lib\net40\WebBackgrounder.dll</HintPath>
+    </Reference>
     <Reference Include="WorldDomination.Web.Authentication, Version=0.19.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WorldDomination.Web.Authentication.0.19.0-Csrf-PewPew-3\lib\net40\WorldDomination.Web.Authentication.dll</HintPath>
@@ -1021,6 +1024,7 @@
     <Compile Include="Infrastructure\Lucene\ISearchService.cs" />
     <Compile Include="Infrastructure\Lucene\LuceneAzureBlobFileSystem.cs" />
     <Compile Include="Infrastructure\Lucene\LuceneCommon.cs" />
+    <Compile Include="Infrastructure\Lucene\LuceneIndexingJob.cs" />
     <Compile Include="Infrastructure\Lucene\LuceneIndexingService.cs" />
     <Compile Include="Infrastructure\Lucene\LuceneLocalFileSystem.cs" />
     <Compile Include="Infrastructure\Lucene\LuceneSearchService.cs" />
