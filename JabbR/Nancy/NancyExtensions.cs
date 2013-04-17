@@ -5,6 +5,7 @@ using JabbR.Infrastructure;
 using JabbR.Models;
 using Nancy;
 using Nancy.Owin;
+using Newtonsoft.Json;
 using Owin.Types;
 using Owin.Types.Extensions;
 
@@ -47,6 +48,18 @@ namespace JabbR.Nancy
         public static void AddValidationError(this NancyModule module, string propertyName, string errorMessage)
         {
             module.ModelValidationResult = module.ModelValidationResult.AddError(propertyName, errorMessage);
+        }
+
+        public static AuthenticationResult GetAuthenticationResult(this NancyContext context)
+        {
+            string value;
+            if (!context.Request.Cookies.TryGetValue(Constants.AuthResultCookie, out value) && 
+                String.IsNullOrEmpty(value))
+            {
+                return null;
+            }
+
+            return JsonConvert.DeserializeObject<AuthenticationResult>(value);
         }
 
         public static void AddAlertMessage(this NancyModule module, string messageType, string alertMessage)

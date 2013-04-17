@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using JabbR.Models;
 using JabbR.Services;
 using Microsoft.Owin.Security.Forms;
+using Newtonsoft.Json;
 using Owin.Types;
+using Owin.Types.Extensions;
+using Owin.Types.Helpers;
 
 namespace JabbR.Infrastructure
 {
@@ -31,6 +35,11 @@ namespace JabbR.Infrastructure
 
         public void ResponseSignIn(FormsResponseSignInContext context)
         {
+            var authResult = new AuthenticationResult
+            {
+                Success = true
+            };
+
             ChatUser loggedInUser = GetLoggedInUser(context.Environment);
 
             var identity = context.Identity as ClaimsIdentity;
@@ -44,23 +53,32 @@ namespace JabbR.Infrastructure
             }
 
             ChatUser user = _repository.GetUser(principal);
+            authResult.ProviderName = principal.GetIdentityProvider();
 
             // The user exists so add the claim
             if (user != null)
             {
-                identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
+                if (loggedInUser != null && user != loggedInUser)
+                {
+                    // Set an error message
+                    authResult.Message = String.Format("This {0} account has already been linked to another user.", authResult.ProviderName);
+                    authResult.Success = false;
+                }
+                else
+                {
+                    identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
+                }
             }
             else if (principal.HasRequiredClaims())
             {
                 // The user doesn't exist but the claims to create the user do exist
-                string userId = null;
-
                 if (loggedInUser == null)
                 {
                     // New user so add them
                     user = _membershipService.AddUser(principal);
 
-                    userId = user.Id;
+                    // Add the jabbr claim
+                    identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
                 }
                 else
                 {
@@ -69,16 +87,24 @@ namespace JabbR.Infrastructure
 
                     _repository.CommitChanges();
 
-                    userId = loggedInUser.Id;
+                    authResult.Message = String.Format("Successfully linked {0} account.", authResult.ProviderName);
                 }
-
-                identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, userId));
             }
             else
             {
                 // A partial identity means the user needs to add more claims to login
                 identity.AddClaim(new Claim(JabbRClaimTypes.PartialIdentity, "true"));
             }
+
+            var response = new OwinResponse(context.Environment);
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+            };
+
+            response.AddCookie(Constants.AuthResultCookie, 
+                               JsonConvert.SerializeObject(authResult), 
+                               cookieOptions);
         }
 
         private ChatUser GetLoggedInUser(IDictionary<string, object> env)

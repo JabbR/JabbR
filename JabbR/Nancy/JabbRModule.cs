@@ -10,12 +10,14 @@ namespace JabbR.Nancy
             : base()
         {
             Before.AddItemToEndOfPipeline(AlertsToViewBag);
+            After.AddItemToEndOfPipeline(RemoveAlters);
         }
 
         public JabbRModule(string modulePath)
             : base(modulePath)
         {
             Before.AddItemToEndOfPipeline(AlertsToViewBag);
+            After.AddItemToEndOfPipeline(RemoveAlters);
         }
 
         protected ClaimsPrincipal Principal
@@ -31,11 +33,33 @@ namespace JabbR.Nancy
         internal static Response AlertsToViewBag(NancyContext context)
         {
             var item = context.Request.Session.GetSessionValue<AlertMessageStore>(AlertMessageStore.AlertMessageKey);
+
+            var result = context.GetAuthenticationResult();
+
+            if (result != null)
+            {
+                if (result.Success)
+                {
+                    item.AddMessage("success", result.Message);
+
+                }
+                else
+                {
+                    item.AddMessage("error", result.Message);
+                }
+            }
+
             context.ViewBag.Alerts = item;
 
-            context.Request.Session.Delete(AlertMessageStore.AlertMessageKey);
-
             return null;
+        }
+
+        internal static void RemoveAlters(NancyContext context)
+        {
+            if (context.Response.StatusCode != HttpStatusCode.Unauthorized)
+            {
+                context.Request.Session.Delete(AlertMessageStore.AlertMessageKey);
+            }
         }
     }
 }
