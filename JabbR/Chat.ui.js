@@ -210,8 +210,7 @@
             $targetList = room.Private === true ? lobby.owners : lobby.users,
             $room = $targetList.find('[data-room="' + room.Name + '"]'),
             $count = $room.find('.count'),
-            roomName = room.Name.toString().toUpperCase(),
-            nextListElement = null;
+            roomName = room.Name.toString().toUpperCase();
 
         $room.css('background-color', '#f5f5f5');
         if (count === 0) {
@@ -227,27 +226,14 @@
         } else {
             $room.removeClass('locked');
         }
-        
+
         if (room.Closed === true) {
             $room.addClass('closed');
         } else {
             $room.removeClass('closed');
         }
-        
-        // move the item to before the next element
-        $targetList.find('li').each(function () {
-            var $this = $(this),
-                liRoomCount = $this.data('count'),
-                nameComparison = $this.data('name').toString().toUpperCase().localeCompare(roomName);
-            
-            if ((liRoomCount < count && nameComparison !== 0) ||
-                (liRoomCount === count && nameComparison > 0)) {
-                nextListElement = $this;
-                return false;
-            }
 
-            return true;
-        });
+        var nextListElement = getNextRoomListElement($targetList, roomName, count, room.Closed);
 
         $room.data('count', count);
         if (nextListElement !== null) {
@@ -265,23 +251,10 @@
             $room = templates.lobbyroom.tmpl(roomViewModel),
             roomName = roomViewModel.Name.toString().toUpperCase(),
             count = roomViewModel.Count,
-            nextListElement = null,
+            closed = roomViewModel.Closed,
             $targetList = roomViewModel.Private ? lobby.owners : lobby.users;
-        
-        // find the element to put the new item before
-        $targetList.find('li').each(function () {
-            var $this = $(this),
-                liRoomCount = $this.data('count'),
-                nameComparison = $this.data('name').toString().toUpperCase().localeCompare(roomName);
-            
-            if ((liRoomCount < count && nameComparison !== 0) ||
-                (liRoomCount === count && nameComparison > 0)) {
-                nextListElement = $this;
-                return false;
-            }
-                        
-            return true;
-        });
+
+        var nextListElement = getNextRoomListElement($targetList, roomName, count, closed);
 
         if (nextListElement !== null) {
             $room.insertBefore(nextListElement);
@@ -290,6 +263,43 @@
         }
 
         filterIndividualRoom($room);
+    }
+    
+    function getNextRoomListElement($targetList, roomName, count, closed) {
+        var nextListElement = null;
+
+        // move the item to before the next element
+        $targetList.find('li').each(function () {
+            var $this = $(this),
+                liRoomCount = $this.data('count'),
+                liRoomClosed = $this.hasClass('closed'),
+                nameComparison = $this.data('name').toString().toUpperCase().localeCompare(roomName);
+
+            // skip this element
+            if (nameComparison === 0) {
+                return true;
+            }
+
+            // skip closed rooms which always go after unclosed ones
+            if (!liRoomClosed && closed) {
+                return true;
+            }
+
+            // skip where we have more occupants
+            if (liRoomCount > count) {
+                return true;
+            }
+
+            // skip where we have the same number of occupants but the room is alphabetically earlier
+            if (liRoomCount === count && nameComparison < 0) {
+                return true;
+            }
+
+            nextListElement = $this;
+            return false;
+        });
+
+        return nextListElement;
     }
     
     function filterIndividualRoom($room) {
