@@ -368,6 +368,8 @@ namespace JabbR.Services
 
             // Remove the user from this room
             _repository.RemoveUserRoom(user, room);
+
+            _repository.CommitChanges();
         }
 
         public void AddAttachment(ChatMessage message, string fileName, string contentType, long size, UploadResult result)
