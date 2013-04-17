@@ -376,7 +376,7 @@
         $tabs.find('li')
             .not('.lobby')
             .sortElements(function (a, b) {
-                return $(a).data('name').toString().toLowerCase() > $(b).data('name').toString().toLowerCase() ? 1 : -1;
+                return $(a).data('name').toString().toUpperCase() > $(b).data('name').toString().toUpperCase() ? 1 : -1;
             });
 
         scrollHandler = function (ev) {
@@ -577,7 +577,7 @@
         focus = true;
 
         if (msg) {
-            if (msg.toLowerCase() === '/login') {
+            if (msg.toUpperCase() === '/LOGIN') {
                 ui.showLogin();
             }
             else {
