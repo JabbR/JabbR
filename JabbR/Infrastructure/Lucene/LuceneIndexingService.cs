@@ -55,7 +55,7 @@ namespace JabbR.Infrastructure
                 AddChatMessages(indexTask);
             }
 
-            UpdateLastWriteTime(indexTask);
+            UpdateIndexMetaData(indexTask);
         }
 
         private IndexTaskMetaData GetIndexTaskMetaData(int? lastMessageKey)
@@ -170,7 +170,7 @@ namespace JabbR.Infrastructure
             WriterCache.GetOrAdd(_fileSystem, _indexWriter);
         }
 
-        private void UpdateLastWriteTime(IndexTaskMetaData indexTaskMetaData)
+        private void UpdateIndexMetaData(IndexTaskMetaData indexTaskMetaData)
         {
             _fileSystem.MetaData.UpdateLastWriteTime(DateTime.UtcNow, indexTaskMetaData.UpperBoundMessageKey);
         }
