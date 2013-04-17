@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System;
+using System.Security.Claims;
 using JabbR.Infrastructure;
 using Nancy;
 
@@ -32,22 +33,22 @@ namespace JabbR.Nancy
 
         internal static Response AlertsToViewBag(NancyContext context)
         {
-            var item = context.Request.Session.GetSessionValue<AlertMessageStore>(AlertMessageStore.AlertMessageKey);
-
             var result = context.GetAuthenticationResult();
 
             if (result != null)
             {
                 if (result.Success)
                 {
-                    item.AddMessage("success", result.Message);
+                    context.Request.AddAlertMessage("success", result.Message);
 
                 }
                 else
                 {
-                    item.AddMessage("error", result.Message);
+                    context.Request.AddAlertMessage("error", result.Message);
                 }
             }
+
+            var item = context.Request.Session.GetSessionValue<AlertMessageStore>(AlertMessageStore.AlertMessageKey);
 
             context.ViewBag.Alerts = item;
 
@@ -56,9 +57,12 @@ namespace JabbR.Nancy
 
         internal static void RemoveAlters(NancyContext context)
         {
-            if (context.Response.StatusCode != HttpStatusCode.Unauthorized)
+            if (context.Response.StatusCode != HttpStatusCode.Unauthorized &&
+                context.Response.StatusCode != HttpStatusCode.SeeOther &&
+                context.Response.StatusCode != HttpStatusCode.Found)
             {
                 context.Request.Session.Delete(AlertMessageStore.AlertMessageKey);
+                context.Response.AddCookie(Constants.AuthResultCookie, null, DateTime.Now.AddDays(-1));
             }
         }
     }

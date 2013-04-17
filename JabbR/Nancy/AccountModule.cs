@@ -176,7 +176,7 @@ namespace JabbR.Nancy
 
                 if (user.Identities.Count == 1 && !user.HasUserNameAndPasswordCredentials())
                 {
-                    this.AddAlertMessage("error", "You cannot unlink this account because you would lose your ability to login.");
+                    Request.AddAlertMessage("error", "You cannot unlink this account because you would lose your ability to login.");
                     return Response.AsRedirect("~/account/#identityProviders");
                 }
 
@@ -186,7 +186,7 @@ namespace JabbR.Nancy
                 {
                     repository.Remove(identity);
 
-                    this.AddAlertMessage("success", String.Format("Successfully unlinked {0} account.", provider));
+                    Request.AddAlertMessage("success", String.Format("Successfully unlinked {0} account.", provider));
                     return Response.AsRedirect("~/account/#identityProviders");
                 }
 
@@ -222,7 +222,7 @@ namespace JabbR.Nancy
 
                 if (ModelValidationResult.IsValid)
                 {
-                    this.AddAlertMessage("success", "Successfully added a password.");
+                    Request.AddAlertMessage("success", "Successfully added a password.");
                     return Response.AsRedirect("~/account/#changePassword");
                 }
 
@@ -264,7 +264,7 @@ namespace JabbR.Nancy
 
                 if (ModelValidationResult.IsValid)
                 {
-                    this.AddAlertMessage("success", "Successfully changed your password.");
+                    Request.AddAlertMessage("success", "Successfully changed your password.");
                     return Response.AsRedirect("~/account/#changePassword");
                 }
 
@@ -303,7 +303,7 @@ namespace JabbR.Nancy
                 {
                     notificationService.OnUserNameChanged(user, oldUsername, username);
 
-                    this.AddAlertMessage("success", "Successfully changed your username.");
+                    Request.AddAlertMessage("success", "Successfully changed your username.");
                     return Response.AsRedirect("~/account/#changeUsername");
                 }
 

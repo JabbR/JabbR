@@ -4,6 +4,7 @@ using System.Security.Claims;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using Nancy;
+using Nancy.Helpers;
 using Nancy.Owin;
 using Newtonsoft.Json;
 using Owin.Types;
@@ -59,12 +60,12 @@ namespace JabbR.Nancy
                 return null;
             }
 
-            return JsonConvert.DeserializeObject<AuthenticationResult>(value);
+            return JsonConvert.DeserializeObject<AuthenticationResult>(HttpUtility.UrlDecode(value));
         }
 
-        public static void AddAlertMessage(this NancyModule module, string messageType, string alertMessage)
+        public static void AddAlertMessage(this Request request, string messageType, string alertMessage)
         {
-            var container = module.Request.Session.GetSessionValue<AlertMessageStore>(AlertMessageStore.AlertMessageKey);
+            var container = request.Session.GetSessionValue<AlertMessageStore>(AlertMessageStore.AlertMessageKey);
 
             if (container == null)
             {
@@ -73,7 +74,7 @@ namespace JabbR.Nancy
 
             container.AddMessage(messageType, alertMessage);
 
-            module.Request.Session.SetSessionValue(AlertMessageStore.AlertMessageKey, container);
+            request.Session.SetSessionValue(AlertMessageStore.AlertMessageKey, container);
         }
 
         public static ClaimsPrincipal GetPrincipal(this NancyModule module)

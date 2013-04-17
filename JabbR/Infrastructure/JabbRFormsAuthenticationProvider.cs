@@ -63,22 +63,27 @@ namespace JabbR.Infrastructure
                     // Set an error message
                     authResult.Message = String.Format("This {0} account has already been linked to another user.", authResult.ProviderName);
                     authResult.Success = false;
+
+                    // Keep the old user logged in
+                    identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, loggedInUser.Id));
                 }
                 else
                 {
+                    // Login this user
                     identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
                 }
+                
             }
             else if (principal.HasRequiredClaims())
             {
+                string userId = null;
                 // The user doesn't exist but the claims to create the user do exist
                 if (loggedInUser == null)
                 {
                     // New user so add them
                     user = _membershipService.AddUser(principal);
 
-                    // Add the jabbr claim
-                    identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
+                    userId = user.Id;
                 }
                 else
                 {
@@ -88,7 +93,12 @@ namespace JabbR.Infrastructure
                     _repository.CommitChanges();
 
                     authResult.Message = String.Format("Successfully linked {0} account.", authResult.ProviderName);
+
+                    userId = loggedInUser.Id;
                 }
+
+                // Add the jabbr claim
+                identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, userId));
             }
             else
             {

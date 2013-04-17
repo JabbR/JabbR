@@ -29,7 +29,7 @@ namespace JabbR.Nancy
 
             if (model.Exception != null)
             {
-                nancyModule.AddAlertMessage("error", model.Exception.Message);
+                nancyModule.Request.AddAlertMessage("error", model.Exception.Message);
             }
             else
             {
