@@ -88,7 +88,7 @@
         </div>
     </script>
     <script id="new-lobby-room-template" type="text/x-jquery-tmpl">
-        <li class="room {{if Private}}locked{{/if}} {{if Closed}}closed{{/if}}" data-room="${Name}" data-name="${Name}" data-count="${Count}" display="none;">
+        <li class="room {{if Private}}locked{{/if}} {{if Closed}}closed{{/if}}" data-room="${Name}" data-name="${Name}" data-count="${Count}">
             <div class="row-fluid room-row">
                 <div class="span3">
                     <span class="name">${Name}</span>
@@ -295,11 +295,11 @@
                 <i class="icon-spinner icon-3x"> </i><h3>Loading...</h3>
             </div>
             <div id="lobby-wrapper">
-                <div id="lobby-private" style="display:none;">
+                <div id="lobby-private">
                     <h2 class="userlist-header nav-header">Your Private Rooms</h2>
                     <ul id="userlist-lobby-owners" data-empty-message="No matching rooms"></ul>
                 </div>
-                <div id="lobby-other" style="display:none;">
+                <div id="lobby-other">
                     <h2 class="userlist-header nav-header">Rooms</h2>
                     <ul id="userlist-lobby" data-empty-message="No matching rooms">
                     </ul>
