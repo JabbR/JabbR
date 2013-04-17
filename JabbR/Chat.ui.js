@@ -234,7 +234,7 @@
             $room.removeClass('closed');
         }
         
-        // move the item to before the 
+        // move the item to before the next element
         $targetList.find('li').each(function () {
             var $this = $(this),
                 liRoomCount = $this.data('count'),
@@ -271,14 +271,15 @@
         // find the element to put the new item before
         $targetList.find('li').each(function () {
             var $this = $(this),
-                liRoomCount = $this.data('count');
+                liRoomCount = $this.data('count'),
+                nameComparison = $this.data('name').toString().toUpperCase().localeCompare(roomName);
             
-            if (liRoomCount < count ||
-                (liRoomCount === count && $this.data('name').toString().toUpperCase().localeCompare(roomName) > 0)) {
+            if ((liRoomCount < count && nameComparison !== 0) ||
+                (liRoomCount === count && nameComparison > 0)) {
                 nextListElement = $this;
                 return false;
             }
-            
+                        
             return true;
         });
 
@@ -286,6 +287,19 @@
             $room.insertBefore(nextListElement);
         } else {
             $room.appendTo($targetList);
+        }
+
+        filterIndividualRoom($room);
+    }
+    
+    function filterIndividualRoom($room) {
+        var filter = $roomFilterInput.val().toUpperCase(),
+            showClosedRooms = $closedRoomFilter.is(':checked');
+        
+        if ($room.data('room').toString().toUpperCase().score(filter) > 0.0 && (showClosedRooms || !$room.is('.closed'))) {
+            $room.show();
+        } else {
+            $room.hide();
         }
     }
 
@@ -1067,8 +1081,6 @@
 
             $lobbyRoomFilterForm.submit(function () {
                 var room = getCurrentRoomElements(),
-                    filter = $roomFilterInput.val().toUpperCase(),
-                    showClosedRooms = $closedRoomFilter.is(':checked'),
                     $lobbyRoomsLists = $lobbyPrivateRooms.add($lobbyOtherRooms);
 
                 // bounce on any room other than lobby
@@ -1079,14 +1091,7 @@
                 // hide all elements except those that match the input / closed filters
                 $lobbyRoomsLists
                     .find('li:not(.empty)')
-                    .each(function() {
-                        var $this = $(this);
-                        if ($this.data('room').toString().toUpperCase().score(filter) > 0.0 && (showClosedRooms || !$this.is('.closed'))) {
-                            $this.show();
-                        } else {
-                            $this.hide();
-                        }
-                    });
+                    .each(function () { filterIndividualRoom($(this)); });
                 
                 $lobbyRoomsLists.find('ul').each(function () {
                     room.setListState($(this));
