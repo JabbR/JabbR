@@ -229,16 +229,14 @@
     };
 
     Room.prototype.setListState = function (list) {
-        if (list.children('li').length > 0) {
-            var roomEmptyStatus = list.children('li.empty');
-            if (roomEmptyStatus.length === 0) {
-                return;
-            } else {
-                roomEmptyStatus.remove();
-                return;
-            }
+        var emptyStatus = list.children('li.empty'),
+            visibleItems = list.children('li:not(.empty)').filter(function() { return $(this).css('display') !== 'none'; });
+        
+        if (visibleItems.length > 0) {
+            emptyStatus.remove();
+        } else if (emptyStatus.length === 0) {
+            list.append($('<li class="empty" />').text(list.data('emptyMessage')));
         }
-        list.append($('<li class="empty">No users</li>'));
     };
 
     Room.prototype.addUser = function (userViewModel, $user) {
@@ -310,7 +308,7 @@
     };
 
     Room.prototype.sortList = function (listToSort) {
-        var listItems = listToSort.children('li').get();
+        var listItems = listToSort.children('li:not(.empty)').get();
 
         var activeUsers = [],
             idleUsers = [],

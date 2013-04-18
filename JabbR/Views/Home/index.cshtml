@@ -88,7 +88,7 @@
         </div>
     </script>
     <script id="new-lobby-room-template" type="text/x-jquery-tmpl">
-        <li class="room {{if Private}}locked{{/if}} {{if Closed}}closed{{/if}}" data-room="${Name}" data-name="${Name}">
+        <li class="room {{if Private}}locked{{/if}} {{if Closed}}closed{{/if}}" data-room="${Name}" data-name="${Name}" data-count="${Count}">
             <div class="row-fluid room-row">
                 <div class="span3">
                     <span class="name">${Name}</span>
@@ -99,7 +99,7 @@
                     <span class="topic">${Topic}</span>
                 </div>
                 <div class="span2">
-                    <span class="count" data-count="${Count}">{{if Count == 0}}Unoccupied{{else}}${Count} occupant{{if Count > 1}}s{{/if}}{{/if}}</span>
+                    <span class="count">{{if Count == 0}}Unoccupied{{else}}${Count} occupant{{if Count > 1}}s{{/if}}{{/if}}</span>
                 </div>
             </div>
         </li>
@@ -129,7 +129,7 @@
             ${listname}
         </h3>
         <div>
-            <ul id="${id}" />
+            <ul id="${id}" data-empty-message="No users" />
         </div>
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">
@@ -273,10 +273,10 @@
             </nav>
         </header>
         <div id="topic-bar">
-            <form id="users-filter-form" action="#" class="form-inline">
-                <input id="users-filter" class="filter input-xlarge" type="text" placeholder="Start typing to filter room list..." />
-                <label id="users-filter-closed-area" class="checkbox inline">
-                    <input id="users-filter-closed" type="checkbox" />
+            <form id="room-filter-form" action="#" class="form-inline">
+                <input id="room-filter" class="filter input-xlarge" type="text" placeholder="Start typing to filter room list..." />
+                <label id="room-filter-closed-area" class="checkbox inline">
+                    <input id="room-filter-closed" type="checkbox" />
                     Show Closed Rooms?
                 </label>
             </form>
@@ -297,11 +297,11 @@
             <div id="lobby-wrapper">
                 <div id="lobby-private">
                     <h2 class="userlist-header nav-header">Your Private Rooms</h2>
-                    <ul id="userlist-lobby-owners"></ul>
+                    <ul id="userlist-lobby-owners" data-empty-message="No matching rooms"></ul>
                 </div>
                 <div id="lobby-other">
                     <h2 class="userlist-header nav-header">Rooms</h2>
-                    <ul id="userlist-lobby">
+                    <ul id="userlist-lobby" data-empty-message="No matching rooms">
                     </ul>
                     <div id="load-more-rooms-item" class="room" style="display:none;"><div class="row-fluid room-row load-more-rooms"><i class="icon-spinner" style="display:none;"></i><a href="#">Load More...</a></div></div>
                 </div>
@@ -460,7 +460,6 @@
             .Add("~/Scripts/jquery.sortElements.js")
             .Add("~/Scripts/ba-linkify.min.js")
             .Add("~/Scripts/quicksilver.js")
-            .Add("~/Scripts/jquery.livesearch.js")
             .Add("~/Scripts/Markdown.Converter.js")
             .Add("~/Scripts/jquery.history.js")
             .Add("~/Scripts/moment.min.js")

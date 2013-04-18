@@ -50,12 +50,12 @@ form#send-message {
     overflow: auto;
 }
 
-#users-filter-form {
+#room-filter-form {
     display: none;
     margin: -4px 5px;
 }
 
-#users-filter-closed-area {
+#room-filter-closed-area {
     margin: 0px 5px;
     font-size: 13px;
 }
@@ -266,10 +266,22 @@ form#send-message {
     background: none;
 }
 
-    #userlist-lobby li,
+    #userlist-lobby li {
+        display: block;
+    }
+
     #userlist-lobby-owners li {
         display: inline;
     }
+
+        #userlist-lobby li.empty,
+        #userlist-lobby-owners li.empty {
+            color: #909090;
+            display: inline-block;
+            font-style: italic;
+            margin-bottom: 10px;
+            margin-left: 10px;
+        }
 
         #userlist-lobby li:hover,
         #userlist-lobby-owners li:hover {
@@ -293,15 +305,27 @@ form#send-message {
 
 #load-more-rooms-item {
     cursor: pointer;
+    margin: 0 5px;
 }
 
-#userlist-lobby .load-more-rooms {
+.load-more-rooms {
+    min-height: 30px;
+    border-color: #EEEEEE;
+    border-style: solid;
+    border-width: 1px 0;
+    margin: 15px 5px 0 -5px;
+    padding-top: 8px;
+    padding-left: 15px;
     text-align: center;
 }
 
-    #userlist-lobby .load-more-rooms a {
+    .load-more-rooms a {
         text-decoration: none;
         color: #999;
+    }
+
+    .load-more-rooms:hover {
+        background: #f1f1f1;
     }
 
 #userlist-lobby-owners li div.room-row {
@@ -374,7 +398,7 @@ form#send-message {
 #userlist-lobby .closed .readonly,
 #userlist-lobby-owners .locked .lock,
 #userlist-lobby-owners .closed .readonly {
-    display: initial;
+    display: inline-block;
 }
 
 .users ul {
