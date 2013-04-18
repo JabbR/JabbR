@@ -12,15 +12,6 @@ namespace JabbR.Infrastructure
             : base("SearchIndexing", interval)
         {
             _searchIndexingService = searchIndexingService;
-
-            // Updates the index synchronously first time job is created.
-            try
-            {
-                _searchIndexingService.UpdateIndex();
-            }
-            catch
-            {
-            }
         }
 
         public override Task Execute()

@@ -1,6 +1,5 @@
 ﻿using System;
 using JabbR.Infrastructure;
-using JabbR.Models;
 using JabbR.ViewModels;
 using Nancy.ModelBinding;
 using PagedList;
