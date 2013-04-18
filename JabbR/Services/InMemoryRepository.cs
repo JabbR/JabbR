@@ -97,12 +97,32 @@ namespace JabbR.Services
 
         public int GetMessageCountSince(int? lastMessageKey, out int newestMessageKey)
         {
-            throw new NotImplementedException();
+            var messages = _rooms.SelectMany(r => r.Messages);
+            newestMessageKey = messages.Max(m => m.Key);
+
+            if (lastMessageKey.HasValue)
+            {
+                newestMessageKey = messages.Max(m => m.Key);
+                return messages.Count(m => m.Key > lastMessageKey);
+            }
+
+            return messages.Count();
         }
 
         public IQueryable<ChatMessage> GetMessagesToIndex(int? lowerBoundKey, int upperBoundKey, int skip, int take)
         {
-            throw new NotImplementedException();
+            IEnumerable<ChatMessage> query = _rooms.SelectMany(r => r.Messages);
+
+            if (lowerBoundKey.HasValue)
+            {
+                query = query.Where(m => m.Key > lowerBoundKey.Value);
+            }
+
+            return query.Where(m => m.Key <= upperBoundKey)
+                      .OrderByDescending(m => m.When)
+                      .Skip(skip)
+                      .Take(take)
+                      .AsQueryable();
         }
 
         public void CommitChanges()
