@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG;IOS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -27,15 +27,78 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <DefineConstants>IOS</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\lib\iOS\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="..\JabbR.Client\ClientEvents.cs">
+      <Link>ClientEvents.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\DefaultAuthenticationProvider.cs">
+      <Link>DefaultAuthenticationProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\HttpHelper.cs">
+      <Link>HttpHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\IAuthenticationProvider.cs">
+      <Link>IAuthenticationProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\IJabbRClient.cs">
+      <Link>IJabbRClient.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\JabbRClient.cs">
+      <Link>JabbRClient.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\StreamExtensions.cs">
+      <Link>StreamExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\TaskAsyncHelper.cs">
+      <Link>TaskAsyncHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\Models\LogOnInfo.cs">
+      <Link>Models\LogOnInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\Models\Message.cs">
+      <Link>Models\Message.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\Models\Room.cs">
+      <Link>Models\Room.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\Models\User.cs">
+      <Link>Models\User.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\Models\UserStatus.cs">
+      <Link>Models\UserStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR\Models\ClientMessage.cs">
+      <Link>ClientMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR\Models\ClientNotification.cs">
+      <Link>ClientNotification.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\JabbR.Client\JabbR.Client.csproj">
+      <Link>JabbR.Client.csproj</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SignalR\src\Microsoft.AspNet.SignalR.Client.iOS\Microsoft.AspNet.SignalR.Client.iOS.csproj">
+      <Project>{44FABCC9-52E0-43AD-ABA9-C1FA909941E0}</Project>
+      <Name>Microsoft.AspNet.SignalR.Client.iOS</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

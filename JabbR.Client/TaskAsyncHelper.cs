@@ -162,7 +162,7 @@ namespace JabbR.Client
         private static void ExecuteOnFaulted(Action<AggregateException, object> handler, object state, AggregateException exception)
         {
             // observe Exception
-#if !WINDOWS_PHONE && !SILVERLIGHT && !NETFX_CORE
+#if !WINDOWS_PHONE && !SILVERLIGHT && !NETFX_CORE && !ANDROID && !IOS
             Trace.TraceError("SignalR exception thrown by Task: {0}", exception);
 #endif
             handler(exception, state);
