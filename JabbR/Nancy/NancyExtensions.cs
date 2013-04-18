@@ -35,6 +35,13 @@ namespace JabbR.Nancy
         {
             var claims = new List<Claim>();
             claims.Add(new Claim(JabbRClaimTypes.Identifier, user.Id));
+
+            // Add the admin claim if the user is an Administrator
+            if (user.IsAdmin)
+            {
+                claims.Add(new Claim(JabbRClaimTypes.Admin, "true"));
+            }
+
             return module.SignIn(claims);
         }
 

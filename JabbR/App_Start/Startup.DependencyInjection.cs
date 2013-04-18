@@ -38,6 +38,9 @@ namespace JabbR
             kernel.Bind<IFormsAuthenticationProvider>()
                   .To<JabbRFormsAuthenticationProvider>();
 
+            kernel.Bind<ILogger>()
+                  .To<RealtimeLogger>();
+
             // We're doing this manually since we want the chat repository to be shared
             // between the chat service and the chat hub itself
             kernel.Bind<Chat>()

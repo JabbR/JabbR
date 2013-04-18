@@ -1,0 +1,43 @@
+﻿@using SquishIt.Framework;
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <ul id="logs">
+
+    </ul>
+
+    @{
+        WriteLiteral(Bundle.JavaScript().ForceRelease()
+            .Add("~/Scripts/jquery-1.9.0.min.js")
+            .Add("~/Scripts/jquery-migrate-1.0.0.min.js")
+            .Add("~/Scripts/json2.min.js")
+            .Add("~/Scripts/jquery.signalR-1.1.0-beta1-130401.min.js")
+            .Render("~/Scripts/JabbR3_#.js"));
+    }
+    <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
+    <script type="text/javascript">
+        $(function () {
+            function encodeHtml(html) {
+                // html still emits double quotes so we need to replace these entities to use them in attributes.
+                return $("<div/>").text(html).html().replace(/\"/g, "&quot;");
+            }
+
+            var monitor = $.connection.monitor;
+
+            monitor.client.logMessage = function (value) {
+                $('#logs').append('<li class="message">' + encodeHtml(value).replace('\n', '<br/>') + '</li>');
+            };
+
+            monitor.client.logError = function () {
+                $('#logs').append('<li class="error">' + encodeHtml(value) + '</li>');
+            };
+
+            $.connection.hub.start();
+        });
+    </script>
+</body>
+</html>

@@ -47,7 +47,7 @@ namespace JabbR
             SetupAuth(app, kernel);
             SetupSignalR(kernel, app);
             SetupWebApi(kernel, app);
-            SetupMiddleware(settings, app);
+            SetupMiddleware(kernel, app, settings);
             SetupNancy(kernel, app);
 
             SetupErrorHandling();
@@ -95,7 +95,7 @@ namespace JabbR
             app.UseNancy(bootstrapper);
         }
 
-        private static void SetupMiddleware(IApplicationSettings settings, IAppBuilder app)
+        private static void SetupMiddleware(IKernel kernel, IAppBuilder app, IApplicationSettings settings)
         {
             if (settings.ProxyImages)
             {
@@ -103,6 +103,7 @@ namespace JabbR
             }
 
             app.UseStaticFiles();
+            app.Use(typeof(LoggingHandler), kernel);
         }
 
         private static void SetupSignalR(IKernel kernel, IAppBuilder app)

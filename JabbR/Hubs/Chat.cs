@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 
 namespace JabbR
 {
-    [JabbRAuthorize]
+    [AuthorizeClaim(JabbRClaimTypes.Identifier)]
     public class Chat : Hub, INotificationService
     {
         private static readonly TimeSpan _disconnectThreshold = TimeSpan.FromSeconds(10);

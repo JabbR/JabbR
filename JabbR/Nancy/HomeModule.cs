@@ -2,6 +2,7 @@
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JabbR.Infrastructure;
@@ -39,6 +40,19 @@ namespace JabbR.Nancy
                 }
 
                 return HttpStatusCode.Unauthorized;
+            };
+
+            Get["/monitor"] = _ =>
+            {
+                ClaimsPrincipal principal = Principal;
+
+                if (principal == null ||
+                    !principal.HasClaim(JabbRClaimTypes.Admin))
+                {
+                    return 403;
+                }
+
+                return View["monitor"];
             };
 
             Post["/upload"] = _ =>

@@ -42,9 +42,7 @@ namespace JabbR.Infrastructure
 
             ChatUser loggedInUser = GetLoggedInUser(context.Environment);
 
-            var identity = context.Identity as ClaimsIdentity;
-
-            var principal = new ClaimsPrincipal(identity);
+            var principal = new ClaimsPrincipal(context.Identity);
 
             // Do nothing if it's authenticated
             if (principal.IsAuthenticated())
@@ -65,25 +63,26 @@ namespace JabbR.Infrastructure
                     authResult.Success = false;
 
                     // Keep the old user logged in
-                    identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, loggedInUser.Id));
+                    context.Identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, loggedInUser.Id));
                 }
                 else
                 {
                     // Login this user
-                    identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
+                    AddClaim(context, user);
                 }
-                
+
             }
             else if (principal.HasRequiredClaims())
             {
-                string userId = null;
+                ChatUser targetUser = null;
+
                 // The user doesn't exist but the claims to create the user do exist
                 if (loggedInUser == null)
                 {
                     // New user so add them
                     user = _membershipService.AddUser(principal);
 
-                    userId = user.Id;
+                    targetUser = user;
                 }
                 else
                 {
@@ -94,16 +93,15 @@ namespace JabbR.Infrastructure
 
                     authResult.Message = String.Format("Successfully linked {0} account.", authResult.ProviderName);
 
-                    userId = loggedInUser.Id;
+                    targetUser = loggedInUser;
                 }
 
-                // Add the jabbr claim
-                identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, userId));
+                AddClaim(context, targetUser);
             }
             else
             {
                 // A partial identity means the user needs to add more claims to login
-                identity.AddClaim(new Claim(JabbRClaimTypes.PartialIdentity, "true"));
+                context.Identity.AddClaim(new Claim(JabbRClaimTypes.PartialIdentity, "true"));
             }
 
             var response = new OwinResponse(context.Environment);
@@ -112,9 +110,21 @@ namespace JabbR.Infrastructure
                 HttpOnly = true,
             };
 
-            response.AddCookie(Constants.AuthResultCookie, 
-                               JsonConvert.SerializeObject(authResult), 
+            response.AddCookie(Constants.AuthResultCookie,
+                               JsonConvert.SerializeObject(authResult),
                                cookieOptions);
+        }
+
+        private static void AddClaim(FormsResponseSignInContext context, ChatUser user)
+        {
+            // Add the jabbr id claim
+            context.Identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
+
+            // Add the admin claim if the user is an Administrator
+            if (user.IsAdmin)
+            {
+                context.Identity.AddClaim(new Claim(JabbRClaimTypes.Admin, "true"));
+            }
         }
 
         private ChatUser GetLoggedInUser(IDictionary<string, object> env)

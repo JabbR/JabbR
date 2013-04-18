@@ -29,7 +29,7 @@ namespace JabbR.Infrastructure
                     if (identity.AuthenticationType == Constants.JabbRAuthType)
                     {
                         Claim idClaim = identity.FindFirst(JabbRClaimTypes.Identifier);
-                        
+
                         if (idClaim != null)
                         {
                             return idClaim.Value;
@@ -39,6 +39,11 @@ namespace JabbR.Infrastructure
             }
 
             return null;
+        }
+
+        public static bool HasClaim(this ClaimsPrincipal principal, string type)
+        {
+            return !String.IsNullOrEmpty(principal.GetClaimValue(type));
         }
 
         public static string GetClaimValue(this ClaimsPrincipal principal, string type)
@@ -56,8 +61,8 @@ namespace JabbR.Infrastructure
 
         public static bool HasRequiredClaims(this ClaimsPrincipal principal)
         {
-            return !String.IsNullOrEmpty(principal.GetClaimValue(ClaimTypes.NameIdentifier)) &&
-                   !String.IsNullOrEmpty(principal.GetClaimValue(ClaimTypes.Name)) &&
+            return principal.HasClaim(ClaimTypes.NameIdentifier) &&
+                   principal.HasClaim(ClaimTypes.Name) &&
                    !String.IsNullOrEmpty(principal.GetIdentityProvider());
         }
 

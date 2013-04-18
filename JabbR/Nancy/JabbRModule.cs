@@ -37,14 +37,17 @@ namespace JabbR.Nancy
 
             if (result != null)
             {
-                if (result.Success)
+                if (!String.IsNullOrEmpty(result.Message))
                 {
-                    context.Request.AddAlertMessage("success", result.Message);
+                    if (result.Success)
+                    {
+                        context.Request.AddAlertMessage("success", result.Message);
 
-                }
-                else
-                {
-                    context.Request.AddAlertMessage("error", result.Message);
+                    }
+                    else
+                    {
+                        context.Request.AddAlertMessage("error", result.Message);
+                    }
                 }
             }
 
