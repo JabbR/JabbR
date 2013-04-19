@@ -42,6 +42,11 @@
         this.activeUsers = $usersActive;
         this.messages = $messages;
         this.roomTopic = $roomTopic;
+
+        this.templates = {
+            separator: $('#message-separator-template')
+        };
+
     }
 
     Room.prototype.isLocked = function () {
@@ -88,7 +93,7 @@
         var n = this.getUnread(),
             $unread = this.messages.find('.message').eq(-(n + 1));
 
-        $unread.after(templates.separator.tmpl())
+        $unread.after(this.templates.separator.tmpl())
             .data('unread', n); // store unread count
 
         this.scrollToBottom();
