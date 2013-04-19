@@ -37,6 +37,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\lib\iOS\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Client.iOS">
+      <HintPath>..\lib\iOS\Microsoft.AspNet.SignalR.Client.iOS.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
@@ -94,11 +97,5 @@
     <None Include="..\JabbR.Client\JabbR.Client.csproj">
       <Link>JabbR.Client.csproj</Link>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\SignalR\src\Microsoft.AspNet.SignalR.Client.iOS\Microsoft.AspNet.SignalR.Client.iOS.csproj">
-      <Project>{44FABCC9-52E0-43AD-ABA9-C1FA909941E0}</Project>
-      <Name>Microsoft.AspNet.SignalR.Client.iOS</Name>
-    </ProjectReference>
   </ItemGroup>
 </Project>

@@ -43,6 +43,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\lib\Android\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Client.Android">
+      <HintPath>..\lib\Android\Microsoft.AspNet.SignalR.Client.Android.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
@@ -102,12 +105,6 @@
     <AndroidResource Include="Resources\values\Strings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
-  <ItemGroup>
-    <ProjectReference Include="..\..\SignalR\src\Microsoft.AspNet.SignalR.Client.Android\Microsoft.AspNet.SignalR.Client.Android.csproj">
-      <Project>{677A3843-1774-48D8-B00C-01F1151AF2BC}</Project>
-      <Name>Microsoft.AspNet.SignalR.Client.Android</Name>
-    </ProjectReference>
-  </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
   </ItemGroup>
