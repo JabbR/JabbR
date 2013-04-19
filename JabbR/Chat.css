@@ -2262,6 +2262,11 @@ li.clearfix {
         font-size: 20px;
     }
 
+    .account-details .flag {
+        position: absolute;
+        margin: 4px 5px;
+    }
+
 .tab-content {
     padding-top: 5px;
 }
