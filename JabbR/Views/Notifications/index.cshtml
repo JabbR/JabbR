@@ -50,7 +50,6 @@
                     <li class="@(Model.ShowAll ? "active" : "")">
                         <a href="@Url.Content("~/notifications?all=true")">All Notifications</a>
                     </li>
-                    <li class="divider">&nbsp;</li>
                 </ul>
                 <div class="tab-content">
                     @if (notificationsViewModel.Notifications.Count > 0)

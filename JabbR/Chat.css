@@ -838,7 +838,8 @@ li.error {
         opacity: 0.4;
     }
 
-.notifications {
+.notifications,
+.user-profile {
     background: #fff;
 }
 
@@ -2245,10 +2246,6 @@ li.clearfix {
     -webkit-border-radius: 5px;
 }
 
-.account-details {
-    background-color: #FFF;
-}
-
 .login-header, .account-details-header {
     border-radius: 5px 5px 0 0;
     -moz-border-radius: 5px 5px 0 0;
@@ -2265,92 +2262,21 @@ li.clearfix {
         font-size: 20px;
     }
 
-.user-details {
-    background-color: #00103f;
-    color: #f1f1f1;
+.tab-content {
+    padding-top: 5px;
+}
+
+.user-details img {
     height: 48px;
-    overflow: hidden;
-    padding: 10px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    border-radius: 5px 5px 0 0;
-    -moz-border-radius: 5px 5px 0 0;
-    -webkit-border-radius: 5px 5px 0 0;
+    margin-right: 10px;
+    width: 48px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
 }
 
-    .user-details img {
-        height: 48px;
-        margin-right: 10px;
-        width: 48px;
-        border-radius: 5px;
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
-    }
-
-    .user-details .name {
-        font-size: 20px;
-    }
-
-.user-details-sidenav {
-    background-color: #FFFFFF;
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
-    padding: 0;
-}
-
-    .user-details-sidenav ul {
-        margin: 20px 0 0;
-        padding: 0;
-    }
-
-        .user-details-sidenav ul > li:first-child > a {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-
-        .user-details-sidenav ul > li:last-child > a,
-        .user-details-sidenav ul > li:last-child {
-            border-bottom-left-radius: 6px;
-            border-bottom-right-radius: 6px;
-        }
-
-        .user-details-sidenav ul > li.active > a {
-            background-color: #00103f;
-        }
-
-            .user-details-sidenav ul > li.active > a:hover {
-                background-color: #164c85;
-            }
-
-        .user-details-sidenav ul > li > a {
-            color: #00103f;
-            border-top: 1px solid #E5E5E5;
-            border-bottom: 1px solid #e5e5e5;
-            display: block;
-            margin: 0 0 -1px;
-            padding: 8px 14px;
-        }
-
-    .user-details-sidenav .icon-chevron-right {
-        float: right;
-        margin-right: -6px;
-        margin-top: 2px;
-        opacity: 0.25;
-    }
-
-.account-details-header {
-    padding-bottom: 10px;
-}
-
-    .account-details-header h1 {
-        margin: 0 20px;
-        font-size: 28px;
-        font-weight: normal;
-    }
-
-.account-details-body {
-    margin: 0;
-    padding: 20px 0;
+.user-details .name {
+    font-size: 2em;
 }
 
 .subheader {
