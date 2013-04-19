@@ -1284,6 +1284,9 @@
                 $ui.trigger(ui.events.fileUploaded, [uploader]);
             });
 
+            // Configure livestamp to only update every 30s since display granularity is by minute anyway (saves CPU cycles)
+            $.livestamp.interval(30 * 1000);
+
             setInterval(function () {
                 ui.trimRoomMessageHistory();
             }, trimRoomHistoryFrequency);
