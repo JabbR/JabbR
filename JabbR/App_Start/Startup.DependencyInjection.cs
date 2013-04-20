@@ -7,6 +7,8 @@ using JabbR.Services;
 using JabbR.UploadHandlers;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Json;
+using Microsoft.Owin.Security.DataProtection;
+using Microsoft.Owin.Security.Forms;
 using Nancy.Authentication.WorldDomination;
 using Nancy.Bootstrappers.Ninject;
 using Newtonsoft.Json;
@@ -30,8 +32,14 @@ namespace JabbR
             kernel.Bind<IChatService>()
                   .To<ChatService>();
 
-            kernel.Bind<IAuthenticationTokenService>()
-                  .To<AuthenticationTokenService>();
+            kernel.Bind<IDataProtection>()
+                  .To<JabbRDataProtection>();
+
+            kernel.Bind<IFormsAuthenticationProvider>()
+                  .To<JabbRFormsAuthenticationProvider>();
+
+            kernel.Bind<ILogger>()
+                  .To<RealtimeLogger>();
 
             // We're doing this manually since we want the chat repository to be shared
             // between the chat service and the chat hub itself
@@ -96,7 +104,7 @@ namespace JabbR
 
             var serializer = new JsonNetSerializer(new JsonSerializerSettings()
             {
-                DateFormatHandling = DateFormatHandling.MicrosoftDateFormat
+                DateFormatHandling = DateFormatHandling.IsoDateFormat
             });
 
             kernel.Bind<IJsonSerializer>()

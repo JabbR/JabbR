@@ -79,7 +79,7 @@
 
     function populateRoom(room) {
         var d = $.Deferred();
-        
+
         connection.hub.log('getRoomInfo(' + room + ')');
 
         // Populate the list of users rooms and messages 
@@ -128,7 +128,7 @@
     }
 
     function populateLobbyRooms() {
-        try { 
+        try {
             // Populate the user list with room names
             chat.server.getRooms()
                 .done(function (rooms) {
@@ -180,7 +180,10 @@
             date: message.When.fromJsonDate(),
             highlight: re.test(message.Content) ? 'highlight' : '',
             isOwn: re.test(message.User.name),
-            isMine: message.User.Name === chat.state.name
+            isMine: message.User.Name === chat.state.name,
+            imageUrl: message.ImageUrl,
+            source: message.Source,
+            messageType: message.MessageType
         };
     }
 
@@ -258,13 +261,13 @@
     chat.client.logOn = function (rooms, myRooms) {
         privateRooms = myRooms;
 
-           var loadRooms = function () {
-                $.each(rooms, function (index, room) {
-                    if (chat.state.activeRoom !== room.Name) {
-                        populateRoom(room.Name);
-                    }
-                });
-            };
+        var loadRooms = function () {
+            $.each(rooms, function (index, room) {
+                if (chat.state.activeRoom !== room.Name) {
+                    populateRoom(room.Name);
+                }
+            });
+        };
 
         $.each(rooms, function (index, room) {
             ui.addRoom(room);
@@ -276,6 +279,7 @@
             }
         });
         ui.setUserName(chat.state.name);
+        ui.setUnreadNotifications(chat.state.unreadNotifications);
 
         // Process any urls that may contain room names
         ui.run();
@@ -342,7 +346,7 @@
         ui.clearRoomOwner(user.Name, room);
     };
 
-    chat.updateRoomCount = function (room, count) {
+    chat.client.updateRoomCount = function (room, count) {
         ui.updateLobbyRoomCount(room, count);
     };
 
@@ -373,7 +377,7 @@
 
         var viewModel = getMessageViewModel(message);
 
-        scrollIfNecessary(function () { 
+        scrollIfNecessary(function () {
 
             // Update your message when it comes from the server
             ui.overwriteMessage(id, viewModel);
@@ -680,9 +684,21 @@
             ui.addMessage('No rooms available', 'list-item');
         }
         else {
-            // sort rooms by count descending
+            // sort rooms by count descending then name
             var sorted = rooms.sort(function (a, b) {
-                return a.Count > b.Count ? -1 : 1;
+                if (a.Closed && !b.Closed) {
+                    return 1;
+                } else if (b.Closed && !a.Closed) {
+                    return -1;
+                }
+
+                if (a.Count > b.Count) {
+                    return -1;
+                } else if (b.Count > a.Count) {
+                    return 1;
+                }
+                
+                return a.Name.toString().toUpperCase().localeCompare(b.Name.toString().toUpperCase());
             });
 
             $.each(sorted, function () {
@@ -771,6 +787,10 @@
 
     chat.client.outOfSync = function () {
         ui.showUpdateUI();
+    };
+
+    chat.client.updateUnreadNotifications = function (read) {
+        ui.setUnreadNotifications(read);
     };
 
     $ui.bind(ui.events.typing, function () {
@@ -958,7 +978,8 @@
 
         try {
             // Show a little animation so the user experience looks fancy
-            ui.setLoadingHistory(loadingHistory);
+            ui.setLoadingHistory(true);
+
             ui.setRoomTrimmable(roomInfo.name, false);
             connection.hub.log('getPreviousMessages(' + roomInfo.name + ')');
             chat.server.getPreviousMessages(roomInfo.messageId)
@@ -966,12 +987,14 @@
                     connection.hub.log('getPreviousMessages.done(' + roomInfo.name + ')');
                     ui.prependChatMessages($.map(messages, getMessageViewModel), roomInfo.name);
                     loadingHistory = false;
-                    ui.setLoadingHistory(loadingHistory);
+
+                    ui.setLoadingHistory(false);
                 })
                 .fail(function (e) {
                     connection.hub.log('getPreviousMessages.failed(' + roomInfo.name + ', ' + e + ')');
                     loadingHistory = false;
-                    ui.setLoadingHistory(loadingHistory);
+
+                    ui.setLoadingHistory(false);
                 });
         }
         catch (e) {

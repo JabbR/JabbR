@@ -41,6 +41,6 @@ namespace JabbR.Services
         void AddAttachment(ChatMessage message, string fileName, string contentType, long size, UploadResult result);
 
         // Add mention
-        void AddNotification(ChatUser mentionedUser, ChatMessage message, bool markAsRead);
+        void AddNotification(ChatUser mentionedUser, ChatMessage message, ChatRoom room, bool markAsRead);
     }
 }

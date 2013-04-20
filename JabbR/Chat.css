@@ -50,12 +50,12 @@ form#send-message {
     overflow: auto;
 }
 
-#users-filter-form {
+#room-filter-form {
     display: none;
     margin: -4px 5px;
 }
 
-#users-filter-closed-area {
+#room-filter-closed-area {
     margin: 0px 5px;
     font-size: 13px;
 }
@@ -266,10 +266,22 @@ form#send-message {
     background: none;
 }
 
-    #userlist-lobby li,
+    #userlist-lobby li {
+        display: block;
+    }
+
     #userlist-lobby-owners li {
         display: inline;
     }
+
+        #userlist-lobby li.empty,
+        #userlist-lobby-owners li.empty {
+            color: #909090;
+            display: inline-block;
+            font-style: italic;
+            margin-bottom: 10px;
+            margin-left: 10px;
+        }
 
         #userlist-lobby li:hover,
         #userlist-lobby-owners li:hover {
@@ -293,15 +305,27 @@ form#send-message {
 
 #load-more-rooms-item {
     cursor: pointer;
+    margin: 0 5px;
 }
 
-#userlist-lobby .load-more-rooms {
+.load-more-rooms {
+    min-height: 30px;
+    border-color: #EEEEEE;
+    border-style: solid;
+    border-width: 1px 0;
+    margin: 15px 5px 0 -5px;
+    padding-top: 8px;
+    padding-left: 15px;
     text-align: center;
 }
 
-    #userlist-lobby .load-more-rooms a {
+    .load-more-rooms a {
         text-decoration: none;
         color: #999;
+    }
+
+    .load-more-rooms:hover {
+        background: #f1f1f1;
     }
 
 #userlist-lobby-owners li div.room-row {
@@ -374,7 +398,7 @@ form#send-message {
 #userlist-lobby .closed .readonly,
 #userlist-lobby-owners .locked .lock,
 #userlist-lobby-owners .closed .readonly {
-    display: initial;
+    display: inline-block;
 }
 
 .users ul {
@@ -485,7 +509,6 @@ form#send-message {
     box-shadow: inset 0px 1px 0px 0px #caefab;
     background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #77d42a), color-stop(1, #5cb811) );
     background: -moz-linear-gradient( center top, #77d42a 5%, #5cb811 100% );
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#77d42a', endColorstr='#5cb811');
     background-color: #77d42a;
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
@@ -513,7 +536,6 @@ li.user.typing .user-status {
     box-shadow: inset 0px 1px 0px 0px #fff6af;
     background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffec64), color-stop(1, #ffab23) );
     background: -moz-linear-gradient( center top, #ffec64 5%, #ffab23 100% );
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffec64', endColorstr='#ffab23');
     background-color: #ffec64;
     border: 1px solid #ffaa22;
 }
@@ -777,6 +799,21 @@ li.error {
             color: inherit;
         }
 
+.postedNotification {
+    border-bottom: 1px solid #eee;
+    padding: 5px;
+}
+
+    .postedNotification .content {
+        margin-right: 95px;
+    }
+
+    .postedNotification img {
+        width: 16px;
+        height: 16px;
+        margin-top: -5px;
+    }
+
 .notification {
     color: #bbb;
     border-bottom: 1px solid #eee;
@@ -800,6 +837,71 @@ li.error {
     .notification .emoji20 {
         opacity: 0.4;
     }
+
+.notifications,
+.user-profile {
+    background: #fff;
+}
+
+.notifications-title {
+    font-size: 2em;
+}
+
+.notifications .tabbable {
+    height: 100%;
+}
+
+.notification-item {
+    background: #fcfcfc;
+}
+
+    .notification-item .js-mark-as-read {
+        margin: 14px;
+        text-decoration: none;
+    }
+
+        .notification-item .js-mark-as-read:hover {
+            color: #00103f;
+        }
+
+    .notification-item blockquote small {
+        padding-bottom: 5px;
+    }
+
+#notifications-pager .pager ul {
+    margin: 0 0 10px 0;
+}
+
+#notifications-pager .pager a {
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    color: #00103f;
+    padding: 0px 6px;
+}
+
+#notifications-pager .pager .disabled > a, #notifications-pager .pager .disabled > a:hover {
+    color: #999;
+}
+
+#no-notifications {
+    text-align: center;
+    font-size: 1.25em;
+}
+
+#notification-unread-count.badge {
+    display: none;
+    position: fixed;
+    right: 90px;
+    top: 12px;
+    font-size: 0.55em;
+    padding: 0 0;
+    padding-left: 4px;
+    padding-right: 4px;
+    border-radius: 6px;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+}
 
 .message {
     border-bottom: 1px solid #eee;
@@ -907,7 +1009,8 @@ li.error {
 }
 
 .list-header {
-    padding: 5px;
+    padding: 3px 5px;
+    color: #c5c5c5;
     border-bottom: 1px solid #eee;
 }
 
@@ -919,7 +1022,7 @@ li.error {
 
 
 .list-header .content {
-    font-weight: bold;
+    font-size: 0.9em;
 }
 
 .list-item .right {
@@ -2143,10 +2246,6 @@ li.clearfix {
     -webkit-border-radius: 5px;
 }
 
-.account-details {
-    background-color: #FFF;
-}
-
 .login-header, .account-details-header {
     border-radius: 5px 5px 0 0;
     -moz-border-radius: 5px 5px 0 0;
@@ -2163,92 +2262,26 @@ li.clearfix {
         font-size: 20px;
     }
 
-.user-details {
-    background-color: #00103f;
-    color: #f1f1f1;
+    .account-details .flag {
+        position: absolute;
+        margin: 4px 5px;
+    }
+
+.tab-content {
+    padding-top: 5px;
+}
+
+.user-details img {
     height: 48px;
-    overflow: hidden;
-    padding: 10px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    border-radius: 5px 5px 0 0;
-    -moz-border-radius: 5px 5px 0 0;
-    -webkit-border-radius: 5px 5px 0 0;
+    margin-right: 10px;
+    width: 48px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
 }
 
-    .user-details img {
-        height: 48px;
-        margin-right: 10px;
-        width: 48px;
-        border-radius: 5px;
-        -moz-border-radius: 5px;
-        -webkit-border-radius: 5px;
-    }
-
-    .user-details .name {
-        font-size: 20px;
-    }
-
-.user-details-sidenav {
-    background-color: #FFFFFF;
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
-    padding: 0;
-}
-
-    .user-details-sidenav ul {
-        margin: 20px 0 0;
-        padding: 0;
-    }
-
-        .user-details-sidenav ul > li:first-child > a {
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
-        }
-
-        .user-details-sidenav ul > li:last-child > a,
-        .user-details-sidenav ul > li:last-child {
-            border-bottom-left-radius: 6px;
-            border-bottom-right-radius: 6px;
-        }
-
-        .user-details-sidenav ul > li.active > a {
-            background-color: #00103f;
-        }
-
-            .user-details-sidenav ul > li.active > a:hover {
-                background-color: #164c85;
-            }
-
-        .user-details-sidenav ul > li > a {
-            color: #00103f;
-            border-top: 1px solid #E5E5E5;
-            border-bottom: 1px solid #e5e5e5;
-            display: block;
-            margin: 0 0 -1px;
-            padding: 8px 14px;
-        }
-
-    .user-details-sidenav .icon-chevron-right {
-        float: right;
-        margin-right: -6px;
-        margin-top: 2px;
-        opacity: 0.25;
-    }
-
-.account-details-header {
-    padding-bottom: 10px;
-}
-
-    .account-details-header h1 {
-        margin: 0 20px;
-        font-size: 28px;
-        font-weight: normal;
-    }
-
-.account-details-body {
-    margin: 0;
-    padding: 20px 0;
+.user-details .name {
+    font-size: 2em;
 }
 
 .subheader {
@@ -2382,7 +2415,7 @@ li.clearfix {
 }
 
 .social-auth .btn-provider {
-    margin-left: 0;
+    margin-left: 15px;
 }
 
 .provider {
@@ -2636,7 +2669,7 @@ h3.userlist-header {
 .connection-status {
     position: absolute;
     top: 17px;
-    right: 130px;
+    right: 170px;
 }
 
 .icon-connection-status {
@@ -2645,7 +2678,6 @@ h3.userlist-header {
     box-shadow: inset 0px 1px 0px 0px #caefab;
     background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #77d42a), color-stop(1, #5cb811) );
     background: -moz-linear-gradient( center top, #77d42a 5%, #5cb811 100% );
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#77d42a', endColorstr='#5cb811');
     background-color: #77d42a;
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
@@ -2662,7 +2694,6 @@ h3.userlist-header {
     box-shadow: inset 0px 1px 0px 0px #fff6af;
     background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ffec64), color-stop(1, #ffab23) );
     background: -moz-linear-gradient( center top, #ffec64 5%, #ffab23 100% );
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffec64', endColorstr='#ffab23');
     background-color: #ffec64;
     border: 1px solid #ffaa22;
 }
@@ -2673,7 +2704,6 @@ h3.userlist-header {
     box-shadow: inset 0px 1px 0px 0px #f29c93;
     background: -webkit-gradient( linear, left top, left bottom, color-stop(0.05, #fe1a00), color-stop(1, #ce0100) );
     background: -moz-linear-gradient( center top, #fe1a00 5%, #ce0100 100% );
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fe1a00', endColorstr='#ce0100');
     background-color: #fe1a00;
     border: 1px solid #d83526;
 }
@@ -2918,4 +2948,11 @@ h3.userlist-header {
     #tabs {
         overflow: auto;
     }
+}
+
+#clipboard-upload-preview {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 300px;
 }

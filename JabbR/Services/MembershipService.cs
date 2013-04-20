@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Principal;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using JabbR.Infrastructure;
 using JabbR.Models;
@@ -18,32 +18,17 @@ namespace JabbR.Services
             _crypto = crypto;
         }
 
-        public ChatUser AddUser(WindowsPrincipal windowsPrincipal)
+        public ChatUser AddUser(ClaimsPrincipal claimsPrincipal)
         {
-            string fullName = windowsPrincipal.Identity.Name;
-            int domainSlash = fullName.IndexOf('\\');
-            string userName = domainSlash != -1 ? fullName.Substring(domainSlash + 1) : fullName;
+            var identity = claimsPrincipal.GetClaimValue(ClaimTypes.NameIdentifier);
+            var name = claimsPrincipal.GetClaimValue(ClaimTypes.Name);
+            var email = claimsPrincipal.GetClaimValue(ClaimTypes.Email);
+            var providerName = claimsPrincipal.GetIdentityProvider();
 
-            if (UserExists(userName))
-            {
-                userName = fullName;
-            }
-
-            var user = new ChatUser
-            {
-                Name = userName,
-                Status = (int)UserStatus.Active,
-                Id = fullName,
-                LastActivity = DateTime.UtcNow
-            };
-
-            _repository.Add(user);
-            _repository.CommitChanges();
-
-            return user;
+            return AddUser(name, providerName, identity, email);
         }
 
-        public ChatUser AddUser(string userName, string providerName, string identity, string email)
+        private ChatUser AddUser(string userName, string providerName, string identity, string email)
         {
             if (!IsValidUserName(userName))
             {
@@ -82,6 +67,21 @@ namespace JabbR.Services
             _repository.CommitChanges();
 
             return user;
+        }
+
+        public void LinkIdentity(ChatUser user, ClaimsPrincipal claimsPrincipal)
+        {
+            var identity = claimsPrincipal.GetClaimValue(ClaimTypes.NameIdentifier);
+            var email = claimsPrincipal.GetClaimValue(ClaimTypes.Email);
+            var providerName = claimsPrincipal.GetIdentityProvider();
+
+            // Link this new identity
+            user.Identities.Add(new ChatUserIdentity
+            {
+                Email = email,
+                Identity = identity,
+                ProviderName = providerName
+            });
         }
 
         public ChatUser AddUser(string userName, string email, string password)

@@ -11,7 +11,7 @@ namespace JabbR.ContentProviders
         {
             get
             {
-                return @"<iframe src=""https://docs.google.com/spreadsheet/embeddedform?formkey={0}"" style=""width:100%;height:500px;"" frameborder=""0"" marginheight=""0"" marginwidth=""0"">Loading...</iframe>";
+                return @"<iframe src=""https://docs.google.com/spreadsheet/pub?key={0}&output=html&widget=true"" style=""width:100%;height:400px;"" frameborder=""0"" marginheight=""0"" marginwidth=""0"">Loading...</iframe>";
             }
         }
 
@@ -27,12 +27,13 @@ namespace JabbR.ContentProviders
         protected override IList<string> ExtractParameters(Uri responseUri)
         {
             var queryString = new QueryStringCollection(responseUri.Query);
-            string formKey = queryString["formkey"];
-            
+            string formKey = queryString["key"];
+
             if (!String.IsNullOrEmpty(formKey))
             {
                 return new [] { formKey };
             }
+
             return null;
         }
     }

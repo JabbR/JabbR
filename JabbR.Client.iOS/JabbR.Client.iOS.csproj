@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E28DCE24-90F9-4275-95D3-BABEDADF114B}</ProjectGuid>
+    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>JabbR.Client.iOS</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>JabbR.Client.iOS</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;IOS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <DefineConstants>IOS</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="monotouch" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\lib\iOS\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Client.iOS">
+      <HintPath>..\lib\iOS\Microsoft.AspNet.SignalR.Client.iOS.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+    <Folder Include="Models\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="..\JabbR.Client\ClientEvents.cs">
+      <Link>ClientEvents.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\DefaultAuthenticationProvider.cs">
+      <Link>DefaultAuthenticationProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\HttpHelper.cs">
+      <Link>HttpHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\IAuthenticationProvider.cs">
+      <Link>IAuthenticationProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\IJabbRClient.cs">
+      <Link>IJabbRClient.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\JabbRClient.cs">
+      <Link>JabbRClient.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\StreamExtensions.cs">
+      <Link>StreamExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\TaskAsyncHelper.cs">
+      <Link>TaskAsyncHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\Models\LogOnInfo.cs">
+      <Link>Models\LogOnInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\Models\Message.cs">
+      <Link>Models\Message.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\Models\Room.cs">
+      <Link>Models\Room.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\Models\User.cs">
+      <Link>Models\User.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR.Client\Models\UserStatus.cs">
+      <Link>Models\UserStatus.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR\Models\ClientMessage.cs">
+      <Link>ClientMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\JabbR\Models\ClientNotification.cs">
+      <Link>ClientNotification.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\JabbR.Client\JabbR.Client.csproj">
+      <Link>JabbR.Client.csproj</Link>
+    </None>
+  </ItemGroup>
+</Project>

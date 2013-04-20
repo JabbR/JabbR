@@ -16,7 +16,7 @@ using Newtonsoft.Json;
 
 namespace JabbR
 {
-    [Authorize]
+    [AuthorizeClaim(JabbRClaimTypes.Identifier)]
     public class Chat : Hub, INotificationService
     {
         private static readonly TimeSpan _disconnectThreshold = TimeSpan.FromSeconds(10);
@@ -79,7 +79,7 @@ namespace JabbR
         public void Join(bool reconnecting)
         {
             // Get the client state
-            var userId = Context.User.Identity.Name;
+            var userId = Context.User.GetUserId();
 
             // Try to get the user from the client state
             ChatUser user = _repository.GetUserById(userId);
@@ -137,7 +137,7 @@ namespace JabbR
                 return true;
             }
 
-            var userId = Context.User.Identity.Name;
+            var userId = Context.User.GetUserId();
 
             ChatUser user = _repository.VerifyUserId(userId);
             ChatRoom room = _repository.VerifyUserRoom(_cache, user, clientMessage.Room);
@@ -184,7 +184,7 @@ namespace JabbR
 
             // Add mentions
             AddMentions(chatMessage);
-            
+
             var urls = UrlExtractor.ExtractUrls(chatMessage.Content);
             if (urls.Count > 0)
             {
@@ -196,8 +196,7 @@ namespace JabbR
 
         private void AddMentions(ChatMessage message)
         {
-            bool anyMentions = false;
-
+            var mentionedUsers = new List<ChatUser>();
             foreach (var userName in MentionExtractor.ExtractMentions(message.Content))
             {
                 ChatUser mentionedUser = _repository.GetUserByName(userName);
@@ -206,30 +205,52 @@ namespace JabbR
                 // 1. If the mentioned user doesn't exist.
                 // 2. If you mention yourself
                 // 3. If you're mentioned in a private room that you don't have access to
-                if (mentionedUser == null || 
-                    mentionedUser == message.User || 
+                if (mentionedUser == null ||
+                    mentionedUser == message.User ||
                     (message.Room.Private && !mentionedUser.AllowedRooms.Contains(message.Room)))
                 {
                     continue;
                 }
 
-                anyMentions = true;
+                // mark as read if ALL of the following
+                // 1. user is not offline
+                // 2. user is not AFK
+                // 3. user has been active within the last 10 minutes
+                // 4. user is currently in the room
+                bool markAsRead = mentionedUser.Status != (int)UserStatus.Offline
+                                  && !mentionedUser.IsAfk
+                                  && (DateTimeOffset.UtcNow - mentionedUser.LastActivity) < TimeSpan.FromMinutes(10)
+                                  && _repository.IsUserInRoom(_cache, mentionedUser, message.Room);
 
-                // Mark the notification as read if the user is online
-                bool markAsRead = mentionedUser.Status == (int)UserStatus.Active;
+                _service.AddNotification(mentionedUser, message, message.Room, markAsRead);
 
-                _service.AddNotification(mentionedUser, message, markAsRead);
+                mentionedUsers.Add(mentionedUser);
             }
 
-            if (anyMentions)
+            if (mentionedUsers.Count > 0)
             {
                 _repository.CommitChanges();
+            }
+
+            foreach (var user in mentionedUsers)
+            {
+                UpdateUnreadMentions(user);
+            }
+        }
+
+        private void UpdateUnreadMentions(ChatUser mentionedUser)
+        {
+            var unread = _repository.GetUnreadNotificationsCount(mentionedUser);
+
+            foreach (var client in mentionedUser.ConnectedClients)
+            {
+                Clients.Client(client.Id).updateUnreadNotifications(unread);
             }
         }
 
         public UserViewModel GetUserInfo()
         {
-            var userId = Context.User.Identity.Name;
+            var userId = Context.User.GetUserId();
 
             ChatUser user = _repository.VerifyUserId(userId);
 
@@ -240,7 +261,7 @@ namespace JabbR
         {
             CheckStatus();
 
-            var userId = Context.User.Identity.Name;
+            var userId = Context.User.GetUserId();
 
             ChatUser user = _repository.VerifyUserId(userId);
 
@@ -297,7 +318,7 @@ namespace JabbR
 
         public IEnumerable<LobbyRoomViewModel> GetRooms()
         {
-            string userId = Context.User.Identity.Name;
+            string userId = Context.User.GetUserId();
             ChatUser user = _repository.VerifyUserId(userId);
 
             var rooms = _repository.GetAllowedRooms(user).Select(r => new LobbyRoomViewModel
@@ -331,7 +352,7 @@ namespace JabbR
                 return null;
             }
 
-            string userId = Context.User.Identity.Name;
+            string userId = Context.User.GetUserId();
             ChatUser user = _repository.VerifyUserId(userId);
 
             ChatRoom room = _repository.GetRoomByName(roomName);
@@ -365,9 +386,57 @@ namespace JabbR
             };
         }
 
+        public void PostNotification(ClientNotification notification)
+        {
+            PostNotification(notification, executeContentProviders: true);
+        }
+
+        public void PostNotification(ClientNotification notification, bool executeContentProviders)
+        {
+            string userId = Context.User.GetUserId();
+
+            ChatUser user = _repository.GetUserById(userId);
+            ChatRoom room = _repository.VerifyUserRoom(_cache, user, notification.Room);
+
+            // User must be an owner
+            if (room == null ||
+                !room.Owners.Contains(user) ||
+                (room.Private && !user.AllowedRooms.Contains(room)))
+            {
+                throw new InvalidOperationException("You're not allowed to post a notification");
+            }
+
+            var chatMessage = new ChatMessage
+            {
+                Id = Guid.NewGuid().ToString("d"),
+                Content = notification.Content,
+                User = user,
+                Room = room,
+                HtmlEncoded = false,
+                ImageUrl = notification.ImageUrl,
+                Source = notification.Source,
+                When = DateTimeOffset.UtcNow,
+                MessageType = (int)MessageType.Notification
+            };
+
+            _repository.Add(chatMessage);
+            _repository.CommitChanges();
+
+            Clients.Group(room.Name).addMessage(new MessageViewModel(chatMessage), room.Name);
+
+            if (executeContentProviders)
+            {
+                var urls = UrlExtractor.ExtractUrls(chatMessage.Content);
+                if (urls.Count > 0)
+                {
+                    _resourceProcessor.ProcessUrls(urls, Clients, room.Name, chatMessage.Id);
+                }
+            }
+        }
+
         public void Typing(string roomName)
         {
-            string userId = Context.User.Identity.Name;
+            string userId = Context.User.GetUserId();
 
             ChatUser user = _repository.GetUserById(userId);
             ChatRoom room = _repository.VerifyUserRoom(_cache, user, roomName);
@@ -387,7 +456,7 @@ namespace JabbR
         {
             CheckStatus();
 
-            string userId = Context.User.Identity.Name;
+            string userId = Context.User.GetUserId();
 
             ChatUser user = _repository.GetUserById(userId);
 
@@ -405,6 +474,7 @@ namespace JabbR
                 Clients.Caller.id = user.Id;
                 Clients.Caller.name = user.Name;
                 Clients.Caller.hash = user.Hash;
+                Clients.Caller.unreadNotifications = user.Notifications.Count(n => !n.Read);
             }
 
             var rooms = new List<RoomViewModel>();
@@ -471,7 +541,7 @@ namespace JabbR
         private bool TryHandleCommand(string command, string room)
         {
             string clientId = Context.ConnectionId;
-            string userId = Context.User.Identity.Name;
+            string userId = Context.User.GetUserId();
 
             var commandManager = new CommandManager(clientId, UserAgent, userId, room, _service, _repository, _cache, this);
             return commandManager.TryHandleCommand(command);
@@ -722,7 +792,7 @@ namespace JabbR
 
         void INotificationService.ListRooms(ChatUser user)
         {
-            string userId = Context.User.Identity.Name;
+            string userId = Context.User.GetUserId();
 
             var userModel = new UserViewModel(user);
 
@@ -794,7 +864,7 @@ namespace JabbR
 
         void INotificationService.ShowUserInfo(ChatUser user)
         {
-            string userId = Context.User.Identity.Name;
+            string userId = Context.User.GetUserId();
 
             Clients.Caller.showUserInfo(new
             {

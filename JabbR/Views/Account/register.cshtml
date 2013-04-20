@@ -21,6 +21,8 @@
                 </div>
             </div>
         </div>
+        @if (ViewBag.requirePassword) 
+        {
         <div class="control-group">
             <div class="controls">
                 <div class="input-prepend">
@@ -37,6 +39,7 @@
                 </div>
             </div>
         </div>
+        }
         <div class="control-group">
             <div class="controls">
                 <button type="submit" class="btn">Register</button>

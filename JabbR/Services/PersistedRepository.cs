@@ -131,6 +131,14 @@ namespace JabbR.Services
                        (r.Private && r.AllowedUsers.Any(u => u.Key == user.Key)));
         }
 
+        public IQueryable<Notification> GetNotificationsByUser(ChatUser user)
+        {
+            return _db.Notifications.Include(n => n.Room)
+                                    .Include(n => n.Message)
+                                    .Include(n => n.Message.User)
+                                    .Where(n => n.UserKey == user.Key);
+        }
+
         private IQueryable<ChatMessage> GetMessagesByRoom(string roomName)
         {
             return _db.Messages.Include(r => r.Room).Where(r => r.Room.Name == roomName);
@@ -237,6 +245,11 @@ namespace JabbR.Services
                 return identity.User;
             }
             return null;
+        }
+
+        public Notification GetNotificationById(int notificationId)
+        {
+            return _db.Notifications.SingleOrDefault(n => n.Key == notificationId);
         }
 
         public ChatUser GetUserByLegacyIdentity(string userIdentity)

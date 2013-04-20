@@ -1,12 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using JabbR.Services;
+using JabbR.Infrastructure;
 
 namespace JabbR.Models
 {
     public static class RepositoryExtensions
     {
+        public static ChatUser GetLoggedInUser(this IJabbrRepository repository, ClaimsPrincipal principal)
+        {
+            return repository.GetUserById(principal.GetUserId());
+        }
+
+        public static ChatUser GetUser(this IJabbrRepository repository, ClaimsPrincipal principal)
+        {
+            string identity = principal.GetClaimValue(ClaimTypes.NameIdentifier);
+            string providerName = principal.GetIdentityProvider();
+
+            return repository.GetUserByIdentity(providerName, identity);
+        }
+
         public static IQueryable<ChatUser> Online(this IQueryable<ChatUser> source)
         {
             return source.Where(u => u.Status != (int)UserStatus.Offline);
@@ -111,6 +126,21 @@ namespace JabbR.Models
             }
 
             return user;
+        }
+
+        public static int GetUnreadNotificationsCount(this IJabbrRepository repository, ChatUser user)
+        {
+            return repository.GetNotificationsByUser(user).Unread().Count();
+        }
+
+        public static IQueryable<Notification> Unread(this IQueryable<Notification> source)
+        {
+            return source.Where(n => !n.Read);
+        }
+
+        public static IQueryable<Notification> ByRoom(this IQueryable<Notification> source, string roomName)
+        {
+            return source.Where(n => n.Room.Name == roomName);
         }
     }
 }

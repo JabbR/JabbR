@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
@@ -88,7 +90,15 @@ namespace JabbR.Test
                 var repository = new InMemoryRepository();
                 var service = new MembershipService(repository, new Mock<ICryptoService>().Object);
 
-                service.AddUser("SomeUser", "provider", "identity", "email");
+                var claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.Name, "SomeUser"));
+                claims.Add(new Claim(ClaimTypes.AuthenticationMethod, "provider"));
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, "identity"));
+                claims.Add(new Claim(ClaimTypes.Email, "email"));
+                var claimsIdentity = new ClaimsIdentity(claims);
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                service.AddUser(claimsPrincipal);
 
                 var user = repository.GetUserByIdentity("provider", "identity");
                 Assert.NotNull(user);
@@ -112,7 +122,14 @@ namespace JabbR.Test
 
                 var service = new MembershipService(repository, new Mock<ICryptoService>().Object);
 
-                service.AddUser("david", "provider", "identity", email: null);
+                var claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.Name, "david"));
+                claims.Add(new Claim(ClaimTypes.AuthenticationMethod, "provider"));
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, "identity"));
+                var claimsIdentity = new ClaimsIdentity(claims);
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                service.AddUser(claimsPrincipal);
 
                 var user = repository.GetUserByIdentity("provider", "identity");
                 Assert.NotNull(user);

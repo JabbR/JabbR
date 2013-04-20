@@ -22,6 +22,10 @@ namespace JabbR.Models.Mapping
             this.HasRequired(a => a.User)
                 .WithMany(u => u.Notifications)
                 .HasForeignKey(a => a.UserKey);
+
+            this.HasRequired(a => a.Room)
+                .WithMany(u => u.Notifications)
+                .HasForeignKey(a => a.RoomKey);
         }
     }
 }
