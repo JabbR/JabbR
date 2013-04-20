@@ -122,7 +122,7 @@
     </Reference>
     <Reference Include="Microsoft.Owin.Security, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.0.22.0-pre-20419-216\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.0.22.0-pre-20419-217\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Federation, Version=0.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -130,11 +130,11 @@
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Forms, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.Forms.0.22.0-pre-20419-216\lib\net45\Microsoft.Owin.Security.Forms.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.Forms.0.22.0-pre-20419-217\lib\net45\Microsoft.Owin.Security.Forms.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Serialization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.Serialization.0.22.0-pre-20419-216\lib\net45\Microsoft.Owin.Security.Serialization.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.Serialization.0.22.0-pre-20419-217\lib\net45\Microsoft.Owin.Security.Serialization.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.StaticFiles, Version=0.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

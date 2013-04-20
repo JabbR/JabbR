@@ -47,6 +47,7 @@ namespace JabbR.Infrastructure
             // Do nothing if it's authenticated
             if (principal.IsAuthenticated())
             {
+                EnsurePersistentCookie(context);
                 return;
             }
 
@@ -107,7 +108,7 @@ namespace JabbR.Infrastructure
             var response = new OwinResponse(context.Environment);
             var cookieOptions = new CookieOptions
             {
-                HttpOnly = true,
+                HttpOnly = true
             };
 
             response.AddCookie(Constants.AuthResultCookie,
@@ -125,6 +126,18 @@ namespace JabbR.Infrastructure
             {
                 context.Identity.AddClaim(new Claim(JabbRClaimTypes.Admin, "true"));
             }
+
+            EnsurePersistentCookie(context);
+        }
+
+        private static void EnsurePersistentCookie(FormsResponseSignInContext context)
+        {
+            if (context.Extra == null)
+            {
+                context.Extra = new Dictionary<string, string>();
+            }
+
+            context.Extra[".persistent"] = "";
         }
 
         private ChatUser GetLoggedInUser(IDictionary<string, object> env)
