@@ -113,6 +113,8 @@ namespace JabbR.Nancy
                     return Response.AsRedirect("~/");
                 }
 
+                ViewBag.requirePassword = !Principal.Identity.IsAuthenticated;
+
                 string username = Request.Form.username;
                 string email = Request.Form.email;
                 string password = Request.Form.password;
