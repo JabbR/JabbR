@@ -25,19 +25,19 @@ namespace JabbR
     {
         public void Configuration(IAppBuilder app)
         {
-            var settings = new ApplicationSettings();
+            var configuration = new JabbrConfiguration();
 
-            if (settings.MigrateDatabase)
+            if (configuration.MigrateDatabase)
             {
                 // Perform the required migrations
                 DoMigrations();
             }
 
-            var kernel = SetupNinject(settings);
+            var kernel = SetupNinject(configuration);
 
             app.Use(typeof(DetectSchemeHandler));
 
-            if (settings.RequireHttps)
+            if (configuration.RequireHttps)
             {
                 app.Use(typeof(RequireHttpsHandler));
             }
@@ -47,7 +47,7 @@ namespace JabbR
             SetupAuth(app, kernel);
             SetupSignalR(kernel, app);
             SetupWebApi(kernel, app);
-            SetupMiddleware(kernel, app, settings);
+            SetupMiddleware(kernel, app, configuration);
             SetupNancy(kernel, app);
 
             SetupErrorHandling();
@@ -95,11 +95,11 @@ namespace JabbR
             app.UseNancy(bootstrapper);
         }
 
-        private static void SetupMiddleware(IKernel kernel, IAppBuilder app, IApplicationSettings settings)
+        private static void SetupMiddleware(IKernel kernel, IAppBuilder app, IJabbrConfiguration configuration)
         {
-            if (settings.ProxyImages)
+            if (configuration.ProxyImages)
             {
-                app.MapPath("/proxy", subApp => subApp.Use(typeof(ImageProxyHandler), settings));
+                app.MapPath("/proxy", subApp => subApp.Use(typeof(ImageProxyHandler), configuration));
             }
 
             app.UseStaticFiles();

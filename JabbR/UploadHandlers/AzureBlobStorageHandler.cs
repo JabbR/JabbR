@@ -10,12 +10,12 @@ namespace JabbR.UploadHandlers
 {
     public class AzureBlobStorageHandler : IUploadHandler
     {
-        private readonly IApplicationSettings _settings;
+        private readonly ApplicationSettings _settings;
 
         private const string JabbRUploadContainer = "jabbr-uploads";
 
         [ImportingConstructor]
-        public AzureBlobStorageHandler(IApplicationSettings settings)
+        public AzureBlobStorageHandler(ApplicationSettings settings)
         {
             _settings = settings;
         }

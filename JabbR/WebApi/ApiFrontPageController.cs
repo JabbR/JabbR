@@ -9,9 +9,9 @@ namespace JabbR.WebApi
 {
     public class ApiFrontPageController : ApiController
     {
-        private IApplicationSettings _appSettings;
+        private ApplicationSettings _appSettings;
 
-        public ApiFrontPageController(IApplicationSettings appSettings)
+        public ApiFrontPageController(ApplicationSettings appSettings)
         {
             _appSettings = appSettings;
         }

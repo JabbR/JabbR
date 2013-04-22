@@ -46,5 +46,6 @@ namespace JabbR.Models
         public DbSet<ChatUserIdentity> Identities { get; set; }
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Settings> Settings { get; set; }
     }
 }

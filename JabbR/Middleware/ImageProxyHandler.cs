@@ -20,12 +20,12 @@ namespace JabbR.Middleware
     public class ImageProxyHandler
     {
         private readonly AppFunc _next;
-        private readonly IApplicationSettings _settings;
+        private readonly IJabbrConfiguration _configuration;
 
-        public ImageProxyHandler(AppFunc next, IApplicationSettings settings)
+        public ImageProxyHandler(AppFunc next, IJabbrConfiguration configuration)
         {
             _next = next;
-            _settings = settings;
+            _configuration = configuration;
         }
 
         public async Task Invoke(IDictionary<string, object> env)
@@ -52,7 +52,7 @@ namespace JabbR.Middleware
                 var response = (HttpWebResponse)await request.GetResponseAsync();
 
                 if (!ImageContentProvider.IsValidContentType(response.ContentType) &&
-                    response.ContentLength > _settings.ProxyImageMaxSizeBytes)
+                    response.ContentLength > _configuration.ProxyImageMaxSizeBytes)
                 {
                     httpResponse.StatusCode = 404;
                     return;

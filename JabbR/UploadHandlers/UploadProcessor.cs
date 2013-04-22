@@ -12,7 +12,7 @@ namespace JabbR.UploadHandlers
     {
         private readonly IList<IUploadHandler> _fileUploadHandlers;
 
-        public UploadProcessor(IApplicationSettings settings)
+        public UploadProcessor(ApplicationSettings settings)
         {
             _fileUploadHandlers = GetUploadHandlers(settings);
         }
@@ -29,11 +29,11 @@ namespace JabbR.UploadHandlers
             return await handler.UploadFile(fileName, contentType, stream);
         }
 
-        private static IList<IUploadHandler> GetUploadHandlers(IApplicationSettings settings)
+        private static IList<IUploadHandler> GetUploadHandlers(ApplicationSettings settings)
         {
             // Use MEF to locate the content providers in this assembly
             var compositionContainer = new CompositionContainer(new AssemblyCatalog(typeof(UploadProcessor).Assembly));
-            compositionContainer.ComposeExportedValue<IApplicationSettings>(settings);
+            compositionContainer.ComposeExportedValue<ApplicationSettings>(settings);
             return compositionContainer.GetExportedValues<IUploadHandler>().ToList();
         }
     }

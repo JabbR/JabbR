@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
 using JabbR.Models;
@@ -19,7 +20,7 @@ namespace JabbR
 {
     public partial class Startup
     {
-        private static KernelBase SetupNinject(ApplicationSettings settings)
+        private static KernelBase SetupNinject(IJabbrConfiguration configuration)
         {
             var kernel = new StandardKernel(new[] { new FactoryModule() });
 
@@ -40,6 +41,9 @@ namespace JabbR
 
             kernel.Bind<ILogger>()
                   .To<RealtimeLogger>();
+
+            kernel.Bind<IJabbrConfiguration>()
+                  .ToConstant(configuration);
 
             // We're doing this manually since we want the chat repository to be shared
             // between the chat service and the chat hub itself
@@ -66,15 +70,18 @@ namespace JabbR
                 .To<ResourceProcessor>()
                 .InSingletonScope();
 
-            kernel.Bind<IApplicationSettings>()
-                  .ToConstant(settings);
-
             kernel.Bind<IJavaScriptMinifier>()
                   .To<AjaxMinMinifier>()
                   .InSingletonScope();
 
             kernel.Bind<IMembershipService>()
                   .To<MembershipService>();
+
+            kernel.Bind<ApplicationSettings>()
+                  .ToMethod(context =>
+                  {
+                      return ApplicationSettings.Load(context);
+                  });
 
             kernel.Bind<IAuthenticationService>()
                   .ToConstant(new AuthenticationService());
@@ -89,18 +96,9 @@ namespace JabbR
             kernel.Bind<IChatNotificationService>()
                   .To<ChatNotificationService>();
 
-            if (String.IsNullOrEmpty(settings.VerificationKey) ||
-                String.IsNullOrEmpty(settings.EncryptionKey))
-            {
-                kernel.Bind<IKeyProvider>()
-                      .ToConstant(new FileBasedKeyProvider());
-            }
-            else
-            {
-                kernel.Bind<IKeyProvider>()
-                      .To<AppSettingKeyProvider>()
+            kernel.Bind<IKeyProvider>()
+                      .To<SettingsKeyProvider>()
                       .InSingletonScope();
-            }
 
             var serializer = new JsonNetSerializer(new JsonSerializerSettings()
             {

@@ -9,21 +9,21 @@ namespace JabbR.ContentProviders
 {
     public class ImageContentProvider : CollapsibleContentProvider
     {
-        private readonly IApplicationSettings _settings;
+        private readonly IJabbrConfiguration _configuration;
 
         [ImportingConstructor]
-        public ImageContentProvider(IApplicationSettings settings)
+        public ImageContentProvider(IJabbrConfiguration configuration)
         {
-            _settings = settings;
+            _configuration = configuration;
         }
 
         protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
             string format = @"<a rel=""nofollow external"" target=""_blank"" href=""{0}""><img src=""{0}"" /></a>";
-            if (_settings.ProxyImages)
+            if (_configuration.ProxyImages)
             {
                 // If we're proxying images, only proxy what we need to (non https images)
-                if (_settings.RequireHttps &&
+                if (_configuration.RequireHttps &&
                     !request.RequestUri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
                 {
                     format = @"<a rel=""nofollow external"" target=""_blank"" href=""{0}""><img src=""proxy?url={0}"" /></a>";

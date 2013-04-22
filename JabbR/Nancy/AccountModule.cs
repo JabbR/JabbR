@@ -12,7 +12,7 @@ namespace JabbR.Nancy
 {
     public class AccountModule : JabbRModule
     {
-        public AccountModule(IApplicationSettings applicationSettings,
+        public AccountModule(ApplicationSettings applicationSettings,
                              IMembershipService membershipService,
                              IJabbrRepository repository,
                              IAuthenticationService authService,
@@ -344,7 +344,7 @@ namespace JabbR.Nancy
             return View["index", new ProfilePageViewModel(user, authService.GetProviders())];
         }
 
-        private LoginViewModel GetLoginViewModel(IApplicationSettings applicationSettings,
+        private LoginViewModel GetLoginViewModel(ApplicationSettings applicationSettings,
                                                  IJabbrRepository repository,
                                                  IAuthenticationService authService)
         {

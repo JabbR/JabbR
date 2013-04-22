@@ -16,13 +16,13 @@ namespace JabbR.Services
         private readonly ContentProviderProcessor _resourceProcessor;
         private readonly IHubContext _hubContext;
         private readonly IChatService _service;
-        private readonly IApplicationSettings _settings;
+        private readonly ApplicationSettings _settings;
 
         public UploadCallbackHandler(UploadProcessor processor,
                                      ContentProviderProcessor resourceProcessor,
                                      IConnectionManager connectionManager,
                                      IChatService service,
-                                     IApplicationSettings settings)
+                                     ApplicationSettings settings)
         {
             _processor = processor;
             _resourceProcessor = resourceProcessor;

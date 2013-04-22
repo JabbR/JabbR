@@ -925,6 +925,9 @@
     <EmbeddedResource Include="Migrations\201304140935434_MessageTypes.resx">
       <DependentUpon>201304140935434_MessageTypes.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201304210948362_DbSettings.resx">
+      <DependentUpon>201304210948362_DbSettings.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -1037,12 +1040,17 @@
     <Compile Include="Migrations\201304140935434_MessageTypes.Designer.cs">
       <DependentUpon>201304140935434_MessageTypes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201304210948362_DbSettings.cs" />
+    <Compile Include="Migrations\201304210948362_DbSettings.Designer.cs">
+      <DependentUpon>201304210948362_DbSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\ClientNotification.cs" />
     <Compile Include="Models\Mapping\AttachmentMap.cs" />
     <Compile Include="Models\Mapping\NotificationMap.cs" />
     <Compile Include="Models\MessageType.cs" />
     <Compile Include="Models\Notification.cs" />
+    <Compile Include="Models\Settings.cs" />
     <Compile Include="Nancy\ClaimsPrincipalUserIdentity.cs" />
     <Compile Include="Nancy\HtmlHelperExtensions.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.cs" />
@@ -1094,9 +1102,11 @@
     <Compile Include="Nancy\HomeModule.cs" />
     <Compile Include="Nancy\NotificationsModule.cs" />
     <Compile Include="Nancy\SessionExtensions.cs" />
-    <Compile Include="Services\AppSettingKeyProvider.cs" />
+    <Compile Include="Services\IJabbrConfiguration.cs" />
+    <Compile Include="Services\JabbrConfiguration.cs" />
+    <Compile Include="Services\SettingsKeyProvider.cs" />
+    <Compile Include="Services\ApplicationSettings.cs" />
     <Compile Include="Services\DefaultCache.cs" />
-    <Compile Include="Services\FileBasedKeyProvider.cs" />
     <Compile Include="Services\IChatNotificationService.cs" />
     <Compile Include="UploadHandlers\AzureBlobStorageHandler.cs" />
     <Compile Include="UploadHandlers\IUploadHandler.cs" />
@@ -1310,10 +1320,8 @@
     <Compile Include="Models\UserStatus.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\ApplicationSettings.cs" />
     <Compile Include="Services\ChatService.cs" />
     <Compile Include="Services\CryptoService.cs" />
-    <Compile Include="Services\IApplicationSettings.cs" />
     <Compile Include="Services\IChatService.cs" />
     <Compile Include="Services\ICryptoService.cs" />
     <Compile Include="Infrastructure\StringExtensions.cs" />

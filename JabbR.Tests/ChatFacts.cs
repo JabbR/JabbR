@@ -23,14 +23,14 @@ namespace JabbR.Test
             var resourceProcessor = new Mock<ContentProviderProcessor>();
             var chatService = new Mock<IChatService>();
             var connection = new Mock<IConnection>();
-            var settings = new Mock<IApplicationSettings>();
+            var settings = new ApplicationSettings();
             var mockPipeline = new Mock<IHubPipelineInvoker>();
 
             // add user to repository
             repository.Add(user);
 
             // create testable chat
-            var chat = new TestableChat(settings, resourceProcessor, chatService, repository, connection);
+            var chat = new TestableChat(resourceProcessor, chatService, repository, connection);
             var mockedConnectionObject = chat.MockedConnection.Object;
 
             chat.Clients = new HubConnectionContext(mockPipeline.Object, mockedConnectionObject, "Chat", connectionId, clientState);
@@ -54,7 +54,7 @@ namespace JabbR.Test
             public IJabbrRepository Repository { get; private set; }
             public Mock<IConnection> MockedConnection { get; private set; }
 
-            public TestableChat(Mock<IApplicationSettings> mockSettings, Mock<ContentProviderProcessor> mockedResourceProcessor, Mock<IChatService> mockedChatService, IJabbrRepository repository, Mock<IConnection> connection)
+            public TestableChat(Mock<ContentProviderProcessor> mockedResourceProcessor, Mock<IChatService> mockedChatService, IJabbrRepository repository, Mock<IConnection> connection)
                 : base(mockedResourceProcessor.Object, mockedChatService.Object, repository, new Mock<ICache>().Object)
             {
                 MockedResourceProcessor = mockedResourceProcessor;
