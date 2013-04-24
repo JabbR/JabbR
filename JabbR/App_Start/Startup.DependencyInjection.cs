@@ -83,6 +83,9 @@ namespace JabbR
                       return ApplicationSettings.Load(context);
                   });
 
+            kernel.Bind<IUserAuthenticator>()
+                  .To<DefaultUserAuthenticator>();
+
             kernel.Bind<IAuthenticationService>()
                   .ToConstant(new AuthenticationService());
 

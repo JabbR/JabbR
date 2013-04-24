@@ -6,15 +6,17 @@ namespace JabbR.Services
 {
     public interface IMembershipService
     {
-        // Creates an account form a ClaimsPrincipal
+        // Account creation
         ChatUser AddUser(ClaimsPrincipal claimsPrincipal);
         void LinkIdentity(ChatUser user, ClaimsPrincipal principal);
-
-        // User name password functions
         ChatUser AddUser(string userName, string email, string password);
-        ChatUser AuthenticateUser(string userName, string password);
+
         void ChangeUserName(ChatUser user, string newUserName);
+
+        // Password management
         void ChangeUserPassword(ChatUser user, string oldPassword, string newPassword);
         void SetUserPassword(ChatUser user, string password);
+
+        bool TryAuthenticateUser(string userName, string password, out ChatUser user);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using JabbR.Infrastructure;
@@ -16,7 +17,8 @@ namespace JabbR.Nancy
                              IMembershipService membershipService,
                              IJabbrRepository repository,
                              IAuthenticationService authService,
-                             IChatNotificationService notificationService)
+                             IChatNotificationService notificationService,
+                             IUserAuthenticator authenticator)
             : base("/account")
         {
             Get["/"] = _ =>
@@ -65,19 +67,21 @@ namespace JabbR.Nancy
                 {
                     if (ModelValidationResult.IsValid)
                     {
-                        ChatUser user = membershipService.AuthenticateUser(username, password);
-                        return this.SignIn(user);
-                    }
-                    else
-                    {
-                        return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
+                        IList<Claim> claims;
+                        if (authenticator.TryAuthenticateUser(username, password, out claims))
+                        {
+                            return this.SignIn(claims);
+                        }
                     }
                 }
                 catch
                 {
-                    this.AddValidationError("_FORM", "Login failed. Check your username/password.");
-                    return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
+                    // Swallow the exception    
                 }
+
+                this.AddValidationError("_FORM", "Login failed. Check your username/password.");
+
+                return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
             };
 
             Post["/logout"] = _ =>

@@ -1099,7 +1099,9 @@
     <Compile Include="Nancy\HomeModule.cs" />
     <Compile Include="Nancy\NotificationsModule.cs" />
     <Compile Include="Nancy\SessionExtensions.cs" />
+    <Compile Include="Services\DefaultUserAuthenticator.cs" />
     <Compile Include="Services\IJabbrConfiguration.cs" />
+    <Compile Include="Services\IUserAuthenticator.cs" />
     <Compile Include="Services\JabbrConfiguration.cs" />
     <Compile Include="Services\SettingsKeyProvider.cs" />
     <Compile Include="Services\ApplicationSettings.cs" />

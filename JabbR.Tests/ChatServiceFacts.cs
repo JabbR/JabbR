@@ -289,7 +289,8 @@ namespace JabbR.Test
                 var repository = new InMemoryRepository();
                 var service = new MembershipService(repository, new Mock<ICryptoService>().Object);
 
-                Assert.Throws<InvalidOperationException>(() => service.AuthenticateUser("SomeUser", "foo"));
+                ChatUser user;
+                Assert.False(service.TryAuthenticateUser("SomeUser", "foo", out user));
             }
 
             [Fact]
@@ -304,7 +305,8 @@ namespace JabbR.Test
                 });
                 var service = new MembershipService(repository, new Mock<ICryptoService>().Object);
 
-                Assert.Throws<InvalidOperationException>(() => service.AuthenticateUser("SomeUser", "foo"));
+                ChatUser user;
+                Assert.False(service.TryAuthenticateUser("SomeUser", "foo", out user));
             }
 
             [Fact]
@@ -317,7 +319,8 @@ namespace JabbR.Test
                 });
                 var service = new MembershipService(repository, new Mock<ICryptoService>().Object);
 
-                Assert.Throws<InvalidOperationException>(() => service.AuthenticateUser("SomeUser", "password"));
+                ChatUser user;
+                Assert.False(service.TryAuthenticateUser("SomeUser", "password", out user));
             }
 
             [Fact]
@@ -330,7 +333,8 @@ namespace JabbR.Test
                     HashedPassword = "3049a1f8327e0215ea924b9e4e04cd4b0ff1800c74a536d9b81d3d8ced9994d3"
                 });
                 var service = new MembershipService(repository, new Mock<ICryptoService>().Object);
-                service.AuthenticateUser("foo", "passwords");
+                ChatUser user;
+                Assert.True(service.TryAuthenticateUser("foo", "passwords", out user));
             }
 
             [Fact]
@@ -344,7 +348,8 @@ namespace JabbR.Test
                     HashedPassword = "8f5793009fe15c2227e3528d0507413a83dff10635d3a6acf1ba3229a03380d8"
                 });
                 var service = new MembershipService(repository, new Mock<ICryptoService>().Object);
-                service.AuthenticateUser("foo", "password");
+                ChatUser user;
+                Assert.True(service.TryAuthenticateUser("foo", "password", out user));
             }
 
             [Fact]
@@ -361,7 +366,7 @@ namespace JabbR.Test
                 repository.Add(user);
                 var service = new MembershipService(repository, crypto.Object);
 
-                service.AuthenticateUser("foo", "passwords");
+                Assert.True(service.TryAuthenticateUser("foo", "passwords", out user));
 
                 Assert.Equal("salted", user.Salt);
                 Assert.Equal("9ce70d2ab42c9a9012ed6f80f85ab400ef1483f70e227a42b6d77faea204db26", user.HashedPassword);

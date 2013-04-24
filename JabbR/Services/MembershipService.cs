@@ -116,18 +116,23 @@ namespace JabbR.Services
             return user;
         }
 
-        public ChatUser AuthenticateUser(string userName, string password)
+        public bool TryAuthenticateUser(string userName, string password, out ChatUser user)
         {
-            ChatUser user = _repository.VerifyUser(userName);
+            user = _repository.GetUserByName(userName);
+
+            if (user == null)
+            {
+                return false;
+            }
 
             if (user.HashedPassword != password.ToSha256(user.Salt))
             {
-                throw new InvalidOperationException();
+                return false;
             }
 
             EnsureSaltedPassword(user, password);
 
-            return user;
+            return true;
         }
 
         public void ChangeUserName(ChatUser user, string newUserName)
