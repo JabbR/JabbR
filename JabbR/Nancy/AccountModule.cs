@@ -96,6 +96,11 @@ namespace JabbR.Nancy
 
             Get["/register"] = _ =>
             {
+                if (!applicationSettings.AllowUserRegistration)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
                 if (IsAuthenticated)
                 {
                     return Response.AsRedirect("~/");
@@ -108,6 +113,11 @@ namespace JabbR.Nancy
 
             Post["/create"] = _ =>
             {
+                if (!applicationSettings.AllowUserRegistration)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
                 if (IsAuthenticated)
                 {
                     return Response.AsRedirect("~/");
@@ -233,6 +243,11 @@ namespace JabbR.Nancy
 
             Post["/changepassword"] = _ =>
             {
+                if (!applicationSettings.AllowUserRegistration)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
                 if (!IsAuthenticated)
                 {
                     return HttpStatusCode.Forbidden;
@@ -355,7 +370,7 @@ namespace JabbR.Nancy
                 user = repository.GetUserById(Principal.GetUserId());
             }
 
-            var viewModel = new LoginViewModel(authService.GetProviders(), user != null ? user.Identities : null);
+            var viewModel = new LoginViewModel(applicationSettings, authService.GetProviders(), user != null ? user.Identities : null);
             return viewModel;
         }
     }

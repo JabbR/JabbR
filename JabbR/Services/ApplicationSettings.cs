@@ -15,6 +15,11 @@ namespace JabbR.Services
         private static readonly TimeSpan _settingsCacheTimespan = TimeSpan.FromDays(1);
         private static readonly string _jabbrSettingsCacheKey = "jabbr.settings";
 
+        public ApplicationSettings()
+        {
+            AllowUserRegistration = true;
+        }
+
         public string EncryptionKey { get; set; }
 
         public string VerificationKey { get; set; }
@@ -24,6 +29,8 @@ namespace JabbR.Services
         public int MaxFileUploadBytes { get; set; }
 
         public string GoogleAnalytics { get; set; }
+
+        public bool AllowUserRegistration { get; set; }
 
         public IDictionary<string, string> AuthenticationProviders { get; set; }
 
@@ -70,6 +77,7 @@ namespace JabbR.Services
                 EncryptionKey = CryptoHelper.ToHex(GenerateRandomBytes()),
                 VerificationKey = CryptoHelper.ToHex(GenerateRandomBytes()),
                 MaxFileUploadBytes = 5242880,
+                AllowUserRegistration = true,
             };
         }
 
