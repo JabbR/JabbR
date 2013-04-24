@@ -100,24 +100,30 @@ namespace JabbR.Nancy
 
             Get["/register"] = _ =>
             {
-                if (!applicationSettings.AllowUserRegistration)
-                {
-                    return HttpStatusCode.NotFound;
-                }
-
                 if (IsAuthenticated)
                 {
                     return Response.AsRedirect("~/");
                 }
 
-                ViewBag.requirePassword = !Principal.Identity.IsAuthenticated;
+                bool requirePassword = !Principal.Identity.IsAuthenticated;
+
+                if (requirePassword && 
+                    !applicationSettings.AllowUserRegistration)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
+                ViewBag.requirePassword = requirePassword;
 
                 return View["register"];
             };
 
             Post["/create"] = _ =>
             {
-                if (!applicationSettings.AllowUserRegistration)
+                bool requirePassword = !Principal.Identity.IsAuthenticated;
+
+                if (requirePassword &&
+                    !applicationSettings.AllowUserRegistration)
                 {
                     return HttpStatusCode.NotFound;
                 }
@@ -127,14 +133,12 @@ namespace JabbR.Nancy
                     return Response.AsRedirect("~/");
                 }
 
-                ViewBag.requirePassword = !Principal.Identity.IsAuthenticated;
+                ViewBag.requirePassword = requirePassword;
 
                 string username = Request.Form.username;
                 string email = Request.Form.email;
                 string password = Request.Form.password;
                 string confirmPassword = Request.Form.confirmPassword;
-
-                bool requirePassword = !Principal.Identity.IsAuthenticated;
 
                 if (String.IsNullOrEmpty(username))
                 {
@@ -165,8 +169,16 @@ namespace JabbR.Nancy
                         {
                             // Add the required claims to this identity
                             var identity = Principal.Identity as ClaimsIdentity;
-                            identity.AddClaim(new Claim(ClaimTypes.Name, username));
-                            identity.AddClaim(new Claim(ClaimTypes.Email, email));
+
+                            if (!Principal.HasClaim(ClaimTypes.Name))
+                            {
+                                identity.AddClaim(new Claim(ClaimTypes.Name, username));
+                            }
+
+                            if (!Principal.HasClaim(ClaimTypes.Email))
+                            {
+                                identity.AddClaim(new Claim(ClaimTypes.Email, email));
+                            }
 
                             return this.SignIn(Principal.Claims);
                         }
