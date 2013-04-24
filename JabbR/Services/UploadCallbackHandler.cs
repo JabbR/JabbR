@@ -50,7 +50,7 @@ namespace JabbR.Services
 
             try
             {
-                result = await _processor.HandleUpload(file, contentType, stream);
+                result = await _processor.HandleUpload(file, contentType, stream, stream.Length);
 
                 if (result == null)
                 {

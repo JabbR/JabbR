@@ -47,7 +47,7 @@ namespace JabbR
             SetupAuth(app, kernel);
             SetupSignalR(kernel, app);
             SetupWebApi(kernel, app);
-            SetupMiddleware(kernel, app, configuration);
+            SetupMiddleware(kernel, app);
             SetupNancy(kernel, app);
 
             SetupErrorHandling();
@@ -95,13 +95,8 @@ namespace JabbR
             app.UseNancy(bootstrapper);
         }
 
-        private static void SetupMiddleware(IKernel kernel, IAppBuilder app, IJabbrConfiguration configuration)
+        private static void SetupMiddleware(IKernel kernel, IAppBuilder app)
         {
-            if (configuration.ProxyImages)
-            {
-                app.MapPath("/proxy", subApp => subApp.Use(typeof(ImageProxyHandler), configuration));
-            }
-
             app.UseStaticFiles();
             app.Use(typeof(LoggingHandler), kernel);
         }

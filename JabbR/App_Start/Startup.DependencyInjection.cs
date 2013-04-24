@@ -67,8 +67,7 @@ namespace JabbR
                 .InSingletonScope();
 
             kernel.Bind<IResourceProcessor>()
-                .To<ResourceProcessor>()
-                .InSingletonScope();
+                .ToConstant(new ResourceProcessor(kernel));
 
             kernel.Bind<IJavaScriptMinifier>()
                   .To<AjaxMinMinifier>()
@@ -116,8 +115,7 @@ namespace JabbR
                   .InSingletonScope();
 
             kernel.Bind<UploadProcessor>()
-                  .ToSelf()
-                  .InSingletonScope();
+                  .ToConstant(new UploadProcessor(kernel));
 
             kernel.Bind<ContentProviderProcessor>()
                   .ToConstant(new ContentProviderProcessor(kernel));

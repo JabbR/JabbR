@@ -33,34 +33,6 @@ namespace JabbR.Services
             }
         }
 
-        public bool ProxyImages
-        {
-            get
-            {
-                string proxyImagesValue = ConfigurationManager.AppSettings["jabbr:proxyImages"];
-                bool proxyImages;
-                if (Boolean.TryParse(proxyImagesValue, out proxyImages))
-                {
-                    return proxyImages;
-                }
-                return false;
-            }
-        }
-
-        public int ProxyImageMaxSizeBytes
-        {
-            get
-            {
-                string proxyImageMaxSizeBytesValue = ConfigurationManager.AppSettings["jabbr:proxyImageMaxSizeBytes"];
-                int proxyImageMaxSizeBytes;
-                if (Int32.TryParse(proxyImageMaxSizeBytesValue, out proxyImageMaxSizeBytes))
-                {
-                    return proxyImageMaxSizeBytes;
-                }
-                return 0;
-            }
-        }
-
         public string DeploymentSha
         {
             get

@@ -9,8 +9,6 @@ namespace JabbR.Services
     {
         bool RequireHttps { get; }
         bool MigrateDatabase { get; }
-        bool ProxyImages { get; }
-        int ProxyImageMaxSizeBytes { get; }
 
         string DeploymentSha { get; }
         string DeploymentBranch { get; }
