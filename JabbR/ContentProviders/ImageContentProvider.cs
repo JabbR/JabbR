@@ -25,8 +25,9 @@ namespace JabbR.ContentProviders
 
         protected override async Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
-            string format = @"<a rel=""nofollow external"" target=""_blank"" href=""{0}""><img src=""{0}"" /></a>";
-            string url = request.RequestUri.ToString();
+            string format = @"<a rel=""nofollow external"" target=""_blank"" href=""{0}""><img src=""{1}"" /></a>";
+            string imageUrl = request.RequestUri.ToString();
+            string href = imageUrl;
 
             // Only proxy what we need to (non https images)
             if (_configuration.RequireHttps &&
@@ -44,15 +45,16 @@ namespace JabbR.ContentProviders
 
                     if (result != null)
                     {
-                        url = result.Url;
+                        imageUrl = result.Url;
                     }
                 }
             }
 
             return new ContentProviderResult()
             {
-                Content = String.Format(format, Encoder.HtmlAttributeEncode(url)),
-                Title = url
+                Content = String.Format(format, Encoder.HtmlAttributeEncode(href), 
+                                                Encoder.HtmlAttributeEncode(imageUrl)),
+                Title = href
             };
         }
 
