@@ -42,7 +42,7 @@ namespace JabbR
                 app.Use(typeof(RequireHttpsHandler));
             }
 
-            app.UseShowExceptions();
+            app.UseErrorPage();
 
             SetupAuth(app, kernel);
             SetupSignalR(kernel, app);

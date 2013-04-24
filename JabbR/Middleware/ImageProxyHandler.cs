@@ -9,6 +9,7 @@ using JabbR.ContentProviders;
 using JabbR.Infrastructure;
 using JabbR.Services;
 using Owin.Types;
+using Owin.Types.Extensions;
 
 namespace JabbR.Middleware
 {
@@ -30,14 +31,15 @@ namespace JabbR.Middleware
 
         public async Task Invoke(IDictionary<string, object> env)
         {
-            var httpRequest = new Gate.Request(env);
+            var httpRequest = new OwinRequest(env);
             var httpResponse = new OwinResponse(env);
 
-            string url;
+            string[] url;
             Uri uri;
-            if (!httpRequest.Query.TryGetValue("url", out url) ||
-                String.IsNullOrEmpty(url) ||
-                !Uri.TryCreate(url, UriKind.Absolute, out uri) ||
+            if (!httpRequest.GetQuery().TryGetValue("url", out url) ||
+                url.Length == 0 ||
+                String.IsNullOrEmpty(url[0]) ||
+                !Uri.TryCreate(url[0], UriKind.Absolute, out uri) ||
                 !ImageContentProvider.IsValidImagePath(uri) ||
                 !IsAuthenticated(env))
             {
@@ -47,7 +49,7 @@ namespace JabbR.Middleware
 
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create(url);
+                var request = (HttpWebRequest)WebRequest.Create(uri);
                 request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.Default);
                 var response = (HttpWebResponse)await request.GetResponseAsync();
 
