@@ -14,6 +14,7 @@ using Nancy.Authentication.WorldDomination;
 using Nancy.Bootstrappers.Ninject;
 using Newtonsoft.Json;
 using Ninject;
+using Ninject.Extensions;
 using WorldDomination.Web.Authentication;
 
 namespace JabbR
@@ -79,8 +80,11 @@ namespace JabbR
             kernel.Bind<ApplicationSettings>()
                   .ToMethod(context =>
                   {
-                      return ApplicationSettings.Load(context);
+                      return context.Kernel.Get<ISettingsManager>().Load();
                   });
+
+            kernel.Bind<ISettingsManager>()
+                  .To<SettingsManager>();
 
             kernel.Bind<IUserAuthenticator>()
                   .To<DefaultUserAuthenticator>();

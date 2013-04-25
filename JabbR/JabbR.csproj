@@ -1101,12 +1101,14 @@
     <Compile Include="Nancy\SessionExtensions.cs" />
     <Compile Include="Services\DefaultUserAuthenticator.cs" />
     <Compile Include="Services\IJabbrConfiguration.cs" />
+    <Compile Include="Services\ISettingsManager.cs" />
     <Compile Include="Services\IUserAuthenticator.cs" />
     <Compile Include="Services\JabbrConfiguration.cs" />
     <Compile Include="Services\SettingsKeyProvider.cs" />
     <Compile Include="Services\ApplicationSettings.cs" />
     <Compile Include="Services\DefaultCache.cs" />
     <Compile Include="Services\IChatNotificationService.cs" />
+    <Compile Include="Services\SettingsManager.cs" />
     <Compile Include="UploadHandlers\AzureBlobStorageHandler.cs" />
     <Compile Include="UploadHandlers\IUploadHandler.cs" />
     <Compile Include="Services\IKeyProvider.cs" />
