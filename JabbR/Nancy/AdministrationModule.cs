@@ -2,6 +2,7 @@
 using JabbR.Services;
 using JabbR.ViewModels;
 using Nancy;
+using Nancy.ModelBinding;
 
 namespace JabbR.Nancy
 {
@@ -14,29 +15,27 @@ namespace JabbR.Nancy
         {
             Get["/"] = _ =>
             {
-                var user = repository.GetUserById(Principal.GetUserId());
-                if (!IsAuthenticated || !user.IsAdmin)
+                if (!Principal.HasClaim(JabbRClaimTypes.Admin))
                 {
                     return HttpStatusCode.Forbidden;
                 }
+
+                
                 return View["index", applicationSettings];
             };
 
             Post["/"] = _ =>
             {
-                if (!IsAuthenticated)
+                if (!Principal.HasClaim(JabbRClaimTypes.Admin))
                 {
                     return HttpStatusCode.Forbidden;
                 }
 
-                applicationSettings.AzureblobStorageConnectionString = Request.Form.azureBlobStorageConnectionString;
-                applicationSettings.MaxFileUploadBytes = Request.Form.maxFileUploadBytes;
+                var appSettings = this.BindTo(applicationSettings);
 
-                applicationSettings.GoogleAnalytics = Request.Form.googleAnalytics;
+                settingsManager.Save(appSettings);
 
-                settingsManager.Save(applicationSettings);
-
-                return View["index", applicationSettings];
+                return Response.AsRedirect("~/administration");
             };
         }
     }
