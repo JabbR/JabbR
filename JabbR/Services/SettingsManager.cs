@@ -41,7 +41,20 @@ namespace JabbR.Services
                 }
                 else
                 {
-                    settings = JsonConvert.DeserializeObject<ApplicationSettings>(dbSettings.RawSettings);
+                    try
+                    {
+                        settings = JsonConvert.DeserializeObject<ApplicationSettings>(dbSettings.RawSettings);
+                    }
+                    catch
+                    {
+                        // TODO: Record the exception
+
+                        // We failed to load the settings from the db so go back to using the default
+                        settings = ApplicationSettings.GetDefaultSettings();
+
+                        dbSettings.RawSettings = JsonConvert.SerializeObject(settings);
+                        _context.SaveChanges();
+                    }
                 }
 
                 // Cache the settings forever (until it changes)
