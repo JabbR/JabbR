@@ -28,7 +28,8 @@ namespace JabbR.Nancy
                         Branch = configuration.DeploymentBranch,
                         Time = configuration.DeploymentTime,
                         DebugMode = (bool)Context.Items["_debugMode"],
-                        Version = Constants.JabbRVersion
+                        Version = Constants.JabbRVersion,
+                        IsAdmin = Principal.HasClaim(JabbRClaimTypes.Admin)
                     };
 
                     return View["index", viewModel];

@@ -267,7 +267,10 @@
                     <a class="btn help" aria-haspopup="true" title="display help"><i class="icon-question-sign"></i></a>
                     <a id="notifications" class="btn" title="notifications" href="@Url.Content("~/notifications")" target="_blank"><i class="icon-comments"></i><span id="notification-unread-count" class="badge badge-info"></span></a>
                     <a class="btn" title="account settings" href="@Url.Content("~/account")" target="_blank"><i class="icon-user"></i></a>
-                    <a id="administration" class="btn" title="jabbr settings" href="@Url.Content("~/administration")" target="_blank"><i class="icon-cog"></i></a>
+                    @if (Model.IsAdmin)
+                    {
+                        <a class="btn" title="jabbr settings" href="@Url.Content("~/administration")" target="_blank"><i class="icon-cog"></i></a>
+                    }
                     <a class="btn logout" title="sign out"><i class="icon-signout"></i></a>
                 </div>
             </div>

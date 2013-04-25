@@ -891,10 +891,6 @@ li.error {
     font-size: 1.25em;
 }
 
-#administration {
-    display: none;
-}
-
 #notification-unread-count.badge {
     display: none;
     position: absolute;
