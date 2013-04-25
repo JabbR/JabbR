@@ -64,8 +64,7 @@ namespace JabbR
                   });
 
             kernel.Bind<ICryptoService>()
-                .To<CryptoService>()
-                .InSingletonScope();
+                .To<CryptoService>();
 
             kernel.Bind<IResourceProcessor>()
                 .ToConstant(new ResourceProcessor(kernel));
@@ -103,8 +102,7 @@ namespace JabbR
                   .To<ChatNotificationService>();
 
             kernel.Bind<IKeyProvider>()
-                      .To<SettingsKeyProvider>()
-                      .InSingletonScope();
+                      .To<SettingsKeyProvider>();
 
             var serializer = new JsonNetSerializer(new JsonSerializerSettings()
             {

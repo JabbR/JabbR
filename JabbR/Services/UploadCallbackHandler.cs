@@ -16,19 +16,16 @@ namespace JabbR.Services
         private readonly ContentProviderProcessor _resourceProcessor;
         private readonly IHubContext _hubContext;
         private readonly IChatService _service;
-        private readonly ApplicationSettings _settings;
 
         public UploadCallbackHandler(UploadProcessor processor,
                                      ContentProviderProcessor resourceProcessor,
                                      IConnectionManager connectionManager,
-                                     IChatService service,
-                                     ApplicationSettings settings)
+                                     IChatService service)
         {
             _processor = processor;
             _resourceProcessor = resourceProcessor;
             _hubContext = connectionManager.GetHubContext<Chat>();
             _service = service;
-            _settings = settings;
         }
 
         public async Task Upload(string userId,
@@ -38,13 +35,6 @@ namespace JabbR.Services
                                  string contentType,
                                  Stream stream)
         {
-
-            if (stream.Length > _settings.MaxFileUploadBytes)
-            {
-                _hubContext.Clients.Client(connectionId).postMessage("Unable to upload " + Path.GetFileName(file) + " because it exceeded the maximum size allowed.", "error", roomName);
-                return;
-            }
-
             UploadResult result;
             ChatMessage message;
 
