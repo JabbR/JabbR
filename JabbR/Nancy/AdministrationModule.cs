@@ -1,8 +1,8 @@
-﻿using JabbR.Infrastructure;
+﻿using System;
+using JabbR.Infrastructure;
 using JabbR.Services;
 using Nancy;
 using Nancy.ModelBinding;
-using System;
 
 namespace JabbR.Nancy
 {
@@ -31,6 +31,7 @@ namespace JabbR.Nancy
                 }
 
                 ApplicationSettings appSettings = applicationSettings;
+
                 try
                 {
                     appSettings = this.Bind<ApplicationSettings>();
