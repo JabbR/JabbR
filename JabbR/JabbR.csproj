@@ -1120,7 +1120,6 @@
     <Compile Include="Services\UploadCallbackHandler.cs" />
     <Compile Include="UploadHandlers\UploadProcessor.cs" />
     <Compile Include="UploadHandlers\UploadResult.cs" />
-    <Compile Include="ViewModels\AdministrationViewModel.cs" />
     <Compile Include="ViewModels\LobbyRoomViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\NotificationsViewModel.cs" />

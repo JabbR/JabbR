@@ -1,10 +1,7 @@
 ﻿@using SquishIt.Framework;
 @using JabbR
-@using JabbR.ViewModels
-@model AdministrationViewModel
-@{
-    var administrationViewModel = Model as AdministrationViewModel;
-}
+@using JabbR.Services
+@model ApplicationSettings
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -38,20 +35,20 @@
                 </div>
                 <hr />
             </div>
-            <form class="form-horizontal" action="#" method="POST">
+            <form class="form-horizontal" action="@Url.Content("~/administration")" method="POST">
                 @Html.ValidationSummary()
                 <fieldset id="encryption">
                     <legend>Encryption</legend>
                     <div class="control-group">
                         <label class="control-label" for="encryptionKey">Encryption Key</label>
                         <div class="controls">
-                            <label class="control-label label-align-left">@administrationViewModel.EncryptionKey</label>
+                            <label class="control-label label-align-left">@Model.EncryptionKey</label>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="verificationKey">Verification Key</label>
                         <div class="controls">
-                            <label class="control-label label-align-left">@administrationViewModel.VerificationKey</label>
+                            <label class="control-label label-align-left">@Model.VerificationKey</label>
                         </div>
                     </div>
                 </fieldset>
@@ -60,13 +57,13 @@
                     <div class="control-group">
                         <label class="control-label" for="azureBlobStorageConnectionString">Azure Blob Storage Connectionstring</label>
                         <div class="controls">
-                            @Html.TextBox("azureBlobStorageConnectionString", "input-xlarge", "Azure Blob Storage Connectionstring")
+                            <input type="text" name="azureBlobStorageConnectionString" class="input-xlarge" value="@Model.AzureblobStorageConnectionString" placeholder="Azure Blob Storage Connectionstring"/>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="maxFileUploadBytes">Max File Upload Size (Bytes)</label>
                         <div class="controls">
-                            @Html.TextBox("maxFileUploadBytes", "input-xlarge", "Max File Upload Size (Bytes)")
+                            <input type="text" name="maxFileUploadBytes" class="input-xlarge" value="@Model.MaxFileUploadBytes" placeholder="Max File Upload Size (Bytes)"/>
                         </div>
                     </div>
                 </fieldset>
@@ -75,7 +72,7 @@
                     <div class="control-group">
                         <label class="control-label" for="googleAnalytics">Google Analytics ID</label>
                         <div class="controls">
-                            @Html.TextBox("googleAnalytics", "input-xlarge", "Google Analytics ID")
+                            <input type="text" name="googleAnalytics" class="input-xlarge" value="@Model.GoogleAnalytics" placeholder="Google Analytics ID"/>
                         </div>
                     </div>
                 </fieldset>
