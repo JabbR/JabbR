@@ -15,24 +15,22 @@ namespace JabbR.Nancy
         {
             Get["/"] = _ =>
             {
-                if (!Principal.HasClaim(JabbRClaimTypes.Admin))
+                if (!IsAuthenticated || !Principal.HasClaim(JabbRClaimTypes.Admin))
                 {
                     return HttpStatusCode.Forbidden;
                 }
-
                 
                 return View["index", applicationSettings];
             };
 
             Post["/"] = _ =>
             {
-                if (!Principal.HasClaim(JabbRClaimTypes.Admin))
+                if (!IsAuthenticated || !Principal.HasClaim(JabbRClaimTypes.Admin))
                 {
                     return HttpStatusCode.Forbidden;
                 }
 
-                var appSettings = this.BindTo(applicationSettings);
-
+                var appSettings = this.Bind<ApplicationSettings>();
                 settingsManager.Save(appSettings);
 
                 return Response.AsRedirect("~/administration");
