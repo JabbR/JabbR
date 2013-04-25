@@ -1,8 +1,8 @@
 ﻿using JabbR.Infrastructure;
 using JabbR.Services;
-using JabbR.ViewModels;
 using Nancy;
 using Nancy.ModelBinding;
+using System;
 
 namespace JabbR.Nancy
 {
@@ -19,7 +19,7 @@ namespace JabbR.Nancy
                 {
                     return HttpStatusCode.Forbidden;
                 }
-                
+
                 return View["index", applicationSettings];
             };
 
@@ -30,10 +30,24 @@ namespace JabbR.Nancy
                     return HttpStatusCode.Forbidden;
                 }
 
-                var appSettings = this.Bind<ApplicationSettings>();
-                settingsManager.Save(appSettings);
+                ApplicationSettings appSettings = applicationSettings;
+                try
+                {
+                    appSettings = this.Bind<ApplicationSettings>();
+                    settingsManager.Save(appSettings);
+                }
+                catch (Exception ex)
+                {
+                    this.AddValidationError("_FORM", ex.Message);
+                }
 
-                return Response.AsRedirect("~/administration");
+                if (ModelValidationResult.IsValid)
+                {
+                    Request.AddAlertMessage("success", "Successfully saved the settings.");
+                    return Response.AsRedirect("~/administration");
+                }
+
+                return View["index", appSettings];
             };
         }
     }
