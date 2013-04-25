@@ -839,11 +839,13 @@ li.error {
     }
 
 .notifications,
-.user-profile {
+.user-profile,
+.administration {
     background: #fff;
 }
 
-.notifications-title {
+.notifications-title,
+.administration-title {
     font-size: 2em;
 }
 
@@ -889,11 +891,15 @@ li.error {
     font-size: 1.25em;
 }
 
+#administration {
+    display: none;
+}
+
 #notification-unread-count.badge {
     display: none;
-    position: fixed;
-    right: 90px;
-    top: 12px;
+    position: absolute;
+    right: 1px;
+    top: 0px;
     font-size: 0.55em;
     padding: 0 0;
     padding-left: 4px;
@@ -2457,7 +2463,8 @@ li.clearfix {
 }
 
 .login-body .btn,
-.account-details .btn {
+.account-details .btn,
+.administration .btn {
     background-color: #00103F;
     background-image: none;
     text-shadow: none;
@@ -2465,7 +2472,8 @@ li.clearfix {
 }
 
     .login-body .btn:hover,
-    .account-details .btn:hover {
+    .account-details .btn:hover,
+    .administration .btn:hover {
         background-color: #164C85;
     }
 
@@ -2667,9 +2675,10 @@ h3.userlist-header {
 }
 
 .connection-status {
-    position: absolute;
+    float: left;
+    position: relative;
     top: 17px;
-    right: 170px;
+    /*right: 210px;*/
 }
 
 .icon-connection-status {
@@ -2719,6 +2728,7 @@ h3.userlist-header {
 
 .popover-content {
     padding: 4px 14px;
+    color: #333;
 }
 
 #connection-info-popover p {

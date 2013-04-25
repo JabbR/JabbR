@@ -82,7 +82,8 @@
         roomLoadingDelay = 250,
         roomLoadingTimeout = null,
         Room = chat.Room,
-        $unreadNotificationCount = null;
+        $unreadNotificationCount = null,
+        $administration = null;
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] === '/') {
@@ -805,7 +806,8 @@
             $roomLoadingIndicator = $('#room-loading');
 
             $unreadNotificationCount = $('#notification-unread-count');
-
+            $administration = $('#administration');
+            
             if (toast.canToast()) {
                 $toast.show();
             }
@@ -1509,6 +1511,10 @@
 
             if ($user.length) {
                 return false;
+            }
+
+            if (userViewModel.admin) {
+                $administration.css('display', 'inline-block');
             }
 
             $user = templates.user.tmpl(userViewModel);

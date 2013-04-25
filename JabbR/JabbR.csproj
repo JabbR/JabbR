@@ -987,6 +987,7 @@
     </Content>
     <Content Include="Views\Notifications\index.cshtml" />
     <Content Include="Views\Home\monitor.cshtml" />
+    <Content Include="Views\Administration\index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\Startup.DependencyInjection.cs" />
@@ -1048,6 +1049,7 @@
     <Compile Include="Models\MessageType.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Settings.cs" />
+    <Compile Include="Nancy\AdministrationModule.cs" />
     <Compile Include="Nancy\ClaimsPrincipalUserIdentity.cs" />
     <Compile Include="Nancy\HtmlHelperExtensions.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.cs" />
@@ -1118,6 +1120,7 @@
     <Compile Include="Services\UploadCallbackHandler.cs" />
     <Compile Include="UploadHandlers\UploadProcessor.cs" />
     <Compile Include="UploadHandlers\UploadResult.cs" />
+    <Compile Include="ViewModels\AdministrationViewModel.cs" />
     <Compile Include="ViewModels\LobbyRoomViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\NotificationsViewModel.cs" />
