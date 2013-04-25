@@ -1,5 +1,4 @@
 ﻿param(
-  $googleAnalyticsToken               = $env:JABBR_GOOGLE_ANALYTICS,
   $remoteDesktopAccountExpiration     = $env:JABBR_REMOTE_DESKTOP_ACCOUNT_EXPIRATION,
   $remoteDesktopCertificateThumbprint = $env:JABBR_REMOTE_DESKTOP_CERTIFICATE_THUMBPRINT,
   $remoteDesktopEnctyptedPassword     = $env:JABBR_REMOTE_DESKTOP_ENCRYPTED_PASSWORD,
@@ -12,10 +11,6 @@
   $facebookSecret                     = $env:JABBR_FACEBOOK_LOGIN_SECRET,
   $twitterKey                         = $env:JABBR_TWITTER_LOGIN_KEY,
   $twitterSecret                      = $env:JABBR_TWITTER_LOGIN_SECRET,
-  $encryptionKey                      = $env:JABBR_ENCRYPTION_KEY,
-  $verificationKey                    = $env:JABBR_VERIFICATION_KEY,
-  $blobStorageConnectionString        = $env:JABBR_BLOB_STORAGE_CONNECTION_STRING,
-  $maxFileUploadBytes                 = $env:JABBR_MAX_UPLOAD_FILE_BYTES,
   $commitSha,
   $commitBranch
 )
@@ -30,8 +25,6 @@ require-param -value $remoteDesktopCertificateThumbprint -paramName "remoteDeskt
 require-param -value $remoteDesktopEnctyptedPassword -paramName "remoteDesktopEnctyptedPassword"
 require-param -value $remoteDesktopUsername -paramName "remoteDesktopUsername"
 require-param -value $sqlAzureConnectionString -paramName "sqlAzureConnectionString"
-require-param -value $encryptionKey -paramName "encryptionKey"
-require-param -value $verificationKey -paramName "verificationKey"
 
 # Helper Functions
 function set-certificatethumbprint {
@@ -126,27 +119,9 @@ cp $libPath\signalr.exe $binPath\signalr.exe
 
 # Set app settngs
 set-appsetting -path $webConfigPath -name "jabbr:requireHttps" -value $true
-set-appsetting -path $webConfigPath -name "jabbr:proxyImages" -value $true
-set-appsetting -path $webConfigPath -name "jabbr:googleAnalytics" -value $googleAnalyticsToken
 set-appsetting -path $webConfigPath -name "jabbr:releaseBranch" -value $commitBranch
 set-appsetting -path $webConfigPath -name "jabbr:releaseSha" -value $commitSha
 set-appsetting -path $webConfigPath -name "jabbr:releaseTime" -value (Get-Date -format "MM/dd/yyyy HH:mm")
-
-# Set encryption keys
-set-appsetting -path $webConfigPath -name "jabbr:encryptionKey" -value $encryptionKey
-set-appsetting -path $webConfigPath -name "jabbr:verificationKey" -value $verificationKey
-
-# File upload
-
-if($blobStorageConnectionString)
-{
-  set-appsetting -path $webConfigPath -name "jabbr:azureblobStorageConnectionString" -value $blobStorageConnectionString
-}
-
-if($maxFileUploadBytes)
-{
-  set-appsetting -path $webConfigPath -name "jabbr:maxFileUploadBytes" -value $maxFileUploadBytes
-}
 
 # Set auth providers
 if($googleKey -and $googleSecret)
