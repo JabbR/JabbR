@@ -12,6 +12,27 @@ namespace JabbR
 {
     public static class HtmlHelperExtensions
     {
+        public static IHtmlString CheckBox<T>(this HtmlHelpers<T> helper, string Name, dynamic ModelProperty)
+        {
+            string input = String.Empty;
+            bool checkedState = false;
+
+            if (!bool.TryParse(ModelProperty.ToString(), out checkedState))
+            {
+                input = "<input name=\"" + Name + "\" type=\"checkbox\" value=\"true\" />";
+            }
+            else
+            {
+                if (checkedState)
+                    input = "<input name=\"" + Name + "\" type=\"checkbox\" value=\"true\" checked />";
+                else
+                    input = "<input name=\"" + Name + "\" type=\"checkbox\" value=\"true\" />";
+            }
+
+
+            return new NonEncodedHtmlString(input);
+        }
+        
         public static IHtmlString ValidationSummary<TModel>(this HtmlHelpers<TModel> htmlHelper)
         {
             var validationResult = htmlHelper.RenderContext.Context.ModelValidationResult;

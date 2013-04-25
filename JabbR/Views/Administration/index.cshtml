@@ -37,6 +37,15 @@
             </div>
             <form class="form-horizontal" action="@Url.Content("~/administration")" method="POST">
                 @Html.ValidationSummary()
+                <fieldset id="generalSettings">
+                    <legend>General Settings</legend>
+                    <div class="control-group">
+                        <label class="control-label" for="allowUserRegistration">Allow User Registration</label>
+                        <div class="controls">
+                            @Html.CheckBox("allowUserRegistration", (bool)Model.AllowUserRegistration)
+                        </div>
+                    </div>
+                </fieldset>
                 <fieldset id="encryption">
                     <legend>Encryption</legend>
                     <div class="control-group">
@@ -54,7 +63,7 @@
                         </div>
                     </div>
                 </fieldset>
-                <fieldset class="account-details tab-pane" id="storage">
+                <fieldset id="storage">
                     <legend>Storage</legend>
                     <div class="control-group">
                         <label class="control-label" for="azureBlobStorageConnectionString">Azure Blob Storage Connectionstring</label>

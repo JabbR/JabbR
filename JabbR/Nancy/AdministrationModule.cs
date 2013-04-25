@@ -9,8 +9,7 @@ namespace JabbR.Nancy
     public class AdministrationModule : JabbRModule
     {
         public AdministrationModule(ApplicationSettings applicationSettings,
-                                    ISettingsManager settingsManager,
-                                    IJabbrRepository repository)
+                                    ISettingsManager settingsManager)
             : base("/administration")
         {
             Get["/"] = _ =>
@@ -35,6 +34,12 @@ namespace JabbR.Nancy
                 try
                 {
                     appSettings = this.Bind<ApplicationSettings>();
+                    // The allow user registration field is not passed in the post
+                    // when you uncheck it, so need to force the value to false
+                    if (Request.Form.allowUserRegistration == null)
+                    {
+                        appSettings.AllowUserRegistration = false;
+                    }
                     settingsManager.Save(appSettings);
                 }
                 catch (Exception ex)
