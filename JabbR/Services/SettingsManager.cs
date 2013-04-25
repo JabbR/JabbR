@@ -21,7 +21,7 @@ namespace JabbR.Services
 
         public ApplicationSettings Load()
         {
-            var settings = (ApplicationSettings)_cache.Get(_jabbrSettingsCacheKey);
+            var settings = _cache.Get<ApplicationSettings>(_jabbrSettingsCacheKey);
 
             if (settings == null)
             {
@@ -73,7 +73,6 @@ namespace JabbR.Services
             }
 
             _context.SaveChanges();
-
 
             // Clear the cache
             _cache.Remove(_jabbrSettingsCacheKey);

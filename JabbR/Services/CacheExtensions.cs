@@ -5,6 +5,11 @@ namespace JabbR.Services
 {
     public static class CacheExtensions
     {
+        public static T Get<T>(this ICache cache, string key)
+        {
+            return (T)cache.Get(key);
+        }
+
         public static bool? IsUserInRoom(this ICache cache, ChatUser user, ChatRoom room)
         {
             string key = CacheKeys.GetUserInRoom(user, room);
