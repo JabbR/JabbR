@@ -88,6 +88,11 @@ namespace JabbR.Services
             // Get all connections on this node and update the activity
             foreach (var connection in _heartbeat.GetConnections())
             {
+                if (!connection.IsAlive)
+                {
+                    continue;
+                }
+
                 ChatClient client = repo.GetClientById(connection.ConnectionId);
 
                 if (client != null)
