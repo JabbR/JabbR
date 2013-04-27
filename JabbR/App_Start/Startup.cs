@@ -12,6 +12,7 @@ using JabbR.Services;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.SystemWeb.Infrastructure;
+using Microsoft.AspNet.SignalR.Transports;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Security.Federation;
 using Microsoft.Owin.Security.Forms;
@@ -105,6 +106,7 @@ namespace JabbR
         {
             var resolver = new NinjectSignalRDependencyResolver(kernel);
             var connectionManager = resolver.Resolve<IConnectionManager>();
+            var heartbeat = resolver.Resolve<ITransportHeartbeat>();
 
             // Ah well loading system web.
             kernel.Bind<IProtectedData>()
@@ -121,7 +123,8 @@ namespace JabbR
 
             app.MapHubs(config);
 
-            StartBackgroundWork(kernel, resolver);
+            var monitor = new PresenceMonitor(kernel, connectionManager, heartbeat);
+            monitor.Start();
         }
 
         private static void SetupWebApi(IKernel kernel, IAppBuilder app)

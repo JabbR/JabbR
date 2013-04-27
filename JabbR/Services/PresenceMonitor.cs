@@ -4,85 +4,89 @@ using System.Data.Objects.SqlClient;
 using System.Linq;
 using System.Threading;
 using JabbR.Models;
-using JabbR.Services;
 using JabbR.ViewModels;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Transports;
 using Ninject;
 
-namespace JabbR
+namespace JabbR.Services
 {
-    public partial class Startup
+    public class PresenceMonitor
     {
-        // Background task info
-        private static volatile bool _sweeping;
-        private static Timer _backgroundTimer;
-        private static readonly TimeSpan _sweepInterval = TimeSpan.FromMinutes(1);
+        private volatile bool _running;
+        private Timer _timer;
+        private readonly TimeSpan _presenceCheckInterval = TimeSpan.FromMinutes(1);
 
-        private static void StartBackgroundWork(IKernel kernel, IDependencyResolver resolver)
+        private readonly IKernel _kernel;
+        private readonly IHubContext _hubContext;
+        private readonly ITransportHeartbeat _heartbeat;
+
+        public PresenceMonitor(IKernel kernel, 
+                               IConnectionManager connectionManager, 
+                               ITransportHeartbeat heartbeat)
         {
-            // Resolve the hub context, so we can broadcast to the hub from a background thread
-            var connectionManager = resolver.Resolve<IConnectionManager>();
-            var heartbeat = resolver.Resolve<ITransportHeartbeat>();
+            _kernel = kernel;
+            _hubContext = connectionManager.GetHubContext<Chat>();
+            _heartbeat = heartbeat;
+        }
 
-            // Start the sweeper
-            _backgroundTimer = new Timer(_ =>
+        public void Start()
+        {
+            // Start the timer
+            _timer = new Timer(_ =>
             {
-                var hubContext = connectionManager.GetHubContext<Chat>();
-                Sweep(kernel, hubContext, heartbeat);
+                Check();
             },
             null,
             TimeSpan.Zero,
-            _sweepInterval);
+            _presenceCheckInterval);
         }
 
-        private static void Sweep(IKernel kernel, IHubContext hubContext, ITransportHeartbeat heartbeat)
+        private void Check()
         {
-            if (_sweeping)
+            if (_running)
             {
                 return;
             }
 
-            _sweeping = true;
+            _running = true;
 
             try
             {
-                using (var repo = kernel.Get<IJabbrRepository>())
+                using (var repo = _kernel.Get<IJabbrRepository>())
                 {
-                    var cache = kernel.Get<ICache>();
+                    var cache = _kernel.Get<ICache>();
 
                     // Update the connection presence
-                    UpdatePresence(cache, repo, heartbeat);
+                    UpdatePresence(cache, repo);
 
                     // Remove zombie connections
                     RemoveZombies(repo);
 
                     // Remove users with no connections
-                    RemoveOfflineUsers(repo, hubContext);
+                    RemoveOfflineUsers(repo);
 
                     // Check the user status
-                    CheckUserStatus(repo, hubContext);
-
-                    repo.CommitChanges();
+                    CheckUserStatus(repo);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ReportError(ex);
+                // TODO: Log
             }
             finally
             {
-                _sweeping = false;
+                _running = false;
             }
         }
 
-        private static void UpdatePresence(ICache cache, IJabbrRepository repo, ITransportHeartbeat heartbeat)
+        private void UpdatePresence(ICache cache, IJabbrRepository repo)
         {
             var service = new ChatService(cache, repo);
 
             // Get all connections on this node and update the activity
-            foreach (var connection in heartbeat.GetConnections())
+            foreach (var connection in _heartbeat.GetConnections())
             {
                 service.UpdateActivity(connection.ConnectionId);
             }
@@ -103,7 +107,7 @@ namespace JabbR
             }
         }
 
-        private static void RemoveOfflineUsers(IJabbrRepository repo, IHubContext hubContext)
+        private void RemoveOfflineUsers(IJabbrRepository repo)
         {
             var offlineUsers = new List<ChatUser>();
             IQueryable<ChatUser> users = repo.GetOnlineUsers();
@@ -124,17 +128,19 @@ namespace JabbR
                 {
                     foreach (var user in roomGroup.Users)
                     {
-                        hubContext.Clients.Group(roomGroup.Room.Name).leave(user, roomGroup.Room.Name);
+                        _hubContext.Clients.Group(roomGroup.Room.Name).leave(user, roomGroup.Room.Name);
                     }
                 });
+
+                repo.CommitChanges();
             }
         }
 
-        private static void CheckUserStatus(IJabbrRepository repo, IHubContext hubContext)
+        private void CheckUserStatus(IJabbrRepository repo)
         {
             var inactiveUsers = new List<ChatUser>();
 
-            IQueryable<ChatUser> users = repo.GetOnlineUsers().Where(u => 
+            IQueryable<ChatUser> users = repo.GetOnlineUsers().Where(u =>
                 u.Status != (int)UserStatus.Inactive &&
                 SqlFunctions.DateDiff("mi", u.LastActivity, DateTime.UtcNow) > 5);
 
@@ -148,8 +154,10 @@ namespace JabbR
             {
                 PerformRoomAction(inactiveUsers, roomGroup =>
                 {
-                    hubContext.Clients.Group(roomGroup.Room.Name).markInactive(roomGroup.Users);
+                    _hubContext.Clients.Group(roomGroup.Room.Name).markInactive(roomGroup.Users);
                 });
+
+                repo.CommitChanges();
             }
         }
 
@@ -174,7 +182,6 @@ namespace JabbR
         private class RoomGroup
         {
             public ChatRoom Room { get; set; }
-
             public IEnumerable<UserViewModel> Users { get; set; }
         }
     }
