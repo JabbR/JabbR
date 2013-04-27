@@ -27,6 +27,7 @@
             }
 
             var monitor = $.connection.monitor;
+            $.connection.hub.logging = true;
 
             monitor.client.logMessage = function (value) {
                 $('#logs').append('<li class="message">' + encodeHtml(value).replace('\n', '<br/>') + '</li>');
@@ -35,6 +36,12 @@
             monitor.client.logError = function () {
                 $('#logs').append('<li class="error">' + encodeHtml(value) + '</li>');
             };
+
+            $.connection.hub.disconnected(function () {
+                setTimeout(function () {
+                    $.connection.hub.start();
+                }, 5000);
+            });
 
             $.connection.hub.start();
         });
