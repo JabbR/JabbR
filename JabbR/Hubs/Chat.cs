@@ -261,37 +261,6 @@ namespace JabbR
         {
             CheckStatus();
 
-            var userId = Context.User.GetUserId();
-
-            ChatUser user = _repository.VerifyUserId(userId);
-
-            // Make sure this client is being tracked
-            _service.AddClient(user, Context.ConnectionId, UserAgent);
-
-            var currentStatus = (UserStatus)user.Status;
-
-            if (currentStatus == UserStatus.Offline)
-            {
-                // Mark the user as inactive
-                user.Status = (int)UserStatus.Inactive;
-                _repository.CommitChanges();
-
-                // If the user was offline that means they are not in the user list so we need to tell
-                // everyone the user is really in the room
-                var userViewModel = new UserViewModel(user);
-
-                foreach (var room in user.Rooms)
-                {
-                    var isOwner = user.OwnedRooms.Contains(room);
-
-                    // Tell the people in this room that you've joined
-                    Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner);
-
-                    // Add the caller to the group so they receive messages
-                    Groups.Add(Context.ConnectionId, room.Name);
-                }
-            }
-
             return base.OnReconnected();
         }
 
