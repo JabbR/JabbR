@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Objects.SqlClient;
 using System.Linq;
 using System.Threading;
+using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.ViewModels;
 using Microsoft.AspNet.SignalR;
@@ -22,8 +23,8 @@ namespace JabbR.Services
         private readonly IHubContext _hubContext;
         private readonly ITransportHeartbeat _heartbeat;
 
-        public PresenceMonitor(IKernel kernel, 
-                               IConnectionManager connectionManager, 
+        public PresenceMonitor(IKernel kernel,
+                               IConnectionManager connectionManager,
                                ITransportHeartbeat heartbeat)
         {
             _kernel = kernel;
@@ -51,27 +52,30 @@ namespace JabbR.Services
             }
 
             _running = true;
+            var logger = _kernel.Get<ILogger>();
 
             try
             {
+                logger.Log("Checking user presence");
+
                 using (var repo = _kernel.Get<IJabbrRepository>())
                 {
                     // Update the connection presence
-                    UpdatePresence(repo);
+                    UpdatePresence(logger, repo);
 
                     // Remove zombie connections
-                    RemoveZombies(repo);
+                    RemoveZombies(logger, repo);
 
                     // Remove users with no connections
-                    RemoveOfflineUsers(repo);
+                    RemoveOfflineUsers(logger, repo);
 
                     // Check the user status
-                    CheckUserStatus(repo);
+                    CheckUserStatus(logger, repo);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // TODO: Log
+                logger.Log(ex);
             }
             finally
             {
@@ -79,7 +83,7 @@ namespace JabbR.Services
             }
         }
 
-        private void UpdatePresence(IJabbrRepository repo)
+        private void UpdatePresence(ILogger logger, IJabbrRepository repo)
         {
             // Get all connections on this node and update the activity
             foreach (var connection in _heartbeat.GetConnections())
@@ -90,12 +94,16 @@ namespace JabbR.Services
                 {
                     client.LastActivity = DateTimeOffset.UtcNow;
                 }
+                else
+                {
+                    logger.Log("Connection {0} exists but isn't tracked", connection.ConnectionId);
+                }
             }
 
             repo.CommitChanges();
         }
 
-        private static void RemoveZombies(IJabbrRepository repo)
+        private static void RemoveZombies(ILogger logger, IJabbrRepository repo)
         {
             // Remove all zombie clients 
             var zombies = repo.Clients.Where(c =>
@@ -104,11 +112,13 @@ namespace JabbR.Services
             // We're doing to list since there's no MARS support on azure
             foreach (var client in zombies.ToList())
             {
+                logger.Log("Removed zombie connection {0}", client.Id);
+
                 repo.Remove(client);
             }
         }
 
-        private void RemoveOfflineUsers(IJabbrRepository repo)
+        private void RemoveOfflineUsers(ILogger logger, IJabbrRepository repo)
         {
             var offlineUsers = new List<ChatUser>();
             IQueryable<ChatUser> users = repo.GetOnlineUsers();
@@ -117,6 +127,8 @@ namespace JabbR.Services
             {
                 if (user.ConnectedClients.Count == 0)
                 {
+                    logger.Log("{0} has no clients. Marking as offline", user.Name);
+
                     // Fix users that are marked as inactive but have no clients
                     user.Status = (int)UserStatus.Offline;
                     offlineUsers.Add(user);
@@ -137,7 +149,7 @@ namespace JabbR.Services
             }
         }
 
-        private void CheckUserStatus(IJabbrRepository repo)
+        private void CheckUserStatus(ILogger logger, IJabbrRepository repo)
         {
             var inactiveUsers = new List<ChatUser>();
 
@@ -147,6 +159,8 @@ namespace JabbR.Services
 
             foreach (var user in users.ToList())
             {
+                logger.Log("Changing {0} to away", user.Name);
+
                 user.Status = (int)UserStatus.Inactive;
                 inactiveUsers.Add(user);
             }

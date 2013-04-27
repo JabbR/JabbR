@@ -54,7 +54,7 @@ namespace JabbR
             SetupErrorHandling();
         }
 
-        private static void SetupAuth(IAppBuilder app, KernelBase kernel)
+        private static void SetupAuth(IAppBuilder app, IKernel kernel)
         {
             app.UseFormsAuthentication(new FormsAuthenticationOptions
             {
@@ -99,7 +99,6 @@ namespace JabbR
         private static void SetupMiddleware(IKernel kernel, IAppBuilder app)
         {
             app.UseStaticFiles();
-            app.Use(typeof(LoggingHandler), kernel);
         }
 
         private static void SetupSignalR(IKernel kernel, IAppBuilder app)

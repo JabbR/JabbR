@@ -1008,7 +1008,6 @@
     <Compile Include="Infrastructure\LogType.cs" />
     <Compile Include="Infrastructure\PrincipalExtensions.cs" />
     <Compile Include="Infrastructure\MentionExtractor.cs" />
-    <Compile Include="Middleware\LoggingHandler.cs" />
     <Compile Include="Middleware\WindowsPrincipalHandler.cs" />
     <Compile Include="Migrations\201303220549121_ContentProviderContent.cs" />
     <Compile Include="Migrations\201303220549121_ContentProviderContent.Designer.cs">
