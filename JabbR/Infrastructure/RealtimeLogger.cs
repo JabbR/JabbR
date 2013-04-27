@@ -1,4 +1,5 @@
-﻿using JabbR.Hubs;
+﻿using System;
+using JabbR.Hubs;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
 
@@ -15,6 +16,8 @@ namespace JabbR.Infrastructure
 
         public void Log(LogType type, string message)
         {
+            message = String.Format("[{0}]: {1}", DateTime.UtcNow, message);
+
             switch (type)
             {
                 case LogType.Message:
