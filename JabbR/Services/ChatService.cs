@@ -363,23 +363,14 @@ namespace JabbR.Services
 
         public void UpdateActivity(string clientId)
         {
-            ChatClient client = _repository.GetClientById(clientId, includeUser: true);
+            ChatClient client = _repository.GetClientById(clientId);
 
             if (client == null)
             {
                 return;
             }
 
-            client.User.Status = (int)UserStatus.Active;
-            client.User.LastActivity = DateTime.UtcNow;
             client.LastActivity = DateTimeOffset.UtcNow;
-
-            // Remove any Afk notes.
-            if (client.User.IsAfk)
-            {
-                client.User.AfkNote = null;
-                client.User.IsAfk = false;
-            }
         }
 
         public void LeaveRoom(ChatUser user, ChatRoom room)
