@@ -56,6 +56,7 @@ namespace JabbR.Client
         public event Action<IEnumerable<User>> UsersInactive;
 
         public string SourceUrl { get; private set; }
+        public bool AutoReconnect { get; set; }
 
         public HubConnection Connection
         {
@@ -287,6 +288,11 @@ namespace JabbR.Client
                 return;
             }
 
+            if (AutoReconnect)
+            {
+                Disconnected += OnDisconnected;
+            }
+
             _chat.On<Message, string>(ClientEvents.AddMessage, (message, room) =>
             {
                 Execute(MessageReceived, messageReceived => messageReceived(message, room));
@@ -337,7 +343,6 @@ namespace JabbR.Client
                 Execute(UserTyping, userTyping => userTyping(user, room));
             });
 
-
             _chat.On<User, string>(ClientEvents.GravatarChanged, (user, room) =>
             {
                 Execute(GravatarChanged, gravatarChanged => gravatarChanged(user, room));
@@ -386,6 +391,18 @@ namespace JabbR.Client
             _chat.On<Room>(ClientEvents.JoinRoom, (room) =>
             {
                 Execute(JoinedRoom, joinedRoom => joinedRoom(room));
+            });
+        }
+
+        private void OnDisconnected()
+        {
+            TaskAsyncHelper.Delay(TimeSpan.FromSeconds(5)).Then(() =>
+            {
+                _connection.Start().Then(() =>
+                {
+                    // Join JabbR
+                    _chat.Invoke("Join", false);
+                });
             });
         }
 
