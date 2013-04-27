@@ -56,10 +56,8 @@ namespace JabbR.Services
             {
                 using (var repo = _kernel.Get<IJabbrRepository>())
                 {
-                    var cache = _kernel.Get<ICache>();
-
                     // Update the connection presence
-                    UpdatePresence(cache, repo);
+                    UpdatePresence(repo);
 
                     // Remove zombie connections
                     RemoveZombies(repo);
@@ -81,14 +79,17 @@ namespace JabbR.Services
             }
         }
 
-        private void UpdatePresence(ICache cache, IJabbrRepository repo)
+        private void UpdatePresence(IJabbrRepository repo)
         {
-            var service = new ChatService(cache, repo);
-
             // Get all connections on this node and update the activity
             foreach (var connection in _heartbeat.GetConnections())
             {
-                service.UpdateActivity(connection.ConnectionId);
+                ChatClient client = repo.GetClientById(connection.ConnectionId);
+
+                if (client != null)
+                {
+                    client.LastActivity = DateTimeOffset.UtcNow;
+                }
             }
 
             repo.CommitChanges();

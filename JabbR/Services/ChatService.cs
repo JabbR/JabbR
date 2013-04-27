@@ -361,18 +361,6 @@ namespace JabbR.Services
             }
         }
 
-        public void UpdateActivity(string clientId)
-        {
-            ChatClient client = _repository.GetClientById(clientId);
-
-            if (client == null)
-            {
-                return;
-            }
-
-            client.LastActivity = DateTimeOffset.UtcNow;
-        }
-
         public void LeaveRoom(ChatUser user, ChatRoom room)
         {
             // Update the cache
