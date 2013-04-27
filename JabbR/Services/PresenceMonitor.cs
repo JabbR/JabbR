@@ -141,8 +141,8 @@ namespace JabbR.Services
         {
             var inactiveUsers = new List<ChatUser>();
 
-            IQueryable<ChatUser> users = repo.GetOnlineUsers().Where(u =>
-                u.Status != (int)UserStatus.Inactive &&
+            IQueryable<ChatUser> users = repo.Users.Where(u =>
+                u.Status == (int)UserStatus.Active &&
                 SqlFunctions.DateDiff("mi", u.LastActivity, DateTime.UtcNow) > 5);
 
             foreach (var user in users.ToList())
