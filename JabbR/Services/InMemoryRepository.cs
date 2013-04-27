@@ -27,6 +27,8 @@ namespace JabbR.Services
 
         public IQueryable<ChatUser> Users { get { return _users.AsQueryable(); } }
 
+        public IQueryable<ChatClient> Clients { get { return _users.SelectMany(u => u.ConnectedClients).AsQueryable(); } }
+
         public void Add(Attachment attachment)
         {
             _attachments.Add(attachment);   
@@ -205,12 +207,6 @@ namespace JabbR.Services
                     from m in r.Messages
                     where m.When < message.When
                     select m).AsQueryable();
-        }
-
-        public void RemoveAllClients()
-        {
-            // No need to do anything here since this is only called on App_Start
-            // if we're using the in memory repository all the data has been purged anyways
         }
 
         public ChatMessage GetMessageById(string id)

@@ -8,6 +8,7 @@ namespace JabbR.Services
         // Users 
         ChatClient AddClient(ChatUser user, string clientId, string userAgent);
         void UpdateActivity(ChatUser user, string clientId, string userAgent);
+        void UpdateActivity(string clientId);
         string DisconnectClient(string clientId);
 
         // Rooms
