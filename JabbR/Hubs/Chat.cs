@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +10,6 @@ using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
 using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Hubs;
 using Newtonsoft.Json;
 
 namespace JabbR
@@ -84,7 +82,12 @@ namespace JabbR
             // Try to get the user from the client state
             ChatUser user = _repository.GetUserById(userId);
 
-            if (!reconnecting)
+            if (reconnecting)
+            {
+                // Ensure the client is re-added
+                _service.AddClient(user, Context.ConnectionId, UserAgent);
+            }
+            else
             {
                 // Update some user values
                 _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
