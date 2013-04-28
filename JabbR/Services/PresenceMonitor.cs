@@ -186,8 +186,6 @@ namespace JabbR.Services
 
             foreach (var user in users.ToList())
             {
-                logger.Log("Changing {0} to away", user.Name);
-
                 user.Status = (int)UserStatus.Inactive;
                 inactiveUsers.Add(user);
             }
