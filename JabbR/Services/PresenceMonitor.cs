@@ -165,7 +165,7 @@ namespace JabbR.Services
                 User = user,
                 UserAgent = context.Request.Headers["User-Agent"],
                 LastActivity = DateTimeOffset.UtcNow,
-                LastClientActivity = DateTimeOffset.UtcNow
+                LastClientActivity = user.LastActivity
             };
 
             repo.Add(client);
