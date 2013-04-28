@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Principal;
 using JabbR.ContentProviders.Core;
+using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
 using Microsoft.AspNet.SignalR;
@@ -55,7 +56,7 @@ namespace JabbR.Test
             public Mock<IConnection> MockedConnection { get; private set; }
 
             public TestableChat(Mock<ContentProviderProcessor> mockedResourceProcessor, Mock<IChatService> mockedChatService, IJabbrRepository repository, Mock<IConnection> connection)
-                : base(mockedResourceProcessor.Object, mockedChatService.Object, repository, new Mock<ICache>().Object)
+                : base(mockedResourceProcessor.Object, mockedChatService.Object, repository, new Mock<ICache>().Object, new Mock<ILogger>().Object)
             {
                 MockedResourceProcessor = mockedResourceProcessor;
                 MockedChatService = mockedChatService;

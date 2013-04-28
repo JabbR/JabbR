@@ -54,13 +54,15 @@ namespace JabbR
                       var resourceProcessor = context.Kernel.Get<ContentProviderProcessor>();
                       var repository = context.Kernel.Get<IJabbrRepository>();
                       var cache = context.Kernel.Get<ICache>();
+                      var logger = context.Kernel.Get<ILogger>();
 
                       var service = new ChatService(cache, repository);
 
                       return new Chat(resourceProcessor,
                                       service,
                                       repository,
-                                      cache);
+                                      cache,
+                                      logger);
                   });
 
             kernel.Bind<ICryptoService>()

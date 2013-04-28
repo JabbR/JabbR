@@ -23,16 +23,19 @@ namespace JabbR
         private readonly IChatService _service;
         private readonly ICache _cache;
         private readonly ContentProviderProcessor _resourceProcessor;
+        private readonly ILogger _logger;
 
         public Chat(ContentProviderProcessor resourceProcessor,
                     IChatService service,
                     IJabbrRepository repository,
-                    ICache cache)
+                    ICache cache,
+                    ILogger logger)
         {
             _resourceProcessor = resourceProcessor;
             _service = service;
             _repository = repository;
             _cache = cache;
+            _logger = logger;
         }
 
         private string UserAgent
@@ -66,6 +69,8 @@ namespace JabbR
         {
             CheckStatus();
 
+            _logger.Log("OnConnected({0})", Context.ConnectionId);
+
             return base.OnConnected();
         }
 
@@ -84,6 +89,8 @@ namespace JabbR
 
             if (reconnecting)
             {
+                _logger.Log("{0}:{1} reconnecting after disconnect", user.Name, Context.ConnectionId);
+
                 // If the user was marked as offline then mark them inactive
                 if (user.Status == (int)UserStatus.Offline)
                 {
@@ -96,6 +103,8 @@ namespace JabbR
             }
             else
             {
+                _logger.Log("{0}:{1} connected", user.Name, Context.ConnectionId);
+
                 // Update some user values
                 _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
                 _repository.CommitChanges();
@@ -269,11 +278,19 @@ namespace JabbR
 
         public override Task OnReconnected()
         {
+            _logger.Log("OnReconnected({0})", Context.ConnectionId);
+
             CheckStatus();
 
             var userId = Context.User.GetUserId();
 
             ChatUser user = _repository.VerifyUserId(userId);
+
+            if (user == null)
+            {
+                _logger.Log("Reconnect failed user {0}:{1}. Doesn't exist.", user, Context.ConnectionId);
+                return TaskAsyncHelper.Empty;
+            }
 
             // Make sure this client is being tracked
             _service.AddClient(user, Context.ConnectionId, UserAgent);
@@ -282,6 +299,8 @@ namespace JabbR
 
             if (currentStatus == UserStatus.Offline)
             {
+                _logger.Log("{0}:{1} reconnecting after temporary network problem and marked offline", user.Name, Context.ConnectionId);
+
                 // Mark the user as inactive
                 user.Status = (int)UserStatus.Inactive;
                 _repository.CommitChanges();
@@ -298,12 +317,18 @@ namespace JabbR
                     Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner);
                 }
             }
+            else
+            {
+                _logger.Log("{0}:{1} reconnected after temporary network problem", user.Name, Context.ConnectionId);
+            }
 
             return base.OnReconnected();
         }
 
         public override Task OnDisconnected()
         {
+            _logger.Log("OnDisconnected({0})", Context.ConnectionId);
+
             DisconnectClient(Context.ConnectionId);
 
             return base.OnDisconnected();
@@ -573,6 +598,7 @@ namespace JabbR
             // There's no associated user for this client id
             if (user == null)
             {
+                _logger.Log("Failed to disconnect {0}. No user found", clientId);
                 return;
             }
 
@@ -581,12 +607,18 @@ namespace JabbR
             // The user will be marked as offline if all clients leave
             if (user.Status == (int)UserStatus.Offline)
             {
+                _logger.Log("Marking {0} offline", user.Name);
+
                 foreach (var room in user.Rooms)
                 {
                     var userViewModel = new UserViewModel(user);
 
                     Clients.OthersInGroup(room.Name).leave(userViewModel, room.Name);
                 }
+            }
+            else
+            {
+                _logger.Log("{0}:{1} disconnected", user.Name, Context.ConnectionId);
             }
         }
 
