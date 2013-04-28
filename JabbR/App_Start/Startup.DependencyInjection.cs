@@ -106,12 +106,12 @@ namespace JabbR
             kernel.Bind<IKeyProvider>()
                       .To<SettingsKeyProvider>();
 
-            var serializer = new JsonNetSerializer(new JsonSerializerSettings()
+            var serializer = JsonSerializer.Create(new JsonSerializerSettings()
             {
                 DateFormatHandling = DateFormatHandling.IsoDateFormat
             });
 
-            kernel.Bind<IJsonSerializer>()
+            kernel.Bind<JsonSerializer>()
                   .ToConstant(serializer);
 
             kernel.Bind<UploadCallbackHandler>()

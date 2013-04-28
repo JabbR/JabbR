@@ -275,7 +275,7 @@ namespace JabbR
             return new UserViewModel(user);
         }
 
-        public override Task OnReconnected()
+        public override async Task OnReconnected()
         {
             _logger.Log("OnReconnected({0})", Context.ConnectionId);
 
@@ -288,10 +288,15 @@ namespace JabbR
             if (user == null)
             {
                 _logger.Log("Reconnect failed user {0}:{1}. Doesn't exist.", user, Context.ConnectionId);
-                return TaskAsyncHelper.Empty;
+                return;
             }
 
             _logger.Log("AddClient({0}:{1})", user.Name, Context.ConnectionId);
+
+            // HACK: There seems to be a bug in signalr that allows OnReconnected
+            // to get called after/at the same time as OnDisconnected.
+
+            await Task.Delay(5000);
 
             // Make sure this client is being tracked
             _service.AddClient(user, Context.ConnectionId, UserAgent);
@@ -324,8 +329,6 @@ namespace JabbR
             }
 
             CheckStatus();
-
-            return base.OnReconnected();
         }
 
         public override Task OnDisconnected()
@@ -584,6 +587,8 @@ namespace JabbR
 
         private void DisconnectClient(string clientId)
         {
+            _logger.Log("before DisconnectClient({0})", clientId);
+
             string userId = _service.DisconnectClient(clientId);
 
             if (String.IsNullOrEmpty(userId))
@@ -592,7 +597,7 @@ namespace JabbR
                 return;
             }
 
-            _logger.Log("DisconnectClient({0}:{1})", userId, clientId);
+            _logger.Log("after DisconnectClient({0}:{1})", userId, clientId);
 
             // Query for the user to get the updated status
             ChatUser user = _repository.GetUserById(userId);
