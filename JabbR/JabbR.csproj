@@ -925,6 +925,9 @@
     <EmbeddedResource Include="Migrations\201304210948362_DbSettings.resx">
       <DependentUpon>201304210948362_DbSettings.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201304280435045_MoreClientProperties.resx">
+      <DependentUpon>201304280435045_MoreClientProperties.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -1040,6 +1043,10 @@
     <Compile Include="Migrations\201304210948362_DbSettings.cs" />
     <Compile Include="Migrations\201304210948362_DbSettings.Designer.cs">
       <DependentUpon>201304210948362_DbSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201304280435045_MoreClientProperties.cs" />
+    <Compile Include="Migrations\201304280435045_MoreClientProperties.Designer.cs">
+      <DependentUpon>201304280435045_MoreClientProperties.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\ClientNotification.cs" />

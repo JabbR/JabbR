@@ -352,6 +352,7 @@ namespace JabbR.Services
             ChatClient client = AddClient(user, clientId, userAgent);
             client.UserAgent = userAgent;
             client.LastActivity = DateTimeOffset.UtcNow;
+            client.LastClientActivity = DateTimeOffset.UtcNow;
 
             // Remove any Afk notes.
             if (user.IsAfk)
