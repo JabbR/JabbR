@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using JabbR.Commands;
 using JabbR.ContentProviders.Core;
@@ -578,7 +579,7 @@ namespace JabbR
             return commandManager.TryHandleCommand(command);
         }
 
-        private async void DisconnectClient(string clientId, bool useThreshold = false)
+        private void DisconnectClient(string clientId, bool useThreshold = false)
         {
             string userId = _service.DisconnectClient(clientId);
 
@@ -590,7 +591,7 @@ namespace JabbR
 
             if (useThreshold)
             {
-                await Task.Delay(_disconnectThreshold);
+                Thread.Sleep(_disconnectThreshold);
             }
 
             // Query for the user to get the updated status
