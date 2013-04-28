@@ -536,7 +536,8 @@ namespace JabbR.Services
                 Id = clientId,
                 User = user,
                 UserAgent = userAgent,
-                LastActivity = DateTimeOffset.UtcNow
+                LastActivity = DateTimeOffset.UtcNow,
+                LastClientActivity = DateTimeOffset.UtcNow
             };
 
             _repository.Add(client);

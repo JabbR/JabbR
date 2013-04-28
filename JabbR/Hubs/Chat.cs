@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using JabbR.Commands;
 using JabbR.ContentProviders.Core;
@@ -17,6 +16,8 @@ namespace JabbR
     [AuthorizeClaim(JabbRClaimTypes.Identifier)]
     public class Chat : Hub, INotificationService
     {
+        private static readonly TimeSpan _disconnectThreshold = TimeSpan.FromSeconds(10);
+
         private readonly IJabbrRepository _repository;
         private readonly IChatService _service;
         private readonly ICache _cache;
@@ -87,7 +88,7 @@ namespace JabbR
 
             if (reconnecting)
             {
-                _logger.Log("{0}:{1} reconnected after disconnect", user.Name, Context.ConnectionId);
+                _logger.Log("{0}:{1} connected after dropping connection.", user.Name, Context.ConnectionId);
 
                 // If the user was marked as offline then mark them inactive
                 if (user.Status == (int)UserStatus.Offline)
@@ -96,13 +97,12 @@ namespace JabbR
                     _repository.CommitChanges();
                 }
 
-                _logger.Log("AddClient({0}:{1})", user.Name, Context.ConnectionId);
                 // Ensure the client is re-added
                 _service.AddClient(user, Context.ConnectionId, UserAgent);
             }
             else
             {
-                _logger.Log("{0}:{1} connected", user.Name, Context.ConnectionId);
+                _logger.Log("{0}:{1} connected.", user.Name, Context.ConnectionId);
 
                 // Update some user values
                 _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
@@ -275,28 +275,19 @@ namespace JabbR
             return new UserViewModel(user);
         }
 
-        public override async Task OnReconnected()
+        public override Task OnReconnected()
         {
             _logger.Log("OnReconnected({0})", Context.ConnectionId);
 
             var userId = Context.User.GetUserId();
 
-            _logger.Log("OnReconnected({0}:{1})", userId, Context.ConnectionId);
-
             ChatUser user = _repository.VerifyUserId(userId);
 
             if (user == null)
             {
-                _logger.Log("Reconnect failed user {0}:{1}. Doesn't exist.", user, Context.ConnectionId);
-                return;
+                _logger.Log("Reconnect failed user {0}:{1} doesn't exist.", userId, Context.ConnectionId);
+                return TaskAsyncHelper.Empty;
             }
-
-            _logger.Log("AddClient({0}:{1})", user.Name, Context.ConnectionId);
-
-            // HACK: There seems to be a bug in signalr that allows OnReconnected
-            // to get called after/at the same time as OnDisconnected.
-
-            await Task.Delay(5000);
 
             // Make sure this client is being tracked
             _service.AddClient(user, Context.ConnectionId, UserAgent);
@@ -305,7 +296,7 @@ namespace JabbR
 
             if (currentStatus == UserStatus.Offline)
             {
-                _logger.Log("{0}:{1} reconnecting after temporary network problem and marked offline", user.Name, Context.ConnectionId);
+                _logger.Log("{0}:{1} reconnected after temporary network problem and marked offline.", user.Name, Context.ConnectionId);
 
                 // Mark the user as inactive
                 user.Status = (int)UserStatus.Inactive;
@@ -325,17 +316,19 @@ namespace JabbR
             }
             else
             {
-                _logger.Log("{0}:{1} reconnected after temporary network problem", user.Name, Context.ConnectionId);
+                _logger.Log("{0}:{1} reconnected after temporary network problem.", user.Name, Context.ConnectionId);
             }
 
             CheckStatus();
+
+            return base.OnReconnected();
         }
 
         public override Task OnDisconnected()
         {
             _logger.Log("OnDisconnected({0})", Context.ConnectionId);
 
-            DisconnectClient(Context.ConnectionId);
+            DisconnectClient(Context.ConnectionId, useThreshold: true);
 
             return base.OnDisconnected();
         }
@@ -585,10 +578,8 @@ namespace JabbR
             return commandManager.TryHandleCommand(command);
         }
 
-        private void DisconnectClient(string clientId)
+        private async void DisconnectClient(string clientId, bool useThreshold = false)
         {
-            _logger.Log("before DisconnectClient({0})", clientId);
-
             string userId = _service.DisconnectClient(clientId);
 
             if (String.IsNullOrEmpty(userId))
@@ -597,7 +588,10 @@ namespace JabbR
                 return;
             }
 
-            _logger.Log("after DisconnectClient({0}:{1})", userId, clientId);
+            if (useThreshold)
+            {
+                await Task.Delay(_disconnectThreshold);
+            }
 
             // Query for the user to get the updated status
             ChatUser user = _repository.GetUserById(userId);

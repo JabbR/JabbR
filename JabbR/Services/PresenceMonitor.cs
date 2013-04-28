@@ -11,6 +11,7 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hosting;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Transports;
+using Newtonsoft.Json;
 using Ninject;
 
 namespace JabbR.Services
@@ -103,31 +104,71 @@ namespace JabbR.Services
                 }
                 else
                 {
-                    logger.Log("Connection {0} exists but isn't tracked.", connection.ConnectionId);
-                    logger.Log("URL: {0}", connection.Url);
-
-                    // HACK: This isn't exposed in signalr to use reflection!
-                    var contextField = connection.GetType().GetField("_context",
-                                                  BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (contextField != null)
-                    {
-                        var context = contextField.GetValue(connection) as HostContext;
-
-                        if (context != null)
-                        {
-                            string userId = context.Request.User.GetUserId();
-                            logger.Log("User ID: {0}", userId);
-
-                            ChatUser user = repo.GetUserById(userId);
-                            if (user != null)
-                            {
-                                logger.Log("User name: {0}", user.Name);
-                            }
-                        }
-                    }
+                    EnsureClientConnected(logger, repo, connection);
                 }
             }
 
+            repo.CommitChanges();
+        }
+
+        // This is an uber hack to make sure the db is in sync with SignalR
+        private void EnsureClientConnected(ILogger logger, IJabbrRepository repo, ITrackingConnection connection)
+        {
+            var contextField = connection.GetType().GetField("_context",
+                                          BindingFlags.NonPublic | BindingFlags.Instance);
+            if (contextField == null)
+            {
+                return;
+            }
+
+            var context = contextField.GetValue(connection) as HostContext;
+
+            if (context == null)
+            {
+                return;
+            }
+
+            string connectionData = context.Request.QueryString["connectionData"];
+
+            if (String.IsNullOrEmpty(connectionData))
+            {
+                return;
+            }
+
+            var hubs = JsonConvert.DeserializeObject<HubConnectionData[]>(connectionData);
+
+            if (hubs.Length != 1)
+            {
+                return;
+            }
+
+            // We only care about the chat hub
+            if (!hubs[0].Name.Equals("chat", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            logger.Log("Connection {0} exists but isn't tracked.", connection.ConnectionId);
+
+            string userId = context.Request.User.GetUserId();
+
+            ChatUser user = repo.GetUserById(userId);
+            if (user == null)
+            {
+                logger.Log("Unable to find user with id {0}", userId);
+                return;
+            }
+
+            var client = new ChatClient
+            {
+                Id = connection.ConnectionId,
+                User = user,
+                UserAgent = context.Request.Headers["User-Agent"],
+                LastActivity = DateTimeOffset.UtcNow,
+                LastClientActivity = DateTimeOffset.UtcNow
+            };
+
+            repo.Add(client);
             repo.CommitChanges();
         }
 
@@ -223,6 +264,11 @@ namespace JabbR.Services
         {
             public ChatRoom Room { get; set; }
             public IEnumerable<UserViewModel> Users { get; set; }
+        }
+
+        private class HubConnectionData
+        {
+            public string Name { get; set; }
         }
     }
 }
