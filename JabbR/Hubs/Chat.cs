@@ -84,6 +84,13 @@ namespace JabbR
 
             if (reconnecting)
             {
+                // If the user was marked as offline then mark them inactive
+                if (user.Status == (int)UserStatus.Offline)
+                {
+                    user.Status = (int)UserStatus.Inactive;
+                    _repository.CommitChanges();
+                }
+
                 // Ensure the client is re-added
                 _service.AddClient(user, Context.ConnectionId, UserAgent);
             }
