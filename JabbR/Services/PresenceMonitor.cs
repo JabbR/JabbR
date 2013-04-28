@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Data.Objects.SqlClient;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.ViewModels;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Hosting;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Transports;
 using Ninject;
@@ -101,7 +103,28 @@ namespace JabbR.Services
                 }
                 else
                 {
-                    logger.Log("Connection {0} exists but isn't tracked", connection.ConnectionId);
+                    logger.Log("Connection {0} exists but isn't tracked.", connection.ConnectionId);
+                    logger.Log("URL: {0}", connection.Url);
+
+                    // HACK: This isn't exposed in signalr to use reflection!
+                    var contextField = connection.GetType().GetField("_context",
+                                                  BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (contextField != null)
+                    {
+                        var context = contextField.GetValue(connection) as HostContext;
+
+                        if (context != null)
+                        {
+                            string userId = context.Request.User.GetUserId();
+                            logger.Log("User ID: {0}", userId);
+
+                            ChatUser user = repo.GetUserById(userId);
+                            if (user != null)
+                            {
+                                logger.Log("User name: {0}", user.Name);
+                            }
+                        }
+                    }
                 }
             }
 
