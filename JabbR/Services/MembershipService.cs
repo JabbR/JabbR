@@ -51,7 +51,8 @@ namespace JabbR.Services
                 Status = (int)UserStatus.Active,
                 Hash = email.ToMD5(),
                 Id = Guid.NewGuid().ToString("d"),
-                LastActivity = DateTime.UtcNow
+                LastActivity = DateTime.UtcNow,
+                IsAdmin = IsFirstUser()
             };
 
             var chatUserIdentity = new ChatUserIdentity
@@ -67,6 +68,11 @@ namespace JabbR.Services
             _repository.CommitChanges();
 
             return user;
+        }
+
+        private bool IsFirstUser()
+        {
+            return _repository.Users.FirstOrDefault() == null;
         }
 
         public void LinkIdentity(ChatUser user, ClaimsPrincipal claimsPrincipal)
@@ -106,6 +112,7 @@ namespace JabbR.Services
                 Id = Guid.NewGuid().ToString("d"),
                 Salt = _crypto.CreateSalt(),
                 LastActivity = DateTime.UtcNow,
+                IsAdmin = IsFirstUser()
             };
 
             ValidatePassword(password);

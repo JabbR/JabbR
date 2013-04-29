@@ -273,7 +273,14 @@
             var $this = $(this),
                 liRoomCount = $this.data('count'),
                 liRoomClosed = $this.hasClass('closed'),
-                nameComparison = $this.data('name').toString().toUpperCase().localeCompare(roomName);
+                name = $this.data('name'),
+                nameComparison;
+
+            if (name === undefined) {
+                return true;
+            }
+
+            nameComparison = name.toString().toUpperCase().localeCompare(roomName);
 
             // skip this element
             if (nameComparison === 0) {
