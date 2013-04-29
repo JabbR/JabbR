@@ -7,34 +7,37 @@ using JabbR.Infrastructure;
 using Nancy.Validation;
 using Nancy.ViewEngines.Razor;
 using PagedList;
+using AntiXSS = Microsoft.Security.Application;
 
 namespace JabbR
 {
     public static class HtmlHelperExtensions
     {
-        public static IHtmlString CheckBox<T>(this HtmlHelpers<T> helper, string Name, dynamic ModelProperty)
+        public static IHtmlString CheckBox<T>(this HtmlHelpers<T> helper, string Name, bool value)
         {
             string input = String.Empty;
-            bool checkedState = false;
+            
+            var checkBoxBuilder = new StringBuilder();
 
-            if (!Boolean.TryParse(ModelProperty.ToString(), out checkedState))
+            checkBoxBuilder.Append(@"<input data-name=""");
+            checkBoxBuilder.Append(AntiXSS.Encoder.HtmlAttributeEncode(Name));
+            checkBoxBuilder.Append(@""" type=""checkbox""");
+            if (value)
             {
-                input = "<input name=\"" + Name + "\" type=\"checkbox\" value=\"true\" />";
+                checkBoxBuilder.Append(@" checked=""checked"" />");
             }
             else
             {
-                if (checkedState)
-                {
-                    input = "<input name=\"" + Name + "\" type=\"checkbox\" value=\"true\" checked />";
-                }
-                else
-                {
-                    input = "<input name=\"" + Name + "\" type=\"checkbox\" value=\"true\" />";
-                }
+                checkBoxBuilder.Append(" />");
             }
 
+            checkBoxBuilder.Append(@"<input name=""");
+            checkBoxBuilder.Append(AntiXSS.Encoder.HtmlAttributeEncode(Name));
+            checkBoxBuilder.Append(@""" type=""hidden"" value=""");
+            checkBoxBuilder.Append(value.ToString().ToLowerInvariant());
+            checkBoxBuilder.Append(@""" />");
 
-            return new NonEncodedHtmlString(input);
+            return new NonEncodedHtmlString(checkBoxBuilder.ToString());
         }
 
         public static IHtmlString ValidationSummary<TModel>(this HtmlHelpers<TModel> htmlHelper)

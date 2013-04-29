@@ -405,6 +405,51 @@ namespace JabbR.Test
             }
 
             [Fact]
+            public void ThrowsIfRoomCreationDisabledAndNotAdmin()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo"
+                };
+                repository.Add(user);
+                var settings = new ApplicationSettings
+                {
+                    AllowRoomCreation = false
+                };
+
+                var service = new ChatService(new Mock<ICache>().Object, repository, settings);
+
+                Assert.Throws<InvalidOperationException>(() => service.AddRoom(user, "NewRoom"));
+            }
+
+            [Fact]
+            public void DoesNotThrowIfRoomCreationDisabledAndUserAdmin()
+            {
+                var repository = new InMemoryRepository();
+                var user = new ChatUser
+                {
+                    Name = "foo",
+                    IsAdmin = true
+                };
+                repository.Add(user);
+                var settings = new ApplicationSettings
+                {
+                    AllowRoomCreation = false
+                };
+
+                var service = new ChatService(new Mock<ICache>().Object, repository, settings);
+                ChatRoom room = service.AddRoom(user, "NewRoom");
+
+                Assert.NotNull(room);
+                Assert.Equal("NewRoom", room.Name);
+                Assert.Same(room, repository.GetRoomByName("NewRoom"));
+                Assert.True(room.Owners.Contains(user));
+                Assert.Same(room.Creator, user);
+                Assert.True(user.OwnedRooms.Contains(room));
+            }
+
+            [Fact]
             public void ThrowsIfRoomNameContainsPeriod()
             {
                 var repository = new InMemoryRepository();

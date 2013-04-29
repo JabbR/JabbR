@@ -9,6 +9,7 @@ namespace JabbR.Services
         public ApplicationSettings()
         {
             AllowUserRegistration = true;
+            AllowRoomCreation = true;
         }
 
         public string EncryptionKey { get; set; }
@@ -23,6 +24,8 @@ namespace JabbR.Services
 
         public bool AllowUserRegistration { get; set; }
 
+        public bool AllowRoomCreation { get; set; }
+
         public IDictionary<string, string> AuthenticationProviders { get; set; }
 
         public static ApplicationSettings GetDefaultSettings()
@@ -33,6 +36,7 @@ namespace JabbR.Services
                 VerificationKey = CryptoHelper.ToHex(GenerateRandomBytes()),
                 MaxFileUploadBytes = 5242880,
                 AllowUserRegistration = true,
+                AllowRoomCreation = true
             };
         }
 

@@ -29,18 +29,11 @@ namespace JabbR.Nancy
                     return HttpStatusCode.Forbidden;
                 }
 
-                ApplicationSettings appSettings = applicationSettings;
-
                 try
                 {
-                    appSettings = this.Bind<ApplicationSettings>();
-                    // The allow user registration field is not passed in the post
-                    // when you uncheck it, so need to force the value to false
-                    if (Request.Form.allowUserRegistration == null)
-                    {
-                        appSettings.AllowUserRegistration = false;
-                    }
-                    settingsManager.Save(appSettings);
+                    var settings = this.Bind<ApplicationSettings>();
+
+                    settingsManager.Save(settings);
                 }
                 catch (Exception ex)
                 {
@@ -53,7 +46,7 @@ namespace JabbR.Nancy
                     return Response.AsRedirect("~/administration");
                 }
 
-                return View["index", appSettings];
+                return View["index", applicationSettings];
             };
         }
     }

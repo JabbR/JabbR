@@ -42,7 +42,13 @@
                     <div class="control-group">
                         <label class="control-label" for="allowUserRegistration">Allow User Registration</label>
                         <div class="controls">
-                            @Html.CheckBox("allowUserRegistration", (bool)Model.AllowUserRegistration)
+                            @Html.CheckBox("allowUserRegistration", Model.AllowUserRegistration)
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="allowUserRegistration">Allow Room Creation</label>
+                        <div class="controls">
+                            @Html.CheckBox("allowRoomCreation", Model.AllowRoomCreation)
                         </div>
                     </div>
                 </fieldset>
@@ -116,6 +122,16 @@
 
             // make sure errors look pretty and bootstrap-y
             $('input.error').closest('.control-group').addClass('error');
+
+            $('input[type="checkbox"]').click(function () {
+                var $this = $(this);
+                    name = $this.data('name'),
+                    checked = $this.is(':checked') === true,
+                    $hiddenField = $('input[type="hidden"][name="' + name + '"]');
+
+                $hiddenField.attr('value', checked);
+            });
+
         }(jQuery));
     </script>
 </body>

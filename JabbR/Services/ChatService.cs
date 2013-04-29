@@ -12,6 +12,7 @@ namespace JabbR.Services
     {
         private readonly IJabbrRepository _repository;
         private readonly ICache _cache;
+        private readonly ApplicationSettings _settings;
 
         private const int NoteMaximumLength = 140;
         private const int TopicMaximumLength = 80;
@@ -275,13 +276,26 @@ namespace JabbR.Services
                                                   };
 
         public ChatService(ICache cache, IJabbrRepository repository)
+            : this(cache, repository, ApplicationSettings.GetDefaultSettings())
+        {
+        }
+
+        public ChatService(ICache cache,
+                           IJabbrRepository repository,
+                           ApplicationSettings settings)
         {
             _cache = cache;
             _repository = repository;
+            _settings = settings;
         }
 
         public ChatRoom AddRoom(ChatUser user, string name)
         {
+            if (!_settings.AllowRoomCreation && !user.IsAdmin)
+            {
+                throw new InvalidOperationException("Room creation is disabled.");
+            }
+
             if (name.Equals("Lobby", StringComparison.OrdinalIgnoreCase))
             {
                 throw new InvalidOperationException("Lobby is not a valid chat room.");
