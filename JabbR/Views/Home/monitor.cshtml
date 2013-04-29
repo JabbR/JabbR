@@ -32,7 +32,7 @@
                 $('#logs').prepend('<li class="message">' + encodeHtml(value).replace('\n', '<br/>') + '</li>');
             };
 
-            monitor.client.logError = function () {
+            monitor.client.logError = function (value) {
                 $('#logs').prepend('<li class="error">' + encodeHtml(value) + '</li>');
             };
 

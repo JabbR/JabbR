@@ -5,11 +5,13 @@ using System.IdentityModel.Tokens;
 using System.Net.Http.Formatting;
 using System.ServiceModel.Security;
 using System.Web.Http;
+using JabbR.Hubs;
 using JabbR.Infrastructure;
 using JabbR.Middleware;
 using JabbR.Nancy;
 using JabbR.Services;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.SystemWeb.Infrastructure;
 using Microsoft.AspNet.SignalR.Transports;
@@ -106,6 +108,7 @@ namespace JabbR
             var resolver = new NinjectSignalRDependencyResolver(kernel);
             var connectionManager = resolver.Resolve<IConnectionManager>();
             var heartbeat = resolver.Resolve<ITransportHeartbeat>();
+            var hubPipeline = resolver.Resolve<IHubPipeline>();
 
             // Ah well loading system web.
             kernel.Bind<IProtectedData>()
@@ -119,6 +122,8 @@ namespace JabbR
                 Resolver = resolver,
                 EnableDetailedErrors = true
             };
+
+            hubPipeline.AddModule(kernel.Get<LoggingHubPipelineModule>());
 
             app.MapHubs(config);
 
