@@ -21,8 +21,6 @@ namespace JabbR.Client
         private IHubProxy _chat;
         private HubConnection _connection;
         private int _initialized;
-        private TextWriter _traceWriter;
-        private TraceLevels _traceLevel;
 
         public JabbRClient(string url)
             : this(url, authenticationProvider: null, transport: new AutoTransport(new DefaultHttpClient()))
@@ -60,6 +58,8 @@ namespace JabbR.Client
 
         public string SourceUrl { get; private set; }
         public bool AutoReconnect { get; set; }
+        public TextWriter TraceWriter { get; set; }
+        public TraceLevels TraceLevel { get; set; }
 
         public HubConnection Connection
         {
@@ -105,28 +105,6 @@ namespace JabbR.Client
             }
         }
 
-        public TextWriter TraceWriter
-        {
-            get { return _connection != null ? _connection.TraceWriter : _traceWriter; }
-            set
-            {
-                _traceWriter = value;
-                if (_connection != null)
-                    _connection.TraceWriter = _traceWriter;
-            }
-        }
-
-        public TraceLevels TraceLevel
-        {
-            get { return _connection != null ? _connection.TraceLevel : _traceLevel; }
-            set
-            {
-                _traceLevel = value;
-                if (_connection != null)
-                    _connection.TraceLevel = _traceLevel;
-            }
-        }
-
         public Task<LogOnInfo> Connect(string name, string password)
         {
             var taskCompletionSource = new TaskCompletionSource<LogOnInfo>();
@@ -136,8 +114,8 @@ namespace JabbR.Client
                 {
                     _connection = connection;
                     
-                    _connection.TraceWriter = _traceWriter;
-                    _connection.TraceLevel = _traceLevel;
+                    _connection.TraceWriter = TraceWriter;
+                    _connection.TraceLevel = TraceLevel;
                     
                     _chat = _connection.CreateHubProxy ("chat");
 
