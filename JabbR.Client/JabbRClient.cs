@@ -398,7 +398,7 @@ namespace JabbR.Client
         {
             TaskAsyncHelper.Delay(TimeSpan.FromSeconds(5)).Then(() =>
             {
-                _connection.Start().Then(() =>
+                _connection.Start(_transport).Then(() =>
                 {
                     // Join JabbR
                     _chat.Invoke("Join", false);
