@@ -116,8 +116,8 @@ namespace JabbR.Client
                     
                     _connection.TraceWriter = TraceWriter;
                     _connection.TraceLevel = TraceLevel;
-                    
-                    _chat = _connection.CreateHubProxy ("chat");
+
+                    _chat = _connection.CreateHubProxy("chat");
 
                     SubscribeToEvents();
 
