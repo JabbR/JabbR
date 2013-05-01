@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -57,6 +58,8 @@ namespace JabbR.Client
 
         public string SourceUrl { get; private set; }
         public bool AutoReconnect { get; set; }
+        public TextWriter TraceWriter { get; set; }
+        public TraceLevels TraceLevel { get; set; }
 
         public HubConnection Connection
         {
@@ -110,6 +113,10 @@ namespace JabbR.Client
                 .Then(connection =>
                 {
                     _connection = connection;
+                    
+                    _connection.TraceWriter = TraceWriter;
+                    _connection.TraceLevel = TraceLevel;
+
                     _chat = _connection.CreateHubProxy("chat");
 
                     SubscribeToEvents();
