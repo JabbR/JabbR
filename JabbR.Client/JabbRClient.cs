@@ -9,6 +9,7 @@ using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Http;
 using Microsoft.AspNet.SignalR.Client.Hubs;
 using Microsoft.AspNet.SignalR.Client.Transports;
+using System.IO;
 
 namespace JabbR.Client
 {
@@ -20,6 +21,8 @@ namespace JabbR.Client
         private IHubProxy _chat;
         private HubConnection _connection;
         private int _initialized;
+        private TextWriter _traceWriter;
+        private TraceLevels _traceLevel;
 
         public JabbRClient(string url)
             : this(url, authenticationProvider: null, transport: new AutoTransport(new DefaultHttpClient()))
@@ -102,6 +105,28 @@ namespace JabbR.Client
             }
         }
 
+        public TextWriter TraceWriter
+        {
+            get { return _connection != null ? _connection.TraceWriter : _traceWriter; }
+            set
+            {
+                _traceWriter = value;
+                if (_connection != null)
+                    _connection.TraceWriter = _traceWriter;
+            }
+        }
+
+        public TraceLevels TraceLevel
+        {
+            get { return _connection != null ? _connection.TraceLevel : _traceLevel; }
+            set
+            {
+                _traceLevel = value;
+                if (_connection != null)
+                    _connection.TraceLevel = _traceLevel;
+            }
+        }
+
         public Task<LogOnInfo> Connect(string name, string password)
         {
             var taskCompletionSource = new TaskCompletionSource<LogOnInfo>();
@@ -110,7 +135,11 @@ namespace JabbR.Client
                 .Then(connection =>
                 {
                     _connection = connection;
-                    _chat = _connection.CreateHubProxy("chat");
+                    
+                    _connection.TraceWriter = _traceWriter;
+                    _connection.TraceLevel = _traceLevel;
+                    
+                    _chat = _connection.CreateHubProxy ("chat");
 
                     SubscribeToEvents();
 
