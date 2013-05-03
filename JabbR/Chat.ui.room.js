@@ -270,7 +270,7 @@
         if (oldParentList.length > 0) {
             this.setListState(oldParentList);
         }
-        this.sortList(list);
+        this.sortList(list, $user);
     };
 
     Room.prototype.appearsInList = function ($user, list) {
@@ -299,42 +299,31 @@
         }
     };
 
-    Room.prototype.sortUsersByName = function (userListToSort) {
-        return userListToSort.sort(function (a, b) {
-            var compA = $(a).data('name').toString().toUpperCase();
-            var compB = $(b).data('name').toString().toUpperCase();
-            return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
-        });
+    Room.prototype.sortLists = function (user) {
+        var isOwner = $(user).data('owner');
+        if (isOwner) {
+            this.sortList(this.owners, user);
+        } else {
+            this.sortList(this.activeUsers, user);
+        }
     };
 
-    Room.prototype.sortLists = function () {
-        this.sortList(this.owners);
-        this.sortList(this.activeUsers);
-    };
+    Room.prototype.sortList = function (listToSort, user) {
+        var listItems = listToSort.children('li:not(.empty)').get(),
+            userName = $(user).data('name'),
+            userActive = $(user).data('active');
 
-    Room.prototype.sortList = function (listToSort) {
-        var listItems = listToSort.children('li:not(.empty)').get();
+        for (var i = 0; i < listItems.length; i++) {
+            var otherName = $(listItems[i]).data('name'),
+                otherActive = $(listItems[i]).data('active');
 
-        var activeUsers = [],
-            idleUsers = [],
-            sortedUsers = [];
-
-        $.each(listItems, function (index, item) {
-            if ($(item).data('active')) {
-                activeUsers.push(item);
-            } else {
-                idleUsers.push(item);
+            if ((userActive && !otherActive) ||
+                (userActive === otherActive &&
+                    userName.toUpperCase() < otherName.toUpperCase())) {
+                $(listItems[i]).before(user);
+                break;
             }
-        });
-
-        activeUsers = this.sortUsersByName(activeUsers);
-        idleUsers = this.sortUsersByName(idleUsers);
-
-        sortedUsers = activeUsers.concat(idleUsers);
-
-        $.each(sortedUsers, function (index, item) {
-            listToSort.append(item);
-        });
+        }
     };
 
     Room.prototype.canTrimHistory = function () {

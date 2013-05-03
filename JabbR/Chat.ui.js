@@ -631,7 +631,7 @@
             $user.each(function () {
                 var room = getRoomElements($(this).data('inroom'));
                 room.updateUserStatus($(this));
-                room.sortLists();
+                room.sortLists($(this));
             });
         }
     }
@@ -1584,7 +1584,7 @@
             });
             $user.data('name', user.Name);
             $user.attr('data-name', user.Name);
-            room.sortLists();
+            room.sortLists($user);
         },
         changeGravatar: function (user, roomName) {
             var room = getRoomElements(roomName),
