@@ -310,11 +310,11 @@
 
     Room.prototype.sortList = function (listToSort, user) {
         var listItems = listToSort.children('li:not(.empty)').get(),
-            userName = $(user).data('name'),
+            userName = $(user).data('name').toString(),
             userActive = $(user).data('active');
 
         for (var i = 0; i < listItems.length; i++) {
-            var otherName = $(listItems[i]).data('name'),
+            var otherName = $(listItems[i]).data('name').toString(),
                 otherActive = $(listItems[i]).data('active');
 
             if ((userActive && !otherActive) ||
