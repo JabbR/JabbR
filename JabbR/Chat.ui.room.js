@@ -317,12 +317,29 @@
             var otherName = $(listItems[i]).data('name').toString(),
                 otherActive = $(listItems[i]).data('active');
 
-            if ((userActive && !otherActive) ||
-                (userActive === otherActive &&
-                    userName.toUpperCase() < otherName.toUpperCase())) {
+            if (userActive === otherActive &&
+                userName.toUpperCase() < otherName.toUpperCase()) {
                 $(listItems[i]).before(user);
                 break;
+            } else if (userActive && !otherActive) {
+                $(listItems[i]).before(user);
+                break;
+            } else if (i === (listItems.length - 1)) {
+                $(listItems[i]).after(user);
+                break;
             }
+
+
+            //if (userActive && !otherActive) {
+            //    $(listItems[i]).before(user);
+            //    break;
+            //} else if (userActive === otherActive &&
+            //        userName.toUpperCase() < otherName.toUpperCase()) {
+            //    $(listItems[i]).before(user);
+            //    break;
+            //} else if ((!userActive && otherActive) && i === listItems.length - 1) {
+            //    $(listItems[i]).after(user);
+            //}
         }
     };
 
