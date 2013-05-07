@@ -481,17 +481,15 @@ form#send-message {
     }
 
     .users li.room.locked .lock {
-        position: absolute;
-        width: 16px;
+        position: relative;
+        width: 19px;
         height: 16px;
-        background: url(Content/images/lock.png) no-repeat bottom;
     }
 
     .users li.room.closed .readonly {
-        position: absolute;
+        position: relative;
         width: 19px;
         height: 16px;
-        background: url(Content/images/no-typing.png) no-repeat;
     }
 
     .users li.room.closed.locked .readonly {
@@ -621,7 +619,7 @@ li.user.typing .user-status {
         }
 
         #tabs li.locked .content {
-            margin: 6px 10px 6px 23px;
+            margin: 6px 10px 6px 27px;
         }
 
         #tabs li.closed .content {
@@ -634,48 +632,26 @@ li.user.typing .user-status {
 
         #tabs li .close {
             position: absolute;
-            top: 7px;
-            right: 5px;
+            top: 5px;
+            right: 0;
             width: 16px;
             height: 16px;
-            background: url(Content/images/close-icon.png);
         }
 
         #tabs li.locked .lock {
             position: absolute;
-            top: 7px;
-            width: 16px;
-            height: 16px;
+            top: 5px;
             margin-left: 5px;
-            background: url(Content/images/lockwhite.png) no-repeat;
-        }
-
-        #tabs li.locked.current .lock, #tabs li.locked:hover .lock {
-            background: url(Content/images/lock.png) no-repeat;
         }
 
         #tabs li.closed .readonly {
             position: absolute;
-            top: 7px;
-            width: 19px;
-            height: 16px;
+            top: 5px;
             margin-left: 5px;
-            background: url(Content/images/no-typing-white.png) no-repeat;
-        }
-
-        #tabs li.closed.current .readonly, #tabs li.closed:hover .readonly {
-            background: url(Content/images/no-typing.png) no-repeat;
         }
 
         #tabs li.closed.locked .readonly {
             margin-left: 22px;
-        }
-
-        #tabs li .close:hover {
-            background: url(Content/images/close-icon-hover.png);
-        }
-
-        #tabs li.unread {
         }
 
         #tabs li:hover {

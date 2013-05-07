@@ -155,11 +155,13 @@
     Room.prototype.close = function () {
         this.tab.attr('data-closed', true);
         this.tab.addClass('closed');
+        this.tab.find('.readonly').removeClass('hide');
     };
 
     Room.prototype.unClose = function () {
         this.tab.attr('data-closed', false);
         this.tab.removeClass('closed');
+        this.tab.find('.readonly').addClass('hide');
     };
 
     Room.prototype.clear = function () {
@@ -231,6 +233,7 @@
 
     Room.prototype.setLocked = function () {
         this.tab.addClass('locked');
+        this.tab.find('.lock').removeClass('hide');
     };
 
     Room.prototype.setListState = function (list) {
@@ -328,18 +331,6 @@
                 $(listItems[i]).after(user);
                 break;
             }
-
-
-            //if (userActive && !otherActive) {
-            //    $(listItems[i]).before(user);
-            //    break;
-            //} else if (userActive === otherActive &&
-            //        userName.toUpperCase() < otherName.toUpperCase()) {
-            //    $(listItems[i]).before(user);
-            //    break;
-            //} else if ((!userActive && otherActive) && i === listItems.length - 1) {
-            //    $(listItems[i]).after(user);
-            //}
         }
     };
 

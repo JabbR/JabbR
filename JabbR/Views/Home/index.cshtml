@@ -93,7 +93,7 @@
                 <div class="span3">
                     <span class="name">${Name}</span>
                     <span class="lock"><i class="icon-lock"></i></span>
-                    <span class="readonly"><i class="icon-remove-sign"></i></span>
+                    <span class="readonly"><i class="icon-ban-circle"></i></span>
                 </div>
                 <div class="span4">
                     <span class="topic">${Topic}</span>
@@ -134,12 +134,12 @@
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">
         <li id="tabs-${id}" class="room" data-name="${name}" data-closed="${closed}" data-trimmable="true" role="tab">
-            <span class="lock"></span>
-            <span class="readonly"></span>
+            <span class="lock hide"><i class="icon-lock icon-large"></i></span>
+            <span class="readonly hide"><i class="icon-ban-circle icon-large"></i></span>
             <button> 
                 <span class="content">${name}</span>
             </button>
-            <div class="close"></div>
+            <button class="close">&times;</button>
         </li>
     </script>
     <script id="command-help-template" type="text/x-jquery-tmpl">
