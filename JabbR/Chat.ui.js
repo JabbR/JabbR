@@ -98,7 +98,7 @@
     }
 
     function getRoomId(roomName) {
-        return window.escape(roomName.toString().toLowerCase()).replace(/[^a-z0-9]/, '_');
+        return window.escape(roomName.toString().toLowerCase()).replace(/[^A-Za-z0-9]/g, '_');
     }
 
     function getUserClassName(userName) {
