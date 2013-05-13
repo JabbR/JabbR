@@ -31,7 +31,7 @@
 
             chromeToast = window.webkitNotifications.createNotification(
                 'Content/images/logo32.png',
-                message.trimmedName,
+                message.trimmedName + ' (' + roomName + ')',
                 $('<div/>').html(message.message).text());
 
             chromeToast.ondisplay = function () {
