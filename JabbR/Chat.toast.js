@@ -24,6 +24,12 @@
                 return;
             }
 
+            var toastTitle = message.trimmedName;
+            // we can reliably show 22 chars
+            if (toastTitle.length <= 19) {
+                toastTitle += ' (' + utility.trim(roomName, 19 - message.trimmedName.length) + ')';
+            }
+
             toastRoom = roomName;
 
             // Hide any previously displayed toast
@@ -31,7 +37,7 @@
 
             chromeToast = window.webkitNotifications.createNotification(
                 'Content/images/logo32.png',
-                utility.trim(message.trimmedName + ' (' + roomName + ')', 21),
+                toastTitle,
                 $('<div/>').html(message.message).text());
 
             chromeToast.ondisplay = function () {
