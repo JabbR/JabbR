@@ -839,6 +839,13 @@
                 ui.setActiveRoom($(this).data('name'));
             });
 
+            $document.on('mousedown', '#tabs li', function (ev) {
+                // if middle mouse
+                if (ev.which === 2) {
+                    $ui.trigger(ui.events.closeRoom, [$(this).data('name')]);
+                }
+            });
+
             $document.on('click', 'li.room .room-row', function () {
                 var roomName = $(this).parent().data('name'),
                     room = getRoomElements(roomName);
