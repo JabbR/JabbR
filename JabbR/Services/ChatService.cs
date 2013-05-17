@@ -646,6 +646,14 @@ namespace JabbR.Services
             }
         }
 
+        public void EnsureAllowed(ChatUser user, ChatRoom room)
+        {
+            if (room.Private && !this.IsUserAllowed(room, user))
+            {
+                throw new InvalidOperationException("You do not have access to " + room.Name);
+            }
+        }
+
         public void AllowUser(ChatUser user, ChatUser targetUser, ChatRoom targetRoom)
         {
             EnsureOwnerOrAdmin(user, targetRoom);

@@ -3362,7 +3362,6 @@ namespace JabbR.Test
                     Name = "room",
                     Private = true,
                     AllowedUsers = new Collection<ChatUser>() { user },
-                    Users = new Collection<ChatUser>() { user }
                 };
                 repository.Add(room);
                 var room2 = new ChatRoom
@@ -3429,46 +3428,6 @@ namespace JabbR.Test
                     Name = "room",
                     Private = true,
                     AllowedUsers = new Collection<ChatUser>() { },
-                    Users = new Collection<ChatUser>() { }
-                };
-                repository.Add(room);
-                var room2 = new ChatRoom
-                {
-                    Name = "room2",
-                    Private = true,
-                    AllowedUsers = new Collection<ChatUser>() { user },
-                    Users = new Collection<ChatUser>() { user }
-                };
-                repository.Add(room2);
-                var service = new ChatService(cache, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room2",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/allowed room"));
-            }
-
-            [Fact]
-            public void CannotGetInfoForNonJoinedPrivateRoom()
-            {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var user = new ChatUser
-                {
-                    Name = "dfowler",
-                    Id = "1"
-                };
-                repository.Add(user);
-                var room = new ChatRoom
-                {
-                    Name = "room",
-                    Private = true,
-                    AllowedUsers = new Collection<ChatUser>() { user },
                     Users = new Collection<ChatUser>() { }
                 };
                 repository.Add(room);
