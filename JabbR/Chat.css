@@ -2937,3 +2937,12 @@ h3.userlist-header {
     max-width: 100%;
     max-height: 300px;
 }
+
+@media only screen and (-Webkit-min-device-pixel-ratio: 1.5),
+only screen and (-moz-min-device-pixel-ratio: 1.5),
+only screen and (-o-min-device-pixel-ratio: 3/2),
+only screen and (min-device-pixel-ratio: 1.5) {
+  .close {
+    line-height: 15px;
+  }
+}
