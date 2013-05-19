@@ -113,8 +113,11 @@ namespace JabbR.Client
                 .Then(connection =>
                 {
                     _connection = connection;
-                    
-                    _connection.TraceWriter = TraceWriter;
+
+                    if (TraceWriter != null)
+                    {
+                        _connection.TraceWriter = TraceWriter;
+                    }
                     _connection.TraceLevel = TraceLevel;
 
                     _chat = _connection.CreateHubProxy("chat");
