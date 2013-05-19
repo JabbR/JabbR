@@ -16,6 +16,8 @@ namespace JabbR.Client.Sample
             string roomName = "test";
             string userName = "testclient";
             string password = "password";
+
+            ServicePointManager.DefaultConnectionLimit = 10;
             
             var client = new JabbRClient(server);
 
