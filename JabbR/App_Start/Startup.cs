@@ -2,6 +2,7 @@
 using System.IdentityModel.Selectors;
 using System.IdentityModel.Services.Configuration;
 using System.IdentityModel.Tokens;
+using System.IO;
 using System.Net.Http.Formatting;
 using System.ServiceModel.Security;
 using System.Web.Http;
@@ -28,6 +29,9 @@ namespace JabbR
     {
         public void Configuration(IAppBuilder app)
         {
+            // So that squishit works
+            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.SetupInformation.ApplicationBase);
+
             var configuration = new JabbrConfiguration();
 
             if (configuration.MigrateDatabase)
