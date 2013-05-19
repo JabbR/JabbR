@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using JabbR.Models;
 using JabbR.Services;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Forms;
 using Newtonsoft.Json;
 using Owin.Types;
@@ -134,10 +135,10 @@ namespace JabbR.Infrastructure
         {
             if (context.Extra == null)
             {
-                context.Extra = new Dictionary<string, string>();
+                context.Extra = new AuthenticationExtra();
             }
 
-            context.Extra[".persistent"] = "";
+            context.Extra.IsPersistent = true;
         }
 
         private ChatUser GetLoggedInUser(IDictionary<string, object> env)

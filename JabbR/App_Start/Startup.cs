@@ -13,8 +13,8 @@ using JabbR.Services;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Infrastructure;
-using Microsoft.AspNet.SignalR.SystemWeb.Infrastructure;
 using Microsoft.AspNet.SignalR.Transports;
+using Microsoft.Owin.Security.DataHandler;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Security.Federation;
 using Microsoft.Owin.Security.Forms;
@@ -58,6 +58,10 @@ namespace JabbR
 
         private static void SetupAuth(IAppBuilder app, IKernel kernel)
         {
+            var ticketHandler = new TicketDataHandler(kernel.Get<IDataProtector>());
+
+            app.Use(typeof(FixCookieHandler), ticketHandler);
+
             app.UseFormsAuthentication(new FormsAuthenticationOptions
             {
                 LoginPath = "/account/login",
@@ -66,7 +70,7 @@ namespace JabbR
                 AuthenticationType = Constants.JabbRAuthType,
                 CookieName = "jabbr.id",
                 ExpireTimeSpan = TimeSpan.FromDays(30),
-                DataProtection = kernel.Get<IDataProtection>(),
+                TicketDataHandler = ticketHandler,
                 Provider = kernel.Get<IFormsAuthenticationProvider>()
             });
 
@@ -109,10 +113,6 @@ namespace JabbR
             var connectionManager = resolver.Resolve<IConnectionManager>();
             var heartbeat = resolver.Resolve<ITransportHeartbeat>();
             var hubPipeline = resolver.Resolve<IHubPipeline>();
-
-            // Ah well loading system web.
-            kernel.Bind<IProtectedData>()
-                  .To<MachineKeyProtectedData>();
 
             kernel.Bind<IConnectionManager>()
                   .ToConstant(connectionManager);

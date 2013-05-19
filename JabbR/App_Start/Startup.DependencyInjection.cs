@@ -34,7 +34,7 @@ namespace JabbR
             kernel.Bind<IChatService>()
                   .To<ChatService>();
 
-            kernel.Bind<IDataProtection>()
+            kernel.Bind<IDataProtector>()
                   .To<JabbRDataProtection>();
 
             kernel.Bind<IFormsAuthenticationProvider>()
