@@ -1055,6 +1055,7 @@
     <Compile Include="Models\Mapping\AttachmentMap.cs" />
     <Compile Include="Models\Mapping\NotificationMap.cs" />
     <Compile Include="Models\MessageType.cs" />
+    <Compile Include="Models\ModelExtensions.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Nancy\AdministrationModule.cs" />

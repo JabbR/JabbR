@@ -332,7 +332,7 @@ namespace JabbR.Services
                     // It is, add the user to the allowed users so that future joins will work
                     room.AllowedUsers.Add(user);
                 }
-                if (!IsUserAllowed(room, user))
+                if (!room.IsUserAllowed(user))
                 {
                     throw new InvalidOperationException(String.Format("Unable to join {0}. This room is locked and you don't have permission to enter. If you have an invite code, make sure to enter it in the /join command", room.Name));
                 }
@@ -596,11 +596,6 @@ namespace JabbR.Services
             return roomName.StartsWith("#") ? roomName.Substring(1) : roomName;
         }
 
-        private bool IsUserAllowed(ChatRoom room, ChatUser user)
-        {
-            return room.AllowedUsers.Contains(user) || user.IsAdmin;
-        }
-
         private static bool IsValidRoomName(string name)
         {
             return !String.IsNullOrEmpty(name) && Regex.IsMatch(name, "^[\\w-_]{1,30}$");
@@ -643,14 +638,6 @@ namespace JabbR.Services
             if (user != room.Creator && !user.IsAdmin)
             {
                 throw new InvalidOperationException("You are not the creator of room '" + room.Name + "'");
-            }
-        }
-
-        public void EnsureAllowed(ChatUser user, ChatRoom room)
-        {
-            if (room.Private && !this.IsUserAllowed(room, user))
-            {
-                throw new InvalidOperationException("You do not have access to " + room.Name);
             }
         }
 

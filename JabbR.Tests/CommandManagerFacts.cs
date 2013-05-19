@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using JabbR.Commands;
 using JabbR.Infrastructure;
@@ -10,8 +11,6 @@ using Xunit;
 
 namespace JabbR.Test
 {
-    using System.Collections.ObjectModel;
-
     public class CommandManagerFacts
     {
         public class ParseCommand
