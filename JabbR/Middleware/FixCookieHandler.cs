@@ -25,23 +25,33 @@ namespace JabbR.Middleware
         {
             var request = new OwinRequest(env);
 
+            // The forms auth module has a bug where it null refs on a null Extra
+            var headers = request.Get<IDictionary<string, string[]>>(Owin.Types.OwinConstants.RequestHeaders);
+
             var cookies = request.GetCookies();
             string cookieValue;
             if (cookies != null && cookies.TryGetValue("jabbr.id", out cookieValue))
             {
                 AuthenticationTicket ticket = _ticketHandler.Unprotect(cookieValue);
-                if (ticket.Extra == null)
+                if (ticket != null && ticket.Extra == null)
                 {
-                    // The forms auth module has a bug where it null refs on a null Extra
-                    var headers = request.Get<IDictionary<string, string[]>>(Owin.Types.OwinConstants.RequestHeaders);
+                    var extra = new AuthenticationExtra();
+                    extra.IsPersistent = true;
+                    extra.IssuedUtc = DateTime.UtcNow;
+                    extra.ExpiresUtc = DateTime.UtcNow.AddDays(30);
+
+                    var newTicket = new AuthenticationTicket(ticket.Identity, extra);
 
                     var cookieBuilder = new StringBuilder();
                     foreach (var cookie in cookies)
                     {
-                        // Skip the jabbr.id cookie
+                        string value = cookie.Value;
+
                         if (cookie.Key == "jabbr.id")
                         {
-                            continue;
+                            // Create a new ticket preserving the identity of the user
+                            // so they don't get logged out
+                            value = _ticketHandler.Protect(newTicket);
                         }
 
                         if (cookieBuilder.Length > 0)
@@ -51,13 +61,13 @@ namespace JabbR.Middleware
 
                         cookieBuilder.Append(cookie.Key)
                                      .Append("=")
-                                     .Append(Uri.EscapeDataString(cookie.Value));
+                                     .Append(Uri.EscapeDataString(value));
                     }
 
                     headers["Cookie"] = new[] { cookieBuilder.ToString() };
                 }
             }
-            
+
             return _next(env);
         }
     }
