@@ -16,21 +16,22 @@ namespace JabbR.Client
     public class JabbRClient : IJabbRClient
     {
         private readonly IAuthenticationProvider _authenticationProvider;
-        private readonly IClientTransport _transport;
+        private readonly Func<IClientTransport> _transportFactory;
 
         private IHubProxy _chat;
         private HubConnection _connection;
         private int _initialized;
 
         public JabbRClient(string url)
-            : this(url, authenticationProvider: null, transport: new AutoTransport(new DefaultHttpClient()))
+            : this(url, authenticationProvider: null, transportFactory: () => new AutoTransport(new DefaultHttpClient()))
         { }
 
-        public JabbRClient(string url, IAuthenticationProvider authenticationProvider, IClientTransport transport)
+        public JabbRClient(string url, IAuthenticationProvider authenticationProvider, Func<IClientTransport> transportFactory)
         {
             SourceUrl = url;
             _authenticationProvider = authenticationProvider ?? new DefaultAuthenticationProvider(url);
-            _transport = transport;
+            _transportFactory = transportFactory;
+            TraceLevel = TraceLevels.All;
         }
 
         public event Action<Message, string> MessageReceived;
@@ -118,13 +119,14 @@ namespace JabbR.Client
                     {
                         _connection.TraceWriter = TraceWriter;
                     }
+
                     _connection.TraceLevel = TraceLevel;
 
                     _chat = _connection.CreateHubProxy("chat");
 
                     SubscribeToEvents();
 
-                    return _connection.Start(_transport);
+                    return _connection.Start(_transportFactory());
                 })
                 .Then(tcs => LogOn(tcs), taskCompletionSource)
                 .Catch(ex => taskCompletionSource.TrySetException(ex));
@@ -408,7 +410,7 @@ namespace JabbR.Client
         {
             TaskAsyncHelper.Delay(TimeSpan.FromSeconds(5)).Then(() =>
             {
-                _connection.Start(_transport).Then(() =>
+                _connection.Start(_transportFactory()).Then(() =>
                 {
                     // Join JabbR
                     _chat.Invoke("Join", false);
