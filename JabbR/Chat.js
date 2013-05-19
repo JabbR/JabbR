@@ -732,6 +732,19 @@
             ui.addMessage(users.join(', '), 'list-item');
         }
     };
+    
+    chat.client.listAllowedUsers = function (room, isPrivate, users) {
+        if (!isPrivate) {
+            ui.addMessage('Anyone is allowed in ' + room + ' as it is not private', 'list-header');
+        }
+        else if (users.length === 0) {
+            ui.addMessage('No users are allowed in ' + room, 'list-header');
+        }
+        else {
+            ui.addMessage('The following users are allowed in ' + room, 'list-header');
+            ui.addMessage(users.join(', '), 'list-item');
+        }
+    };
 
     chat.client.showUsersRoomList = function (user, rooms) {
         var status = "Currently " + user.Status;

@@ -994,6 +994,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\Startup.DependencyInjection.cs" />
+    <Compile Include="Commands\AllowedCommand.cs" />
     <Compile Include="ContentProviders\Core\ContentProviderProcessor.cs" />
     <Compile Include="ContentProviders\GitHubIssueCommentsContentProvider.cs" />
     <Compile Include="Hubs\LoggingHubPipelineModule.cs" />
