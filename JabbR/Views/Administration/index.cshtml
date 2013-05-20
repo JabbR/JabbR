@@ -1,0 +1,138 @@
+﻿@using SquishIt.Framework;
+@using JabbR
+@using JabbR.Services
+@model ApplicationSettings
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>JabbR - administration</title>
+    @{ 
+        WriteLiteral(Bundle.Css()
+            .Add("~/Content/bootstrap.min.css")
+            .Add("~/Content/bootstrap-responsive.min.css")
+            .Add("~/Content/font-awesome.min.css")
+            .Add("~/Chat.css")
+            .Add("~/Content/emoji20.css")
+            .Render("~/Content/JabbR_#.css"));
+    }
+</head>
+<body class="administration">
+    <section id="page" role="application">
+        <header id="heading" role="heading">
+            <div class="banner" role="banner">
+                <h1>Jabb</h1>
+                <div class="jabbrLogo" id="logo"></div>
+            </div>
+        </header>
+        <div class="container">
+            <div class="row" style="padding-top: 75px;">
+                @Html.AlertMessages()
+                <div class="row">
+                    <div class="span12">
+                        <span class="administration-title pull-left">Administration</span>
+                    </div>
+                </div>
+                <hr />
+            </div>
+            <form class="form-horizontal" action="@Url.Content("~/administration")" method="POST">
+                @Html.ValidationSummary()
+                <fieldset id="generalSettings">
+                    <legend>General Settings</legend>
+                    <div class="control-group">
+                        <label class="control-label" for="allowUserRegistration">Allow User Registration</label>
+                        <div class="controls">
+                            @Html.CheckBox("allowUserRegistration", Model.AllowUserRegistration)
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="allowUserRegistration">Allow Room Creation</label>
+                        <div class="controls">
+                            @Html.CheckBox("allowRoomCreation", Model.AllowRoomCreation)
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset id="encryption">
+                    <legend>Encryption</legend>
+                    <div class="control-group">
+                        <label class="control-label" for="encryptionKey">Encryption Key</label>
+                        <div class="controls">
+                            <input type="hidden" id="encryptionKey" name="encryptionKey" value="@Model.EncryptionKey"/>
+                            <label class="control-label label-align-left">@Model.EncryptionKey</label>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="verificationKey">Verification Key</label>
+                        <div class="controls">
+                            <input type="hidden" id="verificationKey" name="verificationKey" value="@Model.VerificationKey"/>
+                            <label class="control-label label-align-left">@Model.VerificationKey</label>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset id="storage">
+                    <legend>Storage</legend>
+                    <div class="control-group">
+                        <label class="control-label" for="azureBlobStorageConnectionString">Azure Blob Storage Connectionstring</label>
+                        <div class="controls">
+                            <input type="text" name="azureBlobStorageConnectionString" class="input-xlarge" value="@Model.AzureblobStorageConnectionString" placeholder="Azure Blob Storage Connectionstring"/>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label class="control-label" for="maxFileUploadBytes">Max File Upload Size (Bytes)</label>
+                        <div class="controls">
+                            <input type="text" name="maxFileUploadBytes" class="input-xlarge" value="@Model.MaxFileUploadBytes" placeholder="Max File Upload Size (Bytes)"/>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset id="analytics">
+                    <legend>Analytics</legend>
+                    <div class="control-group">
+                        <label class="control-label" for="googleAnalytics">Google Analytics ID</label>
+                        <div class="controls">
+                            <input type="text" name="googleAnalytics" class="input-xlarge" value="@Model.GoogleAnalytics" placeholder="Google Analytics ID"/>
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset id="identityProviders">
+                    <legend>Identity Providers</legend>
+                    <div class="control-group">
+                    </div>
+                </fieldset>
+                <div class="control-group">
+                    <div class="controls">
+                        <input type="submit" class="btn pull-right" value="Save Settings" />
+                    </div>
+                </div>
+                @Html.AntiForgeryToken()
+            </form>
+        </div>
+    </section>
+    <script src="@Url.Content("~/Scripts/jquery-1.9.0.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
+    <script type="text/javascript">
+        (function ($) {
+            // set the selected tab based on the hash
+            var currentSection = document.location.hash || "#encryption";
+            $('a[href="' + currentSection + '"]').tab('show');
+
+            // always set the hash when we change tabs
+            $('a[data-toggle="tab"]').on('shown', function (e) {
+                document.location.hash = e.target.hash;
+            });
+
+            // make sure errors look pretty and bootstrap-y
+            $('input.error').closest('.control-group').addClass('error');
+
+            $('input[type="checkbox"]').click(function () {
+                var $this = $(this);
+                    name = $this.data('name'),
+                    checked = $this.is(':checked') === true,
+                    $hiddenField = $('input[type="hidden"][name="' + name + '"]');
+
+                $hiddenField.attr('value', checked);
+            });
+
+        }(jQuery));
+    </script>
+</body>
+</html>

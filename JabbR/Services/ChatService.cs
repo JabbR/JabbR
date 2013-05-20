@@ -12,6 +12,7 @@ namespace JabbR.Services
     {
         private readonly IJabbrRepository _repository;
         private readonly ICache _cache;
+        private readonly ApplicationSettings _settings;
 
         private const int NoteMaximumLength = 140;
         private const int TopicMaximumLength = 80;
@@ -275,13 +276,26 @@ namespace JabbR.Services
                                                   };
 
         public ChatService(ICache cache, IJabbrRepository repository)
+            : this(cache, repository, ApplicationSettings.GetDefaultSettings())
+        {
+        }
+
+        public ChatService(ICache cache,
+                           IJabbrRepository repository,
+                           ApplicationSettings settings)
         {
             _cache = cache;
             _repository = repository;
+            _settings = settings;
         }
 
         public ChatRoom AddRoom(ChatUser user, string name)
         {
+            if (!_settings.AllowRoomCreation && !user.IsAdmin)
+            {
+                throw new InvalidOperationException("Room creation is disabled.");
+            }
+
             if (name.Equals("Lobby", StringComparison.OrdinalIgnoreCase))
             {
                 throw new InvalidOperationException("Lobby is not a valid chat room.");
@@ -318,7 +332,7 @@ namespace JabbR.Services
                     // It is, add the user to the allowed users so that future joins will work
                     room.AllowedUsers.Add(user);
                 }
-                if (!IsUserAllowed(room, user))
+                if (!room.IsUserAllowed(user))
                 {
                     throw new InvalidOperationException(String.Format("Unable to join {0}. This room is locked and you don't have permission to enter. If you have an invite code, make sure to enter it in the /join command", room.Name));
                 }
@@ -352,6 +366,7 @@ namespace JabbR.Services
             ChatClient client = AddClient(user, clientId, userAgent);
             client.UserAgent = userAgent;
             client.LastActivity = DateTimeOffset.UtcNow;
+            client.LastClientActivity = DateTimeOffset.UtcNow;
 
             // Remove any Afk notes.
             if (user.IsAfk)
@@ -535,7 +550,8 @@ namespace JabbR.Services
                 Id = clientId,
                 User = user,
                 UserAgent = userAgent,
-                LastActivity = user.LastActivity
+                LastActivity = DateTimeOffset.UtcNow,
+                LastClientActivity = user.LastActivity
             };
 
             _repository.Add(client);
@@ -578,11 +594,6 @@ namespace JabbR.Services
         internal static string NormalizeRoomName(string roomName)
         {
             return roomName.StartsWith("#") ? roomName.Substring(1) : roomName;
-        }
-
-        private bool IsUserAllowed(ChatRoom room, ChatUser user)
-        {
-            return room.AllowedUsers.Contains(user) || user.IsAdmin;
         }
 
         private static bool IsValidRoomName(string name)

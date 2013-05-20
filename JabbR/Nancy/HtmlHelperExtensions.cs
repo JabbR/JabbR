@@ -7,11 +7,39 @@ using JabbR.Infrastructure;
 using Nancy.Validation;
 using Nancy.ViewEngines.Razor;
 using PagedList;
+using AntiXSS = Microsoft.Security.Application;
 
 namespace JabbR
 {
     public static class HtmlHelperExtensions
     {
+        public static IHtmlString CheckBox<T>(this HtmlHelpers<T> helper, string Name, bool value)
+        {
+            string input = String.Empty;
+            
+            var checkBoxBuilder = new StringBuilder();
+
+            checkBoxBuilder.Append(@"<input data-name=""");
+            checkBoxBuilder.Append(AntiXSS.Encoder.HtmlAttributeEncode(Name));
+            checkBoxBuilder.Append(@""" type=""checkbox""");
+            if (value)
+            {
+                checkBoxBuilder.Append(@" checked=""checked"" />");
+            }
+            else
+            {
+                checkBoxBuilder.Append(" />");
+            }
+
+            checkBoxBuilder.Append(@"<input name=""");
+            checkBoxBuilder.Append(AntiXSS.Encoder.HtmlAttributeEncode(Name));
+            checkBoxBuilder.Append(@""" type=""hidden"" value=""");
+            checkBoxBuilder.Append(value.ToString().ToLowerInvariant());
+            checkBoxBuilder.Append(@""" />");
+
+            return new NonEncodedHtmlString(checkBoxBuilder.ToString());
+        }
+
         public static IHtmlString ValidationSummary<TModel>(this HtmlHelpers<TModel> htmlHelper)
         {
             var validationResult = htmlHelper.RenderContext.Context.ModelValidationResult;

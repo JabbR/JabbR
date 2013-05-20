@@ -481,17 +481,15 @@ form#send-message {
     }
 
     .users li.room.locked .lock {
-        position: absolute;
-        width: 16px;
+        position: relative;
+        width: 19px;
         height: 16px;
-        background: url(Content/images/lock.png) no-repeat bottom;
     }
 
     .users li.room.closed .readonly {
-        position: absolute;
+        position: relative;
         width: 19px;
         height: 16px;
-        background: url(Content/images/no-typing.png) no-repeat;
     }
 
     .users li.room.closed.locked .readonly {
@@ -621,7 +619,7 @@ li.user.typing .user-status {
         }
 
         #tabs li.locked .content {
-            margin: 6px 10px 6px 23px;
+            margin: 6px 10px 6px 27px;
         }
 
         #tabs li.closed .content {
@@ -634,48 +632,26 @@ li.user.typing .user-status {
 
         #tabs li .close {
             position: absolute;
-            top: 7px;
-            right: 5px;
+            top: 5px;
+            right: 0;
             width: 16px;
             height: 16px;
-            background: url(Content/images/close-icon.png);
         }
 
         #tabs li.locked .lock {
             position: absolute;
-            top: 7px;
-            width: 16px;
-            height: 16px;
+            top: 5px;
             margin-left: 5px;
-            background: url(Content/images/lockwhite.png) no-repeat;
-        }
-
-        #tabs li.locked.current .lock, #tabs li.locked:hover .lock {
-            background: url(Content/images/lock.png) no-repeat;
         }
 
         #tabs li.closed .readonly {
             position: absolute;
-            top: 7px;
-            width: 19px;
-            height: 16px;
+            top: 5px;
             margin-left: 5px;
-            background: url(Content/images/no-typing-white.png) no-repeat;
-        }
-
-        #tabs li.closed.current .readonly, #tabs li.closed:hover .readonly {
-            background: url(Content/images/no-typing.png) no-repeat;
         }
 
         #tabs li.closed.locked .readonly {
             margin-left: 22px;
-        }
-
-        #tabs li .close:hover {
-            background: url(Content/images/close-icon-hover.png);
-        }
-
-        #tabs li.unread {
         }
 
         #tabs li:hover {
@@ -839,11 +815,13 @@ li.error {
     }
 
 .notifications,
-.user-profile {
+.user-profile,
+.administration {
     background: #fff;
 }
 
-.notifications-title {
+.notifications-title,
+.administration-title {
     font-size: 2em;
 }
 
@@ -891,9 +869,9 @@ li.error {
 
 #notification-unread-count.badge {
     display: none;
-    position: fixed;
-    right: 90px;
-    top: 12px;
+    position: absolute;
+    right: 1px;
+    top: 0px;
     font-size: 0.55em;
     padding: 0 0;
     padding-left: 4px;
@@ -2457,7 +2435,8 @@ li.clearfix {
 }
 
 .login-body .btn,
-.account-details .btn {
+.account-details .btn,
+.administration .btn {
     background-color: #00103F;
     background-image: none;
     text-shadow: none;
@@ -2465,7 +2444,8 @@ li.clearfix {
 }
 
     .login-body .btn:hover,
-    .account-details .btn:hover {
+    .account-details .btn:hover,
+    .administration .btn:hover {
         background-color: #164C85;
     }
 
@@ -2667,9 +2647,9 @@ h3.userlist-header {
 }
 
 .connection-status {
-    position: absolute;
+    float: left;
+    position: relative;
     top: 17px;
-    right: 170px;
 }
 
 .icon-connection-status {
@@ -2719,6 +2699,7 @@ h3.userlist-header {
 
 .popover-content {
     padding: 4px 14px;
+    color: #333;
 }
 
 #connection-info-popover p {
@@ -2955,4 +2936,13 @@ h3.userlist-header {
     margin: 0 auto;
     max-width: 100%;
     max-height: 300px;
+}
+
+@media only screen and (-Webkit-min-device-pixel-ratio: 1.5),
+only screen and (-moz-min-device-pixel-ratio: 1.5),
+only screen and (-o-min-device-pixel-ratio: 3/2),
+only screen and (min-device-pixel-ratio: 1.5) {
+  .close {
+    line-height: 15px;
+  }
 }

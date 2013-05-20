@@ -3,9 +3,9 @@ using JabbR.Infrastructure;
 
 namespace JabbR.Services
 {
-    public class AppSettingKeyProvider : IKeyProvider
+    public class SettingsKeyProvider : IKeyProvider
     {
-        public AppSettingKeyProvider(IApplicationSettings settings)
+        public SettingsKeyProvider(ApplicationSettings settings)
         {
             if (String.IsNullOrEmpty(settings.EncryptionKey))
             {

@@ -53,5 +53,10 @@ namespace JabbR.Nancy
 
             return response;
         }
+
+        public dynamic OnRedirectToAuthenticationProviderError(NancyModule nancyModule, string errorMessage)
+        {
+            return null;
+        }
     }
 }

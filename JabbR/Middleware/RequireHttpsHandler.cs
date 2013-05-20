@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Owin;
+using Owin.Types;
 
 namespace JabbR.Middleware
-{ 
+{
     using AppFunc = Func<IDictionary<string, object>, Task>;
 
     public class RequireHttpsHandler
@@ -18,15 +19,15 @@ namespace JabbR.Middleware
 
         public Task Invoke(IDictionary<string, object> env)
         {
-            var request = new ServerRequest(env);
-            var response = new Gate.Response(env);
+            var request = new OwinRequest(env);
+            var response = new OwinResponse(env);
 
-            if (!request.Url.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
+            if (!request.Uri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
             {
-                var builder = new UriBuilder(request.Url);
+                var builder = new UriBuilder(request.Uri);
                 builder.Scheme = "https";
 
-                if (request.Url.IsDefaultPort)
+                if (request.Uri.IsDefaultPort)
                 {
                     builder.Port = -1;
                 }

@@ -5,30 +5,35 @@ using System.Threading.Tasks;
 using JabbR.Services;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
+using Ninject;
 
 namespace JabbR.UploadHandlers
 {
     public class AzureBlobStorageHandler : IUploadHandler
     {
-        private readonly IApplicationSettings _settings;
+        private readonly IKernel _kernel;
 
         private const string JabbRUploadContainer = "jabbr-uploads";
 
         [ImportingConstructor]
-        public AzureBlobStorageHandler(IApplicationSettings settings)
+        public AzureBlobStorageHandler(IKernel kernel)
         {
-            _settings = settings;
+            _kernel = kernel;
         }
 
         public bool IsValid(string fileName, string contentType)
         {
+            var settings = _kernel.Get<ApplicationSettings>();
+
             // Blob storage can handle any content
-            return !String.IsNullOrEmpty(_settings.AzureblobStorageConnectionString);
+            return !String.IsNullOrEmpty(settings.AzureblobStorageConnectionString);
         }
 
         public async Task<UploadResult> UploadFile(string fileName, string contentType, Stream stream)
         {
-            var account = CloudStorageAccount.Parse(_settings.AzureblobStorageConnectionString);
+            var settings = _kernel.Get<ApplicationSettings>();
+
+            var account = CloudStorageAccount.Parse(settings.AzureblobStorageConnectionString);
             var client = account.CreateCloudBlobClient();
             var container = client.GetContainerReference(JabbRUploadContainer);
 

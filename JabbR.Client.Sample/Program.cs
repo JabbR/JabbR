@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Threading;
 using JabbR.Client.Models;
 using JabbR.Models;
@@ -15,9 +17,8 @@ namespace JabbR.Client.Sample
             string userName = "testclient";
             string password = "password";
 
-            // this might be needed in some cases
             ServicePointManager.DefaultConnectionLimit = 10;
-
+            
             var client = new JabbRClient(server);
 
             // Subscribe to new messages
@@ -43,11 +44,14 @@ namespace JabbR.Client.Sample
 
             var wh = new ManualResetEventSlim();
 
+            EnsureAccount(server, userName, password);
+
             // Connect to chat
             client.Connect(userName, password).ContinueWith(task =>
             {
                 if (task.IsFaulted)
                 {
+                    Console.WriteLine("Error: " + task.Exception.GetBaseException());
                     wh.Set();
                 }
 
@@ -136,6 +140,28 @@ namespace JabbR.Client.Sample
             });
 
             wh.Wait();
+        }
+
+        private static void EnsureAccount(string server, string userName, string password)
+        {
+            var client = new HttpClient
+            {
+                 BaseAddress = new Uri(server)
+            };
+
+            var content = new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                { "username", userName },
+                { "email", "foo@bar.com" },
+                { "password", password },
+                { "confirmPassword", password }
+            });
+
+            HttpResponseMessage response = client.PostAsync("/account/create", content).Result;
+            if (!response.IsSuccessStatusCode)
+            {
+                Console.WriteLine("Failed to create account");
+            }
         }
     }
 }

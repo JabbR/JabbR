@@ -93,7 +93,7 @@
                 <div class="span3">
                     <span class="name">${Name}</span>
                     <span class="lock"><i class="icon-lock"></i></span>
-                    <span class="readonly"><i class="icon-remove-sign"></i></span>
+                    <span class="readonly"><i class="icon-ban-circle"></i></span>
                 </div>
                 <div class="span4">
                     <span class="topic">${Topic}</span>
@@ -134,12 +134,12 @@
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">
         <li id="tabs-${id}" class="room" data-name="${name}" data-closed="${closed}" data-trimmable="true" role="tab">
-            <span class="lock"></span>
-            <span class="readonly"></span>
+            <span class="lock hide"><i class="icon-lock icon-large"></i></span>
+            <span class="readonly hide"><i class="icon-ban-circle icon-large"></i></span>
             <button> 
                 <span class="content">${name}</span>
             </button>
-            <div class="close"></div>
+            <button class="close">&times;</button>
         </li>
     </script>
     <script id="command-help-template" type="text/x-jquery-tmpl">
@@ -256,11 +256,23 @@
                 <h1>Jabb</h1>
                 <div class="jabbrLogo" id="logo"></div>
             </div>
-            <div id="preferences" class="btn-group account pull-right">
-                <a class="btn help" aria-haspopup="true" title="display help"><i class="icon-question-sign"></i></a>
-                <a id="notifications" class="btn" title="notifications" href="@Url.Content("~/notifications")" target="_blank"><i class="icon-comments"></i><span id="notification-unread-count" class="badge badge-info"></span></a>
-                <a class="btn" title="account settings" href="@Url.Content("~/account")" target="_blank"><i class="icon-user"></i></a>
-                <a class="btn logout" title="sign out"><i class="icon-signout"></i></a>
+            <div class="pull-right">
+                <div id="connectionStatus" class="connection-status" data-toggle="popover" data-placement="left">
+                    <i class="icon-connection-status"></i>
+                </div>
+                <div id="connection-info-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><i class="popover-title-icon icon-globe" style="display: none;"></i><h3 class="popover-title" style="display: none;"></h3><div class="popover-content"><p></p></div></div></div>
+                <div id="connection-info-content" style="display: none;"><p id="connection-status"></p><p id="connection-transport"></p></div>
+                <div id="connection-state-changed-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title" style="display: none;"></h3><i id="popover-content-icon"></i><div class="popover-content"><p></p></div></div></div>
+                <div id="preferences" class="btn-group account pull-right">
+                    <a class="btn help" aria-haspopup="true" title="display help"><i class="icon-question-sign"></i></a>
+                    <a id="notifications" class="btn" title="notifications" href="@Url.Content("~/notifications")" target="_blank"><i class="icon-comments"></i><span id="notification-unread-count" class="badge badge-info"></span></a>
+                    <a class="btn" title="account settings" href="@Url.Content("~/account")" target="_blank"><i class="icon-user"></i></a>
+                    @if (Model.IsAdmin)
+                    {
+                        <a class="btn" title="jabbr settings" href="@Url.Content("~/administration")" target="_blank"><i class="icon-cog"></i></a>
+                    }
+                    <a class="btn logout" title="sign out"><i class="icon-signout"></i></a>
+                </div>
             </div>
             <nav>
                 <ul id="tabs" role="tablist">
@@ -412,12 +424,6 @@
             <div id="loadingRoomHistory" class="loading-room-history alert alert-info">
                 <i class="icon-spinner icon-spin"></i> Loading previous messages...
             </div>
-            <div id="connectionStatus" class="connection-status" data-toggle="popover" data-placement="left">
-                <i class="icon-connection-status"></i>
-            </div>
-            <div id="connection-info-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><i class="popover-title-icon icon-globe" style="display: none;"></i><h3 class="popover-title" style="display: none;"></h3><div class="popover-content"><p></p></div></div></div>
-            <div id="connection-info-content" style="display: none;"><p id="connection-status"></p><p id="connection-transport"></p></div>
-            <div id="connection-state-changed-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title" style="display: none;"></h3><i id="popover-content-icon"></i><div class="popover-content"><p></p></div></div></div>
             <div id="jabbr-clipboard-upload" class="modal hide fade">
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal">&times;</a>
@@ -443,7 +449,7 @@
             .Add("~/Scripts/bootstrap.js")
             .Add("~/Scripts/jquery.KeyTips.js")
             .Add("~/Scripts/jquery-ui-1.10.0.min.js")
-            .Add("~/Scripts/jquery.signalR-1.1.0-beta1-130401.min.js")
+            .Add("~/Scripts/jquery.signalR-2.0.0-beta2-130518-b350.min.js")
             .Render("~/Scripts/JabbR1_#.js"));
     }
     <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
@@ -465,9 +471,9 @@
             .Add("~/Scripts/moment.min.js")
             .Add("~/Scripts/livestamp.min.js")
             .Add("~/Chat.emoji.js")
-            .Add("~/Chat.toast.js")
             .Add("~/Chat.ui.filePaste.js")
             .Add("~/Chat.utility.js")
+            .Add("~/Chat.toast.js")
             .Add("~/Chat.ui.room.js")
             .Add("~/Chat.ui.js")
             .Add("~/Chat.documentOnWrite.js")

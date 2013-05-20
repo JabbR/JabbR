@@ -17,7 +17,9 @@ namespace JabbR.Models.Mapping
             this.Property(c => c.Id).HasColumnName("Id");
             this.Property(c => c.UserKey).HasColumnName("User_Key");
             this.Property(c => c.UserAgent).HasColumnName("UserAgent");
+            this.Property(c => c.Name).HasColumnName("Name");
             this.Property(c => c.LastActivity).HasColumnName("LastActivity");
+            this.Property(c => c.LastClientActivity).HasColumnName("LastClientActivity");
 
             // Relationships
             this.HasRequired(c => c.User)

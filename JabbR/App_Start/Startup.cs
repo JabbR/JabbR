@@ -2,16 +2,20 @@
 using System.IdentityModel.Selectors;
 using System.IdentityModel.Services.Configuration;
 using System.IdentityModel.Tokens;
+using System.IO;
 using System.Net.Http.Formatting;
 using System.ServiceModel.Security;
 using System.Web.Http;
+using JabbR.Hubs;
 using JabbR.Infrastructure;
 using JabbR.Middleware;
 using JabbR.Nancy;
 using JabbR.Services;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Infrastructure;
-using Microsoft.AspNet.SignalR.SystemWeb.Infrastructure;
+using Microsoft.AspNet.SignalR.Transports;
+using Microsoft.Owin.Security.DataHandler;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Security.Federation;
 using Microsoft.Owin.Security.Forms;
@@ -25,36 +29,43 @@ namespace JabbR
     {
         public void Configuration(IAppBuilder app)
         {
-            var settings = new ApplicationSettings();
+            // So that squishit works
+            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.SetupInformation.ApplicationBase);
 
-            if (settings.MigrateDatabase)
+            var configuration = new JabbrConfiguration();
+
+            if (configuration.MigrateDatabase)
             {
                 // Perform the required migrations
                 DoMigrations();
             }
 
-            var kernel = SetupNinject(settings);
+            var kernel = SetupNinject(configuration);
 
             app.Use(typeof(DetectSchemeHandler));
 
-            if (settings.RequireHttps)
+            if (configuration.RequireHttps)
             {
                 app.Use(typeof(RequireHttpsHandler));
             }
 
-            app.UseShowExceptions();
+            app.UseErrorPage();
 
             SetupAuth(app, kernel);
             SetupSignalR(kernel, app);
             SetupWebApi(kernel, app);
-            SetupMiddleware(kernel, app, settings);
+            SetupMiddleware(kernel, app);
             SetupNancy(kernel, app);
 
             SetupErrorHandling();
         }
 
-        private static void SetupAuth(IAppBuilder app, KernelBase kernel)
+        private static void SetupAuth(IAppBuilder app, IKernel kernel)
         {
+            var ticketHandler = new TicketDataHandler(kernel.Get<IDataProtector>());
+
+            app.Use(typeof(FixCookieHandler), ticketHandler);
+
             app.UseFormsAuthentication(new FormsAuthenticationOptions
             {
                 LoginPath = "/account/login",
@@ -63,7 +74,7 @@ namespace JabbR
                 AuthenticationType = Constants.JabbRAuthType,
                 CookieName = "jabbr.id",
                 ExpireTimeSpan = TimeSpan.FromDays(30),
-                DataProtection = kernel.Get<IDataProtection>(),
+                TicketDataHandler = ticketHandler,
                 Provider = kernel.Get<IFormsAuthenticationProvider>()
             });
 
@@ -95,25 +106,17 @@ namespace JabbR
             app.UseNancy(bootstrapper);
         }
 
-        private static void SetupMiddleware(IKernel kernel, IAppBuilder app, IApplicationSettings settings)
+        private static void SetupMiddleware(IKernel kernel, IAppBuilder app)
         {
-            if (settings.ProxyImages)
-            {
-                app.MapPath("/proxy", subApp => subApp.Use(typeof(ImageProxyHandler), settings));
-            }
-
             app.UseStaticFiles();
-            app.Use(typeof(LoggingHandler), kernel);
         }
 
         private static void SetupSignalR(IKernel kernel, IAppBuilder app)
         {
             var resolver = new NinjectSignalRDependencyResolver(kernel);
             var connectionManager = resolver.Resolve<IConnectionManager>();
-
-            // Ah well loading system web.
-            kernel.Bind<IProtectedData>()
-                  .To<MachineKeyProtectedData>();
+            var heartbeat = resolver.Resolve<ITransportHeartbeat>();
+            var hubPipeline = resolver.Resolve<IHubPipeline>();
 
             kernel.Bind<IConnectionManager>()
                   .ToConstant(connectionManager);
@@ -124,9 +127,12 @@ namespace JabbR
                 EnableDetailedErrors = true
             };
 
+            hubPipeline.AddModule(kernel.Get<LoggingHubPipelineModule>());
+
             app.MapHubs(config);
 
-            StartBackgroundWork(kernel, resolver);
+            var monitor = new PresenceMonitor(kernel, connectionManager, heartbeat);
+            monitor.Start();
         }
 
         private static void SetupWebApi(IKernel kernel, IAppBuilder app)

@@ -34,6 +34,11 @@ namespace JabbR.Services
             get { return _db.Users; }
         }
 
+        public IQueryable<ChatClient> Clients
+        {
+            get { return _db.Clients; }
+        }
+
         public void Add(ChatRoom room)
         {
             _db.Rooms.Add(room);
@@ -265,14 +270,6 @@ namespace JabbR.Services
             }
 
             return getClientById(_db, clientId);
-        }
-
-        public void RemoveAllClients()
-        {
-            foreach (var c in _db.Clients)
-            {
-                _db.Clients.Remove(c);
-            }
         }
 
         public bool IsUserInRoom(ChatUser user, ChatRoom room)

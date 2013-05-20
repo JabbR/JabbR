@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using JabbR.Infrastructure;
@@ -12,11 +13,12 @@ namespace JabbR.Nancy
 {
     public class AccountModule : JabbRModule
     {
-        public AccountModule(IApplicationSettings applicationSettings,
+        public AccountModule(ApplicationSettings applicationSettings,
                              IMembershipService membershipService,
                              IJabbrRepository repository,
                              IAuthenticationService authService,
-                             IChatNotificationService notificationService)
+                             IChatNotificationService notificationService,
+                             IUserAuthenticator authenticator)
             : base("/account")
         {
             Get["/"] = _ =>
@@ -65,19 +67,21 @@ namespace JabbR.Nancy
                 {
                     if (ModelValidationResult.IsValid)
                     {
-                        ChatUser user = membershipService.AuthenticateUser(username, password);
-                        return this.SignIn(user);
-                    }
-                    else
-                    {
-                        return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
+                        IList<Claim> claims;
+                        if (authenticator.TryAuthenticateUser(username, password, out claims))
+                        {
+                            return this.SignIn(claims);
+                        }
                     }
                 }
                 catch
                 {
-                    this.AddValidationError("_FORM", "Login failed. Check your username/password.");
-                    return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
+                    // Swallow the exception    
                 }
+
+                this.AddValidationError("_FORM", "Login failed. Check your username/password.");
+
+                return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
             };
 
             Post["/logout"] = _ =>
@@ -101,26 +105,40 @@ namespace JabbR.Nancy
                     return Response.AsRedirect("~/");
                 }
 
-                ViewBag.requirePassword = !Principal.Identity.IsAuthenticated;
+                bool requirePassword = !Principal.Identity.IsAuthenticated;
+
+                if (requirePassword && 
+                    !applicationSettings.AllowUserRegistration)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
+                ViewBag.requirePassword = requirePassword;
 
                 return View["register"];
             };
 
             Post["/create"] = _ =>
             {
+                bool requirePassword = !Principal.Identity.IsAuthenticated;
+
+                if (requirePassword &&
+                    !applicationSettings.AllowUserRegistration)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
                 if (IsAuthenticated)
                 {
                     return Response.AsRedirect("~/");
                 }
 
-                ViewBag.requirePassword = !Principal.Identity.IsAuthenticated;
+                ViewBag.requirePassword = requirePassword;
 
                 string username = Request.Form.username;
                 string email = Request.Form.email;
                 string password = Request.Form.password;
                 string confirmPassword = Request.Form.confirmPassword;
-
-                bool requirePassword = !Principal.Identity.IsAuthenticated;
 
                 if (String.IsNullOrEmpty(username))
                 {
@@ -151,8 +169,16 @@ namespace JabbR.Nancy
                         {
                             // Add the required claims to this identity
                             var identity = Principal.Identity as ClaimsIdentity;
-                            identity.AddClaim(new Claim(ClaimTypes.Name, username));
-                            identity.AddClaim(new Claim(ClaimTypes.Email, email));
+
+                            if (!Principal.HasClaim(ClaimTypes.Name))
+                            {
+                                identity.AddClaim(new Claim(ClaimTypes.Name, username));
+                            }
+
+                            if (!Principal.HasClaim(ClaimTypes.Email))
+                            {
+                                identity.AddClaim(new Claim(ClaimTypes.Email, email));
+                            }
 
                             return this.SignIn(Principal.Claims);
                         }
@@ -233,6 +259,11 @@ namespace JabbR.Nancy
 
             Post["/changepassword"] = _ =>
             {
+                if (!applicationSettings.AllowUserRegistration)
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
                 if (!IsAuthenticated)
                 {
                     return HttpStatusCode.Forbidden;
@@ -344,7 +375,7 @@ namespace JabbR.Nancy
             return View["index", new ProfilePageViewModel(user, authService.GetProviders())];
         }
 
-        private LoginViewModel GetLoginViewModel(IApplicationSettings applicationSettings,
+        private LoginViewModel GetLoginViewModel(ApplicationSettings applicationSettings,
                                                  IJabbrRepository repository,
                                                  IAuthenticationService authService)
         {
@@ -355,7 +386,7 @@ namespace JabbR.Nancy
                 user = repository.GetUserById(Principal.GetUserId());
             }
 
-            var viewModel = new LoginViewModel(authService.GetProviders(), user != null ? user.Identities : null);
+            var viewModel = new LoginViewModel(applicationSettings, authService.GetProviders(), user != null ? user.Identities : null);
             return viewModel;
         }
     }

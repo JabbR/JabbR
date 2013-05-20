@@ -98,7 +98,7 @@
     }
 
     function getRoomId(roomName) {
-        return window.escape(roomName.toString().toLowerCase()).replace(/[^a-z0-9]/, '_');
+        return window.escape(roomName.toString().toLowerCase()).replace(/[^A-Za-z0-9]/g, '_');
     }
 
     function getUserClassName(userName) {
@@ -273,7 +273,14 @@
             var $this = $(this),
                 liRoomCount = $this.data('count'),
                 liRoomClosed = $this.hasClass('closed'),
-                nameComparison = $this.data('name').toString().toUpperCase().localeCompare(roomName);
+                name = $this.data('name'),
+                nameComparison;
+
+            if (name === undefined) {
+                return true;
+            }
+
+            nameComparison = name.toString().toUpperCase().localeCompare(roomName);
 
             // skip this element
             if (nameComparison === 0) {
@@ -624,7 +631,7 @@
             $user.each(function () {
                 var room = getRoomElements($(this).data('inroom'));
                 room.updateUserStatus($(this));
-                room.sortLists();
+                room.sortLists($(this));
             });
         }
     }
@@ -805,7 +812,7 @@
             $roomLoadingIndicator = $('#room-loading');
 
             $unreadNotificationCount = $('#notification-unread-count');
-
+            
             if (toast.canToast()) {
                 $toast.show();
             }
@@ -830,6 +837,13 @@
 
             $document.on('click', '#tabs li', function () {
                 ui.setActiveRoom($(this).data('name'));
+            });
+
+            $document.on('mousedown', '#tabs li', function (ev) {
+                // if middle mouse
+                if (ev.which === 2) {
+                    $ui.trigger(ui.events.closeRoom, [$(this).data('name')]);
+                }
             });
 
             $document.on('click', 'li.room .room-row', function () {
@@ -1577,7 +1591,7 @@
             });
             $user.data('name', user.Name);
             $user.attr('data-name', user.Name);
-            room.sortLists();
+            room.sortLists($user);
         },
         changeGravatar: function (user, roomName) {
             var room = getRoomElements(roomName),

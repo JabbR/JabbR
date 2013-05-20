@@ -7,7 +7,7 @@ using Microsoft.Owin.Security.DataProtection;
 
 namespace JabbR.Infrastructure
 {
-    public class JabbRDataProtection : IDataProtection
+    public class JabbRDataProtection : IDataProtector
     {
         private readonly ICryptoService _cryptoService;
         public JabbRDataProtection(ICryptoService cryptoService)

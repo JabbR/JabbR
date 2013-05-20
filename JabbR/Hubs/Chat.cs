@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +10,6 @@ using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
 using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Hubs;
 using Newtonsoft.Json;
 
 namespace JabbR
@@ -25,16 +23,19 @@ namespace JabbR
         private readonly IChatService _service;
         private readonly ICache _cache;
         private readonly ContentProviderProcessor _resourceProcessor;
+        private readonly ILogger _logger;
 
         public Chat(ContentProviderProcessor resourceProcessor,
                     IChatService service,
                     IJabbrRepository repository,
-                    ICache cache)
+                    ICache cache,
+                    ILogger logger)
         {
             _resourceProcessor = resourceProcessor;
             _service = service;
             _repository = repository;
             _cache = cache;
+            _logger = logger;
         }
 
         private string UserAgent
@@ -66,6 +67,8 @@ namespace JabbR
 
         public override Task OnConnected()
         {
+            _logger.Log("OnConnected({0})", Context.ConnectionId);
+
             CheckStatus();
 
             return base.OnConnected();
@@ -84,8 +87,24 @@ namespace JabbR
             // Try to get the user from the client state
             ChatUser user = _repository.GetUserById(userId);
 
-            if (!reconnecting)
+            if (reconnecting)
             {
+                _logger.Log("{0}:{1} connected after dropping connection.", user.Name, Context.ConnectionId);
+
+                // If the user was marked as offline then mark them inactive
+                if (user.Status == (int)UserStatus.Offline)
+                {
+                    user.Status = (int)UserStatus.Inactive;
+                    _repository.CommitChanges();
+                }
+
+                // Ensure the client is re-added
+                _service.AddClient(user, Context.ConnectionId, UserAgent);
+            }
+            else
+            {
+                _logger.Log("{0}:{1} connected.", user.Name, Context.ConnectionId);
+
                 // Update some user values
                 _service.UpdateActivity(user, Context.ConnectionId, UserAgent);
                 _repository.CommitChanges();
@@ -259,11 +278,17 @@ namespace JabbR
 
         public override Task OnReconnected()
         {
-            CheckStatus();
+            _logger.Log("OnReconnected({0})", Context.ConnectionId);
 
             var userId = Context.User.GetUserId();
 
             ChatUser user = _repository.VerifyUserId(userId);
+
+            if (user == null)
+            {
+                _logger.Log("Reconnect failed user {0}:{1} doesn't exist.", userId, Context.ConnectionId);
+                return TaskAsyncHelper.Empty;
+            }
 
             // Make sure this client is being tracked
             _service.AddClient(user, Context.ConnectionId, UserAgent);
@@ -272,6 +297,8 @@ namespace JabbR
 
             if (currentStatus == UserStatus.Offline)
             {
+                _logger.Log("{0}:{1} reconnected after temporary network problem and marked offline.", user.Name, Context.ConnectionId);
+
                 // Mark the user as inactive
                 user.Status = (int)UserStatus.Inactive;
                 _repository.CommitChanges();
@@ -286,18 +313,23 @@ namespace JabbR
 
                     // Tell the people in this room that you've joined
                     Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner);
-
-                    // Add the caller to the group so they receive messages
-                    Groups.Add(Context.ConnectionId, room.Name);
                 }
             }
+            else
+            {
+                _logger.Log("{0}:{1} reconnected after temporary network problem.", user.Name, Context.ConnectionId);
+            }
+
+            CheckStatus();
 
             return base.OnReconnected();
         }
 
         public override Task OnDisconnected()
         {
-            DisconnectClient(Context.ConnectionId);
+            _logger.Log("OnDisconnected({0})", Context.ConnectionId);
+
+            DisconnectClient(Context.ConnectionId, useThreshold: true);
 
             return base.OnDisconnected();
         }
@@ -454,8 +486,6 @@ namespace JabbR
 
         public void UpdateActivity()
         {
-            CheckStatus();
-
             string userId = Context.User.GetUserId();
 
             ChatUser user = _repository.GetUserById(userId);
@@ -464,6 +494,8 @@ namespace JabbR
             {
                 UpdateActivity(user, room);
             }
+
+            CheckStatus();
         }
 
         private void LogOn(ChatUser user, string clientId, bool reconnecting)
@@ -547,18 +579,20 @@ namespace JabbR
             return commandManager.TryHandleCommand(command);
         }
 
-        private void DisconnectClient(string clientId)
+        private void DisconnectClient(string clientId, bool useThreshold = false)
         {
             string userId = _service.DisconnectClient(clientId);
 
             if (String.IsNullOrEmpty(userId))
             {
+                _logger.Log("Failed to disconnect {0}. No user found", clientId);
                 return;
             }
 
-            // To avoid the leave/join that happens when a user refreshes the page
-            // we sleep for a second before we check the status.
-            Thread.Sleep(_disconnectThreshold);
+            if (useThreshold)
+            {
+                Thread.Sleep(_disconnectThreshold);
+            }
 
             // Query for the user to get the updated status
             ChatUser user = _repository.GetUserById(userId);
@@ -566,14 +600,19 @@ namespace JabbR
             // There's no associated user for this client id
             if (user == null)
             {
+                _logger.Log("Failed to disconnect {0}:{1}. No user found", userId, clientId);
                 return;
             }
 
             _repository.Reload(user);
 
+            _logger.Log("{0}:{1} disconnected", user.Name, Context.ConnectionId);
+
             // The user will be marked as offline if all clients leave
             if (user.Status == (int)UserStatus.Offline)
             {
+                _logger.Log("Marking {0} offline", user.Name);
+
                 foreach (var room in user.Rooms)
                 {
                     var userViewModel = new UserViewModel(user);
@@ -813,6 +852,11 @@ namespace JabbR
         void INotificationService.ListUsers(ChatRoom room, IEnumerable<string> names)
         {
             Clients.Caller.showUsersInRoom(room.Name, names);
+        }
+
+        void INotificationService.ListAllowedUsers(ChatRoom room)
+        {
+            Clients.Caller.listAllowedUsers(room.Name, room.Private, room.AllowedUsers.Select(s => s.Name));
         }
 
         void INotificationService.LockRoom(ChatUser targetUser, ChatRoom room)

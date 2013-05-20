@@ -5,6 +5,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Threading.Tasks;
 using JabbR.Services;
+using Ninject;
 
 namespace JabbR.ContentProviders.Core
 {
@@ -12,9 +13,9 @@ namespace JabbR.ContentProviders.Core
     {
         private readonly IList<IContentProvider> _contentProviders;
 
-        public ResourceProcessor(IApplicationSettings settings)
+        public ResourceProcessor(IKernel kernel)
         {
-            _contentProviders = GetContentProviders(settings);
+            _contentProviders = GetContentProviders(kernel);
         }
 
         public Task<ContentProviderResult> ExtractResource(string url)
@@ -66,11 +67,11 @@ namespace JabbR.ContentProviders.Core
         }
 
 
-        private static IList<IContentProvider> GetContentProviders(IApplicationSettings settings)
+        private static IList<IContentProvider> GetContentProviders(IKernel kernel)
         {
             // Use MEF to locate the content providers in this assembly
             var compositionContainer = new CompositionContainer(new AssemblyCatalog(typeof(ResourceProcessor).Assembly));
-            compositionContainer.ComposeExportedValue(settings);
+            compositionContainer.ComposeExportedValue(kernel);
             return compositionContainer.GetExportedValues<IContentProvider>().ToList();
         }
     }
