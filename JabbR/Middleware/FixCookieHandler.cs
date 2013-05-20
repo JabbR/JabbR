@@ -24,6 +24,7 @@ namespace JabbR.Middleware
         public Task Invoke(IDictionary<string, object> env)
         {
             var request = new OwinRequest(env);
+            var response = new OwinResponse(env);
 
             // The forms auth module has a bug where it null refs on a null Extra
             var headers = request.Get<IDictionary<string, string[]>>(Owin.Types.OwinConstants.RequestHeaders);
@@ -52,6 +53,11 @@ namespace JabbR.Middleware
                             // Create a new ticket preserving the identity of the user
                             // so they don't get logged out
                             value = _ticketHandler.Protect(newTicket);
+                            response.AddCookie("jabbr.id", value, new CookieOptions
+                            {
+                                Expires = extra.ExpiresUtc.Value.UtcDateTime,
+                                HttpOnly = true
+                            });
                         }
 
                         if (cookieBuilder.Length > 0)
