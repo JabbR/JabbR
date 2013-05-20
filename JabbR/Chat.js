@@ -1106,7 +1106,10 @@
                                       // ui.showReloadMessageNotification();
 
                                       // Turn the firehose back on
-                                      chat.server.join(true);
+                                      chat.server.join(true).fail(function (e) {
+                                          // So refresh the page, our auth token is probably gone
+                                          performLogout();
+                                      });
                                   });
                 }, 5000);
             });
