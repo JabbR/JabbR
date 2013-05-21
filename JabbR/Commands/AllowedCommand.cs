@@ -10,7 +10,7 @@ namespace JabbR.Commands
         {
             string targetRoomName = args.Length > 0 ? args[0] : callerContext.RoomName;
 
-            if (String.IsNullOrEmpty(targetRoomName) || targetRoomName.Equals("Lobby", StringComparison.InvariantCultureIgnoreCase))
+            if (String.IsNullOrEmpty(targetRoomName))
             {
                 throw new InvalidOperationException("Which room?");
             }

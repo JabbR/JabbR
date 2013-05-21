@@ -823,9 +823,10 @@ namespace JabbR
 
         void INotificationService.PostNotification(ChatRoom room, ChatUser user, string message)
         {
+            string roomName = room == null ? null : room.Name;
             foreach (var client in user.ConnectedClients)
             {
-                Clients.Client(client.Id).postNotification(message, room.Name);
+                Clients.Client(client.Id).postNotification(message, roomName);
             }
         }
 

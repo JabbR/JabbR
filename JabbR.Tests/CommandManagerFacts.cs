@@ -310,23 +310,24 @@ namespace JabbR.Test
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
-                                                        room.Name,
+                                                        null,
                                                         service,
                                                         repository,
                                                         cache,
                                                         notificationService.Object);
 
-                bool result = commandManager.TryHandleCommand("/invitecode");
+                bool result = commandManager.TryHandleCommand("/invitecode room");
 
                 Assert.True(result);
                 Assert.NotNull(room.InviteCode);
                 Assert.Equal(6, room.InviteCode.Length);
                 Assert.True(room.InviteCode.All(c => Char.IsDigit(c)));
-                notificationService.Verify(n => n.PostNotification(room, user, String.Format("Invite Code for this room: {0}", room.InviteCode)));
+                // expect the notification in the lobby (null room)
+                notificationService.Verify(n => n.PostNotification(null, user, String.Format("Invite Code for {0}: {1}", room.Name, room.InviteCode)));
             }
 
             [Fact]
-            public void InviteCodeDisplaysCodeIfCodeSet()
+            public void MissingRoomThrowsFromLobby()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -348,6 +349,39 @@ namespace JabbR.Test
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                VerifyThrows<InvalidOperationException>("/invitecode");
+            }
+
+            [Fact]
+            public void MissingRoomSucceedsFromRoom()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = true,
+                    InviteCode = "123456"
+                };
+                room.Users.Add(user);
+                room.AllowedUsers.Add(user);
+                repository.Add(room);
+                var service = new ChatService(cache, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
                                                         room.Name,
                                                         service,
                                                         repository,
@@ -360,7 +394,46 @@ namespace JabbR.Test
                 Assert.NotNull(room.InviteCode);
                 Assert.Equal(6, room.InviteCode.Length);
                 Assert.True(room.InviteCode.All(c => Char.IsDigit(c)));
-                notificationService.Verify(n => n.PostNotification(room, user, String.Format("Invite Code for this room: {0}", room.InviteCode)));
+                notificationService.Verify(n => n.PostNotification(room, user, String.Format("Invite Code for {0}: {1}", room.Name, room.InviteCode)));
+            }
+
+            [Fact]
+            public void InviteCodeDisplaysCodeIfCodeSet()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = true,
+                    InviteCode = "123456"
+                };
+                room.Users.Add(user);
+                room.AllowedUsers.Add(user);
+                repository.Add(room);
+                var service = new ChatService(cache, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        room.Name,
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/invitecode");
+
+                Assert.True(result);
+                Assert.NotNull(room.InviteCode);
+                Assert.Equal(6, room.InviteCode.Length);
+                Assert.True(room.InviteCode.All(c => Char.IsDigit(c)));
+                notificationService.Verify(n => n.PostNotification(room, user, String.Format("Invite Code for {0}: {1}", room.Name, room.InviteCode)));
             }
 
             [Fact]
@@ -400,7 +473,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void ThrowsIfNonOwnerRequestsInviteCodeWhenNoneSet()
+            public void ThrowsIfNonUserRequestsInviteCodeWhenNoneSet()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -430,7 +503,77 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invitecode"));
+                Assert.Equal("You do not have access to " + roomName, ex.Message);
+            }
+
+            [Fact]
+            public void ThrowsIfNonOwnerRequestsInviteCodeWhenNoneSet()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+
+                const string roomName = "test";
+                var room = new ChatRoom
+                {
+                    Name = roomName,
+                    Private = true
+                };
+                room.Users.Add(user);
+                room.AllowedUsers.Add(user);
+                repository.Add(room);
+                var service = new ChatService(cache, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        room.Name,
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invitecode"));
                 Assert.Equal("You are not an owner of room '" + roomName + "'", ex.Message);
+            }
+
+            [Fact]
+            public void ThrowsIfNonUserRequestsResetInviteCode()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+
+                const string roomName = "test";
+                var room = new ChatRoom
+                {
+                    Name = roomName,
+                    Private = true,
+                    InviteCode = "123456"
+                };
+                room.Users.Add(user);
+                repository.Add(room);
+                var service = new ChatService(cache, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        room.Name,
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/resetinvitecode"));
+                Assert.Equal("You do not have access to " + roomName, ex.Message);
             }
 
             [Fact]
@@ -453,6 +596,7 @@ namespace JabbR.Test
                     InviteCode = "123456"
                 };
                 room.Users.Add(user);
+                room.AllowedUsers.Add(user);
                 repository.Add(room);
                 var service = new ChatService(cache, repository);
                 var notificationService = new Mock<INotificationService>();
@@ -798,7 +942,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void MissingRoomNameThrows()
+            public void MissingRoomThrowsFromLobby()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -864,6 +1008,48 @@ namespace JabbR.Test
                 Assert.True(targetUser.OwnedRooms.Contains(room));
             }
 
+            [Fact]
+            public void MissingRoomSucceedsFromRoom()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var roomOwnerUser = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                var targetUser = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(roomOwnerUser);
+                repository.Add(targetUser);
+                var room = new ChatRoom()
+                {
+                    Name = "test"
+                };
+                room.Owners.Add(roomOwnerUser);
+                roomOwnerUser.Rooms.Add(room);
+                targetUser.Rooms.Add(room);
+                repository.Add(room);
+                var service = new ChatService(cache, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "test",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                var result = commandManager.TryHandleCommand("/addowner dfowler2");
+
+                Assert.True(result);
+                notificationService.Verify(m => m.AddOwner(targetUser, room), Times.Once());
+                Assert.True(room.Owners.Contains(targetUser));
+                Assert.True(targetUser.OwnedRooms.Contains(room));
+            }
         }
 
         public class RemoveOwnerCommand
@@ -893,7 +1079,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void MissingRoomNameThrows()
+            public void MissingRoomNameThrowsFromLobby()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -914,6 +1100,52 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/removeowner dfowler"));
+            }
+
+            [Fact]
+            public void MissingRoomNameSucceedsFromRoom()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var roomCreator = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                var targetUser = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(roomCreator);
+                repository.Add(targetUser);
+                var room = new ChatRoom()
+                {
+                    Name = "test",
+                    Creator = roomCreator
+                };
+                room.Owners.Add(roomCreator);
+                roomCreator.Rooms.Add(room);
+                // make target user an owner
+                room.Owners.Add(targetUser);
+                targetUser.Rooms.Add(room);
+                repository.Add(room);
+                var service = new ChatService(cache, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "test",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                var result = commandManager.TryHandleCommand("/removeowner dfowler2");
+
+                Assert.True(result);
+                notificationService.Verify(m => m.RemoveOwner(targetUser, room), Times.Once());
+                Assert.False(room.Owners.Contains(targetUser));
+                Assert.False(targetUser.OwnedRooms.Contains(room));
             }
 
             [Fact]
@@ -1471,7 +1703,47 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void CannotKickUserIfUserIsOnlyOneInRoom()
+            public void MissingRoomNameThrowsFromLobby()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                var user2 = new ChatUser
+                {
+                    Name = "cjm1",
+                    Id = "2"
+                };
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                room.Users.Add(user2);
+                room.Owners.Add(user);
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                repository.Add(room);
+                var service = new ChatService(cache, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        null,
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/kick cjm1"));
+            }
+
+            [Fact]
+            public void MissingRoomNameSucceedsFromRoom()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -1481,13 +1753,29 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user2);
+                var user3 = new ChatUser
+                {
+                    Name = "dfowler3",
+                    Id = "3"
+                };
+                repository.Add(user3);
                 var room = new ChatRoom
                 {
                     Name = "room"
                 };
                 room.Users.Add(user);
+                room.Users.Add(user2);
+                room.Users.Add(user3);
                 room.Owners.Add(user);
                 user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                user3.Rooms.Add(room);
                 repository.Add(room);
                 var service = new ChatService(cache, repository);
                 var notificationService = new Mock<INotificationService>();
@@ -1499,7 +1787,12 @@ namespace JabbR.Test
                                                         cache,
                                                         notificationService.Object);
 
-                Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/kick fowler2"));
+                bool result = commandManager.TryHandleCommand("/kick dfowler3");
+
+                Assert.True(result);
+                Assert.False(room.Users.Contains(user3));
+                Assert.False(user3.Rooms.Contains(room));
+                notificationService.Verify(x => x.KickUser(user3, room), Times.Once());
             }
 
             [Fact]
@@ -1627,13 +1920,13 @@ namespace JabbR.Test
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
-                                                        "room",
+                                                        null,
                                                         service,
                                                         repository,
                                                         cache,
                                                         notificationService.Object);
 
-                bool result = commandManager.TryHandleCommand("/kick dfowler3");
+                bool result = commandManager.TryHandleCommand("/kick dfowler3 room");
 
                 Assert.True(result);
                 Assert.False(room.Users.Contains(user3));
@@ -2120,7 +2413,7 @@ namespace JabbR.Test
         public class ListCommand
         {
             [Fact]
-            public void MissingRoomThrows()
+            public void MissingRoomThrowsFromLobby()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -2165,6 +2458,57 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/list test"));
+            }
+
+            [Fact]
+            public void MissingRoomSucceedsFromRoom()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                room.Users.Add(user2);
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                repository.Add(room);
+                var service = new ChatService(cache, repository);
+                var notificationService = new Mock<INotificationService>();
+                var userList = new List<string>();
+                notificationService.Setup(m => m.ListUsers(It.IsAny<ChatRoom>(), It.IsAny<IEnumerable<string>>()))
+                                   .Callback<ChatRoom, IEnumerable<string>>((_, names) =>
+                                   {
+                                       userList.AddRange(names);
+                                   });
+
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/list");
+
+                Assert.True(result);
+                Assert.Equal(2, userList.Count);
+                Assert.True(userList.Contains("dfowler2"));
+                Assert.True(userList.Contains("dfowler"));
             }
 
             [Fact]
@@ -2550,7 +2894,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void MissingRoomThrows()
+            public void MissingRoomThrowsFromLobby()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -2577,6 +2921,40 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invite dfowler2"));
+            }
+
+            [Fact]
+            public void MissingRoomSucceedsFromRoom()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom { Name = "test", };
+                repository.Add(room);
+                var service = new ChatService(cache, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "test",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/invite dfowler2");
+
+                Assert.True(result);
             }
 
             [Fact]
@@ -3135,7 +3513,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void MissingRoomThrows()
+            public void MissingRoomThrowsFromLobby()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -3267,6 +3645,48 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/allow dfowler2 room");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.AllowUser(user2, room), Times.Once());
+                Assert.True(room.AllowedUsers.Contains(user2));
+            }
+
+            [Fact]
+            public void MissingRoomSucceedsFromRoom()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = true
+                };
+                user.OwnedRooms.Add(room);
+                room.Owners.Add(user);
+                repository.Add(room);
+                var service = new ChatService(cache, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/allow dfowler2");
 
                 Assert.True(result);
                 notificationService.Verify(x => x.AllowUser(user2, room), Times.Once());
@@ -3455,7 +3875,7 @@ namespace JabbR.Test
         public class LockCommand
         {
             [Fact]
-            public void MissingRoomNameThrows()
+            public void MissingRoomNameThrowsFromLobby()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -3476,6 +3896,43 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/lock"));
+            }
+
+            [Fact]
+            public void MissingRoomNameSucceedsFromRoom()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = false
+                };
+                room.Creator = user;
+                room.Owners.Add(user);
+                user.OwnedRooms.Add(room);
+                repository.Add(room);
+                var service = new ChatService(cache, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/lock");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.LockRoom(user, room), Times.Once());
+                Assert.True(room.Private);
             }
 
             [Fact]
@@ -3543,7 +4000,7 @@ namespace JabbR.Test
         public class CloseCommand
         {
             [Fact]
-            public void MissingRoomNameThrows()
+            public void MissingRoomNameThrowsFromLobby()
             {
                 // Arrange.
                 var repository = new InMemoryRepository();
@@ -3567,7 +4024,46 @@ namespace JabbR.Test
                 // Act & Assert.
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/close"));
                 Assert.Equal("Which room do you want to close?", ex.Message);
+            }
 
+            [Fact]
+            public void MissingRoomNameSucceedsFromRoom()
+            {
+                // Arrange.
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                repository.Add(user);
+
+                const string roomName = "test";
+                var room = new ChatRoom
+                {
+                    Name = roomName
+                };
+                // Add a room owner.
+                room.Owners.Add(user);
+
+                repository.Add(room);
+
+                var service = new ChatService(cache, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        roomName,
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/close");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.CloseRoom(room.Users, room), Times.Once());
+                Assert.True(room.Closed);
             }
 
             [Fact]
@@ -3779,7 +4275,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void MissingRoomThrows()
+            public void MissingRoomThrowsFromLobby()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -3806,6 +4302,50 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/unallow dfowler2"));
+            }
+
+            [Fact]
+            public void MissingRoomSucceedsFromRoom()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user);
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "room",
+                    Private = true
+                };
+                user.OwnedRooms.Add(room);
+                room.Owners.Add(user);
+                user2.AllowedRooms.Add(room);
+                room.AllowedUsers.Add(user2);
+                repository.Add(room);
+                var service = new ChatService(cache, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                bool result = commandManager.TryHandleCommand("/unallow dfowler2");
+
+                Assert.True(result);
+                notificationService.Verify(x => x.UnallowUser(user2, room), Times.Once());
+                Assert.False(room.AllowedUsers.Contains(user2));
             }
 
             [Fact]

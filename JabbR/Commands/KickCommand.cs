@@ -1,29 +1,30 @@
 ﻿using System;
-using System.Linq;
 using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("kick", "Kick a user from the room. Note, this is only valid for owners of the room.", "user", "user")]
+    [Command("kick", "Kick a user from the room. Note, this is only valid for owners of the room.", "user [room]", "user")]
     public class KickCommand : UserCommand
     {
-        public override void Execute(CommandContext context, CallerContext callerContext, Models.ChatUser callingUser, string[] args)
+        public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
             if (args.Length == 0)
             {
                 throw new InvalidOperationException("Who are you trying to kick?");
             }
 
-            ChatRoom room = context.Repository.VerifyUserRoom(context.Cache, callingUser, callerContext.RoomName);
-
-            if (context.Repository.GetOnlineUsers(room).Count() == 1)
-            {
-                throw new InvalidOperationException("You're the only person in here...");
-            }
-
             string targetUserName = args[0];
 
             ChatUser targetUser = context.Repository.VerifyUser(targetUserName);
+
+            string targetRoomName = args.Length > 1 ? args[1] : callerContext.RoomName;
+
+            if (String.IsNullOrEmpty(targetRoomName))
+            {
+                throw new InvalidOperationException("Which room?");
+            }
+
+            ChatRoom room = context.Repository.VerifyRoom(targetRoomName);
 
             context.Service.KickUser(callingUser, targetUser, room);
 
