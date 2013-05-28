@@ -775,7 +775,7 @@
             focus = true;
             $lobbyRoomFilterForm = $('#room-filter-form'),
             $roomFilterInput = $('#room-filter'),
-            $closedRoomFilter = $('#room-filter-closed');
+            $closedRoomFilter = $('#room-filter-closed'),
             templates = {
                 userlist: $('#new-userlist-template'),
                 user: $('#new-user-template'),
