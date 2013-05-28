@@ -773,9 +773,9 @@
             $userCmdHelp = $('#jabbr-help #user');
             $updatePopup = $('#jabbr-update');
             focus = true;
-            $lobbyRoomFilterForm = $('#room-filter-form'),
-            $roomFilterInput = $('#room-filter'),
-            $closedRoomFilter = $('#room-filter-closed'),
+            $lobbyRoomFilterForm = $('#room-filter-form');
+            $roomFilterInput = $('#room-filter');
+            $closedRoomFilter = $('#room-filter-closed');
             templates = {
                 userlist: $('#new-userlist-template'),
                 user: $('#new-user-template'),
