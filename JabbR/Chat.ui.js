@@ -466,7 +466,6 @@
         var isFromCollapibleContentProvider = isFromCollapsibleContentProvider(message.message),
             collapseContent = shouldCollapseContent(message.message, roomName);
 
-        message.trimmedName = utility.trim(message.name, 21);
         message.when = message.date.formatTime(true);
         message.fulldate = message.date.toLocaleString();
 
