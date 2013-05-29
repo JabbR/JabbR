@@ -904,7 +904,8 @@
             // handle tab cycling - we skip the lobby when cycling
             // handle shift+/ - display help command
             $document.on('keydown', function (ev) {
-                if (ev.keyCode === Keys.Tab && $newMessage.val() === "") {
+                // ctrl + tab event is sent to the page in firefox when the user probably means to change browser tabs
+                if (ev.keyCode === Keys.Tab && !ev.ctrlKey && $newMessage.val() === "") {
                     var current = getCurrentRoomElements(),
                         index = current.tab.index(),
                         tabCount = $tabs.children().length - 1;
