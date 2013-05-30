@@ -1,5 +1,5 @@
 ﻿/// <reference path="Scripts/jquery-1.7.js" />
-(function($, utility) {
+(function($, window, utility) {
     "use strict";
 
     var ToastStatus = { Allowed: 0, NotConfigured: 1, Blocked: 2 },
@@ -49,7 +49,7 @@
             chromeToast.onclick = function () {
                 toast.hideToast();
                                 
-                // Trigger the focus event
+                // Trigger the focus events - focus the window and open the source room
                 $(toast).trigger('toast.focus', [toastRoom]);
             };
 
@@ -92,4 +92,4 @@
         window.chat = {};
     }
     window.chat.toast = toast;
-})(jQuery, window.chat.utility);
+})(jQuery, window, window.chat.utility);
