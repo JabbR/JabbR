@@ -9,6 +9,11 @@ namespace JabbR.Commands
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
+            if (String.IsNullOrEmpty(callerContext.RoomName))
+            {
+                throw new InvalidOperationException("This command cannot be invoked from the Lobby.");
+            }
+
             string targetRoomName = args.Length > 0 ? args[0] : callerContext.RoomName;
 
             if (String.IsNullOrEmpty(targetRoomName))

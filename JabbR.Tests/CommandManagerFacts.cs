@@ -310,7 +310,7 @@ namespace JabbR.Test
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
-                                                        null,
+                                                        "room",
                                                         service,
                                                         repository,
                                                         cache,
@@ -323,7 +323,7 @@ namespace JabbR.Test
                 Assert.Equal(6, room.InviteCode.Length);
                 Assert.True(room.InviteCode.All(c => Char.IsDigit(c)));
                 // expect the notification in the lobby (null room)
-                notificationService.Verify(n => n.PostNotification(null, user, String.Format("Invite Code for {0}: {1}", room.Name, room.InviteCode)));
+                notificationService.Verify(n => n.PostNotification(room, user, String.Format("Invite Code for {0}: {1}", room.Name, room.InviteCode)));
             }
 
             [Fact]
