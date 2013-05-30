@@ -838,7 +838,7 @@
                 ui.setActiveRoom($(this).data('name'));
             });
 
-            $document.on('mousedown', '#tabs li', function (ev) {
+            $document.on('mousedown', '#tabs li.room', function (ev) {
                 // if middle mouse
                 if (ev.which === 2) {
                     $ui.trigger(ui.events.closeRoom, [$(this).data('name')]);
