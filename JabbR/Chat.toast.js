@@ -49,11 +49,8 @@
             chromeToast.onclick = function () {
                 toast.hideToast();
                                 
-                // Trigger the focus events - focus the window, then open the source room
+                // Trigger the focus events - focus the window and open the source room
                 $(toast).trigger('toast.focus', [toastRoom]);
-                
-                // We need to grab the ui/ui.events now as it won't exist when the closure is first run
-                $(window.chat.ui).trigger(window.chat.ui.events.openRoom, [toastRoom]);
             };
 
             chromeToast.show();

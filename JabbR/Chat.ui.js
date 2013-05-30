@@ -1057,6 +1057,9 @@
 
             $(toast).bind('toast.focus', function (ev, room) {
                 window.focus();
+
+                // focus on the room
+                $ui.trigger(ui.events.openRoom, [room]);
             });
 
             $downloadIcon.click(function () {
