@@ -3,7 +3,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("removeowner", "Remove an owner from the specified room. Only works if you're the creator of that room.", "user room", "room")]
+    [Command("removeowner", "Remove an owner from the specified room. Only works if you're the creator of that room.", "user [room]", "room")]
     public class RemoveOwnerCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
@@ -17,12 +17,13 @@ namespace JabbR.Commands
 
             ChatUser targetUser = context.Repository.VerifyUser(targetUserName);
 
-            if (args.Length == 1)
+            string roomName = args.Length > 1 ? args[1] : callerContext.RoomName;
+
+            if (String.IsNullOrEmpty(roomName))
             {
                 throw new InvalidOperationException("Which room?");
             }
 
-            string roomName = args[1];
             ChatRoom targetRoom = context.Repository.VerifyRoom(roomName);
 
             context.Service.RemoveOwner(callingUser, targetUser, targetRoom);
