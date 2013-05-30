@@ -24,10 +24,10 @@
                 return;
             }
 
-            var toastTitle = message.trimmedName;
+            var toastTitle = utility.trim(message.name, 21);
             // we can reliably show 22 chars
             if (toastTitle.length <= 19) {
-                toastTitle += ' (' + utility.trim(roomName, 19 - message.trimmedName.length) + ')';
+                toastTitle += ' (' + utility.trim(roomName, 19 - toastTitle.length) + ')';
             }
 
             toastRoom = roomName;
