@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace JabbR.Models
 {
@@ -18,7 +15,7 @@ namespace JabbR.Models
 
         public static bool IsUserAllowed(this ChatRoom room, ChatUser user)
         {
-            return room.AllowedUsers.Contains(user) || user.IsAdmin;
+            return room.AllowedUsers.Contains(user) || room.Owners.Contains(user) || user.IsAdmin;
         }
     }
 }

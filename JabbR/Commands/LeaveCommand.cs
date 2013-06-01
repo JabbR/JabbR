@@ -1,4 +1,5 @@
-﻿using JabbR.Models;
+﻿using System;
+using JabbR.Models;
 
 namespace JabbR.Commands
 {
@@ -7,17 +8,14 @@ namespace JabbR.Commands
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
-            ChatRoom room = null;
-            if (args.Length  == 0)
-            {
-                room = context.Repository.VerifyUserRoom(context.Cache, callingUser, callerContext.RoomName);                
-            }
-            else
-            {
-                string roomName = args[0];
+            string targetRoomName = args.Length > 0 ? args[0] : callerContext.RoomName;
 
-                room = context.Repository.VerifyRoom(roomName, mustBeOpen: false);
+            if (String.IsNullOrEmpty(targetRoomName))
+            {
+                throw new InvalidOperationException("Which room?");
             }
+
+            ChatRoom room = context.Repository.VerifyRoom(targetRoomName);
 
             context.Service.LeaveRoom(callingUser, room);
 

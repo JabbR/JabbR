@@ -448,7 +448,7 @@
     };
 
     chat.client.userUnallowed = function (user, room) {
-        ui.addMessage('You have revoked ' + user + '"s access to ' + room, 'notification', this.state.activeRoom);
+        ui.addMessage('You have revoked ' + user + '\'s access to ' + room, 'notification', this.state.activeRoom);
     };
 
     // Called when you make someone an owner
