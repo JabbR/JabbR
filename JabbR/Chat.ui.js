@@ -1585,7 +1585,8 @@
         },
         changeUserName: function (oldName, user, roomName) {
             var room = getRoomElements(roomName),
-                $user = room.getUserReferences(oldName);
+                $user = room.getUserReferences(oldName),
+                $userListUser = room.getUser(oldName);
 
             // Update the user's name
             $user.find('.name').fadeOut('normal', function () {
@@ -1594,7 +1595,7 @@
             });
             $user.data('name', user.Name);
             $user.attr('data-name', user.Name);
-            room.sortLists($user);
+            room.sortLists($userListUser);
         },
         changeGravatar: function (user, roomName) {
             var room = getRoomElements(roomName),
