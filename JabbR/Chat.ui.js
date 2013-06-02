@@ -834,26 +834,45 @@
                 });
             });
 
-            $document.on('click', '#tabs li', function () {
-                ui.setActiveRoom($(this).data('name'));
-            });
-
-            $document.on('mousedown', '#tabs li.room', function (ev) {
-                // if middle mouse
-                if (ev.which === 2) {
-                    $ui.trigger(ui.events.closeRoom, [$(this).data('name')]);
-                }
-            });
-
-            $document.on('click', 'li.room .room-row', function () {
-                var roomName = $(this).parent().data('name'),
-                    room = getRoomElements(roomName);
+            var activateOrOpenRoom = function(roomName) {
+                var room = getRoomElements(roomName);
 
                 if (room.exists()) {
                     ui.setActiveRoom(roomName);
                 }
                 else {
                     $ui.trigger(ui.events.openRoom, [roomName]);
+                }
+            };
+            
+            $document.on('click', 'li.room .room-row', function () {
+                var roomName = $(this).parent().data('name');
+                activateOrOpenRoom(roomName);
+            });
+            
+            $roomFilterInput.keypress(function (ev) {
+                var key = ev.keyCode || ev.which,
+                    roomName = $(this).val();
+                
+                switch (key) {
+                    case Keys.Enter:
+                        // only if it's an exact match
+                        if (roomCache[roomName.toUpperCase()]) {
+                            activateOrOpenRoom(roomName);
+                            return;
+                        }
+                }
+            });
+            
+            $document.on('click', '#tabs li', function () {
+                var roomName = $(this).data('name');
+                activateOrOpenRoom(roomName);
+            });
+
+            $document.on('mousedown', '#tabs li.room', function (ev) {
+                // if middle mouse
+                if (ev.which === 2) {
+                    $ui.trigger(ui.events.closeRoom, [$(this).data('name')]);
                 }
             });
 
@@ -1059,7 +1078,7 @@
                 window.focus();
 
                 // focus on the room
-                $ui.trigger(ui.events.openRoom, [room]);
+                activateOrOpenRoom(room);
             });
 
             $downloadIcon.click(function () {
