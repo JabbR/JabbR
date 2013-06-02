@@ -1367,7 +1367,6 @@
                     }
                 }
 
-                triggerFocus();
                 room.makeActive();
 
                 if (room.isLobby()) {
@@ -1380,6 +1379,7 @@
                 ui.toggleMessageSection(room.isClosed());
 
                 $ui.trigger(ui.events.activeRoomChanged, [roomName]);
+                triggerFocus();
                 return true;
             }
 
