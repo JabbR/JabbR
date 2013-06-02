@@ -929,40 +929,28 @@ li.error {
         word-wrap: break-word;
     }
 
-        .message .middle.first:before {
+        .message .middle.first:before,
+        .message.my-message .middle.first:before,
+        .message.highlight .middle.first:before,
+        .message.highlight.my-message .middle.first:before {
             content: "";
             position: absolute;
-            left: -5px;
+            left: -8px;
             top: 8px;
-            width: 8px;
-            height: 8px;
-            background: inherit;
-            background-color: white;
-            border-bottom: inherit;
-            border-left: inherit;
-            -webkit-transform: rotate(45deg);
-            -moz-transform: rotate(45deg);
-            -ms-transform: rotate(45deg);
-            -o-transform: rotate(45deg);
-            transform: rotate(45deg);
+            width: 0;
+            height: 0;
+            border-bottom: 8px solid rgba(255,255,255,0);
+            border-top: 8px solid rgba(255,255,255,0);
+            border-right: 8px solid white;
         }
 
-    .message.my-message .middle.first:before {
-        content: "";
-        position: absolute;
-        left: -5px;
-        top: 8px;
-        width: 8px;
-        height: 8px;
-        background: inherit;
-        background-color: #f5f5f5;
-        border-bottom: inherit;
-        border-left: inherit;
-        -webkit-transform: rotate(45deg);
-        -moz-transform: rotate(45deg);
-        -ms-transform: rotate(45deg);
-        -o-transform: rotate(45deg);
-        transform: rotate(45deg);
+    .message.my-message .middle.first:before,
+    .message.highlight.my-message .middle.first:before {
+        border-right: 8px solid #f5f5f5;
+    }
+
+    .message.highlight .middle.first:before {
+        border-right: 8px solid #fff6bd;
     }
 
 .messages li .right {
