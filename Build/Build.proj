@@ -37,6 +37,7 @@
                  Targets="pipelinePreDeployCopyAllFilesToOneFolder" 
                  Properties="_PackageTempDir=$(SiteArtifactsPath);
                              AutoParameterizationWebConfigConnectionStrings=false;
-                             SolutionDir=$(ProjectRoot)\;" />
+                             SolutionDir=$(ProjectRoot)\;
+                             MSBuildExtensionsPath32=$(MSBuildProjectDirectory)\msbuild" />
     </Target>
 </Project>
