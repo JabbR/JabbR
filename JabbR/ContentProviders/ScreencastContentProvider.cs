@@ -5,7 +5,7 @@ using HtmlAgilityPack;
 using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
 
-namespace JabbR
+namespace JabbR.ContentProviders
 {
     public class ScreencastContentProvider : CollapsibleContentProvider
     {
