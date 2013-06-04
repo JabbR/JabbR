@@ -30,7 +30,9 @@ namespace JabbR.ContentProviders
 
         private Task<PageInfo> ExtractFromResponse(ContentProviderHttpRequest request)
         {
-            return Http.GetAsync(request.RequestUri).Then(response =>
+            var builder = new UriBuilder(request.RequestUri) { Scheme = "https" };
+            
+            return Http.GetAsync(builder.Uri).Then(response =>
             {
                 var pageInfo = new PageInfo();
                 using (Stream responseStream = response.GetResponseStream())
