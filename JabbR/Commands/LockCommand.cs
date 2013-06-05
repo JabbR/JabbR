@@ -15,7 +15,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which room do you want to lock?");
             }
 
-            ChatRoom room = context.Repository.VerifyRoom(roomName);
+            ChatRoom room = context.Repository.VerifyRoom(roomName, mustBeOpen: false);
 
             context.Service.LockRoom(callingUser, room);
 

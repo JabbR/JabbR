@@ -29,7 +29,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Invite them to which room?");
             }
 
-            ChatRoom targetRoom = context.Repository.VerifyRoom(roomName);
+            ChatRoom targetRoom = context.Repository.VerifyRoom(roomName, mustBeOpen: false);
 
             context.NotificationService.Invite(callingUser, targetUser, targetRoom);
         }

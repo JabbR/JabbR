@@ -159,15 +159,14 @@ namespace JabbR
             var userId = Context.User.GetUserId();
 
             ChatUser user = _repository.VerifyUserId(userId);
-            ChatRoom room = _repository.VerifyUserRoom(_cache, user, clientMessage.Room);
+            ChatRoom room = _repository.VerifyUserRoom(_cache, user, clientMessage.Room, mustBeOpen: false);
 
             if (room == null || (room.Private && !user.AllowedRooms.Contains(room)))
             {
                 return false;
             }
 
-            // REVIEW: Is it better to use _repository.VerifyRoom(message.Room, mustBeOpen: false)
-            // here?
+            // REVIEW: Is it better to use _repository.VerifyUserRoom(..., mustBeOpen: true) here?
             if (room.Closed)
             {
                 throw new InvalidOperationException(String.Format("You cannot post messages to '{0}'. The room is closed.", clientMessage.Room));
@@ -428,7 +427,7 @@ namespace JabbR
             string userId = Context.User.GetUserId();
 
             ChatUser user = _repository.GetUserById(userId);
-            ChatRoom room = _repository.VerifyUserRoom(_cache, user, notification.Room);
+            ChatRoom room = _repository.VerifyUserRoom(_cache, user, notification.Room, mustBeOpen: false);
 
             // User must be an owner
             if (room == null ||
@@ -471,7 +470,7 @@ namespace JabbR
             string userId = Context.User.GetUserId();
 
             ChatUser user = _repository.GetUserById(userId);
-            ChatRoom room = _repository.VerifyUserRoom(_cache, user, roomName);
+            ChatRoom room = _repository.VerifyUserRoom(_cache, user, roomName, mustBeOpen: false);
 
             if (room == null || (room.Private && !user.AllowedRooms.Contains(room)))
             {
