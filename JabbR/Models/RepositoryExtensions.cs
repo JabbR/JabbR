@@ -40,7 +40,7 @@ namespace JabbR.Models
                    select r;
         }
 
-        public static ChatRoom VerifyUserRoom(this IJabbrRepository repository, ICache cache, ChatUser user, string roomName, bool mustBeOpen = true)
+        public static ChatRoom VerifyUserRoom(this IJabbrRepository repository, ICache cache, ChatUser user, string roomName)
         {
             if (String.IsNullOrEmpty(roomName))
             {
@@ -59,11 +59,6 @@ namespace JabbR.Models
             if (!repository.IsUserInRoom(cache, user, room))
             {
                 throw new InvalidOperationException(String.Format("You're not in '{0}'. Use '/join {0}' to join it.", roomName));
-            }
-
-            if (room.Closed && mustBeOpen)
-            {
-                throw new InvalidOperationException(String.Format("The room '{0}' is closed", roomName));
             }
 
             return room;
