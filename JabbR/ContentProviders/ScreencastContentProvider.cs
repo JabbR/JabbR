@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using HtmlAgilityPack;
 using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
+using Nancy.Helpers;
 
 namespace JabbR.ContentProviders
 {
@@ -17,7 +18,9 @@ namespace JabbR.ContentProviders
             {
                 return new ContentProviderResult
                 {
-                    Content = String.Format(ContentFormat, pageInfo.ImageURL, pageInfo.Title),
+                    Content = String.Format(ContentFormat, 
+					                        HttpUtility.HtmlAttributeEncode(pageInfo.ImageURL), 
+					                        HttpUtility.HtmlAttributeEncode(pageInfo.Title)),
                     Title = pageInfo.Title
                 };
             });
@@ -30,6 +33,7 @@ namespace JabbR.ContentProviders
 
         private Task<PageInfo> ExtractFromResponse(ContentProviderHttpRequest request)
         {
+            //Force https for the url
             var builder = new UriBuilder(request.RequestUri) { Scheme = "https" };
             
             return Http.GetAsync(builder.Uri).Then(response =>
