@@ -71,7 +71,7 @@
 			
 				<p>The following script will perform a lot of the grunt-work, performing item 2 to item 8 above.  Be sure to update the $dbServer if you haven't got a data source of ".".  Make sure that you run the script in an administrator instance of powershell (right click on the powershell link and select "Run as Administrator").</p>
 				
-				<p><img src="Content/Images/Install/1.png" /></p>
+				<p><img src="Content/images/install/1.png" /></p>
 
 				<pre>$webFolder = "$env:systemdrive\inetpub\jabbr"
 $appPoolName = "JabbR"
@@ -120,7 +120,7 @@ $acl.SetAccessRule($rule)
 Set-Acl "$webFolder\Content" $acl
 </pre>
 
-			<p><img src="Content/Images/Install/3.png" /></p>
+			<p><img src="Content/images/install/3.png" /></p>
 			
 			</div>
         </div>
@@ -132,19 +132,19 @@ Set-Acl "$webFolder\Content" $acl
 				
 				<p>Open up Server Manager, and click the Add Roles and Features link.</p>
 				
-				<p><img src="Content/Images/Install/srv1.png" /></p>
+				<p><img src="Content/images/install/srv1.png" /></p>
 				
 				<p>Add the Web Server (IIS) role.</p>
 				
-				<p><img src="Content/Images/Install/srv5.png" /></p>
+				<p><img src="Content/images/install/srv5.png" /></p>
 				
 				<p>Add the ASP.NET 4.5 feature.</p>
 				
-				<p><img src="Content/Images/Install/srv7.png" /></p>
+				<p><img src="Content/images/install/srv7.png" /></p>
 				
 				<p>Add the ASP.NET 4.5 Role Service.</p>
 				
-				<p><img src="Content/Images/Install/srv9.png" /></p>
+				<p><img src="Content/images/install/srv9.png" /></p>
 			</div>
         </div>
 		
@@ -154,11 +154,11 @@ Set-Acl "$webFolder\Content" $acl
 				
 				<p>Download and copy the JabbR install zip to your machine.  You can find the link at <a href="http://about.jabbr.net">http://about.jabbr.net</a>.</p>
 				
-				<p><img src="Content/Images/Install/alt1.png" /></p>
+				<p><img src="Content/images/install/alt1.png" /></p>
 				
 				<p>Unzip the install zip to a new folder where you want the site to be hosted from (eg C:\inetpub\jabbr).</p>
 				
-				<p><img src="Content/Images/Install/win1.png" /></p>
+				<p><img src="Content/images/install/win1.png" /></p>
 			</div>
         </div>
 		
@@ -168,11 +168,11 @@ Set-Acl "$webFolder\Content" $acl
 				
 				<p>Open up IIS Manager, select the Default Web Site (under Sites) and click the Stop button.  Now, right click on Sites and select Add Website...</p>
 				
-				<p><img src="Content/Images/Install/iis2.png" /></p>
+				<p><img src="Content/images/install/iis2.png" /></p>
 				
 				<p>Provide a site name and the folder you want the site to be hosted from.  We don't mind that the binding *:80: is assigned to another site (the Default Web Site that we just stopped) so select Yes on the dialog.</p>
 				
-				<p><img src="Content/Images/Install/iis3.png" /></p>
+				<p><img src="Content/images/install/iis3.png" /></p>
 			</div>
         </div>
 		
@@ -182,27 +182,27 @@ Set-Acl "$webFolder\Content" $acl
 				
 				<p>Open SQL Server Management Studio.  Connect to your database instance (and take note of the Server name that you have to enter - this is the Data Source that we need to use later).</p>
 				
-				<p><img src="Content/Images/Install/ssms1.png" /></p>
+				<p><img src="Content/images/install/ssms1.png" /></p>
 				
 				<p>Right click on Databases and select New Database...  Provide a name (eg JabbR), the default options are fine however, click OK to continue.</p>
 				
-				<p><img src="Content/Images/Install/ssms3.png" /></p>
+				<p><img src="Content/images/install/ssms3.png" /></p>
 				
 				<p>Expand the Security node, Right click on Logins and select New Login...  You want a windows login running as the IIS App Pool for your web application (if your Site Name was JabbR, by default this will be IIS AppPool\JabbR).  Select JabbR as the default database, and click OK.</p>
 				
-				<p><img src="Content/Images/Install/ssms5.png" /></p>
+				<p><img src="Content/images/install/ssms5.png" /></p>
 				
 				<p>Next, expand the database that you created, its Security node, right click on Users and select New User...</p>
 				
-				<p><img src="Content/Images/Install/ssms6.png" /></p>
+				<p><img src="Content/images/install/ssms6.png" /></p>
 				
 				<p>Create an SQL user with login for the login created earlier:</p>
 				
-				<p><img src="Content/Images/Install/ssms7.png" /></p>
+				<p><img src="Content/images/install/ssms7.png" /></p>
 				
 				<p>On the membership tab, check db_owner to add them to that role:</p>
 				
-				<p><img src="Content/Images/Install/ssms8.png" /></p>
+				<p><img src="Content/images/install/ssms8.png" /></p>
 			</div>
         </div>
 		
@@ -212,7 +212,7 @@ Set-Acl "$webFolder\Content" $acl
 				
 				<p>Edit the connectionString value in the web.config file to point at where you want the database to reside.</p>
 				
-				<p><img src="Content/Images/Install/win3.png" /></p>
+				<p><img src="Content/images/install/win3.png" /></p>
 			</div>
         </div>
 		
@@ -222,7 +222,7 @@ Set-Acl "$webFolder\Content" $acl
 				
 				<p>Open the properties for the /Content directory (you can right click in Explorer to get this dialog).  Under security, click Edit, and enter the windows login for the App Pool (eg IIS AppPool\JabbR).  Click OK and give them Write permissions.</p>
 				
-				<p><img src="Content/Images/Install/win6.png" /></p>
+				<p><img src="Content/images/install/win6.png" /></p>
 			</div>
         </div>
 		
@@ -232,15 +232,15 @@ Set-Acl "$webFolder\Content" $acl
 				
 				<p>The first user that is registered on a JabbR instance is automatically created as an admin.  Once you've set up your instance, you just visit its url (eg http://localhost/ if you're running locally, or http://machinename/ or http://remote-ip/ if you're running on another machine).</p>
 				
-				<p><img src="Content/Images/Install/jabbr1.png" /></p>
+				<p><img src="Content/images/install/jabbr1.png" /></p>
 				
 				<p>Click the Register link, and provide some information.  You will automatically be logged in and the screen should be pretty empty (this is because no rooms exist yet).  In JabbR, to do a lot of things, you enter commands into the chat textbox.  A command is simply a message that starts with a slash eg "/create" is used to create a room.  If you want to see the commands that are available, click the Question Mark at the top right of the screen.  If you type "/create RoomNameHere" it will make a new chatroom for you named RoomNameHere and you will join it automatically.</p>
 				
-				<p><img src="Content/Images/Install/jabbr3.png" /></p>
+				<p><img src="Content/images/install/jabbr3.png" /></p>
 				
 				<p>If you want file uploads to work, you'll need to provide an Azure Blob Storage Connection string.  This can be entered via the JabbR Settings page, which can be reached by clicking on the gear at the top right of the page (this is only shown to admins).  On this page, you can also provide your ID for Google Analytics.</p>
 				
-				<p><img src="Content/Images/Install/jabbr5.png" /></p>
+				<p><img src="Content/images/install/jabbr5.png" /></p>
 				
 				<p>That's all there is to it!</p>
 			</div>
