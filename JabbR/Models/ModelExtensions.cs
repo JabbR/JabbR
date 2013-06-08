@@ -9,7 +9,7 @@ namespace JabbR.Models
         {
             if (room.Private && !room.IsUserAllowed(user))
             {
-                throw new InvalidOperationException("You do not have access to " + room.Name);
+                throw new InvalidOperationException(String.Format("You do not have access to {0}.", room.Name));
             }
         }
 
@@ -22,7 +22,7 @@ namespace JabbR.Models
         {
             if (room.Closed)
             {
-                throw new InvalidOperationException(string.Format("The room '{0}' is closed", room.Name));
+                throw new InvalidOperationException(String.Format("The room '{0}' is closed.", room.Name));
             }
         }
     }

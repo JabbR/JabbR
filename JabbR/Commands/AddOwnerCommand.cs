@@ -21,7 +21,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(roomName))
             {
-                throw new InvalidOperationException("Which room?");
+                throw new InvalidOperationException("Which room do you want to add ownership to?");
             }
 
             ChatRoom targetRoom = context.Repository.VerifyRoom(roomName);

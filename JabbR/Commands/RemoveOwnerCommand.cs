@@ -21,7 +21,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(roomName))
             {
-                throw new InvalidOperationException("Which room?");
+                throw new InvalidOperationException("Which room do you want to remove the owner from?");
             }
 
             ChatRoom targetRoom = context.Repository.VerifyRoom(roomName);

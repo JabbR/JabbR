@@ -26,7 +26,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(roomName))
             {
-                throw new InvalidOperationException("Invite them to which room?");
+                throw new InvalidOperationException("Which room do you want to invite them to?");
             }
 
             ChatRoom targetRoom = context.Repository.VerifyRoom(roomName, mustBeOpen: false);

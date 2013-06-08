@@ -14,7 +14,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(messageText))
             {
-                throw new InvalidOperationException("What did you want to broadcast?");
+                throw new InvalidOperationException("What message do you want to broadcast?");
             }
 
             context.NotificationService.BroadcastMessage(callingUser, messageText);
