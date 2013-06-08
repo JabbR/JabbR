@@ -11,6 +11,8 @@ namespace JabbR.Commands
         {
             ChatRoom room = context.Repository.VerifyUserRoom(context.Cache, callingUser, callerContext.RoomName);
 
+            room.EnsureOpen();
+
             if (args.Length  == 0)
             {
                 throw new InvalidOperationException("You what?");

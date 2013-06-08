@@ -166,8 +166,7 @@ namespace JabbR
                 return false;
             }
 
-            // REVIEW: Is it better to use _repository.VerifyRoom(message.Room, mustBeOpen: false)
-            // here?
+            // REVIEW: Is it better to use the extension method room.EnsureOpen here?
             if (room.Closed)
             {
                 throw new InvalidOperationException(String.Format("You cannot post messages to '{0}'. The room is closed.", clientMessage.Room));

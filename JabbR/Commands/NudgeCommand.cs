@@ -23,6 +23,8 @@ namespace JabbR.Commands
         {
             ChatRoom room = context.Repository.VerifyUserRoom(context.Cache, callingUser, callerContext.RoomName);
 
+            room.EnsureOpen();
+
             var betweenNudges = TimeSpan.FromMinutes(1);
             if (room.LastNudged == null || room.LastNudged < DateTime.Now.Subtract(betweenNudges))
             {

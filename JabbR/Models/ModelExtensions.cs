@@ -17,5 +17,13 @@ namespace JabbR.Models
         {
             return room.AllowedUsers.Contains(user) || room.Owners.Contains(user) || user.IsAdmin;
         }
+
+        public static void EnsureOpen(this ChatRoom room)
+        {
+            if (room.Closed)
+            {
+                throw new InvalidOperationException(string.Format("The room '{0}' is closed", room.Name));
+            }
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("Which room?");
             }
 
-            ChatRoom targetRoom = context.Repository.VerifyRoom(roomName);
+            ChatRoom targetRoom = context.Repository.VerifyRoom(roomName, mustBeOpen: false);
 
             context.Service.UnallowUser(callingUser, targetUser, targetRoom);
 
