@@ -4824,7 +4824,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/unallow"));
-                Assert.Equal("Which user to you want to revoke permissions from?", ex.Message);
+                Assert.Equal("Who you want to revoke access permissions from?", ex.Message);
             }
 
             [Fact]
@@ -4880,7 +4880,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/unallow dfowler2"));
-                Assert.Equal("Which room do you want to the user's access permissions from?", ex.Message);
+                Assert.Equal("Which room do you want to revoke access from?", ex.Message);
             }
 
             [Fact]
