@@ -350,7 +350,7 @@ namespace JabbR.Services
             EnsureOwnerOrAdmin(user, room);
             if (!room.Private)
             {
-                throw new InvalidOperationException("Only private rooms can have invite codes");
+                throw new InvalidOperationException("Only private rooms can have invite codes.");
             }
 
             // Set the invite code and save
@@ -604,7 +604,7 @@ namespace JabbR.Services
         {
             if (!user.IsAdmin)
             {
-                throw new InvalidOperationException("You are not an admin");
+                throw new InvalidOperationException("You are not an admin.");
             }
         }
 
@@ -612,7 +612,7 @@ namespace JabbR.Services
         {
             if (!room.Owners.Contains(user) && !user.IsAdmin)
             {
-                throw new InvalidOperationException("You are not an owner of room '" + room.Name + "'");
+                throw new InvalidOperationException(String.Format("You are not an owner of room '{0}'.", room.Name));
             }
         }
 
@@ -620,7 +620,7 @@ namespace JabbR.Services
         {
             if (!room.Owners.Contains(user))
             {
-                throw new InvalidOperationException("You are not an owner of room '" + room.Name + "'");
+                throw new InvalidOperationException(String.Format("You are not an owner of room '{0}'.", room.Name));
             }
         }
 
@@ -628,7 +628,7 @@ namespace JabbR.Services
         {
             if (user != room.Creator)
             {
-                throw new InvalidOperationException("You are not the creator of " + room.Name);
+                throw new InvalidOperationException(String.Format("You are not the creator of room '{0}'", room.Name));
             }
         }
 
@@ -636,7 +636,7 @@ namespace JabbR.Services
         {
             if (user != room.Creator && !user.IsAdmin)
             {
-                throw new InvalidOperationException("You are not the creator of room '" + room.Name + "'");
+                throw new InvalidOperationException(String.Format("You are not the creator of room '{0}'.", room.Name));
             }
         }
 
@@ -809,7 +809,7 @@ namespace JabbR.Services
 
             if (targetUser.IsAdmin)
             {
-                throw new InvalidOperationException("You cannot ban another Admin.");
+                throw new InvalidOperationException("You cannot ban another admin.");
             }
 
             targetUser.IsBanned = true;
@@ -824,7 +824,7 @@ namespace JabbR.Services
                 note.Length > lengthToValidateFor)
             {
                 throw new InvalidOperationException(
-                    String.Format("Sorry, but your {1} is too long. Can please keep it under {0} characters.",
+                    String.Format("Sorry, but your {1} is too long. Please keep it under {0} characters.",
                         lengthToValidateFor, noteTypeName));
             }
         }

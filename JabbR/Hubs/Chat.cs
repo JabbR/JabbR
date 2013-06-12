@@ -434,7 +434,7 @@ namespace JabbR
                 !room.Owners.Contains(user) ||
                 (room.Private && !user.AllowedRooms.Contains(room)))
             {
-                throw new InvalidOperationException("You're not allowed to post a notification");
+                throw new InvalidOperationException("You're not allowed to post a notification.");
             }
 
             var chatMessage = new ChatMessage
