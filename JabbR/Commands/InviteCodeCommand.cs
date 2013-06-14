@@ -11,14 +11,14 @@ namespace JabbR.Commands
         {
             if (String.IsNullOrEmpty(callerContext.RoomName))
             {
-                throw new InvalidOperationException("This command cannot be invoked from the Lobby.");
+                throw new InvalidOperationException(LanguageResources.InvokeFromRoomRequired);
             }
 
             string targetRoomName = args.Length > 0 ? args[0] : callerContext.RoomName;
 
             if (String.IsNullOrEmpty(targetRoomName))
             {
-                throw new InvalidOperationException("Which room do you want to show the invite code for?");
+                throw new InvalidOperationException(LanguageResources.InviteCode_RoomRequired);
             }
 
             ChatRoom targetRoom = context.Repository.VerifyRoom(targetRoomName, mustBeOpen: false);
@@ -32,7 +32,7 @@ namespace JabbR.Commands
             }
 
             ChatRoom callingRoom = context.Repository.GetRoomByName(callerContext.RoomName);
-            context.NotificationService.PostNotification(callingRoom, callingUser, String.Format("Invite Code for {0}: {1}", targetRoomName, targetRoom.InviteCode));
+            context.NotificationService.PostNotification(callingRoom, callingUser, String.Format(LanguageResources.InviteCode_Success, targetRoomName, targetRoom.InviteCode));
         }
     }
 }

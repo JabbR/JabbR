@@ -11,28 +11,24 @@ namespace JabbR.Commands
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
-            if (context.Repository.Users.Count() == 1)
-            {
-                throw new InvalidOperationException("You're the only person in here...");
-            }
-
             if (args.Length == 0 || String.IsNullOrWhiteSpace(args[0]))
             {
-                throw new InvalidOperationException("Who do you want to send a private message to?");
+                throw new InvalidOperationException(LanguageResources.Msg_UserRequired);
             }
+
             var toUserName = args[0];
             ChatUser toUser = context.Repository.VerifyUser(toUserName);
 
             if (toUser == callingUser)
             {
-                throw new InvalidOperationException("You can't private message yourself!");
+                throw new InvalidOperationException(LanguageResources.Msg_CannotMsgSelf);
             }
 
             string messageText = String.Join(" ", args.Skip(1)).Trim();
 
             if (String.IsNullOrEmpty(messageText))
             {
-                throw new InvalidOperationException(String.Format("What do you want to say to '{0}'?", toUser.Name));
+                throw new InvalidOperationException(String.Format(LanguageResources.Msg_MessageRequired, toUser.Name));
             }
 
             context.NotificationService.SendPrivateMessage(callingUser, toUser, messageText);

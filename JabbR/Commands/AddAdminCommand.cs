@@ -10,7 +10,7 @@ namespace JabbR.Commands
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException("Who do you want to make an admin?");
+                throw new InvalidOperationException(LanguageResources.AddAdmin_UserRequired);
             }
 
             string targetUserName = args[0];

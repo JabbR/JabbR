@@ -15,7 +15,7 @@ namespace JabbR.Commands
 
             if (args.Length  == 0)
             {
-                throw new InvalidOperationException("You what?");
+                throw new InvalidOperationException(LanguageResources.Me_ActionRequired);
             }
 
             var content = String.Join(" ", args);

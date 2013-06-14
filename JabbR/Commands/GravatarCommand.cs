@@ -14,7 +14,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrWhiteSpace(email))
             {
-                throw new InvalidOperationException("Which email address do you want to use for the Gravatar image?");
+                throw new InvalidOperationException(LanguageResources.Gravatar_EmailRequired);
             }
 
             string hash = email.ToLowerInvariant().ToMD5();

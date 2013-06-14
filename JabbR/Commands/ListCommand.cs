@@ -13,7 +13,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(roomName))
             {
-                throw new InvalidOperationException("Which room do you want to list the current users of?");
+                throw new InvalidOperationException(LanguageResources.List_RoomRequired);
             }
 
             ChatRoom room = context.Repository.VerifyRoom(roomName);

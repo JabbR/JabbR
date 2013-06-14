@@ -12,7 +12,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(roomName))
             {
-                throw new InvalidOperationException("Which room do you want to lock?");
+                throw new InvalidOperationException(LanguageResources.Lock_RoomRequired);
             }
 
             ChatRoom room = context.Repository.VerifyRoom(roomName, mustBeOpen: false);

@@ -1,0 +1,465 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AddAdmin_UserRequired" xml:space="preserve">
+    <value>Who do you want to make an admin?</value>
+  </data>
+  <data name="AddOwner_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to add ownership to?</value>
+  </data>
+  <data name="AddOwner_UserRequired" xml:space="preserve">
+    <value>Who do you want to make an owner?</value>
+  </data>
+  <data name="AdminRequired" xml:space="preserve">
+    <value>You are not an admin.</value>
+  </data>
+  <data name="Allowed_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to list the allowed users of?</value>
+  </data>
+  <data name="Allow_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to allow access to?</value>
+  </data>
+  <data name="Allow_UserRequired" xml:space="preserve">
+    <value>Who do you want to grant access permissions to?</value>
+  </data>
+  <data name="AudioTagSupportRequired" xml:space="preserve">
+    <value>Your browser does not support the audio tag.</value>
+  </data>
+  <data name="AuthenticationIdentityProviderTaken" xml:space="preserve">
+    <value>Identity {0} already taken with Provider {1}, please login with a different provider/identity combination.</value>
+  </data>
+  <data name="AuthenticationPasswordRequired" xml:space="preserve">
+    <value>A password is required.</value>
+  </data>
+  <data name="Authentication_AccountAlreadyLinked" xml:space="preserve">
+    <value>This {0} account has already been linked to another user.</value>
+  </data>
+  <data name="Authentication_AccountLinkedSuccess" xml:space="preserve">
+    <value>Successfully linked {0} account.</value>
+  </data>
+  <data name="Authentication_EmailRequired" xml:space="preserve">
+    <value>Email is required.</value>
+  </data>
+  <data name="Authentication_GenericFailure" xml:space="preserve">
+    <value>Login failed. Check your username/password.</value>
+  </data>
+  <data name="Authentication_NameChangeCompleted" xml:space="preserve">
+    <value>Successfully changed your username.</value>
+  </data>
+  <data name="Authentication_NameNonMatching" xml:space="preserve">
+    <value>Usernames don't match.</value>
+  </data>
+  <data name="Authentication_NameRequired" xml:space="preserve">
+    <value>Username is required.</value>
+  </data>
+  <data name="Authentication_NotLoggedIn" xml:space="preserve">
+    <value>You're not logged in.</value>
+  </data>
+  <data name="Authentication_OldNewUsernamesSame" xml:space="preserve">
+    <value>That's already your username...</value>
+  </data>
+  <data name="Authentication_OldPasswordRequired" xml:space="preserve">
+    <value>Old password is required.</value>
+  </data>
+  <data name="Authentication_PassAddSuccess" xml:space="preserve">
+    <value>Successfully added a password.</value>
+  </data>
+  <data name="Authentication_PassChangeSuccess" xml:space="preserve">
+    <value>Successfully changed your password.</value>
+  </data>
+  <data name="Authentication_PassLengthRequired" xml:space="preserve">
+    <value>Your password must be at least {0} characters.</value>
+  </data>
+  <data name="Authentication_PassNonMatching" xml:space="preserve">
+    <value>Passwords don't match.</value>
+  </data>
+  <data name="Authentication_PassRequired" xml:space="preserve">
+    <value>Password is required.</value>
+  </data>
+  <data name="Authentication_UnlinkCompleted" xml:space="preserve">
+    <value>Successfully unlinked {0} account.</value>
+  </data>
+  <data name="Authentication_UnlinkRequiresMultipleIdentities" xml:space="preserve">
+    <value>You cannot unlink this account because you would lose your ability to login.</value>
+  </data>
+  <data name="Ban_CannotBanAdmin" xml:space="preserve">
+    <value>You cannot ban another admin.</value>
+  </data>
+  <data name="Ban_UserRequired" xml:space="preserve">
+    <value>Who do you want to ban?</value>
+  </data>
+  <data name="Broadcast_MessageRequired" xml:space="preserve">
+    <value>What message do you want to broadcast?</value>
+  </data>
+  <data name="Close_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to close?</value>
+  </data>
+  <data name="CommandAmbiguous" xml:space="preserve">
+    <value>{0} is ambiguous: {1}.</value>
+  </data>
+  <data name="CommandNotFound" xml:space="preserve">
+    <value>{0} is not a valid command.</value>
+  </data>
+  <data name="Content_HeaderAndToggle" xml:space="preserve">
+    <value>{0} (click to show/hide)</value>
+  </data>
+  <data name="CountryISOInvalid" xml:space="preserve">
+    <value>Sorry, but the country ISO code you requested doesn't exist. Please refer to http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 for a proper list of country ISO codes.</value>
+  </data>
+  <data name="GoogleMapsContent_DefaultTitle" xml:space="preserve">
+    <value>Google Maps</value>
+  </data>
+  <data name="Gravatar_EmailRequired" xml:space="preserve">
+    <value>Which email address do you want to use for the Gravatar image?</value>
+  </data>
+  <data name="InviteCode_PrivateRoomRequired" xml:space="preserve">
+    <value>Only private rooms can have invite codes.</value>
+  </data>
+  <data name="InviteCode_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to show the invite code for?</value>
+  </data>
+  <data name="InviteCode_Success" xml:space="preserve">
+    <value>Invite Code for {0}: {1}</value>
+  </data>
+  <data name="Invite_CannotInviteSelf" xml:space="preserve">
+    <value>You can't invite yourself!</value>
+  </data>
+  <data name="Invite_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to invite them to?</value>
+  </data>
+  <data name="Invite_UserRequired" xml:space="preserve">
+    <value>Who do you want to invite?</value>
+  </data>
+  <data name="InvokeFromRoomRequired" xml:space="preserve">
+    <value>This command cannot be invoked from the Lobby.</value>
+  </data>
+  <data name="JoinMeContent_DefaultTitle" xml:space="preserve">
+    <value>Join Me Meeting: {0}</value>
+  </data>
+  <data name="Join_LockedAccessPermission" xml:space="preserve">
+    <value>Unable to join {0}. This room is locked and you don't have permission to enter. If you have an invite code, enter it in the /join command</value>
+  </data>
+  <data name="Join_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to join?</value>
+  </data>
+  <data name="Kick_AdminRequiredToKickAdmin" xml:space="preserve">
+    <value>You cannot kick an admin. Only admin can kick admin.</value>
+  </data>
+  <data name="Kick_CannotKickSelf" xml:space="preserve">
+    <value>Why would you want to kick yourself?</value>
+  </data>
+  <data name="Kick_CreatorRequiredToKickOwner" xml:space="preserve">
+    <value>Owners cannot kick other owners. Only the room creator can kick an owner.</value>
+  </data>
+  <data name="Kick_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to kick them from?</value>
+  </data>
+  <data name="Kick_UserRequired" xml:space="preserve">
+    <value>Who do you want to to kick?</value>
+  </data>
+  <data name="Leave_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to leave?</value>
+  </data>
+  <data name="List_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to list the current users of?</value>
+  </data>
+  <data name="LoadingMessage" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="Lock_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to lock?</value>
+  </data>
+  <data name="Me_ActionRequired" xml:space="preserve">
+    <value>You what?</value>
+  </data>
+  <data name="Msg_CannotMsgSelf" xml:space="preserve">
+    <value>You can't private message yourself!</value>
+  </data>
+  <data name="Msg_MessageRequired" xml:space="preserve">
+    <value>What do you want to say to {0}?</value>
+  </data>
+  <data name="Msg_UserRequired" xml:space="preserve">
+    <value>Who do you want to send a private message to?</value>
+  </data>
+  <data name="NudgeRoom_Throttled" xml:space="preserve">
+    <value>Room can only be nudged once every {0} seconds.</value>
+  </data>
+  <data name="NudgeUser_CannotNudgeSelf" xml:space="preserve">
+    <value>You can't nudge yourself!</value>
+  </data>
+  <data name="NudgeUser_Throttled" xml:space="preserve">
+    <value>User can only be nudged once every {0} seconds.</value>
+  </data>
+  <data name="Open_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to open?</value>
+  </data>
+  <data name="PostNotification_NotAllowed" xml:space="preserve">
+    <value>You're not allowed to post a notification.</value>
+  </data>
+  <data name="RemoveAdmin_UserRequired" xml:space="preserve">
+    <value>Which admin do you want to remove?</value>
+  </data>
+  <data name="RemoveOwner_CommandUserMissing" xml:space="preserve">
+    <value>Which owner do you want to remove?</value>
+  </data>
+  <data name="RemoveOwner_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to remove the owner from?</value>
+  </data>
+  <data name="ResetInviteCode_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to reset the invite code of?</value>
+  </data>
+  <data name="RoomAccessPermission" xml:space="preserve">
+    <value>You do not have access to {0}.</value>
+  </data>
+  <data name="RoomAccessPermissionUser" xml:space="preserve">
+    <value>{0} isn't allowed to access {1}.</value>
+  </data>
+  <data name="RoomAlreadyClosed" xml:space="preserve">
+    <value>{0} is already closed.</value>
+  </data>
+  <data name="RoomAlreadyLocked" xml:space="preserve">
+    <value>{0} is already locked.</value>
+  </data>
+  <data name="RoomAlreadyOpen" xml:space="preserve">
+    <value>{0} is already open.</value>
+  </data>
+  <data name="RoomCannotBeNamedLobby" xml:space="preserve">
+    <value>Lobby is not a valid chat room name.</value>
+  </data>
+  <data name="RoomClosed" xml:space="preserve">
+    <value>{0} is closed.</value>
+  </data>
+  <data name="RoomCreationDisabled" xml:space="preserve">
+    <value>Room creation is disabled.</value>
+  </data>
+  <data name="RoomCreatorRequired" xml:space="preserve">
+    <value>You are not the creator of {0}.</value>
+  </data>
+  <data name="RoomExists" xml:space="preserve">
+    <value>{0} already exists.</value>
+  </data>
+  <data name="RoomExistsButClosed" xml:space="preserve">
+    <value>{0} already exists, but it's closed.</value>
+  </data>
+  <data name="RoomInvalidName" xml:space="preserve">
+    <value>{0} is not a valid room name.</value>
+  </data>
+  <data name="RoomInvalidNameSpaces" xml:space="preserve">
+    <value>Room names cannot contain spaces.</value>
+  </data>
+  <data name="RoomJoinMessage" xml:space="preserve">
+    <value>Use '/join room' to join a room.</value>
+  </data>
+  <data name="RoomMemberButNotExists" xml:space="preserve">
+    <value>You're in {0}, but it doesn't exist.</value>
+  </data>
+  <data name="RoomNotFound" xml:space="preserve">
+    <value>Unable to find {0}.</value>
+  </data>
+  <data name="RoomNotMember" xml:space="preserve">
+    <value>You're not in {0}. Use '/join {0}' to join it.</value>
+  </data>
+  <data name="RoomNotPrivate" xml:space="preserve">
+    <value>{0} is not a private room.</value>
+  </data>
+  <data name="RoomOwnershipRequired" xml:space="preserve">
+    <value>You are not an owner of {0}.</value>
+  </data>
+  <data name="RoomRequired" xml:space="preserve">
+    <value>No room specified.</value>
+  </data>
+  <data name="RoomRequiresName" xml:space="preserve">
+    <value>Room name cannot be blank!</value>
+  </data>
+  <data name="RoomUserAlreadyAllowed" xml:space="preserve">
+    <value>{0} is already allowed into {1}.</value>
+  </data>
+  <data name="RoomUserAlreadyOwner" xml:space="preserve">
+    <value>{0} is already an owner of {1}.</value>
+  </data>
+  <data name="SendMessageRoomClosed" xml:space="preserve">
+    <value>You cannot post messages to {0}. The room is closed.</value>
+  </data>
+  <data name="SettingsSaveSuccess" xml:space="preserve">
+    <value>Successfully saved the settings.</value>
+  </data>
+  <data name="SizeOrderBytes" xml:space="preserve">
+    <value>Bytes</value>
+  </data>
+  <data name="SizeOrderGB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="SizeOrderKB" xml:space="preserve">
+    <value>KB</value>
+  </data>
+  <data name="SizeOrderMB" xml:space="preserve">
+    <value>MB</value>
+  </data>
+  <data name="UnAllow_AdminRequired" xml:space="preserve">
+    <value>You cannot unallow an admin. Only admin can unallow admin.</value>
+  </data>
+  <data name="UnAllow_CannotUnallowSelf" xml:space="preserve">
+    <value>Why would you want to unallow yourself?</value>
+  </data>
+  <data name="UnAllow_CreatorRequiredToUnallowOwner" xml:space="preserve">
+    <value>Owners cannot unallow other owners. Only the room creator can unallow an owner.</value>
+  </data>
+  <data name="UnAllow_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to revoke access from?</value>
+  </data>
+  <data name="UnAllow_UserRequired" xml:space="preserve">
+    <value>Who you want to revoke access permissions from?</value>
+  </data>
+  <data name="UploadFailed" xml:space="preserve">
+    <value>Failed to upload {0}.</value>
+  </data>
+  <data name="UploadFailedException" xml:space="preserve">
+    <value>Failed to upload {0}. {1}</value>
+  </data>
+  <data name="UserAlreadyAdmin" xml:space="preserve">
+    <value>{0} is already an admin.</value>
+  </data>
+  <data name="UserInvalidName" xml:space="preserve">
+    <value>{0} is not a valid user name.</value>
+  </data>
+  <data name="UserNameTaken" xml:space="preserve">
+    <value>Username {0} already taken.</value>
+  </data>
+  <data name="UserNotAdmin" xml:space="preserve">
+    <value>{0} is not an admin.</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>Unable to find {0}.</value>
+  </data>
+  <data name="UserNotInRoom" xml:space="preserve">
+    <value>{0} isn't in {1}.</value>
+  </data>
+  <data name="UserNotRoomOwner" xml:space="preserve">
+    <value>{0} is not an owner of {1}.</value>
+  </data>
+  <data name="ViewArticle" xml:space="preserve">
+    <value>View article</value>
+  </data>
+  <data name="ViewLargerMap" xml:space="preserve">
+    <value>View Larger Map</value>
+  </data>
+  <data name="Where_UserRequired" xml:space="preserve">
+    <value>Who do you want to locate?</value>
+  </data>
+</root>

@@ -10,7 +10,7 @@ namespace JabbR.Commands
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException("Who you want to revoke access permissions from?");
+                throw new InvalidOperationException(LanguageResources.UnAllow_UserRequired);
             }
 
             string targetUserName = args[0];
@@ -21,7 +21,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(roomName))
             {
-                throw new InvalidOperationException("Which room do you want to revoke access from?");
+                throw new InvalidOperationException(LanguageResources.UnAllow_RoomRequired);
             }
 
             ChatRoom targetRoom = context.Repository.VerifyRoom(roomName, mustBeOpen: false);

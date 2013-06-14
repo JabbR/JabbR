@@ -11,7 +11,7 @@ namespace JabbR.Commands
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException("Which room do you want to open?");
+                throw new InvalidOperationException(LanguageResources.Open_RoomRequired);
             }
 
             string roomName = args[0];

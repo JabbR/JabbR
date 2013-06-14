@@ -57,12 +57,12 @@ namespace JabbR.Nancy
 
                 if (String.IsNullOrEmpty(username))
                 {
-                    this.AddValidationError("username", "Name is required");
+                    this.AddValidationError("username", LanguageResources.Authentication_NameRequired);
                 }
 
                 if (String.IsNullOrEmpty(password))
                 {
-                    this.AddValidationError("password", "Password is required");
+                    this.AddValidationError("password", LanguageResources.Authentication_PassRequired);
                 }
 
                 try
@@ -81,7 +81,7 @@ namespace JabbR.Nancy
                     // Swallow the exception    
                 }
 
-                this.AddValidationError("_FORM", "Login failed. Check your username/password.");
+                this.AddValidationError("_FORM", LanguageResources.Authentication_GenericFailure);
 
                 return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
             };
@@ -144,12 +144,12 @@ namespace JabbR.Nancy
 
                 if (String.IsNullOrEmpty(username))
                 {
-                    this.AddValidationError("username", "Name is required");
+                    this.AddValidationError("username", LanguageResources.Authentication_NameRequired);
                 }
 
                 if (String.IsNullOrEmpty(email))
                 {
-                    this.AddValidationError("email", "Email is required");
+                    this.AddValidationError("email", LanguageResources.Authentication_EmailRequired);
                 }
 
                 try
@@ -206,7 +206,7 @@ namespace JabbR.Nancy
 
                 if (user.Identities.Count == 1 && !user.HasUserNameAndPasswordCredentials())
                 {
-                    Request.AddAlertMessage("error", "You cannot unlink this account because you would lose your ability to login.");
+                    Request.AddAlertMessage("error", LanguageResources.Authentication_UnlinkRequiresMultipleIdentities);
                     return Response.AsRedirect("~/account/#identityProviders");
                 }
 
@@ -216,7 +216,7 @@ namespace JabbR.Nancy
                 {
                     repository.Remove(identity);
 
-                    Request.AddAlertMessage("success", String.Format("Successfully unlinked {0} account.", provider));
+                    Request.AddAlertMessage("success", String.Format(LanguageResources.Authentication_UnlinkCompleted, provider));
                     return Response.AsRedirect("~/account/#identityProviders");
                 }
 
@@ -252,7 +252,7 @@ namespace JabbR.Nancy
 
                 if (ModelValidationResult.IsValid)
                 {
-                    Request.AddAlertMessage("success", "Successfully added a password.");
+                    Request.AddAlertMessage("success", LanguageResources.Authentication_PassAddSuccess);
                     return Response.AsRedirect("~/account/#changePassword");
                 }
 
@@ -277,7 +277,7 @@ namespace JabbR.Nancy
 
                 if (String.IsNullOrEmpty(oldPassword))
                 {
-                    this.AddValidationError("oldPassword", "Old password is required");
+                    this.AddValidationError("oldPassword", LanguageResources.Authentication_OldPasswordRequired);
                 }
 
                 ValidatePassword(password, confirmPassword);
@@ -299,7 +299,7 @@ namespace JabbR.Nancy
 
                 if (ModelValidationResult.IsValid)
                 {
-                    Request.AddAlertMessage("success", "Successfully changed your password.");
+                    Request.AddAlertMessage("success", LanguageResources.Authentication_PassChangeSuccess);
                     return Response.AsRedirect("~/account/#changePassword");
                 }
 
@@ -338,7 +338,7 @@ namespace JabbR.Nancy
                 {
                     notificationService.OnUserNameChanged(user, oldUsername, username);
 
-                    Request.AddAlertMessage("success", "Successfully changed your username.");
+                    Request.AddAlertMessage("success", LanguageResources.Authentication_NameChangeCompleted);
                     return Response.AsRedirect("~/account/#changeUsername");
                 }
 
@@ -496,12 +496,12 @@ namespace JabbR.Nancy
         {
             if (String.IsNullOrEmpty(password))
             {
-                this.AddValidationError("password", "Password is required");
+                this.AddValidationError("password", LanguageResources.Authentication_PassRequired);
             }
 
             if (!String.Equals(password, confirmPassword))
             {
-                this.AddValidationError("confirmPassword", "Passwords don't match");
+                this.AddValidationError("confirmPassword", LanguageResources.Authentication_PassNonMatching);
             }
         }
 
@@ -509,12 +509,12 @@ namespace JabbR.Nancy
         {
             if (String.IsNullOrEmpty(username))
             {
-                this.AddValidationError("username", "Username is required");
+                this.AddValidationError("username", LanguageResources.Authentication_NameRequired);
             }
 
             if (!String.Equals(username, confirmUsername))
             {
-                this.AddValidationError("confirmUsername", "Usernames don't match");
+                this.AddValidationError("confirmUsername", LanguageResources.Authentication_NameNonMatching);
             }
         }
 

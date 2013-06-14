@@ -42,7 +42,7 @@ namespace JabbR.Nancy
 
                 if (ModelValidationResult.IsValid)
                 {
-                    Request.AddAlertMessage("success", "Successfully saved the settings.");
+                    Request.AddAlertMessage("success", LanguageResources.SettingsSaveSuccess);
                     return Response.AsRedirect("~/administration");
                 }
 

@@ -11,7 +11,7 @@ namespace JabbR.Commands
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException("Who do you want to ban?");
+                throw new InvalidOperationException(LanguageResources.Ban_UserRequired);
             }
 
             string targetUserName = args[0];

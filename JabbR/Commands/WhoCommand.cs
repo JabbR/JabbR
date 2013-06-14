@@ -21,7 +21,7 @@ namespace JabbR.Commands
 
             if (user == null)
             {
-                throw new InvalidOperationException(String.Format("We didn't find anyone with the username {0}.", name));
+                throw new InvalidOperationException(String.Format(LanguageResources.UserNotFound, name));
             }
 
             context.NotificationService.ShowUserInfo(user);

@@ -10,7 +10,7 @@ namespace JabbR.Commands
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException("Which owner do you want to remove?");
+                throw new InvalidOperationException(LanguageResources.RemoveOwner_UserRequired);
             }
 
             string targetUserName = args[0];
@@ -21,7 +21,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(roomName))
             {
-                throw new InvalidOperationException("Which room do you want to remove the owner from?");
+                throw new InvalidOperationException(LanguageResources.RemoveOwner_RoomRequired);
             }
 
             ChatRoom targetRoom = context.Repository.VerifyRoom(roomName);

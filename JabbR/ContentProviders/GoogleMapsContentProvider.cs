@@ -17,7 +17,7 @@ namespace JabbR.ContentProviders
         {
             get
             {
-                return @"<iframe width=""500"" height=""350"" frameborder=""0"" scrolling=""no"" marginheight=""0"" marginwidth=""0"" src=""http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl={1}&amp;geocode=&amp;q={0}&amp;aq=0&amp;sll={4}&amp;sspn={5}&amp;vpsrc={6}&amp;ie=UTF8&amp;hq=&amp;hnear={7}&amp;ll={2}&amp;spn={3}&amp;t={8}&amp;z={9}&amp;output=embed""></iframe><br /><small><a href=""http://maps.google.com/maps?f=q&amp;source=embed&amp;hl={1}&amp;geocode=&amp;q={0}&amp;aq=0&amp;sll={4}&amp;sspn={5}&amp;vpsrc={6}&amp;ie=UTF8&amp;hq=&amp;hnear={7}&amp;ll={2}&amp;spn={3}&amp;t={8}&amp;z={9}"" style=""color:#0000FF;text-align:left"" target=""_blank"">View Larger Map</a></small>";
+                return String.Format(@"<iframe width=""500"" height=""350"" frameborder=""0"" scrolling=""no"" marginheight=""0"" marginwidth=""0"" src=""http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl={1}&amp;geocode=&amp;q={0}&amp;aq=0&amp;sll={4}&amp;sspn={5}&amp;vpsrc={6}&amp;ie=UTF8&amp;hq=&amp;hnear={7}&amp;ll={2}&amp;spn={3}&amp;t={8}&amp;z={9}&amp;output=embed""></iframe><br /><small><a href=""http://maps.google.com/maps?f=q&amp;source=embed&amp;hl={{1}}&amp;geocode=&amp;q={{0}}&amp;aq=0&amp;sll={{4}}&amp;sspn={{5}}&amp;vpsrc={{6}}&amp;ie=UTF8&amp;hq=&amp;hnear={{7}}&amp;ll={{2}}&amp;spn={{3}}&amp;t={{8}}&amp;z={{9}}"" style=""color:#0000FF;text-align:left"" target=""_blank"">{0}</a></small>", LanguageResources.ViewLargerMap);
             }
         }
 
@@ -49,7 +49,7 @@ namespace JabbR.ContentProviders
             return base.GetCollapsibleContent(request).Then(content =>
             {
                 var queryString = new QueryStringCollection(request.RequestUri.Query);
-                content.Title = queryString["q"] ?? "Google Maps";
+                content.Title = queryString["q"] ?? LanguageResources.GoogleMapsContent_DefaultTitle;
                 return content;
             });
         }

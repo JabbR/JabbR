@@ -169,7 +169,7 @@ namespace JabbR
             // REVIEW: Is it better to use the extension method room.EnsureOpen here?
             if (room.Closed)
             {
-                throw new InvalidOperationException(String.Format("You cannot post messages to '{0}'. The room is closed.", clientMessage.Room));
+                throw new InvalidOperationException(String.Format(LanguageResources.SendMessageRoomClosed, clientMessage.Room));
             }
 
             // Update activity *after* ensuring the user, this forces them to be active
@@ -411,8 +411,8 @@ namespace JabbR
                 Owners = from u in room.Owners.Online()
                          select u.Name,
                 RecentMessages = recentMessages.Select(m => new MessageViewModel(m)),
-                Topic = room.Topic ?? "",
-                Welcome = room.Welcome ?? "",
+                Topic = room.Topic ?? String.Empty,
+                Welcome = room.Welcome ?? String.Empty,
                 Closed = room.Closed
             };
         }
@@ -434,7 +434,7 @@ namespace JabbR
                 !room.Owners.Contains(user) ||
                 (room.Private && !user.AllowedRooms.Contains(room)))
             {
-                throw new InvalidOperationException("You're not allowed to post a notification.");
+                throw new InvalidOperationException(LanguageResources.PostNotification_NotAllowed);
             }
 
             var chatMessage = new ChatMessage
@@ -688,7 +688,7 @@ namespace JabbR
             {
                 Name = room.Name,
                 Private = room.Private,
-                Welcome = room.Welcome ?? "",
+                Welcome = room.Welcome ?? String.Empty,
                 Closed = room.Closed
             };
 
@@ -1031,7 +1031,7 @@ namespace JabbR
         void INotificationService.ChangeTopic(ChatUser user, ChatRoom room)
         {
             bool isTopicCleared = String.IsNullOrWhiteSpace(room.Topic);
-            var parsedTopic = room.Topic ?? "";
+            var parsedTopic = room.Topic ?? String.Empty;
             Clients.Group(room.Name).topicChanged(room.Name, isTopicCleared, parsedTopic, user.Name);
             // Create the view model
             var roomViewModel = new RoomViewModel
@@ -1046,7 +1046,7 @@ namespace JabbR
         void INotificationService.ChangeWelcome(ChatUser user, ChatRoom room)
         {
             bool isWelcomeCleared = String.IsNullOrWhiteSpace(room.Welcome);
-            var parsedWelcome = room.Welcome ?? "";
+            var parsedWelcome = room.Welcome ?? String.Empty;
             foreach (var client in user.ConnectedClients)
             {
                 Clients.Client(client.Id).welcomeChanged(isWelcomeCleared, parsedWelcome);
