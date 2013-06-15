@@ -206,7 +206,7 @@ namespace JabbR.Nancy
 
                 if (user.Identities.Count == 1 && !user.HasUserNameAndPasswordCredentials())
                 {
-                    Request.AddAlertMessage("error", LanguageResources.Authentication_UnlinkRequiresMultipleIdentities);
+                    Request.AddAlertMessage("error", LanguageResources.Account_UnlinkRequiresMultipleIdentities);
                     return Response.AsRedirect("~/account/#identityProviders");
                 }
 
@@ -216,7 +216,7 @@ namespace JabbR.Nancy
                 {
                     repository.Remove(identity);
 
-                    Request.AddAlertMessage("success", String.Format(LanguageResources.Authentication_UnlinkCompleted, provider));
+                    Request.AddAlertMessage("success", String.Format(LanguageResources.Account_UnlinkCompleted, provider));
                     return Response.AsRedirect("~/account/#identityProviders");
                 }
 

@@ -274,7 +274,7 @@ namespace JabbR.Services
 
         internal static void ThrowProviderAndIdentityExist(string providerName, string identity)
         {
-            throw new InvalidOperationException(String.Format(LanguageResources.AuthenticationIdentityProviderTaken, identity, providerName));
+            throw new InvalidOperationException(String.Format(LanguageResources.Account_IdentityProviderTaken, identity, providerName));
         }
     }
 }

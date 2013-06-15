@@ -22,7 +22,7 @@ namespace JabbR {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class LanguageResources {
+    public class LanguageResources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace JabbR {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("JabbR.LanguageResources", typeof(LanguageResources).Assembly);
@@ -51,7 +51,7 @@ namespace JabbR {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,9 +61,207 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This {0} account has already been linked to another user..
+        /// </summary>
+        public static string Account_AccountAlreadyLinked {
+            get {
+                return ResourceManager.GetString("Account_AccountAlreadyLinked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully linked {0} account..
+        /// </summary>
+        public static string Account_AccountLinkedSuccess {
+            get {
+                return ResourceManager.GetString("Account_AccountLinkedSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Account_Cancel {
+            get {
+                return ResourceManager.GetString("Account_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change Password.
+        /// </summary>
+        public static string Account_ChangePass {
+            get {
+                return ResourceManager.GetString("Account_ChangePass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change Username.
+        /// </summary>
+        public static string Account_ChangeUserName {
+            get {
+                return ResourceManager.GetString("Account_ChangeUserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Country.
+        /// </summary>
+        public static string Account_Country {
+            get {
+                return ResourceManager.GetString("Account_Country", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Password.
+        /// </summary>
+        public static string Account_CurrentPass {
+            get {
+                return ResourceManager.GetString("Account_CurrentPass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        public static string Account_Email {
+            get {
+                return ResourceManager.GetString("Account_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Identity Providers.
+        /// </summary>
+        public static string Account_IdentityProviders {
+            get {
+                return ResourceManager.GetString("Account_IdentityProviders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Identity {0} already taken with Provider {1}, please login with a different provider/identity combination..
+        /// </summary>
+        public static string Account_IdentityProviderTaken {
+            get {
+                return ResourceManager.GetString("Account_IdentityProviderTaken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note.
+        /// </summary>
+        public static string Account_Note {
+            get {
+                return ResourceManager.GetString("Account_Note", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        public static string Account_Pass {
+            get {
+                return ResourceManager.GetString("Account_Pass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm Password.
+        /// </summary>
+        public static string Account_PassConfirm {
+            get {
+                return ResourceManager.GetString("Account_PassConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        public static string Account_Profile {
+            get {
+                return ResourceManager.GetString("Account_Profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Register.
+        /// </summary>
+        public static string Account_Register {
+            get {
+                return ResourceManager.GetString("Account_Register", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}Register{1} if you don&apos;t have an account..
+        /// </summary>
+        public static string Account_RegisterMessage {
+            get {
+                return ResourceManager.GetString("Account_RegisterMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sign in.
+        /// </summary>
+        public static string Account_SignIn {
+            get {
+                return ResourceManager.GetString("Account_SignIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully unlinked {0} account..
+        /// </summary>
+        public static string Account_UnlinkCompleted {
+            get {
+                return ResourceManager.GetString("Account_UnlinkCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unlink identity provider.
+        /// </summary>
+        public static string Account_UnlinkIdentityProvider {
+            get {
+                return ResourceManager.GetString("Account_UnlinkIdentityProvider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot unlink this account because you would lose your ability to login..
+        /// </summary>
+        public static string Account_UnlinkRequiresMultipleIdentities {
+            get {
+                return ResourceManager.GetString("Account_UnlinkRequiresMultipleIdentities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        public static string Account_UserName {
+            get {
+                return ResourceManager.GetString("Account_UserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm Username.
+        /// </summary>
+        public static string Account_UserNameConfirm {
+            get {
+                return ResourceManager.GetString("Account_UserNameConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Who do you want to make an admin?.
         /// </summary>
-        internal static string AddAdmin_UserRequired {
+        public static string AddAdmin_UserRequired {
             get {
                 return ResourceManager.GetString("AddAdmin_UserRequired", resourceCulture);
             }
@@ -72,7 +270,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Which room do you want to add ownership to?.
         /// </summary>
-        internal static string AddOwner_RoomRequired {
+        public static string AddOwner_RoomRequired {
             get {
                 return ResourceManager.GetString("AddOwner_RoomRequired", resourceCulture);
             }
@@ -81,16 +279,133 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Who do you want to make an owner?.
         /// </summary>
-        internal static string AddOwner_UserRequired {
+        public static string AddOwner_UserRequired {
             get {
                 return ResourceManager.GetString("AddOwner_UserRequired", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Administration.
+        /// </summary>
+        public static string Administration {
+            get {
+                return ResourceManager.GetString("Administration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow Room Creation.
+        /// </summary>
+        public static string Administration_AllowRoomCreation {
+            get {
+                return ResourceManager.GetString("Administration_AllowRoomCreation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow User Registration.
+        /// </summary>
+        public static string Administration_AllowUserRegistration {
+            get {
+                return ResourceManager.GetString("Administration_AllowUserRegistration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Analytics.
+        /// </summary>
+        public static string Administration_Analytics {
+            get {
+                return ResourceManager.GetString("Administration_Analytics", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Google Analytics ID.
+        /// </summary>
+        public static string Administration_AnalyticsGoogleId {
+            get {
+                return ResourceManager.GetString("Administration_AnalyticsGoogleId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Azure Blob Storage Connectionstring.
+        /// </summary>
+        public static string Administration_AzureBlobStorageConnectionString {
+            get {
+                return ResourceManager.GetString("Administration_AzureBlobStorageConnectionString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Encryption.
+        /// </summary>
+        public static string Administration_Encryption {
+            get {
+                return ResourceManager.GetString("Administration_Encryption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Encryption Key.
+        /// </summary>
+        public static string Administration_EncryptionKey {
+            get {
+                return ResourceManager.GetString("Administration_EncryptionKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General Settings.
+        /// </summary>
+        public static string Administration_GeneralSettings {
+            get {
+                return ResourceManager.GetString("Administration_GeneralSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Identity Providers.
+        /// </summary>
+        public static string Administration_IdentityProviders {
+            get {
+                return ResourceManager.GetString("Administration_IdentityProviders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max File Upload Size (Bytes).
+        /// </summary>
+        public static string Administration_MaxFileUploadBytes {
+            get {
+                return ResourceManager.GetString("Administration_MaxFileUploadBytes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Storage.
+        /// </summary>
+        public static string Administration_Storage {
+            get {
+                return ResourceManager.GetString("Administration_Storage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verification Key.
+        /// </summary>
+        public static string Administration_VerificationKey {
+            get {
+                return ResourceManager.GetString("Administration_VerificationKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You are not an admin..
         /// </summary>
-        internal static string AdminRequired {
+        public static string AdminRequired {
             get {
                 return ResourceManager.GetString("AdminRequired", resourceCulture);
             }
@@ -99,7 +414,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Which room do you want to allow access to?.
         /// </summary>
-        internal static string Allow_RoomRequired {
+        public static string Allow_RoomRequired {
             get {
                 return ResourceManager.GetString("Allow_RoomRequired", resourceCulture);
             }
@@ -108,7 +423,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Who do you want to grant access permissions to?.
         /// </summary>
-        internal static string Allow_UserRequired {
+        public static string Allow_UserRequired {
             get {
                 return ResourceManager.GetString("Allow_UserRequired", resourceCulture);
             }
@@ -117,7 +432,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Which room do you want to list the allowed users of?.
         /// </summary>
-        internal static string Allowed_RoomRequired {
+        public static string Allowed_RoomRequired {
             get {
                 return ResourceManager.GetString("Allowed_RoomRequired", resourceCulture);
             }
@@ -126,34 +441,16 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Your browser does not support the audio tag..
         /// </summary>
-        internal static string AudioTagSupportRequired {
+        public static string AudioTagSupportRequired {
             get {
                 return ResourceManager.GetString("AudioTagSupportRequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This {0} account has already been linked to another user..
-        /// </summary>
-        internal static string Authentication_AccountAlreadyLinked {
-            get {
-                return ResourceManager.GetString("Authentication_AccountAlreadyLinked", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Successfully linked {0} account..
-        /// </summary>
-        internal static string Authentication_AccountLinkedSuccess {
-            get {
-                return ResourceManager.GetString("Authentication_AccountLinkedSuccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Email is required..
         /// </summary>
-        internal static string Authentication_EmailRequired {
+        public static string Authentication_EmailRequired {
             get {
                 return ResourceManager.GetString("Authentication_EmailRequired", resourceCulture);
             }
@@ -162,7 +459,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Login failed. Check your username/password..
         /// </summary>
-        internal static string Authentication_GenericFailure {
+        public static string Authentication_GenericFailure {
             get {
                 return ResourceManager.GetString("Authentication_GenericFailure", resourceCulture);
             }
@@ -171,7 +468,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Successfully changed your username..
         /// </summary>
-        internal static string Authentication_NameChangeCompleted {
+        public static string Authentication_NameChangeCompleted {
             get {
                 return ResourceManager.GetString("Authentication_NameChangeCompleted", resourceCulture);
             }
@@ -180,7 +477,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Usernames don&apos;t match..
         /// </summary>
-        internal static string Authentication_NameNonMatching {
+        public static string Authentication_NameNonMatching {
             get {
                 return ResourceManager.GetString("Authentication_NameNonMatching", resourceCulture);
             }
@@ -189,7 +486,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Username is required..
         /// </summary>
-        internal static string Authentication_NameRequired {
+        public static string Authentication_NameRequired {
             get {
                 return ResourceManager.GetString("Authentication_NameRequired", resourceCulture);
             }
@@ -198,7 +495,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You&apos;re not logged in..
         /// </summary>
-        internal static string Authentication_NotLoggedIn {
+        public static string Authentication_NotLoggedIn {
             get {
                 return ResourceManager.GetString("Authentication_NotLoggedIn", resourceCulture);
             }
@@ -207,7 +504,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to That&apos;s already your username....
         /// </summary>
-        internal static string Authentication_OldNewUsernamesSame {
+        public static string Authentication_OldNewUsernamesSame {
             get {
                 return ResourceManager.GetString("Authentication_OldNewUsernamesSame", resourceCulture);
             }
@@ -216,7 +513,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Old password is required..
         /// </summary>
-        internal static string Authentication_OldPasswordRequired {
+        public static string Authentication_OldPasswordRequired {
             get {
                 return ResourceManager.GetString("Authentication_OldPasswordRequired", resourceCulture);
             }
@@ -225,7 +522,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Successfully added a password..
         /// </summary>
-        internal static string Authentication_PassAddSuccess {
+        public static string Authentication_PassAddSuccess {
             get {
                 return ResourceManager.GetString("Authentication_PassAddSuccess", resourceCulture);
             }
@@ -234,7 +531,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Successfully changed your password..
         /// </summary>
-        internal static string Authentication_PassChangeSuccess {
+        public static string Authentication_PassChangeSuccess {
             get {
                 return ResourceManager.GetString("Authentication_PassChangeSuccess", resourceCulture);
             }
@@ -243,7 +540,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Your password must be at least {0} characters..
         /// </summary>
-        internal static string Authentication_PassLengthRequired {
+        public static string Authentication_PassLengthRequired {
             get {
                 return ResourceManager.GetString("Authentication_PassLengthRequired", resourceCulture);
             }
@@ -252,7 +549,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Passwords don&apos;t match..
         /// </summary>
-        internal static string Authentication_PassNonMatching {
+        public static string Authentication_PassNonMatching {
             get {
                 return ResourceManager.GetString("Authentication_PassNonMatching", resourceCulture);
             }
@@ -261,43 +558,16 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Password is required..
         /// </summary>
-        internal static string Authentication_PassRequired {
+        public static string Authentication_PassRequired {
             get {
                 return ResourceManager.GetString("Authentication_PassRequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Successfully unlinked {0} account..
-        /// </summary>
-        internal static string Authentication_UnlinkCompleted {
-            get {
-                return ResourceManager.GetString("Authentication_UnlinkCompleted", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to You cannot unlink this account because you would lose your ability to login..
-        /// </summary>
-        internal static string Authentication_UnlinkRequiresMultipleIdentities {
-            get {
-                return ResourceManager.GetString("Authentication_UnlinkRequiresMultipleIdentities", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Identity {0} already taken with Provider {1}, please login with a different provider/identity combination..
-        /// </summary>
-        internal static string AuthenticationIdentityProviderTaken {
-            get {
-                return ResourceManager.GetString("AuthenticationIdentityProviderTaken", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to A password is required..
         /// </summary>
-        internal static string AuthenticationPasswordRequired {
+        public static string AuthenticationPasswordRequired {
             get {
                 return ResourceManager.GetString("AuthenticationPasswordRequired", resourceCulture);
             }
@@ -306,7 +576,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You cannot ban another admin..
         /// </summary>
-        internal static string Ban_CannotBanAdmin {
+        public static string Ban_CannotBanAdmin {
             get {
                 return ResourceManager.GetString("Ban_CannotBanAdmin", resourceCulture);
             }
@@ -315,7 +585,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Who do you want to ban?.
         /// </summary>
-        internal static string Ban_UserRequired {
+        public static string Ban_UserRequired {
             get {
                 return ResourceManager.GetString("Ban_UserRequired", resourceCulture);
             }
@@ -324,16 +594,450 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to What message do you want to broadcast?.
         /// </summary>
-        internal static string Broadcast_MessageRequired {
+        public static string Broadcast_MessageRequired {
             get {
                 return ResourceManager.GetString("Broadcast_MessageRequired", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Account settings.
+        /// </summary>
+        public static string Client_AccountSettings {
+            get {
+                return ResourceManager.GetString("Client_AccountSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to admin.
+        /// </summary>
+        public static string Client_AdminTag {
+            get {
+                return ResourceManager.GetString("Client_AdminTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Audible Notifications.
+        /// </summary>
+        public static string Client_AudibleNotifications {
+            get {
+                return ResourceManager.GetString("Client_AudibleNotifications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        public static string Client_DateRangeAll {
+            get {
+                return ResourceManager.GetString("Client_DateRangeAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last day.
+        /// </summary>
+        public static string Client_DateRangeLastDay {
+            get {
+                return ResourceManager.GetString("Client_DateRangeLastDay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last hour.
+        /// </summary>
+        public static string Client_DateRangeLastHour {
+            get {
+                return ResourceManager.GetString("Client_DateRangeLastHour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last month.
+        /// </summary>
+        public static string Client_DateRangeLastMonth {
+            get {
+                return ResourceManager.GetString("Client_DateRangeLastMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Last week.
+        /// </summary>
+        public static string Client_DateRangeLastWeek {
+            get {
+                return ResourceManager.GetString("Client_DateRangeLastWeek", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deployed from {0} on {1} at {2}..
+        /// </summary>
+        public static string Client_DeploymentInfo {
+            get {
+                return ResourceManager.GetString("Client_DeploymentInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display Help.
+        /// </summary>
+        public static string Client_DisplayHelp {
+            get {
+                return ResourceManager.GetString("Client_DisplayHelp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download.
+        /// </summary>
+        public static string Client_Download {
+            get {
+                return ResourceManager.GetString("Client_Download", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download Messages.
+        /// </summary>
+        public static string Client_DownloadMessages {
+            get {
+                return ResourceManager.GetString("Client_DownloadMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select date range for messages:.
+        /// </summary>
+        public static string Client_DownloadMessagesDateRange {
+            get {
+                return ResourceManager.GetString("Client_DownloadMessagesDateRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FAQ.
+        /// </summary>
+        public static string Client_FAQ {
+            get {
+                return ResourceManager.GetString("Client_FAQ", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click on a user to send message.
+        ///Type #roomname to create a link to a room
+        ///Use #test for testing..
+        /// </summary>
+        public static string Client_FAQMessage {
+            get {
+                return ResourceManager.GetString("Client_FAQMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JabbR Help.
+        /// </summary>
+        public static string Client_Help {
+            get {
+                return ResourceManager.GetString("Client_Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Jabbr Error.
+        /// </summary>
+        public static string Client_JabbrError {
+            get {
+                return ResourceManager.GetString("Client_JabbrError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was an error contacting the server, please refresh in a few minutes..
+        /// </summary>
+        public static string Client_JabbrErrorMessage {
+            get {
+                return ResourceManager.GetString("Client_JabbrErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JabbR Settings.
+        /// </summary>
+        public static string Client_JabbrSettings {
+            get {
+                return ResourceManager.GetString("Client_JabbrSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Loading previous messages....
+        /// </summary>
+        public static string Client_LoadingPreviousMessages {
+            get {
+                return ResourceManager.GetString("Client_LoadingPreviousMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load missing messages.
+        /// </summary>
+        public static string Client_LoadMissingMessages {
+            get {
+                return ResourceManager.GetString("Client_LoadMissingMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load more....
+        /// </summary>
+        public static string Client_LoadMore {
+            get {
+                return ResourceManager.GetString("Client_LoadMore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lobby.
+        /// </summary>
+        public static string Client_Lobby {
+            get {
+                return ResourceManager.GetString("Client_Lobby", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No matching rooms.
+        /// </summary>
+        public static string Client_NoMatchingRooms {
+            get {
+                return ResourceManager.GetString("Client_NoMatchingRooms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notifications.
+        /// </summary>
+        public static string Client_Notifications {
+            get {
+                return ResourceManager.GetString("Client_Notifications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No users.
+        /// </summary>
+        public static string Client_NoUsersInList {
+            get {
+                return ResourceManager.GetString("Client_NoUsersInList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} occupants.
+        /// </summary>
+        public static string Client_OccupantsMany {
+            get {
+                return ResourceManager.GetString("Client_OccupantsMany", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1 occupant.
+        /// </summary>
+        public static string Client_OccupantsOne {
+            get {
+                return ResourceManager.GetString("Client_OccupantsOne", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unoccupied.
+        /// </summary>
+        public static string Client_OccupantsZero {
+            get {
+                return ResourceManager.GetString("Client_OccupantsZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Popup Notifications.
+        /// </summary>
+        public static string Client_PopupNotifications {
+            get {
+                return ResourceManager.GetString("Client_PopupNotifications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JabbR Update.
+        /// </summary>
+        public static string Client_RefreshRequiredHeader {
+            get {
+                return ResourceManager.GetString("Client_RefreshRequiredHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refresh your browser to get the latest version.  Auto update will take place in 15 seconds..
+        /// </summary>
+        public static string Client_RefreshRequiredNotification {
+            get {
+                return ResourceManager.GetString("Client_RefreshRequiredNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Room commands.
+        /// </summary>
+        public static string Client_RoomCommands {
+            get {
+                return ResourceManager.GetString("Client_RoomCommands", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start typing to filter room list....
+        /// </summary>
+        public static string Client_RoomFilterInstruction {
+            get {
+                return ResourceManager.GetString("Client_RoomFilterInstruction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rooms.
+        /// </summary>
+        public static string Client_Rooms {
+            get {
+                return ResourceManager.GetString("Client_Rooms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Room Settings.
+        /// </summary>
+        public static string Client_RoomSettings {
+            get {
+                return ResourceManager.GetString("Client_RoomSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send.
+        /// </summary>
+        public static string Client_Send {
+            get {
+                return ResourceManager.GetString("Client_Send", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Closed Rooms?.
+        /// </summary>
+        public static string Client_ShowClosedRooms {
+            get {
+                return ResourceManager.GetString("Client_ShowClosedRooms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sign Out.
+        /// </summary>
+        public static string Client_SignOut {
+            get {
+                return ResourceManager.GetString("Client_SignOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Site-wide commands.
+        /// </summary>
+        public static string Client_SiteWideCommands {
+            get {
+                return ResourceManager.GetString("Client_SiteWideCommands", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Site-wide shortcuts.
+        /// </summary>
+        public static string Client_SiteWideShortcuts {
+            get {
+                return ResourceManager.GetString("Client_SiteWideShortcuts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Toggle Rich Content.
+        /// </summary>
+        public static string Client_ToggleRichContent {
+            get {
+                return ResourceManager.GetString("Client_ToggleRichContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload.
+        /// </summary>
+        public static string Client_Upload {
+            get {
+                return ResourceManager.GetString("Client_Upload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uploading from clipboard.
+        /// </summary>
+        public static string Client_UploadingFromClipboard {
+            get {
+                return ResourceManager.GetString("Client_UploadingFromClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User commands.
+        /// </summary>
+        public static string Client_UserCommands {
+            get {
+                return ResourceManager.GetString("Client_UserCommands", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View the branch.
+        /// </summary>
+        public static string Client_ViewTheBranch {
+            get {
+                return ResourceManager.GetString("Client_ViewTheBranch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View the commit.
+        /// </summary>
+        public static string Client_ViewTheCommit {
+            get {
+                return ResourceManager.GetString("Client_ViewTheCommit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your Private Rooms.
+        /// </summary>
+        public static string Client_YourPrivateRooms {
+            get {
+                return ResourceManager.GetString("Client_YourPrivateRooms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Which room do you want to close?.
         /// </summary>
-        internal static string Close_RoomRequired {
+        public static string Close_RoomRequired {
             get {
                 return ResourceManager.GetString("Close_RoomRequired", resourceCulture);
             }
@@ -342,7 +1046,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} is ambiguous: {1}..
         /// </summary>
-        internal static string CommandAmbiguous {
+        public static string CommandAmbiguous {
             get {
                 return ResourceManager.GetString("CommandAmbiguous", resourceCulture);
             }
@@ -351,7 +1055,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} is not a valid command..
         /// </summary>
-        internal static string CommandNotFound {
+        public static string CommandNotFound {
             get {
                 return ResourceManager.GetString("CommandNotFound", resourceCulture);
             }
@@ -360,25 +1064,70 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} (click to show/hide).
         /// </summary>
-        internal static string Content_HeaderAndToggle {
+        public static string Content_HeaderAndToggle {
             get {
                 return ResourceManager.GetString("Content_HeaderAndToggle", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Paste (click to show/hide).
+        /// </summary>
+        public static string Content_PasteHeaderAndToggle {
+            get {
+                return ResourceManager.GetString("Content_PasteHeaderAndToggle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sorry, but the country ISO code you requested doesn&apos;t exist. Please refer to http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 for a proper list of country ISO codes..
         /// </summary>
-        internal static string CountryISOInvalid {
+        public static string CountryISOInvalid {
             get {
                 return ResourceManager.GetString("CountryISOInvalid", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No milestone.
+        /// </summary>
+        public static string GithubContent_NoMilestone {
+            get {
+                return ResourceManager.GetString("GithubContent_NoMilestone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is assigned.
+        /// </summary>
+        public static string GithubContent_UserAssigned {
+            get {
+                return ResourceManager.GetString("GithubContent_UserAssigned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} commented {1}.
+        /// </summary>
+        public static string GithubContent_UserCommentedAtTime {
+            get {
+                return ResourceManager.GetString("GithubContent_UserCommentedAtTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} opened this issue {1}.
+        /// </summary>
+        public static string GithubContent_UserOpenedIssueAtTime {
+            get {
+                return ResourceManager.GetString("GithubContent_UserOpenedIssueAtTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Google Maps.
         /// </summary>
-        internal static string GoogleMapsContent_DefaultTitle {
+        public static string GoogleMapsContent_DefaultTitle {
             get {
                 return ResourceManager.GetString("GoogleMapsContent_DefaultTitle", resourceCulture);
             }
@@ -387,16 +1136,25 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Which email address do you want to use for the Gravatar image?.
         /// </summary>
-        internal static string Gravatar_EmailRequired {
+        public static string Gravatar_EmailRequired {
             get {
                 return ResourceManager.GetString("Gravatar_EmailRequired", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Gravatar Profile: {0} (click to show/hide).
+        /// </summary>
+        public static string GravatarContent_HeaderAndToggle {
+            get {
+                return ResourceManager.GetString("GravatarContent_HeaderAndToggle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You can&apos;t invite yourself!.
         /// </summary>
-        internal static string Invite_CannotInviteSelf {
+        public static string Invite_CannotInviteSelf {
             get {
                 return ResourceManager.GetString("Invite_CannotInviteSelf", resourceCulture);
             }
@@ -405,7 +1163,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Which room do you want to invite them to?.
         /// </summary>
-        internal static string Invite_RoomRequired {
+        public static string Invite_RoomRequired {
             get {
                 return ResourceManager.GetString("Invite_RoomRequired", resourceCulture);
             }
@@ -414,7 +1172,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Who do you want to invite?.
         /// </summary>
-        internal static string Invite_UserRequired {
+        public static string Invite_UserRequired {
             get {
                 return ResourceManager.GetString("Invite_UserRequired", resourceCulture);
             }
@@ -423,7 +1181,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Only private rooms can have invite codes..
         /// </summary>
-        internal static string InviteCode_PrivateRoomRequired {
+        public static string InviteCode_PrivateRoomRequired {
             get {
                 return ResourceManager.GetString("InviteCode_PrivateRoomRequired", resourceCulture);
             }
@@ -432,7 +1190,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Which room do you want to show the invite code for?.
         /// </summary>
-        internal static string InviteCode_RoomRequired {
+        public static string InviteCode_RoomRequired {
             get {
                 return ResourceManager.GetString("InviteCode_RoomRequired", resourceCulture);
             }
@@ -441,7 +1199,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Invite Code for {0}: {1}.
         /// </summary>
-        internal static string InviteCode_Success {
+        public static string InviteCode_Success {
             get {
                 return ResourceManager.GetString("InviteCode_Success", resourceCulture);
             }
@@ -450,7 +1208,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to This command cannot be invoked from the Lobby..
         /// </summary>
-        internal static string InvokeFromRoomRequired {
+        public static string InvokeFromRoomRequired {
             get {
                 return ResourceManager.GetString("InvokeFromRoomRequired", resourceCulture);
             }
@@ -459,7 +1217,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Unable to join {0}. This room is locked and you don&apos;t have permission to enter. If you have an invite code, enter it in the /join command.
         /// </summary>
-        internal static string Join_LockedAccessPermission {
+        public static string Join_LockedAccessPermission {
             get {
                 return ResourceManager.GetString("Join_LockedAccessPermission", resourceCulture);
             }
@@ -468,7 +1226,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Which room do you want to join?.
         /// </summary>
-        internal static string Join_RoomRequired {
+        public static string Join_RoomRequired {
             get {
                 return ResourceManager.GetString("Join_RoomRequired", resourceCulture);
             }
@@ -477,7 +1235,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Join Me Meeting: {0}.
         /// </summary>
-        internal static string JoinMeContent_DefaultTitle {
+        public static string JoinMeContent_DefaultTitle {
             get {
                 return ResourceManager.GetString("JoinMeContent_DefaultTitle", resourceCulture);
             }
@@ -486,7 +1244,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You cannot kick an admin. Only admin can kick admin..
         /// </summary>
-        internal static string Kick_AdminRequiredToKickAdmin {
+        public static string Kick_AdminRequiredToKickAdmin {
             get {
                 return ResourceManager.GetString("Kick_AdminRequiredToKickAdmin", resourceCulture);
             }
@@ -495,7 +1253,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Why would you want to kick yourself?.
         /// </summary>
-        internal static string Kick_CannotKickSelf {
+        public static string Kick_CannotKickSelf {
             get {
                 return ResourceManager.GetString("Kick_CannotKickSelf", resourceCulture);
             }
@@ -504,7 +1262,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Owners cannot kick other owners. Only the room creator can kick an owner..
         /// </summary>
-        internal static string Kick_CreatorRequiredToKickOwner {
+        public static string Kick_CreatorRequiredToKickOwner {
             get {
                 return ResourceManager.GetString("Kick_CreatorRequiredToKickOwner", resourceCulture);
             }
@@ -513,7 +1271,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Which room do you want to kick them from?.
         /// </summary>
-        internal static string Kick_RoomRequired {
+        public static string Kick_RoomRequired {
             get {
                 return ResourceManager.GetString("Kick_RoomRequired", resourceCulture);
             }
@@ -522,7 +1280,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Who do you want to to kick?.
         /// </summary>
-        internal static string Kick_UserRequired {
+        public static string Kick_UserRequired {
             get {
                 return ResourceManager.GetString("Kick_UserRequired", resourceCulture);
             }
@@ -531,7 +1289,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Which room do you want to leave?.
         /// </summary>
-        internal static string Leave_RoomRequired {
+        public static string Leave_RoomRequired {
             get {
                 return ResourceManager.GetString("Leave_RoomRequired", resourceCulture);
             }
@@ -540,7 +1298,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Which room do you want to list the current users of?.
         /// </summary>
-        internal static string List_RoomRequired {
+        public static string List_RoomRequired {
             get {
                 return ResourceManager.GetString("List_RoomRequired", resourceCulture);
             }
@@ -549,7 +1307,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Loading....
         /// </summary>
-        internal static string LoadingMessage {
+        public static string LoadingMessage {
             get {
                 return ResourceManager.GetString("LoadingMessage", resourceCulture);
             }
@@ -558,7 +1316,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Which room do you want to lock?.
         /// </summary>
-        internal static string Lock_RoomRequired {
+        public static string Lock_RoomRequired {
             get {
                 return ResourceManager.GetString("Lock_RoomRequired", resourceCulture);
             }
@@ -567,7 +1325,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You what?.
         /// </summary>
-        internal static string Me_ActionRequired {
+        public static string Me_ActionRequired {
             get {
                 return ResourceManager.GetString("Me_ActionRequired", resourceCulture);
             }
@@ -576,7 +1334,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You can&apos;t private message yourself!.
         /// </summary>
-        internal static string Msg_CannotMsgSelf {
+        public static string Msg_CannotMsgSelf {
             get {
                 return ResourceManager.GetString("Msg_CannotMsgSelf", resourceCulture);
             }
@@ -585,7 +1343,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to What do you want to say to {0}?.
         /// </summary>
-        internal static string Msg_MessageRequired {
+        public static string Msg_MessageRequired {
             get {
                 return ResourceManager.GetString("Msg_MessageRequired", resourceCulture);
             }
@@ -594,16 +1352,88 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Who do you want to send a private message to?.
         /// </summary>
-        internal static string Msg_UserRequired {
+        public static string Msg_UserRequired {
             get {
                 return ResourceManager.GetString("Msg_UserRequired", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sorry, but your {1} is too long. Please keep it under {0} characters..
+        /// </summary>
+        public static string NoteTooLong {
+            get {
+                return ResourceManager.GetString("NoteTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notifications.
+        /// </summary>
+        public static string Notifications {
+            get {
+                return ResourceManager.GetString("Notifications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All Notifications.
+        /// </summary>
+        public static string Notifications_AllNotifications {
+            get {
+                return ResourceManager.GetString("Notifications_AllNotifications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mark All as Read.
+        /// </summary>
+        public static string Notifications_MarkAllRead {
+            get {
+                return ResourceManager.GetString("Notifications_MarkAllRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mark Notification as Read.
+        /// </summary>
+        public static string Notifications_MarkAsRead {
+            get {
+                return ResourceManager.GetString("Notifications_MarkAsRead", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} in {1} on {2}.
+        /// </summary>
+        public static string Notifications_MetadataInfo {
+            get {
+                return ResourceManager.GetString("Notifications_MetadataInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No unread notifications!.
+        /// </summary>
+        public static string Notifications_NoUnread {
+            get {
+                return ResourceManager.GetString("Notifications_NoUnread", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unread {0}.
+        /// </summary>
+        public static string Notifications_UnreadWithCount {
+            get {
+                return ResourceManager.GetString("Notifications_UnreadWithCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Room can only be nudged once every {0} seconds..
         /// </summary>
-        internal static string NudgeRoom_Throttled {
+        public static string NudgeRoom_Throttled {
             get {
                 return ResourceManager.GetString("NudgeRoom_Throttled", resourceCulture);
             }
@@ -612,7 +1442,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You can&apos;t nudge yourself!.
         /// </summary>
-        internal static string NudgeUser_CannotNudgeSelf {
+        public static string NudgeUser_CannotNudgeSelf {
             get {
                 return ResourceManager.GetString("NudgeUser_CannotNudgeSelf", resourceCulture);
             }
@@ -621,7 +1451,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to User can only be nudged once every {0} seconds..
         /// </summary>
-        internal static string NudgeUser_Throttled {
+        public static string NudgeUser_Throttled {
             get {
                 return ResourceManager.GetString("NudgeUser_Throttled", resourceCulture);
             }
@@ -630,7 +1460,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Which room do you want to open?.
         /// </summary>
-        internal static string Open_RoomRequired {
+        public static string Open_RoomRequired {
             get {
                 return ResourceManager.GetString("Open_RoomRequired", resourceCulture);
             }
@@ -639,43 +1469,52 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You&apos;re not allowed to post a notification..
         /// </summary>
-        internal static string PostNotification_NotAllowed {
+        public static string PostNotification_NotAllowed {
             get {
                 return ResourceManager.GetString("PostNotification_NotAllowed", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Powered by {0}SignalR{1}.
+        /// </summary>
+        public static string PoweredByHeader {
+            get {
+                return ResourceManager.GetString("PoweredByHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Which admin do you want to remove?.
         /// </summary>
-        internal static string RemoveAdmin_UserRequired {
+        public static string RemoveAdmin_UserRequired {
             get {
                 return ResourceManager.GetString("RemoveAdmin_UserRequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Which owner do you want to remove?.
-        /// </summary>
-        internal static string RemoveOwner_UserRequired {
-            get {
-                return ResourceManager.GetString("RemoveOwner_CommandUserMissing", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Which room do you want to remove the owner from?.
         /// </summary>
-        internal static string RemoveOwner_RoomRequired {
+        public static string RemoveOwner_RoomRequired {
             get {
                 return ResourceManager.GetString("RemoveOwner_RoomRequired", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Which owner do you want to remove?.
+        /// </summary>
+        public static string RemoveOwner_UserRequired {
+            get {
+                return ResourceManager.GetString("RemoveOwner_UserRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Which room do you want to reset the invite code of?.
         /// </summary>
-        internal static string ResetInviteCode_RoomRequired {
+        public static string ResetInviteCode_RoomRequired {
             get {
                 return ResourceManager.GetString("ResetInviteCode_RoomRequired", resourceCulture);
             }
@@ -684,7 +1523,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You do not have access to {0}..
         /// </summary>
-        internal static string RoomAccessPermission {
+        public static string RoomAccessPermission {
             get {
                 return ResourceManager.GetString("RoomAccessPermission", resourceCulture);
             }
@@ -693,7 +1532,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} isn&apos;t allowed to access {1}..
         /// </summary>
-        internal static string RoomAccessPermissionUser {
+        public static string RoomAccessPermissionUser {
             get {
                 return ResourceManager.GetString("RoomAccessPermissionUser", resourceCulture);
             }
@@ -702,7 +1541,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} is already closed..
         /// </summary>
-        internal static string RoomAlreadyClosed {
+        public static string RoomAlreadyClosed {
             get {
                 return ResourceManager.GetString("RoomAlreadyClosed", resourceCulture);
             }
@@ -711,7 +1550,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} is already locked..
         /// </summary>
-        internal static string RoomAlreadyLocked {
+        public static string RoomAlreadyLocked {
             get {
                 return ResourceManager.GetString("RoomAlreadyLocked", resourceCulture);
             }
@@ -720,7 +1559,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} is already open..
         /// </summary>
-        internal static string RoomAlreadyOpen {
+        public static string RoomAlreadyOpen {
             get {
                 return ResourceManager.GetString("RoomAlreadyOpen", resourceCulture);
             }
@@ -729,7 +1568,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Lobby is not a valid chat room name..
         /// </summary>
-        internal static string RoomCannotBeNamedLobby {
+        public static string RoomCannotBeNamedLobby {
             get {
                 return ResourceManager.GetString("RoomCannotBeNamedLobby", resourceCulture);
             }
@@ -738,7 +1577,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} is closed..
         /// </summary>
-        internal static string RoomClosed {
+        public static string RoomClosed {
             get {
                 return ResourceManager.GetString("RoomClosed", resourceCulture);
             }
@@ -747,7 +1586,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Room creation is disabled..
         /// </summary>
-        internal static string RoomCreationDisabled {
+        public static string RoomCreationDisabled {
             get {
                 return ResourceManager.GetString("RoomCreationDisabled", resourceCulture);
             }
@@ -756,7 +1595,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You are not the creator of {0}..
         /// </summary>
-        internal static string RoomCreatorRequired {
+        public static string RoomCreatorRequired {
             get {
                 return ResourceManager.GetString("RoomCreatorRequired", resourceCulture);
             }
@@ -765,7 +1604,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} already exists..
         /// </summary>
-        internal static string RoomExists {
+        public static string RoomExists {
             get {
                 return ResourceManager.GetString("RoomExists", resourceCulture);
             }
@@ -774,7 +1613,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} already exists, but it&apos;s closed..
         /// </summary>
-        internal static string RoomExistsButClosed {
+        public static string RoomExistsButClosed {
             get {
                 return ResourceManager.GetString("RoomExistsButClosed", resourceCulture);
             }
@@ -783,7 +1622,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} is not a valid room name..
         /// </summary>
-        internal static string RoomInvalidName {
+        public static string RoomInvalidName {
             get {
                 return ResourceManager.GetString("RoomInvalidName", resourceCulture);
             }
@@ -792,7 +1631,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Room names cannot contain spaces..
         /// </summary>
-        internal static string RoomInvalidNameSpaces {
+        public static string RoomInvalidNameSpaces {
             get {
                 return ResourceManager.GetString("RoomInvalidNameSpaces", resourceCulture);
             }
@@ -801,7 +1640,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Use &apos;/join room&apos; to join a room..
         /// </summary>
-        internal static string RoomJoinMessage {
+        public static string RoomJoinMessage {
             get {
                 return ResourceManager.GetString("RoomJoinMessage", resourceCulture);
             }
@@ -810,16 +1649,25 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You&apos;re in {0}, but it doesn&apos;t exist..
         /// </summary>
-        internal static string RoomMemberButNotExists {
+        public static string RoomMemberButNotExists {
             get {
                 return ResourceManager.GetString("RoomMemberButNotExists", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Room name cannot be blank!.
+        /// </summary>
+        public static string RoomNameCannotBeBlank {
+            get {
+                return ResourceManager.GetString("RoomNameCannotBeBlank", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Unable to find {0}..
         /// </summary>
-        internal static string RoomNotFound {
+        public static string RoomNotFound {
             get {
                 return ResourceManager.GetString("RoomNotFound", resourceCulture);
             }
@@ -828,7 +1676,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You&apos;re not in {0}. Use &apos;/join {0}&apos; to join it..
         /// </summary>
-        internal static string RoomNotMember {
+        public static string RoomNotMember {
             get {
                 return ResourceManager.GetString("RoomNotMember", resourceCulture);
             }
@@ -837,7 +1685,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} is not a private room..
         /// </summary>
-        internal static string RoomNotPrivate {
+        public static string RoomNotPrivate {
             get {
                 return ResourceManager.GetString("RoomNotPrivate", resourceCulture);
             }
@@ -846,34 +1694,25 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You are not an owner of {0}..
         /// </summary>
-        internal static string RoomOwnerRequired {
+        public static string RoomOwnerRequired {
             get {
-                return ResourceManager.GetString("RoomOwnershipRequired", resourceCulture);
+                return ResourceManager.GetString("RoomOwnerRequired", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to No room specified..
         /// </summary>
-        internal static string RoomRequired {
+        public static string RoomRequired {
             get {
                 return ResourceManager.GetString("RoomRequired", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Room name cannot be blank!.
-        /// </summary>
-        internal static string RoomNameCannotBeBlank {
-            get {
-                return ResourceManager.GetString("RoomRequiresName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to {0} is already allowed into {1}..
         /// </summary>
-        internal static string RoomUserAlreadyAllowed {
+        public static string RoomUserAlreadyAllowed {
             get {
                 return ResourceManager.GetString("RoomUserAlreadyAllowed", resourceCulture);
             }
@@ -882,7 +1721,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} is already an owner of {1}..
         /// </summary>
-        internal static string RoomUserAlreadyOwner {
+        public static string RoomUserAlreadyOwner {
             get {
                 return ResourceManager.GetString("RoomUserAlreadyOwner", resourceCulture);
             }
@@ -891,16 +1730,25 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You cannot post messages to {0}. The room is closed..
         /// </summary>
-        internal static string SendMessageRoomClosed {
+        public static string SendMessageRoomClosed {
             get {
                 return ResourceManager.GetString("SendMessageRoomClosed", resourceCulture);
             }
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save Settings.
+        /// </summary>
+        public static string SettingsSave {
+            get {
+                return ResourceManager.GetString("SettingsSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Successfully saved the settings..
         /// </summary>
-        internal static string SettingsSaveSuccess {
+        public static string SettingsSaveSuccess {
             get {
                 return ResourceManager.GetString("SettingsSaveSuccess", resourceCulture);
             }
@@ -909,7 +1757,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Bytes.
         /// </summary>
-        internal static string SizeOrderBytes {
+        public static string SizeOrderBytes {
             get {
                 return ResourceManager.GetString("SizeOrderBytes", resourceCulture);
             }
@@ -918,7 +1766,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to GB.
         /// </summary>
-        internal static string SizeOrderGB {
+        public static string SizeOrderGB {
             get {
                 return ResourceManager.GetString("SizeOrderGB", resourceCulture);
             }
@@ -927,7 +1775,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to KB.
         /// </summary>
-        internal static string SizeOrderKB {
+        public static string SizeOrderKB {
             get {
                 return ResourceManager.GetString("SizeOrderKB", resourceCulture);
             }
@@ -936,7 +1784,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to MB.
         /// </summary>
-        internal static string SizeOrderMB {
+        public static string SizeOrderMB {
             get {
                 return ResourceManager.GetString("SizeOrderMB", resourceCulture);
             }
@@ -945,7 +1793,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You cannot unallow an admin. Only admin can unallow admin..
         /// </summary>
-        internal static string UnAllow_AdminRequired {
+        public static string UnAllow_AdminRequired {
             get {
                 return ResourceManager.GetString("UnAllow_AdminRequired", resourceCulture);
             }
@@ -954,7 +1802,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Why would you want to unallow yourself?.
         /// </summary>
-        internal static string UnAllow_CannotUnallowSelf {
+        public static string UnAllow_CannotUnallowSelf {
             get {
                 return ResourceManager.GetString("UnAllow_CannotUnallowSelf", resourceCulture);
             }
@@ -963,7 +1811,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Owners cannot unallow other owners. Only the room creator can unallow an owner..
         /// </summary>
-        internal static string UnAllow_CreatorRequiredToUnallowOwner {
+        public static string UnAllow_CreatorRequiredToUnallowOwner {
             get {
                 return ResourceManager.GetString("UnAllow_CreatorRequiredToUnallowOwner", resourceCulture);
             }
@@ -972,7 +1820,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Which room do you want to revoke access from?.
         /// </summary>
-        internal static string UnAllow_RoomRequired {
+        public static string UnAllow_RoomRequired {
             get {
                 return ResourceManager.GetString("UnAllow_RoomRequired", resourceCulture);
             }
@@ -981,7 +1829,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Who you want to revoke access permissions from?.
         /// </summary>
-        internal static string UnAllow_UserRequired {
+        public static string UnAllow_UserRequired {
             get {
                 return ResourceManager.GetString("UnAllow_UserRequired", resourceCulture);
             }
@@ -990,7 +1838,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Failed to upload {0}..
         /// </summary>
-        internal static string UploadFailed {
+        public static string UploadFailed {
             get {
                 return ResourceManager.GetString("UploadFailed", resourceCulture);
             }
@@ -999,7 +1847,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Failed to upload {0}. {1}.
         /// </summary>
-        internal static string UploadFailedException {
+        public static string UploadFailedException {
             get {
                 return ResourceManager.GetString("UploadFailedException", resourceCulture);
             }
@@ -1008,7 +1856,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} is already an admin..
         /// </summary>
-        internal static string UserAlreadyAdmin {
+        public static string UserAlreadyAdmin {
             get {
                 return ResourceManager.GetString("UserAlreadyAdmin", resourceCulture);
             }
@@ -1017,7 +1865,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} is not a valid user name..
         /// </summary>
-        internal static string UserInvalidName {
+        public static string UserInvalidName {
             get {
                 return ResourceManager.GetString("UserInvalidName", resourceCulture);
             }
@@ -1026,7 +1874,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Username {0} already taken..
         /// </summary>
-        internal static string UserNameTaken {
+        public static string UserNameTaken {
             get {
                 return ResourceManager.GetString("UserNameTaken", resourceCulture);
             }
@@ -1035,7 +1883,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} is not an admin..
         /// </summary>
-        internal static string UserNotAdmin {
+        public static string UserNotAdmin {
             get {
                 return ResourceManager.GetString("UserNotAdmin", resourceCulture);
             }
@@ -1044,7 +1892,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Unable to find {0}..
         /// </summary>
-        internal static string UserNotFound {
+        public static string UserNotFound {
             get {
                 return ResourceManager.GetString("UserNotFound", resourceCulture);
             }
@@ -1053,7 +1901,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} isn&apos;t in {1}..
         /// </summary>
-        internal static string UserNotInRoom {
+        public static string UserNotInRoom {
             get {
                 return ResourceManager.GetString("UserNotInRoom", resourceCulture);
             }
@@ -1062,7 +1910,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} is not an owner of {1}..
         /// </summary>
-        internal static string UserNotRoomOwner {
+        public static string UserNotRoomOwner {
             get {
                 return ResourceManager.GetString("UserNotRoomOwner", resourceCulture);
             }
@@ -1071,7 +1919,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to View article.
         /// </summary>
-        internal static string ViewArticle {
+        public static string ViewArticle {
             get {
                 return ResourceManager.GetString("ViewArticle", resourceCulture);
             }
@@ -1080,7 +1928,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to View Larger Map.
         /// </summary>
-        internal static string ViewLargerMap {
+        public static string ViewLargerMap {
             get {
                 return ResourceManager.GetString("ViewLargerMap", resourceCulture);
             }
@@ -1089,7 +1937,7 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to Who do you want to locate?.
         /// </summary>
-        internal static string Where_UserRequired {
+        public static string Where_UserRequired {
             get {
                 return ResourceManager.GetString("Where_UserRequired", resourceCulture);
             }

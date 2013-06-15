@@ -117,6 +117,73 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Account_AccountAlreadyLinked" xml:space="preserve">
+    <value>This {0} account has already been linked to another user.</value>
+  </data>
+  <data name="Account_AccountLinkedSuccess" xml:space="preserve">
+    <value>Successfully linked {0} account.</value>
+  </data>
+  <data name="Account_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Account_ChangePass" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Account_ChangeUserName" xml:space="preserve">
+    <value>Change Username</value>
+  </data>
+  <data name="Account_Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="Account_CurrentPass" xml:space="preserve">
+    <value>Current Password</value>
+  </data>
+  <data name="Account_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Account_IdentityProviders" xml:space="preserve">
+    <value>Identity Providers</value>
+  </data>
+  <data name="Account_IdentityProviderTaken" xml:space="preserve">
+    <value>Identity {0} already taken with Provider {1}, please login with a different provider/identity combination.</value>
+  </data>
+  <data name="Account_Note" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="Account_Pass" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Account_PassConfirm" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
+  <data name="Account_Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Account_Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Account_RegisterMessage" xml:space="preserve">
+    <value>{0}Register{1} if you don't have an account.</value>
+    <comment>{0} and {1} are anchor open and close tags</comment>
+  </data>
+  <data name="Account_SignIn" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="Account_UnlinkCompleted" xml:space="preserve">
+    <value>Successfully unlinked {0} account.</value>
+  </data>
+  <data name="Account_UnlinkIdentityProvider" xml:space="preserve">
+    <value>Unlink identity provider</value>
+  </data>
+  <data name="Account_UnlinkRequiresMultipleIdentities" xml:space="preserve">
+    <value>You cannot unlink this account because you would lose your ability to login.</value>
+  </data>
+  <data name="Account_UserName" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Account_UserNameConfirm" xml:space="preserve">
+    <value>Confirm Username</value>
+  </data>
   <data name="AddAdmin_UserRequired" xml:space="preserve">
     <value>Who do you want to make an admin?</value>
   </data>
@@ -125,6 +192,45 @@
   </data>
   <data name="AddOwner_UserRequired" xml:space="preserve">
     <value>Who do you want to make an owner?</value>
+  </data>
+  <data name="Administration" xml:space="preserve">
+    <value>Administration</value>
+  </data>
+  <data name="Administration_AllowRoomCreation" xml:space="preserve">
+    <value>Allow Room Creation</value>
+  </data>
+  <data name="Administration_AllowUserRegistration" xml:space="preserve">
+    <value>Allow User Registration</value>
+  </data>
+  <data name="Administration_Analytics" xml:space="preserve">
+    <value>Analytics</value>
+  </data>
+  <data name="Administration_AnalyticsGoogleId" xml:space="preserve">
+    <value>Google Analytics ID</value>
+  </data>
+  <data name="Administration_AzureBlobStorageConnectionString" xml:space="preserve">
+    <value>Azure Blob Storage Connectionstring</value>
+  </data>
+  <data name="Administration_Encryption" xml:space="preserve">
+    <value>Encryption</value>
+  </data>
+  <data name="Administration_EncryptionKey" xml:space="preserve">
+    <value>Encryption Key</value>
+  </data>
+  <data name="Administration_GeneralSettings" xml:space="preserve">
+    <value>General Settings</value>
+  </data>
+  <data name="Administration_IdentityProviders" xml:space="preserve">
+    <value>Identity Providers</value>
+  </data>
+  <data name="Administration_MaxFileUploadBytes" xml:space="preserve">
+    <value>Max File Upload Size (Bytes)</value>
+  </data>
+  <data name="Administration_Storage" xml:space="preserve">
+    <value>Storage</value>
+  </data>
+  <data name="Administration_VerificationKey" xml:space="preserve">
+    <value>Verification Key</value>
   </data>
   <data name="AdminRequired" xml:space="preserve">
     <value>You are not an admin.</value>
@@ -141,17 +247,8 @@
   <data name="AudioTagSupportRequired" xml:space="preserve">
     <value>Your browser does not support the audio tag.</value>
   </data>
-  <data name="AuthenticationIdentityProviderTaken" xml:space="preserve">
-    <value>Identity {0} already taken with Provider {1}, please login with a different provider/identity combination.</value>
-  </data>
   <data name="AuthenticationPasswordRequired" xml:space="preserve">
     <value>A password is required.</value>
-  </data>
-  <data name="Authentication_AccountAlreadyLinked" xml:space="preserve">
-    <value>This {0} account has already been linked to another user.</value>
-  </data>
-  <data name="Authentication_AccountLinkedSuccess" xml:space="preserve">
-    <value>Successfully linked {0} account.</value>
   </data>
   <data name="Authentication_EmailRequired" xml:space="preserve">
     <value>Email is required.</value>
@@ -192,12 +289,6 @@
   <data name="Authentication_PassRequired" xml:space="preserve">
     <value>Password is required.</value>
   </data>
-  <data name="Authentication_UnlinkCompleted" xml:space="preserve">
-    <value>Successfully unlinked {0} account.</value>
-  </data>
-  <data name="Authentication_UnlinkRequiresMultipleIdentities" xml:space="preserve">
-    <value>You cannot unlink this account because you would lose your ability to login.</value>
-  </data>
   <data name="Ban_CannotBanAdmin" xml:space="preserve">
     <value>You cannot ban another admin.</value>
   </data>
@@ -206,6 +297,152 @@
   </data>
   <data name="Broadcast_MessageRequired" xml:space="preserve">
     <value>What message do you want to broadcast?</value>
+  </data>
+  <data name="Client_AccountSettings" xml:space="preserve">
+    <value>Account settings</value>
+  </data>
+  <data name="Client_AdminTag" xml:space="preserve">
+    <value>admin</value>
+  </data>
+  <data name="Client_AudibleNotifications" xml:space="preserve">
+    <value>Audible Notifications</value>
+  </data>
+  <data name="Client_DateRangeAll" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Client_DateRangeLastDay" xml:space="preserve">
+    <value>Last day</value>
+  </data>
+  <data name="Client_DateRangeLastHour" xml:space="preserve">
+    <value>Last hour</value>
+  </data>
+  <data name="Client_DateRangeLastMonth" xml:space="preserve">
+    <value>Last month</value>
+  </data>
+  <data name="Client_DateRangeLastWeek" xml:space="preserve">
+    <value>Last week</value>
+  </data>
+  <data name="Client_DeploymentInfo" xml:space="preserve">
+    <value>Deployed from {0} on {1} at {2}.</value>
+  </data>
+  <data name="Client_DisplayHelp" xml:space="preserve">
+    <value>Display Help</value>
+  </data>
+  <data name="Client_Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Client_DownloadMessages" xml:space="preserve">
+    <value>Download Messages</value>
+  </data>
+  <data name="Client_DownloadMessagesDateRange" xml:space="preserve">
+    <value>Select date range for messages:</value>
+  </data>
+  <data name="Client_FAQ" xml:space="preserve">
+    <value>FAQ</value>
+  </data>
+  <data name="Client_FAQMessage" xml:space="preserve">
+    <value>Click on a user to send message.
+Type #roomname to create a link to a room
+Use #test for testing.</value>
+  </data>
+  <data name="Client_Help" xml:space="preserve">
+    <value>JabbR Help</value>
+  </data>
+  <data name="Client_JabbrError" xml:space="preserve">
+    <value>Jabbr Error</value>
+  </data>
+  <data name="Client_JabbrErrorMessage" xml:space="preserve">
+    <value>There was an error contacting the server, please refresh in a few minutes.</value>
+  </data>
+  <data name="Client_JabbrSettings" xml:space="preserve">
+    <value>JabbR Settings</value>
+  </data>
+  <data name="Client_LoadingPreviousMessages" xml:space="preserve">
+    <value>Loading previous messages...</value>
+  </data>
+  <data name="Client_LoadMissingMessages" xml:space="preserve">
+    <value>Load missing messages</value>
+  </data>
+  <data name="Client_LoadMore" xml:space="preserve">
+    <value>Load more...</value>
+  </data>
+  <data name="Client_Lobby" xml:space="preserve">
+    <value>Lobby</value>
+  </data>
+  <data name="Client_NoMatchingRooms" xml:space="preserve">
+    <value>No matching rooms</value>
+  </data>
+  <data name="Client_Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="Client_NoUsersInList" xml:space="preserve">
+    <value>No users</value>
+  </data>
+  <data name="Client_OccupantsMany" xml:space="preserve">
+    <value>{0} occupants</value>
+  </data>
+  <data name="Client_OccupantsOne" xml:space="preserve">
+    <value>1 occupant</value>
+  </data>
+  <data name="Client_OccupantsZero" xml:space="preserve">
+    <value>Unoccupied</value>
+  </data>
+  <data name="Client_PopupNotifications" xml:space="preserve">
+    <value>Popup Notifications</value>
+  </data>
+  <data name="Client_RefreshRequiredHeader" xml:space="preserve">
+    <value>JabbR Update</value>
+  </data>
+  <data name="Client_RefreshRequiredNotification" xml:space="preserve">
+    <value>Refresh your browser to get the latest version.  Auto update will take place in 15 seconds.</value>
+  </data>
+  <data name="Client_RoomCommands" xml:space="preserve">
+    <value>Room commands</value>
+  </data>
+  <data name="Client_RoomFilterInstruction" xml:space="preserve">
+    <value>Start typing to filter room list...</value>
+  </data>
+  <data name="Client_Rooms" xml:space="preserve">
+    <value>Rooms</value>
+  </data>
+  <data name="Client_RoomSettings" xml:space="preserve">
+    <value>Room Settings</value>
+  </data>
+  <data name="Client_Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="Client_ShowClosedRooms" xml:space="preserve">
+    <value>Show Closed Rooms?</value>
+  </data>
+  <data name="Client_SignOut" xml:space="preserve">
+    <value>Sign Out</value>
+  </data>
+  <data name="Client_SiteWideCommands" xml:space="preserve">
+    <value>Site-wide commands</value>
+  </data>
+  <data name="Client_SiteWideShortcuts" xml:space="preserve">
+    <value>Site-wide shortcuts</value>
+  </data>
+  <data name="Client_ToggleRichContent" xml:space="preserve">
+    <value>Toggle Rich Content</value>
+  </data>
+  <data name="Client_Upload" xml:space="preserve">
+    <value>Upload</value>
+  </data>
+  <data name="Client_UploadingFromClipboard" xml:space="preserve">
+    <value>Uploading from clipboard</value>
+  </data>
+  <data name="Client_UserCommands" xml:space="preserve">
+    <value>User commands</value>
+  </data>
+  <data name="Client_ViewTheBranch" xml:space="preserve">
+    <value>View the branch</value>
+  </data>
+  <data name="Client_ViewTheCommit" xml:space="preserve">
+    <value>View the commit</value>
+  </data>
+  <data name="Client_YourPrivateRooms" xml:space="preserve">
+    <value>Your Private Rooms</value>
   </data>
   <data name="Close_RoomRequired" xml:space="preserve">
     <value>Which room do you want to close?</value>
@@ -219,11 +456,29 @@
   <data name="Content_HeaderAndToggle" xml:space="preserve">
     <value>{0} (click to show/hide)</value>
   </data>
+  <data name="Content_PasteHeaderAndToggle" xml:space="preserve">
+    <value>Paste (click to show/hide)</value>
+  </data>
   <data name="CountryISOInvalid" xml:space="preserve">
     <value>Sorry, but the country ISO code you requested doesn't exist. Please refer to http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 for a proper list of country ISO codes.</value>
   </data>
+  <data name="GithubContent_NoMilestone" xml:space="preserve">
+    <value>No milestone</value>
+  </data>
+  <data name="GithubContent_UserAssigned" xml:space="preserve">
+    <value>{0} is assigned</value>
+  </data>
+  <data name="GithubContent_UserCommentedAtTime" xml:space="preserve">
+    <value>{0} commented {1}</value>
+  </data>
+  <data name="GithubContent_UserOpenedIssueAtTime" xml:space="preserve">
+    <value>{0} opened this issue {1}</value>
+  </data>
   <data name="GoogleMapsContent_DefaultTitle" xml:space="preserve">
     <value>Google Maps</value>
+  </data>
+  <data name="GravatarContent_HeaderAndToggle" xml:space="preserve">
+    <value>Gravatar Profile: {0} (click to show/hide)</value>
   </data>
   <data name="Gravatar_EmailRequired" xml:space="preserve">
     <value>Which email address do you want to use for the Gravatar image?</value>
@@ -297,6 +552,31 @@
   <data name="Msg_UserRequired" xml:space="preserve">
     <value>Who do you want to send a private message to?</value>
   </data>
+  <data name="NoteTooLong" xml:space="preserve">
+    <value>Sorry, but your {1} is too long. Please keep it under {0} characters.</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="Notifications_AllNotifications" xml:space="preserve">
+    <value>All Notifications</value>
+  </data>
+  <data name="Notifications_MarkAllRead" xml:space="preserve">
+    <value>Mark All as Read</value>
+  </data>
+  <data name="Notifications_MarkAsRead" xml:space="preserve">
+    <value>Mark Notification as Read</value>
+  </data>
+  <data name="Notifications_MetadataInfo" xml:space="preserve">
+    <value>{0} in {1} on {2}</value>
+    <comment>{0} is sender, {1} is room, {2} is timestamp</comment>
+  </data>
+  <data name="Notifications_NoUnread" xml:space="preserve">
+    <value>No unread notifications!</value>
+  </data>
+  <data name="Notifications_UnreadWithCount" xml:space="preserve">
+    <value>Unread {0}</value>
+  </data>
   <data name="NudgeRoom_Throttled" xml:space="preserve">
     <value>Room can only be nudged once every {0} seconds.</value>
   </data>
@@ -312,14 +592,18 @@
   <data name="PostNotification_NotAllowed" xml:space="preserve">
     <value>You're not allowed to post a notification.</value>
   </data>
+  <data name="PoweredByHeader" xml:space="preserve">
+    <value>Powered by {0}SignalR{1}</value>
+    <comment>{0} and {1} are anchor open and close tags</comment>
+  </data>
   <data name="RemoveAdmin_UserRequired" xml:space="preserve">
     <value>Which admin do you want to remove?</value>
   </data>
-  <data name="RemoveOwner_CommandUserMissing" xml:space="preserve">
-    <value>Which owner do you want to remove?</value>
-  </data>
   <data name="RemoveOwner_RoomRequired" xml:space="preserve">
     <value>Which room do you want to remove the owner from?</value>
+  </data>
+  <data name="RemoveOwner_UserRequired" xml:space="preserve">
+    <value>Which owner do you want to remove?</value>
   </data>
   <data name="ResetInviteCode_RoomRequired" xml:space="preserve">
     <value>Which room do you want to reset the invite code of?</value>
@@ -369,6 +653,9 @@
   <data name="RoomMemberButNotExists" xml:space="preserve">
     <value>You're in {0}, but it doesn't exist.</value>
   </data>
+  <data name="RoomNameCannotBeBlank" xml:space="preserve">
+    <value>Room name cannot be blank!</value>
+  </data>
   <data name="RoomNotFound" xml:space="preserve">
     <value>Unable to find {0}.</value>
   </data>
@@ -378,14 +665,11 @@
   <data name="RoomNotPrivate" xml:space="preserve">
     <value>{0} is not a private room.</value>
   </data>
-  <data name="RoomOwnershipRequired" xml:space="preserve">
+  <data name="RoomOwnerRequired" xml:space="preserve">
     <value>You are not an owner of {0}.</value>
   </data>
   <data name="RoomRequired" xml:space="preserve">
     <value>No room specified.</value>
-  </data>
-  <data name="RoomRequiresName" xml:space="preserve">
-    <value>Room name cannot be blank!</value>
   </data>
   <data name="RoomUserAlreadyAllowed" xml:space="preserve">
     <value>{0} is already allowed into {1}.</value>
@@ -395,6 +679,9 @@
   </data>
   <data name="SendMessageRoomClosed" xml:space="preserve">
     <value>You cannot post messages to {0}. The room is closed.</value>
+  </data>
+  <data name="SettingsSave" xml:space="preserve">
+    <value>Save Settings</value>
   </data>
   <data name="SettingsSaveSuccess" xml:space="preserve">
     <value>Successfully saved the settings.</value>

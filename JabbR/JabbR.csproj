@@ -814,7 +814,7 @@
     <Content Include="notifications.unreadcounter.js" />
     <Content Include="robots.txt" />
     <EmbeddedResource Include="LanguageResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>LanguageResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201208211555032_BanUser.resx">

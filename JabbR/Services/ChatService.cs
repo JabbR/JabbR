@@ -836,7 +836,7 @@ namespace JabbR.Services
                 note.Length > lengthToValidateFor)
             {
                 throw new InvalidOperationException(
-                    String.Format("Sorry, but your {1} is too long. Please keep it under {0} characters.",
+                    String.Format(LanguageResources.NoteTooLong,
                         lengthToValidateFor, noteTypeName));
             }
         }

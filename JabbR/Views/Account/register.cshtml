@@ -9,7 +9,7 @@
             <div class="controls">
                 <div class="input-prepend">
                     <span class="add-on"><i class="icon-user"></i></span>
-                    @Html.TextBox("username", "input-block-level", "Username")
+                    @Html.TextBox("username", "input-block-level", @LanguageResources.Account_UserName)
                 </div>
             </div>
         </div>
@@ -17,7 +17,7 @@
             <div class="controls">
                 <div class="input-prepend">
                     <span class="add-on"><i class="icon-envelope"></i></span>
-                    @Html.TextBox("email", "input-block-level", "Email")
+                    @Html.TextBox("email", "input-block-level", @LanguageResources.Account_Email)
                 </div>
             </div>
         </div>
@@ -27,7 +27,7 @@
             <div class="controls">
                 <div class="input-prepend">
                     <span class="add-on"><i class="icon-lock"></i></span>
-                    @Html.Password("password", "input-block-level", "Password")
+                    @Html.Password("password", "input-block-level", @LanguageResources.Account_Pass)
                 </div>
             </div>
         </div>
@@ -35,15 +35,15 @@
             <div class="controls">
                 <div class="input-prepend">
                     <span class="add-on"><i class="icon-lock"></i></span>
-                    @Html.Password("confirmPassword", "input-block-level", "Confirm Password")
+                    @Html.Password("confirmPassword", "input-block-level", @LanguageResources.Account_PassConfirm)
                 </div>
             </div>
         </div>
         }
         <div class="control-group">
             <div class="controls">
-                <button type="submit" class="btn">Register</button>
-                <a href="@Url.Content("~/")" class="btn">Cancel</a>
+                <button type="submit" class="btn">@LanguageResources.Account_Register</button>
+                <a href="@Url.Content("~/")" class="btn">@LanguageResources.Account_Cancel</a>
             </div>
         </div>
         @Html.AntiForgeryToken()
