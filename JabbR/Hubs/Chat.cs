@@ -956,7 +956,7 @@ namespace JabbR
 
             foreach (var client in user.ConnectedClients)
             {
-                Clients.Client(client.Id).sendPrivateMessage(user.Name, targetUser.Name, "nudged " + targetUser.Name);
+                Clients.Client(client.Id).nudge(user.Name, targetUser.Name);
             }
         }
 

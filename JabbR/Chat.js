@@ -663,14 +663,21 @@
                 }
             }
         }
+        // the method is called if we're the sender, or recipient of a nudge.
+        if (!isSelf({ Name: from })) {
+            $("#chat-area").pulse({ opacity: 0 }, { duration: 300, pulses: 3 });
+            window.setTimeout(function() {
+                shake(20);
+            }, 300);
+        }
 
-        $("#chat-area").pulse({ opacity: 0 }, { duration: 300, pulses: 3 });
-
-        window.setTimeout(function () {
-            shake(20);
-        }, 300);
-
-        ui.addMessage('*' + from + ' nudged ' + (to ? 'you' : 'the room'), to ? 'pm' : 'notification');
+        if (to)
+        {
+            var recipientDisplay = isSelf({ Name: to }) ? 'you' : to;
+            ui.addMessage('*' + from + ' nudged ' + recipientDisplay, 'pm');
+        } else {
+            ui.addMessage('*' + from + ' nudged the room', 'notification');
+        }
     };
 
     chat.client.leave = function (user, room) {
