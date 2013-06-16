@@ -268,6 +268,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grants another user owner permissions on the specified (or current) room. Only works if you&apos;re an owner of the room..
+        /// </summary>
+        public static string AddOwner_CommandInfo {
+            get {
+                return ResourceManager.GetString("AddOwner_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Which room do you want to add ownership to?.
         /// </summary>
         public static string AddOwner_RoomRequired {
@@ -412,6 +421,24 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set a temporary away from keyboard (AFK) note. This note will disappear when you next type something..
+        /// </summary>
+        public static string AFK_CommandInfo {
+            get {
+                return ResourceManager.GetString("AFK_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grant a user permission to access a private room. Only works if you&apos;re an owner of that room..
+        /// </summary>
+        public static string Allow_CommandInfo {
+            get {
+                return ResourceManager.GetString("Allow_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Which room do you want to allow access to?.
         /// </summary>
         public static string Allow_RoomRequired {
@@ -426,6 +453,15 @@ namespace JabbR {
         public static string Allow_UserRequired {
             get {
                 return ResourceManager.GetString("Allow_UserRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show a list of all users allowed in the specified (or current) room..
+        /// </summary>
+        public static string Allowed_CommandInfo {
+            get {
+                return ResourceManager.GetString("Allowed_CommandInfo", resourceCulture);
             }
         }
         
@@ -583,11 +619,29 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ban a user from JabbR!.
+        /// </summary>
+        public static string Ban_CommandInfo {
+            get {
+                return ResourceManager.GetString("Ban_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Who do you want to ban?.
         /// </summary>
         public static string Ban_UserRequired {
             get {
                 return ResourceManager.GetString("Ban_UserRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send a message to all users in all rooms. Only works if you&apos;re an administrator..
+        /// </summary>
+        public static string Broadcast_CommandInfo {
+            get {
+                return ResourceManager.GetString("Broadcast_CommandInfo", resourceCulture);
             }
         }
         
@@ -1603,6 +1657,33 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Go to the Lobby..
+        /// </summary>
+        public static string Client_ShortcutLobby {
+            get {
+                return ResourceManager.GetString("Client_ShortcutLobby", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to specific Tab..
+        /// </summary>
+        public static string Client_ShortcutSpecificTab {
+            get {
+                return ResourceManager.GetString("Client_ShortcutSpecificTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to the next open room tab or Go to the previous open room tab..
+        /// </summary>
+        public static string Client_ShortcutTabs {
+            get {
+                return ResourceManager.GetString("Client_ShortcutTabs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show Closed Rooms?.
         /// </summary>
         public static string Client_ShowClosedRooms {
@@ -1720,6 +1801,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close the specified (or current) room. Only works if you&apos;re an owner of that room..
+        /// </summary>
+        public static string Close_CommandInfo {
+            get {
+                return ResourceManager.GetString("Close_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Which room do you want to close?.
         /// </summary>
         public static string Close_RoomRequired {
@@ -1783,6 +1873,24 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create a room with the given name..
+        /// </summary>
+        public static string Create_CommandInfo {
+            get {
+                return ResourceManager.GetString("Create_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show a small flag which represents your nationality. Eg. /flag US for a USA flag. ISO Reference Chart: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 (Apologies to people with dual citizenship)..
+        /// </summary>
+        public static string Flag_CommandInfo {
+            get {
+                return ResourceManager.GetString("Flag_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No milestone.
         /// </summary>
         public static string GithubContent_NoMilestone {
@@ -1828,6 +1936,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set your gravatar..
+        /// </summary>
+        public static string Gravatar_CommandInfo {
+            get {
+                return ResourceManager.GetString("Gravatar_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Which email address do you want to use for the Gravatar image?.
         /// </summary>
         public static string Gravatar_EmailRequired {
@@ -1846,11 +1963,29 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show this list of commands..
+        /// </summary>
+        public static string Help_CommandInfo {
+            get {
+                return ResourceManager.GetString("Help_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You can&apos;t invite yourself!.
         /// </summary>
         public static string Invite_CannotInviteSelf {
             get {
                 return ResourceManager.GetString("Invite_CannotInviteSelf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invite a user to join a room. If it is private they must still either be granted access or given the access code to enter..
+        /// </summary>
+        public static string Invite_CommandInfo {
+            get {
+                return ResourceManager.GetString("Invite_CommandInfo", resourceCulture);
             }
         }
         
@@ -1869,6 +2004,15 @@ namespace JabbR {
         public static string Invite_UserRequired {
             get {
                 return ResourceManager.GetString("Invite_UserRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show the current invite code..
+        /// </summary>
+        public static string InviteCode_CommandInfo {
+            get {
+                return ResourceManager.GetString("InviteCode_CommandInfo", resourceCulture);
             }
         }
         
@@ -1905,6 +2049,15 @@ namespace JabbR {
         public static string InvokeFromRoomRequired {
             get {
                 return ResourceManager.GetString("InvokeFromRoomRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Join a room of your choice. If it is private and you have an invite code, enter it after the room name..
+        /// </summary>
+        public static string Join_CommandInfo {
+            get {
+                return ResourceManager.GetString("Join_CommandInfo", resourceCulture);
             }
         }
         
@@ -1954,6 +2107,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kick a user from the room. Note, this is only valid for owners of the room..
+        /// </summary>
+        public static string Kick_CommandInfo {
+            get {
+                return ResourceManager.GetString("Kick_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Owners cannot kick other owners. Only the room creator can kick an owner..
         /// </summary>
         public static string Kick_CreatorRequiredToKickOwner {
@@ -1981,11 +2143,29 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Leave the specified (or current) room..
+        /// </summary>
+        public static string Leave_CommandInfo {
+            get {
+                return ResourceManager.GetString("Leave_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Which room do you want to leave?.
         /// </summary>
         public static string Leave_RoomRequired {
             get {
                 return ResourceManager.GetString("Leave_RoomRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show a list of users in the room..
+        /// </summary>
+        public static string List_CommandInfo {
+            get {
+                return ResourceManager.GetString("List_CommandInfo", resourceCulture);
             }
         }
         
@@ -2008,11 +2188,29 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Make a room private. Only works if you&apos;re the creator of that room..
+        /// </summary>
+        public static string Lock_CommandInfo {
+            get {
+                return ResourceManager.GetString("Lock_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Which room do you want to lock?.
         /// </summary>
         public static string Lock_RoomRequired {
             get {
                 return ResourceManager.GetString("Lock_RoomRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log this client out from JabbR and remove browser cookie..
+        /// </summary>
+        public static string Logout_CommandInfo {
+            get {
+                return ResourceManager.GetString("Logout_CommandInfo", resourceCulture);
             }
         }
         
@@ -2026,11 +2224,29 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Type /me &apos;does anything&apos;. Sends a message to everyone in the room..
+        /// </summary>
+        public static string Me_CommandInfo {
+            get {
+                return ResourceManager.GetString("Me_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You can&apos;t private message yourself!.
         /// </summary>
         public static string Msg_CannotMsgSelf {
             get {
                 return ResourceManager.GetString("Msg_CannotMsgSelf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send a private message to a specified user. @ is optional..
+        /// </summary>
+        public static string Msg_CommandInfo {
+            get {
+                return ResourceManager.GetString("Msg_CommandInfo", resourceCulture);
             }
         }
         
@@ -2049,6 +2265,15 @@ namespace JabbR {
         public static string Msg_UserRequired {
             get {
                 return ResourceManager.GetString("Msg_UserRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set a note against your user account..
+        /// </summary>
+        public static string Note_CommandInfo {
+            get {
+                return ResourceManager.GetString("Note_CommandInfo", resourceCulture);
             }
         }
         
@@ -2125,6 +2350,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Send a nudge to the current room, or optionally provide a username to nudge that particular user..
+        /// </summary>
+        public static string Nudge_CommandInfo {
+            get {
+                return ResourceManager.GetString("Nudge_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Room can only be nudged once every {0} seconds..
         /// </summary>
         public static string NudgeRoom_Throttled {
@@ -2148,6 +2382,15 @@ namespace JabbR {
         public static string NudgeUser_Throttled {
             get {
                 return ResourceManager.GetString("NudgeUser_Throttled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open a closed room. Only works if you&apos;re an owner of that room..
+        /// </summary>
+        public static string Open_CommandInfo {
+            get {
+                return ResourceManager.GetString("Open_CommandInfo", resourceCulture);
             }
         }
         
@@ -2188,6 +2431,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove room owner permissions from a user. Only works if you&apos;re the creator of that room..
+        /// </summary>
+        public static string RemoveOwner_CommandInfo {
+            get {
+                return ResourceManager.GetString("RemoveOwner_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Which room do you want to remove the owner from?.
         /// </summary>
         public static string RemoveOwner_RoomRequired {
@@ -2202,6 +2454,15 @@ namespace JabbR {
         public static string RemoveOwner_UserRequired {
             get {
                 return ResourceManager.GetString("RemoveOwner_UserRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset the current invite code. This will render the previous invite code invalid..
+        /// </summary>
+        public static string ResetInviteCode_CommandInfo {
+            get {
+                return ResourceManager.GetString("ResetInviteCode_CommandInfo", resourceCulture);
             }
         }
         
@@ -2485,6 +2746,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set or clear the room topic. Exclude [topic] to clear the room&apos;s topic..
+        /// </summary>
+        public static string Topic_CommandInfo {
+            get {
+                return ResourceManager.GetString("Topic_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You cannot unallow an admin. Only admin can unallow admin..
         /// </summary>
         public static string UnAllow_AdminRequired {
@@ -2499,6 +2769,15 @@ namespace JabbR {
         public static string UnAllow_CannotUnallowSelf {
             get {
                 return ResourceManager.GetString("UnAllow_CannotUnallowSelf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Revoke a user&apos;s permission to access a private room. Only works if you&apos;re an owner of that room..
+        /// </summary>
+        public static string Unallow_CommandInfo {
+            get {
+                return ResourceManager.GetString("Unallow_CommandInfo", resourceCulture);
             }
         }
         
@@ -2629,11 +2908,38 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set or clear the welcome message displayed when users enter the room. Exclude [message] to remove the welcome..
+        /// </summary>
+        public static string Welcome_CommandInfo {
+            get {
+                return ResourceManager.GetString("Welcome_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to List the rooms that user is in..
+        /// </summary>
+        public static string Where_CommandInfo {
+            get {
+                return ResourceManager.GetString("Where_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Who do you want to locate?.
         /// </summary>
         public static string Where_UserRequired {
             get {
                 return ResourceManager.GetString("Where_UserRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show a list of all users, Use [name] to show specific information about that user..
+        /// </summary>
+        public static string Who_CommandInfo {
+            get {
+                return ResourceManager.GetString("Who_CommandInfo", resourceCulture);
             }
         }
     }

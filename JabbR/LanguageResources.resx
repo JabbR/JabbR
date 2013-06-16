@@ -749,6 +749,24 @@ Use #test for testing.</value>
   <data name="Content_HeaderAndToggle" xml:space="preserve">
     <value>{0} (click to show/hide)</value>
   </data>
+  <data name="AddOwner_CommandInfo" xml:space="preserve">
+    <value>Grants another user owner permissions on the specified (or current) room. Only works if you're an owner of the room.</value>
+  </data>
+  <data name="AFK_CommandInfo" xml:space="preserve">
+    <value>Set a temporary away from keyboard (AFK) note. This note will disappear when you next type something.</value>
+  </data>
+  <data name="Allowed_CommandInfo" xml:space="preserve">
+    <value>Show a list of all users allowed in the specified (or current) room.</value>
+  </data>
+  <data name="Allow_CommandInfo" xml:space="preserve">
+    <value>Grant a user permission to access a private room. Only works if you're an owner of that room.</value>
+  </data>
+  <data name="Ban_CommandInfo" xml:space="preserve">
+    <value>Ban a user from JabbR!</value>
+  </data>
+  <data name="Broadcast_CommandInfo" xml:space="preserve">
+    <value>Send a message to all users in all rooms. Only works if you're an administrator.</value>
+  </data>
   <data name="Chat_AdminBroadcast" xml:space="preserve">
     <value>ADMIN: {0}</value>
   </data>
@@ -974,13 +992,97 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="Client_Reconnecting" xml:space="preserve">
     <value>The connection to JabbR has been temporarily lost, trying to reconnect.</value>
   </data>
+  <data name="Client_ShortcutLobby" xml:space="preserve">
+    <value>Go to the Lobby.</value>
+  </data>
+  <data name="Client_ShortcutSpecificTab" xml:space="preserve">
+    <value>Go to specific Tab.</value>
+  </data>
+  <data name="Client_ShortcutTabs" xml:space="preserve">
+    <value>Go to the next open room tab or Go to the previous open room tab.</value>
+  </data>
   <data name="Client_Transport" xml:space="preserve">
     <value>Transport: {0}</value>
   </data>
   <data name="Client_Uploading" xml:space="preserve">
     <value>Uploading {0}.</value>
   </data>
+  <data name="Close_CommandInfo" xml:space="preserve">
+    <value>Close the specified (or current) room. Only works if you're an owner of that room.</value>
+  </data>
   <data name="Content_DisabledMessage" xml:space="preserve">
     <value>Content collapsed because you have rich content disabled.</value>
+  </data>
+  <data name="Create_CommandInfo" xml:space="preserve">
+    <value>Create a room with the given name.</value>
+  </data>
+  <data name="Flag_CommandInfo" xml:space="preserve">
+    <value>Show a small flag which represents your nationality. Eg. /flag US for a USA flag. ISO Reference Chart: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 (Apologies to people with dual citizenship).</value>
+  </data>
+  <data name="Gravatar_CommandInfo" xml:space="preserve">
+    <value>Set your gravatar.</value>
+  </data>
+  <data name="Help_CommandInfo" xml:space="preserve">
+    <value>Show this list of commands.</value>
+  </data>
+  <data name="InviteCode_CommandInfo" xml:space="preserve">
+    <value>Show the current invite code.</value>
+  </data>
+  <data name="Invite_CommandInfo" xml:space="preserve">
+    <value>Invite a user to join a room. If it is private they must still either be granted access or given the access code to enter.</value>
+  </data>
+  <data name="Join_CommandInfo" xml:space="preserve">
+    <value>Join a room of your choice. If it is private and you have an invite code, enter it after the room name.</value>
+  </data>
+  <data name="Kick_CommandInfo" xml:space="preserve">
+    <value>Kick a user from the room. Note, this is only valid for owners of the room.</value>
+  </data>
+  <data name="Leave_CommandInfo" xml:space="preserve">
+    <value>Leave the specified (or current) room.</value>
+  </data>
+  <data name="List_CommandInfo" xml:space="preserve">
+    <value>Show a list of users in the room.</value>
+  </data>
+  <data name="Lock_CommandInfo" xml:space="preserve">
+    <value>Make a room private. Only works if you're the creator of that room.</value>
+  </data>
+  <data name="Logout_CommandInfo" xml:space="preserve">
+    <value>Log this client out from JabbR and remove browser cookie.</value>
+  </data>
+  <data name="Me_CommandInfo" xml:space="preserve">
+    <value>Type /me 'does anything'. Sends a message to everyone in the room.</value>
+  </data>
+  <data name="Msg_CommandInfo" xml:space="preserve">
+    <value>Send a private message to a specified user. @ is optional.</value>
+  </data>
+  <data name="Note_CommandInfo" xml:space="preserve">
+    <value>Set a note against your user account.</value>
+  </data>
+  <data name="Nudge_CommandInfo" xml:space="preserve">
+    <value>Send a nudge to the current room, or optionally provide a username to nudge that particular user.</value>
+  </data>
+  <data name="Open_CommandInfo" xml:space="preserve">
+    <value>Open a closed room. Only works if you're an owner of that room.</value>
+  </data>
+  <data name="RemoveOwner_CommandInfo" xml:space="preserve">
+    <value>Remove room owner permissions from a user. Only works if you're the creator of that room.</value>
+  </data>
+  <data name="ResetInviteCode_CommandInfo" xml:space="preserve">
+    <value>Reset the current invite code. This will render the previous invite code invalid.</value>
+  </data>
+  <data name="Topic_CommandInfo" xml:space="preserve">
+    <value>Set or clear the room topic. Exclude [topic] to clear the room's topic.</value>
+  </data>
+  <data name="Unallow_CommandInfo" xml:space="preserve">
+    <value>Revoke a user's permission to access a private room. Only works if you're an owner of that room.</value>
+  </data>
+  <data name="Welcome_CommandInfo" xml:space="preserve">
+    <value>Set or clear the welcome message displayed when users enter the room. Exclude [message] to remove the welcome.</value>
+  </data>
+  <data name="Where_CommandInfo" xml:space="preserve">
+    <value>List the rooms that user is in.</value>
+  </data>
+  <data name="Who_CommandInfo" xml:space="preserve">
+    <value>Show a list of all users, Use [name] to show specific information about that user.</value>
   </data>
 </root>

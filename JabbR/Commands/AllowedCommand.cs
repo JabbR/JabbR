@@ -3,7 +3,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("allowed", "Show a list of all users allowed in the given room.", "[room]", "room")]
+    [Command("allowed", "Allowed_CommandInfo", "[room]", "room")]
     public class AllowedCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

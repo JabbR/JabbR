@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using JabbR.Infrastructure;
 using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("msg", "Send a private message to nickname. @ is optional.", "@nickname message", "user")]
+    [Command("msg", "Msg_CommandInfo", "@user message", "user")]
     public class PrivateMessageCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

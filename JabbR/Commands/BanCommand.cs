@@ -4,7 +4,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("ban", "Ban a user from JabbR!", "user", "admin")]
+    [Command("ban", "Ban_CommandInfo", "user", "admin")]
     public class BanCommand : AdminCommand
     {
         public override void ExecuteAdminOperation(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

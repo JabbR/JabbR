@@ -3,7 +3,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("kick", "Kick a user from the room. Note, this is only valid for owners of the room.", "user [room]", "user")]
+    [Command("kick", "Kick_CommandInfo", "user [room]", "user")]
     public class KickCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

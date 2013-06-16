@@ -3,7 +3,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("leave", "Leave the current room. Use [room] to leave a specific room.", "[room]", "room")]
+    [Command("leave", "Leave_CommandInfo", "[room]", "room")]
     public class LeaveCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

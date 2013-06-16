@@ -3,7 +3,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("create", "Create a room.", "room", "room")]
+    [Command("create", "Create_CommandInfo", "room", "room")]
     public class CreateCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

@@ -3,7 +3,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("removeowner", "Remove an owner from the specified room. Only works if you're the creator of that room.", "user [room]", "room")]
+    [Command("removeowner", "RemoveOwner_CommandInfo", "user [room]", "room")]
     public class RemoveOwnerCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)

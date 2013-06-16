@@ -4,7 +4,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("list", "Show a list of users in the room.", "[room]", "room")]
+    [Command("list", "List_CommandInfo", "[room]", "room")]
     public class ListCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
