@@ -62,7 +62,7 @@
     String.format = function(formatString) {
         var formatArgs = arguments;
         return formatString.replace(/{(?:[0-9]+)}/g, function (match) {
-            return formatArgs[parseInt(match.substr(1, match.length - 2)) + 1];
+            return formatArgs[parseInt(match.substr(1, match.length - 2), 10) + 1];
         });
     };
     
