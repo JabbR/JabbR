@@ -32,15 +32,15 @@
     @if (!String.IsNullOrEmpty(Model.GoogleAnalytics))
     {
     <script type="text/javascript">
-        var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', '@Model.GoogleAnalytics']);
-        _gaq.push(['_trackPageview']);
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', '@Model.GoogleAnalytics']);
+      _gaq.push(['_trackPageview']);
 
-        (function () {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-        })();
+      (function () {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
     </script>
     }
     <script id="new-message-template" type="text/x-jquery-tmpl">
@@ -484,7 +484,94 @@
     }
     <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
     <script type="text/javascript">
-        window.jabbrVersion = '@Model.Version';
+      window.jabbrVersion = '@Model.Version';
+      window.languageResources = {
+        'Content_HeaderAndToggle': @Encoder.JavaScriptEncode(LanguageResources.Content_HeaderAndToggle),
+        'Chat_YouEnteredRoom': @Encoder.JavaScriptEncode(LanguageResources.Chat_YouEnteredRoom),
+        'Chat_UserLockedRoom': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserLockedRoom),
+        'Chat_RoomNowLocked': @Encoder.JavaScriptEncode(LanguageResources.Chat_RoomNowLocked),
+        'Chat_RoomNowClosed': @Encoder.JavaScriptEncode(LanguageResources.Chat_RoomNowClosed),
+        'Chat_RoomNowOpen': @Encoder.JavaScriptEncode(LanguageResources.Chat_RoomNowOpen),
+        'Chat_UserEnteredRoom': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserEnteredRoom),
+        'Chat_UserNameChanged': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserNameChanged),
+        'Chat_UserGravatarChanged': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserGravatarChanged),
+        'Chat_YouGrantedRoomAccess': @Encoder.JavaScriptEncode(LanguageResources.Chat_YouGrantedRoomAccess),
+        'Chat_UserGrantedRoomAccess': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserGrantedRoomAccess),
+        'Chat_YourRoomAccessRevoked': @Encoder.JavaScriptEncode(LanguageResources.Chat_YourRoomAccessRevoked),
+        'Chat_YouRevokedUserRoomAccess': @Encoder.JavaScriptEncode(LanguageResources.Chat_YouRevokedUserRoomAccess),
+        'Chat_UserGrantedRoomOwnership': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserGrantedRoomOwnership),
+        'Chat_UserRoomOwnershipRevoked': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserRoomOwnershipRevoked),
+        'Chat_YouGrantedRoomOwnership': @Encoder.JavaScriptEncode(LanguageResources.Chat_YouGrantedRoomOwnership),
+        'Chat_YourRoomOwnershipRevoked': @Encoder.JavaScriptEncode(LanguageResources.Chat_YourRoomOwnershipRevoked),
+        'Chat_YourGravatarChanged': @Encoder.JavaScriptEncode(LanguageResources.Chat_YourGravatarChanged),
+        'Chat_YourPasswordSet': @Encoder.JavaScriptEncode(LanguageResources.Chat_YourPasswordSet),
+        'Chat_YourPasswordChanged': @Encoder.JavaScriptEncode(LanguageResources.Chat_YourPasswordChanged),
+        'Chat_YouAreAFK': @Encoder.JavaScriptEncode(LanguageResources.Chat_YouAreAFK),
+        'Chat_YourNoteSet': @Encoder.JavaScriptEncode(LanguageResources.Chat_YourNoteSet),
+        'Chat_YourNoteCleared': @Encoder.JavaScriptEncode(LanguageResources.Chat_YourNoteCleared),
+        'Chat_UserIsAFK': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserIsAFK),
+        'Chat_UserNoteSet': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserNoteSet),
+        'Chat_UserNoteCleared': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserNoteCleared),
+        'Chat_YouSetRoomTopic': @Encoder.JavaScriptEncode(LanguageResources.Chat_YouSetRoomTopic),
+        'Chat_YouClearedRoomTopic': @Encoder.JavaScriptEncode(LanguageResources.Chat_YouClearedRoomTopic),
+        'Chat_UserSetRoomTopic': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserSetRoomTopic),
+        'Chat_UserClearedRoomTopic': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserClearedRoomTopic),
+        'Chat_YouSetRoomWelcome': @Encoder.JavaScriptEncode(LanguageResources.Chat_YouSetRoomWelcome),
+        'Chat_YouClearedRoomWelcome': @Encoder.JavaScriptEncode(LanguageResources.Chat_YouClearedRoomWelcome),
+        'Chat_YouSetFlag': @Encoder.JavaScriptEncode(LanguageResources.Chat_YouSetFlag),
+        'Chat_YouClearedFlag': @Encoder.JavaScriptEncode(LanguageResources.Chat_YouClearedFlag),
+        'Chat_UserSetFlag': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserSetFlag),
+        'Chat_UserClearedFlag': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserClearedFlag),
+        'Chat_YourNameChanged': @Encoder.JavaScriptEncode(LanguageResources.Chat_YourNameChanged),
+        'Chat_UserPerformsAction': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserPerformsAction),
+        'Chat_PrivateMessage': @Encoder.JavaScriptEncode(LanguageResources.Chat_PrivateMessage),
+        'Chat_UserInvitedYouToRoom': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserInvitedYouToRoom),
+        'Chat_YouInvitedUserToRoom': @Encoder.JavaScriptEncode(LanguageResources.Chat_YouInvitedUserToRoom),
+        'Chat_UserNudgedYou': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserNudgedYou),
+        'Chat_UserNudgedRoom': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserNudgedRoom),
+        'Chat_UserNudgedUser': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserNudgedUser),
+        'Chat_UserLeftRoom': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserLeftRoom),
+        'Chat_YouKickedFromRoom': @Encoder.JavaScriptEncode(LanguageResources.Chat_YouKickedFromRoom),
+        'Chat_NoRoomsAvailable': @Encoder.JavaScriptEncode(LanguageResources.Chat_NoRoomsAvailable),
+        'Chat_RoomUsersHeader': @Encoder.JavaScriptEncode(LanguageResources.Chat_RoomUsersHeader),
+        'Chat_RoomUsersEmpty': @Encoder.JavaScriptEncode(LanguageResources.Chat_RoomUsersEmpty),
+        'Chat_RoomSearchEmpty': @Encoder.JavaScriptEncode(LanguageResources.Chat_RoomSearchEmpty),
+        'Chat_RoomSearchResults': @Encoder.JavaScriptEncode(LanguageResources.Chat_RoomSearchResults),
+        'Chat_RoomNotPrivateAllowed': @Encoder.JavaScriptEncode(LanguageResources.Chat_RoomNotPrivateAllowed),
+        'Chat_RoomPrivateNoUsersAllowed': @Encoder.JavaScriptEncode(LanguageResources.Chat_RoomPrivateNoUsersAllowed),
+        'Chat_RoomPrivateUsersAllowedResults': @Encoder.JavaScriptEncode(LanguageResources.Chat_RoomPrivateUsersAllowedResults),
+        'Chat_UserNotInRooms': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserNotInRooms),
+        'Chat_UserInRooms': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserInRooms),
+        'Chat_UserOwnsNoRooms': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserOwnsNoRooms),
+        'Chat_UserOwnsRooms': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserOwnsRooms),
+        'Chat_UserAdminAllowed': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserAdminAllowed),
+        'Chat_UserAdminRevoked': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserAdminRevoked),
+        'Chat_YouAdminAllowed': @Encoder.JavaScriptEncode(LanguageResources.Chat_YouAdminAllowed),
+        'Chat_YouAdminRevoked': @Encoder.JavaScriptEncode(LanguageResources.Chat_YouAdminRevoked),
+        'Chat_AdminBroadcast': @Encoder.JavaScriptEncode(LanguageResources.Chat_AdminBroadcast),
+        'Chat_CannotSendLobby': @Encoder.JavaScriptEncode(LanguageResources.Chat_CannotSendLobby),
+        'Chat_InitialMessages': @Encoder.JavaScriptEncode(LanguageResources.Chat_InitialMessages),
+        'Chat_UserOwnerHeader': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserOwnerHeader),
+        'Chat_UserHeader': @Encoder.JavaScriptEncode(LanguageResources.Chat_UserHeader),
+        'Content_DisabledMessage': @Encoder.JavaScriptEncode(LanguageResources.Content_DisabledMessage),
+        'Chat_DefaultTopic': @Encoder.JavaScriptEncode(LanguageResources.Chat_DefaultTopic),
+        'Client_ConnectedStatus': @Encoder.JavaScriptEncode(LanguageResources.Client_ConnectedStatus),
+        'Client_Transport': @Encoder.JavaScriptEncode(LanguageResources.Client_Transport),
+        'Client_Uploading': @Encoder.JavaScriptEncode(LanguageResources.Client_Uploading),
+        'Client_Rooms': @Encoder.JavaScriptEncode(LanguageResources.Client_Rooms),
+        'Client_OtherRooms': @Encoder.JavaScriptEncode(LanguageResources.Client_OtherRooms),
+        'Chat_ExpandHiddenMessages': @Encoder.JavaScriptEncode(LanguageResources.Chat_ExpandHiddenMessages),
+        'Chat_CollapseHiddenMessages': @Encoder.JavaScriptEncode(LanguageResources.Chat_CollapseHiddenMessages),
+        'Client_Connected': @Encoder.JavaScriptEncode(LanguageResources.Client_Connected),
+        'Client_Reconnecting': @Encoder.JavaScriptEncode(LanguageResources.Client_Reconnecting),
+        'Client_Disconnected': @Encoder.JavaScriptEncode(LanguageResources.Client_Disconnected),
+        'Client_AdminTag': @Encoder.JavaScriptEncode(LanguageResources.Client_AdminTag),
+        'Client_OccupantsZero': @Encoder.JavaScriptEncode(LanguageResources.Client_OccupantsZero),
+        'Client_OccupantsOne': @Encoder.JavaScriptEncode(LanguageResources.Client_OccupantsOne),
+        'Client_OccupantsMany': @Encoder.JavaScriptEncode(LanguageResources.Client_OccupantsMany),
+        'LoadingMessage': @Encoder.JavaScriptEncode(LanguageResources.LoadingMessage),
+        'Client_LoadMore': @Encoder.JavaScriptEncode(LanguageResources.Client_LoadMore)
+      };
     </script>
     @{
         WriteLiteral(Bundle.JavaScript().ForceDebugIf(() => Model.DebugMode)

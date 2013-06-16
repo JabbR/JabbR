@@ -12,7 +12,7 @@
             roomName = elementToAppendTo.closest('ul.messages').attr('id');
             roomName = roomName.substring(9);
 
-            collapsible = $('<div><h3 class="collapsible_title">' + headerText + ' (click to show/hide)</h3><div class="collapsible_box captureDocumentWrite_content"></div></div>');
+            collapsible = $('<div><h3 class="collapsible_title">' + String.formatLanguageResource('Content_HeaderAndToggle', headerText) + '</h3><div class="collapsible_box captureDocumentWrite_content"></div></div>');
             $('.captureDocumentWrite_content', collapsible).append(content);
 
             // Since IE doesn't render the css if the links are not in the head element, we move those to the head element

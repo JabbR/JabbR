@@ -453,9 +453,6 @@ Use #test for testing.</value>
   <data name="CommandNotFound" xml:space="preserve">
     <value>{0} is not a valid command.</value>
   </data>
-  <data name="Content_HeaderAndToggle" xml:space="preserve">
-    <value>{0} (click to show/hide)</value>
-  </data>
   <data name="Content_PasteHeaderAndToggle" xml:space="preserve">
     <value>Paste (click to show/hide)</value>
   </data>
@@ -748,5 +745,242 @@ Use #test for testing.</value>
   </data>
   <data name="Where_UserRequired" xml:space="preserve">
     <value>Who do you want to locate?</value>
+  </data>
+  <data name="Content_HeaderAndToggle" xml:space="preserve">
+    <value>{0} (click to show/hide)</value>
+  </data>
+  <data name="Chat_AdminBroadcast" xml:space="preserve">
+    <value>ADMIN: {0}</value>
+  </data>
+  <data name="Chat_CannotSendLobby" xml:space="preserve">
+    <value>You cannot send messages within the lobby.</value>
+  </data>
+  <data name="Chat_CollapseHiddenMessages" xml:space="preserve">
+    <value>(click to collapse)</value>
+  </data>
+  <data name="Chat_DefaultTopic" xml:space="preserve">
+    <value>You're chatting in {0}.</value>
+  </data>
+  <data name="Chat_ExpandHiddenMessages" xml:space="preserve">
+    <value>(plus {0} hidden... click to expand)</value>
+  </data>
+  <data name="Chat_InitialMessages" xml:space="preserve">
+    <value>Welcome to JabbR
+Use ? or type /? to display the FAQ and list of commands.</value>
+  </data>
+  <data name="Chat_NoRoomsAvailable" xml:space="preserve">
+    <value>No rooms available.</value>
+  </data>
+  <data name="Chat_PrivateMessage" xml:space="preserve">
+    <value>*{0}* *{1}* {2}</value>
+    <comment>{0} is from, {1} is to, {2} is message</comment>
+  </data>
+  <data name="Chat_RoomNotPrivateAllowed" xml:space="preserve">
+    <value>Anyone is allowed in {0} as it is not private.</value>
+  </data>
+  <data name="Chat_RoomNowClosed" xml:space="preserve">
+    <value>{0} is now closed.</value>
+  </data>
+  <data name="Chat_RoomNowLocked" xml:space="preserve">
+    <value>{0} is now locked.</value>
+  </data>
+  <data name="Chat_RoomNowOpen" xml:space="preserve">
+    <value>{0} is now open.</value>
+  </data>
+  <data name="Chat_RoomPrivateNoUsersAllowed" xml:space="preserve">
+    <value>No users are allowed in {0}.</value>
+  </data>
+  <data name="Chat_RoomPrivateUsersAllowedResults" xml:space="preserve">
+    <value>The following users are allowed in {0}:</value>
+  </data>
+  <data name="Chat_RoomSearchEmpty" xml:space="preserve">
+    <value>No users matched your search.</value>
+  </data>
+  <data name="Chat_RoomSearchResults" xml:space="preserve">
+    <value>The following users match your search:</value>
+  </data>
+  <data name="Chat_RoomUsersEmpty" xml:space="preserve">
+    <value>Room is empty.</value>
+  </data>
+  <data name="Chat_RoomUsersHeader" xml:space="preserve">
+    <value>Users in {0}</value>
+  </data>
+  <data name="Chat_UserAdminAllowed" xml:space="preserve">
+    <value>{0} is now an admin.</value>
+  </data>
+  <data name="Chat_UserAdminRevoked" xml:space="preserve">
+    <value>{0} is no longer an admin.</value>
+  </data>
+  <data name="Chat_UserClearedFlag" xml:space="preserve">
+    <value>{0} has cleared their flag.</value>
+  </data>
+  <data name="Chat_UserClearedRoomTopic" xml:space="preserve">
+    <value>{0} has cleared the room topic.</value>
+  </data>
+  <data name="Chat_UserEnteredRoom" xml:space="preserve">
+    <value>{0} just entered {1}.</value>
+  </data>
+  <data name="Chat_UserGrantedRoomAccess" xml:space="preserve">
+    <value>{0} now has access to {1}.</value>
+  </data>
+  <data name="Chat_UserGrantedRoomOwnership" xml:space="preserve">
+    <value>{0} is now an owner of {1}.</value>
+  </data>
+  <data name="Chat_UserGravatarChanged" xml:space="preserve">
+    <value>{0}'s gravatar changed.</value>
+  </data>
+  <data name="Chat_UserHeader" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="Chat_UserInRooms" xml:space="preserve">
+    <value>{0} (Currently {1}) is in the following rooms:</value>
+  </data>
+  <data name="Chat_UserInvitedYouToRoom" xml:space="preserve">
+    <value>{0} has invited you to #{1}. Click the room name to join.</value>
+  </data>
+  <data name="Chat_UserIsAFK" xml:space="preserve">
+    <value>{0} has gone AFK.</value>
+  </data>
+  <data name="Chat_UserLeftRoom" xml:space="preserve">
+    <value>{0} left {1}.</value>
+  </data>
+  <data name="Chat_UserLockedRoom" xml:space="preserve">
+    <value>{0} has locked {1}.</value>
+  </data>
+  <data name="Chat_UserNameChanged" xml:space="preserve">
+    <value>{0}'s name has changed to {1}.</value>
+  </data>
+  <data name="Chat_UserNoteCleared" xml:space="preserve">
+    <value>{0} has cleared their note.</value>
+  </data>
+  <data name="Chat_UserNoteSet" xml:space="preserve">
+    <value>{0} has set their note.</value>
+  </data>
+  <data name="Chat_UserNotInRooms" xml:space="preserve">
+    <value>{0} (Currently {1}) is not in any rooms.</value>
+  </data>
+  <data name="Chat_UserNudgedRoom" xml:space="preserve">
+    <value>*{0} nudged the room.</value>
+  </data>
+  <data name="Chat_UserNudgedUser" xml:space="preserve">
+    <value>*{0} nudged {1}</value>
+  </data>
+  <data name="Chat_UserNudgedYou" xml:space="preserve">
+    <value>*{0} nudged you.</value>
+  </data>
+  <data name="Chat_UserOwnerHeader" xml:space="preserve">
+    <value>Room Owners</value>
+  </data>
+  <data name="Chat_UserOwnsNoRooms" xml:space="preserve">
+    <value>{0} does not own any rooms.</value>
+  </data>
+  <data name="Chat_UserOwnsRooms" xml:space="preserve">
+    <value>{0} owns the following rooms:</value>
+  </data>
+  <data name="Chat_UserPerformsAction" xml:space="preserve">
+    <value>*{0} {1}</value>
+    <comment>{0} is username, {1} is action</comment>
+  </data>
+  <data name="Chat_UserRoomOwnershipRevoked" xml:space="preserve">
+    <value>{0} is no longer an owner of {1}.</value>
+  </data>
+  <data name="Chat_UserSetFlag" xml:space="preserve">
+    <value>{0} has set their flag to {1}.</value>
+  </data>
+  <data name="Chat_UserSetRoomTopic" xml:space="preserve">
+    <value>{0} has set the room topic to "{1}".</value>
+  </data>
+  <data name="Chat_YouAdminAllowed" xml:space="preserve">
+    <value>You are now an admin.</value>
+  </data>
+  <data name="Chat_YouAdminRevoked" xml:space="preserve">
+    <value>You are no longer an admin.</value>
+  </data>
+  <data name="Chat_YouAreAFK" xml:space="preserve">
+    <value>You have gone AFK.</value>
+  </data>
+  <data name="Chat_YouClearedFlag" xml:space="preserve">
+    <value>You have cleared your flag.</value>
+  </data>
+  <data name="Chat_YouClearedRoomTopic" xml:space="preserve">
+    <value>You have cleared the room topic.</value>
+  </data>
+  <data name="Chat_YouClearedRoomWelcome" xml:space="preserve">
+    <value>You have cleared the room welcome.</value>
+  </data>
+  <data name="Chat_YouEnteredRoom" xml:space="preserve">
+    <value>You just entered {0}.</value>
+  </data>
+  <data name="Chat_YouGrantedRoomAccess" xml:space="preserve">
+    <value>You have been granted access to {0}.</value>
+  </data>
+  <data name="Chat_YouGrantedRoomOwnership" xml:space="preserve">
+    <value>You are now an owner of {0}.</value>
+  </data>
+  <data name="Chat_YouInvitedUserToRoom" xml:space="preserve">
+    <value>Invitation to {0} to join #{1} has been sent.</value>
+  </data>
+  <data name="Chat_YouKickedFromRoom" xml:space="preserve">
+    <value>You were kicked from {0}.</value>
+  </data>
+  <data name="Chat_YouRevokedUserRoomAccess" xml:space="preserve">
+    <value>You have revoked {0}'s access to {1}.</value>
+  </data>
+  <data name="Chat_YourGravatarChanged" xml:space="preserve">
+    <value>Your gravatar has been set.</value>
+  </data>
+  <data name="Chat_YourNameChanged" xml:space="preserve">
+    <value>Your name is now {0}.</value>
+  </data>
+  <data name="Chat_YourNoteCleared" xml:space="preserve">
+    <value>Your note has been cleared.</value>
+  </data>
+  <data name="Chat_YourNoteSet" xml:space="preserve">
+    <value>Your note has been set.</value>
+  </data>
+  <data name="Chat_YourPasswordChanged" xml:space="preserve">
+    <value>Your password has been changed.</value>
+  </data>
+  <data name="Chat_YourPasswordSet" xml:space="preserve">
+    <value>Your password has been set.</value>
+  </data>
+  <data name="Chat_YourRoomAccessRevoked" xml:space="preserve">
+    <value>Your access to {0} has been revoked.</value>
+  </data>
+  <data name="Chat_YourRoomOwnershipRevoked" xml:space="preserve">
+    <value>You are no longer an owner of {0}.</value>
+  </data>
+  <data name="Chat_YouSetFlag" xml:space="preserve">
+    <value>You have set your flag to {0}.</value>
+  </data>
+  <data name="Chat_YouSetRoomTopic" xml:space="preserve">
+    <value>You have set the room topic to "{0}".</value>
+  </data>
+  <data name="Chat_YouSetRoomWelcome" xml:space="preserve">
+    <value>You have set the room welcome to "{0}".</value>
+  </data>
+  <data name="Client_Connected" xml:space="preserve">
+    <value>You're connected.</value>
+  </data>
+  <data name="Client_ConnectedStatus" xml:space="preserve">
+    <value>Status: Connected</value>
+  </data>
+  <data name="Client_Disconnected" xml:space="preserve">
+    <value>The connection to JabbR has been lost, trying to reconnect.</value>
+  </data>
+  <data name="Client_OtherRooms" xml:space="preserve">
+    <value>Other Rooms</value>
+  </data>
+  <data name="Client_Reconnecting" xml:space="preserve">
+    <value>The connection to JabbR has been temporarily lost, trying to reconnect.</value>
+  </data>
+  <data name="Client_Transport" xml:space="preserve">
+    <value>Transport: {0}</value>
+  </data>
+  <data name="Client_Uploading" xml:space="preserve">
+    <value>Uploading {0}.</value>
+  </data>
+  <data name="Content_DisabledMessage" xml:space="preserve">
+    <value>Content collapsed because you have rich content disabled.</value>
   </data>
 </root>

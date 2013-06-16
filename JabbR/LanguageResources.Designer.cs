@@ -601,6 +601,628 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ADMIN: {0}.
+        /// </summary>
+        public static string Chat_AdminBroadcast {
+            get {
+                return ResourceManager.GetString("Chat_AdminBroadcast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot send messages within the lobby..
+        /// </summary>
+        public static string Chat_CannotSendLobby {
+            get {
+                return ResourceManager.GetString("Chat_CannotSendLobby", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (click to collapse).
+        /// </summary>
+        public static string Chat_CollapseHiddenMessages {
+            get {
+                return ResourceManager.GetString("Chat_CollapseHiddenMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;re chatting in {0}..
+        /// </summary>
+        public static string Chat_DefaultTopic {
+            get {
+                return ResourceManager.GetString("Chat_DefaultTopic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (plus {0} hidden... click to expand).
+        /// </summary>
+        public static string Chat_ExpandHiddenMessages {
+            get {
+                return ResourceManager.GetString("Chat_ExpandHiddenMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Welcome to JabbR
+        ///Use ? or type /? to display the FAQ and list of commands..
+        /// </summary>
+        public static string Chat_InitialMessages {
+            get {
+                return ResourceManager.GetString("Chat_InitialMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No rooms available..
+        /// </summary>
+        public static string Chat_NoRoomsAvailable {
+            get {
+                return ResourceManager.GetString("Chat_NoRoomsAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to *{0}* *{1}* {2}.
+        /// </summary>
+        public static string Chat_PrivateMessage {
+            get {
+                return ResourceManager.GetString("Chat_PrivateMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anyone is allowed in {0} as it is not private..
+        /// </summary>
+        public static string Chat_RoomNotPrivateAllowed {
+            get {
+                return ResourceManager.GetString("Chat_RoomNotPrivateAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is now closed..
+        /// </summary>
+        public static string Chat_RoomNowClosed {
+            get {
+                return ResourceManager.GetString("Chat_RoomNowClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is now locked..
+        /// </summary>
+        public static string Chat_RoomNowLocked {
+            get {
+                return ResourceManager.GetString("Chat_RoomNowLocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is now open..
+        /// </summary>
+        public static string Chat_RoomNowOpen {
+            get {
+                return ResourceManager.GetString("Chat_RoomNowOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No users are allowed in {0}..
+        /// </summary>
+        public static string Chat_RoomPrivateNoUsersAllowed {
+            get {
+                return ResourceManager.GetString("Chat_RoomPrivateNoUsersAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following users are allowed in {0}:.
+        /// </summary>
+        public static string Chat_RoomPrivateUsersAllowedResults {
+            get {
+                return ResourceManager.GetString("Chat_RoomPrivateUsersAllowedResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No users matched your search..
+        /// </summary>
+        public static string Chat_RoomSearchEmpty {
+            get {
+                return ResourceManager.GetString("Chat_RoomSearchEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The following users match your search:.
+        /// </summary>
+        public static string Chat_RoomSearchResults {
+            get {
+                return ResourceManager.GetString("Chat_RoomSearchResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Room is empty..
+        /// </summary>
+        public static string Chat_RoomUsersEmpty {
+            get {
+                return ResourceManager.GetString("Chat_RoomUsersEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Users in {0}.
+        /// </summary>
+        public static string Chat_RoomUsersHeader {
+            get {
+                return ResourceManager.GetString("Chat_RoomUsersHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is now an admin..
+        /// </summary>
+        public static string Chat_UserAdminAllowed {
+            get {
+                return ResourceManager.GetString("Chat_UserAdminAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is no longer an admin..
+        /// </summary>
+        public static string Chat_UserAdminRevoked {
+            get {
+                return ResourceManager.GetString("Chat_UserAdminRevoked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has cleared their flag..
+        /// </summary>
+        public static string Chat_UserClearedFlag {
+            get {
+                return ResourceManager.GetString("Chat_UserClearedFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has cleared the room topic..
+        /// </summary>
+        public static string Chat_UserClearedRoomTopic {
+            get {
+                return ResourceManager.GetString("Chat_UserClearedRoomTopic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} just entered {1}..
+        /// </summary>
+        public static string Chat_UserEnteredRoom {
+            get {
+                return ResourceManager.GetString("Chat_UserEnteredRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} now has access to {1}..
+        /// </summary>
+        public static string Chat_UserGrantedRoomAccess {
+            get {
+                return ResourceManager.GetString("Chat_UserGrantedRoomAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is now an owner of {1}..
+        /// </summary>
+        public static string Chat_UserGrantedRoomOwnership {
+            get {
+                return ResourceManager.GetString("Chat_UserGrantedRoomOwnership", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}&apos;s gravatar changed..
+        /// </summary>
+        public static string Chat_UserGravatarChanged {
+            get {
+                return ResourceManager.GetString("Chat_UserGravatarChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Users.
+        /// </summary>
+        public static string Chat_UserHeader {
+            get {
+                return ResourceManager.GetString("Chat_UserHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (Currently {1}) is in the following rooms:.
+        /// </summary>
+        public static string Chat_UserInRooms {
+            get {
+                return ResourceManager.GetString("Chat_UserInRooms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has invited you to #{1}. Click the room name to join..
+        /// </summary>
+        public static string Chat_UserInvitedYouToRoom {
+            get {
+                return ResourceManager.GetString("Chat_UserInvitedYouToRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has gone AFK..
+        /// </summary>
+        public static string Chat_UserIsAFK {
+            get {
+                return ResourceManager.GetString("Chat_UserIsAFK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} left {1}..
+        /// </summary>
+        public static string Chat_UserLeftRoom {
+            get {
+                return ResourceManager.GetString("Chat_UserLeftRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has locked {1}..
+        /// </summary>
+        public static string Chat_UserLockedRoom {
+            get {
+                return ResourceManager.GetString("Chat_UserLockedRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}&apos;s name has changed to {1}..
+        /// </summary>
+        public static string Chat_UserNameChanged {
+            get {
+                return ResourceManager.GetString("Chat_UserNameChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has cleared their note..
+        /// </summary>
+        public static string Chat_UserNoteCleared {
+            get {
+                return ResourceManager.GetString("Chat_UserNoteCleared", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has set their note..
+        /// </summary>
+        public static string Chat_UserNoteSet {
+            get {
+                return ResourceManager.GetString("Chat_UserNoteSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} (Currently {1}) is not in any rooms..
+        /// </summary>
+        public static string Chat_UserNotInRooms {
+            get {
+                return ResourceManager.GetString("Chat_UserNotInRooms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to *{0} nudged the room..
+        /// </summary>
+        public static string Chat_UserNudgedRoom {
+            get {
+                return ResourceManager.GetString("Chat_UserNudgedRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to *{0} nudged {1}.
+        /// </summary>
+        public static string Chat_UserNudgedUser {
+            get {
+                return ResourceManager.GetString("Chat_UserNudgedUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to *{0} nudged you..
+        /// </summary>
+        public static string Chat_UserNudgedYou {
+            get {
+                return ResourceManager.GetString("Chat_UserNudgedYou", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Room Owners.
+        /// </summary>
+        public static string Chat_UserOwnerHeader {
+            get {
+                return ResourceManager.GetString("Chat_UserOwnerHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} does not own any rooms..
+        /// </summary>
+        public static string Chat_UserOwnsNoRooms {
+            get {
+                return ResourceManager.GetString("Chat_UserOwnsNoRooms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} owns the following rooms:.
+        /// </summary>
+        public static string Chat_UserOwnsRooms {
+            get {
+                return ResourceManager.GetString("Chat_UserOwnsRooms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to *{0} {1}.
+        /// </summary>
+        public static string Chat_UserPerformsAction {
+            get {
+                return ResourceManager.GetString("Chat_UserPerformsAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is no longer an owner of {1}..
+        /// </summary>
+        public static string Chat_UserRoomOwnershipRevoked {
+            get {
+                return ResourceManager.GetString("Chat_UserRoomOwnershipRevoked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has set their flag to {1}..
+        /// </summary>
+        public static string Chat_UserSetFlag {
+            get {
+                return ResourceManager.GetString("Chat_UserSetFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has set the room topic to &quot;{1}&quot;..
+        /// </summary>
+        public static string Chat_UserSetRoomTopic {
+            get {
+                return ResourceManager.GetString("Chat_UserSetRoomTopic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are now an admin..
+        /// </summary>
+        public static string Chat_YouAdminAllowed {
+            get {
+                return ResourceManager.GetString("Chat_YouAdminAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are no longer an admin..
+        /// </summary>
+        public static string Chat_YouAdminRevoked {
+            get {
+                return ResourceManager.GetString("Chat_YouAdminRevoked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have gone AFK..
+        /// </summary>
+        public static string Chat_YouAreAFK {
+            get {
+                return ResourceManager.GetString("Chat_YouAreAFK", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have cleared your flag..
+        /// </summary>
+        public static string Chat_YouClearedFlag {
+            get {
+                return ResourceManager.GetString("Chat_YouClearedFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have cleared the room topic..
+        /// </summary>
+        public static string Chat_YouClearedRoomTopic {
+            get {
+                return ResourceManager.GetString("Chat_YouClearedRoomTopic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have cleared the room welcome..
+        /// </summary>
+        public static string Chat_YouClearedRoomWelcome {
+            get {
+                return ResourceManager.GetString("Chat_YouClearedRoomWelcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You just entered {0}..
+        /// </summary>
+        public static string Chat_YouEnteredRoom {
+            get {
+                return ResourceManager.GetString("Chat_YouEnteredRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have been granted access to {0}..
+        /// </summary>
+        public static string Chat_YouGrantedRoomAccess {
+            get {
+                return ResourceManager.GetString("Chat_YouGrantedRoomAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are now an owner of {0}..
+        /// </summary>
+        public static string Chat_YouGrantedRoomOwnership {
+            get {
+                return ResourceManager.GetString("Chat_YouGrantedRoomOwnership", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invitation to {0} to join #{1} has been sent..
+        /// </summary>
+        public static string Chat_YouInvitedUserToRoom {
+            get {
+                return ResourceManager.GetString("Chat_YouInvitedUserToRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You were kicked from {0}..
+        /// </summary>
+        public static string Chat_YouKickedFromRoom {
+            get {
+                return ResourceManager.GetString("Chat_YouKickedFromRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have revoked {0}&apos;s access to {1}..
+        /// </summary>
+        public static string Chat_YouRevokedUserRoomAccess {
+            get {
+                return ResourceManager.GetString("Chat_YouRevokedUserRoomAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your gravatar has been set..
+        /// </summary>
+        public static string Chat_YourGravatarChanged {
+            get {
+                return ResourceManager.GetString("Chat_YourGravatarChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your name is now {0}..
+        /// </summary>
+        public static string Chat_YourNameChanged {
+            get {
+                return ResourceManager.GetString("Chat_YourNameChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your note has been cleared..
+        /// </summary>
+        public static string Chat_YourNoteCleared {
+            get {
+                return ResourceManager.GetString("Chat_YourNoteCleared", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your note has been set..
+        /// </summary>
+        public static string Chat_YourNoteSet {
+            get {
+                return ResourceManager.GetString("Chat_YourNoteSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your password has been changed..
+        /// </summary>
+        public static string Chat_YourPasswordChanged {
+            get {
+                return ResourceManager.GetString("Chat_YourPasswordChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your password has been set..
+        /// </summary>
+        public static string Chat_YourPasswordSet {
+            get {
+                return ResourceManager.GetString("Chat_YourPasswordSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your access to {0} has been revoked..
+        /// </summary>
+        public static string Chat_YourRoomAccessRevoked {
+            get {
+                return ResourceManager.GetString("Chat_YourRoomAccessRevoked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are no longer an owner of {0}..
+        /// </summary>
+        public static string Chat_YourRoomOwnershipRevoked {
+            get {
+                return ResourceManager.GetString("Chat_YourRoomOwnershipRevoked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have set your flag to {0}..
+        /// </summary>
+        public static string Chat_YouSetFlag {
+            get {
+                return ResourceManager.GetString("Chat_YouSetFlag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have set the room topic to &quot;{0}&quot;..
+        /// </summary>
+        public static string Chat_YouSetRoomTopic {
+            get {
+                return ResourceManager.GetString("Chat_YouSetRoomTopic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have set the room welcome to &quot;{0}&quot;..
+        /// </summary>
+        public static string Chat_YouSetRoomWelcome {
+            get {
+                return ResourceManager.GetString("Chat_YouSetRoomWelcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account settings.
         /// </summary>
         public static string Client_AccountSettings {
@@ -624,6 +1246,24 @@ namespace JabbR {
         public static string Client_AudibleNotifications {
             get {
                 return ResourceManager.GetString("Client_AudibleNotifications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You&apos;re connected..
+        /// </summary>
+        public static string Client_Connected {
+            get {
+                return ResourceManager.GetString("Client_Connected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status: Connected.
+        /// </summary>
+        public static string Client_ConnectedStatus {
+            get {
+                return ResourceManager.GetString("Client_ConnectedStatus", resourceCulture);
             }
         }
         
@@ -678,6 +1318,15 @@ namespace JabbR {
         public static string Client_DeploymentInfo {
             get {
                 return ResourceManager.GetString("Client_DeploymentInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The connection to JabbR has been lost, trying to reconnect..
+        /// </summary>
+        public static string Client_Disconnected {
+            get {
+                return ResourceManager.GetString("Client_Disconnected", resourceCulture);
             }
         }
         
@@ -864,11 +1513,29 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Other Rooms.
+        /// </summary>
+        public static string Client_OtherRooms {
+            get {
+                return ResourceManager.GetString("Client_OtherRooms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Popup Notifications.
         /// </summary>
         public static string Client_PopupNotifications {
             get {
                 return ResourceManager.GetString("Client_PopupNotifications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The connection to JabbR has been temporarily lost, trying to reconnect..
+        /// </summary>
+        public static string Client_Reconnecting {
+            get {
+                return ResourceManager.GetString("Client_Reconnecting", resourceCulture);
             }
         }
         
@@ -981,11 +1648,29 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Transport: {0}.
+        /// </summary>
+        public static string Client_Transport {
+            get {
+                return ResourceManager.GetString("Client_Transport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Upload.
         /// </summary>
         public static string Client_Upload {
             get {
                 return ResourceManager.GetString("Client_Upload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uploading {0}..
+        /// </summary>
+        public static string Client_Uploading {
+            get {
+                return ResourceManager.GetString("Client_Uploading", resourceCulture);
             }
         }
         
@@ -1058,6 +1743,15 @@ namespace JabbR {
         public static string CommandNotFound {
             get {
                 return ResourceManager.GetString("CommandNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Content collapsed because you have rich content disabled..
+        /// </summary>
+        public static string Content_DisabledMessage {
+            get {
+                return ResourceManager.GetString("Content_DisabledMessage", resourceCulture);
             }
         }
         
