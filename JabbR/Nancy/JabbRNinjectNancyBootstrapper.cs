@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Security.Claims;
 using System.Security.Principal;
+using System.Threading;
+
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Bootstrappers.Ninject;
@@ -29,6 +32,9 @@ namespace JabbR.Nancy
             base.ApplicationStartup(container, pipelines);
 
             pipelines.BeforeRequest.AddItemToStartOfPipeline(FlowPrincipal);
+            pipelines.BeforeRequest.AddItemToStartOfPipeline(SetCulture);
+
+            pipelines.AfterRequest.AddItemToStartOfPipeline(SetContentType);
         }
 
         private Response FlowPrincipal(NancyContext context)
@@ -56,6 +62,21 @@ namespace JabbR.Nancy
             }
 
             return null;
+        }
+
+        private Response SetCulture(NancyContext ctx)
+        {
+            Thread.CurrentThread.CurrentCulture = ctx.Culture;
+            Thread.CurrentThread.CurrentUICulture = ctx.Culture;
+            return null;
+        }
+
+        private void SetContentType(NancyContext ctx)
+        {
+            if (ctx.Response.ContentType.Contains("text/html"))
+            {
+                ctx.Response.ContentType = "text/html; charset=utf-8";
+            }
         }
 
         private static T Get<T>(IDictionary<string, object> env, string key)
