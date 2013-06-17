@@ -24,6 +24,11 @@ namespace JabbR.Services
             ChatUser user;
             if (_service.TryAuthenticateUser(username, password, out user))
             {
+                if (user.IsBanned)
+                {
+                    return false;
+                }
+
                 claims.Add(new Claim(JabbRClaimTypes.Identifier, user.Id));
 
                 // Add the admin claim if the user is an Administrator
