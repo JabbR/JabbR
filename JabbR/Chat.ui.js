@@ -1204,10 +1204,6 @@
                 });
             });
 
-            if (window.File && window.FileReader && window.FileList && window.Blob) {
-                console.log("file reader support");
-            }
-
             $clipboardUploadButton.on("click", function () {
                 if ($uploadCallback) {
                     $uploadCallback();
@@ -1221,7 +1217,6 @@
 
             $hiddenFile.change(function (e) {
                 var file = e.target.files[0];
-                console.log(file);
                 
                 if (!file.type.match('image.*')) {
                     //it's a standard file - just upload it for now
