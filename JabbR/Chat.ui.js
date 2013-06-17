@@ -65,6 +65,8 @@
         $clipboardUpload = null,
         $clipboardUploadPreview = null,
         $clipboardUploadButton = null,
+        $clipboardCancelButton = null,
+        $uploadCallback = null,
         $fileRoom = null,
         $fileConnectionId = null,
         connectionInfoStatus = null,
@@ -698,6 +700,7 @@
             $clipboardUpload = $('#jabbr-clipboard-upload');
             $clipboardUploadPreview = $('#jabbr-clipboard-upload #clipboard-upload-preview');
             $clipboardUploadButton = $('#jabbr-clipboard-upload #clipboard-upload');
+            $clipboardCancelButton = $('#jabbr-clipboard-upload #clipboard-cancel');
             $helpBody = $('#jabbr-help .help-body');
             $shortCutHelp = $('#jabbr-help #shortcut');
             $globalCmdHelp = $('#jabbr-help #global');
@@ -1166,66 +1169,113 @@
             // Crazy browser hack
             $hiddenFile[0].style.left = '-800px';
 
+            $.imagePaste(function (file) {
+                ui.showClipboardUpload(file, "clipboard", function() {
+                    var name = "clipboard-data",
+                        uploader = {
+                            submitFile: function (connectionId, room) {
+                                $fileConnectionId.val(connectionId);
+
+                                $fileRoom.val(room);
+
+                                //$uploadForm.submit();
+                                $.ajax({
+                                    url: '/upload-clipboard',
+                                    dataType: 'json',
+                                    type: 'POST',
+                                    data: {
+                                        file: $clipboardUploadPreview.attr("src"),
+                                        room: room,
+                                        connectionId: connectionId
+                                    }
+                                }).done(function (result) {
+                                    //remove image from preview
+                                    $clipboardUploadPreview.attr("src", "");
+                                });
+
+                                $hiddenFile.val(''); //hide upload dialog
+                            }
+                        };
+
+                    ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
+
+                    $ui.trigger(ui.events.fileUploaded, [uploader]);
+
+                });
+            });
+
+            if (window.File && window.FileReader && window.FileList && window.Blob) {
+                console.log("file reader support");
+            }
+
             $clipboardUploadButton.on("click", function () {
-                var name = "clipboard-data",
-                    uploader = {
-                        submitFile: function (connectionId, room) {
-                            $fileConnectionId.val(connectionId);
-
-                            $fileRoom.val(room);
-
-                            //$uploadForm.submit();
-                            $.ajax({
-                                url: '/upload-clipboard',
-                                dataType: 'json',
-                                type: 'POST',
-                                data: {
-                                    file: $clipboardUploadPreview.attr("src"),
-                                    room: room,
-                                    connectionId: connectionId
-                                }
-                            }).done(function (result) {
-                                //remove image from preview
-                                $clipboardUploadPreview.attr("src", "");
-                            });
-
-                            $hiddenFile.val(''); //hide upload dialog
-                        }
-                    };
-
-                ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
-
-                $ui.trigger(ui.events.fileUploaded, [uploader]);
+                if ($uploadCallback) {
+                    $uploadCallback();
+                }
                 $clipboardUpload.modal('hide');
             });
 
-            $.imagePaste(function (file) {
-                ui.showClipboardUpload(file);
+            $clipboardCancelButton.on("click", function() {
+                $clipboardUpload.modal('hide');
             });
 
-            $hiddenFile.change(function () {
-                if (!$hiddenFile.val()) {
+            $hiddenFile.change(function (e) {
+                var file = e.target.files[0];
+                console.log(file);
+                
+                if (!file.type.match('image.*')) {
+                    //it's a standard file - just upload it for now
+                    ui.showClipboardUpload({ data: e.target, name: file.name }, "non-image", function() {
+                        var path = $hiddenFile.val(),
+                            slash = path.lastIndexOf('\\'),
+                            name = path.substring(slash + 1),
+                            uploader = {
+                                submitFile: function(connectionId, room) {
+                                    $fileConnectionId.val(connectionId);
+
+                                    $fileRoom.val(room);
+
+                                    $uploadForm.submit();
+
+                                    $hiddenFile.val('');
+                                }
+                            };
+
+                        ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
+
+                        $ui.trigger(ui.events.fileUploaded, [uploader]);
+                    });
+                    
                     return;
                 }
+                
+                var reader = new FileReader();
+                reader.onload = (function(f) {
+                    return function(e) {
+                        ui.showClipboardUpload({ data: e.target, name: file.name }, "image", function () {
+                                var path = $hiddenFile.val(),
+                                    slash = path.lastIndexOf('\\'),
+                                    name = path.substring(slash + 1),
+                                    uploader = {
+                                        submitFile: function (connectionId, room) {
+                                            $fileConnectionId.val(connectionId);
 
-                var path = $hiddenFile.val(),
-                    slash = path.lastIndexOf('\\'),
-                    name = path.substring(slash + 1),
-                    uploader = {
-                        submitFile: function (connectionId, room) {
-                            $fileConnectionId.val(connectionId);
+                                            $fileRoom.val(room);
 
-                            $fileRoom.val(room);
+                                            $uploadForm.submit();
 
-                            $uploadForm.submit();
+                                            $hiddenFile.val('');
+                                        }
+                                    };
 
-                            $hiddenFile.val('');
-                        }
+                                ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
+
+                                $ui.trigger(ui.events.fileUploaded, [uploader]);
+                            });
                     };
-
-                ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
-
-                $ui.trigger(ui.events.fileUploaded, [uploader]);
+                })(file);
+                
+                reader.readAsDataURL(file);
             });
 
             setInterval(function () {
@@ -1982,9 +2032,24 @@
             });
             $helpPopup.modal();
         },
-        showClipboardUpload: function (file) {
+        showClipboardUpload: function (file, type, uploader) {
+            $uploadCallback = uploader;
+            $clipboardUploadPreview.show();
             //set image url
-            $clipboardUploadPreview.attr("src", file.dataURL);
+            if (file.dataURL) {
+                $clipboardUpload.find("h3").text("Uploading from clipboard");
+                $clipboardUploadPreview.attr("src", file.dataURL);
+            } else {
+                $clipboardUpload.find("h3").text("Uploading: " + file.name);
+                if (type == "image") {
+                    //uploading an actual file
+                    $clipboardUploadPreview.attr("src", file.data.result);
+                } else {
+                    //nothing just yet
+                    $clipboardUploadPreview.hide();
+                }
+            }
+            
             $clipboardUpload.modal();
         },
         showUpdateUI: function () {
