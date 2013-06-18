@@ -874,7 +874,9 @@ namespace JabbR.Services
 
             string newIsoCode;
             if (LegacyCountryConversion.TryGetValue(isoCode, out newIsoCode))
+            {
                 Countries.TryGetValue(newIsoCode, out country);
+            }
 
             return country;
         }
