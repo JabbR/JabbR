@@ -649,6 +649,52 @@
         populateLobbyRoomList(moreRooms, templates.lobbyroom, lobby.users, showClosedRooms);
         lastLoadedRoomIndex = lastLoadedRoomIndex + maxRoomsToLoad;
     }
+    
+    function showUploadPreview(file, type, uploader) {
+        $uploadCallback = uploader;
+        $imageUploadPreview.show();
+        $unknownUploadPreview.hide();
+        //set image url
+        if (file.dataURL) {
+            $clipboardUpload.find("h3").text("Uploading from clipboard");
+            $imageUploadPreview.attr("src", file.dataURL);
+        } else {
+            $clipboardUpload.find("h3").text("Uploading: " + file.name);
+            if (type == "image") {
+                //uploading an actual file
+                $imageUploadPreview.attr("src", file.data.result);
+            } else {
+                //nothing just yet
+                $imageUploadPreview.hide();
+                $unknownUploadPreview.show();
+            }
+        }
+            
+        $clipboardUpload.modal();
+    }
+
+    function initializeUploadPreview(e, file, type) {
+        showUploadPreview({ data: e.target, name: file.name }, type, function () {
+            var path = $hiddenFile.val(),
+                slash = path.lastIndexOf('\\'),
+                name = path.substring(slash + 1),
+                uploader = {
+                    submitFile: function (connectionId, room) {
+                        $fileConnectionId.val(connectionId);
+
+                        $fileRoom.val(room);
+
+                        $uploadForm.submit();
+
+                        $hiddenFile.val('');
+                    }
+                };
+
+            ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
+
+            $ui.trigger(ui.events.fileUploaded, [uploader]);
+        });
+    }
 
     var ui = {
 
@@ -1172,7 +1218,7 @@
             $hiddenFile[0].style.left = '-800px';
 
             $.imagePaste(function (file) {
-                ui.showUploadPreview(file, "clipboard", function() {
+                showUploadPreview(file, "clipboard", function() {
                     var name = "clipboard-data",
                         uploader = {
                             submitFile: function (connectionId, room) {
@@ -1214,29 +1260,6 @@
             $previewCancelButton.on("click", function() {
                 $clipboardUpload.modal('hide');
             });
-            
-            function initializeUploadPreview(e, file, type) {
-                ui.showUploadPreview({ data: e.target, name: file.name }, type, function () {
-                    var path = $hiddenFile.val(),
-                        slash = path.lastIndexOf('\\'),
-                        name = path.substring(slash + 1),
-                        uploader = {
-                            submitFile: function (connectionId, room) {
-                                $fileConnectionId.val(connectionId);
-
-                                $fileRoom.val(room);
-
-                                $uploadForm.submit();
-
-                                $hiddenFile.val('');
-                            }
-                        };
-
-                    ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
-
-                    $ui.trigger(ui.events.fileUploaded, [uploader]);
-                });
-            }
 
             $hiddenFile.change(function (e) {
                 var file = e.target.files[0];
@@ -2009,28 +2032,6 @@
                 $shortCutHelp.append(templates.commandhelp.tmpl(this));
             });
             $helpPopup.modal();
-        },
-        showUploadPreview: function (file, type, uploader) {
-            $uploadCallback = uploader;
-            $imageUploadPreview.show();
-            $unknownUploadPreview.hide();
-            //set image url
-            if (file.dataURL) {
-                $clipboardUpload.find("h3").text("Uploading from clipboard");
-                $imageUploadPreview.attr("src", file.dataURL);
-            } else {
-                $clipboardUpload.find("h3").text("Uploading: " + file.name);
-                if (type == "image") {
-                    //uploading an actual file
-                    $imageUploadPreview.attr("src", file.data.result);
-                } else {
-                    //nothing just yet
-                    $imageUploadPreview.hide();
-                    $unknownUploadPreview.show();
-                }
-            }
-            
-            $clipboardUpload.modal();
         },
         showUpdateUI: function () {
             $updatePopup.modal();
