@@ -1,5 +1,5 @@
 ﻿using System;
-using JabbR.Services;
+using System.Collections.Generic;
 
 namespace JabbR.ViewModels
 {
@@ -12,6 +12,7 @@ namespace JabbR.ViewModels
         public bool DebugMode { get; set; }
         public Version Version { get; set; }
         public bool IsAdmin { get; set; }
+        public string ClientLanguageResources { get; set; }
      
         public bool ShowDetails
         {
