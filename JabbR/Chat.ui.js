@@ -62,7 +62,7 @@
         $fileUploadButton = null,
         $hiddenFile = null,
         $uploadForm = null,
-        $clipboardUpload = null,
+        $previewUpload = null,
         $imageUploadPreview = null,
         $unknownUploadPreview = null,
         $previewUploadButton = null,
@@ -723,10 +723,10 @@
         $unknownUploadPreview.hide();
         //set image url
         if (file.dataURL) {
-            $clipboardUpload.find('h3').text('Uploading from clipboard');
+            $previewUpload.find('h3').text('Uploading from clipboard');
             $imageUploadPreview.attr('src', file.dataURL);
         } else {
-            $clipboardUpload.find('h3').text('Uploading: ' + file.name);
+            $previewUpload.find('h3').text('Uploading: ' + file.name);
             if (type == 'image') {
                 //uploading an actual file
                 $imageUploadPreview.attr('src', file.data.result);
@@ -737,7 +737,7 @@
             }
         }
             
-        $clipboardUpload.modal();
+        $previewUpload.modal();
     }
 
     function initializeUploadPreview(e, file, type) {
@@ -811,7 +811,7 @@
             $disconnectDialog = $('#disconnect-dialog');
             $login = $('#jabbr-login');
             $helpPopup = $('#jabbr-help');
-            $clipboardUpload = $('#jabbr-upload-preview');
+            $previewUpload = $('#jabbr-upload-preview');
             $imageUploadPreview = $('#jabbr-upload-preview #image-upload-preview');
             $unknownUploadPreview = $('#jabbr-upload-preview #unknown-upload-preview');
             $previewUploadButton = $('#jabbr-upload-preview #upload-preview-upload');
@@ -1343,14 +1343,16 @@
             });
 
             $previewUploadButton.on('click', function () {
-                if ($uploadCallback) {
-                    $uploadCallback();
-                }
-                $clipboardUpload.modal('hide');
+                //callback is initialized when previewUpload is
+                //created. This button is only available when
+                //modal is being shown. Hence should never be
+                //stale. 
+                $uploadCallback();
+                $previewUpload.modal('hide');
             });
 
             $previewCancelButton.on('click', function() {
-                $clipboardUpload.modal('hide');
+                $previewUpload.modal('hide');
             });
 
             $hiddenFile.change(function (e) {
