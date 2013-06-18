@@ -1343,10 +1343,10 @@
             });
 
             $previewUploadButton.on('click', function () {
-                //callback is initialized when previewUpload is
-                //created. This button is only available when
-                //modal is being shown. Hence should never be
-                //stale. 
+                // Callback is initialized when previewUpload is
+                // created. This button is only available when
+                // modal is being shown. Hence should never be
+                // stale. 
                 $uploadCallback();
                 $previewUpload.modal('hide');
             });
