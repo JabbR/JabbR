@@ -46,7 +46,7 @@
             <div class="left">
                 {{if showUser}}
                 <img src="https://secure.gravatar.com/avatar/${hash}?s=16&d=mm" class="gravatar" />
-                <div class="name">${trimmedName}</div>
+                <div class="name">${name}</div>
                 {{/if}}
                 <span class="state"></span>
             </div>
@@ -88,18 +88,18 @@
         </div>
     </script>
     <script id="new-lobby-room-template" type="text/x-jquery-tmpl">
-        <li class="room {{if Private}}locked{{/if}} {{if Closed}}closed{{/if}}" data-room="${Name}" data-name="${Name}">
+        <li class="room {{if Private}}locked{{/if}} {{if Closed}}closed{{/if}}" data-room="${Name}" data-name="${Name}" data-count="${Count}">
             <div class="row-fluid room-row">
                 <div class="span3">
                     <span class="name">${Name}</span>
                     <span class="lock"><i class="icon-lock"></i></span>
-                    <span class="readonly"><i class="icon-remove-sign"></i></span>
+                    <span class="readonly"><i class="icon-ban-circle"></i></span>
                 </div>
                 <div class="span4">
                     <span class="topic">${Topic}</span>
                 </div>
                 <div class="span2">
-                    <span class="count" data-count="${Count}">{{if Count == 0}}Unoccupied{{else}}${Count} occupant{{if Count > 1}}s{{/if}}{{/if}}</span>
+                    <span class="count">{{if Count == 0}}Unoccupied{{else}}${Count} occupant{{if Count > 1}}s{{/if}}{{/if}}</span>
                 </div>
             </div>
         </li>
@@ -129,17 +129,17 @@
             ${listname}
         </h3>
         <div>
-            <ul id="${id}" />
+            <ul id="${id}" data-empty-message="No users" />
         </div>
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">
         <li id="tabs-${id}" class="room" data-name="${name}" data-closed="${closed}" data-trimmable="true" role="tab">
-            <span class="lock"></span>
-            <span class="readonly"></span>
+            <span class="lock hide"><i class="icon-lock icon-large"></i></span>
+            <span class="readonly hide"><i class="icon-ban-circle icon-large"></i></span>
             <button> 
                 <span class="content">${name}</span>
             </button>
-            <div class="close"></div>
+            <button class="close">&times;</button>
         </li>
     </script>
     <script id="command-help-template" type="text/x-jquery-tmpl">
@@ -256,11 +256,23 @@
                 <h1>Jabb</h1>
                 <div class="jabbrLogo" id="logo"></div>
             </div>
-            <div id="preferences" class="btn-group account pull-right">
-                <a class="btn help" aria-haspopup="true" title="display help"><i class="icon-question-sign"></i></a>
-                <a id="notifications" class="btn" title="notifications" href="@Url.Content("~/notifications")" target="_blank"><i class="icon-comments"></i><span id="notification-unread-count" class="badge badge-info"></span></a>
-                <a class="btn" title="account settings" href="@Url.Content("~/account")" target="_blank"><i class="icon-user"></i></a>
-                <a class="btn logout" title="sign out"><i class="icon-signout"></i></a>
+            <div class="pull-right">
+                <div id="connectionStatus" class="connection-status" data-toggle="popover" data-placement="left">
+                    <i class="icon-connection-status"></i>
+                </div>
+                <div id="connection-info-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><i class="popover-title-icon icon-globe" style="display: none;"></i><h3 class="popover-title" style="display: none;"></h3><div class="popover-content"><p></p></div></div></div>
+                <div id="connection-info-content" style="display: none;"><p id="connection-status"></p><p id="connection-transport"></p></div>
+                <div id="connection-state-changed-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title" style="display: none;"></h3><i id="popover-content-icon"></i><div class="popover-content"><p></p></div></div></div>
+                <div id="preferences" class="btn-group account pull-right">
+                    <a class="btn help" aria-haspopup="true" title="display help"><i class="icon-question-sign"></i></a>
+                    <a id="notifications" class="btn" title="notifications" href="@Url.Content("~/notifications")" target="_blank"><i class="icon-comments"></i><span id="notification-unread-count" class="badge badge-info"></span></a>
+                    <a class="btn" title="account settings" href="@Url.Content("~/account")" target="_blank"><i class="icon-user"></i></a>
+                    @if (Model.IsAdmin)
+                    {
+                        <a class="btn" title="jabbr settings" href="@Url.Content("~/administration")" target="_blank"><i class="icon-cog"></i></a>
+                    }
+                    <a class="btn logout" title="sign out"><i class="icon-signout"></i></a>
+                </div>
             </div>
             <nav>
                 <ul id="tabs" role="tablist">
@@ -273,10 +285,10 @@
             </nav>
         </header>
         <div id="topic-bar">
-            <form id="users-filter-form" action="#" class="form-inline">
-                <input id="users-filter" class="filter input-xlarge" type="text" placeholder="Start typing to filter room list..." />
-                <label id="users-filter-closed-area" class="checkbox inline">
-                    <input id="users-filter-closed" type="checkbox" />
+            <form id="room-filter-form" action="#" class="form-inline">
+                <input id="room-filter" class="filter input-xlarge" type="text" placeholder="Start typing to filter room list..." />
+                <label id="room-filter-closed-area" class="checkbox inline">
+                    <input id="room-filter-closed" type="checkbox" />
                     Show Closed Rooms?
                 </label>
             </form>
@@ -297,11 +309,11 @@
             <div id="lobby-wrapper">
                 <div id="lobby-private">
                     <h2 class="userlist-header nav-header">Your Private Rooms</h2>
-                    <ul id="userlist-lobby-owners"></ul>
+                    <ul id="userlist-lobby-owners" data-empty-message="No matching rooms"></ul>
                 </div>
                 <div id="lobby-other">
                     <h2 class="userlist-header nav-header">Rooms</h2>
-                    <ul id="userlist-lobby">
+                    <ul id="userlist-lobby" data-empty-message="No matching rooms">
                     </ul>
                     <div id="load-more-rooms-item" class="room" style="display:none;"><div class="row-fluid room-row load-more-rooms"><i class="icon-spinner" style="display:none;"></i><a href="#">Load More...</a></div></div>
                 </div>
@@ -444,8 +456,7 @@
             .Add("~/Scripts/json2.min.js")
             .Add("~/Scripts/bootstrap.js")
             .Add("~/Scripts/jquery.KeyTips.js")
-            .Add("~/Scripts/jquery-ui-1.10.0.min.js")
-            .Add("~/Scripts/jquery.signalR-1.1.0-beta1-130401.min.js")
+            .Add("~/Scripts/jquery.signalR-2.0.0-beta2-130602-b51.min.js")
             .Render("~/Scripts/JabbR1_#.js"));
     }
     <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
@@ -462,15 +473,14 @@
             .Add("~/Scripts/jquery.sortElements.js")
             .Add("~/Scripts/ba-linkify.min.js")
             .Add("~/Scripts/quicksilver.js")
-            .Add("~/Scripts/jquery.livesearch.js")
             .Add("~/Scripts/Markdown.Converter.js")
             .Add("~/Scripts/jquery.history.js")
             .Add("~/Scripts/moment.min.js")
             .Add("~/Scripts/livestamp.min.js")
             .Add("~/Chat.emoji.js")
-            .Add("~/Chat.toast.js")
             .Add("~/Chat.ui.filePaste.js")
             .Add("~/Chat.utility.js")
+            .Add("~/Chat.toast.js")
             .Add("~/Chat.ui.room.js")
             .Add("~/Chat.ui.js")
             .Add("~/Chat.documentOnWrite.js")

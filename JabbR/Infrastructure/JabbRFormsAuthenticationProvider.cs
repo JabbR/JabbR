@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using JabbR.Models;
 using JabbR.Services;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Forms;
+using Newtonsoft.Json;
 using Owin.Types;
+using Owin.Types.Extensions;
+using Owin.Types.Helpers;
 
 namespace JabbR.Infrastructure
 {
@@ -31,36 +36,55 @@ namespace JabbR.Infrastructure
 
         public void ResponseSignIn(FormsResponseSignInContext context)
         {
+            var authResult = new AuthenticationResult
+            {
+                Success = true
+            };
+
             ChatUser loggedInUser = GetLoggedInUser(context.Environment);
 
-            var identity = context.Identity as ClaimsIdentity;
-
-            var principal = new ClaimsPrincipal(identity);
+            var principal = new ClaimsPrincipal(context.Identity);
 
             // Do nothing if it's authenticated
             if (principal.IsAuthenticated())
             {
+                EnsurePersistentCookie(context);
                 return;
             }
 
             ChatUser user = _repository.GetUser(principal);
+            authResult.ProviderName = principal.GetIdentityProvider();
 
             // The user exists so add the claim
             if (user != null)
             {
-                identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
+                if (loggedInUser != null && user != loggedInUser)
+                {
+                    // Set an error message
+                    authResult.Message = String.Format("This {0} account has already been linked to another user.", authResult.ProviderName);
+                    authResult.Success = false;
+
+                    // Keep the old user logged in
+                    context.Identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, loggedInUser.Id));
+                }
+                else
+                {
+                    // Login this user
+                    AddClaim(context, user);
+                }
+
             }
             else if (principal.HasRequiredClaims())
             {
-                // The user doesn't exist but the claims to create the user do exist
-                string userId = null;
+                ChatUser targetUser = null;
 
+                // The user doesn't exist but the claims to create the user do exist
                 if (loggedInUser == null)
                 {
                     // New user so add them
                     user = _membershipService.AddUser(principal);
 
-                    userId = user.Id;
+                    targetUser = user;
                 }
                 else
                 {
@@ -69,16 +93,58 @@ namespace JabbR.Infrastructure
 
                     _repository.CommitChanges();
 
-                    userId = loggedInUser.Id;
+                    authResult.Message = String.Format("Successfully linked {0} account.", authResult.ProviderName);
+
+                    targetUser = loggedInUser;
                 }
 
-                identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, userId));
+                AddClaim(context, targetUser);
             }
-            else
+            else if(!principal.HasPartialIdentity())
             {
                 // A partial identity means the user needs to add more claims to login
-                identity.AddClaim(new Claim(JabbRClaimTypes.PartialIdentity, "true"));
+                context.Identity.AddClaim(new Claim(JabbRClaimTypes.PartialIdentity, "true"));
             }
+
+            var response = new OwinResponse(context.Environment);
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true
+            };
+
+            response.AddCookie(Constants.AuthResultCookie,
+                               JsonConvert.SerializeObject(authResult),
+                               cookieOptions);
+        }
+
+        private static void AddClaim(FormsResponseSignInContext context, ChatUser user)
+        {
+            // Do nothing if the user is banned
+            if (user.IsBanned)
+            {
+                return;
+            }
+
+            // Add the jabbr id claim
+            context.Identity.AddClaim(new Claim(JabbRClaimTypes.Identifier, user.Id));
+
+            // Add the admin claim if the user is an Administrator
+            if (user.IsAdmin)
+            {
+                context.Identity.AddClaim(new Claim(JabbRClaimTypes.Admin, "true"));
+            }
+
+            EnsurePersistentCookie(context);
+        }
+
+        private static void EnsurePersistentCookie(FormsResponseSignInContext context)
+        {
+            if (context.Extra == null)
+            {
+                context.Extra = new AuthenticationExtra();
+            }
+
+            context.Extra.IsPersistent = true;
         }
 
         private ChatUser GetLoggedInUser(IDictionary<string, object> env)

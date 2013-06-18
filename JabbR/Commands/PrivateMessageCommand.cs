@@ -18,7 +18,7 @@ namespace JabbR.Commands
 
             if (args.Length == 0 || String.IsNullOrWhiteSpace(args[0]))
             {
-                throw new InvalidOperationException("Who are you trying send a private message to?");
+                throw new InvalidOperationException("Who do you want to send a private message to?");
             }
             var toUserName = args[0];
             ChatUser toUser = context.Repository.VerifyUser(toUserName);
@@ -32,7 +32,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(messageText))
             {
-                throw new InvalidOperationException(String.Format("What did you want to say to '{0}'?", toUser.Name));
+                throw new InvalidOperationException(String.Format("What do you want to say to '{0}'?", toUser.Name));
             }
 
             context.NotificationService.SendPrivateMessage(callingUser, toUser, messageText);

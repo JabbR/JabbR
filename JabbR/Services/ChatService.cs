@@ -12,6 +12,7 @@ namespace JabbR.Services
     {
         private readonly IJabbrRepository _repository;
         private readonly ICache _cache;
+        private readonly ApplicationSettings _settings;
 
         private const int NoteMaximumLength = 140;
         private const int TopicMaximumLength = 80;
@@ -275,13 +276,26 @@ namespace JabbR.Services
                                                   };
 
         public ChatService(ICache cache, IJabbrRepository repository)
+            : this(cache, repository, ApplicationSettings.GetDefaultSettings())
+        {
+        }
+
+        public ChatService(ICache cache,
+                           IJabbrRepository repository,
+                           ApplicationSettings settings)
         {
             _cache = cache;
             _repository = repository;
+            _settings = settings;
         }
 
         public ChatRoom AddRoom(ChatUser user, string name)
         {
+            if (!_settings.AllowRoomCreation && !user.IsAdmin)
+            {
+                throw new InvalidOperationException("Room creation is disabled.");
+            }
+
             if (name.Equals("Lobby", StringComparison.OrdinalIgnoreCase))
             {
                 throw new InvalidOperationException("Lobby is not a valid chat room.");
@@ -318,7 +332,7 @@ namespace JabbR.Services
                     // It is, add the user to the allowed users so that future joins will work
                     room.AllowedUsers.Add(user);
                 }
-                if (!IsUserAllowed(room, user))
+                if (!room.IsUserAllowed(user))
                 {
                     throw new InvalidOperationException(String.Format("Unable to join {0}. This room is locked and you don't have permission to enter. If you have an invite code, make sure to enter it in the /join command", room.Name));
                 }
@@ -336,7 +350,7 @@ namespace JabbR.Services
             EnsureOwnerOrAdmin(user, room);
             if (!room.Private)
             {
-                throw new InvalidOperationException("Only private rooms can have invite codes");
+                throw new InvalidOperationException("Only private rooms can have invite codes.");
             }
 
             // Set the invite code and save
@@ -352,6 +366,7 @@ namespace JabbR.Services
             ChatClient client = AddClient(user, clientId, userAgent);
             client.UserAgent = userAgent;
             client.LastActivity = DateTimeOffset.UtcNow;
+            client.LastClientActivity = DateTimeOffset.UtcNow;
 
             // Remove any Afk notes.
             if (user.IsAfk)
@@ -368,6 +383,8 @@ namespace JabbR.Services
 
             // Remove the user from this room
             _repository.RemoveUserRoom(user, room);
+
+            _repository.CommitChanges();
         }
 
         public void AddAttachment(ChatMessage message, string fileName, string contentType, long size, UploadResult result)
@@ -409,8 +426,7 @@ namespace JabbR.Services
             ChatUser user = _repository.VerifyUserId(userId);
             ChatRoom room = _repository.VerifyUserRoom(_cache, user, roomName);
 
-            // REVIEW: Is it better to use _repository.VerifyRoom(message.Room, mustBeOpen: false)
-            // here?
+            // REVIEW: Is it better to use room.EnsureOpen() here?
             if (room.Closed)
             {
                 throw new InvalidOperationException(String.Format("You cannot post messages to '{0}'. The room is closed.", roomName));
@@ -533,7 +549,8 @@ namespace JabbR.Services
                 Id = clientId,
                 User = user,
                 UserAgent = userAgent,
-                LastActivity = user.LastActivity
+                LastActivity = DateTimeOffset.UtcNow,
+                LastClientActivity = user.LastActivity
             };
 
             _repository.Add(client);
@@ -578,11 +595,6 @@ namespace JabbR.Services
             return roomName.StartsWith("#") ? roomName.Substring(1) : roomName;
         }
 
-        private bool IsUserAllowed(ChatRoom room, ChatUser user)
-        {
-            return room.AllowedUsers.Contains(user) || user.IsAdmin;
-        }
-
         private static bool IsValidRoomName(string name)
         {
             return !String.IsNullOrEmpty(name) && Regex.IsMatch(name, "^[\\w-_]{1,30}$");
@@ -592,7 +604,7 @@ namespace JabbR.Services
         {
             if (!user.IsAdmin)
             {
-                throw new InvalidOperationException("You are not an admin");
+                throw new InvalidOperationException("You are not an admin.");
             }
         }
 
@@ -600,7 +612,7 @@ namespace JabbR.Services
         {
             if (!room.Owners.Contains(user) && !user.IsAdmin)
             {
-                throw new InvalidOperationException("You are not an owner of room '" + room.Name + "'");
+                throw new InvalidOperationException(String.Format("You are not an owner of room '{0}'.", room.Name));
             }
         }
 
@@ -608,7 +620,7 @@ namespace JabbR.Services
         {
             if (!room.Owners.Contains(user))
             {
-                throw new InvalidOperationException("You are not an owner of room '" + room.Name + "'");
+                throw new InvalidOperationException(String.Format("You are not an owner of room '{0}'.", room.Name));
             }
         }
 
@@ -616,7 +628,7 @@ namespace JabbR.Services
         {
             if (user != room.Creator)
             {
-                throw new InvalidOperationException("You are not the creator of " + room.Name);
+                throw new InvalidOperationException(String.Format("You are not the creator of room '{0}'", room.Name));
             }
         }
 
@@ -624,7 +636,7 @@ namespace JabbR.Services
         {
             if (user != room.Creator && !user.IsAdmin)
             {
-                throw new InvalidOperationException("You are not the creator of room '" + room.Name + "'");
+                throw new InvalidOperationException(String.Format("You are not the creator of room '{0}'.", room.Name));
             }
         }
 
@@ -797,7 +809,7 @@ namespace JabbR.Services
 
             if (targetUser.IsAdmin)
             {
-                throw new InvalidOperationException("You cannot ban another Admin.");
+                throw new InvalidOperationException("You cannot ban another admin.");
             }
 
             targetUser.IsBanned = true;
@@ -812,7 +824,7 @@ namespace JabbR.Services
                 note.Length > lengthToValidateFor)
             {
                 throw new InvalidOperationException(
-                    String.Format("Sorry, but your {1} is too long. Can please keep it under {0} characters.",
+                    String.Format("Sorry, but your {1} is too long. Please keep it under {0} characters.",
                         lengthToValidateFor, noteTypeName));
             }
         }

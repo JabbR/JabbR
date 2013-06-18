@@ -346,7 +346,7 @@
         ui.clearRoomOwner(user.Name, room);
     };
 
-    chat.updateRoomCount = function (room, count) {
+    chat.client.updateRoomCount = function (room, count) {
         ui.updateLobbyRoomCount(room, count);
     };
 
@@ -448,7 +448,7 @@
     };
 
     chat.client.userUnallowed = function (user, room) {
-        ui.addMessage('You have revoked ' + user + '"s access to ' + room, 'notification', this.state.activeRoom);
+        ui.addMessage('You have revoked ' + user + '\'s access to ' + room, 'notification', this.state.activeRoom);
     };
 
     // Called when you make someone an owner
@@ -684,9 +684,21 @@
             ui.addMessage('No rooms available', 'list-item');
         }
         else {
-            // sort rooms by count descending
+            // sort rooms by count descending then name
             var sorted = rooms.sort(function (a, b) {
-                return a.Count > b.Count ? -1 : 1;
+                if (a.Closed && !b.Closed) {
+                    return 1;
+                } else if (b.Closed && !a.Closed) {
+                    return -1;
+                }
+
+                if (a.Count > b.Count) {
+                    return -1;
+                } else if (b.Count > a.Count) {
+                    return 1;
+                }
+                
+                return a.Name.toString().toUpperCase().localeCompare(b.Name.toString().toUpperCase());
             });
 
             $.each(sorted, function () {
@@ -717,6 +729,19 @@
         }
         else {
             ui.addMessage('The following users match your search', 'list-header');
+            ui.addMessage(users.join(', '), 'list-item');
+        }
+    };
+    
+    chat.client.listAllowedUsers = function (room, isPrivate, users) {
+        if (!isPrivate) {
+            ui.addMessage('Anyone is allowed in ' + room + ' as it is not private', 'list-header');
+        }
+        else if (users.length === 0) {
+            ui.addMessage('No users are allowed in ' + room, 'list-header');
+        }
+        else {
+            ui.addMessage('The following users are allowed in ' + room, 'list-header');
             ui.addMessage(users.join(', '), 'list-item');
         }
     };
@@ -1081,7 +1106,10 @@
                                       // ui.showReloadMessageNotification();
 
                                       // Turn the firehose back on
-                                      chat.server.join(true);
+                                      chat.server.join(true).fail(function (e) {
+                                          // So refresh the page, our auth token is probably gone
+                                          performLogout();
+                                      });
                                   });
                 }, 5000);
             });

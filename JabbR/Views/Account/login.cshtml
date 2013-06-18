@@ -4,12 +4,13 @@
 @{
     Layout = "_layout.cshtml"; 
     var hasSocialProviders = Model.SocialDetails.ConfiguredProviders.Any();
+    var allowRegistration = Model.AllowUserRegistration;
 }
 
 <div class="row-fluid">
     <div class="span5 @if (!hasSocialProviders) {<text>offset3</text>}">
     <div class="usernamepassword-auth @if(hasSocialProviders) {<text>auth-divider</text>}">
-        @Html.Partial("_username")
+        @Html.Partial("_username", allowRegistration)
         </div>
     </div>
     <div class="span5">

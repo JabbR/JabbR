@@ -3,27 +3,28 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("allow", "Give a user permission to a private room. Only works if you're an owner of that room.", "user room", "room")]
+    [Command("allow", "Give a user permission to a private room. Only works if you're an owner of that room.", "user [room]", "room")]
     public class AllowCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException("Who do you want to allow?");
+                throw new InvalidOperationException("Who do you want to grant access permissions to?");
             }
 
             string targetUserName = args[0];
 
             ChatUser targetUser = context.Repository.VerifyUser(targetUserName);
 
-            if (args.Length == 1)
+            string roomName = args.Length > 1 ? args[1] : callerContext.RoomName;
+
+            if (String.IsNullOrEmpty(roomName))
             {
-                throw new InvalidOperationException("Which room?");
+                throw new InvalidOperationException("Which room do you want to allow access to?");
             }
 
-            string roomName = args[1];
-            ChatRoom targetRoom = context.Repository.VerifyRoom(roomName);
+            ChatRoom targetRoom = context.Repository.VerifyRoom(roomName, mustBeOpen: false);
 
             context.Service.AllowUser(callingUser, targetUser, targetRoom);
 

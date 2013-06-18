@@ -1,41 +1,61 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.IO;
 using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
+using JabbR.Infrastructure;
 using JabbR.Services;
+using JabbR.UploadHandlers;
 using Microsoft.Security.Application;
+using Ninject;
 
 namespace JabbR.ContentProviders
 {
     public class ImageContentProvider : CollapsibleContentProvider
     {
-        private readonly IApplicationSettings _settings;
+        private readonly IKernel _kernel;
+        private readonly IJabbrConfiguration _configuration;
 
         [ImportingConstructor]
-        public ImageContentProvider(IApplicationSettings settings)
+        public ImageContentProvider(IKernel kernel)
         {
-            _settings = settings;
+            _kernel = kernel;
+            _configuration = kernel.Get<IJabbrConfiguration>();
         }
 
-        protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
+        protected override async Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
-            string format = @"<a rel=""nofollow external"" target=""_blank"" href=""{0}""><img src=""{0}"" /></a>";
-            if (_settings.ProxyImages)
+            string format = @"<a rel=""nofollow external"" target=""_blank"" href=""{0}""><img src=""{1}"" /></a>";
+            string imageUrl = request.RequestUri.ToString();
+            string href = imageUrl;
+
+            // Only proxy what we need to (non https images)
+            if (_configuration.RequireHttps &&
+                !request.RequestUri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
             {
-                // If we're proxying images, only proxy what we need to (non https images)
-                if (_settings.RequireHttps &&
-                    !request.RequestUri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
+                var uploadProcessor = _kernel.Get<UploadProcessor>();
+                var response = await Http.GetAsync(request.RequestUri);
+                string fileName = Path.GetFileName(request.RequestUri.LocalPath);
+                string contentType = GetContentType(request.RequestUri);
+                long contentLength = response.ContentLength;
+
+                using (Stream stream = response.GetResponseStream())
                 {
-                    format = @"<a rel=""nofollow external"" target=""_blank"" href=""{0}""><img src=""proxy?url={0}"" /></a>";
+                    UploadResult result = await uploadProcessor.HandleUpload(fileName, contentType, stream, contentLength);
+
+                    if (result != null)
+                    {
+                        imageUrl = result.Url;
+                    }
                 }
             }
 
-            string url = request.RequestUri.ToString();
-            return TaskAsyncHelper.FromResult(new ContentProviderResult()
+            return new ContentProviderResult()
             {
-                Content = String.Format(format, Encoder.HtmlAttributeEncode(url)),
-                Title = url
-            });
+                Content = String.Format(format, Encoder.HtmlAttributeEncode(href), 
+                                                Encoder.HtmlAttributeEncode(imageUrl)),
+                Title = href
+            };
         }
 
         public override bool IsValidContent(Uri uri)
@@ -54,15 +74,24 @@ namespace JabbR.ContentProviders
                    path.EndsWith(".gif");
         }
 
-        public static bool IsValidContentType(string contentType)
+        public static string GetContentType(Uri uri)
         {
-            return contentType.Equals("image/bmp", StringComparison.OrdinalIgnoreCase) ||
-                   contentType.Equals("image/gif", StringComparison.OrdinalIgnoreCase) ||
-                   contentType.Equals("image/jpeg", StringComparison.OrdinalIgnoreCase) ||
-                   contentType.Equals("image/tiff", StringComparison.OrdinalIgnoreCase) ||
-                   contentType.Equals("image/x-tiff", StringComparison.OrdinalIgnoreCase) ||
-                   contentType.Equals("image/png", StringComparison.OrdinalIgnoreCase) ||
-                   contentType.Equals("image/svg+xml", StringComparison.OrdinalIgnoreCase);
+            string extension = Path.GetExtension(uri.LocalPath).ToLowerInvariant();
+
+            switch (extension)
+            {
+                case ".png":
+                    return "image/png";
+                case ".bmp":
+                    return "image/bmp";
+                case ".gif":
+                    return "image/gif";
+                case ".jpg":
+                case ".jpeg":
+                    return "image/jpeg";
+            }
+
+            return null;
         }
     }
 }

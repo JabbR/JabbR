@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,21 +16,22 @@ namespace JabbR.Client
     public class JabbRClient : IJabbRClient
     {
         private readonly IAuthenticationProvider _authenticationProvider;
-        private readonly IClientTransport _transport;
+        private readonly Func<IClientTransport> _transportFactory;
 
         private IHubProxy _chat;
         private HubConnection _connection;
         private int _initialized;
 
         public JabbRClient(string url)
-            : this(url, authenticationProvider: null, transport: new AutoTransport(new DefaultHttpClient()))
+            : this(url, authenticationProvider: null, transportFactory: () => new AutoTransport(new DefaultHttpClient()))
         { }
 
-        public JabbRClient(string url, IAuthenticationProvider authenticationProvider, IClientTransport transport)
+        public JabbRClient(string url, IAuthenticationProvider authenticationProvider, Func<IClientTransport> transportFactory)
         {
             SourceUrl = url;
             _authenticationProvider = authenticationProvider ?? new DefaultAuthenticationProvider(url);
-            _transport = transport;
+            _transportFactory = transportFactory;
+            TraceLevel = TraceLevels.All;
         }
 
         public event Action<Message, string> MessageReceived;
@@ -56,6 +58,9 @@ namespace JabbR.Client
         public event Action<IEnumerable<User>> UsersInactive;
 
         public string SourceUrl { get; private set; }
+        public bool AutoReconnect { get; set; }
+        public TextWriter TraceWriter { get; set; }
+        public TraceLevels TraceLevel { get; set; }
 
         public HubConnection Connection
         {
@@ -109,11 +114,19 @@ namespace JabbR.Client
                 .Then(connection =>
                 {
                     _connection = connection;
+
+                    if (TraceWriter != null)
+                    {
+                        _connection.TraceWriter = TraceWriter;
+                    }
+
+                    _connection.TraceLevel = TraceLevel;
+
                     _chat = _connection.CreateHubProxy("chat");
 
                     SubscribeToEvents();
 
-                    return _connection.Start(_transport);
+                    return _connection.Start(_transportFactory());
                 })
                 .Then(tcs => LogOn(tcs), taskCompletionSource)
                 .Catch(ex => taskCompletionSource.TrySetException(ex));
@@ -287,6 +300,11 @@ namespace JabbR.Client
                 return;
             }
 
+            if (AutoReconnect)
+            {
+                Disconnected += OnDisconnected;
+            }
+
             _chat.On<Message, string>(ClientEvents.AddMessage, (message, room) =>
             {
                 Execute(MessageReceived, messageReceived => messageReceived(message, room));
@@ -337,7 +355,6 @@ namespace JabbR.Client
                 Execute(UserTyping, userTyping => userTyping(user, room));
             });
 
-
             _chat.On<User, string>(ClientEvents.GravatarChanged, (user, room) =>
             {
                 Execute(GravatarChanged, gravatarChanged => gravatarChanged(user, room));
@@ -386,6 +403,18 @@ namespace JabbR.Client
             _chat.On<Room>(ClientEvents.JoinRoom, (room) =>
             {
                 Execute(JoinedRoom, joinedRoom => joinedRoom(room));
+            });
+        }
+
+        private void OnDisconnected()
+        {
+            TaskAsyncHelper.Delay(TimeSpan.FromSeconds(5)).Then(() =>
+            {
+                _connection.Start(_transportFactory()).Then(() =>
+                {
+                    // Join JabbR
+                    _chat.Invoke("Join", false);
+                });
             });
         }
 

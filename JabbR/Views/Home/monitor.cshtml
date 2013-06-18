@@ -1,0 +1,49 @@
+﻿@using SquishIt.Framework;
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <ul id="logs">
+    </ul>
+
+    @{
+        WriteLiteral(Bundle.JavaScript().ForceRelease()
+            .Add("~/Scripts/jquery-1.9.0.min.js")
+            .Add("~/Scripts/jquery-migrate-1.0.0.min.js")
+            .Add("~/Scripts/json2.min.js")
+            .Add("~/Scripts/jquery.signalR-2.0.0-beta2-130602-b51.min.js")
+            .Render("~/Scripts/JabbR3_#.js"));
+    }
+    <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
+    <script type="text/javascript">
+        $(function () {
+            function encodeHtml(html) {
+                // html still emits double quotes so we need to replace these entities to use them in attributes.
+                return $("<div/>").text(html).html().replace(/\"/g, "&quot;");
+            }
+
+            var monitor = $.connection.monitor;
+            $.connection.hub.logging = true;
+
+            monitor.client.logMessage = function (value) {
+                $('#logs').prepend('<li class="message">' + encodeHtml(value).replace('\n', '<br/>') + '</li>');
+            };
+
+            monitor.client.logError = function (value) {
+                $('#logs').prepend('<li class="error">' + encodeHtml(value) + '</li>');
+            };
+
+            $.connection.hub.disconnected(function () {
+                setTimeout(function () {
+                    $.connection.hub.start();
+                }, 5000);
+            });
+
+            $.connection.hub.start();
+        });
+    </script>
+</body>
+</html>

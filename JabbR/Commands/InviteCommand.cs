@@ -3,7 +3,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("invite", "Invite a user to join a room.", "user room", "room")]
+    [Command("invite", "Invite a user to join a room.", "user [room]", "room")]
     public class InviteCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
@@ -22,13 +22,14 @@ namespace JabbR.Commands
                 throw new InvalidOperationException("You can't invite yourself!");
             }
 
-            if (args.Length == 1)
+            string roomName = args.Length > 1 ? args[1] : callerContext.RoomName;
+
+            if (String.IsNullOrEmpty(roomName))
             {
-                throw new InvalidOperationException("Invite them to which room?");
+                throw new InvalidOperationException("Which room do you want to invite them to?");
             }
 
-            string roomName = args[1];
-            ChatRoom targetRoom = context.Repository.VerifyRoom(roomName);
+            ChatRoom targetRoom = context.Repository.VerifyRoom(roomName, mustBeOpen: false);
 
             context.NotificationService.Invite(callingUser, targetUser, targetRoom);
         }

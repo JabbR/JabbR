@@ -22,10 +22,13 @@
                 <button type="submit" class="btn">Sign in</button>
             </div>
         </div>
+        @if (Model)
+        { 
         <div class="control-group">
             <div class="controls">
                 <a href="@Url.Content("~/account/register")">Register</a> if you don't have an account.
             </div>
         </div>
+        }
         @Html.AntiForgeryToken()
     </form>

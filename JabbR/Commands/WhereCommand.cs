@@ -10,7 +10,7 @@ namespace JabbR.Commands
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException("Who are you trying to locate?");
+                throw new InvalidOperationException("Who do you want to locate?");
             }
 
             string targetUserName = args[0];

@@ -1,117 +1,52 @@
-﻿using System;
-using System.Configuration;
+﻿using System.Collections.Generic;
+using System.Security.Cryptography;
+using JabbR.Infrastructure;
 
 namespace JabbR.Services
 {
-    public class ApplicationSettings : IApplicationSettings
+    public class ApplicationSettings
     {
-        public string EncryptionKey
+        public ApplicationSettings()
         {
-            get
-            {
-                return ConfigurationManager.AppSettings["jabbr:encryptionKey"];
-            }
+            AllowUserRegistration = true;
+            AllowRoomCreation = true;
         }
 
-        public string VerificationKey
+        public string EncryptionKey { get; set; }
+
+        public string VerificationKey { get; set; }
+
+        public string AzureblobStorageConnectionString { get; set; }
+
+        public int MaxFileUploadBytes { get; set; }
+
+        public string GoogleAnalytics { get; set; }
+
+        public bool AllowUserRegistration { get; set; }
+
+        public bool AllowRoomCreation { get; set; }
+
+        public IDictionary<string, string> AuthenticationProviders { get; set; }
+
+        public static ApplicationSettings GetDefaultSettings()
         {
-            get
+            return new ApplicationSettings
             {
-                return ConfigurationManager.AppSettings["jabbr:verificationKey"];
-            }
+                EncryptionKey = CryptoHelper.ToHex(GenerateRandomBytes()),
+                VerificationKey = CryptoHelper.ToHex(GenerateRandomBytes()),
+                MaxFileUploadBytes = 5242880,
+                AllowUserRegistration = true,
+                AllowRoomCreation = true
+            };
         }
 
-        public string DefaultAdminUserName
+        private static byte[] GenerateRandomBytes(int n = 32)
         {
-            get
+            using (var cryptoProvider = new RNGCryptoServiceProvider())
             {
-                return ConfigurationManager.AppSettings["jabbr:defaultAdminUserName"];
-            }
-        }
-
-        public string DefaultAdminPassword
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["jabbr:defaultAdminPassword"];
-            }
-        }
-
-        public bool RequireHttps
-        {
-            get
-            {
-                string requireHttpsValue = ConfigurationManager.AppSettings["jabbr:requireHttps"];
-                bool requireHttps;
-                if (Boolean.TryParse(requireHttpsValue, out requireHttps))
-                {
-                    return requireHttps;
-                }
-                return false;
-            }
-        }
-
-        public bool MigrateDatabase
-        {
-            get
-            {
-                string migrateDatabaseValue = ConfigurationManager.AppSettings["jabbr:migrateDatabase"];
-                bool migrateDatabase;
-                if (Boolean.TryParse(migrateDatabaseValue, out migrateDatabase))
-                {
-                    return migrateDatabase;
-                }
-                return false;
-            }
-        }
-
-        public bool ProxyImages
-        {
-            get
-            {
-                string proxyImagesValue = ConfigurationManager.AppSettings["jabbr:proxyImages"];
-                bool proxyImages;
-                if (Boolean.TryParse(proxyImagesValue, out proxyImages))
-                {
-                    return proxyImages;
-                }
-                return false;
-            }
-        }
-
-        public int ProxyImageMaxSizeBytes
-        {
-            get
-            {
-                string proxyImageMaxSizeBytesValue = ConfigurationManager.AppSettings["jabbr:proxyImageMaxSizeBytes"];
-                int proxyImageMaxSizeBytes;
-                if (Int32.TryParse(proxyImageMaxSizeBytesValue, out proxyImageMaxSizeBytes))
-                {
-                    return proxyImageMaxSizeBytes;
-                }
-                return 0;
-            }
-        }
-
-        public string AzureblobStorageConnectionString
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["jabbr:azureblobStorageConnectionString"];
-            }
-        }
-
-        public int MaxFileUploadBytes
-        {
-            get
-            {
-                string maxFileUploadBytesValue = ConfigurationManager.AppSettings["jabbr:maxFileUploadBytes"];
-                int maxFileUploadBytes;
-                if (Int32.TryParse(maxFileUploadBytesValue, out maxFileUploadBytes))
-                {
-                    return maxFileUploadBytes;
-                }
-                return 0;
+                var bytes = new byte[n];
+                cryptoProvider.GetBytes(bytes);
+                return bytes;
             }
         }
     }

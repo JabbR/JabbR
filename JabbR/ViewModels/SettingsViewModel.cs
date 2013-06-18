@@ -11,7 +11,8 @@ namespace JabbR.ViewModels
         public string Time { get; set; }
         public bool DebugMode { get; set; }
         public Version Version { get; set; }
-
+        public bool IsAdmin { get; set; }
+     
         public bool ShowDetails
         {
             get

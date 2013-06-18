@@ -1,5 +1,5 @@
 ﻿/// <reference path="Scripts/jquery-1.7.js" />
-(function($) {
+(function($, window, utility) {
     "use strict";
 
     var ToastStatus = { Allowed: 0, NotConfigured: 1, Blocked: 2 },
@@ -24,6 +24,12 @@
                 return;
             }
 
+            var toastTitle = utility.trim(message.name, 21);
+            // we can reliably show 22 chars
+            if (toastTitle.length <= 19) {
+                toastTitle += ' (' + utility.trim(roomName, 19 - toastTitle.length) + ')';
+            }
+
             toastRoom = roomName;
 
             // Hide any previously displayed toast
@@ -31,7 +37,7 @@
 
             chromeToast = window.webkitNotifications.createNotification(
                 'Content/images/logo32.png',
-                message.trimmedName,
+                toastTitle,
                 $('<div/>').html(message.message).text());
 
             chromeToast.ondisplay = function () {
@@ -43,7 +49,7 @@
             chromeToast.onclick = function () {
                 toast.hideToast();
                                 
-                // Trigger the focus event
+                // Trigger the focus events - focus the window and open the source room
                 $(toast).trigger('toast.focus', [toastRoom]);
             };
 
@@ -86,4 +92,4 @@
         window.chat = {};
     }
     window.chat.toast = toast;
-})(jQuery);
+})(jQuery, window, window.chat.utility);

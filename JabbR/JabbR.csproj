@@ -65,12 +65,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="Gate">
-      <HintPath>..\packages\Gate.0.27\lib\net40\Gate.dll</HintPath>
-    </Reference>
-    <Reference Include="Gate.Middleware">
-      <HintPath>..\packages\Gate.Middleware.0.27\lib\net40\Gate.Middleware.dll</HintPath>
-    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\HtmlAgilityPack.1.4.6\lib\Net40\HtmlAgilityPack.dll</HintPath>
@@ -83,21 +77,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Iesi.Collections.3.2.0.4000\lib\Net35\Iesi.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.1.1.0-beta1-130401\lib\net40\Microsoft.AspNet.SignalR.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Owin, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Owin.1.1.0-beta1-130401\lib\net45\Microsoft.AspNet.SignalR.Owin.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.1.1.0-beta1-130401\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.AspNet.WebApi.Owin, Version=0.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.0.21.0-pre-20319-141\lib\net40\Microsoft.AspNet.WebApi.Owin.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.0-beta2-130602-b51\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -108,36 +90,40 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Data.OData.5.2.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.FileSystems">
-      <HintPath>..\packages\Microsoft.Owin.FileSystems.0.21.0-pre-20319-141\lib\net40\Microsoft.Owin.FileSystems.dll</HintPath>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.1.1.0-beta1-20518-314\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Owin.Diagnostics, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.1.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Diagnostics.1.1.0-beta1-20518-314\lib\net40\Microsoft.Owin.Diagnostics.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Mapping, Version=0.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Owin.FileSystems, Version=0.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Mapping.0.21.0-pre-20319-141\lib\net40\Microsoft.Owin.Mapping.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.FileSystems.0.22.0-pre-20518-314\lib\net40\Microsoft.Owin.FileSystems.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.1.1.0-beta1-20518-314\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Mapping, Version=0.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Mapping.0.22.0-pre-20518-314\lib\net40\Microsoft.Owin.Mapping.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.0.22.0-pre-20413-189\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.1.1.0-beta1-20518-314\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.Federation, Version=0.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Owin.Security.Federation, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.Federation.0.22.0-pre-20413-189\lib\net45\Microsoft.Owin.Security.Federation.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.Federation.0.22.0-pre-20518-314\lib\net45\Microsoft.Owin.Security.Federation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Forms, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.Forms.0.22.0-pre-20413-188\lib\net45\Microsoft.Owin.Security.Forms.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.Forms.1.1.0-beta1-20518-314\lib\net45\Microsoft.Owin.Security.Forms.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.Serialization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Owin.StaticFiles, Version=0.22.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.Serialization.0.22.0-pre-20413-188\lib\net45\Microsoft.Owin.Security.Serialization.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.StaticFiles, Version=0.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.StaticFiles.0.21.0-pre-20319-141\lib\net40\Microsoft.Owin.StaticFiles.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.StaticFiles.0.22.0-pre-20518-314\lib\net40\Microsoft.Owin.StaticFiles.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
@@ -153,9 +139,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Nancy.0.16.1\lib\net40\Nancy.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy.Authentication.WorldDomination, Version=0.17.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Nancy.Authentication.WorldDomination, Version=0.19.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Nancy.Authentication.WorldDomination.0.17.0\lib\net40\Nancy.Authentication.WorldDomination.dll</HintPath>
+      <HintPath>..\packages\Nancy.Authentication.WorldDomination.0.19.1\lib\net40\Nancy.Authentication.WorldDomination.dll</HintPath>
     </Reference>
     <Reference Include="Nancy.Bootstrappers.Ninject, Version=0.16.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -171,7 +157,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.5.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -206,8 +192,9 @@
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.identitymodel.services" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    <Reference Include="System.Net.Http.Formatting, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.0.0-rtm-130602\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Runtime.Caching" />
@@ -219,8 +206,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\System.Spatial.5.2.0\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.20710.0\lib\net40\System.Web.Http.dll</HintPath>
+    <Reference Include="System.Web.Http, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.0.0-rtm-130602\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Owin, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.0.0-rtm-130602\lib\net45\System.Web.Http.Owin.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -229,9 +221,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="WorldDomination.Web.Authentication, Version=0.19.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="WorldDomination.Web.Authentication, Version=0.19.1.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\WorldDomination.Web.Authentication.0.19.0-Csrf-PewPew-3\lib\net40\WorldDomination.Web.Authentication.dll</HintPath>
+      <HintPath>..\packages\WorldDomination.Web.Authentication.0.19.1\lib\net40\WorldDomination.Web.Authentication.dll</HintPath>
     </Reference>
     <Reference Include="Yahoo.Yui.Compressor, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -814,68 +806,6 @@
     <Content Include="Chat.githubissues.js" />
     <Content Include="Chat.githubissues.css" />
     <Content Include="Chat.nuget.css" />
-    <Content Include="Content\themes\base\images\animated-overlay.gif" />
-    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
-    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\themes\base\jquery-ui.css" />
-    <Content Include="Content\themes\base\jquery.ui.accordion.css" />
-    <Content Include="Content\themes\base\jquery.ui.all.css" />
-    <Content Include="Content\themes\base\jquery.ui.autocomplete.css" />
-    <Content Include="Content\themes\base\jquery.ui.base.css" />
-    <Content Include="Content\themes\base\jquery.ui.button.css" />
-    <Content Include="Content\themes\base\jquery.ui.core.css" />
-    <Content Include="Content\themes\base\jquery.ui.datepicker.css" />
-    <Content Include="Content\themes\base\jquery.ui.dialog.css" />
-    <Content Include="Content\themes\base\jquery.ui.menu.css" />
-    <Content Include="Content\themes\base\jquery.ui.progressbar.css" />
-    <Content Include="Content\themes\base\jquery.ui.resizable.css" />
-    <Content Include="Content\themes\base\jquery.ui.selectable.css" />
-    <Content Include="Content\themes\base\jquery.ui.slider.css" />
-    <Content Include="Content\themes\base\jquery.ui.spinner.css" />
-    <Content Include="Content\themes\base\jquery.ui.tabs.css" />
-    <Content Include="Content\themes\base\jquery.ui.theme.css" />
-    <Content Include="Content\themes\base\jquery.ui.tooltip.css" />
-    <Content Include="Content\themes\base\minified\images\animated-overlay.gif" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_flat_0_aaaaaa_40x100.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_flat_75_ffffff_40x100.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_glass_55_fbf9ee_1x400.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_glass_65_ffffff_1x400.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_dadada_1x400.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_glass_75_e6e6e6_1x400.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_glass_95_fef1ec_1x400.png" />
-    <Content Include="Content\themes\base\minified\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
-    <Content Include="Content\themes\base\minified\images\ui-icons_222222_256x240.png" />
-    <Content Include="Content\themes\base\minified\images\ui-icons_2e83ff_256x240.png" />
-    <Content Include="Content\themes\base\minified\images\ui-icons_454545_256x240.png" />
-    <Content Include="Content\themes\base\minified\images\ui-icons_888888_256x240.png" />
-    <Content Include="Content\themes\base\minified\images\ui-icons_cd0a0a_256x240.png" />
-    <Content Include="Content\themes\base\minified\jquery-ui.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.accordion.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.autocomplete.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.button.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.core.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.datepicker.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.dialog.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.menu.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.progressbar.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.resizable.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.selectable.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.slider.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.spinner.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
-    <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="favicon.ico" />
     <Content Include="Content\images\big-logo.png" />
     <Content Include="Content\images\logo32.png" />
@@ -924,6 +854,12 @@
     <EmbeddedResource Include="Migrations\201304140935434_MessageTypes.resx">
       <DependentUpon>201304140935434_MessageTypes.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201304210948362_DbSettings.resx">
+      <DependentUpon>201304210948362_DbSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201304280435045_MoreClientProperties.resx">
+      <DependentUpon>201304280435045_MoreClientProperties.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -931,8 +867,6 @@
     <Content Include="Scripts\jquery-1.9.0.js" />
     <Content Include="Scripts\jquery-1.9.0.min.js" />
     <Content Include="Scripts\jquery-migrate-1.0.0.min.js" />
-    <Content Include="Scripts\jquery-ui-1.10.0.js" />
-    <Content Include="Scripts\jquery-ui-1.10.0.min.js" />
     <Content Include="Scripts\jquery.history.js" />
     <Content Include="Scripts\jquery.autotabcomplete.js" />
     <Content Include="Scripts\jquery.captureDocumentWrite.js" />
@@ -943,11 +877,10 @@
     <Content Include="Scripts\jquery.KeyTips.min.js">
       <DependentUpon>jquery.KeyTips.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\jquery.livesearch.js" />
     <Content Include="Scripts\jquery.network.mock.js" />
     <Content Include="Scripts\jquery.pubsub.js" />
-    <Content Include="Scripts\jquery.signalR-1.1.0-beta1-130401.js" />
-    <Content Include="Scripts\jquery.signalR-1.1.0-beta1-130401.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.0-beta2-130602-b51.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.0-beta2-130602-b51.min.js" />
     <Content Include="Scripts\jquery.sortElements.js" />
     <Content Include="Scripts\jquery.timeago.0.10.js" />
     <Content Include="Scripts\jQuery.tmpl.js" />
@@ -986,19 +919,30 @@
       <DependentUpon>livestamp.js</DependentUpon>
     </Content>
     <Content Include="Views\Notifications\index.cshtml" />
+    <Content Include="Views\Home\monitor.cshtml" />
+    <Content Include="Views\Administration\index.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Middleware\FixCookieHandler.cs" />
     <Compile Include="App_Start\Startup.DependencyInjection.cs" />
+    <Compile Include="Commands\AllowedCommand.cs" />
     <Compile Include="ContentProviders\Core\ContentProviderProcessor.cs" />
     <Compile Include="ContentProviders\GitHubIssueCommentsContentProvider.cs" />
+    <Compile Include="Hubs\LoggingHubPipelineModule.cs" />
+    <Compile Include="Hubs\Monitor.cs" />
+    <Compile Include="Infrastructure\AuthenticationResult.cs" />
     <Compile Include="Infrastructure\AuthenticationServiceExtensions.cs" />
+    <Compile Include="Infrastructure\AuthorizeClaim.cs" />
     <Compile Include="Infrastructure\CryptoHelper.cs" />
+    <Compile Include="Infrastructure\RealtimeLogger.cs" />
     <Compile Include="Infrastructure\IdentityUtility.cs" />
     <Compile Include="Infrastructure\AlertMessageStore.cs" />
+    <Compile Include="Infrastructure\ILogger.cs" />
     <Compile Include="Infrastructure\JabbRDataProtection.cs" />
     <Compile Include="Infrastructure\JabbRFormsAuthenticationProvider.cs" />
+    <Compile Include="Infrastructure\LoggingExtensions.cs" />
+    <Compile Include="Infrastructure\LogType.cs" />
     <Compile Include="Infrastructure\PrincipalExtensions.cs" />
-    <Compile Include="Infrastructure\JabbRAuthorizeAttribute.cs" />
     <Compile Include="Infrastructure\MentionExtractor.cs" />
     <Compile Include="Middleware\WindowsPrincipalHandler.cs" />
     <Compile Include="Migrations\201303220549121_ContentProviderContent.cs" />
@@ -1029,12 +973,23 @@
     <Compile Include="Migrations\201304140935434_MessageTypes.Designer.cs">
       <DependentUpon>201304140935434_MessageTypes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201304210948362_DbSettings.cs" />
+    <Compile Include="Migrations\201304210948362_DbSettings.Designer.cs">
+      <DependentUpon>201304210948362_DbSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201304280435045_MoreClientProperties.cs" />
+    <Compile Include="Migrations\201304280435045_MoreClientProperties.Designer.cs">
+      <DependentUpon>201304280435045_MoreClientProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\ClientNotification.cs" />
     <Compile Include="Models\Mapping\AttachmentMap.cs" />
     <Compile Include="Models\Mapping\NotificationMap.cs" />
     <Compile Include="Models\MessageType.cs" />
+    <Compile Include="Models\ModelExtensions.cs" />
     <Compile Include="Models\Notification.cs" />
+    <Compile Include="Models\Settings.cs" />
+    <Compile Include="Nancy\AdministrationModule.cs" />
     <Compile Include="Nancy\ClaimsPrincipalUserIdentity.cs" />
     <Compile Include="Nancy\HtmlHelperExtensions.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.cs" />
@@ -1051,7 +1006,6 @@
     <Compile Include="Nancy\JabbRAuthenticationCallbackProvider.cs" />
     <Compile Include="App_Start\Startup.ErrorHandling.cs" />
     <Compile Include="App_Start\Startup.Migrations.cs" />
-    <Compile Include="App_Start\Startup.BackgroundWork.cs" />
     <Compile Include="Infrastructure\AppBuilderExtensions.cs" />
     <Compile Include="Infrastructure\Constants.cs" />
     <Compile Include="Nancy\JabbRNinjectNancyBootstrapper.cs" />
@@ -1086,10 +1040,17 @@
     <Compile Include="Nancy\HomeModule.cs" />
     <Compile Include="Nancy\NotificationsModule.cs" />
     <Compile Include="Nancy\SessionExtensions.cs" />
-    <Compile Include="Services\AppSettingKeyProvider.cs" />
+    <Compile Include="Services\DefaultUserAuthenticator.cs" />
+    <Compile Include="Services\IJabbrConfiguration.cs" />
+    <Compile Include="Services\ISettingsManager.cs" />
+    <Compile Include="Services\IUserAuthenticator.cs" />
+    <Compile Include="Services\JabbrConfiguration.cs" />
+    <Compile Include="Services\PresenceMonitor.cs" />
+    <Compile Include="Services\SettingsKeyProvider.cs" />
+    <Compile Include="Services\ApplicationSettings.cs" />
     <Compile Include="Services\DefaultCache.cs" />
-    <Compile Include="Services\FileBasedKeyProvider.cs" />
     <Compile Include="Services\IChatNotificationService.cs" />
+    <Compile Include="Services\SettingsManager.cs" />
     <Compile Include="UploadHandlers\AzureBlobStorageHandler.cs" />
     <Compile Include="UploadHandlers\IUploadHandler.cs" />
     <Compile Include="Services\IKeyProvider.cs" />
@@ -1175,7 +1136,6 @@
     <Compile Include="ContentProviders\GoogleDocsFormProvider.cs" />
     <Compile Include="ContentProviders\SlideshareContentProvider.cs" />
     <Compile Include="ContentProviders\GistContentProvider.cs" />
-    <Compile Include="Middleware\ImageProxyHandler.cs" />
     <Compile Include="Hubs\Chat.cs" />
     <Compile Include="ContentProviders\CollegeHumorContentProvider.cs" />
     <Compile Include="ContentProviders\ImgurContentProvider.cs" />
@@ -1302,10 +1262,8 @@
     <Compile Include="Models\UserStatus.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\ApplicationSettings.cs" />
     <Compile Include="Services\ChatService.cs" />
     <Compile Include="Services\CryptoService.cs" />
-    <Compile Include="Services\IApplicationSettings.cs" />
     <Compile Include="Services\IChatService.cs" />
     <Compile Include="Services\ICryptoService.cs" />
     <Compile Include="Infrastructure\StringExtensions.cs" />
@@ -1344,7 +1302,9 @@
   <ItemGroup>
     <Content Include="Chat.emoji.js" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Content\themes\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

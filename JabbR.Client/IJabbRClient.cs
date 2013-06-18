@@ -34,6 +34,7 @@ namespace JabbR.Client
         event Action<StateChange> StateChanged;
 
         string SourceUrl { get; }
+        bool AutoReconnect { get; set; }
         ICredentials Credentials { get; set; }
 
         Task<LogOnInfo> Connect(string name, string password);

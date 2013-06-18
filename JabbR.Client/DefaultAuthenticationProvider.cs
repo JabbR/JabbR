@@ -47,7 +47,7 @@ namespace JabbR.Client
                     
                     // Verify the cookie
                     var cookie = cookieJar.GetCookies(new Uri(_url));
-                    if (cookie == null || cookie["jabbr.userToken"] == null)
+                    if (cookie == null || cookie["jabbr.id"] == null)
                     {
                         throw new SecurityException("Didn't get a cookie from JabbR! Ensure your User Name/Password are correct");
                     }

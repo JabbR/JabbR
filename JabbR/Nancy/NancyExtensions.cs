@@ -4,7 +4,9 @@ using System.Security.Claims;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using Nancy;
+using Nancy.Helpers;
 using Nancy.Owin;
+using Newtonsoft.Json;
 using Owin.Types;
 using Owin.Types.Extensions;
 
@@ -33,6 +35,13 @@ namespace JabbR.Nancy
         {
             var claims = new List<Claim>();
             claims.Add(new Claim(JabbRClaimTypes.Identifier, user.Id));
+
+            // Add the admin claim if the user is an Administrator
+            if (user.IsAdmin)
+            {
+                claims.Add(new Claim(JabbRClaimTypes.Admin, "true"));
+            }
+
             return module.SignIn(claims);
         }
 
@@ -49,9 +58,21 @@ namespace JabbR.Nancy
             module.ModelValidationResult = module.ModelValidationResult.AddError(propertyName, errorMessage);
         }
 
-        public static void AddAlertMessage(this NancyModule module, string messageType, string alertMessage)
+        public static AuthenticationResult GetAuthenticationResult(this NancyContext context)
         {
-            var container = module.Request.Session.GetSessionValue<AlertMessageStore>(AlertMessageStore.AlertMessageKey);
+            string value;
+            if (!context.Request.Cookies.TryGetValue(Constants.AuthResultCookie, out value) && 
+                String.IsNullOrEmpty(value))
+            {
+                return null;
+            }
+
+            return JsonConvert.DeserializeObject<AuthenticationResult>(HttpUtility.UrlDecode(value));
+        }
+
+        public static void AddAlertMessage(this Request request, string messageType, string alertMessage)
+        {
+            var container = request.Session.GetSessionValue<AlertMessageStore>(AlertMessageStore.AlertMessageKey);
 
             if (container == null)
             {
@@ -60,7 +81,7 @@ namespace JabbR.Nancy
 
             container.AddMessage(messageType, alertMessage);
 
-            module.Request.Session.SetSessionValue(AlertMessageStore.AlertMessageKey, container);
+            request.Session.SetSessionValue(AlertMessageStore.AlertMessageKey, container);
         }
 
         public static ClaimsPrincipal GetPrincipal(this NancyModule module)

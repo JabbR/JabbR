@@ -3,15 +3,16 @@ namespace JabbR.Infrastructure
 {
     public static class Constants
     {
-        public static readonly string UserTokenCookie = "jabbr.userToken";
+        public static readonly string AuthResultCookie = "jabbr.authResult";
         public static readonly Version JabbRVersion = typeof(Constants).Assembly.GetName().Version;
         public static readonly string JabbRAuthType = "JabbR";
     }
 
     public static class JabbRClaimTypes
     {
-        public static readonly string Identifier = "urn:jabbr:id";
-        public static readonly string PartialIdentity = "urn:jabbr:partialid";
+        public const string Identifier = "urn:jabbr:id";
+        public const string Admin = "urn:jabbr:admin";
+        public const string PartialIdentity = "urn:jabbr:partialid";
     }
 
     public static class AcsClaimTypes

@@ -7,7 +7,10 @@
         <XunitPath>$(ToolsPath)xunit\</XunitPath>
         <ArtifactsPath>$(ProjectRoot)\target</ArtifactsPath>
         <SiteArtifactsPath>$(ArtifactsPath)\site</SiteArtifactsPath>
+        <MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)</MSBuildCommunityTasksPath>
     </PropertyGroup>
+
+    <Import Project="$(MSBuildProjectDirectory)\MSBuild.Community.Tasks.targets"/>
     
     <ItemGroup>
         <TestProjects Include="$(ProjectRoot)\JabbR.Tests\bin\$(Configuration)\JabbR.Tests.dll" />
@@ -16,7 +19,7 @@
     <UsingTask AssemblyFile="$(XunitPath)xunit.runner.msbuild.dll"
                TaskName="Xunit.Runner.MSBuild.xunit" />
     
-    <Target Name="RunAll" DependsOnTargets="Build; RunTests; Package" />
+    <Target Name="RunAll" DependsOnTargets="Build; RunTests; Package; ZipIt" />
     
     <Target Name="MakeArtifactsPath">
         <MakeDir Directories="$(SiteArtifactsPath)" Condition="!Exists('$(SiteArtifactsPath)')" />
@@ -37,6 +40,14 @@
                  Targets="pipelinePreDeployCopyAllFilesToOneFolder" 
                  Properties="_PackageTempDir=$(SiteArtifactsPath);
                              AutoParameterizationWebConfigConnectionStrings=false;
-                             SolutionDir=$(ProjectRoot)\;" />
+                             SolutionDir=$(ProjectRoot)\;
+                             MSBuildExtensionsPath32=$(MSBuildProjectDirectory)\msbuild" />
+    </Target>
+
+    <Target Name="ZipIt" DependsOnTargets="Package">
+        <ItemGroup>
+            <ZipFiles Include="$(ArtifactsPath)\**\*.*" Exclude="$(ArtifactsPath)\**\*.pdb;$(ArtifactsPath)\**\*.zip" />
+        </ItemGroup>
+        <Zip Files="@(ZipFiles)" ZipFileName="$(ArtifactsPath)\site.zip" WorkingDirectory="$(SiteArtifactsPath)" />
     </Target>
 </Project>

@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JabbR.Infrastructure;
@@ -13,7 +13,9 @@ namespace JabbR.Nancy
 {
     public class HomeModule : JabbRModule
     {
-        public HomeModule(UploadCallbackHandler uploadHandler)
+        public HomeModule(ApplicationSettings settings, 
+                          IJabbrConfiguration configuration, 
+                          UploadCallbackHandler uploadHandler)
         {
             Get["/"] = _ =>
             {
@@ -21,12 +23,13 @@ namespace JabbR.Nancy
                 {
                     var viewModel = new SettingsViewModel
                     {
-                        GoogleAnalytics = ConfigurationManager.AppSettings["jabbr:googleAnalytics"],
-                        Sha = ConfigurationManager.AppSettings["jabbr:releaseSha"],
-                        Branch = ConfigurationManager.AppSettings["jabbr:releaseBranch"],
-                        Time = ConfigurationManager.AppSettings["jabbr:releaseTime"],
+                        GoogleAnalytics = settings.GoogleAnalytics,
+                        Sha = configuration.DeploymentSha,
+                        Branch = configuration.DeploymentBranch,
+                        Time = configuration.DeploymentTime,
                         DebugMode = (bool)Context.Items["_debugMode"],
-                        Version = Constants.JabbRVersion
+                        Version = Constants.JabbRVersion,
+                        IsAdmin = Principal.HasClaim(JabbRClaimTypes.Admin)
                     };
 
                     return View["index", viewModel];
@@ -39,6 +42,19 @@ namespace JabbR.Nancy
                 }
 
                 return HttpStatusCode.Unauthorized;
+            };
+
+            Get["/monitor"] = _ =>
+            {
+                ClaimsPrincipal principal = Principal;
+
+                if (principal == null ||
+                    !principal.HasClaim(JabbRClaimTypes.Admin))
+                {
+                    return 403;
+                }
+
+                return View["monitor"];
             };
 
             Post["/upload"] = _ =>

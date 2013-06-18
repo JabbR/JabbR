@@ -10,7 +10,7 @@ namespace JabbR.Commands
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException("Join which room?");
+                throw new InvalidOperationException("Which room do you want to join?");
             }
 
             // Extract arguments

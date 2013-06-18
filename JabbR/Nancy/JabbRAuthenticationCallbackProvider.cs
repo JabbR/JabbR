@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
-using JabbR.Infrastructure;
-using JabbR.Models;
 using JabbR.Services;
 using Nancy;
 using Nancy.Authentication.WorldDomination;
+using WorldDomination.Web.Authentication;
 
 namespace JabbR.Nancy
 {
@@ -20,49 +19,44 @@ namespace JabbR.Nancy
 
         public dynamic Process(NancyModule nancyModule, AuthenticateCallbackData model)
         {
-            if (model.Exception != null)
-            {
-                nancyModule.AddAlertMessage("error", model.Exception.Message);
-
-                return nancyModule.Response.AsRedirect("~/");
-            }
-
-            var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, model.AuthenticatedClient.UserInformation.Id));
-            claims.Add(new Claim(ClaimTypes.Name, model.AuthenticatedClient.UserInformation.UserName));
-            claims.Add(new Claim(ClaimTypes.Email, model.AuthenticatedClient.UserInformation.Email));
-            claims.Add(new Claim(ClaimTypes.AuthenticationMethod, model.AuthenticatedClient.ProviderName));
-            var identity = new ClaimsIdentity(claims);
-            var principal = new ClaimsPrincipal(identity);
-
-            string currentUserId = nancyModule.GetPrincipal().GetUserId();
-            bool isAuthenticated = !String.IsNullOrEmpty(currentUserId);
-
-            ChatUser user = _repository.GetUser(principal);
             Response response = nancyModule.Response.AsRedirect("~/");
 
-            // If a user is logged in, then they got here from the account page, send them back there
-            if (isAuthenticated)
+            if (nancyModule.IsAuthenticated())
             {
                 response = nancyModule.Response.AsRedirect("~/account/#identityProviders");
             }
 
-            if (isAuthenticated && user != null && user.Id != currentUserId)
+            if (model.Exception != null)
             {
-                // User already linked so fail here
-                nancyModule.AddAlertMessage("error", String.Format("This {0} account has already been linked to another user.", model.AuthenticatedClient.ProviderName));
-
-                return response;
+                nancyModule.Request.AddAlertMessage("error", model.Exception.Message);
             }
-            else if (isAuthenticated)
+            else
             {
-                // REVIEW: This is a little hacky since the operation might fail
-                nancyModule.AddAlertMessage("success", String.Format("Successfully linked {0} account.", model.AuthenticatedClient.ProviderName));
-            }
+                UserInformation information = model.AuthenticatedClient.UserInformation;
+                var claims = new List<Claim>();
+                claims.Add(new Claim(ClaimTypes.NameIdentifier, information.Id));
+                claims.Add(new Claim(ClaimTypes.AuthenticationMethod, model.AuthenticatedClient.ProviderName));
 
-            nancyModule.SignIn(claims);
+                if (!String.IsNullOrEmpty(information.UserName))
+                {
+                    claims.Add(new Claim(ClaimTypes.Name, information.UserName));
+                }
+
+                if (!String.IsNullOrEmpty(information.Email))
+                {
+                    claims.Add(new Claim(ClaimTypes.Email, information.Email));
+                }
+
+
+                nancyModule.SignIn(claims);
+            }
 
             return response;
+        }
+
+        public dynamic OnRedirectToAuthenticationProviderError(NancyModule nancyModule, string errorMessage)
+        {
+            return null;
         }
     }
 }
