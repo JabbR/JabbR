@@ -723,13 +723,13 @@
         $unknownUploadPreview.hide();
         //set image url
         if (file.dataURL) {
-            $clipboardUpload.find("h3").text("Uploading from clipboard");
-            $imageUploadPreview.attr("src", file.dataURL);
+            $clipboardUpload.find('h3').text('Uploading from clipboard');
+            $imageUploadPreview.attr('src', file.dataURL);
         } else {
-            $clipboardUpload.find("h3").text("Uploading: " + file.name);
-            if (type == "image") {
+            $clipboardUpload.find('h3').text('Uploading: ' + file.name);
+            if (type == 'image') {
                 //uploading an actual file
-                $imageUploadPreview.attr("src", file.data.result);
+                $imageUploadPreview.attr('src', file.data.result);
             } else {
                 //nothing just yet
                 $imageUploadPreview.hide();
@@ -1310,8 +1310,8 @@
             $hiddenFile[0].style.left = '-800px';
 
             $.imagePaste(function (file) {
-                showUploadPreview(file, "clipboard", function() {
-                    var name = "clipboard-data",
+                showUploadPreview(file, 'clipboard', function() {
+                    var name = 'clipboard-data',
                         uploader = {
                             submitFile: function (connectionId, room) {
                                 $fileConnectionId.val(connectionId);
@@ -1322,13 +1322,13 @@
                                     dataType: 'json',
                                     type: 'POST',
                                     data: {
-                                        file: $imageUploadPreview.attr("src"),
+                                        file: $imageUploadPreview.attr('src'),
                                         room: room,
                                         connectionId: connectionId
                                     }
                                 }).done(function (result) {
                                     //remove image from preview
-                                    $imageUploadPreview.attr("src", "");
+                                    $imageUploadPreview.attr('src', '');
                                 });
 
                                 $hiddenFile.val(''); //hide upload dialog
@@ -1342,14 +1342,14 @@
                 });
             });
 
-            $previewUploadButton.on("click", function () {
+            $previewUploadButton.on('click', function () {
                 if ($uploadCallback) {
                     $uploadCallback();
                 }
                 $clipboardUpload.modal('hide');
             });
 
-            $previewCancelButton.on("click", function() {
+            $previewCancelButton.on('click', function() {
                 $clipboardUpload.modal('hide');
             });
 
@@ -1357,14 +1357,14 @@
                 var file = e.target.files[0];
                 
                 if (!file.type.match('image.*')) {
-                    initializeUploadPreview(e, file, "non-image");
+                    initializeUploadPreview(e, file, 'non-image');
                     return;
                 }
                 
                 var reader = new FileReader();
                 reader.onload = (function(f) {
                     return function (e) {
-                        initializeUploadPreview(e, file, "image");
+                        initializeUploadPreview(e, file, 'image');
                     };
                 })(file);
                 
