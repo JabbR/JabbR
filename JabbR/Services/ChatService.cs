@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.UploadHandlers;
 
@@ -17,6 +16,14 @@ namespace JabbR.Services
         private const int NoteMaximumLength = 140;
         private const int TopicMaximumLength = 80;
         private const int WelcomeMaximumLength = 200;
+
+        // To migrate from previous versions of Jabbr
+        private static readonly IDictionary<string, string> LegacyCountryConversion = new Dictionary<string, string>
+                                                                                          {
+                                                                                              {"g1", "england"},
+                                                                                              {"g2", "wales"},
+                                                                                              {"g3", "scotland"}
+                                                            };
 
         // Iso reference: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
         private static readonly IDictionary<string, string> Countries = new Dictionary<string, string>
@@ -50,7 +57,7 @@ namespace JabbR.Services
                                                                                 {"bm", "Bermuda"},
                                                                                 {"bn", "Brunei Darussalam"},
                                                                                 {"bo", "Bolivia"},
-                                                                                {"bq","Bonaire, Sint Eustatius and Saba"},
+                                                                                {"bq", "Bonaire, Sint Eustatius and Saba"},
                                                                                 {"br", "Brazil"},
                                                                                 {"bs", "Bahamas"},
                                                                                 {"bt", "Bhutan"},
@@ -60,7 +67,7 @@ namespace JabbR.Services
                                                                                 {"bz", "Belize"},
                                                                                 {"ca", "Canada"},
                                                                                 {"cc", "Cocos (Keeling) Islands"},
-                                                                                {"cd","Congo, the Democratic Republic of the"},
+                                                                                {"cd", "Congo, the Democratic Republic of the"},
                                                                                 {"cf", "Central African Republic"},
                                                                                 {"cg", "Congo"},
                                                                                 {"ch", "Switzerland"},
@@ -110,17 +117,18 @@ namespace JabbR.Services
                                                                                 {"gp", "Guadeloupe"},
                                                                                 {"gq", "Equatorial Guinea"},
                                                                                 {"gr", "Greece"},
-                                                                                {"gs","South Georgia and the South Sandwich Islands"},
+                                                                                {"gs", "South Georgia and the South Sandwich Islands"},
                                                                                 {"gt", "Guatemala"},
                                                                                 {"gu", "Guam"},
                                                                                 {"gw", "Guinea-Bissau"},
                                                                                 {"gy", "Guyana"},
                                                                                 {"hk", "Hong Kong"},
-                                                                                {"hm","Heard Island and McDonald Islands"},
+                                                                                {"hm", "Heard Island and McDonald Islands"},
                                                                                 {"hn", "Honduras"},
                                                                                 {"hr", "Croatia"},
                                                                                 {"ht", "Haiti"},
                                                                                 {"hu", "Hungary"},
+                                                                                {"ic", "Canary Islands"},
                                                                                 {"id", "Indonesia"},
                                                                                 {"ie", "Ireland"},
                                                                                 {"il", "Israel"},
@@ -141,12 +149,12 @@ namespace JabbR.Services
                                                                                 {"ki", "Kiribati"},
                                                                                 {"km", "Comoros"},
                                                                                 {"kn", "Saint Kitts and Nevis"},
-                                                                                {"kp","Korea, Democratic People's Republic of"},
+                                                                                {"kp", "Korea, Democratic People's Republic of"},
                                                                                 {"kr", "Korea, Republic of"},
                                                                                 {"kw", "Kuwait"},
                                                                                 {"ky", "Cayman Islands"},
                                                                                 {"kz", "Kazakhstan"},
-                                                                                {"la","Lao People's Democratic Republic"},
+                                                                                {"la", "Lao People's Democratic Republic"},
                                                                                 {"lb", "Lebanon"},
                                                                                 {"lc", "Saint Lucia"},
                                                                                 {"li", "Liechtenstein"},
@@ -164,7 +172,7 @@ namespace JabbR.Services
                                                                                 {"mf", "Saint Martin (French part)"},
                                                                                 {"mg", "Madagascar"},
                                                                                 {"mh", "Marshall Islands"},
-                                                                                {"mk","Macedonia, the former Yugoslav Republic of"},
+                                                                                {"mk", "Macedonia, the former Yugoslav Republic of"},
                                                                                 {"ml", "Mali"},
                                                                                 {"mm", "Myanmar"},
                                                                                 {"mn", "Mongolia"},
@@ -219,7 +227,7 @@ namespace JabbR.Services
                                                                                 {"sd", "Seychelles"},
                                                                                 {"se", "Sweden"},
                                                                                 {"sg", "Singapore"},
-                                                                                {"sh","Saint Helena, Ascension and Tristan da Cunha"},
+                                                                                {"sh", "Saint Helena, Ascension and Tristan da Cunha"},
                                                                                 {"si", "Slovenia"},
                                                                                 {"sj", "Svalbard and Jan Mayen"},
                                                                                 {"sk", "Slovakia"},
@@ -252,13 +260,13 @@ namespace JabbR.Services
                                                                                 {"tz", "Tanzania, United Republic of"},
                                                                                 {"ua", "Ukraine"},
                                                                                 {"ug", "Uganda"},
-                                                                                {"um","United States Minor Outlying Islands"},
+                                                                                {"um", "United States Minor Outlying Islands"},
                                                                                 {"us", "United States"},
                                                                                 {"uy", "Uruguay"},
                                                                                 {"uz", "Uzbekistan"},
                                                                                 {"va", "Holy See (Vatican City State)"},
-                                                                                {"vc","Saint Vincent and the Grenadines"},
-                                                                                {"ve","Venezuela, Bolivarian Republic of"},
+                                                                                {"vc", "Saint Vincent and the Grenadines"},
+                                                                                {"ve", "Venezuela, Bolivarian Republic of"},
                                                                                 {"vg", "Virgin Islands, British"},
                                                                                 {"vi", "Virgin Islands, U.S."},
                                                                                 {"vn", "Viet Nam"},
@@ -270,9 +278,13 @@ namespace JabbR.Services
                                                                                 {"za", "South Africa"},
                                                                                 {"zm", "Zambia"},
                                                                                 {"zw", "Zimbabwe"},
-                                                                                {"g1", "England"},
-                                                                                {"g2", "Wales"},
-                                                                                {"g3", "Scotland"}
+                                                                                /* Not country codes */
+                                                                                {"england", "England"},
+                                                                                {"wales", "Wales"},
+                                                                                {"scotland", "Scotland"},
+                                                                                {"kurdistan","Kurdistan"},
+                                                                                {"somaliland","Somaliland"},
+                                                                                {"zanzibar","Zanzibar"}
                                                   };
 
         public ChatService(ICache cache, IJabbrRepository repository)
@@ -857,7 +869,16 @@ namespace JabbR.Services
             }
 
             string country;
-            return Countries.TryGetValue(isoCode, out country) ? country : null;
+            if (Countries.TryGetValue(isoCode, out country))
+                return country;
+
+            string newIsoCode;
+            if (LegacyCountryConversion.TryGetValue(isoCode, out newIsoCode))
+            {
+                Countries.TryGetValue(newIsoCode, out country);
+            }
+
+            return country;
         }
     }
 }

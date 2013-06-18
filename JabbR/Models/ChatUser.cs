@@ -29,7 +29,7 @@ namespace JabbR.Models
 
         public bool IsAfk { get; set; }
 
-        [StringLength(2)]
+        [StringLength(255)]
         public string Flag { get; set; }
 
         // TODO: Migrate everyone off identity and email
