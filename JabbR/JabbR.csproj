@@ -860,6 +860,9 @@
     <EmbeddedResource Include="Migrations\201304280435045_MoreClientProperties.resx">
       <DependentUpon>201304280435045_MoreClientProperties.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201306180311195_ExtendChatUserFlagLength.resx">
+      <DependentUpon>201306180311195_ExtendChatUserFlagLength.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -980,6 +983,10 @@
     <Compile Include="Migrations\201304280435045_MoreClientProperties.cs" />
     <Compile Include="Migrations\201304280435045_MoreClientProperties.Designer.cs">
       <DependentUpon>201304280435045_MoreClientProperties.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201306180311195_ExtendChatUserFlagLength.cs" />
+    <Compile Include="Migrations\201306180311195_ExtendChatUserFlagLength.Designer.cs">
+      <DependentUpon>201306180311195_ExtendChatUserFlagLength.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\ClientNotification.cs" />
