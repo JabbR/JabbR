@@ -1,4 +1,4 @@
-## JabbR [![Build Status](https://travis-ci.org/davidfowl/JabbR.png)](https://travis-ci.org/davidfowl/JabbR)
+## JabbR [![Build Status](https://travis-ci.org/JabbR/JabbR.png)](https://travis-ci.org/JabbR/JabbR)
 JabbR is a chat application built with ASP.NET using SignalR. 
 
 ![jabbr.net](https://jabbr.blob.core.windows.net/jabbr-uploads/Screen%20Shot%202013-04-01%20at%207.57.53%20PM_d6a3.png)
