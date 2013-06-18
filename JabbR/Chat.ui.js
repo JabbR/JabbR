@@ -210,11 +210,11 @@
 
         $room.css('background-color', '#f5f5f5');
         if (count === 0) {
-            $count.text(String.formatLanguageResource('Client_OccupantsZero'));
+            $count.text(utility.getLanguageResource('Client_OccupantsZero'));
         } else if (count === 1) {
-            $count.text(String.formatLanguageResource('Client_OccupantsOne'));
+            $count.text(utility.getLanguageResource('Client_OccupantsOne'));
         } else {
-            $count.text(String.formatLanguageResource('Client_OccupantsMany', count));
+            $count.text(utility.getLanguageResource('Client_OccupantsMany', count));
         }
 
         if (room.Private === true) {
@@ -326,8 +326,8 @@
             $roomTopic = null,
             scrollHandler = null,
             userContainer = null,
-            roomOwnersHeader = String.formatLanguageResource('Chat_UserOwnerHeader'),
-            usersHeader = String.formatLanguageResource('Chat_UserHeader');
+            roomOwnersHeader = utility.getLanguageResource('Chat_UserOwnerHeader'),
+            usersHeader = utility.getLanguageResource('Chat_UserHeader');
 
         if (room.exists()) {
             return false;
@@ -476,7 +476,7 @@
 
     function collapseRichContent(content) {
         content = content.replace(/class="collapsible_box/g, 'style="display: none;" class="collapsible_box');
-        return content.replace(/class="collapsible_title"/g, 'class="collapsible_title" title="' + String.formatLanguageResource('Content_DisabledMessage') + '"');
+        return content.replace(/class="collapsible_title"/g, 'class="collapsible_title" title="' + utility.getLanguageResource('Content_DisabledMessage') + '"');
     }
 
     function triggerFocus() {
@@ -646,7 +646,7 @@
     function updateRoomTopic(roomViewModel) {
         var room = getRoomElements(roomViewModel.Name);
         var topic = roomViewModel.Topic;
-        var topicHtml = topic === '' ? String.formatLanguageResource('Chat_DefaultTopic', roomViewModel.Name) : ui.processContent(topic);
+        var topicHtml = topic === '' ? utility.getLanguageResource('Chat_DefaultTopic', roomViewModel.Name) : ui.processContent(topic);
         var roomTopic = room.roomTopic;
         var isVisibleRoom = getCurrentRoomElements().getName() === roomViewModel.Name;
 
@@ -684,8 +684,8 @@
             template: $connectionInfoPopover,
             content: function () {
                 var connectionInfo = $connectionInfoContent;
-                connectionInfo.find(connectionInfoStatus).text(String.formatLanguageResource('Client_ConnectedStatus'));
-                connectionInfo.find(connectionInfoTransport).text(String.formatLanguageResource('Client_Transport', transport));
+                connectionInfo.find(connectionInfoStatus).text(utility.getLanguageResource('Client_ConnectedStatus'));
+                connectionInfo.find(connectionInfoTransport).text(utility.getLanguageResource('Client_Transport', transport));
                 return connectionInfo.html();
             }
         };
@@ -867,11 +867,11 @@
                 spinner.addClass('icon-spin');
                 spinner.show();
                 var loader = $loadMoreRooms.find('.load-more-rooms a');
-                loader.html(' ' + String.formatLanguageResource('LoadingMessage'));
+                loader.html(' ' + utility.getLanguageResource('LoadingMessage'));
                 loadMoreLobbyRooms();
                 spinner.hide();
                 spinner.removeClass('icon-spin');
-                loader.html(String.formatLanguageResource('Client_LoadMore'));
+                loader.html(utility.getLanguageResource('Client_LoadMore'));
                 if (lastLoadedRoomIndex < sortedRoomList.length) {
                     $loadMoreRooms.show();
                 } else {
@@ -1021,7 +1021,7 @@
                         isCurrentlyVisible = $this.next().is(":visible");
 
                     if (enabled) {
-                        $this.attr('title', String.formatLanguageResource('Content_DisabledMessage'));
+                        $this.attr('title', utility.getLanguageResource('Content_DisabledMessage'));
                     } else {
                         $this.removeAttr('title');
                     }
@@ -1430,10 +1430,10 @@
                     populateLobbyRoomList(privateSorted, templates.lobbyroom, listOfPrivateRooms);
                     listOfPrivateRooms.children('li').appendTo(lobby.owners);
                     $lobbyPrivateRooms.show();
-                    $lobbyOtherRooms.find('nav-header').html(String.formatLanguageResource('Client_OtherRooms'));
+                    $lobbyOtherRooms.find('nav-header').html(utility.getLanguageResource('Client_OtherRooms'));
                 } else {
                     $lobbyPrivateRooms.hide();
-                    $lobbyOtherRooms.find('nav-header').html(String.formatLanguageResource('Client_Rooms'));
+                    $lobbyOtherRooms.find('nav-header').html(utility.getLanguageResource('Client_Rooms'));
                 }
 
                 var listOfRooms = $('<ul/>');
@@ -1929,7 +1929,7 @@
                     .hide()
                     .find('.info').text('');    // clear any prior text
                 $notification.find('.info')
-                    .text(' ' + String.formatLanguageResource('Chat_ExpandHiddenMessages', $notifications.length))
+                    .text(' ' + utility.getLanguageResource('Chat_ExpandHiddenMessages', $notifications.length))
                     .removeClass('collapse');
             }
         },
@@ -1939,7 +1939,7 @@
                 topBefore = $notification.position().top;
 
             $notification.find('.info')
-                .text(' ' + String.formatLanguageResource('Chat_CollapseHiddenMessages'))
+                .text(' ' + utility.getLanguageResource('Chat_CollapseHiddenMessages'))
                 .addClass('collapse');
             $notifications.show();
 
@@ -2045,7 +2045,7 @@
                 switch (status) {
                     case 0: // Connected
                         $connectionStatus.removeClass('reconnecting disconnected');
-                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions(String.formatLanguageResource('Client_Connected')));
+                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions(utility.getLanguageResource('Client_Connected')));
                         $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-ok-sign');
                         $connectionStatus.popover('show');
                         popoverTimer = setTimeout(function () {
@@ -2056,7 +2056,7 @@
                         break;
                     case 1: // Reconnecting
                         $connectionStatus.removeClass('disconnected').addClass('reconnecting');
-                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions(String.formatLanguageResource('Client_Reconnecting')));
+                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions(utility.getLanguageResource('Client_Reconnecting')));
                         $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-question-sign');
                         $connectionStatus.popover('show');
                         popoverTimer = setTimeout(function () {
@@ -2066,7 +2066,7 @@
                         break;
                     case 2: // Disconnected
                         $connectionStatus.removeClass('reconnecting').addClass('disconnected');
-                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions(String.formatLanguageResource('Client_Disconnected')));
+                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions(utility.getLanguageResource('Client_Disconnected')));
                         $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-exclamation-sign');
                         $connectionStatus.popover('show');
                         popoverTimer = setTimeout(function () {
@@ -2133,7 +2133,7 @@
                 .attr('data-admin', true)
                 .data('admin', true)
                 .find('.admin')
-                .text('(' + String.formatLanguageResource('Client_AdminTag') + ')');
+                .text('(' + utility.getLanguageResource('Client_AdminTag') + ')');
             room.updateUserStatus($user);
         },
         clearRoomAdmin: function (adminName, roomName) {

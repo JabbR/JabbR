@@ -59,17 +59,17 @@
         return $("<div/>").text(html).html().replace(/\"/g, "&quot;");
     }
     
-    String.format = function(formatString) {
+    function format(formatString) {
         var formatArgs = arguments;
         return formatString.replace(/{(?:[0-9]+)}/g, function (match) {
             return formatArgs[parseInt(match.substr(1, match.length - 2), 10) + 1];
         });
     };
     
-    String.formatLanguageResource = function (languageResourceKey) {
+    function getLanguageResource(languageResourceKey) {
         var args = Array.prototype.slice.call(arguments, 0);
         args[0] = languageResources[languageResourceKey];
-        return String.format.apply(this, args);
+        return format.apply(this, args);
     };
 
     String.prototype.fromJsonDate = function () {
@@ -196,7 +196,9 @@
         decodeHtml: decodeHtml,
         encodeHtml: encodeHtml,
         newId: guidGenerator,
-        processContent: processContent
+        processContent: processContent,
+        format: format,
+        getLanguageResource: getLanguageResource
     };
 
     if (!window.chat) {
