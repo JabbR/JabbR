@@ -424,18 +424,26 @@
             <div id="loadingRoomHistory" class="loading-room-history alert alert-info">
                 <i class="icon-spinner icon-spin"></i> Loading previous messages...
             </div>
-            <div id="jabbr-clipboard-upload" class="modal hide fade">
+            <div id="connectionStatus" class="connection-status" data-toggle="popover" data-placement="left">
+                <i class="icon-connection-status"></i>
+            </div>
+            <div id="connection-info-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><i class="popover-title-icon icon-globe" style="display: none;"></i><h3 class="popover-title" style="display: none;"></h3><div class="popover-content"><p></p></div></div></div>
+            <div id="connection-info-content" style="display: none;"><p id="connection-status"></p><p id="connection-transport"></p></div>
+            <div id="connection-state-changed-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title" style="display: none;"></h3><i id="popover-content-icon"></i><div class="popover-content"><p></p></div></div></div>
+            <div id="jabbr-upload-preview" class="modal hide fade">
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal">&times;</a>
                     <h3>Uploading from clipboard</h3>
                 </div>
                 <div class="modal-body">
                     <div class="help-body">
-                        <img id="clipboard-upload-preview" />
+                        <img id="image-upload-preview" />
+                        <span id="unknown-upload-preview">No preview available for this file type.</span>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a id="clipboard-upload" class="btn btn-primary" href="#">Upload</a>
+                    <a id="upload-preview-cancel" class="btn btn-secondary" href="#">Cancel</a>
+                    <a id="upload-preview-upload" class="btn btn-primary" href="#">Upload</a>
                 </div>
             </div>
         </section>

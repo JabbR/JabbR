@@ -62,9 +62,12 @@
         $fileUploadButton = null,
         $hiddenFile = null,
         $uploadForm = null,
-        $clipboardUpload = null,
-        $clipboardUploadPreview = null,
-        $clipboardUploadButton = null,
+        $previewUpload = null,
+        $imageUploadPreview = null,
+        $unknownUploadPreview = null,
+        $previewUploadButton = null,
+        $previewCancelButton = null,
+        $uploadCallback = null,
         $fileRoom = null,
         $fileConnectionId = null,
         connectionInfoStatus = null,
@@ -713,6 +716,52 @@
         // re-filter lists
         $lobbyRoomFilterForm.submit();
     }
+    
+    function showUploadPreview(file, type, uploader) {
+        $uploadCallback = uploader;
+        $imageUploadPreview.show();
+        $unknownUploadPreview.hide();
+        //set image url
+        if (file.dataURL) {
+            $previewUpload.find('h3').text('Uploading from clipboard');
+            $imageUploadPreview.attr('src', file.dataURL);
+        } else {
+            $previewUpload.find('h3').text('Uploading: ' + file.name);
+            if (type == 'image') {
+                //uploading an actual file
+                $imageUploadPreview.attr('src', file.data.result);
+            } else {
+                //nothing just yet
+                $imageUploadPreview.hide();
+                $unknownUploadPreview.show();
+            }
+        }
+            
+        $previewUpload.modal();
+    }
+
+    function initializeUploadPreview(e, file, type) {
+        showUploadPreview({ data: e.target, name: file.name }, type, function () {
+            var path = $hiddenFile.val(),
+                slash = path.lastIndexOf('\\'),
+                name = path.substring(slash + 1),
+                uploader = {
+                    submitFile: function (connectionId, room) {
+                        $fileConnectionId.val(connectionId);
+
+                        $fileRoom.val(room);
+
+                        $uploadForm.submit();
+
+                        $hiddenFile.val('');
+                    }
+                };
+
+            ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
+
+            $ui.trigger(ui.events.fileUploaded, [uploader]);
+        });
+    }
 
     var ui = {
 
@@ -762,9 +811,11 @@
             $disconnectDialog = $('#disconnect-dialog');
             $login = $('#jabbr-login');
             $helpPopup = $('#jabbr-help');
-            $clipboardUpload = $('#jabbr-clipboard-upload');
-            $clipboardUploadPreview = $('#jabbr-clipboard-upload #clipboard-upload-preview');
-            $clipboardUploadButton = $('#jabbr-clipboard-upload #clipboard-upload');
+            $previewUpload = $('#jabbr-upload-preview');
+            $imageUploadPreview = $('#jabbr-upload-preview #image-upload-preview');
+            $unknownUploadPreview = $('#jabbr-upload-preview #unknown-upload-preview');
+            $previewUploadButton = $('#jabbr-upload-preview #upload-preview-upload');
+            $previewCancelButton = $('#jabbr-upload-preview #upload-preview-cancel');
             $helpBody = $('#jabbr-help .help-body');
             $shortCutHelp = $('#jabbr-help #shortcut');
             $globalCmdHelp = $('#jabbr-help #global');
@@ -1258,66 +1309,68 @@
             // Crazy browser hack
             $hiddenFile[0].style.left = '-800px';
 
-            $clipboardUploadButton.on("click", function () {
-                var name = "clipboard-data",
-                    uploader = {
-                        submitFile: function (connectionId, room) {
-                            $fileConnectionId.val(connectionId);
-
-                            $fileRoom.val(room);
-
-                            //$uploadForm.submit();
-                            $.ajax({
-                                url: '/upload-clipboard',
-                                dataType: 'json',
-                                type: 'POST',
-                                data: {
-                                    file: $clipboardUploadPreview.attr("src"),
-                                    room: room,
-                                    connectionId: connectionId
-                                }
-                            }).done(function (result) {
-                                //remove image from preview
-                                $clipboardUploadPreview.attr("src", "");
-                            });
-
-                            $hiddenFile.val(''); //hide upload dialog
-                        }
-                    };
-
-                ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
-
-                $ui.trigger(ui.events.fileUploaded, [uploader]);
-                $clipboardUpload.modal('hide');
-            });
-
             $.imagePaste(function (file) {
-                ui.showClipboardUpload(file);
+                showUploadPreview(file, 'clipboard', function() {
+                    var name = 'clipboard-data',
+                        uploader = {
+                            submitFile: function (connectionId, room) {
+                                $fileConnectionId.val(connectionId);
+
+                                $fileRoom.val(room);
+                                $.ajax({
+                                    url: '/upload-clipboard',
+                                    dataType: 'json',
+                                    type: 'POST',
+                                    data: {
+                                        file: $imageUploadPreview.attr('src'),
+                                        room: room,
+                                        connectionId: connectionId
+                                    }
+                                }).done(function (result) {
+                                    //remove image from preview
+                                    $imageUploadPreview.attr('src', '');
+                                });
+
+                                $hiddenFile.val(''); //hide upload dialog
+                            }
+                        };
+
+                    ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
+
+                    $ui.trigger(ui.events.fileUploaded, [uploader]);
+
+                });
             });
 
-            $hiddenFile.change(function () {
-                if (!$hiddenFile.val()) {
+            $previewUploadButton.on('click', function () {
+                // Callback is initialized when previewUpload is
+                // created. This button is only available when
+                // modal is being shown. Hence should never be
+                // stale. 
+                $uploadCallback();
+                $previewUpload.modal('hide');
+            });
+
+            $previewCancelButton.on('click', function() {
+                $previewUpload.modal('hide');
+            });
+
+            $hiddenFile.change(function (e) {
+                var file = e.target.files[0];
+                
+                if (!file.type.match('image.*')) {
+                    initializeUploadPreview(e, file, 'non-image');
                     return;
                 }
-
-                var path = $hiddenFile.val(),
-                    slash = path.lastIndexOf('\\'),
-                    name = path.substring(slash + 1),
-                    uploader = {
-                        submitFile: function (connectionId, room) {
-                            $fileConnectionId.val(connectionId);
-
-                            $fileRoom.val(room);
-
-                            $uploadForm.submit();
-
-                            $hiddenFile.val('');
-                        }
+                
+                var reader = new FileReader();
+                reader.onload = (function(f) {
+                    return function (e) {
+                        initializeUploadPreview(e, file, 'image');
                     };
-
-                ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
-
-                $ui.trigger(ui.events.fileUploaded, [uploader]);
+                })(file);
+                
+                reader.readAsDataURL(file);
             });
 
             // Configure livestamp to only update every 30s since display granularity is by minute anyway (saves CPU cycles)
@@ -2074,11 +2127,6 @@
                 $shortCutHelp.append(templates.commandhelp.tmpl(this));
             });
             $helpPopup.modal();
-        },
-        showClipboardUpload: function (file) {
-            //set image url
-            $clipboardUploadPreview.attr("src", file.dataURL);
-            $clipboardUpload.modal();
         },
         showUpdateUI: function () {
             $updatePopup.modal();
