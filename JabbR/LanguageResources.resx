@@ -299,7 +299,7 @@
     <value>What message do you want to broadcast?</value>
   </data>
   <data name="Client_AccountSettings" xml:space="preserve">
-    <value>Account settings</value>
+    <value>Account Settings</value>
   </data>
   <data name="Client_AdminTag" xml:space="preserve">
     <value>admin</value>

@@ -64,13 +64,13 @@
         return formatString.replace(/{(?:[0-9]+)}/g, function (match) {
             return formatArgs[parseInt(match.substr(1, match.length - 2), 10) + 1];
         });
-    };
+    }
     
     function getLanguageResource(languageResourceKey) {
         var args = Array.prototype.slice.call(arguments, 0);
         args[0] = languageResources[languageResourceKey];
-        return format.apply(this, args);
-    };
+        return format.apply(null, args);
+    }
 
     String.prototype.fromJsonDate = function () {
         return new Date(moment(this.toString()).valueOf());
