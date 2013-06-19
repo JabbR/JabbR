@@ -29,11 +29,11 @@
                 <div class="controls">                    
                     @if (Model.AllowUserRegistration)
                     {
-                        @{{
-                            string registerMessage = Encoder.HtmlEncode(LanguageResources.Account_RegisterMessage);
-                            string anchorContent = String.Format("<a href=\"{0}\">", Url.Content("~/account/register"));
-                            @Html.Raw(String.Format(registerMessage, anchorContent, "</a>"))
-                         }}
+                        <p>
+                            @Html.Raw(String.Format(Encoder.HtmlEncode(LanguageResources.Account_RegisterMessage), 
+                                        String.Format("<a href=\"{0}\">", Url.Content("~/account/register")), 
+                                        "</a>"))
+                        </p>
                     }
                     @if (Model.AllowUserResetPassword && Model.HasEmailSender)
                     { 

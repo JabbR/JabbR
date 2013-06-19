@@ -184,12 +184,9 @@
                     <div class="comment starting-comment ">
                         <div class="body">
                             <p class="author">
-                                @{{
-                                    string userOpenedIssue = Encoder.HtmlEncode(LanguageResources.GithubContent_UserOpenedIssueAtTime);
-                                    string userContent = "<a href=\"#\" class=\"github-issue-user-${user.login}\" target=\"_blank\">${user.login}</a>";
-                                    string atTimeContent = "<time class=\"js-relative-date\" datetime=\"${created_at}\">${created_at}</time>";
-                                    @Html.Raw(String.Format(userOpenedIssue, userContent, atTimeContent))
-                                }}
+                                @Html.Raw(String.Format(Encoder.HtmlEncode(LanguageResources.GithubContent_UserOpenedIssueAtTime),
+                                                        "<a href=\"#\" class=\"github-issue-user-${user.login}\" target=\"_blank\">${user.login}</a>", 
+                                                        "<time class=\"js-relative-date\" datetime=\"${created_at}\">${created_at}</time>"))
                             </p>
                             <a href="${html_url}" target="_blank"><h2 class="content-title">${title}</h2></a>
                             <div class="infobar clearfix">
@@ -200,11 +197,8 @@
                                             <img height="20" width="20" src="${assignee.avatar_url}">
                                             <span class="overlay size-20"></span>
                                         </span>
-                                        @{{
-                                            string userAssigned = Encoder.HtmlEncode(LanguageResources.GithubContent_UserAssigned);
-                                            string userContent = "<a href=\"#\" class=\"github-issue-user-${assignee.login}\" target=\"_blank\">${assignee.login}</a>";
-                                            @Html.Raw(String.Format(userAssigned, userContent))
-                                        }}
+                                        @Html.Raw(String.Format(Encoder.HtmlEncode(LanguageResources.GithubContent_UserAssigned), 
+                                                                "<a href=\"#\" class=\"github-issue-user-${assignee.login}\" target=\"_blank\">${assignee.login}</a>"))
                                     </p>
                                 {{/if}}
                             </div>
@@ -234,12 +228,9 @@
                     <div class="comment starting-comment ">
                         <div class="body">
                             <p class="author">
-                                @{{
-                                    string userOpenedIssue = Encoder.HtmlEncode(LanguageResources.GithubContent_UserCommentedAtTime);
-                                    string userContent = "<a href=\"#\" class=\"github-issue-user-${user.login}\" target=\"_blank\">${user.login}</a>";
-                                    string atTimeContent = "<time class=\"js-relative-date\" datetime=\"${created_at}\">${created_at}</time>";
-                                    @Html.Raw(String.Format(userOpenedIssue, userContent, atTimeContent))
-                                }}
+                                @Html.Raw(String.Format(Encoder.HtmlEncode(LanguageResources.GithubContent_UserCommentedAtTime),
+                                                        "<a href=\"#\" class=\"github-issue-user-${user.login}\" target=\"_blank\">${user.login}</a>", 
+                                                        "<time class=\"js-relative-date\" datetime=\"${created_at}\">${created_at}</time>"))
                             </p>
                             <a href="${html_url}" target="_blank"><h2 class="content-title">${title}</h2></a>
                             <div class="formatted-content">
@@ -403,25 +394,17 @@
                         {
                             <div id="releaseArea">
                                 <p id="releaseTag">
-                                    @{{
-                                        string deploymentInfo = Encoder.HtmlEncode(LanguageResources.Client_DeploymentInfo);
-                                        string viewCommitContent = Encoder.HtmlEncode(LanguageResources.Client_ViewTheCommit);
-                                        string commitContent = String.Format("<a target=\"_blank\" href=\"https://github.com/JabbR/JabbR/commit/{0}\" title=\"{2}\">{1}</a>", Model.Sha, Model.Sha.Substring(0, 10), viewCommitContent);
-                                        string viewBranchContent = Encoder.HtmlEncode(LanguageResources.Client_ViewTheBranch);
-                                        string branchContent = String.Format("<a target=\"_blank\" href=\"https://github.com/JabbR/JabbR/branches/{0}\" title=\"{1}\">{0}</a>", Model.Branch, viewBranchContent);
-                                        @Html.Raw(String.Format(deploymentInfo, commitContent, branchContent, Model.Time))
-                                    }}
+                                    @Html.Raw(String.Format(Encoder.HtmlEncode(LanguageResources.Client_DeploymentInfo), 
+                                                            String.Format("<a target=\"_blank\" href=\"https://github.com/JabbR/JabbR/commit/{0}\" title=\"{2}\">{1}</a>", Model.Sha, Model.Sha.Substring(0, 10), Encoder.HtmlEncode(LanguageResources.Client_ViewTheCommit)), 
+                                                            String.Format("<a target=\"_blank\" href=\"https://github.com/JabbR/JabbR/branches/{0}\" title=\"{1}\">{0}</a>", Model.Branch, Encoder.HtmlEncode(LanguageResources.Client_ViewTheBranch)),
+                                                            Model.Time))
                                 </p>
                             </div>
                         }
                         <div class="command-list">
                             <h3>@LanguageResources.Client_FAQ</h3>
                             <p>
-                                @{{
-                                    string faqMessage = Encoder.HtmlEncode(LanguageResources.Client_FAQMessage);
-                                    string encodedNewLine = Encoder.HtmlEncode(Environment.NewLine);
-                                    @Html.Raw(faqMessage.Replace(encodedNewLine, "</p><p>"))      
-                                }}
+                                @Html.Raw(Encoder.HtmlEncode(LanguageResources.Client_FAQMessage).Replace(Encoder.HtmlEncode(Environment.NewLine), "</p><p>"))      
                             </p>
                         </div>
                         <h3>@LanguageResources.Client_SiteWideShortcuts</h3>

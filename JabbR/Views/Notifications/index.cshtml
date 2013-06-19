@@ -47,11 +47,8 @@
                 <ul class="nav nav-tabs">
                     <li class="@(!Model.ShowAll ? "active" : "")">
                         <a href="@Url.Content("~/notifications")">
-                            @{{
-                                string unreadWithCount = Encoder.HtmlEncode(LanguageResources.Notifications_UnreadWithCount);
-                                string unreadCountContent = String.Format("<span id=\"js-unread-counter\" data-unread=\"{0}\" class=\"pull-right\">{0}</span>", Model.UnreadCount);
-                                @Html.Raw(String.Format(unreadWithCount, unreadCountContent))
-                            }}
+                            @Html.Raw(String.Format(Encoder.HtmlEncode(LanguageResources.Notifications_UnreadWithCount), 
+                                                    String.Format("<span id=\"js-unread-counter\" data-unread=\"{0}\" class=\"pull-right\">{0}</span>", Model.UnreadCount)))
                         </a>
                     </li>
                     <li class="@(Model.ShowAll ? "active" : "")">
