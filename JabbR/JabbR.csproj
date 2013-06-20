@@ -882,6 +882,8 @@
     </Content>
     <Content Include="Scripts\jquery.network.mock.js" />
     <Content Include="Scripts\jquery.pubsub.js" />
+    <Content Include="Scripts\jquery.pulse.js" />
+    <Content Include="Scripts\jquery.pulse.min.js" />
     <Content Include="Scripts\jquery.signalR-2.0.0-beta2-130602-b51.js" />
     <Content Include="Scripts\jquery.signalR-2.0.0-beta2-130602-b51.min.js" />
     <Content Include="Scripts\jquery.sortElements.js" />
