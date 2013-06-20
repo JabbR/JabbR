@@ -251,10 +251,7 @@
     <script id="gravatar-profile-template" type="text/x-jquery-tmpl">
         <div class="collapsible_content">
             <h3 class="collapsible_title">
-                @{{
-                    string gravatarHeader = Encoder.HtmlEncode(LanguageResources.GravatarContent_HeaderAndToggle);
-                    @Html.Raw(String.Format(gravatarHeader, "${profileUrl}"))
-                }}
+                @Html.Raw(String.Format(Encoder.HtmlEncode(LanguageResources.GravatarContent_HeaderAndToggle), "${profileUrl}"))
             </h3>
             <div class="collapsible_box">
                 <div class="gravatar_${hash} gravatarProfile">

@@ -72,13 +72,10 @@
                                         <p class="@(notification.HtmlEncoded ? "" : "linkify")">@notification.Message</p>
                                         <small>
                                             <img class="gravatar" src="https://secure.gravatar.com/avatar/@notification.FromUserImage?s=16&amp;d=mm" />
-                                            @{
-                                                string metadataInfo = Encoder.HtmlEncode(LanguageResources.Notifications_MetadataInfo);
-                                                string fromUserContent = Encoder.HtmlEncode(notification.FromUserName);
-                                                string roomNameContent = String.Format("<strong><cite>{0}</cite></strong>", Encoder.HtmlEncode(notification.RoomName));
-                                                string timeStampContent = String.Format("<span class=\"time\" data-timestamp=\"{0}\"></span>", Encoder.HtmlEncode(notification.WhenString));
-                                                @Html.Raw(String.Format(metadataInfo, fromUserContent, roomNameContent, timeStampContent))
-                                            }
+                                                @Html.Raw(String.Format(Encoder.HtmlEncode(LanguageResources.Notifications_MetadataInfo), 
+                                                                        Encoder.HtmlEncode(notification.FromUserName), 
+                                                                        String.Format("<strong><cite>{0}</cite></strong>", Encoder.HtmlEncode(notification.RoomName)), 
+                                                                        String.Format("<span class=\"time\" data-timestamp=\"{0}\"></span>", Encoder.HtmlEncode(notification.WhenString))))
                                         </small>
                                     </blockquote>
                                 </li>
