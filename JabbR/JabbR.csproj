@@ -232,8 +232,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="apple-touch-icon.png" />
-    <Content Include="Chat.bbcnews.css" />
-    <Content Include="Chat.css" />
+    <Content Include="Content\themes\default\Chat.bbcnews.css" />
+    <Content Include="Content\themes\default\Chat.css" />
     <Content Include="Chat.documentOnWrite.js" />
     <Content Include="Chat.js" />
     <Content Include="Chat.toast.js" />
@@ -804,8 +804,8 @@
     <Content Include="Content\qunit.css" />
     <Content Include="Chat.pinnedWindows.js" />
     <Content Include="Chat.githubissues.js" />
-    <Content Include="Chat.githubissues.css" />
-    <Content Include="Chat.nuget.css" />
+    <Content Include="Content\themes\default\Chat.githubissues.css" />
+    <Content Include="Content\themes\default\Chat.nuget.css" />
     <Content Include="favicon.ico" />
     <Content Include="Content\images\big-logo.png" />
     <Content Include="Content\images\logo32.png" />
@@ -901,7 +901,7 @@
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\quicksilver.js" />
     <Content Include="Scripts\qunit.js" />
-    <Content Include="Chat.dictionary.css" />
+    <Content Include="Content\themes\default\Chat.dictionary.css" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1311,9 +1311,7 @@
   <ItemGroup>
     <Content Include="Chat.emoji.js" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Content\themes\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
