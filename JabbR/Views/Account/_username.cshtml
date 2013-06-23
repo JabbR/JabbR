@@ -30,9 +30,7 @@
                     @if (Model.AllowUserRegistration)
                     {
                         <p>
-                            @Html.Raw(String.Format(Encoder.HtmlEncode(LanguageResources.Account_RegisterMessage), 
-                                        String.Format("<a href=\"{0}\">", Url.Content("~/account/register")), 
-                                        "</a>"))
+                            @Html.Raw(String.Format(LanguageResources.Account_RegisterMessage, Url.Content("~/account/register")))
                         </p>
                     }
                     @if (Model.AllowUserResetPassword && Model.HasEmailSender)

@@ -163,8 +163,7 @@
     <value>Register</value>
   </data>
   <data name="Account_RegisterMessage" xml:space="preserve">
-    <value>{0}Register{1} if you don't have an account.</value>
-    <comment>{0} and {1} are anchor open and close tags</comment>
+    <value>&lt;a href="{0}"&gt;Register&lt;/a&gt; if you don't have an account.</value>
   </data>
   <data name="Account_SignIn" xml:space="preserve">
     <value>Sign in</value>
@@ -323,7 +322,7 @@
     <value>Last week</value>
   </data>
   <data name="Client_DeploymentInfo" xml:space="preserve">
-    <value>Deployed from {0} on {1} at {2}.</value>
+    <value>Deployed from &lt;a target="_blank" href="https://github.com/JabbR/JabbR/commit/{0}" title="View the commit"&gt;{1}&lt;/a&gt; on &lt;a target="_blank" href="https://github.com/JabbR/JabbR/branches/{2}" title="View the branch"&gt;{2}&lt;/a&gt; at {3}.</value>
   </data>
   <data name="Client_DisplayHelp" xml:space="preserve">
     <value>Display Help</value>
@@ -341,9 +340,9 @@
     <value>FAQ</value>
   </data>
   <data name="Client_FAQMessage" xml:space="preserve">
-    <value>Click on a user to send message.
-Type #roomname to create a link to a room
-Use #test for testing.</value>
+    <value>&lt;p&gt;Click on a user to send message.&lt;/p&gt;
+&lt;p&gt;Type #roomname to create a link to a room.&lt;/p&gt;
+&lt;p&gt;Use #test for testing.&lt;/p&gt;</value>
   </data>
   <data name="Client_Help" xml:space="preserve">
     <value>JabbR Help</value>
@@ -435,12 +434,6 @@ Use #test for testing.</value>
   <data name="Client_UserCommands" xml:space="preserve">
     <value>User commands</value>
   </data>
-  <data name="Client_ViewTheBranch" xml:space="preserve">
-    <value>View the branch</value>
-  </data>
-  <data name="Client_ViewTheCommit" xml:space="preserve">
-    <value>View the commit</value>
-  </data>
   <data name="Client_YourPrivateRooms" xml:space="preserve">
     <value>Your Private Rooms</value>
   </data>
@@ -463,13 +456,13 @@ Use #test for testing.</value>
     <value>No milestone</value>
   </data>
   <data name="GithubContent_UserAssigned" xml:space="preserve">
-    <value>{0} is assigned</value>
+    <value>&lt;a href="#" class="github-issue-user-{0}" target="_blank"&gt;{0}&lt;/a&gt; is assigned</value>
   </data>
   <data name="GithubContent_UserCommentedAtTime" xml:space="preserve">
-    <value>{0} commented {1}</value>
+    <value>&lt;a href="#" class="github-issue-user-{0}" target="_blank"&gt;{0}&lt;/a&gt; commented &lt;time class="js-relative-date" datetime="{1}"&gt;{1}&lt;/time&gt;</value>
   </data>
   <data name="GithubContent_UserOpenedIssueAtTime" xml:space="preserve">
-    <value>{0} opened this issue {1}</value>
+    <value>&lt;a href="#" class="github-issue-user-{0}" target="_blank"&gt;{0}&lt;/a&gt; opened this issue &lt;time class="js-relative-date" datetime="{1}"&gt;{1}&lt;/time&gt;</value>
   </data>
   <data name="GoogleMapsContent_DefaultTitle" xml:space="preserve">
     <value>Google Maps</value>
@@ -565,14 +558,14 @@ Use #test for testing.</value>
     <value>Mark Notification as Read</value>
   </data>
   <data name="Notifications_MetadataInfo" xml:space="preserve">
-    <value>{0} in {1} on {2}</value>
+    <value>{0} in &lt;strong&gt;&lt;cite&gt;{1}&lt;/cite&gt;&lt;/strong&gt; on &lt;span class="time" data-timestamp="{2}"&gt;&lt;/span&gt;</value>
     <comment>{0} is sender, {1} is room, {2} is timestamp</comment>
   </data>
   <data name="Notifications_NoUnread" xml:space="preserve">
     <value>No unread notifications!</value>
   </data>
   <data name="Notifications_UnreadWithCount" xml:space="preserve">
-    <value>Unread {0}</value>
+    <value>Unread &lt;span id="js-unread-counter" data-unread="{0}" class="pull-right"&gt;{0}&lt;/span&gt;</value>
   </data>
   <data name="NudgeRoom_Throttled" xml:space="preserve">
     <value>Room can only be nudged once every {0} seconds.</value>
@@ -590,8 +583,7 @@ Use #test for testing.</value>
     <value>You're not allowed to post a notification.</value>
   </data>
   <data name="PoweredByHeader" xml:space="preserve">
-    <value>Powered by {0}SignalR{1}</value>
-    <comment>{0} and {1} are anchor open and close tags</comment>
+    <value>Powered by &lt;a href="{0}" target="_blank"&gt;SignalR&lt;/a&gt;</value>
   </data>
   <data name="RemoveAdmin_UserRequired" xml:space="preserve">
     <value>Which admin do you want to remove?</value>

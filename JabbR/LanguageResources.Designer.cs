@@ -196,7 +196,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}Register{1} if you don&apos;t have an account..
+        ///   Looks up a localized string similar to &lt;a href=&quot;{0}&quot;&gt;Register&lt;/a&gt; if you don&apos;t have an account..
         /// </summary>
         public static string Account_RegisterMessage {
             get {
@@ -1277,7 +1277,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Account settings.
+        ///   Looks up a localized string similar to Account Settings.
         /// </summary>
         public static string Client_AccountSettings {
             get {
@@ -1367,7 +1367,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Deployed from {0} on {1} at {2}..
+        ///   Looks up a localized string similar to Deployed from &lt;a target=&quot;_blank&quot; href=&quot;https://github.com/JabbR/JabbR/commit/{0}&quot; title=&quot;View the commit&quot;&gt;{1}&lt;/a&gt; on &lt;a target=&quot;_blank&quot; href=&quot;https://github.com/JabbR/JabbR/branches/{2}&quot; title=&quot;View the branch&quot;&gt;{2}&lt;/a&gt; at {3}..
         /// </summary>
         public static string Client_DeploymentInfo {
             get {
@@ -1430,9 +1430,9 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Click on a user to send message.
-        ///Type #roomname to create a link to a room
-        ///Use #test for testing..
+        ///   Looks up a localized string similar to &lt;p&gt;Click on a user to send message.&lt;/p&gt;
+        ///&lt;p&gt;Type #roomname to create a link to a room.&lt;/p&gt;
+        ///&lt;p&gt;Use #test for testing.&lt;/p&gt;.
         /// </summary>
         public static string Client_FAQMessage {
             get {
@@ -1774,24 +1774,6 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to View the branch.
-        /// </summary>
-        public static string Client_ViewTheBranch {
-            get {
-                return ResourceManager.GetString("Client_ViewTheBranch", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to View the commit.
-        /// </summary>
-        public static string Client_ViewTheCommit {
-            get {
-                return ResourceManager.GetString("Client_ViewTheCommit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Your Private Rooms.
         /// </summary>
         public static string Client_YourPrivateRooms {
@@ -1900,7 +1882,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} is assigned.
+        ///   Looks up a localized string similar to &lt;a href=&quot;#&quot; class=&quot;github-issue-user-{0}&quot; target=&quot;_blank&quot;&gt;{0}&lt;/a&gt; is assigned.
         /// </summary>
         public static string GithubContent_UserAssigned {
             get {
@@ -1909,7 +1891,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} commented {1}.
+        ///   Looks up a localized string similar to &lt;a href=&quot;#&quot; class=&quot;github-issue-user-{0}&quot; target=&quot;_blank&quot;&gt;{0}&lt;/a&gt; commented &lt;time class=&quot;js-relative-date&quot; datetime=&quot;{1}&quot;&gt;{1}&lt;/time&gt;.
         /// </summary>
         public static string GithubContent_UserCommentedAtTime {
             get {
@@ -1918,7 +1900,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} opened this issue {1}.
+        ///   Looks up a localized string similar to &lt;a href=&quot;#&quot; class=&quot;github-issue-user-{0}&quot; target=&quot;_blank&quot;&gt;{0}&lt;/a&gt; opened this issue &lt;time class=&quot;js-relative-date&quot; datetime=&quot;{1}&quot;&gt;{1}&lt;/time&gt;.
         /// </summary>
         public static string GithubContent_UserOpenedIssueAtTime {
             get {
@@ -2323,7 +2305,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} in {1} on {2}.
+        ///   Looks up a localized string similar to {0} in &lt;strong&gt;&lt;cite&gt;{1}&lt;/cite&gt;&lt;/strong&gt; on &lt;span class=&quot;time&quot; data-timestamp=&quot;{2}&quot;&gt;&lt;/span&gt;.
         /// </summary>
         public static string Notifications_MetadataInfo {
             get {
@@ -2341,7 +2323,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Unread {0}.
+        ///   Looks up a localized string similar to Unread &lt;span id=&quot;js-unread-counter&quot; data-unread=&quot;{0}&quot; class=&quot;pull-right&quot;&gt;{0}&lt;/span&gt;.
         /// </summary>
         public static string Notifications_UnreadWithCount {
             get {
@@ -2413,7 +2395,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Powered by {0}SignalR{1}.
+        ///   Looks up a localized string similar to Powered by &lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;SignalR&lt;/a&gt;.
         /// </summary>
         public static string PoweredByHeader {
             get {

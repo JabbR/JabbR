@@ -47,8 +47,7 @@
                 <ul class="nav nav-tabs">
                     <li class="@(!Model.ShowAll ? "active" : "")">
                         <a href="@Url.Content("~/notifications")">
-                            @Html.Raw(String.Format(Encoder.HtmlEncode(LanguageResources.Notifications_UnreadWithCount), 
-                                                    String.Format("<span id=\"js-unread-counter\" data-unread=\"{0}\" class=\"pull-right\">{0}</span>", Model.UnreadCount)))
+                            @Html.Raw(String.Format(LanguageResources.Notifications_UnreadWithCount, Model.UnreadCount))
                         </a>
                     </li>
                     <li class="@(Model.ShowAll ? "active" : "")">
@@ -74,8 +73,8 @@
                                             <img class="gravatar" src="https://secure.gravatar.com/avatar/@notification.FromUserImage?s=16&amp;d=mm" />
                                                 @Html.Raw(String.Format(Encoder.HtmlEncode(LanguageResources.Notifications_MetadataInfo), 
                                                                         Encoder.HtmlEncode(notification.FromUserName), 
-                                                                        String.Format("<strong><cite>{0}</cite></strong>", Encoder.HtmlEncode(notification.RoomName)), 
-                                                                        String.Format("<span class=\"time\" data-timestamp=\"{0}\"></span>", Encoder.HtmlEncode(notification.WhenString))))
+                                                                        Encoder.HtmlEncode(notification.RoomName), 
+                                                                        Encoder.HtmlEncode(notification.WhenString)))
                                         </small>
                                     </blockquote>
                                 </li>
