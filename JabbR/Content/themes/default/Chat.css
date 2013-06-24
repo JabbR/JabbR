@@ -2346,7 +2346,7 @@ li.clearfix {
 }
 
 .icon-twitter-logo {
-    background-image: url('/../../images/twitter_white.png');
+    background-image: url('../../images/twitter_white.png');
     background-repeat: no-repeat;
     background-position: center left;
     height: 16px;
@@ -2355,7 +2355,7 @@ li.clearfix {
 }
 
 .icon-facebook-logo {
-    background-image: url('/../../images/facebook_white.png');
+    background-image: url('../../images/facebook_white.png');
     background-repeat: no-repeat;
     background-position: center left;
     height: 16px;
@@ -2364,7 +2364,7 @@ li.clearfix {
 }
 
 .icon-google-logo {
-    background-image: url('/../../images/google_white.png');
+    background-image: url('../../images/google_white.png');
     background-repeat: no-repeat;
     background-position: center left;
     height: 16px;
@@ -2373,7 +2373,7 @@ li.clearfix {
 }
 
 .icon-link {
-    background-image: url('/../../images/link.png');
+    background-image: url('../../images/link.png');
     background-repeat: no-repeat;
     background-position: top left;
     background-size: 24px 24px;
@@ -2382,7 +2382,7 @@ li.clearfix {
 }
 
 .icon-unlink {
-    background-image: url('/../../images/unlink.png');
+    background-image: url('../../images/unlink.png');
     background-repeat: no-repeat;
     background-position: top left;
     background-size: 24px 24px;
@@ -2460,7 +2460,7 @@ li.clearfix {
     }
 
 .large-logo {
-    background-image: url('/../../images/logo64.png');
+    background-image: url('../../images/logo64.png');
     background-size: 48px 48px;
     height: 48px;
     width: 48px;
