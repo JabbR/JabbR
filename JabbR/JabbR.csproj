@@ -1302,6 +1302,7 @@
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\RoomViewModel.cs" />
     <Compile Include="ViewModels\UserViewModel.cs" />
+    <Compile Include="ContentProviders\ScreencastContentProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">
