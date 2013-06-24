@@ -653,7 +653,7 @@
             }
         }
 
-        $("body").pulse({ opacity: 0 }, { duration: 300, pulses: 3 });
+        $("#chat-area").pulse({ opacity: 0 }, { duration: 300, pulses: 3 });
 
         window.setTimeout(function () {
             shake(20);
