@@ -25,12 +25,11 @@ namespace JabbR.ContentProviders
         /// </summary>
         private static readonly string tweetScript = String.Format( // Be aware: Nested string.format placeholder!
             "<div class=\"tweet_{{0}}\"><script src=\"{0}\"></script></div>",
-            WebUtility.HtmlEncode("https://api.twitter.com/1/statuses/show/{0}.json?include_entities=false&callback=addTweet")
+            WebUtility.HtmlEncode("https://api.twitter.com/1/statuses/oembed.json?id={0}&callback=addTweet")
         );
 
         protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
-
             // Extract the status id from the URL.
             var status = _tweetRegex.Match(request.RequestUri.AbsoluteUri)
                                 .Groups
