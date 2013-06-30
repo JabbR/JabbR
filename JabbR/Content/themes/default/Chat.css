@@ -1,5 +1,5 @@
 ﻿body {
-    font-family: Lato;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,"sans-serif";
     font-weight: 400;
     font-size: 14px;
     background-color: #f5f5f5;
@@ -9,11 +9,11 @@
 input, button, select, textarea {
     font-size: 14px;
     font-weight: 400;
-    font-family: Lato;
+    font-family: sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: Lato;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,"sans-serif";
     margin: 10px 0;
 }
 
@@ -23,7 +23,7 @@ h1, h2, h3 {
 }
 
 b, strong {
-    font-family: Lato;
+    font-family: "Segoe UI","Segoe UI Web Regular","Segoe UI Symbol","Helvetica Neue","BBAlpha Sans","S60 Sans",Arial,"sans-serif";
     font-weight: 700;
 }
 
@@ -615,7 +615,6 @@ li.user.typing .user-status {
             color: inherit;
             cursor: inherit;
             font-size: 16px;
-            font-weight: bold;
         }
 
         #tabs li.current {
@@ -679,7 +678,7 @@ li.room {
     }
 
 #tabs li.lobby {
-    margin-right: -3px;
+    margin-right: -4px;
     color: #00103f;
     color: rgba(0, 16, 63, 1);
     padding-right: 0;
@@ -914,7 +913,8 @@ li.error {
     }
 
         .message .left .name {
-            font-weight: 300;
+            font-weight: 400;
+            font-size: small;
             cursor: pointer;
             overflow: hidden;
             max-width: 140px;
@@ -2417,10 +2417,6 @@ li.clearfix {
 }
 
 .btn-provider {
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
     font-size: 17.5px;
     width: 400px;
     padding: 11px 0;
@@ -2432,10 +2428,6 @@ li.clearfix {
 }
 
 .provider {
-    border-bottom-left-radius: 6px;
-    border-bottom-right-radius: 6px;
-    border-top-left-radius: 6px;
-    border-top-right-radius: 6px;
     font-size: 17.5px;
     width: 400px;
     padding: 11px 0;
@@ -2446,8 +2438,6 @@ li.clearfix {
     cursor: default;
     border: 1px solid #00103f;
     display: inline-block;
-    box-shadow: #ffffff 0 1px 0 inset, #000000 0 1px 2px;
-    box-shadow: rgba(255, 255, 255, 0.2) 0 1px 0 inset, rgba(0, 0, 0, 0.0470588) 0 1px 2px;
     color: #f1f1f1;
     opacity: 0.25;
 }
