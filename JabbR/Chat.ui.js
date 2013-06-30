@@ -1918,7 +1918,7 @@
                 $body.append('<p>' + content + '</p>');
             }
             else {
-                $middle.append('<p>' + content + '</p>');
+                $middle.append(content);
             }
         },
         addPrivateMessage: function (content, type) {
