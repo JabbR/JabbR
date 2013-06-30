@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Owin.Types;
+using Microsoft.Owin;
 
 namespace JabbR.Middleware
 {
@@ -21,11 +22,11 @@ namespace JabbR.Middleware
             var request = new OwinRequest(env);
 
             // This header is set on app harbor since ssl is terminated at the load balancer
-            var scheme = request.GetHeader("X-Forwarded-Proto");
+            var scheme = request.Headers.Get("X-Forwarded-Proto");
 
             if (!String.IsNullOrEmpty(scheme))
             {
-                env[OwinConstants.RequestScheme] = scheme;
+                request.Scheme = scheme;
             }
 
             return _next(env);

@@ -104,7 +104,7 @@ namespace JabbR.Infrastructure
                 HttpOnly = true
             };
 
-            context.Response.AddCookie(Constants.AuthResultCookie,
+            context.Response.Cookies.Append(Constants.AuthResultCookie,
                                        JsonConvert.SerializeObject(authResult),
                                        cookieOptions);
         }
