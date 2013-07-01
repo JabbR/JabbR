@@ -866,11 +866,12 @@
     <Content Include="Scripts\jquery-1.9.0.js" />
     <Content Include="Scripts\jquery-1.9.0.min.js" />
     <Content Include="Scripts\jquery-migrate-1.0.0.min.js" />
+    <Content Include="Scripts\jquery.color-2.1.2.js" />
+    <Content Include="Scripts\jquery.color-2.1.2.min.js" />
     <Content Include="Scripts\jquery.history.js" />
     <Content Include="Scripts\jquery.autotabcomplete.js" />
     <Content Include="Scripts\jquery.captureDocumentWrite.js" />
     <Content Include="Scripts\jquery.captureDocumentWrite.min.js" />
-    <Content Include="Scripts\jquery.color.js" />
     <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.KeyTips.js" />
     <Content Include="Scripts\jquery.KeyTips.min.js">
