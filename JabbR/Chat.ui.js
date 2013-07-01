@@ -891,6 +891,8 @@
                 return false;
             });
 
+            $('#tabs').dragsort({ placeHolderTemplate: '<li class="room"><button><span class="content"></span></button></li>' });
+
             // handle click on notifications
             $document.on('click', '.notification a.info', function (ev) {
                 var $notification = $(this).closest('.notification');
