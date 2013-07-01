@@ -13,7 +13,6 @@
     <link href="@Url.Content("~/Content/images/logo32.png")" rel="icon" type="image/png" sizes="32x32">
     <link href="@Url.Content("~/Content/images/logo64.png")" rel="icon" type="image/png" sizes="64x64">
     <link href="@Url.Content("~/favicon.ico")" rel="shortcut icon" type="image/x-icon" sizes="16x16">
-    <link href='https://fonts.googleapis.com/css?family=Lato:100italic,300italic,700italic,100,300,700' rel='stylesheet' type='text/css'>
     @{ 
         WriteLiteral(Bundle.Css().ForceDebugIf(() => Model.DebugMode)
             .Add("~/Content/bootstrap.min.css")
@@ -452,6 +451,7 @@
             .Add("~/Scripts/jquery-migrate-1.0.0.min.js")
             .Add("~/Scripts/json2.min.js")
             .Add("~/Scripts/bootstrap.js")
+            .Add("~/Scripts/jquery.color-2.1.2.min.js")
             .Add("~/Scripts/jquery.pulse.min.js")
             .Add("~/Scripts/jquery.KeyTips.js")
             .Add("~/Scripts/jquery.signalR-2.0.0-rc1-130629-b89.min.js")
