@@ -145,10 +145,10 @@
             $('input.error').closest('.control-group').addClass('error');
 
             $('input[type="checkbox"]').click(function () {
-                var $this = $(this);
-                name = $this.data('name'),
-                checked = $this.is(':checked') === true,
-                $hiddenField = $('input[type="hidden"][name="' + name + '"]');
+                var $this = $(this),
+                    name = $this.data('name'),
+                    checked = $this.is(':checked') === true,
+                    $hiddenField = $('input[type="hidden"][name="' + name + '"]');
 
                 $hiddenField.attr('value', checked);
             });
