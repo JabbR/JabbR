@@ -522,20 +522,16 @@ form#send-message {
     }
 
 .user-status-container {
-    width: 15px;
     float: left;
+    line-height: 12px;
 }
 
 .user-status {
     background-color: #268a16;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
     display: inline-block;
-    color: #306108;
-    position: relative;
-    padding: 5px;
-}
+    width: 3px;
+    height: 16px;
+}   
 
 li.user.typing .user-status {
     border: inherit;
