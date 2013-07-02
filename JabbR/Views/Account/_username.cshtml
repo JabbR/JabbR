@@ -36,7 +36,7 @@
                     @if (Model.AllowUserResetPassword && Model.HasEmailSender)
                     { 
                         <p>
-                            <a href="@Url.Content("~/account/requestresetpassword")">Reset password</a> if you've forgotten or lost your login information.       
+                            @Html.Raw(String.Format(LanguageResources.Account_ResetPasswordMessage, Url.Content("~/account/requestresetpassword")))      
                         </p>   
                     }
                 </div>

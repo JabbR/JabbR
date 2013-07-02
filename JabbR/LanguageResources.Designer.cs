@@ -205,6 +205,63 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;p&gt;Your request to reset password {0}.&lt;/p&gt;
+        ///&lt;p&gt;If this is in error, please &lt;a href=&quot;{1}&quot;&gt;try again&lt;/a&gt;.&lt;/p&gt;.
+        /// </summary>
+        public static string Account_ResetFailureMessage {
+            get {
+                return ResourceManager.GetString("Account_ResetFailureMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset password.
+        /// </summary>
+        public static string Account_ResetPassword {
+            get {
+                return ResourceManager.GetString("Account_ResetPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;a href=&quot;{0}&quot;&gt;Reset your password&lt;/a&gt; if you&apos;ve forgotten or lost your login information..
+        /// </summary>
+        public static string Account_ResetPasswordMessage {
+            get {
+                return ResourceManager.GetString("Account_ResetPasswordMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;p&gt;A password reset email has been sent to the email address registered for user &lt;strong&gt;{0}&lt;/strong&gt;.&lt;/p&gt;
+        ///&lt;p&gt;If you don&apos;t see this email in your inbox within 15 minutes, look for it in your junk-mail folder.&lt;/p&gt;.
+        /// </summary>
+        public static string Account_ResetPasswordSuccessMessage {
+            get {
+                return ResourceManager.GetString("Account_ResetPasswordSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Request reset.
+        /// </summary>
+        public static string Account_ResetRequest {
+            get {
+                return ResourceManager.GetString("Account_ResetRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;p&gt;Your password has been reset successfully. &lt;/p&gt;
+        ///&lt;p&gt;You should be able to &lt;a href=&quot;{0}&quot;&gt;sign in&lt;/a&gt; with your new password.&lt;/p&gt;.
+        /// </summary>
+        public static string Account_ResetSuccessMessage {
+            get {
+                return ResourceManager.GetString("Account_ResetSuccessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sign in.
         /// </summary>
         public static string Account_SignIn {
@@ -1304,6 +1361,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Client_Cancel {
+            get {
+                return ResourceManager.GetString("Client_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You&apos;re connected..
         /// </summary>
         public static string Client_Connected {
@@ -2391,15 +2457,6 @@ namespace JabbR {
         public static string PostNotification_NotAllowed {
             get {
                 return ResourceManager.GetString("PostNotification_NotAllowed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Powered by &lt;a href=&quot;{0}&quot; target=&quot;_blank&quot;&gt;SignalR&lt;/a&gt;.
-        /// </summary>
-        public static string PoweredByHeader {
-            get {
-                return ResourceManager.GetString("PoweredByHeader", resourceCulture);
             }
         }
         

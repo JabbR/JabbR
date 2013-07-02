@@ -582,9 +582,6 @@
   <data name="PostNotification_NotAllowed" xml:space="preserve">
     <value>You're not allowed to post a notification.</value>
   </data>
-  <data name="PoweredByHeader" xml:space="preserve">
-    <value>Powered by &lt;a href="{0}" target="_blank"&gt;SignalR&lt;/a&gt;</value>
-  </data>
   <data name="RemoveAdmin_UserRequired" xml:space="preserve">
     <value>Which admin do you want to remove?</value>
   </data>
@@ -1076,5 +1073,29 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   </data>
   <data name="Who_CommandInfo" xml:space="preserve">
     <value>Show a list of all users, Use [name] to show specific information about that user.</value>
+  </data>
+  <data name="Account_ResetFailureMessage" xml:space="preserve">
+    <value>&lt;p&gt;Your request to reset password {0}.&lt;/p&gt;
+&lt;p&gt;If this is in error, please &lt;a href="{1}"&gt;try again&lt;/a&gt;.&lt;/p&gt;</value>
+  </data>
+  <data name="Account_ResetPassword" xml:space="preserve">
+    <value>Reset password</value>
+  </data>
+  <data name="Account_ResetPasswordMessage" xml:space="preserve">
+    <value>&lt;a href="{0}"&gt;Reset your password&lt;/a&gt; if you've forgotten or lost your login information.</value>
+  </data>
+  <data name="Account_ResetPasswordSuccessMessage" xml:space="preserve">
+    <value>&lt;p&gt;A password reset email has been sent to the email address registered for user &lt;strong&gt;{0}&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;If you don't see this email in your inbox within 15 minutes, look for it in your junk-mail folder.&lt;/p&gt;</value>
+  </data>
+  <data name="Account_ResetRequest" xml:space="preserve">
+    <value>Request reset</value>
+  </data>
+  <data name="Account_ResetSuccessMessage" xml:space="preserve">
+    <value>&lt;p&gt;Your password has been reset successfully. &lt;/p&gt;
+&lt;p&gt;You should be able to &lt;a href="{0}"&gt;sign in&lt;/a&gt; with your new password.&lt;/p&gt;</value>
+  </data>
+  <data name="Client_Cancel" xml:space="preserve">
+    <value>Cancel</value>
   </data>
 </root>
