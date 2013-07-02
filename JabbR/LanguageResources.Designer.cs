@@ -406,6 +406,24 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email Sender.
+        /// </summary>
+        public static string Administration_EmailSender {
+            get {
+                return ResourceManager.GetString("Administration_EmailSender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email Settings.
+        /// </summary>
+        public static string Administration_EmailSettings {
+            get {
+                return ResourceManager.GetString("Administration_EmailSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Encryption.
         /// </summary>
         public static string Administration_Encryption {
@@ -447,6 +465,24 @@ namespace JabbR {
         public static string Administration_MaxFileUploadBytes {
             get {
                 return ResourceManager.GetString("Administration_MaxFileUploadBytes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow User Password Reset.
+        /// </summary>
+        public static string Administration_ResetPasswordAllowed {
+            get {
+                return ResourceManager.GetString("Administration_ResetPasswordAllowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset Password Valid Through (Hours).
+        /// </summary>
+        public static string Administration_ResetPasswordValidDurationHours {
+            get {
+                return ResourceManager.GetString("Administration_ResetPasswordValidDurationHours", resourceCulture);
             }
         }
         
@@ -1827,6 +1863,15 @@ namespace JabbR {
         public static string Client_UploadingFromClipboard {
             get {
                 return ResourceManager.GetString("Client_UploadingFromClipboard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No preview available for this file type..
+        /// </summary>
+        public static string Client_UploadNoPreview {
+            get {
+                return ResourceManager.GetString("Client_UploadNoPreview", resourceCulture);
             }
         }
         

@@ -46,13 +46,13 @@
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="allowUserResetPassword">Allow User Reset Password</label>
+                        <label class="control-label" for="allowUserResetPassword">@LanguageResources.Administration_ResetPasswordAllowed</label>
                         <div class="controls">
                             @Html.CheckBox("allowUserResetPassword", Model.AllowUserResetPassword)
                         </div>
                     </div>                    
                     <div class="control-group">
-                        <label class="control-label" for="requestResetPasswordValidThroughInHours">Reset Password Valid Through (Hours)</label>
+                        <label class="control-label" for="requestResetPasswordValidThroughInHours">@LanguageResources.Administration_ResetPasswordValidDurationHours</label>
                         <div class="controls">
                             <input type="text" id="requestResetPasswordValidThroughInHours" name="requestResetPasswordValidThroughInHours" class="input-mini" value="@Model.RequestResetPasswordValidThroughInHours" />
                         </div>
@@ -65,9 +65,9 @@
                     </div>
                 </fieldset>
                 <fieldset id="emailSettings">
-                    <legend>Email Settings</legend>
+                    <legend>@LanguageResources.Administration_EmailSettings</legend>
                     <div class="control-group">
-                        <label class="control-label" for="emailSender">Email Sender</label>
+                        <label class="control-label" for="emailSender">@LanguageResources.Administration_EmailSender</label>
                         <div class="controls">
                             @Html.TextBox("emailSender", "input-xlarge", "noreply@mysite.com")
                         </div>

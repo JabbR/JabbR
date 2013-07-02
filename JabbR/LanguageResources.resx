@@ -1095,7 +1095,22 @@ Use ? or type /? to display the FAQ and list of commands.</value>
     <value>&lt;p&gt;Your password has been reset successfully. &lt;/p&gt;
 &lt;p&gt;You should be able to &lt;a href="{0}"&gt;sign in&lt;/a&gt; with your new password.&lt;/p&gt;</value>
   </data>
+  <data name="Administration_EmailSender" xml:space="preserve">
+    <value>Email Sender</value>
+  </data>
+  <data name="Administration_EmailSettings" xml:space="preserve">
+    <value>Email Settings</value>
+  </data>
+  <data name="Administration_ResetPasswordAllowed" xml:space="preserve">
+    <value>Allow User Password Reset</value>
+  </data>
+  <data name="Administration_ResetPasswordValidDurationHours" xml:space="preserve">
+    <value>Reset Password Valid Through (Hours)</value>
+  </data>
   <data name="Client_Cancel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="Client_UploadNoPreview" xml:space="preserve">
+    <value>No preview available for this file type.</value>
   </data>
 </root>
