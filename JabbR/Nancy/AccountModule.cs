@@ -380,7 +380,7 @@ namespace JabbR.Nancy
 
                 if (String.IsNullOrEmpty(username))
                 {
-                    this.AddValidationError("username", "User name is required.");
+                    this.AddValidationError("username", LanguageResources.Authentication_NameRequired);
                 }
 
                 try
@@ -391,11 +391,11 @@ namespace JabbR.Nancy
 
                         if (user == null)
                         {
-                            this.AddValidationError("username", String.Format(CultureInfo.CurrentUICulture, "User name '{0}' not found.", username));
+                            this.AddValidationError("username", String.Format(LanguageResources.Account_NoMatchingUser, username));
                         }
                         else if (String.IsNullOrWhiteSpace(user.Email))
                         {
-                            this.AddValidationError("username", String.Format(CultureInfo.CurrentUICulture, "No email found for user name '{0}'.", username));
+                            this.AddValidationError("username", String.Format(LanguageResources.Account_NoEmailForUser, username));
                         }
                         else
                         {
@@ -430,7 +430,7 @@ namespace JabbR.Nancy
                 // Is the token not valid, maybe some character change?
                 if (userName == null)
                 {
-                    return View["resetpassworderror", "seems to be not valid"];
+                    return View["resetpassworderror", LanguageResources.Account_ResetInvalidToken];
                 }
                 else
                 {
@@ -439,7 +439,7 @@ namespace JabbR.Nancy
                     // Is the token expired?
                     if (user == null)
                     {
-                        return View["resetpassworderror", "has been expired"];
+                        return View["resetpassworderror", LanguageResources.Account_ResetExpiredToken];
                     }
                     else
                     {
@@ -472,7 +472,7 @@ namespace JabbR.Nancy
                         // Is the token expired?
                         if (user == null)
                         {
-                            return View["resetpassworderror", "has been expired"];
+                            return View["resetpassworderror", LanguageResources.Account_ResetExpiredToken];
                         }
                         else
                         {

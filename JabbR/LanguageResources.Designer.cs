@@ -151,6 +151,24 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No email found for {0}..
+        /// </summary>
+        public static string Account_NoEmailForUser {
+            get {
+                return ResourceManager.GetString("Account_NoEmailForUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User {0} could not be found..
+        /// </summary>
+        public static string Account_NoMatchingUser {
+            get {
+                return ResourceManager.GetString("Account_NoMatchingUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Note.
         /// </summary>
         public static string Account_Note {
@@ -205,12 +223,30 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &lt;p&gt;Your request to reset password {0}.&lt;/p&gt;
+        ///   Looks up a localized string similar to The link used has expired..
+        /// </summary>
+        public static string Account_ResetExpiredToken {
+            get {
+                return ResourceManager.GetString("Account_ResetExpiredToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;p&gt;Your password reset was unsuccessful: {0}.&lt;/p&gt;
         ///&lt;p&gt;If this is in error, please &lt;a href=&quot;{1}&quot;&gt;try again&lt;/a&gt;.&lt;/p&gt;.
         /// </summary>
         public static string Account_ResetFailureMessage {
             get {
                 return ResourceManager.GetString("Account_ResetFailureMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The link used is incorrect or has expired..
+        /// </summary>
+        public static string Account_ResetInvalidToken {
+            get {
+                return ResourceManager.GetString("Account_ResetInvalidToken", resourceCulture);
             }
         }
         

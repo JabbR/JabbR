@@ -1074,9 +1074,21 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="Who_CommandInfo" xml:space="preserve">
     <value>Show a list of all users, Use [name] to show specific information about that user.</value>
   </data>
+  <data name="Account_NoEmailForUser" xml:space="preserve">
+    <value>No email found for {0}.</value>
+  </data>
+  <data name="Account_NoMatchingUser" xml:space="preserve">
+    <value>User {0} could not be found.</value>
+  </data>
+  <data name="Account_ResetExpiredToken" xml:space="preserve">
+    <value>The link used has expired.</value>
+  </data>
   <data name="Account_ResetFailureMessage" xml:space="preserve">
-    <value>&lt;p&gt;Your request to reset password {0}.&lt;/p&gt;
+    <value>&lt;p&gt;Your password reset was unsuccessful: {0}.&lt;/p&gt;
 &lt;p&gt;If this is in error, please &lt;a href="{1}"&gt;try again&lt;/a&gt;.&lt;/p&gt;</value>
+  </data>
+  <data name="Account_ResetInvalidToken" xml:space="preserve">
+    <value>The link used is incorrect or has expired.</value>
   </data>
   <data name="Account_ResetPassword" xml:space="preserve">
     <value>Reset password</value>
