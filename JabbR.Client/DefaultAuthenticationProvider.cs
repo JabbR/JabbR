@@ -3,7 +3,7 @@ using System.Net;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Hubs;
 
 namespace JabbR.Client
