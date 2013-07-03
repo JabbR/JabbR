@@ -527,9 +527,9 @@ form#send-message {
 }
 
 .user-status {
-    background-color: #268a16;
+    background-color: #77d42a;
     display: inline-block;
-    width: 3px;
+    width: 5px;
     height: 16px;
 }   
 
