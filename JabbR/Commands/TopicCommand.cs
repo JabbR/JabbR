@@ -17,6 +17,8 @@ namespace JabbR.Commands
 
             ChatRoom room = context.Repository.VerifyUserRoom(context.Cache, callingUser, callerContext.RoomName);
 
+            room.EnsureOpen();
+
             context.Service.ChangeTopic(callingUser, room, newTopic);
 
             context.NotificationService.ChangeTopic(callingUser, room);

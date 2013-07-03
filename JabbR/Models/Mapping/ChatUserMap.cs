@@ -18,7 +18,7 @@ namespace JabbR.Models.Mapping
                 .HasMaxLength(200);
 
             this.Property(u => u.Flag)
-                .HasMaxLength(2);
+                .HasMaxLength(255);
 
             // Table & Column Mappings
             this.ToTable("ChatUsers");

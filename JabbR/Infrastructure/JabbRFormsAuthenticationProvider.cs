@@ -7,9 +7,7 @@ using JabbR.Services;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Forms;
 using Newtonsoft.Json;
-using Owin.Types;
-using Owin.Types.Extensions;
-using Owin.Types.Helpers;
+using Microsoft.Owin;
 
 namespace JabbR.Infrastructure
 {
@@ -29,11 +27,6 @@ namespace JabbR.Infrastructure
             return TaskAsyncHelper.Empty;
         }
 
-        public Task ValidateLogin(FormsValidateLoginContext context)
-        {
-            return TaskAsyncHelper.Empty;
-        }
-
         public void ResponseSignIn(FormsResponseSignInContext context)
         {
             var authResult = new AuthenticationResult
@@ -41,7 +34,7 @@ namespace JabbR.Infrastructure
                 Success = true
             };
 
-            ChatUser loggedInUser = GetLoggedInUser(context.Environment);
+            ChatUser loggedInUser = GetLoggedInUser(context);
 
             var principal = new ClaimsPrincipal(context.Identity);
 
@@ -106,15 +99,14 @@ namespace JabbR.Infrastructure
                 context.Identity.AddClaim(new Claim(JabbRClaimTypes.PartialIdentity, "true"));
             }
 
-            var response = new OwinResponse(context.Environment);
             var cookieOptions = new CookieOptions
             {
                 HttpOnly = true
             };
 
-            response.AddCookie(Constants.AuthResultCookie,
-                               JsonConvert.SerializeObject(authResult),
-                               cookieOptions);
+            context.Response.Cookies.Append(Constants.AuthResultCookie,
+                                       JsonConvert.SerializeObject(authResult),
+                                       cookieOptions);
         }
 
         private static void AddClaim(FormsResponseSignInContext context, ChatUser user)
@@ -147,11 +139,9 @@ namespace JabbR.Infrastructure
             context.Extra.IsPersistent = true;
         }
 
-        private ChatUser GetLoggedInUser(IDictionary<string, object> env)
+        private ChatUser GetLoggedInUser(FormsResponseSignInContext context)
         {
-            var request = new OwinRequest(env);
-
-            var principal = request.User as ClaimsPrincipal;
+            var principal = context.Request.User as ClaimsPrincipal;
 
             if (principal != null)
             {

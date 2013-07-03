@@ -10,7 +10,7 @@ namespace JabbR.Commands
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException("Who are you trying to kick?");
+                throw new InvalidOperationException("Who do you want to to kick?");
             }
 
             string targetUserName = args[0];
@@ -21,7 +21,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(targetRoomName))
             {
-                throw new InvalidOperationException("Which room?");
+                throw new InvalidOperationException("Which room do you want to kick them from?");
             }
 
             ChatRoom room = context.Repository.VerifyRoom(targetRoomName);

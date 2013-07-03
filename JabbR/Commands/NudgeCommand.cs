@@ -23,6 +23,8 @@ namespace JabbR.Commands
         {
             ChatRoom room = context.Repository.VerifyUserRoom(context.Cache, callingUser, callerContext.RoomName);
 
+            room.EnsureOpen();
+
             var betweenNudges = TimeSpan.FromMinutes(1);
             if (room.LastNudged == null || room.LastNudged < DateTime.Now.Subtract(betweenNudges))
             {
@@ -33,7 +35,7 @@ namespace JabbR.Commands
             }
             else
             {
-                throw new InvalidOperationException(String.Format("Room can only be nudged once every {0} seconds", betweenNudges.TotalSeconds));
+                throw new InvalidOperationException(String.Format("Room can only be nudged once every {0} seconds.", betweenNudges.TotalSeconds));
             }
         }
 
@@ -58,7 +60,7 @@ namespace JabbR.Commands
             var betweenNudges = TimeSpan.FromSeconds(60);
             if (toUser.LastNudged.HasValue && toUser.LastNudged > DateTime.Now.Subtract(betweenNudges))
             {
-                throw new InvalidOperationException(String.Format("User can only be nudged once every {0} seconds", betweenNudges.TotalSeconds));
+                throw new InvalidOperationException(String.Format("User can only be nudged once every {0} seconds.", betweenNudges.TotalSeconds));
             }
 
             toUser.LastNudged = DateTime.Now;

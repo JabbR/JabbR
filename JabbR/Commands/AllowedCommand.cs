@@ -12,7 +12,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(targetRoomName))
             {
-                throw new InvalidOperationException("Which room?");
+                throw new InvalidOperationException("Which room do you want to list the allowed users of?");
             }
 
             ChatRoom room = context.Repository.VerifyRoom(targetRoomName, mustBeOpen: false);

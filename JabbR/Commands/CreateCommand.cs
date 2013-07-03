@@ -10,7 +10,7 @@ namespace JabbR.Commands
         {
             if (args.Length > 1)
             {
-                throw new InvalidOperationException("Room name cannot contain spaces.");
+                throw new InvalidOperationException("Room names cannot contain spaces.");
             }
 
             if (args.Length == 0)
@@ -28,7 +28,7 @@ namespace JabbR.Commands
 
             if (room != null)
             {
-                throw new InvalidOperationException(String.Format("The room '{0}' already exists{1}",
+                throw new InvalidOperationException(String.Format("The room '{0}' already exists{1}.",
                     roomName,
                     room.Closed ? " but it's closed" : String.Empty));
             }

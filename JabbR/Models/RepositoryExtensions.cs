@@ -103,12 +103,12 @@ namespace JabbR.Models
 
             if (room == null)
             {
-                throw new InvalidOperationException(String.Format("Unable to find room '{0}'", roomName));
+                throw new InvalidOperationException(String.Format("Unable to find room '{0}'.", roomName));
             }
 
             if (room.Closed && mustBeOpen)
             {
-                throw new InvalidOperationException(String.Format("The room '{0}' is closed", roomName));
+                throw new InvalidOperationException(String.Format("The room '{0}' is closed.", roomName));
             }
 
             return room;

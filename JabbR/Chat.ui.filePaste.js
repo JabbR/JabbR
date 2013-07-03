@@ -31,9 +31,7 @@
     $.extend({
         //here's the actual call we're going to make
         imagePaste: function (callback) {
-            if (browser.mozilla) {
-                initializeFirefox(callback);
-            } else if (browser.webkit) {
+            if (browser.webkit) {
                 initializeWebkit(callback);
             }
         }
@@ -93,81 +91,5 @@
         };
 
         pasteImageReader("html", callback);
-    }
-
-    function initializeFirefox(options) {
-        var defaults = {
-            contentEditableDiv: "#paste"
-        };
-        if (typeof options === "function") {
-            options = {
-                callback: options
-            };
-        }
-        options = $.extend({}, defaults, options);
-
-        //this portion of the source is
-        //for mozilla only
-        var pasteDiv = $(options.contentEditableDiv)[0];
-
-        function waitForPasteData(pasteDiv) {
-            if (pasteDiv.childNodes && pasteDiv.childNodes.length > 0) {
-                processPaste(pasteDiv);
-            } else {
-                setTimeout(function () {
-                    waitForPasteData(pasteDiv);
-                }, 20);
-            }
-        }
-
-        function processPaste(pasteDiv) {
-            
-            var innerHtml = pasteDiv.innerHTML;
-            var data = {
-                image: innerHtml.indexOf("<img") !== -1 && innerHtml.indexOf("src=") !== -1,
-                base64: innerHtml.indexOf("base64,") !== -1,
-                png: innerHtml.indexOf("iVBORw0K") !== -1
-            };
-
-            if (data.image && data.base64) {
-                var tag = innerHtml.split('<img src="');
-                tag = tag[1].split('" alt="">');
-                var fileData = {
-                    dataURL: tag[0],
-                    file: {
-                        size: 0 //file is in base 64 format, we need to get the filesize somehow
-                    }
-                };
-
-                //we have an image so let's use it
-                //what do you want to do with it?
-
-                //upload using base64?
-                
-                options.callback(fileData);
-            } else {
-                
-                pasteDiv.innerHTML = "";
-            }
-        }
-
-        function handlePaste(event, pasteDiv) {
-            if (event && event.clipboardData && event.clipboardData.getData) {
-                waitForPasteData(pasteDiv);
-                if (event.preventDefault) {
-                    event.stopPropagation();
-                    event.preventDefault();
-                }
-                return false;
-            } else {
-                waitForPasteData(pasteDiv);
-                return true;
-            }
-        }
-
-        document.onpaste = function(event) {
-            pasteDiv.focus();
-            handlePaste(event, pasteDiv);
-        };
     }
 })(jQuery);

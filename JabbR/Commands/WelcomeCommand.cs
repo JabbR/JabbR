@@ -15,6 +15,9 @@ namespace JabbR.Commands
             newWelcome = String.IsNullOrWhiteSpace(newWelcome) ? null : newWelcome;
 
             ChatRoom room = context.Repository.VerifyUserRoom(context.Cache, callingUser, callerContext.RoomName);
+
+            room.EnsureOpen();
+
             context.Service.ChangeWelcome(callingUser, room, newWelcome);
             context.NotificationService.ChangeWelcome(callingUser, room);
         }
