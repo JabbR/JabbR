@@ -2701,16 +2701,14 @@ h3.userlist-header {
 .connection-status {
     float: left;
     position: relative;
-    top: 20px;
+    margin-top: 9px;
 }
 
 .icon-connection-status {
     background-color: #77d42a;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
-    display: inline-block;
-    padding: 6px;
+    display: block;
+    width: 10px;
+    height: 36px;
 }
 
 .reconnecting .icon-connection-status {
@@ -2780,7 +2778,7 @@ h3.userlist-header {
     box-shadow: none;
     border: 1px solid #e5e5e5;
     border-radius: 4px 4px 0 0;
-    margin: 9px 5px 0 5px;
+    margin: 9px 5px 0 0;
 }
 
 .navbar .nav {
