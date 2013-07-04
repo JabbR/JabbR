@@ -160,7 +160,8 @@ namespace JabbR
                 defaults: new { controller = "ApiFrontPage" }
             );
 
-            app.UseWebApi(config);
+            // TODO: There's an incompatibility with the new webapi integration
+            // app.UseWebApi(config);
         }
     }
 }
