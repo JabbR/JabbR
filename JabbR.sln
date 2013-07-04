@@ -15,16 +15,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "azure", "azure", "{E97E0A5A
 		Scripts\Package.ps1 = Scripts\Package.ps1
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{8138D13B-8051-4A62-8AED-77C79B0E241F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JabbR.Client", "JabbR.Client\JabbR.Client.csproj", "{A4A1D183-FD80-4DBD-806F-883DDADD4967}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JabbR.Client.Sample", "JabbR.Client.Sample\JabbR.Client.Sample.csproj", "{E8AA84F5-7283-4CA3-A679-901EF0EFB0D5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C286B5A9-E144-4AD1-89D5-B38985ECF35A}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JabbR.Client", "JabbR.Client\JabbR.Client.csproj", "{A4A1D183-FD80-4DBD-806F-883DDADD4967}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JabbR.Client.Sample", "JabbR.Client.Sample\JabbR.Client.Sample.csproj", "{E8AA84F5-7283-4CA3-A679-901EF0EFB0D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
