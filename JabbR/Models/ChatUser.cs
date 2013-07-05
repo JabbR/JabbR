@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 using JabbR.Infrastructure;
 
 namespace JabbR.Models
@@ -43,6 +45,8 @@ namespace JabbR.Models
         // Request password reset token
         public string RequestPasswordResetId { get; set; }
         public DateTimeOffset? RequestPasswordResetValidThrough { get; set; }
+
+        public string RawPreferences { get; set; }
 
         // List of clients that are currently connected for this user
         public virtual ICollection<ChatUserIdentity> Identities { get; set; }

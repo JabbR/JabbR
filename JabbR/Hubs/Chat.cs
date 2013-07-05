@@ -497,6 +497,23 @@ namespace JabbR
             CheckStatus();
         }
 
+        public void TabOrderChanged(string[] tabOrdering)
+        {
+            string userId = Context.User.GetUserId();
+
+            ChatUser user = _repository.GetUserById(userId);
+
+            //TODO
+            //_repository.UpdateTabOrder(user, tabOrdering);
+
+            _repository.CommitChanges();
+
+            foreach (var client in user.ConnectedClients)
+            {
+                Clients.Client(client.Id).updateTabOrder(tabOrdering);
+            }
+        }
+
         private void LogOn(ChatUser user, string clientId, bool reconnecting)
         {
             if (!reconnecting)

@@ -201,6 +201,7 @@
     // Save some state in a cookie
     function updateCookie() {
         var state = {
+            tabOrder: chat.state.tabOrder,
             activeRoom: chat.state.activeRoom,
             preferences: ui.getState()
         },
@@ -888,6 +889,10 @@
         ui.setUnreadNotifications(read);
     };
 
+    chat.client.updateTabOrder = function(tabOrder) {
+        ui.updateTabOrder(tabOrder);
+    };
+
     $ui.bind(ui.events.typing, function () {
         // If not in a room, don't try to send typing notifications
         if (!chat.state.activeRoom) {
@@ -1109,6 +1114,36 @@
 
     $(ui).bind(ui.events.loggedOut, function () {
         logout();
+    });
+    
+    $ui.bind(ui.events.tabOrderChanged, function (ev, tabOrder) {
+        var orderChanged = false;
+        
+        if (chat.tabOrder == undefined || chat.tabOrder.length !== tabOrder.length) {
+            orderChanged = true;
+        }
+        
+        if (orderChanged === false)
+        {
+            for (var i = 0; i < tabOrder.length; i++) {
+                if (chat.tabOrder[i] !== tabOrder[i]) {
+                    orderChanged = true;
+                }
+            }
+        }
+        
+        if (orderChanged === false) {
+            return;
+        }
+
+        chat.server.tabOrderChanged(tabOrder)
+            .done(function () {
+                chat.tabOrder = tabOrder;
+            })
+            .fail(function () {
+                // revert ordering
+                ui.updateTabOrder(chat.tabOrder);
+            });
     });
 
     $(function () {

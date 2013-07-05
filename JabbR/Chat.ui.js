@@ -724,7 +724,8 @@
             preferencesChanged: 'jabbr.ui.preferencesChanged',
             loggedOut: 'jabbr.ui.loggedOut',
             reloadMessages: 'jabbr.ui.reloadMessages',
-            fileUploaded: 'jabbr.ui.fileUploaded'
+            fileUploaded: 'jabbr.ui.fileUploaded',
+            tabOrderChanged: 'jabbr.ui.tabOrderChanged'
         },
 
         help: {
@@ -891,7 +892,19 @@
                 return false;
             });
 
-            $('#tabs').dragsort({ placeHolderTemplate: '<li class="room"><button><span class="content"></span></button></li>' });
+            $('#tabs').dragsort({
+                placeHolderTemplate: '<li class="room"><button><span class="content"></span></button></li>',
+                dragEnd: function () {
+                    var roomTabOrder = new Array(),
+                        $roomTabs = $('#tabs li');
+                    
+                    for (var i = 0; i < $roomTabs.length; i++) {
+                        roomTabOrder[i] = $($roomTabs[i]).data('name');
+                    }
+                    
+                    $ui.trigger(ui.events.tabOrderChanged, [roomTabOrder]);
+                }
+            });
 
             // handle click on notifications
             $document.on('click', '.notification a.info', function (ev) {
@@ -2202,6 +2215,11 @@
             for (var i = 0; i < rooms.length; i++) {
                 rooms[i].trimHistory();
             }
+        },
+        updateTabOrder: function(tabOrder) {
+            $.each(tabOrder.reverse(), function(el, name) {
+                $tabs.find('li[data-name="' + name + '"]').prependTo($tabs);
+            });
         }
     };
 

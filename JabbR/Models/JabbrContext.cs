@@ -11,10 +11,10 @@ namespace JabbR.Models
         public JabbrContext()
             : base("Jabbr")
         {
-            ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += OnObjectContextObjectMaterialized;
+            ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
         }
 
-        private void OnObjectContextObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
+        void ObjectContext_ObjectMaterialized(object sender, System.Data.Objects.ObjectMaterializedEventArgs e)
         {
             var entityChatUser = e.Entity as ChatUser;
             if (entityChatUser != null)
