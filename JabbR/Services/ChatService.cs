@@ -880,5 +880,10 @@ namespace JabbR.Services
 
             return country;
         }
+
+        internal static string GetUserRoomPresence(ChatUser user, ChatRoom room)
+        {
+            return user.Rooms.Contains(room) ? "present" : "absent";
+        }
     }
 }

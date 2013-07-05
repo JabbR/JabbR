@@ -3,6 +3,8 @@ using JabbR.Models;
 
 namespace JabbR.ViewModels
 {
+    using JabbR.Services;
+
     public class MessageViewModel
     {
         public MessageViewModel(ChatMessage message)
@@ -11,6 +13,7 @@ namespace JabbR.ViewModels
             Content = message.Content;
             HtmlContent = message.HtmlContent;
             User = new UserViewModel(message.User);
+            UserRoomPresence = ChatService.GetUserRoomPresence(message.User, message.Room);
             When = message.When;
             HtmlEncoded = message.HtmlEncoded;
             MessageType = message.MessageType;
@@ -25,6 +28,7 @@ namespace JabbR.ViewModels
         public DateTimeOffset When { get; set; }
         public UserViewModel User { get; set; }
         public int MessageType { get; set; }
+        public string UserRoomPresence { get; set; }
 
         public string ImageUrl { get; set; }
         public string Source { get; set; }

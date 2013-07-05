@@ -217,7 +217,7 @@ form#send-message {
             width: 16px;
             display: inline-block;
             float: left;
-            margin: 0 2px;
+            margin: 0 2px 0 0;
         }
 
 .message img {
@@ -543,8 +543,13 @@ li.user.typing .user-status {
     padding-right: 5px;
 }
 
-.users .idle .user-status {
+.inactive .user-status {
     background-color: #ffaa22;
+}
+
+.offline .user-status,
+.absent .user-status {
+    background-color: #fe1a00;
 }
 
 .users .details {
@@ -2712,7 +2717,7 @@ h3.userlist-header {
 }
 
 .reconnecting .icon-connection-status {
-    background-color: #ffec64;
+    background-color: #ffaa22;
 }
 
 .disconnected .icon-connection-status {
@@ -2750,7 +2755,7 @@ h3.userlist-header {
     color: white;
 }
 
-.idle-since {
+.inactive-since {
     float: right;
     font-size: 11px;
     font-weight: bold;
@@ -2862,7 +2867,7 @@ h3.userlist-header {
         width: 200px;
     }
 
-    .user.idle .details.admin .name-container .name {
+    .user.inactive .details.admin .name-container .name {
         width: 72px;
     }
 
@@ -2977,7 +2982,7 @@ h3.userlist-header {
         width: 45px;
     }
 
-    .user .details .name-container .idle-since {
+    .user .details .name-container .inactive-since {
         float: left;
     }
 
