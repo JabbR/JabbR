@@ -1,10 +1,9 @@
 ﻿using System;
 using JabbR.Models;
+using JabbR.Services;
 
 namespace JabbR.ViewModels
 {
-    using JabbR.Services;
-
     public class MessageViewModel
     {
         public MessageViewModel(ChatMessage message)
