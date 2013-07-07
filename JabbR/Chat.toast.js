@@ -74,8 +74,8 @@
     };
 
 
-    var html5Toast = function () {
-        return {
+    function html5Toast() {
+        return $.extend(toast, {
             isAllowed: function () { return Notification.permission === 'granted' },
             isNotConfigured: function () { return Notification.permission === 'default' },
             isBlocked: function () { return Notification.permission === 'denied' },
@@ -100,11 +100,11 @@
             requestPermission: function (callback) {
                 Notification.requestPermission(callback);
             }
-        }
+        });
     };
 
-    var webkitToast = function () {
-        return {
+    function webkitToast() {
+        return $.extend(toast, {
             isAllowed: function () { return window.webkitNotifications.checkPermission() === 0 },
             isNotConfigured: function () { return window.webkitNotifications.checkPermission() === 1 },
             isBlocked: function () { return window.webkitNotifications.checkPermission() === 2 },
@@ -132,7 +132,7 @@
             requestPermission: function (callback) {
                 window.webkitNotifications.requestPermission(callback);
             }
-        };
+        });
     };
 
     if (!window.chat) {
@@ -141,9 +141,9 @@
 
     //pick which implementation we want
     if (typeof (Notification) !== 'undefined') {
-        toast = $.extend(toast, html5Toast());
+        toast = html5Toast();
     } else if (window.webkitNotifications) {
-        toast = $.extend(toast, webkitToast());
+        toast = webkitToast();
     }
 
     window.chat.toast = toast;
