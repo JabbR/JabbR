@@ -183,7 +183,9 @@
             isMine: message.User.Name === chat.state.name,
             imageUrl: message.ImageUrl,
             source: message.Source,
-            messageType: message.MessageType
+            messageType: message.MessageType,
+            presence: (message.UserRoomPresence || 'absent').toLowerCase(),
+            status: (message.User.Status || 'offline').toLowerCase()
         };
     }
 

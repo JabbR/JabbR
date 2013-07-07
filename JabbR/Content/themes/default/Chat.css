@@ -217,7 +217,7 @@ form#send-message {
             width: 16px;
             display: inline-block;
             float: left;
-            margin: 0 2px;
+            margin: 0 2px 0 0;
         }
 
 .message img {
@@ -543,8 +543,13 @@ li.user.typing .user-status {
     padding-right: 5px;
 }
 
-.users .idle .user-status {
+.inactive .user-status {
     background-color: #ffaa22;
+}
+
+.offline .user-status,
+.absent .user-status {
+    background-color: #fe1a00;
 }
 
 .users .details {
@@ -2701,20 +2706,18 @@ h3.userlist-header {
 .connection-status {
     float: left;
     position: relative;
-    top: 20px;
+    margin-top: 9px;
 }
 
 .icon-connection-status {
     background-color: #77d42a;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
-    display: inline-block;
-    padding: 6px;
+    display: block;
+    width: 10px;
+    height: 36px;
 }
 
 .reconnecting .icon-connection-status {
-    background-color: #ffec64;
+    background-color: #ffaa22;
 }
 
 .disconnected .icon-connection-status {
@@ -2752,7 +2755,7 @@ h3.userlist-header {
     color: white;
 }
 
-.idle-since {
+.inactive-since {
     float: right;
     font-size: 11px;
     font-weight: bold;
@@ -2780,7 +2783,7 @@ h3.userlist-header {
     box-shadow: none;
     border: 1px solid #e5e5e5;
     border-radius: 4px 4px 0 0;
-    margin: 9px 5px 0 5px;
+    margin: 9px 5px 0 0;
 }
 
 .navbar .nav {
@@ -2864,7 +2867,7 @@ h3.userlist-header {
         width: 200px;
     }
 
-    .user.idle .details.admin .name-container .name {
+    .user.inactive .details.admin .name-container .name {
         width: 72px;
     }
 
@@ -2979,7 +2982,7 @@ h3.userlist-header {
         width: 45px;
     }
 
-    .user .details .name-container .idle-since {
+    .user .details .name-container .inactive-since {
         float: left;
     }
 
