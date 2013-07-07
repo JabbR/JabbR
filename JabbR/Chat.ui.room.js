@@ -19,14 +19,14 @@
             // Check if we're on our last glow
             if (n !== 0) {
                 // Go dark
-                $tab.animate({ backgroundColor: '#e5e5e5', color: '#00103f' }, 800, function () {
+                $tab.animate({ backgroundColor: '#f5f5f5', color: '#00103f' }, 800, function () {
                     // Glow the tab again
                     glowTab($tab, n);
                 });
             }
             else {
                 // Leave the tab highlighted
-                $tab.animate({ backgroundColor: '#e5e5e5', color: '#00103f' }, 800);
+                $tab.animate({ backgroundColor: '#f5f5f5', color: '#00103f' }, 800);
             }
         });
     }
