@@ -139,11 +139,11 @@
         window.chat = {};
     }
 
-    //pick which browser implementation we want
-    if (window.webkitNotifications) {
-        toast = $.extend(toast, webkitToast());
-    } else if (typeof (Notification) !== 'undefined') {
+    //pick which implementation we want
+    if (typeof (Notification) !== 'undefined') {
         toast = $.extend(toast, html5Toast());
+    } else if (window.webkitNotifications) {
+        toast = $.extend(toast, webkitToast());
     }
 
     window.chat.toast = toast;
