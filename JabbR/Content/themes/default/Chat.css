@@ -646,7 +646,12 @@ li.user.typing .user-status {
             right: 0;
             width: 16px;
             height: 16px;
+            opacity: 0.5;
         }
+            
+            #tabs li .close:hover {
+                opacity: 0.75;
+            }
 
         #tabs li.locked .lock {
             position: absolute;
