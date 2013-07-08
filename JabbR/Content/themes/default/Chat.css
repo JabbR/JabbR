@@ -501,8 +501,7 @@ form#send-message {
     .users li.typing {
         background-image: url('../../images/typing.png');
         background-repeat: no-repeat;
-        background-position: 5px 12px;
-        background-size: 12px auto;
+        background-position: 10px 12px;
     }
 
     .users li.room.locked .lock {
@@ -539,8 +538,10 @@ li.user.typing .user-status {
     -moz-box-shadow: none;
     box-shadow: none;
     background: none;
-    padding-left: 5px;
-    padding-right: 5px;
+}
+
+li.user.typing .gravatar {
+    visibility: hidden;
 }
 
 .inactive .user-status {
