@@ -550,7 +550,7 @@ li.user.typing .gravatar {
 
 .offline .user-status,
 .absent .user-status {
-    background-color: #fe1a00;
+    background-color: #e5e5e5;
 }
 
 .users .details {
