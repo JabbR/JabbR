@@ -1,5 +1,5 @@
 /// <reference path="Scripts/jquery-1.7.js" />
-(function ($, window, utility) {
+(function($, window, utility) {
     "use strict";
 
     var toast = {
@@ -7,32 +7,32 @@
         timeOut: 10000,
 
         //default all permission checks to not allowed
-        isAllowed: function () { return false; },
-        isNotConfigured: function () { return false; },
-        isBlocked: function () { return true; },
+        isAllowed: function() { return false; },
+        isNotConfigured: function() { return false; },
+        isBlocked: function() { return true; },
 
-        canToast: function () {
+        canToast: function() {
             return !this.isBlocked();
         },
-        ensureToast: function (preferences) {
-            if (this.isNotConfigured()) {
+        ensureToast: function(preferences) {
+            if(this.isNotConfigured()) {
                 preferences.canToast = false;
             }
         },
-        onToastShow: function () {
-            setTimeout(function () {
+        onToastShow: function() {
+            setTimeout(function() {
                 toast.hideToast();
             }, toast.timeOut);
         },
-        onToastClick: function () {
+        onToastClick: function() {
             var room = toast.current.roomName;
             toast.hideToast();
             // Trigger the focus events - focus the window and open the source room
             window.focus();
             $(toast).trigger('toast.focus', [room]);
         },
-        toastMessage: function (msg, roomName) {
-            if (!this.isAllowed()) {
+        toastMessage: function(msg, roomName) {
+            if(!this.isAllowed()) {
                 return;
             }
             this.hideToast();
@@ -41,18 +41,18 @@
             //little dirty, but it makes triggering focus later easier, without using a static variable
             this.current.roomName = roomName;
         },
-        hideToast: function () {
-            if (this.current) {
+        hideToast: function() {
+            if(this.current) {
                 this.removeNotification(this.current);
                 this.current = null;
             }
         },
-        enableToast: function (callback) {
+        enableToast: function(callback) {
             var deferred = $.Deferred();
             // If not configured, request permission
-            if (this.isNotConfigured()) {
-                this.requestPermission(function () {
-                    if (!toast.isAllowed()) {
+            if(this.isNotConfigured()) {
+                this.requestPermission(function() {
+                    if(!toast.isAllowed()) {
                         deferred.reject();
                     }
                     else {
@@ -60,7 +60,7 @@
                     }
                 });
             }
-            else if (this.isAllowed()) {
+            else if(this.isAllowed()) {
                 // If we're allowed then just resolve here
                 deferred.resolve();
             }
@@ -76,11 +76,11 @@
 
     function html5Toast() {
         return $.extend(toast, {
-            isAllowed: function () { return window.Notification.permission === 'granted'; },
-            isNotConfigured: function () { return window.Notification.permission === 'default'; },
-            isBlocked: function () { return window.Notification.permission === 'denied'; },
+            isAllowed: function() { return window.Notification.permission === 'granted'; },
+            isNotConfigured: function() { return window.Notification.permission === 'default'; },
+            isBlocked: function() { return window.Notification.permission === 'denied'; },
 
-            createNotification: function (msg, roomName) {
+            createNotification: function(msg, roomName) {
                 //firefox doesnt set a limitation on notification title, but we will use an arbituary sane limit
                 var title = utility.trim(msg.name, 50) + ' (' + roomName + ')';
                 var notification = new window.Notification(title, {
@@ -93,10 +93,10 @@
                 notification.onclick = this.onToastClick;
                 return notification;
             },
-            removeNotification: function (notification) {
+            removeNotification: function(notification) {
                 notification.close();
             },
-            requestPermission: function (callback) {
+            requestPermission: function(callback) {
                 window.Notification.requestPermission(callback);
             }
         });
@@ -104,14 +104,14 @@
 
     function webkitToast() {
         return $.extend(toast, {
-            isAllowed: function () { return window.webkitNotifications.checkPermission() === 0; },
-            isNotConfigured: function () { return window.webkitNotifications.checkPermission() === 1; },
-            isBlocked: function () { return window.webkitNotifications.checkPermission() === 2; },
+            isAllowed: function() { return window.webkitNotifications.checkPermission() === 0; },
+            isNotConfigured: function() { return window.webkitNotifications.checkPermission() === 1; },
+            isBlocked: function() { return window.webkitNotifications.checkPermission() === 2; },
 
-            createNotification: function (message, roomName) {
+            createNotification: function(message, roomName) {
                 var toastTitle = utility.trim(message.name, 21);
                 // we can reliably show 22 chars
-                if (toastTitle.length <= 19) {
+                if(toastTitle.length <= 19) {
                     toastTitle += ' (' + utility.trim(roomName, 19 - toastTitle.length) + ')';
                 }
 
@@ -125,24 +125,24 @@
                 notification.show();
                 return notification;
             },
-            removeNotification: function (notification) {
+            removeNotification: function(notification) {
                 notification.cancel();
             },
-            requestPermission: function (callback) {
+            requestPermission: function(callback) {
                 window.webkitNotifications.requestPermission(callback);
             }
         });
     }
 
-    if (!window.chat) {
+    if(!window.chat) {
         window.chat = {};
     }
 
     //pick which implementation we want
     //chrome has the Notification object but not much else, so we need to check the permission property to be sure
-    if (typeof (window.Notification) && typeof (window.Notification.permission) === 'string') {
+    if(window.Notification && typeof window.Notification.permission === 'string') {
         toast = html5Toast();
-    } else if (window.webkitNotifications) {
+    } else if(window.webkitNotifications) {
         toast = webkitToast();
     }
 
