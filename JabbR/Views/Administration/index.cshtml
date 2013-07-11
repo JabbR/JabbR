@@ -46,9 +46,30 @@
                         </div>
                     </div>
                     <div class="control-group">
+                        <label class="control-label" for="allowUserResetPassword">Allow User Reset Password</label>
+                        <div class="controls">
+                            @Html.CheckBox("allowUserResetPassword", Model.AllowUserResetPassword)
+                        </div>
+                    </div>                    
+                    <div class="control-group">
+                        <label class="control-label" for="requestResetPasswordValidThroughInHours">Reset Password Valid Through (Hours)</label>
+                        <div class="controls">
+                            <input type="text" name="requestResetPasswordValidThroughInHours" class="input-mini" value="@Model.RequestResetPasswordValidThroughInHours" />
+                        </div>
+                    </div>
+                    <div class="control-group">
                         <label class="control-label" for="allowUserRegistration">Allow Room Creation</label>
                         <div class="controls">
                             @Html.CheckBox("allowRoomCreation", Model.AllowRoomCreation)
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset id="generalSettings">
+                    <legend>Email Settings</legend>
+                    <div class="control-group">
+                        <label class="control-label" for="emailSender">Email Sender</label>
+                        <div class="controls">
+                            @Html.TextBox("emailSender", "input-xlarge", "noreply@mysite.com")
                         </div>
                     </div>
                 </fieldset>
@@ -125,11 +146,21 @@
 
             $('input[type="checkbox"]').click(function () {
                 var $this = $(this);
-                    name = $this.data('name'),
-                    checked = $this.is(':checked') === true,
-                    $hiddenField = $('input[type="hidden"][name="' + name + '"]');
+                name = $this.data('name'),
+                checked = $this.is(':checked') === true,
+                $hiddenField = $('input[type="hidden"][name="' + name + '"]');
 
                 $hiddenField.attr('value', checked);
+            });
+
+            $('input[data-name="allowUserResetPassword"]').change(function () {
+                var checked = $(this).is(':checked') === true;
+                if (checked) {
+                    $('#requestResetPasswordValid').removeAttr('disabled');
+                }
+                else {
+                    $('#requestResetPasswordValid').attr('disabled', 'disabled');
+                }
             });
 
         }(jQuery));

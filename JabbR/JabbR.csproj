@@ -861,6 +861,9 @@
     <EmbeddedResource Include="Migrations\201306180311195_ExtendChatUserFlagLength.resx">
       <DependentUpon>201306180311195_ExtendChatUserFlagLength.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201307020008436_AllowUserResetPassword.resx">
+      <DependentUpon>201307020008436_AllowUserResetPassword.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -925,9 +928,18 @@
     <Content Include="Views\Notifications\index.cshtml" />
     <Content Include="Views\Home\monitor.cshtml" />
     <Content Include="Views\Administration\index.cshtml" />
+    <Content Include="Views\EmailTemplates\RequestResetPassword.cshtml" />
+    <Content Include="Views\EmailTemplates\RequestResetPassword.text.cshtml" />
+    <Content Include="Views\Account\requestresetpassword.cshtml" />
+    <Content Include="Views\Account\requestresetpasswordsuccess.cshtml" />
+    <Content Include="Views\Account\resetpassword.cshtml" />
+    <Content Include="Views\Account\resetpassworderror.cshtml" />
+    <Content Include="Views\Account\resetpasswordsuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Infrastructure\AuthenticationManagerExtensions.cs" />
+    <Compile Include="Infrastructure\EnumerableExtensions.cs" />
+    <Compile Include="Infrastructure\HttpServerUtility.cs" />
     <Compile Include="Middleware\FixCookieHandler.cs" />
     <Compile Include="App_Start\Startup.DependencyInjection.cs" />
     <Compile Include="Commands\AllowedCommand.cs" />
@@ -990,6 +1002,10 @@
     <Compile Include="Migrations\201306180311195_ExtendChatUserFlagLength.Designer.cs">
       <DependentUpon>201306180311195_ExtendChatUserFlagLength.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201307020008436_AllowUserResetPassword.cs" />
+    <Compile Include="Migrations\201307020008436_AllowUserResetPassword.Designer.cs">
+      <DependentUpon>201307020008436_AllowUserResetPassword.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\ClientNotification.cs" />
     <Compile Include="Models\Mapping\AttachmentMap.cs" />
@@ -1050,6 +1066,19 @@
     <Compile Include="Nancy\NotificationsModule.cs" />
     <Compile Include="Nancy\SessionExtensions.cs" />
     <Compile Include="Services\DefaultUserAuthenticator.cs" />
+    <Compile Include="Services\Email\Email.cs" />
+    <Compile Include="Services\Email\EmailService.cs" />
+    <Compile Include="Services\Email\EmailTemplate.cs" />
+    <Compile Include="Services\Email\DynamicModel.cs" />
+    <Compile Include="Services\Email\FileEmailTemplateContentReader.cs" />
+    <Compile Include="Services\Email\IEmailSender.cs" />
+    <Compile Include="Services\Email\IEmailService.cs" />
+    <Compile Include="Services\Email\IEmailTemplate.cs" />
+    <Compile Include="Services\Email\IEmailTemplateContentReader.cs" />
+    <Compile Include="Services\Email\IEmailTemplateEngine.cs" />
+    <Compile Include="Services\Email\RazorEmailTemplateContentReader.cs" />
+    <Compile Include="Services\Email\RazorEmailTemplateEngine.cs" />
+    <Compile Include="Services\Email\SmtpClientEmailSender.cs" />
     <Compile Include="Services\IJabbrConfiguration.cs" />
     <Compile Include="Services\ISettingsManager.cs" />
     <Compile Include="Services\IUserAuthenticator.cs" />

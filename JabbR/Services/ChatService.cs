@@ -761,7 +761,7 @@ namespace JabbR.Services
 
             if (!targetRoom.Closed)
             {
-                throw new InvalidOperationException(string.Format("{0} is already open.", targetRoom.Name));
+                throw new InvalidOperationException(String.Format("{0} is already open.", targetRoom.Name));
             }
 
             // Open the room

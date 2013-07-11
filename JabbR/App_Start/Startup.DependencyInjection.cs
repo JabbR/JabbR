@@ -1,20 +1,16 @@
-﻿using System;
-using System.Linq;
-using JabbR.ContentProviders.Core;
+﻿using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Nancy;
 using JabbR.Services;
 using JabbR.UploadHandlers;
 using Microsoft.AspNet.SignalR.Hubs;
-using Microsoft.AspNet.SignalR.Json;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Security.Forms;
 using Nancy.Authentication.WorldDomination;
 using Nancy.Bootstrappers.Ninject;
 using Newtonsoft.Json;
 using Ninject;
-using Ninject.Extensions;
 using WorldDomination.Web.Authentication;
 
 namespace JabbR
@@ -124,6 +120,18 @@ namespace JabbR
 
             kernel.Bind<ContentProviderProcessor>()
                   .ToConstant(new ContentProviderProcessor(kernel));
+
+            kernel.Bind<IEmailTemplateContentReader>()
+                  .To<RazorEmailTemplateContentReader>();
+
+            kernel.Bind<IEmailTemplateEngine>()
+                  .To<RazorEmailTemplateEngine>();
+
+            kernel.Bind<IEmailSender>()
+                  .To<SmtpClientEmailSender>();
+
+            kernel.Bind<IEmailService>()
+                  .To<EmailService>();
 
             return kernel;
         }

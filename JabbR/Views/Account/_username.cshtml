@@ -22,13 +22,24 @@
                 <button type="submit" class="btn">Sign in</button>
             </div>
         </div>
-        @if (Model)
+        @if (Model.AllowUserRegistration || Model.AllowUserResetPassword)
         { 
-        <div class="control-group">
-            <div class="controls">
-                <a href="@Url.Content("~/account/register")">Register</a> if you don't have an account.
+            <div class="control-group">
+                <div class="controls">                    
+                    @if (Model.AllowUserRegistration)
+                    {
+                        <p>
+                            <a href="@Url.Content("~/account/register")">Register</a> if you don't have an account.
+                        </p>
+                    }
+                    @if (Model.AllowUserResetPassword && Model.HasEmailSender)
+                    { 
+                        <p>
+                            <a href="@Url.Content("~/account/requestresetpassword")">Reset password</a> if you've forgotten or lost your login information.       
+                        </p>   
+                    }
+                </div>
             </div>
-        </div>
         }
         @Html.AntiForgeryToken()
     </form>
