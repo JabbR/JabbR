@@ -3039,27 +3039,27 @@ h3.userlist-header {
 }
 
 /* Make admin screens nicer */
-.form-horizontal .control-label {
+.administration .form-horizontal .control-label {
   width: 260px;
 }
 
-.form-horizontal .controls {
+.administration .form-horizontal .controls {
   margin-left: 280px;
   *margin-left: 0;
 }
 
-.form-horizontal .controls:first-child {
+.administration .form-horizontal .controls:first-child {
   *padding-left: 280px;
 }
 
 @media (max-width: 480px)
 {
-    .form-horizontal .control-label
+    .administration .form-horizontal .control-label
     {
         width: auto;
     }
 
-    .form-horizontal .controls
+    .administration .form-horizontal .controls
     {
         margin-left: 0;
     }
