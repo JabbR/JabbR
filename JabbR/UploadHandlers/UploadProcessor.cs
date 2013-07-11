@@ -4,6 +4,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using JabbR.Infrastructure;
 using JabbR.Services;
 using Ninject;
 
@@ -28,15 +29,17 @@ namespace JabbR.UploadHandlers
             {
                 return null;
             }
-            
-            IUploadHandler handler = _fileUploadHandlers.FirstOrDefault(c => c.IsValid(fileName, contentType));
+
+            string fileNameSlug = fileName.ToFileNameSlug();
+
+            IUploadHandler handler = _fileUploadHandlers.FirstOrDefault(c => c.IsValid(fileNameSlug, contentType));
 
             if (handler == null)
             {
                 return null;
             }
 
-            return await handler.UploadFile(fileName, contentType, stream);
+            return await handler.UploadFile(fileNameSlug, contentType, stream);
         }
 
         private static IList<IUploadHandler> GetUploadHandlers(IKernel kernel)
