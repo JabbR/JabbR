@@ -1610,7 +1610,7 @@
                 $inactiveSince = $user.find('.inactive-since'),
                 $userMessages = $('.messages').find(getUserClassName(userViewModel.name));
 
-            if (userViewModel.active === true) {
+            if (userViewModel.active === true && userViewModel.afk === false) {
                 if ($user.hasClass('inactive')) {
                     $user.removeClass('inactive');
                     $inactiveSince.livestamp('destroy');
@@ -1650,7 +1650,8 @@
             return true;
         },
         setUserInActive: function ($user) {
-            var $userMessages = $('.messages').find(getUserClassName($user.data('name')));
+            var $userMessages = $('.messages').find(getUserClassName($user.data('name'))),
+                $inactiveSince = $user.find('.inactive-since');
             
             if ($user.data('active') === false) {
                 return false;
@@ -1658,6 +1659,10 @@
             $user.attr('data-active', false);
             $user.data('active', false);
             $user.addClass('inactive');
+            
+            if (!$inactiveSince.html()) {
+                $inactiveSince.livestamp(new Date());
+            }
             
             $userMessages.find('.user').removeClass('offline active inactive').addClass('inactive');
             

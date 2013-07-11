@@ -165,7 +165,8 @@
             country: user.Country,
             lastActive: lastActive,
             timeAgo: $.timeago(lastActive),
-            admin: user.IsAdmin
+            admin: user.IsAdmin,
+            afk: user.IsAfk
         };
     }
 
@@ -185,8 +186,16 @@
             source: message.Source,
             messageType: message.MessageType,
             presence: (message.UserRoomPresence || 'absent').toLowerCase(),
-            status: (message.User.Status || 'offline').toLowerCase()
+            status: getMessageUserStatus(message.User).toLowerCase()
         };
+    }
+    
+    function getMessageUserStatus(user) {
+        if (user.Status === 'Active' && user.IsAfk === true) {
+            return 'Inactive';           
+        }
+
+        return (user.Status || 'Offline');
     }
 
     // Save some state in a cookie
