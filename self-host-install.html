@@ -119,6 +119,11 @@ $acl = Get-Acl "$webFolder\Content"
 $rule = New-Object System.Security.AccessControl.FileSystemAccessRule($identity, "Write", "ContainerInherit, ObjectInherit", "None", "Allow")
 $acl.SetAccessRule($rule)
 Set-Acl "$webFolder\Content" $acl
+
+$acl = Get-Acl "$webFolder\Scripts"
+$rule = New-Object System.Security.AccessControl.FileSystemAccessRule($identity, "Write", "ContainerInherit, ObjectInherit", "None", "Allow")
+$acl.SetAccessRule($rule)
+Set-Acl "$webFolder\Scripts" $acl
 </pre>
 
 			<p><img src="Content/images/install/3.png" /></p>
@@ -219,11 +224,13 @@ Set-Acl "$webFolder\Content" $acl
 		
 		<div class="row">
 			<div class="span12">
-				<h4>Update permissions for the /Content directory</h4>
+				<h4>Update permissions for the /Content and /Scripts directories</h4>
 				
 				<p>Open the properties for the /Content directory (you can right click in Explorer to get this dialog).  Under security, click Edit, and enter the windows login for the App Pool (eg IIS AppPool\JabbR).  Click OK and give them Write permissions.</p>
 				
 				<p><img src="Content/images/install/win6.png" /></p>
+				
+				<p>Repeat this process for the /Scripts directory.</p>
 			</div>
         </div>
 		
