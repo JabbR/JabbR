@@ -3056,10 +3056,7 @@ h3.userlist-header {
 {
     .form-horizontal .control-label
     {
-        float: none;
         width: auto;
-        padding-top: 0;
-        text-align: left;
     }
 
     .form-horizontal .controls

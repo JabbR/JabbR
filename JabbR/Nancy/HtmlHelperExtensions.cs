@@ -19,7 +19,9 @@ namespace JabbR
             
             var checkBoxBuilder = new StringBuilder();
 
-            checkBoxBuilder.Append(@"<input data-name=""");
+            checkBoxBuilder.Append(@"<input id=""");
+            checkBoxBuilder.Append(AntiXSS.Encoder.HtmlAttributeEncode(Name));
+            checkBoxBuilder.Append(@""" data-name=""");
             checkBoxBuilder.Append(AntiXSS.Encoder.HtmlAttributeEncode(Name));
             checkBoxBuilder.Append(@""" type=""checkbox""");
             if (value)
