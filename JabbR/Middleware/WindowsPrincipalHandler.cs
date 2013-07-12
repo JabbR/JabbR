@@ -9,6 +9,7 @@ using Owin.Types.Extensions;
 
 namespace JabbR.Middleware
 {
+    using Microsoft.Owin;
     using AppFunc = Func<IDictionary<string, object>, Task>;
 
     public class WindowsPrincipalHandler
@@ -55,12 +56,11 @@ namespace JabbR.Middleware
                         claims.Add(new Claim(ClaimTypes.Name, shortName));
                         claims.Add(new Claim(ClaimTypes.AuthenticationMethod, "Windows"));
                         var identity = new ClaimsIdentity(claims, Constants.JabbRAuthType);
-                        var claimsPrincipal = new ClaimsPrincipal(identity);
 
-                        response.SignIn(claimsPrincipal);
+                        response.Authentication.SignIn(identity);
 
                         response.StatusCode = 302;
-                        response.SetHeader("Location", request.PathBase + request.Path);
+                        response.Headers.Set("Location", request.PathBase + request.Path);
                     }
 
                     return;

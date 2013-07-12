@@ -165,7 +165,8 @@
             country: user.Country,
             lastActive: lastActive,
             timeAgo: $.timeago(lastActive),
-            admin: user.IsAdmin
+            admin: user.IsAdmin,
+            afk: user.IsAfk
         };
     }
 
@@ -183,8 +184,18 @@
             isMine: message.User.Name === chat.state.name,
             imageUrl: message.ImageUrl,
             source: message.Source,
-            messageType: message.MessageType
+            messageType: message.MessageType,
+            presence: (message.UserRoomPresence || 'absent').toLowerCase(),
+            status: getMessageUserStatus(message.User).toLowerCase()
         };
+    }
+    
+    function getMessageUserStatus(user) {
+        if (user.Status === 'Active' && user.IsAfk === true) {
+            return 'Inactive';           
+        }
+
+        return (user.Status || 'Offline');
     }
 
     // Save some state in a cookie
@@ -652,7 +663,9 @@
                 }
             }
         }
-        $("body").effect("pulsate", { times: 3 }, 300);
+
+        $("#chat-area").pulse({ opacity: 0 }, { duration: 300, pulses: 3 });
+
         window.setTimeout(function () {
             shake(20);
         }, 300);

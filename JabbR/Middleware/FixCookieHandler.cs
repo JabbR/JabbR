@@ -26,12 +26,8 @@ namespace JabbR.Middleware
             var request = new OwinRequest(env);
             var response = new OwinResponse(env);
 
-            // The forms auth module has a bug where it null refs on a null Extra
-            var headers = request.Get<IDictionary<string, string[]>>(Owin.Types.OwinConstants.RequestHeaders);
-
-            var cookies = request.GetCookies();
-            string cookieValue;
-            if (cookies != null && cookies.TryGetValue("jabbr.id", out cookieValue))
+            string cookieValue = request.Cookies["jabbr.id"];
+            if (!String.IsNullOrEmpty(cookieValue))
             {
                 AuthenticationTicket ticket = _ticketHandler.Unprotect(cookieValue);
                 if (ticket != null && ticket.Extra == null)
@@ -44,7 +40,7 @@ namespace JabbR.Middleware
                     var newTicket = new AuthenticationTicket(ticket.Identity, extra);
 
                     var cookieBuilder = new StringBuilder();
-                    foreach (var cookie in cookies)
+                    foreach (var cookie in request.Cookies)
                     {
                         string value = cookie.Value;
 
@@ -53,7 +49,7 @@ namespace JabbR.Middleware
                             // Create a new ticket preserving the identity of the user
                             // so they don't get logged out
                             value = _ticketHandler.Protect(newTicket);
-                            response.AddCookie("jabbr.id", value, new CookieOptions
+                            response.Cookies.Append("jabbr.id", value, new CookieOptions
                             {
                                 Expires = extra.ExpiresUtc.Value.UtcDateTime,
                                 HttpOnly = true
@@ -70,7 +66,7 @@ namespace JabbR.Middleware
                                      .Append(Uri.EscapeDataString(value));
                     }
 
-                    headers["Cookie"] = new[] { cookieBuilder.ToString() };
+                    request.Headers["Cookie"] = cookieBuilder.ToString();
                 }
             }
 

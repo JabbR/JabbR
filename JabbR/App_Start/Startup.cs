@@ -6,6 +6,7 @@ using System.IO;
 using System.Net.Http.Formatting;
 using System.ServiceModel.Security;
 using System.Web.Http;
+using JabbR;
 using JabbR.Hubs;
 using JabbR.Infrastructure;
 using JabbR.Middleware;
@@ -15,6 +16,7 @@ using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Transports;
+using Microsoft.Owin;
 using Microsoft.Owin.Security.DataHandler;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Security.Federation;
@@ -22,6 +24,8 @@ using Microsoft.Owin.Security.Forms;
 using Newtonsoft.Json.Serialization;
 using Ninject;
 using Owin;
+
+[assembly: OwinStartup(typeof(Startup), "Configuration")]
 
 namespace JabbR
 {

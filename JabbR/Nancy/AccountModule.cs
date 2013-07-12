@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using JabbR.Infrastructure;
@@ -18,7 +19,8 @@ namespace JabbR.Nancy
                              IJabbrRepository repository,
                              IAuthenticationService authService,
                              IChatNotificationService notificationService,
-                             IUserAuthenticator authenticator)
+                             IUserAuthenticator authenticator,
+                             IEmailService emailService)
             : base("/account")
         {
             Get["/"] = _ =>
@@ -107,7 +109,7 @@ namespace JabbR.Nancy
 
                 bool requirePassword = !Principal.Identity.IsAuthenticated;
 
-                if (requirePassword && 
+                if (requirePassword &&
                     !applicationSettings.AllowUserRegistration)
                 {
                     return HttpStatusCode.NotFound;
@@ -341,6 +343,152 @@ namespace JabbR.Nancy
                 }
 
                 return GetProfileView(authService, user);
+            };
+
+            Get["/requestresetpassword"] = _ =>
+            {
+                if (IsAuthenticated)
+                {
+                    return Response.AsRedirect("~/account/#changePassword");
+                }
+
+                if (!Principal.Identity.IsAuthenticated &&
+                    !applicationSettings.AllowUserResetPassword ||
+                    string.IsNullOrWhiteSpace(applicationSettings.EmailSender))
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
+                return View["requestresetpassword"];
+            };
+
+            Post["/requestresetpassword"] = _ =>
+            {
+                if (IsAuthenticated)
+                {
+                    return Response.AsRedirect("~/account/#changePassword");
+                }
+
+                if (!Principal.Identity.IsAuthenticated &&
+                    !applicationSettings.AllowUserResetPassword ||
+                    string.IsNullOrWhiteSpace(applicationSettings.EmailSender))
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
+                string username = Request.Form.username;
+
+                if (String.IsNullOrEmpty(username))
+                {
+                    this.AddValidationError("username", "User name is required.");
+                }
+
+                try
+                {
+                    if (ModelValidationResult.IsValid)
+                    {
+                        ChatUser user = repository.GetUserByName(username);
+
+                        if (user == null)
+                        {
+                            this.AddValidationError("username", String.Format(CultureInfo.CurrentUICulture, "User name '{0}' not found.", username));
+                        }
+                        else if (String.IsNullOrWhiteSpace(user.Email))
+                        {
+                            this.AddValidationError("username", String.Format(CultureInfo.CurrentUICulture, "No email found for user name '{0}'.", username));
+                        }
+                        else
+                        {
+                            membershipService.RequestResetPassword(user, applicationSettings.RequestResetPasswordValidThroughInHours);
+                            repository.CommitChanges();
+
+                            emailService.SendRequestResetPassword(user, this.Request.Url.SiteBase + "/account/resetpassword/");
+
+                            return View["requestresetpasswordsuccess", username];
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.AddValidationError("_FORM", ex.Message);
+                }
+
+                return View["requestresetpassword"];
+            };
+
+            Get["/resetpassword/{id}"] = parameters =>
+            {
+                if (!applicationSettings.AllowUserResetPassword ||
+                    string.IsNullOrWhiteSpace(applicationSettings.EmailSender))
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
+                string resetPasswordToken = parameters.id;
+                string userName = membershipService.GetUserNameFromToken(resetPasswordToken);
+
+                // Is the token not valid, maybe some character change?
+                if (userName == null)
+                {
+                    return View["resetpassworderror", "seems to be not valid"];
+                }
+                else
+                {
+                    ChatUser user = repository.GetUserByRequestResetPasswordId(userName, resetPasswordToken);
+
+                    // Is the token expired?
+                    if (user == null)
+                    {
+                        return View["resetpassworderror", "has been expired"];
+                    }
+                    else
+                    {
+                        return View["resetpassword", user.RequestPasswordResetId];
+                    }
+                }
+            };
+
+            Post["/resetpassword/{id}"] = parameters =>
+            {
+                if (!applicationSettings.AllowUserResetPassword ||
+                    string.IsNullOrWhiteSpace(applicationSettings.EmailSender))
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
+                string resetPasswordToken = parameters.id;
+                string newPassword = Request.Form.password;
+                string confirmNewPassword = Request.Form.confirmPassword;
+
+                ValidatePassword(newPassword, confirmNewPassword);
+
+                try
+                {
+                    if (ModelValidationResult.IsValid)
+                    {
+                        string userName = membershipService.GetUserNameFromToken(resetPasswordToken);
+                        ChatUser user = repository.GetUserByRequestResetPasswordId(userName, resetPasswordToken);
+
+                        // Is the token expired?
+                        if (user == null)
+                        {
+                            return View["resetpassworderror", "has been expired"];
+                        }
+                        else
+                        {
+                            membershipService.ResetUserPassword(user, newPassword);
+                            repository.CommitChanges();
+
+                            return View["resetpasswordsuccess"];
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.AddValidationError("_FORM", ex.Message);
+                }
+
+                return View["resetpassword", resetPasswordToken];
             };
         }
 

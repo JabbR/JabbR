@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.AspNet.SignalR.Owin;
-using Owin.Types;
+using Microsoft.Owin;
 
 namespace JabbR.Middleware
 {
@@ -32,7 +31,7 @@ namespace JabbR.Middleware
                     builder.Port = -1;
                 }
 
-                response.SetHeader("Location", builder.ToString());
+                response.Headers.Set("Location", builder.ToString());
                 response.StatusCode = 302;
 
                 return TaskAsyncHelper.Empty;

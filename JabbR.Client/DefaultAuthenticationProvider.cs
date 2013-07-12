@@ -3,7 +3,7 @@ using System.Net;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
-
+using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Hubs;
 
 namespace JabbR.Client
@@ -22,10 +22,8 @@ namespace JabbR.Client
             var content = String.Format("username={0}&password={1}", Uri.EscapeUriString(userName), Uri.EscapeUriString(password));
             var contentBytes = Encoding.ASCII.GetBytes(content);
 
-            var authUri = new UriBuilder(_url)
-            {
-                Path = "account/login"
-            };
+            var authUri = new UriBuilder(_url);
+            authUri.Path += authUri.Path.EndsWith("/") ? "account/login" : "/account/login";
 
             var cookieJar = new CookieContainer();
             var request = (HttpWebRequest)WebRequest.Create(authUri.Uri);

@@ -178,6 +178,35 @@ namespace JabbR.Services
             EnsureSaltedPassword(user, newPassword);
         }
 
+        public void RequestResetPassword(ChatUser user, int requestValidThroughInHours)
+        {
+            user.RequestPasswordResetId = HttpServerUtility.UrlTokenEncode(_crypto.CreateToken(user.Name));
+            user.RequestPasswordResetValidThrough = DateTimeOffset.UtcNow.AddHours(requestValidThroughInHours);
+        }
+
+        public void ResetUserPassword(ChatUser user, string newPassword)
+        {
+            user.RequestPasswordResetId = null;
+            user.RequestPasswordResetValidThrough = null;
+
+            ValidatePassword(newPassword);
+
+            EnsureSaltedPassword(user, newPassword);
+        }
+
+        public string GetUserNameFromToken(string token)
+        {
+            try
+            {
+                var decodedToken = HttpServerUtility.UrlTokenDecode(token);
+                return _crypto.GetValueFromToken(decodedToken);
+            }
+            catch (FormatException)
+            {
+                return null;
+            }
+        }
+
         private static void ValidatePassword(string password)
         {
             if (String.IsNullOrEmpty(password) || password.Length < 6)

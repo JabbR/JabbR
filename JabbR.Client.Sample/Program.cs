@@ -17,9 +17,10 @@ namespace JabbR.Client.Sample
             string userName = "testclient";
             string password = "password";
 
-            ServicePointManager.DefaultConnectionLimit = 10;
-            
             var client = new JabbRClient(server);
+
+            // Uncomment to see tracing
+            // client.TraceWriter = Console.Out;
 
             // Subscribe to new messages
             client.MessageReceived += (message, room) =>

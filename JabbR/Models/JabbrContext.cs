@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using JabbR.Models.Mapping;
 
@@ -10,10 +11,10 @@ namespace JabbR.Models
         public JabbrContext()
             : base("Jabbr")
         {
-            ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += ObjectContext_ObjectMaterialized;
+            ((IObjectContextAdapter)this).ObjectContext.ObjectMaterialized += OnObjectContextObjectMaterialized;
         }
 
-        void ObjectContext_ObjectMaterialized(object sender, System.Data.Objects.ObjectMaterializedEventArgs e)
+        private void OnObjectContextObjectMaterialized(object sender, ObjectMaterializedEventArgs e)
         {
             var entityChatUser = e.Entity as ChatUser;
             if (entityChatUser != null)

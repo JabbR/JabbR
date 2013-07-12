@@ -4,7 +4,7 @@
         relativeTime: {
             future: "%s",
             past: "%s",
-            s: "s",
+            s: "",
             m: "%dm",
             mm: "%dm",
             h: "%dh",

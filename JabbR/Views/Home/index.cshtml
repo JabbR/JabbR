@@ -4,6 +4,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>JabbR</title>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1"> 
@@ -17,11 +18,11 @@
             .Add("~/Content/bootstrap.min.css")
             .Add("~/Content/bootstrap-responsive.min.css")
             .Add("~/Content/font-awesome.min.css")
-            .Add("~/Chat.css")
-            .Add("~/Chat.nuget.css")
-            .Add("~/Chat.bbcnews.css")
-            .Add("~/Chat.githubissues.css")
-            .Add("~/Chat.dictionary.css")
+            .Add("~/Content/themes/default/Chat.css")
+            .Add("~/Content/themes/default/Chat.nuget.css")
+            .Add("~/Content/themes/default/Chat.bbcnews.css")
+            .Add("~/Content/themes/default/Chat.githubissues.css")
+            .Add("~/Content/themes/default/Chat.dictionary.css")
             .Add("~/Content/KeyTips.css")
             .Add("~/Content/emoji20.css")
             .Render("~/Content/JabbR_#.css"));
@@ -45,8 +46,13 @@
         <li class="message ${highlight} clearfix{{if isMine}} my-message{{/if}}{{if showUser}} first{{/if}}" id="m-${id}" data-name="${name}" data-timestamp="${date}">
             <div class="left">
                 {{if showUser}}
-                <img src="https://secure.gravatar.com/avatar/${hash}?s=16&d=mm" class="gravatar" />
-                <div class="name">${name}</div>
+                <div class="user ${status} ${presence}">
+                    <div class="user-status-container">
+                        <i class="user-status"></i>
+                    </div>
+                    <img src="https://secure.gravatar.com/avatar/${hash}?s=16&d=mm" class="gravatar" />
+                    <div class="name">${name}</div>
+                </div>
                 {{/if}}
                 <span class="state"></span>
             </div>
@@ -116,7 +122,7 @@
                 </div>
                 <div class="name-container">
                     <div class="name" {{if note}}title="${note}"{{else}}title="${name}"{{/if}}>${name}</div>
-                    <div class="idle-since"></div>
+                    <div class="inactive-since"></div>
                     {{if admin}}<div class="admin">(admin)</div>{{/if}}
                 </div>
                 <div style="clear:both"></div>
@@ -126,7 +132,7 @@
     </script>
     <script id="new-userlist-template" type="text/x-jquery-tmpl">
         <h3 class="userlist-header nav-header">
-            ${listname}
+            <span class="list-name">${listname}</span>
         </h3>
         <div>
             <ul id="${id}" data-empty-message="No users" />
@@ -134,8 +140,8 @@
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">
         <li id="tabs-${id}" class="room" data-name="${name}" data-closed="${closed}" data-trimmable="true" role="tab">
-            <span class="lock hide"><i class="icon-lock icon-large"></i></span>
-            <span class="readonly hide"><i class="icon-ban-circle icon-large"></i></span>
+            <span class="lock hide"><i class="icon-lock"></i></span>
+            <span class="readonly hide"><i class="icon-ban-circle"></i></span>
             <button> 
                 <span class="content">${name}</span>
             </button>
@@ -151,11 +157,9 @@
     </script>
     <!-- TweetContentProvider: Should be extracted out if other content providers need templates -->
     <script id="tweet-template" type="text/x-jquery-tmpl">
-        <div class="user">
-            <img src="${user.profile_image_url_https}" />
-            <span class="name">${user.screen_name}</span> (${user.name})
+        <div class="collapsible_content">
+            {{html html}}
         </div>
-        {{html text}}
         <time class="js-relative-date" datetime="${created_at}">${created_at}</time> 
     </script>
     <!-- /TweetContentProvider -->
@@ -253,26 +257,7 @@
     <section id="page" role="application">
         <header id="heading" role="heading">
             <div class="banner" role="banner">
-                <h1>Jabb</h1>
-                <div class="jabbrLogo" id="logo"></div>
-            </div>
-            <div class="pull-right">
-                <div id="connectionStatus" class="connection-status" data-toggle="popover" data-placement="left">
-                    <i class="icon-connection-status"></i>
-                </div>
-                <div id="connection-info-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><i class="popover-title-icon icon-globe" style="display: none;"></i><h3 class="popover-title" style="display: none;"></h3><div class="popover-content"><p></p></div></div></div>
-                <div id="connection-info-content" style="display: none;"><p id="connection-status"></p><p id="connection-transport"></p></div>
-                <div id="connection-state-changed-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title" style="display: none;"></h3><i id="popover-content-icon"></i><div class="popover-content"><p></p></div></div></div>
-                <div id="preferences" class="btn-group account pull-right">
-                    <a class="btn help" aria-haspopup="true" title="display help"><i class="icon-question-sign"></i></a>
-                    <a id="notifications" class="btn" title="notifications" href="@Url.Content("~/notifications")" target="_blank"><i class="icon-comments"></i><span id="notification-unread-count" class="badge badge-info"></span></a>
-                    <a class="btn" title="account settings" href="@Url.Content("~/account")" target="_blank"><i class="icon-user"></i></a>
-                    @if (Model.IsAdmin)
-                    {
-                        <a class="btn" title="jabbr settings" href="@Url.Content("~/administration")" target="_blank"><i class="icon-cog"></i></a>
-                    }
-                    <a class="btn logout" title="sign out"><i class="icon-signout"></i></a>
-                </div>
+                <h1>JabbR</h1>
             </div>
             <nav>
                 <ul id="tabs" role="tablist">
@@ -283,6 +268,28 @@
                     </li>
                 </ul>
             </nav>
+            <div id="main-menu" class="pull-right">
+                <div id="connectionStatus" class="connection-status" data-toggle="popover" data-placement="bottom">
+                    <i class="icon-connection-status"></i>
+                <div id="connection-info-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><i class="popover-title-icon icon-globe" style="display: none;"></i><h3 class="popover-title" style="display: none;"></h3><div class="popover-content"><p></p></div></div></div>
+                <div id="connection-info-content" style="display: none;"><p id="connection-status"></p><p id="connection-transport"></p></div>
+                <div id="connection-state-changed-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><h3 class="popover-title" style="display: none;"></h3><i id="popover-content-icon"></i><div class="popover-content"><p></p></div></div></div>
+                </div>
+                <div id="preferences" class="navbar account pull-right">
+                    <div class="navbar-inner">
+                        <ul class="nav">
+                            <li><a id="notifications" class="" title="notifications" href="@Url.Content("~/notifications")" target="_blank"><i class="icon-comments"></i><span id="notification-unread-count" class="badge badge-info"></span></a></li>
+                            <li><a class="" title="account settings" href="@Url.Content("~/account")" target="_blank"><i class="icon-user"></i></a></li>
+                            @if (Model.IsAdmin)
+                            {
+                                <li><a class="" title="jabbr settings" href="@Url.Content("~/administration")" target="_blank"><i class="icon-cog"></i></a></li>
+                            }
+                            <li><a class="help" aria-haspopup="true" title="display help"><i class="icon-question-sign"></i></a></li>
+                            <li><a class="logout" title="sign out"><i class="icon-signout"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </header>
         <div id="topic-bar">
             <form id="room-filter-form" action="#" class="form-inline">
@@ -293,7 +300,7 @@
                 </label>
             </form>
             <div id="room-actions" class="btn-group pull-right">
-                <a class="btn btn-small dropdown-toggle" data-toggle="dropdown" href="#">Room Settings <span class="caret"></span></a>
+                <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">Room Settings <span class="caret"></span></button>
                 <ul id="room-preferences" class="dropdown-menu">
                     <li><a class="sound" title="audible notifications"><i class="icon-sound"></i> Audible Notifications</a></li>
                     <li><a class="richness" title="toggle rich-content"><i class="icon-richness"></i> Toggle Rich-content</a></li>
@@ -450,8 +457,10 @@
             .Add("~/Scripts/jquery-migrate-1.0.0.min.js")
             .Add("~/Scripts/json2.min.js")
             .Add("~/Scripts/bootstrap.js")
+            .Add("~/Scripts/jquery.color-2.1.2.min.js")
+            .Add("~/Scripts/jquery.pulse.min.js")
             .Add("~/Scripts/jquery.KeyTips.js")
-            .Add("~/Scripts/jquery.signalR-2.0.0-beta2-130602-b51.min.js")
+            .Add("~/Scripts/jquery.signalR-2.0.0-rc1-130702-b94.min.js")
             .Render("~/Scripts/JabbR1_#.js"));
     }
     <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
@@ -487,7 +496,7 @@
     }
     @if (Model.DebugMode)
     {
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.network.mock.js")"></script>
+    @*<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.network.mock.js")"></script>*@
     }
 </body>
 </html>

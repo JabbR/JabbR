@@ -10,6 +10,7 @@ using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Http;
 using Microsoft.AspNet.SignalR.Client.Hubs;
 using Microsoft.AspNet.SignalR.Client.Transports;
+using Newtonsoft.Json.Linq;
 
 namespace JabbR.Client
 {
@@ -149,7 +150,7 @@ namespace JabbR.Client
             };
 
             // Wait for the logOn callback to get triggered
-            logOn = _chat.On<IEnumerable<Room>>(ClientEvents.LogOn, rooms =>
+            logOn = _chat.On<IEnumerable<Room>, JArray>(ClientEvents.LogOn, (rooms, privateRooms) =>
             {
                 callback(new LogOnInfo
                 {
@@ -335,7 +336,7 @@ namespace JabbR.Client
                 Execute(RoomCountChanged, roomCountChanged => roomCountChanged(room, count));
             });
 
-            _chat.On<User>(ClientEvents.UpdateActivity, user =>
+            _chat.On<User, string>(ClientEvents.UpdateActivity, (user, roomName) =>
             {
                 Execute(UserActivityChanged, userActivityChanged => userActivityChanged(user));
             });
