@@ -713,7 +713,7 @@
         $imageUploadPreview.show();
         $unknownUploadPreview.hide();
         //set image url
-        if (file.dataURL.indexOf('data:image') == 0) {
+        if (file.dataURL.indexOf('data:image') === 0) {
             $previewUpload.find('h3').text('Uploading: ' + type);
             $imageUploadPreview.attr('src', file.dataURL);
         } else {
