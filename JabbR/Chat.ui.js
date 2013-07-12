@@ -753,9 +753,7 @@
                         var h = $.ajaxSettings.xhr();
                         if (h.upload) {
                             h.upload.addEventListener("progress", function (progressEvent) {
-                                if (progressEvent.lengthComputable) {
-                                    console.log("progress: " + (progressEvent.loaded / progressEvent.total) * 100 + "%");
-                                }
+                                //empty handler for future progress bar for upload
                             });
                         }
 
@@ -1349,13 +1347,13 @@
                 $previewUpload.modal('hide');
             });
 
-            $(document).on("dragenter dragover", ".messages.current", function (e) {
+            $(document).on('dragenter dragover', '.messages.current', function (e) {
                 //show drag target
                 //get css position
                 //width,height
                 var position = $(this).offset();
                 var size = { width: $(this).width(), height: $(this).height() };
-                $("#drop-file-target").css({
+                $('#drop-file-target').css({
                     top: position.top + 1,
                     left: position.left + 1,
                     width: size.width,
@@ -1365,36 +1363,35 @@
                     opacity: '.25'
                 });
                 
-                $("#drop-file-target").fadeIn(500);
+                $('#drop-file-target').fadeIn(500);
             });
 
-            $(".drop-file-text").on("dragexit dragleave", function (e) {
+            $('.drop-file-text').on('dragexit dragleave', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
             });
 
-            $("#drop-file-target").on("dragexit dragleave", function (e) {
+            $('#drop-file-target').on('dragexit dragleave', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log(e);
                 if (e.currentTarget.id !== 'drop-file-text') {
-                    $("#drop-file-target").fadeOut(500);
+                    $('#drop-file-target').fadeOut(500);
                 }
             });
 
             //change the drop target from the one that initiated it
             //in this case .messages.current
-            $("#drop-file-target").on("dragenter dragover", function (e) {
+            $('#drop-file-target').on('dragenter dragover', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
                 return false; //required for IE
             });
 
-            $("#drop-file-target").on("click", function(e) {
-                $("#drop-file-target").fadeOut(500);
+            $('#drop-file-target').on('click', function(e) {
+                $('#drop-file-target').fadeOut(500);
             });
             
-            $("#drop-file-target").on("drop", function (e) {
+            $('#drop-file-target').on('drop', function (e) {
                 e = e || window.event;
                 e.stopPropagation();
                 e.preventDefault();
@@ -1416,7 +1413,7 @@
                     }
                 }
 
-                $("#drop-file-target").fadeOut(500);
+                $('#drop-file-target').fadeOut(500);
                 return false;
             });
 
@@ -1430,8 +1427,6 @@
                 var reader = new FileReader();
                 reader.onload = (function(f) {
                     return function (e) {
-                        console.log(e);
-                        //initializeUploadPreview(e, file, 'image');
                         showUploadPreview({ dataURL: e.target.result, name: file.name }, file.name, function () {
                             file.data = e.target.result;
                             uploadFile(file);
