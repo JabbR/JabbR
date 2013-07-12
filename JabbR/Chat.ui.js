@@ -722,8 +722,8 @@
         $imageUploadPreview.show();
         $unknownUploadPreview.hide();
         //set image url
-        if (file.dataURL) {
-            $previewUpload.find('h3').text('Uploading from clipboard');
+        if (file.dataURL.indexOf('data:image') == 0) {
+            $previewUpload.find('h3').text('Uploading: ' + type);
             $imageUploadPreview.attr('src', file.dataURL);
         } else {
             $previewUpload.find('h3').text('Uploading: ' + file.name);
@@ -740,27 +740,47 @@
         $previewUpload.modal();
     }
 
-    function initializeUploadPreview(e, file, type) {
-        showUploadPreview({ data: e.target, name: file.name }, type, function () {
-            var path = $hiddenFile.val(),
-                slash = path.lastIndexOf('\\'),
-                name = path.substring(slash + 1),
-                uploader = {
-                    submitFile: function (connectionId, room) {
-                        $fileConnectionId.val(connectionId);
+    function uploadFile(file) {
+        var uploader = {
+            submitFile: function (connectionId, room) {
+                $fileConnectionId.val(connectionId);
 
-                        $fileRoom.val(room);
+                $fileRoom.val(room);
+                $.ajax({
+                    url: $("#upload").attr("action"),
+                    type: 'POST',
+                    xhr: function () {
+                        var h = $.ajaxSettings.xhr();
+                        if (h.upload) {
+                            h.upload.addEventListener("progress", function (progressEvent) {
+                                if (progressEvent.lengthComputable) {
+                                    console.log("progress: " + (progressEvent.loaded / progressEvent.total) * 100 + "%");
+                                }
+                            });
+                        }
 
-                        $uploadForm.submit();
-
-                        $hiddenFile.val('');
+                        return h;
+                    },
+                    data: {
+                        file: file.data,
+                        room: room,
+                        connectionId: connectionId,
+                        filename: file.name,
+                        size: file.length,
+                        type: file.type
                     }
-                };
+                }).done(function (result) {
+                    //remove image from preview
+                    $imageUploadPreview.attr('src', '');
+                });
 
-            ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
+                $hiddenFile.val(''); //hide upload dialog
+            }
+        };
 
-            $ui.trigger(ui.events.fileUploaded, [uploader]);
-        });
+        ui.addMessage('Uploading \'' + file.name + '\'.', 'broadcast');
+
+        $ui.trigger(ui.events.fileUploaded, [uploader]);
     }
 
     var ui = {
@@ -1308,37 +1328,15 @@
 
             // Crazy browser hack
             $hiddenFile[0].style.left = '-800px';
-
+            
             $.imagePaste(function (file) {
-                showUploadPreview(file, 'clipboard', function() {
-                    var name = 'clipboard-data',
-                        uploader = {
-                            submitFile: function (connectionId, room) {
-                                $fileConnectionId.val(connectionId);
-
-                                $fileRoom.val(room);
-                                $.ajax({
-                                    url: '/upload-clipboard',
-                                    dataType: 'json',
-                                    type: 'POST',
-                                    data: {
-                                        file: $imageUploadPreview.attr('src'),
-                                        room: room,
-                                        connectionId: connectionId
-                                    }
-                                }).done(function (result) {
-                                    //remove image from preview
-                                    $imageUploadPreview.attr('src', '');
-                                });
-
-                                $hiddenFile.val(''); //hide upload dialog
-                            }
-                        };
-
-                    ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
-
-                    $ui.trigger(ui.events.fileUploaded, [uploader]);
-
+                showUploadPreview(file, 'clipboard', function () {
+                    file.name = 'clipboard.png';
+                    file.data = $imageUploadPreview.attr('src');
+                    file.filename = null;
+                    file.type = 'image/png';
+                    file.length = 0;
+                    uploadFile(file);
                 });
             });
 
@@ -1351,6 +1349,77 @@
                 $previewUpload.modal('hide');
             });
 
+            $(document).on("dragenter dragover", ".messages.current", function (e) {
+                //show drag target
+                //get css position
+                //width,height
+                var position = $(this).offset();
+                var size = { width: $(this).width(), height: $(this).height() };
+                $("#drop-file-target").css({
+                    top: position.top + 1,
+                    left: position.left + 1,
+                    width: size.width,
+                    height: size.height,
+                    position: 'absolute',
+                    background: '#000',
+                    opacity: '.25'
+                });
+                
+                $("#drop-file-target").fadeIn(500);
+            });
+
+            $(".drop-file-text").on("dragexit dragleave", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            });
+
+            $("#drop-file-target").on("dragexit dragleave", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log(e);
+                if (e.currentTarget.id !== 'drop-file-text') {
+                    $("#drop-file-target").fadeOut(500);
+                }
+            });
+
+            //change the drop target from the one that initiated it
+            //in this case .messages.current
+            $("#drop-file-target").on("dragenter dragover", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false; //required for IE
+            });
+
+            $("#drop-file-target").on("click", function(e) {
+                $("#drop-file-target").fadeOut(500);
+            });
+            
+            $("#drop-file-target").on("drop", function (e) {
+                e = e || window.event;
+                e.stopPropagation();
+                e.preventDefault();
+                if (e.originalEvent.dataTransfer) {
+                    if (e.originalEvent.dataTransfer.files.length) {
+                        var file = e.originalEvent.dataTransfer.files[0];
+
+                        var reader = new FileReader();
+                        reader.onload = (function (f) {
+                            return function (loadEvent) {
+                                showUploadPreview({ dataURL: loadEvent.target.result, name: file.name }, file.name, function () {
+                                    file.data = loadEvent.target.result;
+                                    uploadFile(file);
+                                });
+                            };
+                        })(file);
+
+                        reader.readAsDataURL(file);
+                    }
+                }
+
+                $("#drop-file-target").fadeOut(500);
+                return false;
+            });
+
             $previewCancelButton.on('click', function() {
                 $previewUpload.modal('hide');
             });
@@ -1358,15 +1427,16 @@
             $hiddenFile.change(function (e) {
                 var file = e.target.files[0];
                 
-                if (!file.type.match('image.*')) {
-                    initializeUploadPreview(e, file, 'non-image');
-                    return;
-                }
-                
                 var reader = new FileReader();
                 reader.onload = (function(f) {
                     return function (e) {
-                        initializeUploadPreview(e, file, 'image');
+                        console.log(e);
+                        //initializeUploadPreview(e, file, 'image');
+                        showUploadPreview({ dataURL: e.target.result, name: file.name }, file.name, function () {
+                            file.data = e.target.result;
+                            uploadFile(file);
+                        });
+
                     };
                 })(file);
                 
@@ -1380,6 +1450,7 @@
                 ui.trimRoomMessageHistory();
             }, trimRoomHistoryFrequency);
         },
+        
         run: function () {
             $.history.init(function (hash) {
                 var roomName = getRoomNameFromHash(hash);

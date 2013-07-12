@@ -2956,3 +2956,20 @@ only screen and (min-device-pixel-ratio: 1.5) {
     line-height: 15px;
   }
 }
+
+#drop-file-target {
+    display: none;
+}
+
+.drop-file-text {
+    font-size: 72pt;
+    display: block;
+    position: absolute;
+    line-height: 50px;
+    top: 50%;
+    left: 40%;
+    margin: -82px 0 0 -180px;
+    text-shadow: 3px 3px 4px #000;
+    color: #fff;
+    z-index: -1;
+}
