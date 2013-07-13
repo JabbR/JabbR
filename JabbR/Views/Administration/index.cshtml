@@ -54,17 +54,17 @@
                     <div class="control-group">
                         <label class="control-label" for="requestResetPasswordValidThroughInHours">Reset Password Valid Through (Hours)</label>
                         <div class="controls">
-                            <input type="text" name="requestResetPasswordValidThroughInHours" class="input-mini" value="@Model.RequestResetPasswordValidThroughInHours" />
+                            <input type="text" id="requestResetPasswordValidThroughInHours" name="requestResetPasswordValidThroughInHours" class="input-mini" value="@Model.RequestResetPasswordValidThroughInHours" />
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="allowUserRegistration">Allow Room Creation</label>
+                        <label class="control-label" for="allowRoomCreation">Allow Room Creation</label>
                         <div class="controls">
                             @Html.CheckBox("allowRoomCreation", Model.AllowRoomCreation)
                         </div>
                     </div>
                 </fieldset>
-                <fieldset id="generalSettings">
+                <fieldset id="emailSettings">
                     <legend>Email Settings</legend>
                     <div class="control-group">
                         <label class="control-label" for="emailSender">Email Sender</label>
@@ -95,13 +95,13 @@
                     <div class="control-group">
                         <label class="control-label" for="azureBlobStorageConnectionString">Azure Blob Storage Connectionstring</label>
                         <div class="controls">
-                            <input type="text" name="azureBlobStorageConnectionString" class="input-xlarge" value="@Model.AzureblobStorageConnectionString" placeholder="Azure Blob Storage Connectionstring"/>
+                            <input type="text" id="azureBlobStorageConnectionString" name="azureBlobStorageConnectionString" class="input-xlarge" value="@Model.AzureblobStorageConnectionString" placeholder="Azure Blob Storage Connectionstring"/>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="maxFileUploadBytes">Max File Upload Size (Bytes)</label>
                         <div class="controls">
-                            <input type="text" name="maxFileUploadBytes" class="input-xlarge" value="@Model.MaxFileUploadBytes" placeholder="Max File Upload Size (Bytes)"/>
+                            <input type="text" id="maxFileUploadBytes" name="maxFileUploadBytes" class="input-xlarge" value="@Model.MaxFileUploadBytes" placeholder="Max File Upload Size (Bytes)"/>
                         </div>
                     </div>
                 </fieldset>
@@ -110,7 +110,7 @@
                     <div class="control-group">
                         <label class="control-label" for="googleAnalytics">Google Analytics ID</label>
                         <div class="controls">
-                            <input type="text" name="googleAnalytics" class="input-xlarge" value="@Model.GoogleAnalytics" placeholder="Google Analytics ID"/>
+                            <input type="text" id="googleAnalytics" name="googleAnalytics" class="input-xlarge" value="@Model.GoogleAnalytics" placeholder="Google Analytics ID"/>
                         </div>
                     </div>
                 </fieldset>
