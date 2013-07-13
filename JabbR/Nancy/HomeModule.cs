@@ -77,7 +77,7 @@ namespace JabbR.Nancy
                     binData = Convert.FromBase64String(info.Groups["data"].Value);
                     contentType = info.Groups["type"].Value;
 
-                    if (string.IsNullOrWhiteSpace(contentType))
+                    if (String.IsNullOrWhiteSpace(contentType))
                     {
                         contentType = "application/octet-stream";
                     }
