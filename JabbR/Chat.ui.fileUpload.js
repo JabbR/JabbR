@@ -1,7 +1,4 @@
 ﻿(function ($, ui) {
-
-    console.log("initializing file upload");
-
     var $hiddenFile = null,
         $previewUpload = null,
         $imageUploadPreview = null,
