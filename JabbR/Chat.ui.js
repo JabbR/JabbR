@@ -368,12 +368,9 @@
             .appendTo(userContainer);
         templates.userlist.tmpl({ listname: usersHeader, id: 'userlist-' + roomId + '-active' })
             .appendTo(userContainer);
-        
-        $tabs.find('li')
-            .not('.lobby')
-            .sortElements(function (a, b) {
-                return $(a).data('name').toString().toUpperCase() > $(b).data('name').toString().toUpperCase() ? 1 : -1;
-            });
+
+        // remove space text nodes between elements
+        $tabs.contents().filter(function() { return this.nodeType === 3 && !/\S/.test(this.nodeValue); }).remove();
 
         scrollHandler = function (ev) {
             var messageId = null;

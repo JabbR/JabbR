@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 using JabbR.Infrastructure;
+
+using Newtonsoft.Json;
 
 namespace JabbR.Models
 {
@@ -74,6 +77,37 @@ namespace JabbR.Models
         public bool HasUserNameAndPasswordCredentials()
         {
             return !String.IsNullOrEmpty(HashedPassword) && !String.IsNullOrEmpty(Name);
+        }
+
+        [NotMapped]
+        public ChatUserPreferences Preferences
+        {
+            get
+            {
+                if (this.RawPreferences == null)
+                {
+                    this.Preferences = new ChatUserPreferences();
+                }
+
+                var preferences = JsonConvert.DeserializeObject<ChatUserPreferences>(this.RawPreferences);
+
+                if (preferences.TabOrder == null)
+                {
+                    preferences.TabOrder = new List<string>();
+                    preferences.TabOrder.Add("Lobby");
+                    foreach (var room in this.Rooms.Select(e => e.Name).OrderBy(e => e))
+                    {
+                        preferences.TabOrder.Add(room);
+                    }
+                }
+
+                return preferences;
+            }
+
+            set
+            {
+                this.RawPreferences = JsonConvert.SerializeObject(value);
+            }
         }
     }
 }

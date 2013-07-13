@@ -270,7 +270,7 @@
     };
 
     // Called when a returning users join chat
-    chat.client.logOn = function (rooms, myRooms) {
+    chat.client.logOn = function (rooms, myRooms, tabOrder) {
         privateRooms = myRooms;
 
         var loadRooms = function () {
@@ -290,6 +290,10 @@
                 ui.setRoomClosed(room.Name);
             }
         });
+
+        chat.state.tabOrder = tabOrder;
+        ui.updateTabOrder(chat.state.tabOrder);
+        
         ui.setUserName(chat.state.name);
         ui.setUnreadNotifications(chat.state.unreadNotifications);
 

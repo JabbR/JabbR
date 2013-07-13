@@ -503,9 +503,10 @@ namespace JabbR
 
             ChatUser user = _repository.GetUserById(userId);
 
-            //TODO
-            //_repository.UpdateTabOrder(user, tabOrdering);
-
+            ChatUserPreferences userPreferences = user.Preferences;
+            userPreferences.TabOrder = tabOrdering.ToList();
+            user.Preferences = userPreferences;
+            
             _repository.CommitChanges();
 
             foreach (var client in user.ConnectedClients)
@@ -568,7 +569,7 @@ namespace JabbR
                 }
 
                 // Initialize the chat with the rooms the user is in
-                Clients.Caller.logOn(rooms, privateRooms);
+                Clients.Caller.logOn(rooms, privateRooms, user.Preferences.TabOrder);
             }
         }
 
