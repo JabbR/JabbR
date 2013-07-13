@@ -868,6 +868,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201307020008436_AllowUserResetPassword.resx">
       <DependentUpon>201307020008436_AllowUserResetPassword.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201307012142294_AddChatUserPreferences.resx">
       <DependentUpon>201307012142294_AddChatUserPreferences.cs</DependentUpon>
     </EmbeddedResource>
@@ -1019,6 +1020,7 @@
     <Compile Include="Migrations\201307020008436_AllowUserResetPassword.cs" />
     <Compile Include="Migrations\201307020008436_AllowUserResetPassword.Designer.cs">
       <DependentUpon>201307020008436_AllowUserResetPassword.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\201307012142294_AddChatUserPreferences.cs" />
     <Compile Include="Migrations\201307012142294_AddChatUserPreferences.Designer.cs">
       <DependentUpon>201307012142294_AddChatUserPreferences.cs</DependentUpon>
