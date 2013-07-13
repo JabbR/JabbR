@@ -61,13 +61,6 @@
         $connectionInfoContent = null,
         $fileUploadButton = null,
         $hiddenFile = null,
-        $uploadForm = null,
-        $previewUpload = null,
-        $imageUploadPreview = null,
-        $unknownUploadPreview = null,
-        $previewUploadButton = null,
-        $previewCancelButton = null,
-        $uploadCallback = null,
         $fileRoom = null,
         $fileConnectionId = null,
         connectionInfoStatus = null,
@@ -707,70 +700,6 @@
         // re-filter lists
         $lobbyRoomFilterForm.submit();
     }
-    
-    function showUploadPreview(file, type, uploader) {
-        $uploadCallback = uploader;
-        $imageUploadPreview.show();
-        $unknownUploadPreview.hide();
-        //set image url
-        if (file.dataURL.indexOf('data:image') === 0) {
-            $previewUpload.find('h3').text('Uploading: ' + type);
-            $imageUploadPreview.attr('src', file.dataURL);
-        } else {
-            $previewUpload.find('h3').text('Uploading: ' + file.name);
-            if (type == 'image') {
-                //uploading an actual file
-                $imageUploadPreview.attr('src', file.data.result);
-            } else {
-                //nothing just yet
-                $imageUploadPreview.hide();
-                $unknownUploadPreview.show();
-            }
-        }
-            
-        $previewUpload.modal();
-    }
-
-    function uploadFile(file) {
-        var uploader = {
-            submitFile: function (connectionId, room) {
-                $fileConnectionId.val(connectionId);
-
-                $fileRoom.val(room);
-                $.ajax({
-                    url: $("#upload").attr("action"),
-                    type: 'POST',
-                    xhr: function () {
-                        var h = $.ajaxSettings.xhr();
-                        if (h.upload) {
-                            h.upload.addEventListener("progress", function (progressEvent) {
-                                //empty handler for future progress bar for upload
-                            });
-                        }
-
-                        return h;
-                    },
-                    data: {
-                        file: file.data,
-                        room: room,
-                        connectionId: connectionId,
-                        filename: file.name,
-                        size: file.length,
-                        type: file.type
-                    }
-                }).done(function (result) {
-                    //remove image from preview
-                    $imageUploadPreview.attr('src', '');
-                });
-
-                $hiddenFile.val(''); //hide upload dialog
-            }
-        };
-
-        ui.addMessage('Uploading \'' + file.name + '\'.', 'broadcast');
-
-        $ui.trigger(ui.events.fileUploaded, [uploader]);
-    }
 
     var ui = {
 
@@ -820,11 +749,6 @@
             $disconnectDialog = $('#disconnect-dialog');
             $login = $('#jabbr-login');
             $helpPopup = $('#jabbr-help');
-            $previewUpload = $('#jabbr-upload-preview');
-            $imageUploadPreview = $('#jabbr-upload-preview #image-upload-preview');
-            $unknownUploadPreview = $('#jabbr-upload-preview #unknown-upload-preview');
-            $previewUploadButton = $('#jabbr-upload-preview #upload-preview-upload');
-            $previewCancelButton = $('#jabbr-upload-preview #upload-preview-cancel');
             $helpBody = $('#jabbr-help .help-body');
             $shortCutHelp = $('#jabbr-help #shortcut');
             $globalCmdHelp = $('#jabbr-help #global');
@@ -851,7 +775,6 @@
             $reloadMessageNotification = $('#reloadMessageNotification');
             $fileUploadButton = $('.upload-button');
             $hiddenFile = $('#hidden-file');
-            $uploadForm = $('#upload');
             $fileRoom = $('#file-room');
             $fileConnectionId = $('#file-connection-id');
             $connectionStatus = $('#connectionStatus');
@@ -1314,120 +1237,6 @@
 
             // Load preferences
             loadPreferences();
-
-            // Crazy browser hack
-            $hiddenFile[0].style.left = '-800px';
-            
-            $.imagePaste(function (file) {
-                showUploadPreview(file, 'clipboard', function () {
-                    file.name = 'clipboard.png';
-                    file.data = $imageUploadPreview.attr('src');
-                    file.filename = null;
-                    file.type = 'image/png';
-                    file.length = 0;
-                    uploadFile(file);
-                });
-            });
-
-            $previewUploadButton.on('click', function () {
-                // Callback is initialized when previewUpload is
-                // created. This button is only available when
-                // modal is being shown. Hence should never be
-                // stale. 
-                $uploadCallback();
-                $previewUpload.modal('hide');
-            });
-
-            $(document).on('dragenter dragover', '.messages.current', function (e) {
-                //show drag target
-                //get css position
-                //width,height
-                var position = $(this).offset();
-                var size = { width: $(this).width(), height: $(this).height() };
-                $('#drop-file-target').css({
-                    top: position.top + 1,
-                    left: position.left + 1,
-                    width: size.width,
-                    height: size.height,
-                    position: 'absolute',
-                    background: '#000',
-                    opacity: '.25'
-                });
-                
-                $('#drop-file-target').fadeIn(500);
-            });
-
-            $('.drop-file-text').on('dragexit dragleave', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-            });
-
-            $('#drop-file-target').on('dragexit dragleave', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                if (e.currentTarget.id !== 'drop-file-text') {
-                    $('#drop-file-target').fadeOut(500);
-                }
-            });
-
-            //change the drop target from the one that initiated it
-            //in this case .messages.current
-            $('#drop-file-target').on('dragenter dragover', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                return false; //required for IE
-            });
-
-            $('#drop-file-target').on('click', function(e) {
-                $('#drop-file-target').fadeOut(500);
-            });
-            
-            $('#drop-file-target').on('drop', function (e) {
-                e = e || window.event;
-                e.stopPropagation();
-                e.preventDefault();
-                if (e.originalEvent.dataTransfer) {
-                    if (e.originalEvent.dataTransfer.files.length) {
-                        var file = e.originalEvent.dataTransfer.files[0];
-
-                        var reader = new FileReader();
-                        reader.onload = (function (f) {
-                            return function (loadEvent) {
-                                showUploadPreview({ dataURL: loadEvent.target.result, name: file.name }, file.name, function () {
-                                    file.data = loadEvent.target.result;
-                                    uploadFile(file);
-                                });
-                            };
-                        })(file);
-
-                        reader.readAsDataURL(file);
-                    }
-                }
-
-                $('#drop-file-target').fadeOut(500);
-                return false;
-            });
-
-            $previewCancelButton.on('click', function() {
-                $previewUpload.modal('hide');
-            });
-
-            $hiddenFile.change(function (e) {
-                var file = e.target.files[0];
-                
-                var reader = new FileReader();
-                reader.onload = (function(f) {
-                    return function (e) {
-                        showUploadPreview({ dataURL: e.target.result, name: file.name }, file.name, function () {
-                            file.data = e.target.result;
-                            uploadFile(file);
-                        });
-
-                    };
-                })(file);
-                
-                reader.readAsDataURL(file);
-            });
 
             // Configure livestamp to only update every 30s since display granularity is by minute anyway (saves CPU cycles)
             $.livestamp.interval(30 * 1000);
