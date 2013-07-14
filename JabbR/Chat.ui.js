@@ -894,7 +894,7 @@
                 placeHolderTemplate: '<li class="room"><a><span class="content"></span></a></li>',
                 dragBetween: true,
                 dragEnd: function () {
-                    var roomTabOrder = new Array(),
+                    var roomTabOrder = [],
                         $roomTabs = $('#tabs li, #tabs-dropdown li');
                     
                     for (var i = 0; i < $roomTabs.length; i++) {
