@@ -691,6 +691,7 @@ li.user.typing .gravatar {
 }
 
     #tabs-dropdown-container .dropdown-toggle {
+        display: none;
         border: none;
         outline: 0;
         background-color: transparent;

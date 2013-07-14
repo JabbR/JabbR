@@ -2229,7 +2229,8 @@
                 $roomTabs = null,
                 $tabsList = $tabs.first(),
                 $tabsDropdown = $tabs.last(),
-                overflowedRoomTabs = null;
+                overflowedRoomTabs = null,
+                $tabsDropdownButton = $('#tabs-dropdown-rooms');
             
             // move all tabs to the first list
             $tabs.last().find('li').each(function() { $(this).detach().appendTo($tabsList); });
@@ -2252,13 +2253,13 @@
 
             // move all elements from here to the dropdown list
             if (sliceIndex !== -1) {
-                $('#tabs-dropdown-rooms').css({ visibility: 'visible' });
+                $tabsDropdownButton.fadeIn('slow');
                 overflowedRoomTabs = $roomTabs.slice(sliceIndex);
                 for (var i = overflowedRoomTabs.length - 1; i >= 0; i--) {
                     $(overflowedRoomTabs[i]).prependTo($tabsDropdown);
                 }
             } else {
-                $('#tabs-dropdown-rooms').css({visibility:'hidden'});
+                $tabsDropdownButton.fadeOut('slow').parent().removeClass('open');
             }
 
             return;
