@@ -104,8 +104,8 @@ form#send-message {
     padding-top: 10px;
     width: 100%;
     height: 30px;
-    background: #e5e5e5;
-    color: #00103f;
+    background: #003259;
+    color: #e5e5e5;
 }
 
 #chat-area {
@@ -620,9 +620,9 @@ li.user.typing .gravatar {
         }
 
         #tabs li.current {
-            color: #00103f;
-            background: #e5e5e5;
-            border-bottom-color: #e5e5e5;
+            color: #e5e5e5;
+            background: #003259;
+            border-color: #003259;
         }
 
         #tabs li .content {
@@ -672,8 +672,9 @@ li.user.typing .gravatar {
 
         #tabs li:hover,
         #tabs li.current:hover {
-            background-color: #f5f5f5;
-            color: #00103f;
+            background-color: #264773;
+            border-color: #264773;
+            color: #e5e5e5;
         }
 
 li.room {
@@ -692,14 +693,18 @@ li.room {
     border-color: #e5e5e5;
 }
 
+#tabs li.lobby:hover {
+    border-color: #264773;
+    color: #e5e5e5;
+}
 #tabs li.lobby button {
         padding-right: 0;
     }
 
     #tabs li.lobby.current {
-        background-color: #fafafa;
-        color: #00103f;
-        border-bottom: #fafafa;
+        background-color: #003259;
+        color: #e5e5e5;
+        border-color: #003259;
     }
 
 #send-message {
@@ -3053,4 +3058,31 @@ h3.userlist-header {
     text-shadow: 3px 3px 4px #000;
     color: #fff;
     z-index: -1;
+}
+
+/* Make admin screens nicer */
+.administration .form-horizontal .control-label {
+  width: 260px;
+}
+
+.administration .form-horizontal .controls {
+  margin-left: 280px;
+  *margin-left: 0;
+}
+
+.administration .form-horizontal .controls:first-child {
+  *padding-left: 280px;
+}
+
+@media (max-width: 480px)
+{
+    .administration .form-horizontal .control-label
+    {
+        width: auto;
+    }
+
+    .administration .form-horizontal .controls
+    {
+        margin-left: 0;
+    }
 }
