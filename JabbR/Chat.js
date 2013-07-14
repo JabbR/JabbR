@@ -1123,7 +1123,7 @@
     $ui.bind(ui.events.tabOrderChanged, function (ev, tabOrder) {
         var orderChanged = false;
         
-        if (chat.tabOrder == undefined || chat.tabOrder.length !== tabOrder.length) {
+        if (chat.tabOrder === undefined || chat.tabOrder.length !== tabOrder.length) {
             orderChanged = true;
         }
         
