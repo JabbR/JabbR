@@ -342,7 +342,8 @@
   <data name="Client_FAQMessage" xml:space="preserve">
     <value>&lt;p&gt;Click on a user to send message.&lt;/p&gt;
 &lt;p&gt;Type #roomname to create a link to a room.&lt;/p&gt;
-&lt;p&gt;Use #test for testing.&lt;/p&gt;</value>
+&lt;p&gt;Use #test for testing.&lt;/p&gt;
+&lt;p&gt;To use a command, enter it into the chat message textbox.&lt;/p&gt;</value>
   </data>
   <data name="Client_Help" xml:space="preserve">
     <value>JabbR Help</value>
