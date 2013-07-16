@@ -554,9 +554,12 @@
     }
 
     function anyRoomPreference(name, value) {
+        var rooms = $.map(getAllRoomElements(), function (r) { return "_room_" + r.getName(); });
         for (var key in preferences) {
-            if (preferences[key][name] === value) {
-                return true;
+            if (rooms.indexOf(key) != -1) {
+                if (preferences[key][name] === value) {
+                    return true;
+                }
             }
         }
         return false;
