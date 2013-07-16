@@ -1570,7 +1570,8 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to &lt;p&gt;Click on a user to send message.&lt;/p&gt;
         ///&lt;p&gt;Type #roomname to create a link to a room.&lt;/p&gt;
-        ///&lt;p&gt;Use #test for testing.&lt;/p&gt;.
+        ///&lt;p&gt;Use #test for testing.&lt;/p&gt;
+        ///&lt;p&gt;To use a command, enter it into the chat message textbox.&lt;/p&gt;.
         /// </summary>
         public static string Client_FAQMessage {
             get {

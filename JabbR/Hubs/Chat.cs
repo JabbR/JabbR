@@ -341,9 +341,9 @@ namespace JabbR
         public object GetShortcuts()
         {
             return new[] {
-                new { Name = "Tab or Shift + Tab", Category = "shortcut", Description = LanguageResources.Client_ShortcutTabs },
-                new { Name = "Alt + L", Category = "shortcut", Description = LanguageResources.Client_ShortcutLobby },
-                new { Name = "Alt + Number", Category = "shortcut", Description = LanguageResources.Client_ShortcutSpecificTab }
+                new { Name = "Tab or Shift + Tab", Group = "shortcut", IsKeyCombination = true, Description = LanguageResources.Client_ShortcutTabs },
+                new { Name = "Alt + L", Group = "shortcut", IsKeyCombination = true, Description = LanguageResources.Client_ShortcutLobby },
+                new { Name = "Alt + Number", Group = "shortcut", IsKeyCombination = true, Description = LanguageResources.Client_ShortcutSpecificTab }
             };
         }
 
