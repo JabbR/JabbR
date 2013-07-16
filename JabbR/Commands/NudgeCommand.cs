@@ -4,7 +4,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("nudge", "Send a nudge to the whole room, or use [@nickname] to nudge a particular user. @ is optional.", "[@nickname]", "global")]
+    [Command("nudge", "Nudge_CommandInfo", "[@user]", "global")]
     public class NudgeCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
@@ -35,32 +35,25 @@ namespace JabbR.Commands
             }
             else
             {
-                throw new InvalidOperationException(String.Format("Room can only be nudged once every {0} seconds.", betweenNudges.TotalSeconds));
+                throw new InvalidOperationException(String.Format(LanguageResources.NudgeRoom_Throttled, betweenNudges.TotalSeconds));
             }
         }
 
         private static void NudgeUser(CommandContext context, ChatUser callingUser, string[] args)
         {
-            if (context.Repository.Users.Count() == 1)
-            {
-                throw new InvalidOperationException("You're the only person in here...");
-            }
-
             var toUserName = args[0];
 
             ChatUser toUser = context.Repository.VerifyUser(toUserName);
 
             if (toUser == callingUser)
             {
-                throw new InvalidOperationException("You can't nudge yourself!");
+                throw new InvalidOperationException(LanguageResources.NudgeUser_CannotNudgeSelf);
             }
-
-            string messageText = String.Format("{0} nudged you", callingUser);
 
             var betweenNudges = TimeSpan.FromSeconds(60);
             if (toUser.LastNudged.HasValue && toUser.LastNudged > DateTime.Now.Subtract(betweenNudges))
             {
-                throw new InvalidOperationException(String.Format("User can only be nudged once every {0} seconds.", betweenNudges.TotalSeconds));
+                throw new InvalidOperationException(String.Format(LanguageResources.NudgeUser_Throttled, betweenNudges.TotalSeconds));
             }
 
             toUser.LastNudged = DateTime.Now;

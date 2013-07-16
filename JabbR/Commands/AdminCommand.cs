@@ -9,7 +9,7 @@ namespace JabbR.Commands
         {
             if (!callingUser.IsAdmin)
             {
-                throw new InvalidOperationException("You are not an admin.");
+                throw new InvalidOperationException(LanguageResources.AdminRequired);
             }
 
             ExecuteAdminOperation(context, callerContext, callingUser, args);

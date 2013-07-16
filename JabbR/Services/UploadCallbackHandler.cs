@@ -44,7 +44,8 @@ namespace JabbR.Services
 
                 if (result == null)
                 {
-                    _hubContext.Clients.Client(connectionId).postMessage("Failed to upload " + Path.GetFileName(file) + ".", "error", roomName);
+                    string messageContent = String.Format(LanguageResources.UploadFailed, Path.GetFileName(file));
+                    _hubContext.Clients.Client(connectionId).postMessage(messageContent, "error", roomName);
                     return;
                 }
 
@@ -56,7 +57,8 @@ namespace JabbR.Services
             }
             catch (Exception ex)
             {
-                _hubContext.Clients.Client(connectionId).postMessage("Failed to upload " + Path.GetFileName(file) + ". " + ex.Message, "error", roomName);
+                string messageContent = String.Format(LanguageResources.UploadFailedException, Path.GetFileName(file), ex.Message);
+                _hubContext.Clients.Client(connectionId).postMessage(messageContent, "error", roomName);
                 return;
             }
 
@@ -71,7 +73,7 @@ namespace JabbR.Services
         private static string FormatBytes(long bytes)
         {
             const int scale = 1024;
-            string[] orders = new string[] { "GB", "MB", "KB", "Bytes" };
+            string[] orders = new string[] { LanguageResources.SizeOrderGB, LanguageResources.SizeOrderMB, LanguageResources.SizeOrderKB, LanguageResources.SizeOrderBytes };
             long max = (long)Math.Pow(scale, orders.Length - 1);
 
             foreach (string order in orders)
@@ -83,7 +85,8 @@ namespace JabbR.Services
 
                 max /= scale;
             }
-            return "0 Bytes";
+
+            return String.Format("0 {0}", LanguageResources.SizeOrderBytes);
         }
     }
 }

@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>JabbR - administration</title>
     @{ 
         WriteLiteral(Bundle.Css()
@@ -30,7 +30,7 @@
                 @Html.AlertMessages()
                 <div class="row">
                     <div class="span12">
-                        <span class="administration-title pull-left">Administration</span>
+                        <span class="administration-title pull-left">@LanguageResources.Administration</span>
                     </div>
                 </div>
                 <hr />
@@ -38,52 +38,52 @@
             <form class="form-horizontal" action="@Url.Content("~/administration")" method="POST">
                 @Html.ValidationSummary()
                 <fieldset id="generalSettings">
-                    <legend>General Settings</legend>
+                    <legend>@LanguageResources.Administration_GeneralSettings</legend>
                     <div class="control-group">
-                        <label class="control-label" for="allowUserRegistration">Allow User Registration</label>
+                        <label class="control-label" for="allowUserRegistration">@LanguageResources.Administration_AllowUserRegistration</label>
                         <div class="controls">
                             @Html.CheckBox("allowUserRegistration", Model.AllowUserRegistration)
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="allowUserResetPassword">Allow User Reset Password</label>
+                        <label class="control-label" for="allowUserResetPassword">@LanguageResources.Administration_ResetPasswordAllowed</label>
                         <div class="controls">
                             @Html.CheckBox("allowUserResetPassword", Model.AllowUserResetPassword)
                         </div>
                     </div>                    
                     <div class="control-group">
-                        <label class="control-label" for="requestResetPasswordValidThroughInHours">Reset Password Valid Through (Hours)</label>
+                        <label class="control-label" for="requestResetPasswordValidThroughInHours">@LanguageResources.Administration_ResetPasswordValidDurationHours</label>
                         <div class="controls">
                             <input type="text" id="requestResetPasswordValidThroughInHours" name="requestResetPasswordValidThroughInHours" class="input-mini" value="@Model.RequestResetPasswordValidThroughInHours" />
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="allowRoomCreation">Allow Room Creation</label>
+                        <label class="control-label" for="allowRoomCreation">@LanguageResources.Administration_AllowRoomCreation</label>
                         <div class="controls">
                             @Html.CheckBox("allowRoomCreation", Model.AllowRoomCreation)
                         </div>
                     </div>
                 </fieldset>
                 <fieldset id="emailSettings">
-                    <legend>Email Settings</legend>
+                    <legend>@LanguageResources.Administration_EmailSettings</legend>
                     <div class="control-group">
-                        <label class="control-label" for="emailSender">Email Sender</label>
+                        <label class="control-label" for="emailSender">@LanguageResources.Administration_EmailSender</label>
                         <div class="controls">
                             @Html.TextBox("emailSender", "input-xlarge", "noreply@mysite.com")
                         </div>
                     </div>
                 </fieldset>
                 <fieldset id="encryption">
-                    <legend>Encryption</legend>
+                    <legend>@LanguageResources.Administration_Encryption</legend>
                     <div class="control-group">
-                        <label class="control-label" for="encryptionKey">Encryption Key</label>
+                        <label class="control-label" for="encryptionKey">@LanguageResources.Administration_EncryptionKey</label>
                         <div class="controls">
                             <input type="hidden" id="encryptionKey" name="encryptionKey" value="@Model.EncryptionKey"/>
                             <label class="control-label label-align-left">@Model.EncryptionKey</label>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="verificationKey">Verification Key</label>
+                        <label class="control-label" for="verificationKey">@LanguageResources.Administration_VerificationKey</label>
                         <div class="controls">
                             <input type="hidden" id="verificationKey" name="verificationKey" value="@Model.VerificationKey"/>
                             <label class="control-label label-align-left">@Model.VerificationKey</label>
@@ -91,37 +91,37 @@
                     </div>
                 </fieldset>
                 <fieldset id="storage">
-                    <legend>Storage</legend>
+                    <legend>@LanguageResources.Administration_Storage</legend>
                     <div class="control-group">
-                        <label class="control-label" for="azureBlobStorageConnectionString">Azure Blob Storage Connectionstring</label>
+                        <label class="control-label" for="azureBlobStorageConnectionString">@LanguageResources.Administration_AzureBlobStorageConnectionString</label>
                         <div class="controls">
-                            <input type="text" id="azureBlobStorageConnectionString" name="azureBlobStorageConnectionString" class="input-xlarge" value="@Model.AzureblobStorageConnectionString" placeholder="Azure Blob Storage Connectionstring"/>
+                            <input type="text" id="azureBlobStorageConnectionString" name="azureBlobStorageConnectionString" class="input-xlarge" value="@Model.AzureblobStorageConnectionString" placeholder="@LanguageResources.Administration_AzureBlobStorageConnectionString"/>
                         </div>
                     </div>
                     <div class="control-group">
-                        <label class="control-label" for="maxFileUploadBytes">Max File Upload Size (Bytes)</label>
+                        <label class="control-label" for="maxFileUploadBytes">@LanguageResources.Administration_MaxFileUploadBytes</label>
                         <div class="controls">
-                            <input type="text" id="maxFileUploadBytes" name="maxFileUploadBytes" class="input-xlarge" value="@Model.MaxFileUploadBytes" placeholder="Max File Upload Size (Bytes)"/>
+                            <input type="text" id="maxFileUploadBytes" name="maxFileUploadBytes" class="input-xlarge" value="@Model.MaxFileUploadBytes" placeholder="@LanguageResources.Administration_MaxFileUploadBytes"/>
                         </div>
                     </div>
                 </fieldset>
                 <fieldset id="analytics">
-                    <legend>Analytics</legend>
+                    <legend>@LanguageResources.Administration_Analytics</legend>
                     <div class="control-group">
-                        <label class="control-label" for="googleAnalytics">Google Analytics ID</label>
+                        <label class="control-label" for="googleAnalytics">@LanguageResources.Administration_AnalyticsGoogleId</label>
                         <div class="controls">
-                            <input type="text" id="googleAnalytics" name="googleAnalytics" class="input-xlarge" value="@Model.GoogleAnalytics" placeholder="Google Analytics ID"/>
+                            <input type="text" id="googleAnalytics" name="googleAnalytics" class="input-xlarge" value="@Model.GoogleAnalytics" placeholder="@LanguageResources.Administration_AnalyticsGoogleId"/>
                         </div>
                     </div>
                 </fieldset>
                 <fieldset id="identityProviders">
-                    <legend>Identity Providers</legend>
+                    <legend>@LanguageResources.Administration_IdentityProviders</legend>
                     <div class="control-group">
                     </div>
                 </fieldset>
                 <div class="control-group">
                     <div class="controls">
-                        <input type="submit" class="btn pull-right" value="Save Settings" />
+                        <input type="submit" class="btn pull-right" value="@LanguageResources.SettingsSave" />
                     </div>
                 </div>
                 @Html.AntiForgeryToken()
@@ -145,10 +145,10 @@
             $('input.error').closest('.control-group').addClass('error');
 
             $('input[type="checkbox"]').click(function () {
-                var $this = $(this);
-                name = $this.data('name'),
-                checked = $this.is(':checked') === true,
-                $hiddenField = $('input[type="hidden"][name="' + name + '"]');
+                var $this = $(this),
+                    name = $this.data('name'),
+                    checked = $this.is(':checked') === true,
+                    $hiddenField = $('input[type="hidden"][name="' + name + '"]');
 
                 $hiddenField.attr('value', checked);
             });

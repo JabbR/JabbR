@@ -4,7 +4,7 @@
 /// <reference path="Scripts/moment.min.js" />
 
 /*jshint evil:true, bitwise:false*/
-(function ($, window, emoji, markdown, linkify, moment) {
+(function ($, window, emoji, markdown, linkify, moment, languageResources) {
     "use strict";
 
     // getting the browser's name for use in isMobile
@@ -58,6 +58,19 @@
         // html still emits double quotes so we need to replace these entities to use them in attributes.
         return $("<div/>").text(html).html().replace(/\"/g, "&quot;");
     }
+    
+    function format(formatString) {
+        var formatArgs = arguments;
+        return formatString.replace(/{(?:[0-9]+)}/g, function (match) {
+            return formatArgs[parseInt(match.substr(1, match.length - 2), 10) + 1];
+        });
+    }
+    
+    function getLanguageResource(languageResourceKey) {
+        var args = Array.prototype.slice.call(arguments, 0);
+        args[0] = languageResources[languageResourceKey];
+        return format.apply(null, args);
+    }
 
     String.prototype.fromJsonDate = function () {
         return new Date(moment(this.toString()).valueOf());
@@ -72,8 +85,8 @@
     };
 
     Date.prototype.formatTime = function (showAp) {
-        var ap = "";
-        var hr = this.getHours();
+        var ap,
+            hr = this.getHours();
 
         if (hr < 12) {
             ap = "AM";
@@ -183,7 +196,9 @@
         decodeHtml: decodeHtml,
         encodeHtml: encodeHtml,
         newId: guidGenerator,
-        processContent: processContent
+        processContent: processContent,
+        format: format,
+        getLanguageResource: getLanguageResource
     };
 
     if (!window.chat) {
@@ -192,4 +207,4 @@
 
     window.chat.utility = utility;
 
-})(jQuery, window, window.Emoji, window.Markdown, window.linkify, window.moment);
+})(jQuery, window, window.Emoji, window.Markdown, window.linkify, window.moment, window.languageResources);

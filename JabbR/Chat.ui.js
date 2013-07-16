@@ -210,11 +210,11 @@
 
         $room.css('background-color', '#f5f5f5');
         if (count === 0) {
-            $count.text('Unoccupied');
+            $count.text(utility.getLanguageResource('Client_OccupantsZero'));
         } else if (count === 1) {
-            $count.text('1 occupant');
+            $count.text(utility.getLanguageResource('Client_OccupantsOne'));
         } else {
-            $count.text(count + ' occupants');
+            $count.text(utility.getLanguageResource('Client_OccupantsMany', count));
         }
 
         if (room.Private === true) {
@@ -325,7 +325,9 @@
             $messages = null,
             $roomTopic = null,
             scrollHandler = null,
-            userContainer = null;
+            userContainer = null,
+            roomOwnersHeader = utility.getLanguageResource('Chat_UserOwnerHeader'),
+            usersHeader = utility.getLanguageResource('Chat_UserHeader');
 
         if (room.exists()) {
             return false;
@@ -361,10 +363,10 @@
         userContainer = $('<div/>').attr('id', 'userlist-' + roomId)
             .addClass('users')
             .appendTo($chatArea).hide();
-        templates.userlist.tmpl({ listname: 'Room Owners', id: 'userlist-' + roomId + '-owners' })
+        templates.userlist.tmpl({ listname: roomOwnersHeader, id: 'userlist-' + roomId + '-owners' })
             .addClass('owners')
             .appendTo(userContainer);
-        templates.userlist.tmpl({ listname: 'Users', id: 'userlist-' + roomId + '-active' })
+        templates.userlist.tmpl({ listname: usersHeader, id: 'userlist-' + roomId + '-active' })
             .appendTo(userContainer);
         
         $tabs.find('li')
@@ -474,7 +476,7 @@
 
     function collapseRichContent(content) {
         content = content.replace(/class="collapsible_box/g, 'style="display: none;" class="collapsible_box');
-        return content.replace(/class="collapsible_title"/g, 'class="collapsible_title" title="Content collapsed because you have Rich-Content disabled"');
+        return content.replace(/class="collapsible_title"/g, 'class="collapsible_title" title="' + utility.getLanguageResource('Content_DisabledMessage') + '"');
     }
 
     function triggerFocus() {
@@ -644,7 +646,7 @@
     function updateRoomTopic(roomViewModel) {
         var room = getRoomElements(roomViewModel.Name);
         var topic = roomViewModel.Topic;
-        var topicHtml = topic === '' ? 'You\'re chatting in ' + roomViewModel.Name : ui.processContent(topic);
+        var topicHtml = topic === '' ? utility.getLanguageResource('Chat_DefaultTopic', roomViewModel.Name) : ui.processContent(topic);
         var roomTopic = room.roomTopic;
         var isVisibleRoom = getCurrentRoomElements().getName() === roomViewModel.Name;
 
@@ -682,8 +684,8 @@
             template: $connectionInfoPopover,
             content: function () {
                 var connectionInfo = $connectionInfoContent;
-                connectionInfo.find(connectionInfoStatus).text('Status: Connected');
-                connectionInfo.find(connectionInfoTransport).text('Transport: ' + transport);
+                connectionInfo.find(connectionInfoStatus).text(utility.getLanguageResource('Client_ConnectedStatus'));
+                connectionInfo.find(connectionInfoTransport).text(utility.getLanguageResource('Client_Transport', transport));
                 return connectionInfo.html();
             }
         };
@@ -865,11 +867,11 @@
                 spinner.addClass('icon-spin');
                 spinner.show();
                 var loader = $loadMoreRooms.find('.load-more-rooms a');
-                loader.html(' Loading more rooms...');
+                loader.html(' ' + utility.getLanguageResource('LoadingMessage'));
                 loadMoreLobbyRooms();
                 spinner.hide();
                 spinner.removeClass('icon-spin');
-                loader.html('Load More...');
+                loader.html(utility.getLanguageResource('Client_LoadMore'));
                 if (lastLoadedRoomIndex < sortedRoomList.length) {
                     $loadMoreRooms.show();
                 } else {
@@ -1019,7 +1021,7 @@
                         isCurrentlyVisible = $this.next().is(":visible");
 
                     if (enabled) {
-                        $this.attr('title', 'Content collapsed because you have Rich-Content disabled');
+                        $this.attr('title', utility.getLanguageResource('Content_DisabledMessage'));
                     } else {
                         $this.removeAttr('title');
                     }
@@ -1428,10 +1430,10 @@
                     populateLobbyRoomList(privateSorted, templates.lobbyroom, listOfPrivateRooms);
                     listOfPrivateRooms.children('li').appendTo(lobby.owners);
                     $lobbyPrivateRooms.show();
-                    $lobbyOtherRooms.find('nav-header').html('Other Rooms');
+                    $lobbyOtherRooms.find('nav-header').html(utility.getLanguageResource('Client_OtherRooms'));
                 } else {
                     $lobbyPrivateRooms.hide();
-                    $lobbyOtherRooms.find('nav-header').html('Rooms');
+                    $lobbyOtherRooms.find('nav-header').html(utility.getLanguageResource('Client_Rooms'));
                 }
 
                 var listOfRooms = $('<ul/>');
@@ -1927,7 +1929,7 @@
                     .hide()
                     .find('.info').text('');    // clear any prior text
                 $notification.find('.info')
-                    .text(' (plus ' + $notifications.length + ' hidden... click to expand)')
+                    .text(' ' + utility.getLanguageResource('Chat_ExpandHiddenMessages', $notifications.length))
                     .removeClass('collapse');
             }
         },
@@ -1937,7 +1939,7 @@
                 topBefore = $notification.position().top;
 
             $notification.find('.info')
-                .text(' (click to collapse)')
+                .text(' ' + utility.getLanguageResource('Chat_CollapseHiddenMessages'))
                 .addClass('collapse');
             $notifications.show();
 
@@ -2043,7 +2045,7 @@
                 switch (status) {
                     case 0: // Connected
                         $connectionStatus.removeClass('reconnecting disconnected');
-                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions('You\'re connected.'));
+                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions(utility.getLanguageResource('Client_Connected')));
                         $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-ok-sign');
                         $connectionStatus.popover('show');
                         popoverTimer = setTimeout(function () {
@@ -2054,7 +2056,7 @@
                         break;
                     case 1: // Reconnecting
                         $connectionStatus.removeClass('disconnected').addClass('reconnecting');
-                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions('The connection to JabbR has been temporarily lost, trying to reconnect.'));
+                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions(utility.getLanguageResource('Client_Reconnecting')));
                         $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-question-sign');
                         $connectionStatus.popover('show');
                         popoverTimer = setTimeout(function () {
@@ -2064,7 +2066,7 @@
                         break;
                     case 2: // Disconnected
                         $connectionStatus.removeClass('reconnecting').addClass('disconnected');
-                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions('The connection to JabbR has been lost, trying to reconnect.'));
+                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions(utility.getLanguageResource('Client_Disconnected')));
                         $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-exclamation-sign');
                         $connectionStatus.popover('show');
                         popoverTimer = setTimeout(function () {
@@ -2131,7 +2133,7 @@
                 .attr('data-admin', true)
                 .data('admin', true)
                 .find('.admin')
-                .text('(admin)');
+                .text('(' + utility.getLanguageResource('Client_AdminTag') + ')');
             room.updateUserStatus($user);
         },
         clearRoomAdmin: function (adminName, roomName) {

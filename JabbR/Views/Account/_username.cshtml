@@ -1,11 +1,12 @@
 ﻿@using JabbR;
+
     <form class="form-horizontal" action="@Url.Content("~/account/login")" method="post">
         @Html.ValidationSummary()
         <div class="control-group">
             <div class="controls">
                 <div class="input-prepend">
                     <span class="add-on"><i class="icon-user"></i></span>
-                    @Html.TextBox("username", "span10", "Username")
+                    @Html.TextBox("username", "span10", @LanguageResources.Account_UserName)
                 </div>
             </div>
         </div>
@@ -13,13 +14,13 @@
             <div class="controls">
                 <div class="input-prepend">
                     <span class="add-on"><i class="icon-lock"></i></span>
-                    @Html.Password("password", "span10", "Password")
+                    @Html.Password("password", "span10", @LanguageResources.Account_Pass)
                 </div>
             </div>
         </div>
         <div class="control-group">
             <div class="controls">
-                <button type="submit" class="btn">Sign in</button>
+                <button type="submit" class="btn">@LanguageResources.Account_SignIn</button>
             </div>
         </div>
         @if (Model.AllowUserRegistration || Model.AllowUserResetPassword)
@@ -29,13 +30,13 @@
                     @if (Model.AllowUserRegistration)
                     {
                         <p>
-                            <a href="@Url.Content("~/account/register")">Register</a> if you don't have an account.
+                            @Html.Raw(String.Format(LanguageResources.Account_RegisterMessage, Url.Content("~/account/register")))
                         </p>
                     }
                     @if (Model.AllowUserResetPassword && Model.HasEmailSender)
                     { 
                         <p>
-                            <a href="@Url.Content("~/account/requestresetpassword")">Reset password</a> if you've forgotten or lost your login information.       
+                            @Html.Raw(String.Format(LanguageResources.Account_ResetPasswordMessage, Url.Content("~/account/requestresetpassword")))      
                         </p>   
                     }
                 </div>
