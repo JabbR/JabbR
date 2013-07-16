@@ -3043,6 +3043,23 @@ h3.userlist-header {
     background-image: none !important;
 }
 
+#drop-file-target {
+    display: none;
+}
+
+.drop-file-text {
+    font-size: 72pt;
+    display: block;
+    position: absolute;
+    line-height: 50px;
+    top: 50%;
+    left: 40%;
+    margin: -82px 0 0 -180px;
+    text-shadow: 3px 3px 4px #000;
+    color: #fff;
+    z-index: -1;
+}
+
 /* Make admin screens nicer */
 .administration .form-horizontal .control-label {
   width: 260px;

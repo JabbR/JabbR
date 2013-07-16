@@ -13,8 +13,8 @@ namespace JabbR.Nancy
 {
     public class HomeModule : JabbRModule
     {
-        public HomeModule(ApplicationSettings settings, 
-                          IJabbrConfiguration configuration, 
+        public HomeModule(ApplicationSettings settings,
+                          IJabbrConfiguration configuration,
                           UploadCallbackHandler uploadHandler)
         {
             Get["/"] = _ =>
@@ -57,31 +57,7 @@ namespace JabbR.Nancy
                 return View["monitor"];
             };
 
-            Post["/upload"] = _ =>
-            {
-                if (!IsAuthenticated)
-                {
-                    return 403;
-                }
-
-                string roomName = Request.Form.room;
-                string connectionId = Request.Form.connectionId;
-                HttpFile file = Request.Files.First();
-
-                // This blocks since we're not using nancy's async support yet
-                UploadFile(
-                    uploadHandler,
-                    Principal.GetUserId(),
-                    connectionId,
-                    roomName,
-                    file.Name,
-                    file.ContentType,
-                    file.Value).Wait();
-
-                return 200;
-            };
-
-            Post["/upload-clipboard"] = _ =>
+            Post["/upload-file"] = _ =>
                 {
                     if (!IsAuthenticated)
                     {
@@ -91,16 +67,21 @@ namespace JabbR.Nancy
                     string roomName = Request.Form.room;
                     string connectionId = Request.Form.connectionId;
                     string file = Request.Form.file;
-                    string fileName = "clipboard_" + Guid.NewGuid().ToString("N");
-                    string contentType = "image/jpeg";
+                    //string fileName = "clipboard_" + Guid.NewGuid().ToString("N");
+                    string fileName = Request.Form.filename;
+                    string contentType = Request.Form.type;
+                    byte[] binData = null;
 
-                    var info = Regex.Match(file, @"data:image/(?<type>.+?);base64,(?<data>.+)");
+                    var info = Regex.Match(file, @"data:(?:(?<unkown>.+?)/(?<type>.+?))?;base64,(?<data>.+)");
 
-                    var binData = Convert.FromBase64String(info.Groups["data"].Value);
+                    binData = Convert.FromBase64String(info.Groups["data"].Value);
                     contentType = info.Groups["type"].Value;
 
-                    fileName = fileName + "." + contentType.Substring(contentType.IndexOf("/") + 1);
-
+                    if (String.IsNullOrWhiteSpace(contentType))
+                    {
+                        contentType = "application/octet-stream";
+                    }
+                    
                     UploadFile(
                         uploadHandler,
                         Principal.GetUserId(),

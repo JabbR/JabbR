@@ -237,7 +237,7 @@
     <Content Include="Chat.js" />
     <Content Include="Chat.toast.js" />
     <Content Include="Chat.twitter.js" />
-    <Content Include="Chat.ui.filePaste.js" />
+    <Content Include="Chat.ui.fileUpload.js" />
     <Content Include="Chat.ui.js" />
     <Content Include="Chat.ui.room.js" />
     <Content Include="Chat.utility.js" />

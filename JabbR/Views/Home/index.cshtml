@@ -333,7 +333,7 @@
                 </div>
                 <input type="submit" id="send" value="Send" class="send btn" />
             </form>
-            <form id="upload" action="@Url.Content("~/upload")" method="post" enctype="multipart/form-data" target="upload-frame">
+            <form id="upload" action="@Url.Content("~/upload-file")" method="post" enctype="multipart/form-data" target="upload-frame">
                 <input type="hidden" id="file-connection-id" name="connectionId" />
                 <input type="hidden" id="file-message-id" name="messageId" />
                 <input type="hidden" id="file-room" name="room" />
@@ -450,6 +450,7 @@
         </section>
     </section>
     <div id="paste" contenteditable="true" style="height: 1px; width: 1px;"></div>
+    <div id="drop-file-target"><h1 class="drop-file-text">Drop files here</h1></div>
     @{
         WriteLiteral(Bundle.JavaScript().ForceDebugIf(() => Model.DebugMode)
             .Add("~/Scripts/jquery-1.9.0.min.js")
@@ -481,11 +482,11 @@
             .Add("~/Scripts/moment.min.js")
             .Add("~/Scripts/livestamp.min.js")
             .Add("~/Chat.emoji.js")
-            .Add("~/Chat.ui.filePaste.js")
             .Add("~/Chat.utility.js")
             .Add("~/Chat.toast.js")
             .Add("~/Chat.ui.room.js")
             .Add("~/Chat.ui.js")
+            .Add("~/Chat.ui.fileUpload.js")
             .Add("~/Chat.documentOnWrite.js")
             .Add("~/Chat.twitter.js")
             .Add("~/Chat.pinnedWindows.js")
