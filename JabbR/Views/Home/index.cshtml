@@ -1,10 +1,11 @@
-﻿@using SquishIt.Framework;
+﻿@using JabbR
+@using SquishIt.Framework;
 @model SettingsViewModel
 
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>JabbR</title>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1"> 
@@ -36,9 +37,9 @@
         _gaq.push(['_trackPageview']);
 
         (function () {
-            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+          var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+          ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+          var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
     </script>
     }
@@ -87,7 +88,7 @@
     </script>
     <script id="multiline-content-template" type="text/x-jquery-tmpl">
         <div class="collapsible_content">
-            <h3 class="collapsible_title">Paste (click to show/hide)</h3>
+            <h3 class="collapsible_title">@LanguageResources.Content_PasteHeaderAndToggle</h3>
             <div class="collapsible_box">
                 <pre class="multiline">${content}</pre>
             </div>
@@ -105,7 +106,15 @@
                     <span class="topic">${Topic}</span>
                 </div>
                 <div class="span2">
-                    <span class="count">{{if Count == 0}}Unoccupied{{else}}${Count} occupant{{if Count > 1}}s{{/if}}{{/if}}</span>
+                    <span class="count">
+                        {{if Count == 0}}
+                        @LanguageResources.Client_OccupantsZero
+                        {{else Count == 1}}
+                        @LanguageResources.Client_OccupantsOne
+                        {{else}}
+                        @String.Format(LanguageResources.Client_OccupantsMany, "${Count}")
+                        {{/if}}
+                    </span>
                 </div>
             </div>
         </li>
@@ -123,7 +132,7 @@
                 <div class="name-container">
                     <div class="name" {{if note}}title="${note}"{{else}}title="${name}"{{/if}}>${name}</div>
                     <div class="inactive-since"></div>
-                    {{if admin}}<div class="admin">(admin)</div>{{/if}}
+                    {{if admin}}<div class="admin">(@LanguageResources.Client_AdminTag)</div>{{/if}}
                 </div>
                 <div style="clear:both"></div>
             </div>
@@ -135,7 +144,7 @@
             <span class="list-name">${listname}</span>
         </h3>
         <div>
-            <ul id="${id}" data-empty-message="No users" />
+            <ul id="${id}" data-empty-message="@LanguageResources.Client_NoUsersInList" />
         </div>
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">
@@ -175,19 +184,18 @@
                     <div class="comment starting-comment ">
                         <div class="body">
                             <p class="author">
-                                <a href="#" class='github-issue-user-${user.login}' target="_blank">${user.login}</a> opened this issue
-                                <time class="js-relative-date" datetime="${created_at}">${created_at}</time>
+                                @Html.Raw(String.Format(LanguageResources.GithubContent_UserOpenedIssueAtTime, "${user.login}", "${created_at}"))
                             </p>
                             <a href="${html_url}" target="_blank"><h2 class="content-title">${title}</h2></a>
                             <div class="infobar clearfix">
-                                <p class="milestone js-milestone-infobar-item-wrapper">No milestone</p>
+                                <p class="milestone js-milestone-infobar-item-wrapper">@LanguageResources.GithubContent_NoMilestone</p>
                                 {{if assignee}}
                                     <p class="assignee">
                                         <span class="avatar">
                                             <img height="20" width="20" src="${assignee.avatar_url}">
                                             <span class="overlay size-20"></span>
                                         </span>
-                                        <a href="#" class="github-issue-user-${assignee.login}" target="_blank">${assignee.login}</a> is assigned
+                                        @Html.Raw(String.Format(LanguageResources.GithubContent_UserAssigned, "${assignee.login}"))
                                     </p>
                                 {{/if}}
                             </div>
@@ -217,8 +225,7 @@
                     <div class="comment starting-comment ">
                         <div class="body">
                             <p class="author">
-                                <a href="#" class='github-issue-user-${user.login}' target="_blank">${user.login}</a> commented
-                                <time class="js-relative-date" datetime="${created_at}">${created_at}</time>
+                                @Html.Raw(String.Format(LanguageResources.GithubContent_UserCommentedAtTime, "${user.login}", "${created_at}"))
                             </p>
                             <a href="${html_url}" target="_blank"><h2 class="content-title">${title}</h2></a>
                             <div class="formatted-content">
@@ -238,7 +245,8 @@
     <!--Gravatar Profile Template for Who command-->
     <script id="gravatar-profile-template" type="text/x-jquery-tmpl">
         <div class="collapsible_content">
-            <h3 class="collapsible_title">Gravatar Profile: ${profileUrl} (click to show/hide)
+            <h3 class="collapsible_title">
+                @Html.Raw(String.Format(Encoder.HtmlEncode(LanguageResources.GravatarContent_HeaderAndToggle), "${profileUrl}"))
             </h3>
             <div class="collapsible_box">
                 <div class="gravatar_${hash} gravatarProfile">
@@ -263,7 +271,7 @@
                 <ul id="tabs" role="tablist">
                     <li id="tabs-lobby" class="current lobby" data-name="Lobby" data-trimmable="false" role="tab">
                         <button accesskey="l">
-                            <span class="content">Lobby</span>
+                            <span class="content">@LanguageResources.Client_Lobby</span>
                         </button>
                     </li>
                 </ul>
@@ -278,14 +286,14 @@
                 <div id="preferences" class="navbar account pull-right">
                     <div class="navbar-inner">
                         <ul class="nav">
-                            <li><a id="notifications" class="" title="notifications" href="@Url.Content("~/notifications")" target="_blank"><i class="icon-comments"></i><span id="notification-unread-count" class="badge badge-info"></span></a></li>
-                            <li><a class="" title="account settings" href="@Url.Content("~/account")" target="_blank"><i class="icon-user"></i></a></li>
+                            <li><a id="notifications" class="" title="@LanguageResources.Client_Notifications" href="@Url.Content("~/notifications")" target="_blank"><i class="icon-comments"></i><span id="notification-unread-count" class="badge badge-info"></span></a></li>
+                            <li><a class="" title="@LanguageResources.Client_AccountSettings" href="@Url.Content("~/account")" target="_blank"><i class="icon-user"></i></a></li>
                             @if (Model.IsAdmin)
                             {
-                                <li><a class="" title="jabbr settings" href="@Url.Content("~/administration")" target="_blank"><i class="icon-cog"></i></a></li>
+                                <li><a class="" title="@LanguageResources.Client_JabbrSettings" href="@Url.Content("~/administration")" target="_blank"><i class="icon-cog"></i></a></li>
                             }
-                            <li><a class="help" aria-haspopup="true" title="display help"><i class="icon-question-sign"></i></a></li>
-                            <li><a class="logout" title="sign out"><i class="icon-signout"></i></a></li>
+                            <li><a class="help" aria-haspopup="true" title="@LanguageResources.Client_DisplayHelp"><i class="icon-question-sign"></i></a></li>
+                            <li><a class="logout" title="@LanguageResources.Client_SignOut"><i class="icon-signout"></i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -293,36 +301,36 @@
         </header>
         <div id="topic-bar">
             <form id="room-filter-form" action="#" class="form-inline">
-                <input id="room-filter" class="filter input-xlarge" type="text" placeholder="Start typing to filter room list..." />
+                <input id="room-filter" class="filter input-xlarge" type="text" placeholder="@LanguageResources.Client_RoomFilterInstruction" />
                 <label id="room-filter-closed-area" class="checkbox inline">
                     <input id="room-filter-closed" type="checkbox" />
-                    Show Closed Rooms?
+                    @LanguageResources.Client_ShowClosedRooms
                 </label>
             </form>
             <div id="room-actions" class="btn-group pull-right">
-                <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">Room Settings <span class="caret"></span></button>
+                <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">@LanguageResources.Client_RoomSettings <span class="caret"></span></button>
                 <ul id="room-preferences" class="dropdown-menu">
-                    <li><a class="sound" title="audible notifications"><i class="icon-sound"></i> Audible Notifications</a></li>
-                    <li><a class="richness" title="toggle rich-content"><i class="icon-richness"></i> Toggle Rich-content</a></li>
-                    <li><a class="toast" title="popup notifications" aria-haspopup="true"><i class="icon-toast"></i>Popup Notifications</a></li>
-                    <li><a class="download" title="download messages" aria-haspopup="true"><i class="icon-download"></i>Download Messages</a></li>
+                    <li><a class="sound" title="audible notifications"><i class="icon-sound"></i> @LanguageResources.Client_AudibleNotifications</a></li>
+                    <li><a class="richness" title="toggle rich-content"><i class="icon-richness"></i> @LanguageResources.Client_ToggleRichContent</a></li>
+                    <li><a class="toast" title="popup notifications" aria-haspopup="true"><i class="icon-toast"></i> @LanguageResources.Client_PopupNotifications</a></li>
+                    <li><a class="download" title="download messages" aria-haspopup="true"><i class="icon-download"></i> @LanguageResources.Client_DownloadMessages</a></li>
                 </ul>
             </div>
         </div>
         <div id="chat-area" role="tabpanel">
             <div id="room-loading">
-                <i class="icon-spinner icon-3x"> </i><h3>Loading...</h3>
+                <i class="icon-spinner icon-3x"> </i><h3>@LanguageResources.LoadingMessage</h3>
             </div>
             <div id="lobby-wrapper">
                 <div id="lobby-private">
-                    <h2 class="userlist-header nav-header">Your Private Rooms</h2>
-                    <ul id="userlist-lobby-owners" data-empty-message="No matching rooms"></ul>
+                    <h2 class="userlist-header nav-header">@LanguageResources.Client_YourPrivateRooms</h2>
+                    <ul id="userlist-lobby-owners" data-empty-message="@LanguageResources.Client_NoMatchingRooms"></ul>
                 </div>
                 <div id="lobby-other">
-                    <h2 class="userlist-header nav-header">Rooms</h2>
-                    <ul id="userlist-lobby" data-empty-message="No matching rooms">
+                    <h2 class="userlist-header nav-header">@LanguageResources.Client_Rooms</h2>
+                    <ul id="userlist-lobby" data-empty-message="@LanguageResources.Client_NoMatchingRooms">
                     </ul>
-                    <div id="load-more-rooms-item" class="room" style="display:none;"><div class="row-fluid room-row load-more-rooms"><i class="icon-spinner" style="display:none;"></i><a href="#">Load More...</a></div></div>
+                    <div id="load-more-rooms-item" class="room" style="display:none;"><div class="row-fluid room-row load-more-rooms"><i class="icon-spinner" style="display:none;"></i><a href="#">@LanguageResources.Client_LoadMore</a></div></div>
                 </div>
                 <ul id="messages-lobby" class="messages current" role="log" style="visibility: hidden;">
                 </ul>
@@ -331,7 +339,7 @@
                 <div id="message-box">
                     <textarea id="new-message" autocomplete="off" aria-autocomplete="none" accesskey="m"></textarea>
                 </div>
-                <input type="submit" id="send" value="Send" class="send btn" />
+                <input type="submit" id="send" value="@LanguageResources.Client_Send" class="send btn" />
             </form>
             <form id="upload" action="@Url.Content("~/upload-file")" method="post" enctype="multipart/form-data" target="upload-frame">
                 <input type="hidden" id="file-connection-id" name="connectionId" />
@@ -349,67 +357,63 @@
             <div id="disconnect-dialog" class="modal hide fade">
                 <div class="modal-header">
                   <a class="close" data-dismiss="modal">&times;</a>
-                  <div class="jabbrLogo" id="logo"></div><h3>JabbR Error</h3>
+                  <div class="jabbrLogo" id="logo"></div><h3>@LanguageResources.Client_JabbrError</h3>
                 </div>
                 <div class="modal-body">
-                  <p>
-                    There was an error contacting the server, please refresh in a few minutes.
-                  </p>
+                  <p>@LanguageResources.Client_JabbrErrorMessage</p>
                 </div>
             </div>
             <div id="download-dialog" class="modal hide fade">
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal">&times;</a>
-                    <h3>Download Messages</h3>
+                    <h3>@LanguageResources.Client_DownloadMessages</h3>
                 </div>
                 <div class="modal-body">
-                    <p>
-                    Select date range for messages:
-                    </p>
+                    <p>@LanguageResources.Client_DownloadMessagesDateRange</p>
                     <p>
                     <select id="download-range">
-                        <option value="last-hour">Last hour</option>
-                        <option value="last-day">Last day</option>
-                        <option value="last-week">Last week</option>
-                        <option value="last-month">Last month</option>
-                        <option value="all">All</option>
+                        <option value="last-hour">@LanguageResources.Client_DateRangeLastHour</option>
+                        <option value="last-day">@LanguageResources.Client_DateRangeLastDay</option>
+                        <option value="last-week">@LanguageResources.Client_DateRangeLastWeek</option>
+                        <option value="last-month">@LanguageResources.Client_DateRangeLastMonth</option>
+                        <option value="all">@LanguageResources.Client_DateRangeAll</option>
                     </select>
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" class="btn btn-primary" id="download-dialog-button">Download</a>
+                    <a href="#" class="btn btn-primary" id="download-dialog-button">@LanguageResources.Client_Download</a>
                 </div>
             </div>
             <div id="jabbr-help" class="modal hide fade">
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal">&times;</a>
-                    <h3>JabbR Help</h3>
+                    <h3>@LanguageResources.Client_Help</h3>
                 </div>
                 <div class="modal-body">
                     <div class="help-body">
                         @if (Model.ShowDetails)
                         {
                             <div id="releaseArea">
-                                <p id="releaseTag">
-                                    Deployed from <a target="_blank" href="https://github.com/JabbR/JabbR/commit/@Model.Sha" title="View the commit.">@Model.Sha.Substring(0, 10)</a>
-                                    on <a target="_blank" href="https://github.com/JabbR/JabbR/branches/@Model.Branch" title="View the branch.">@Model.Branch</a> 
-                                    at @Model.Time.
+                                <p>
+                                    @Html.Raw(String.Format(LanguageResources.Client_DeploymentInfo, 
+                                                            Model.Sha, 
+                                                            Model.Sha.Substring(0, 10), 
+                                                            Model.Branch, 
+                                                            Model.Time))
                                 </p>
                             </div>
                         }
                         <div class="command-list">
-                            <h3>FAQ</h3>
-                            <p>Click on a user to send message.</p>
-                            <p>Type #roomname to create a link to a room</p>
-                            <p>Use #test for testing.</p>
+                            <h3>@LanguageResources.Client_FAQ</h3>
+                            @Html.Raw(LanguageResources.Client_FAQMessage)      
                         </div>
-                        <h3>Site wide shortcuts</h3>
+                        <h3>@LanguageResources.Client_SiteWideShortcuts</h3>
                         <dl id="shortcut" class="command-list"></dl>
-                        <h3>Site wide commands</h3>
+                        <h3>@LanguageResources.Client_SiteWideCommands</h3>
                         <dl id="global" class="command-list"></dl>
-                        <h3>Room commands</h3>
+                        <h3>@LanguageResources.Client_RoomCommands</h3>
                         <dl id="room" class="command-list"></dl>
-                        <h3>User commands</h3>
+                        <h3>@LanguageResources.Client_UserCommands</h3>
                         <dl id="user" class="command-list"></dl>
                     </div>
                 </div>
@@ -417,40 +421,38 @@
             <div id="jabbr-update" class="modal hide fade">
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal">&times;</a>
-                    <div class="jabbrLogo" id="logo"></div><h3>JabbR Update</h3>
+                    <div class="jabbrLogo" id="logo"></div><h3>@LanguageResources.Client_RefreshRequiredHeader</h3>
                 </div>
                 <div class="modal-body">
-                    <p>
-                        Refresh your browser to get the latest. Auto update will take place in 15 seconds.
-                    </p>
+                    <p>@LanguageResources.Client_RefreshRequiredNotification</p>
                 </div>
             </div>
             <div id="reloadMessageNotification" class="reload-message alert alert-info">
-                <button type="button" class="close" data-dismiss="alert">&times;</button><a href="#">Load missing messages</a>
+                <button type="button" class="close" data-dismiss="alert">&times;</button><a href="#">@LanguageResources.Client_LoadMissingMessages</a>
             </div>
             <div id="loadingRoomHistory" class="loading-room-history alert alert-info">
-                <i class="icon-spinner icon-spin"></i> Loading previous messages...
+                <i class="icon-spinner icon-spin"></i> @LanguageResources.Client_LoadingPreviousMessages
             </div>
             <div id="jabbr-upload-preview" class="modal hide fade">
                 <div class="modal-header">
                     <a class="close" data-dismiss="modal">&times;</a>
-                    <h3>Uploading from clipboard</h3>
+                    <h3>@LanguageResources.Client_UploadingFromClipboard</h3>
                 </div>
                 <div class="modal-body">
                     <div class="help-body">
                         <img id="image-upload-preview" />
-                        <span id="unknown-upload-preview">No preview available for this file type.</span>
+                        <span id="unknown-upload-preview">@LanguageResources.Client_UploadNoPreview</span>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a id="upload-preview-cancel" class="btn btn-secondary" href="#">Cancel</a>
-                    <a id="upload-preview-upload" class="btn btn-primary" href="#">Upload</a>
+                    <a id="upload-preview-cancel" class="btn btn-secondary" href="#">@LanguageResources.Client_Cancel</a>
+                    <a id="upload-preview-upload" class="btn btn-primary" href="#">@LanguageResources.Client_Upload</a>
                 </div>
             </div>
         </section>
     </section>
     <div id="paste" contenteditable="true" style="height: 1px; width: 1px;"></div>
-    <div id="drop-file-target"><h1 class="drop-file-text">Drop files here</h1></div>
+    <div id="drop-file-target"><h1 class="drop-file-text">@LanguageResources.Client_UploadDropTarget</h1></div>
     @{
         WriteLiteral(Bundle.JavaScript().ForceDebugIf(() => Model.DebugMode)
             .Add("~/Scripts/jquery-1.9.0.min.js")
@@ -465,7 +467,10 @@
     }
     <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
     <script type="text/javascript">
-        window.jabbrVersion = '@Model.Version';
+      window.jabbrVersion = '@Model.Version';
+      window.languageResources = {
+        @Html.Raw(Model.ClientLanguageResources)
+      };
     </script>
     @{
         WriteLiteral(Bundle.JavaScript().ForceDebugIf(() => Model.DebugMode)

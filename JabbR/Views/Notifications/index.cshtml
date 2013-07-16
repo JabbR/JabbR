@@ -10,7 +10,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>JabbR - notifications</title>
     <link href='https://fonts.googleapis.com/css?family=Lato:100italic,300italic,700italic,100,300,700' rel='stylesheet' type='text/css'>
     @{ 
@@ -35,10 +35,10 @@
                 @Html.AlertMessages()
                 <div class="row">
                     <div class="span2">
-                        <span class="notifications-title pull-left">Notifications</span>
+                        <span class="notifications-title pull-left">@LanguageResources.Notifications</span>
                     </div>
                     <div class="span2 offset8 pull-right">
-                        <a href="#" class="btn btn-mini pull-right js-mark-all-as-read @(notificationsViewModel.UnreadCount == 0 ? "disabled" : "")" data-action-url="@Url.Content("~/notifications/markallasread")">Mark All as Read</a>
+                        <a href="#" class="btn btn-mini pull-right js-mark-all-as-read @(notificationsViewModel.UnreadCount == 0 ? "disabled" : "")" data-action-url="@Url.Content("~/notifications/markallasread")">@LanguageResources.Notifications_MarkAllRead</a>
                     </div>
                 </div>
                 <hr />
@@ -46,10 +46,12 @@
             <div class="tabbable tabs-left">
                 <ul class="nav nav-tabs">
                     <li class="@(!Model.ShowAll ? "active" : "")">
-                        <a href="@Url.Content("~/notifications")">Unread <span id="js-unread-counter" data-unread="@Model.UnreadCount" class="pull-right">@Model.UnreadCount</span></a>
+                        <a href="@Url.Content("~/notifications")">
+                            @Html.Raw(String.Format(LanguageResources.Notifications_UnreadWithCount, Model.UnreadCount))
+                        </a>
                     </li>
                     <li class="@(Model.ShowAll ? "active" : "")">
-                        <a href="@Url.Content("~/notifications?all=true")">All Notifications</a>
+                        <a href="@Url.Content("~/notifications?all=true")">@LanguageResources.Notifications_AllNotifications</a>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -61,7 +63,7 @@
                                 <li data-notification-id="@notification.NotificationKey" class="notification-item @(!notification.Read ? "notification-unread" : "")">
                                     @if (!notification.Read)
                                     {
-                                        <a href="#" title="mark notification as read" class="pull-right js-mark-as-read" data-action-url="@Url.Content("~/notifications/markasread")" data-notification-id="@notification.NotificationKey">
+                                        <a href="#" title="@LanguageResources.Notifications_MarkAsRead" class="pull-right js-mark-as-read" data-action-url="@Url.Content("~/notifications/markasread")" data-notification-id="@notification.NotificationKey">
                                             <i class="icon-large icon-ok-circle"></i>
                                         </a>
                                     }
@@ -69,7 +71,10 @@
                                         <p class="@(notification.HtmlEncoded ? "" : "linkify")">@notification.Message</p>
                                         <small>
                                             <img class="gravatar" src="https://secure.gravatar.com/avatar/@notification.FromUserImage?s=16&amp;d=mm" />
-                                            @notification.FromUserName in <strong><cite>@notification.RoomName</cite></strong> on <span class="time" data-timestamp="@notification.WhenString"></span>
+                                                @Html.Raw(String.Format(Encoder.HtmlEncode(LanguageResources.Notifications_MetadataInfo), 
+                                                                        Encoder.HtmlEncode(notification.FromUserName), 
+                                                                        Encoder.HtmlEncode(notification.RoomName), 
+                                                                        Encoder.HtmlEncode(notification.WhenString)))
                                         </small>
                                     </blockquote>
                                 </li>
@@ -79,7 +84,7 @@
                             @Html.SimplePager(notificationsViewModel.Notifications, Model.ShowAll ? "?all=true&" : "?")
                         </div>
                     }
-                    <p id="no-notifications" class="well well-large" @Html.DisplayNoneIf(model => model.Notifications.Count > 0)>No unread notifications!</p>
+                    <p id="no-notifications" class="well well-large" @Html.DisplayNoneIf(model => model.Notifications.Count > 0)>@LanguageResources.Notifications_NoUnread</p>
                 </div>
             </div>
         </div>

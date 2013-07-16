@@ -14,7 +14,7 @@ namespace JabbR.ContentProviders
             return TaskAsyncHelper.FromResult(new ContentProviderResult()
             {
                 Content = String.Format(@"<img src=""proxy?url=http://i.imgur.com/{0}.jpg"" />", id),
-                Title = request.RequestUri.AbsoluteUri.ToString()
+                Title = request.RequestUri.AbsoluteUri
             });
         }
 

@@ -3,34 +3,39 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("create", "Create a room.", "room", "room")]
+    [Command("create", "Create_CommandInfo", "room", "room")]
     public class CreateCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
             if (args.Length > 1)
             {
-                throw new InvalidOperationException("Room names cannot contain spaces.");
+                throw new InvalidOperationException(LanguageResources.RoomInvalidNameSpaces);
             }
 
             if (args.Length == 0)
             {
-                throw new InvalidOperationException("No room specified.");
+                throw new InvalidOperationException(LanguageResources.RoomRequired);
             }
 
             string roomName = args[0];
             if (String.IsNullOrWhiteSpace(roomName))
             {
-                throw new InvalidOperationException("No room specified.");
+                throw new InvalidOperationException(LanguageResources.RoomRequired);
             }
 
             ChatRoom room = context.Repository.GetRoomByName(roomName);
 
             if (room != null)
             {
-                throw new InvalidOperationException(String.Format("The room '{0}' already exists{1}.",
-                    roomName,
-                    room.Closed ? " but it's closed" : String.Empty));
+                if (!room.Closed)
+                {
+                    throw new InvalidOperationException(String.Format(LanguageResources.RoomExists, roomName));
+                }
+                else
+                {
+                    throw new InvalidOperationException(String.Format(LanguageResources.RoomExistsButClosed, roomName));
+                }
             }
 
             // Create the room, then join it

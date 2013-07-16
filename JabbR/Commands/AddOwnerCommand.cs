@@ -3,14 +3,14 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("addowner", "Add an owner a user as an owner to the specified room. Only works if you're an owner of that room.", "user [room]", "room")]
+    [Command("addowner", "AddOwner_CommandInfo", "user [room]", "room")]
     public class AddOwnerCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException("Who do you want to make an owner?");
+                throw new InvalidOperationException(LanguageResources.AddOwner_UserRequired);
             }
 
             string targetUserName = args[0];
@@ -21,7 +21,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(roomName))
             {
-                throw new InvalidOperationException("Which room do you want to add ownership to?");
+                throw new InvalidOperationException(LanguageResources.AddOwner_RoomRequired);
             }
 
             ChatRoom targetRoom = context.Repository.VerifyRoom(roomName);

@@ -38,25 +38,25 @@
                 </div>
                 <div class="tabbable tabs-left">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#profile" data-toggle="tab">Profile</a></li>
-                        <li><a href="#changeUsername" data-toggle="tab">Username</a></li>
-                        <li><a href="#changePassword" data-toggle="tab">Password</a></li>
+                        <li class="active"><a href="#profile" data-toggle="tab">@LanguageResources.Account_Profile</a></li>
+                        <li><a href="#changeUsername" data-toggle="tab">@LanguageResources.Account_UserName</a></li>
+                        <li><a href="#changePassword" data-toggle="tab">@LanguageResources.Account_Pass</a></li>
                         @if (userModel.SocialDetails.ConfiguredProviders.Any())
                         {
-                            <li><a href="#identityProviders" data-toggle="tab">Identity Providers</a></li>
+                            <li><a href="#identityProviders" data-toggle="tab">@LanguageResources.Account_IdentityProviders</a></li>
                         }
                     </ul>
                     <div class="tab-content">
                         <div class="account-details tab-pane active" id="profile">
                             <form class="form-horizontal">
                                 <div class="control-group">
-                                    <label class="control-label" for="note">Note</label>
+                                    <label class="control-label" for="note">@LanguageResources.Account_Note</label>
                                     <div class="controls">
                                         <label class="control-label label-align-left">@(userModel.Note ?? "-")</label>
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label class="control-label" for="country">Country</label>
+                                    <label class="control-label" for="country">@LanguageResources.Account_Country</label>
                                     <div class="controls">
                                         <label class="control-label label-align-left">@(userModel.Country ?? "-") <span class="flag flag-@userModel.Flag"></span></label>
                                     </div>
@@ -67,20 +67,20 @@
                             <form class="form-horizontal" action="@Url.Content("~/account/changeusername")#changeUsername" method="POST">
                                 @Html.ValidationSummary()
                                 <div class="control-group">
-                                    <label class="control-label" for="username">Username</label>
+                                    <label class="control-label" for="username">@LanguageResources.Account_UserName</label>
                                     <div class="controls">
-                                        @Html.TextBox("username", "input-xlarge", "Username")
+                                        @Html.TextBox("username", "input-xlarge", LanguageResources.Account_UserName)
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label class="control-label" for="confirmUsername">Confirm Username</label>
+                                    <label class="control-label" for="confirmUsername">@LanguageResources.Account_UserNameConfirm</label>
                                     <div class="controls">
-                                        @Html.TextBox("confirmUsername", "input-xlarge", "Confirm Username")
+                                        @Html.TextBox("confirmUsername", "input-xlarge", LanguageResources.Account_UserNameConfirm)
                                     </div>
                                 </div>
                                 <div class="control-group">
                                     <div class="controls">
-                                        <input type="submit" class="btn" value="Change Username" />
+                                        <input type="submit" class="btn" value="@LanguageResources.Account_ChangeUserName" />
                                     </div>
                                 </div>
                                 @Html.AntiForgeryToken()
@@ -92,27 +92,27 @@
                                 @if (userModel.HasPassword)
                                 {
                                     <div class="control-group">
-                                        <label class="control-label" for="oldPassword">Current Password</label>
+                                        <label class="control-label" for="oldPassword">@LanguageResources.Account_CurrentPass</label>
                                         <div class="controls">
-                                            @Html.Password("oldPassword", "input-xlarge", "Current Password")
+                                            @Html.Password("oldPassword", "input-xlarge", LanguageResources.Account_CurrentPass)
                                         </div>
                                     </div>
                                 }
                                 <div class="control-group">
-                                    <label class="control-label" for="password">Password</label>
+                                    <label class="control-label" for="password">@LanguageResources.Account_Pass</label>
                                     <div class="controls">
-                                        @Html.Password("password", "input-xlarge", "Password")
+                                        @Html.Password("password", "input-xlarge", LanguageResources.Account_Pass)
                                     </div>
                                 </div>
                                 <div class="control-group">
-                                    <label class="control-label" for="confirmPassword">Confirm Password</label>
+                                    <label class="control-label" for="confirmPassword">@LanguageResources.Account_PassConfirm</label>
                                     <div class="controls">
-                                        @Html.Password("confirmPassword", "input-xlarge", "Confirm Password")
+                                        @Html.Password("confirmPassword", "input-xlarge", LanguageResources.Account_PassConfirm)
                                     </div>
                                 </div>
                                 <div class="control-group">
                                     <div class="controls">
-                                        <input type="submit" class="btn" value="Change Password" />
+                                        <input type="submit" class="btn" value="@LanguageResources.Account_ChangePass" />
                                     </div>
                                 </div>
                                 @Html.AntiForgeryToken()

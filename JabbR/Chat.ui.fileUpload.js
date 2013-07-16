@@ -1,4 +1,4 @@
-﻿(function ($, ui) {
+﻿(function ($, ui, utility) {
     var $hiddenFile = null,
         $previewUpload = null,
         $imageUploadPreview = null,
@@ -25,10 +25,10 @@
         $unknownUploadPreview.hide();
         //set image url
         if (file.dataURL.indexOf('data:image') === 0) {
-            $previewUpload.find('h3').text('Uploading: ' + type);
+            $previewUpload.find('h3').text(utility.getLanguageResource('Client_Uploading', type));
             $imageUploadPreview.attr('src', file.dataURL);
         } else {
-            $previewUpload.find('h3').text('Uploading: ' + file.name);
+            $previewUpload.find('h3').text(utility.getLanguageResource('Client_Uploading', file.name));
             if (type == 'image') {
                 //uploading an actual file
                 $imageUploadPreview.attr('src', file.data.result);
@@ -78,7 +78,7 @@
             }
         };
 
-        ui.addMessage('Uploading \'' + file.name + '\'.', 'broadcast');
+        ui.addMessage(utility.getLanguageResource('Client_Uploading', file.name), 'broadcast');
 
         $ui.trigger(ui.events.fileUploaded, [uploader]);
     }
@@ -294,4 +294,4 @@
         reader.readAsDataURL(file);
     });
 
-})(jQuery, window.chat.ui);
+})(jQuery, window.chat.ui, window.chat.utility);

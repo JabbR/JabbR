@@ -4,14 +4,14 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("open", "Open a closed room. Only works if you're an owner of that room.", "room", "room")]
+    [Command("open", "Open_CommandInfo", "room", "room")]
     public class OpenCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException("Which room do you want to open?");
+                throw new InvalidOperationException(LanguageResources.Open_RoomRequired);
             }
 
             string roomName = args[0];

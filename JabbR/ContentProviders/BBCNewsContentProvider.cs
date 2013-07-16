@@ -11,7 +11,7 @@ namespace JabbR.ContentProviders
 {
     public class BBCContentProvider : CollapsibleContentProvider
     {
-        private static readonly string ContentFormat = "<div class='bbc_wrapper'><div class=\"bbc_header\"><img src=\"/Content/images/contentproviders/bbcnews-masthead.png\" alt=\"\" width=\"84\" height=\"24\"></div><img src=\"{1}\" title=\"{2}\" alt=\"{3}\" class=\"bbc_newsimage\" /><h2>{0}</h2><div>{4}</div><div><a href=\"{5}\" target=\"_blank\">View article</a></div></div>";
+        private static readonly string ContentFormat = "<div class='bbc_wrapper'><div class=\"bbc_header\"><img src=\"/Content/images/contentproviders/bbcnews-masthead.png\" alt=\"\" width=\"84\" height=\"24\"></div><img src=\"{1}\" title=\"{2}\" alt=\"{3}\" class=\"bbc_newsimage\" /><h2>{0}</h2><div>{4}</div><div><a href=\"{5}\" target=\"_blank\">{6}</a></div></div>";
 
         protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
@@ -19,7 +19,7 @@ namespace JabbR.ContentProviders
             {
                 return new ContentProviderResult()
                 {
-                    Content = String.Format(ContentFormat, pageInfo.Title, pageInfo.ImageURL, pageInfo.Title, pageInfo.Title, pageInfo.Description, pageInfo.PageURL),
+                    Content = String.Format(ContentFormat, pageInfo.Title, pageInfo.ImageURL, pageInfo.Title, pageInfo.Title, pageInfo.Description, pageInfo.PageURL, LanguageResources.ViewArticle),
                     Title = pageInfo.Title
                 };
             });

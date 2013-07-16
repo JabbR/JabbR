@@ -2184,19 +2184,16 @@ li.clearfix {
 
 #releaseArea {
     padding: 10px 0;
-}
-
-#releaseTag {
     font-size: smaller;
     margin: 0;
 }
 
-    #releaseTag a {
+    #releaseArea a {
         color: #1C94C4;
         text-decoration: none;
     }
 
-        #releaseTag a:hover {
+        #releaseArea a:hover {
             color: #1C94C4;
             text-decoration: underline;
         }

@@ -193,9 +193,11 @@
                 .css('backgroundColor', '')
                 .css('color', '')
                 .data('unread', 0)
-                .data('hasMentions', false)
-                .find('.content')
-                .text(this.getName());
+                .data('hasMentions', false);
+        
+        if (this.tab.is('.room')) {
+            this.tab.find('.content').text(this.getName());
+        }
 
         this.messages.addClass('current')
                      .show();

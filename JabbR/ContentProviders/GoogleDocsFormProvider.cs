@@ -11,7 +11,7 @@ namespace JabbR.ContentProviders
         {
             get
             {
-                return @"<iframe src=""https://docs.google.com/spreadsheet/pub?key={0}&output=html&widget=true"" style=""width:100%;height:400px;"" frameborder=""0"" marginheight=""0"" marginwidth=""0"">Loading...</iframe>";
+                return String.Format(@"<iframe src=""https://docs.google.com/spreadsheet/pub?key={{0}}&output=html&widget=true"" style=""width:100%;height:400px;"" frameborder=""0"" marginheight=""0"" marginwidth=""0"">{0}</iframe>", LanguageResources.LoadingMessage);
             }
         }
 

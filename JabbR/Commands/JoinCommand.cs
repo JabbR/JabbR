@@ -3,14 +3,14 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("join", "Join a channel of your choice. If it is private and you have an invite code, enter it after the room name.", "room [invitecode]", "user")]
+    [Command("join", "Join_CommandInfo", "room [invitecode]", "user")]
     public class JoinCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException("Which room do you want to join?");
+                throw new InvalidOperationException(LanguageResources.Join_RoomRequired);
             }
 
             // Extract arguments

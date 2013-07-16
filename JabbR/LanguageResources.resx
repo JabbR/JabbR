@@ -1,0 +1,1131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Account_AccountAlreadyLinked" xml:space="preserve">
+    <value>This {0} account has already been linked to another user.</value>
+  </data>
+  <data name="Account_AccountLinkedSuccess" xml:space="preserve">
+    <value>Successfully linked {0} account.</value>
+  </data>
+  <data name="Account_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Account_ChangePass" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Account_ChangeUserName" xml:space="preserve">
+    <value>Change Username</value>
+  </data>
+  <data name="Account_Country" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="Account_CurrentPass" xml:space="preserve">
+    <value>Current Password</value>
+  </data>
+  <data name="Account_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="Account_IdentityProviders" xml:space="preserve">
+    <value>Identity Providers</value>
+  </data>
+  <data name="Account_IdentityProviderTaken" xml:space="preserve">
+    <value>Identity {0} already taken with Provider {1}, please login with a different provider/identity combination.</value>
+  </data>
+  <data name="Account_Note" xml:space="preserve">
+    <value>Note</value>
+  </data>
+  <data name="Account_Pass" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="Account_PassConfirm" xml:space="preserve">
+    <value>Confirm Password</value>
+  </data>
+  <data name="Account_Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="Account_Register" xml:space="preserve">
+    <value>Register</value>
+  </data>
+  <data name="Account_RegisterMessage" xml:space="preserve">
+    <value>&lt;a href="{0}"&gt;Register&lt;/a&gt; if you don't have an account.</value>
+  </data>
+  <data name="Account_SignIn" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="Account_UnlinkCompleted" xml:space="preserve">
+    <value>Successfully unlinked {0} account.</value>
+  </data>
+  <data name="Account_UnlinkIdentityProvider" xml:space="preserve">
+    <value>Unlink identity provider</value>
+  </data>
+  <data name="Account_UnlinkRequiresMultipleIdentities" xml:space="preserve">
+    <value>You cannot unlink this account because you would lose your ability to login.</value>
+  </data>
+  <data name="Account_UserName" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Account_UserNameConfirm" xml:space="preserve">
+    <value>Confirm Username</value>
+  </data>
+  <data name="AddAdmin_UserRequired" xml:space="preserve">
+    <value>Who do you want to make an admin?</value>
+  </data>
+  <data name="AddOwner_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to add ownership to?</value>
+  </data>
+  <data name="AddOwner_UserRequired" xml:space="preserve">
+    <value>Who do you want to make an owner?</value>
+  </data>
+  <data name="Administration" xml:space="preserve">
+    <value>Administration</value>
+  </data>
+  <data name="Administration_AllowRoomCreation" xml:space="preserve">
+    <value>Allow Room Creation</value>
+  </data>
+  <data name="Administration_AllowUserRegistration" xml:space="preserve">
+    <value>Allow User Registration</value>
+  </data>
+  <data name="Administration_Analytics" xml:space="preserve">
+    <value>Analytics</value>
+  </data>
+  <data name="Administration_AnalyticsGoogleId" xml:space="preserve">
+    <value>Google Analytics ID</value>
+  </data>
+  <data name="Administration_AzureBlobStorageConnectionString" xml:space="preserve">
+    <value>Azure Blob Storage Connectionstring</value>
+  </data>
+  <data name="Administration_Encryption" xml:space="preserve">
+    <value>Encryption</value>
+  </data>
+  <data name="Administration_EncryptionKey" xml:space="preserve">
+    <value>Encryption Key</value>
+  </data>
+  <data name="Administration_GeneralSettings" xml:space="preserve">
+    <value>General Settings</value>
+  </data>
+  <data name="Administration_IdentityProviders" xml:space="preserve">
+    <value>Identity Providers</value>
+  </data>
+  <data name="Administration_MaxFileUploadBytes" xml:space="preserve">
+    <value>Max File Upload Size (Bytes)</value>
+  </data>
+  <data name="Administration_Storage" xml:space="preserve">
+    <value>Storage</value>
+  </data>
+  <data name="Administration_VerificationKey" xml:space="preserve">
+    <value>Verification Key</value>
+  </data>
+  <data name="AdminRequired" xml:space="preserve">
+    <value>You are not an admin.</value>
+  </data>
+  <data name="Allowed_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to list the allowed users of?</value>
+  </data>
+  <data name="Allow_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to allow access to?</value>
+  </data>
+  <data name="Allow_UserRequired" xml:space="preserve">
+    <value>Who do you want to grant access permissions to?</value>
+  </data>
+  <data name="AudioTagSupportRequired" xml:space="preserve">
+    <value>Your browser does not support the audio tag.</value>
+  </data>
+  <data name="AuthenticationPasswordRequired" xml:space="preserve">
+    <value>A password is required.</value>
+  </data>
+  <data name="Authentication_EmailRequired" xml:space="preserve">
+    <value>Email is required.</value>
+  </data>
+  <data name="Authentication_GenericFailure" xml:space="preserve">
+    <value>Login failed. Check your username/password.</value>
+  </data>
+  <data name="Authentication_NameChangeCompleted" xml:space="preserve">
+    <value>Successfully changed your username.</value>
+  </data>
+  <data name="Authentication_NameNonMatching" xml:space="preserve">
+    <value>Usernames don't match.</value>
+  </data>
+  <data name="Authentication_NameRequired" xml:space="preserve">
+    <value>Username is required.</value>
+  </data>
+  <data name="Authentication_NotLoggedIn" xml:space="preserve">
+    <value>You're not logged in.</value>
+  </data>
+  <data name="Authentication_OldNewUsernamesSame" xml:space="preserve">
+    <value>That's already your username...</value>
+  </data>
+  <data name="Authentication_OldPasswordRequired" xml:space="preserve">
+    <value>Old password is required.</value>
+  </data>
+  <data name="Authentication_PassAddSuccess" xml:space="preserve">
+    <value>Successfully added a password.</value>
+  </data>
+  <data name="Authentication_PassChangeSuccess" xml:space="preserve">
+    <value>Successfully changed your password.</value>
+  </data>
+  <data name="Authentication_PassLengthRequired" xml:space="preserve">
+    <value>Your password must be at least {0} characters.</value>
+  </data>
+  <data name="Authentication_PassNonMatching" xml:space="preserve">
+    <value>Passwords don't match.</value>
+  </data>
+  <data name="Authentication_PassRequired" xml:space="preserve">
+    <value>Password is required.</value>
+  </data>
+  <data name="Ban_CannotBanAdmin" xml:space="preserve">
+    <value>You cannot ban another admin.</value>
+  </data>
+  <data name="Ban_UserRequired" xml:space="preserve">
+    <value>Who do you want to ban?</value>
+  </data>
+  <data name="Broadcast_MessageRequired" xml:space="preserve">
+    <value>What message do you want to broadcast?</value>
+  </data>
+  <data name="Client_AccountSettings" xml:space="preserve">
+    <value>Account Settings</value>
+  </data>
+  <data name="Client_AdminTag" xml:space="preserve">
+    <value>admin</value>
+  </data>
+  <data name="Client_AudibleNotifications" xml:space="preserve">
+    <value>Audible Notifications</value>
+  </data>
+  <data name="Client_DateRangeAll" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Client_DateRangeLastDay" xml:space="preserve">
+    <value>Last day</value>
+  </data>
+  <data name="Client_DateRangeLastHour" xml:space="preserve">
+    <value>Last hour</value>
+  </data>
+  <data name="Client_DateRangeLastMonth" xml:space="preserve">
+    <value>Last month</value>
+  </data>
+  <data name="Client_DateRangeLastWeek" xml:space="preserve">
+    <value>Last week</value>
+  </data>
+  <data name="Client_DeploymentInfo" xml:space="preserve">
+    <value>Deployed from &lt;a target="_blank" href="https://github.com/JabbR/JabbR/commit/{0}" title="View the commit"&gt;{1}&lt;/a&gt; on &lt;a target="_blank" href="https://github.com/JabbR/JabbR/branches/{2}" title="View the branch"&gt;{2}&lt;/a&gt; at {3}.</value>
+  </data>
+  <data name="Client_DisplayHelp" xml:space="preserve">
+    <value>Display Help</value>
+  </data>
+  <data name="Client_Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="Client_DownloadMessages" xml:space="preserve">
+    <value>Download Messages</value>
+  </data>
+  <data name="Client_DownloadMessagesDateRange" xml:space="preserve">
+    <value>Select date range for messages:</value>
+  </data>
+  <data name="Client_FAQ" xml:space="preserve">
+    <value>FAQ</value>
+  </data>
+  <data name="Client_FAQMessage" xml:space="preserve">
+    <value>&lt;p&gt;Click on a user to send message.&lt;/p&gt;
+&lt;p&gt;Type #roomname to create a link to a room.&lt;/p&gt;
+&lt;p&gt;Use #test for testing.&lt;/p&gt;</value>
+  </data>
+  <data name="Client_Help" xml:space="preserve">
+    <value>JabbR Help</value>
+  </data>
+  <data name="Client_JabbrError" xml:space="preserve">
+    <value>Jabbr Error</value>
+  </data>
+  <data name="Client_JabbrErrorMessage" xml:space="preserve">
+    <value>There was an error contacting the server, please refresh in a few minutes.</value>
+  </data>
+  <data name="Client_JabbrSettings" xml:space="preserve">
+    <value>JabbR Settings</value>
+  </data>
+  <data name="Client_LoadingPreviousMessages" xml:space="preserve">
+    <value>Loading previous messages...</value>
+  </data>
+  <data name="Client_LoadMissingMessages" xml:space="preserve">
+    <value>Load missing messages</value>
+  </data>
+  <data name="Client_LoadMore" xml:space="preserve">
+    <value>Load more...</value>
+  </data>
+  <data name="Client_Lobby" xml:space="preserve">
+    <value>Lobby</value>
+  </data>
+  <data name="Client_NoMatchingRooms" xml:space="preserve">
+    <value>No matching rooms</value>
+  </data>
+  <data name="Client_Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="Client_NoUsersInList" xml:space="preserve">
+    <value>No users</value>
+  </data>
+  <data name="Client_OccupantsMany" xml:space="preserve">
+    <value>{0} occupants</value>
+  </data>
+  <data name="Client_OccupantsOne" xml:space="preserve">
+    <value>1 occupant</value>
+  </data>
+  <data name="Client_OccupantsZero" xml:space="preserve">
+    <value>Unoccupied</value>
+  </data>
+  <data name="Client_PopupNotifications" xml:space="preserve">
+    <value>Popup Notifications</value>
+  </data>
+  <data name="Client_RefreshRequiredHeader" xml:space="preserve">
+    <value>JabbR Update</value>
+  </data>
+  <data name="Client_RefreshRequiredNotification" xml:space="preserve">
+    <value>Refresh your browser to get the latest version.  Auto update will take place in 15 seconds.</value>
+  </data>
+  <data name="Client_RoomCommands" xml:space="preserve">
+    <value>Room commands</value>
+  </data>
+  <data name="Client_RoomFilterInstruction" xml:space="preserve">
+    <value>Start typing to filter room list...</value>
+  </data>
+  <data name="Client_Rooms" xml:space="preserve">
+    <value>Rooms</value>
+  </data>
+  <data name="Client_RoomSettings" xml:space="preserve">
+    <value>Room Settings</value>
+  </data>
+  <data name="Client_Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="Client_ShowClosedRooms" xml:space="preserve">
+    <value>Show Closed Rooms?</value>
+  </data>
+  <data name="Client_SignOut" xml:space="preserve">
+    <value>Sign Out</value>
+  </data>
+  <data name="Client_SiteWideCommands" xml:space="preserve">
+    <value>Site-wide commands</value>
+  </data>
+  <data name="Client_SiteWideShortcuts" xml:space="preserve">
+    <value>Site-wide shortcuts</value>
+  </data>
+  <data name="Client_ToggleRichContent" xml:space="preserve">
+    <value>Toggle Rich Content</value>
+  </data>
+  <data name="Client_Upload" xml:space="preserve">
+    <value>Upload</value>
+  </data>
+  <data name="Client_UploadingFromClipboard" xml:space="preserve">
+    <value>Uploading from clipboard</value>
+  </data>
+  <data name="Client_UserCommands" xml:space="preserve">
+    <value>User commands</value>
+  </data>
+  <data name="Client_YourPrivateRooms" xml:space="preserve">
+    <value>Your Private Rooms</value>
+  </data>
+  <data name="Close_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to close?</value>
+  </data>
+  <data name="CommandAmbiguous" xml:space="preserve">
+    <value>{0} is ambiguous: {1}.</value>
+  </data>
+  <data name="CommandNotFound" xml:space="preserve">
+    <value>{0} is not a valid command.</value>
+  </data>
+  <data name="Content_PasteHeaderAndToggle" xml:space="preserve">
+    <value>Paste (click to show/hide)</value>
+  </data>
+  <data name="CountryISOInvalid" xml:space="preserve">
+    <value>Sorry, but the country ISO code you requested doesn't exist. Please refer to http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 for a proper list of country ISO codes.</value>
+  </data>
+  <data name="GithubContent_NoMilestone" xml:space="preserve">
+    <value>No milestone</value>
+  </data>
+  <data name="GithubContent_UserAssigned" xml:space="preserve">
+    <value>&lt;a href="#" class="github-issue-user-{0}" target="_blank"&gt;{0}&lt;/a&gt; is assigned</value>
+  </data>
+  <data name="GithubContent_UserCommentedAtTime" xml:space="preserve">
+    <value>&lt;a href="#" class="github-issue-user-{0}" target="_blank"&gt;{0}&lt;/a&gt; commented &lt;time class="js-relative-date" datetime="{1}"&gt;{1}&lt;/time&gt;</value>
+  </data>
+  <data name="GithubContent_UserOpenedIssueAtTime" xml:space="preserve">
+    <value>&lt;a href="#" class="github-issue-user-{0}" target="_blank"&gt;{0}&lt;/a&gt; opened this issue &lt;time class="js-relative-date" datetime="{1}"&gt;{1}&lt;/time&gt;</value>
+  </data>
+  <data name="GoogleMapsContent_DefaultTitle" xml:space="preserve">
+    <value>Google Maps</value>
+  </data>
+  <data name="GravatarContent_HeaderAndToggle" xml:space="preserve">
+    <value>Gravatar Profile: {0} (click to show/hide)</value>
+  </data>
+  <data name="Gravatar_EmailRequired" xml:space="preserve">
+    <value>Which email address do you want to use for the Gravatar image?</value>
+  </data>
+  <data name="InviteCode_PrivateRoomRequired" xml:space="preserve">
+    <value>Only private rooms can have invite codes.</value>
+  </data>
+  <data name="InviteCode_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to show the invite code for?</value>
+  </data>
+  <data name="InviteCode_Success" xml:space="preserve">
+    <value>Invite Code for {0}: {1}</value>
+  </data>
+  <data name="Invite_CannotInviteSelf" xml:space="preserve">
+    <value>You can't invite yourself!</value>
+  </data>
+  <data name="Invite_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to invite them to?</value>
+  </data>
+  <data name="Invite_UserRequired" xml:space="preserve">
+    <value>Who do you want to invite?</value>
+  </data>
+  <data name="InvokeFromRoomRequired" xml:space="preserve">
+    <value>This command cannot be invoked from the Lobby.</value>
+  </data>
+  <data name="JoinMeContent_DefaultTitle" xml:space="preserve">
+    <value>Join Me Meeting: {0}</value>
+  </data>
+  <data name="Join_LockedAccessPermission" xml:space="preserve">
+    <value>Unable to join {0}. This room is locked and you don't have permission to enter. If you have an invite code, enter it in the /join command</value>
+  </data>
+  <data name="Join_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to join?</value>
+  </data>
+  <data name="Kick_AdminRequiredToKickAdmin" xml:space="preserve">
+    <value>You cannot kick an admin. Only admin can kick admin.</value>
+  </data>
+  <data name="Kick_CannotKickSelf" xml:space="preserve">
+    <value>Why would you want to kick yourself?</value>
+  </data>
+  <data name="Kick_CreatorRequiredToKickOwner" xml:space="preserve">
+    <value>Owners cannot kick other owners. Only the room creator can kick an owner.</value>
+  </data>
+  <data name="Kick_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to kick them from?</value>
+  </data>
+  <data name="Kick_UserRequired" xml:space="preserve">
+    <value>Who do you want to to kick?</value>
+  </data>
+  <data name="Leave_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to leave?</value>
+  </data>
+  <data name="List_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to list the current users of?</value>
+  </data>
+  <data name="LoadingMessage" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="Lock_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to lock?</value>
+  </data>
+  <data name="Me_ActionRequired" xml:space="preserve">
+    <value>You what?</value>
+  </data>
+  <data name="Msg_CannotMsgSelf" xml:space="preserve">
+    <value>You can't private message yourself!</value>
+  </data>
+  <data name="Msg_MessageRequired" xml:space="preserve">
+    <value>What do you want to say to {0}?</value>
+  </data>
+  <data name="Msg_UserRequired" xml:space="preserve">
+    <value>Who do you want to send a private message to?</value>
+  </data>
+  <data name="NoteTooLong" xml:space="preserve">
+    <value>Sorry, but your {1} is too long. Please keep it under {0} characters.</value>
+  </data>
+  <data name="Notifications" xml:space="preserve">
+    <value>Notifications</value>
+  </data>
+  <data name="Notifications_AllNotifications" xml:space="preserve">
+    <value>All Notifications</value>
+  </data>
+  <data name="Notifications_MarkAllRead" xml:space="preserve">
+    <value>Mark All as Read</value>
+  </data>
+  <data name="Notifications_MarkAsRead" xml:space="preserve">
+    <value>Mark Notification as Read</value>
+  </data>
+  <data name="Notifications_MetadataInfo" xml:space="preserve">
+    <value>{0} in &lt;strong&gt;&lt;cite&gt;{1}&lt;/cite&gt;&lt;/strong&gt; on &lt;span class="time" data-timestamp="{2}"&gt;&lt;/span&gt;</value>
+    <comment>{0} is sender, {1} is room, {2} is timestamp</comment>
+  </data>
+  <data name="Notifications_NoUnread" xml:space="preserve">
+    <value>No unread notifications!</value>
+  </data>
+  <data name="Notifications_UnreadWithCount" xml:space="preserve">
+    <value>Unread &lt;span id="js-unread-counter" data-unread="{0}" class="pull-right"&gt;{0}&lt;/span&gt;</value>
+  </data>
+  <data name="NudgeRoom_Throttled" xml:space="preserve">
+    <value>Room can only be nudged once every {0} seconds.</value>
+  </data>
+  <data name="NudgeUser_CannotNudgeSelf" xml:space="preserve">
+    <value>You can't nudge yourself!</value>
+  </data>
+  <data name="NudgeUser_Throttled" xml:space="preserve">
+    <value>User can only be nudged once every {0} seconds.</value>
+  </data>
+  <data name="Open_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to open?</value>
+  </data>
+  <data name="PostNotification_NotAllowed" xml:space="preserve">
+    <value>You're not allowed to post a notification.</value>
+  </data>
+  <data name="RemoveAdmin_UserRequired" xml:space="preserve">
+    <value>Which admin do you want to remove?</value>
+  </data>
+  <data name="RemoveOwner_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to remove the owner from?</value>
+  </data>
+  <data name="RemoveOwner_UserRequired" xml:space="preserve">
+    <value>Which owner do you want to remove?</value>
+  </data>
+  <data name="ResetInviteCode_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to reset the invite code of?</value>
+  </data>
+  <data name="RoomAccessPermission" xml:space="preserve">
+    <value>You do not have access to {0}.</value>
+  </data>
+  <data name="RoomAccessPermissionUser" xml:space="preserve">
+    <value>{0} isn't allowed to access {1}.</value>
+  </data>
+  <data name="RoomAlreadyClosed" xml:space="preserve">
+    <value>{0} is already closed.</value>
+  </data>
+  <data name="RoomAlreadyLocked" xml:space="preserve">
+    <value>{0} is already locked.</value>
+  </data>
+  <data name="RoomAlreadyOpen" xml:space="preserve">
+    <value>{0} is already open.</value>
+  </data>
+  <data name="RoomCannotBeNamedLobby" xml:space="preserve">
+    <value>Lobby is not a valid chat room name.</value>
+  </data>
+  <data name="RoomClosed" xml:space="preserve">
+    <value>{0} is closed.</value>
+  </data>
+  <data name="RoomCreationDisabled" xml:space="preserve">
+    <value>Room creation is disabled.</value>
+  </data>
+  <data name="RoomCreatorRequired" xml:space="preserve">
+    <value>You are not the creator of {0}.</value>
+  </data>
+  <data name="RoomExists" xml:space="preserve">
+    <value>{0} already exists.</value>
+  </data>
+  <data name="RoomExistsButClosed" xml:space="preserve">
+    <value>{0} already exists, but it's closed.</value>
+  </data>
+  <data name="RoomInvalidName" xml:space="preserve">
+    <value>{0} is not a valid room name.</value>
+  </data>
+  <data name="RoomInvalidNameSpaces" xml:space="preserve">
+    <value>Room names cannot contain spaces.</value>
+  </data>
+  <data name="RoomJoinMessage" xml:space="preserve">
+    <value>Use '/join room' to join a room.</value>
+  </data>
+  <data name="RoomMemberButNotExists" xml:space="preserve">
+    <value>You're in {0}, but it doesn't exist.</value>
+  </data>
+  <data name="RoomNameCannotBeBlank" xml:space="preserve">
+    <value>Room name cannot be blank!</value>
+  </data>
+  <data name="RoomNotFound" xml:space="preserve">
+    <value>Unable to find {0}.</value>
+  </data>
+  <data name="RoomNotMember" xml:space="preserve">
+    <value>You're not in {0}. Use '/join {0}' to join it.</value>
+  </data>
+  <data name="RoomNotPrivate" xml:space="preserve">
+    <value>{0} is not a private room.</value>
+  </data>
+  <data name="RoomOwnerRequired" xml:space="preserve">
+    <value>You are not an owner of {0}.</value>
+  </data>
+  <data name="RoomRequired" xml:space="preserve">
+    <value>No room specified.</value>
+  </data>
+  <data name="RoomUserAlreadyAllowed" xml:space="preserve">
+    <value>{0} is already allowed into {1}.</value>
+  </data>
+  <data name="RoomUserAlreadyOwner" xml:space="preserve">
+    <value>{0} is already an owner of {1}.</value>
+  </data>
+  <data name="SendMessageRoomClosed" xml:space="preserve">
+    <value>You cannot post messages to {0}. The room is closed.</value>
+  </data>
+  <data name="SettingsSave" xml:space="preserve">
+    <value>Save Settings</value>
+  </data>
+  <data name="SettingsSaveSuccess" xml:space="preserve">
+    <value>Successfully saved the settings.</value>
+  </data>
+  <data name="SizeOrderBytes" xml:space="preserve">
+    <value>Bytes</value>
+  </data>
+  <data name="SizeOrderGB" xml:space="preserve">
+    <value>GB</value>
+  </data>
+  <data name="SizeOrderKB" xml:space="preserve">
+    <value>KB</value>
+  </data>
+  <data name="SizeOrderMB" xml:space="preserve">
+    <value>MB</value>
+  </data>
+  <data name="UnAllow_AdminRequired" xml:space="preserve">
+    <value>You cannot unallow an admin. Only admin can unallow admin.</value>
+  </data>
+  <data name="UnAllow_CannotUnallowSelf" xml:space="preserve">
+    <value>Why would you want to unallow yourself?</value>
+  </data>
+  <data name="UnAllow_CreatorRequiredToUnallowOwner" xml:space="preserve">
+    <value>Owners cannot unallow other owners. Only the room creator can unallow an owner.</value>
+  </data>
+  <data name="UnAllow_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to revoke access from?</value>
+  </data>
+  <data name="UnAllow_UserRequired" xml:space="preserve">
+    <value>Who you want to revoke access permissions from?</value>
+  </data>
+  <data name="UploadFailed" xml:space="preserve">
+    <value>Failed to upload {0}.</value>
+  </data>
+  <data name="UploadFailedException" xml:space="preserve">
+    <value>Failed to upload {0}. {1}</value>
+  </data>
+  <data name="UserAlreadyAdmin" xml:space="preserve">
+    <value>{0} is already an admin.</value>
+  </data>
+  <data name="UserInvalidName" xml:space="preserve">
+    <value>{0} is not a valid user name.</value>
+  </data>
+  <data name="UserNameTaken" xml:space="preserve">
+    <value>Username {0} already taken.</value>
+  </data>
+  <data name="UserNotAdmin" xml:space="preserve">
+    <value>{0} is not an admin.</value>
+  </data>
+  <data name="UserNotFound" xml:space="preserve">
+    <value>Unable to find {0}.</value>
+  </data>
+  <data name="UserNotInRoom" xml:space="preserve">
+    <value>{0} isn't in {1}.</value>
+  </data>
+  <data name="UserNotRoomOwner" xml:space="preserve">
+    <value>{0} is not an owner of {1}.</value>
+  </data>
+  <data name="ViewArticle" xml:space="preserve">
+    <value>View article</value>
+  </data>
+  <data name="ViewLargerMap" xml:space="preserve">
+    <value>View Larger Map</value>
+  </data>
+  <data name="Where_UserRequired" xml:space="preserve">
+    <value>Who do you want to locate?</value>
+  </data>
+  <data name="Content_HeaderAndToggle" xml:space="preserve">
+    <value>{0} (click to show/hide)</value>
+  </data>
+  <data name="AddOwner_CommandInfo" xml:space="preserve">
+    <value>Grants another user owner permissions on the specified (or current) room. Only works if you're an owner of the room.</value>
+  </data>
+  <data name="AFK_CommandInfo" xml:space="preserve">
+    <value>Set a temporary away from keyboard (AFK) note. This note will disappear when you next type something.</value>
+  </data>
+  <data name="Allowed_CommandInfo" xml:space="preserve">
+    <value>Show a list of all users allowed in the specified (or current) room.</value>
+  </data>
+  <data name="Allow_CommandInfo" xml:space="preserve">
+    <value>Grant a user permission to access a private room. Only works if you're an owner of that room.</value>
+  </data>
+  <data name="Ban_CommandInfo" xml:space="preserve">
+    <value>Ban a user from JabbR!</value>
+  </data>
+  <data name="Broadcast_CommandInfo" xml:space="preserve">
+    <value>Send a message to all users in all rooms. Only works if you're an administrator.</value>
+  </data>
+  <data name="Chat_AdminBroadcast" xml:space="preserve">
+    <value>ADMIN: {0}</value>
+  </data>
+  <data name="Chat_CannotSendLobby" xml:space="preserve">
+    <value>You cannot send messages within the lobby.</value>
+  </data>
+  <data name="Chat_CollapseHiddenMessages" xml:space="preserve">
+    <value>(click to collapse)</value>
+  </data>
+  <data name="Chat_DefaultTopic" xml:space="preserve">
+    <value>You're chatting in {0}.</value>
+  </data>
+  <data name="Chat_ExpandHiddenMessages" xml:space="preserve">
+    <value>(plus {0} hidden... click to expand)</value>
+  </data>
+  <data name="Chat_InitialMessages" xml:space="preserve">
+    <value>Welcome to JabbR
+Use ? or type /? to display the FAQ and list of commands.</value>
+  </data>
+  <data name="Chat_NoRoomsAvailable" xml:space="preserve">
+    <value>No rooms available.</value>
+  </data>
+  <data name="Chat_PrivateMessage" xml:space="preserve">
+    <value>*{0}* *{1}* {2}</value>
+    <comment>{0} is from, {1} is to, {2} is message</comment>
+  </data>
+  <data name="Chat_RoomNotPrivateAllowed" xml:space="preserve">
+    <value>Anyone is allowed in {0} as it is not private.</value>
+  </data>
+  <data name="Chat_RoomNowClosed" xml:space="preserve">
+    <value>{0} is now closed.</value>
+  </data>
+  <data name="Chat_RoomNowLocked" xml:space="preserve">
+    <value>{0} is now locked.</value>
+  </data>
+  <data name="Chat_RoomNowOpen" xml:space="preserve">
+    <value>{0} is now open.</value>
+  </data>
+  <data name="Chat_RoomPrivateNoUsersAllowed" xml:space="preserve">
+    <value>No users are allowed in {0}.</value>
+  </data>
+  <data name="Chat_RoomPrivateUsersAllowedResults" xml:space="preserve">
+    <value>The following users are allowed in {0}:</value>
+  </data>
+  <data name="Chat_RoomSearchEmpty" xml:space="preserve">
+    <value>No users matched your search.</value>
+  </data>
+  <data name="Chat_RoomSearchResults" xml:space="preserve">
+    <value>The following users match your search:</value>
+  </data>
+  <data name="Chat_RoomUsersEmpty" xml:space="preserve">
+    <value>Room is empty.</value>
+  </data>
+  <data name="Chat_RoomUsersHeader" xml:space="preserve">
+    <value>Users in {0}</value>
+  </data>
+  <data name="Chat_UserAdminAllowed" xml:space="preserve">
+    <value>{0} is now an admin.</value>
+  </data>
+  <data name="Chat_UserAdminRevoked" xml:space="preserve">
+    <value>{0} is no longer an admin.</value>
+  </data>
+  <data name="Chat_UserClearedFlag" xml:space="preserve">
+    <value>{0} has cleared their flag.</value>
+  </data>
+  <data name="Chat_UserClearedRoomTopic" xml:space="preserve">
+    <value>{0} has cleared the room topic.</value>
+  </data>
+  <data name="Chat_UserEnteredRoom" xml:space="preserve">
+    <value>{0} just entered {1}.</value>
+  </data>
+  <data name="Chat_UserGrantedRoomAccess" xml:space="preserve">
+    <value>{0} now has access to {1}.</value>
+  </data>
+  <data name="Chat_UserGrantedRoomOwnership" xml:space="preserve">
+    <value>{0} is now an owner of {1}.</value>
+  </data>
+  <data name="Chat_UserGravatarChanged" xml:space="preserve">
+    <value>{0}'s gravatar changed.</value>
+  </data>
+  <data name="Chat_UserHeader" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="Chat_UserInRooms" xml:space="preserve">
+    <value>{0} (Currently {1}) is in the following rooms:</value>
+  </data>
+  <data name="Chat_UserInvitedYouToRoom" xml:space="preserve">
+    <value>{0} has invited you to #{1}. Click the room name to join.</value>
+  </data>
+  <data name="Chat_UserIsAFK" xml:space="preserve">
+    <value>{0} has gone AFK.</value>
+  </data>
+  <data name="Chat_UserLeftRoom" xml:space="preserve">
+    <value>{0} left {1}.</value>
+  </data>
+  <data name="Chat_UserLockedRoom" xml:space="preserve">
+    <value>{0} has locked {1}.</value>
+  </data>
+  <data name="Chat_UserNameChanged" xml:space="preserve">
+    <value>{0}'s name has changed to {1}.</value>
+  </data>
+  <data name="Chat_UserNoteCleared" xml:space="preserve">
+    <value>{0} has cleared their note.</value>
+  </data>
+  <data name="Chat_UserNoteSet" xml:space="preserve">
+    <value>{0} has set their note.</value>
+  </data>
+  <data name="Chat_UserNotInRooms" xml:space="preserve">
+    <value>{0} (Currently {1}) is not in any rooms.</value>
+  </data>
+  <data name="Chat_UserNudgedRoom" xml:space="preserve">
+    <value>*{0} nudged the room.</value>
+  </data>
+  <data name="Chat_UserNudgedUser" xml:space="preserve">
+    <value>*{0} nudged {1}</value>
+  </data>
+  <data name="Chat_UserNudgedYou" xml:space="preserve">
+    <value>*{0} nudged you.</value>
+  </data>
+  <data name="Chat_UserOwnerHeader" xml:space="preserve">
+    <value>Room Owners</value>
+  </data>
+  <data name="Chat_UserOwnsNoRooms" xml:space="preserve">
+    <value>{0} does not own any rooms.</value>
+  </data>
+  <data name="Chat_UserOwnsRooms" xml:space="preserve">
+    <value>{0} owns the following rooms:</value>
+  </data>
+  <data name="Chat_UserPerformsAction" xml:space="preserve">
+    <value>*{0} {1}</value>
+    <comment>{0} is username, {1} is action</comment>
+  </data>
+  <data name="Chat_UserRoomOwnershipRevoked" xml:space="preserve">
+    <value>{0} is no longer an owner of {1}.</value>
+  </data>
+  <data name="Chat_UserSetFlag" xml:space="preserve">
+    <value>{0} has set their flag to {1}.</value>
+  </data>
+  <data name="Chat_UserSetRoomTopic" xml:space="preserve">
+    <value>{0} has set the room topic to "{1}".</value>
+  </data>
+  <data name="Chat_YouAdminAllowed" xml:space="preserve">
+    <value>You are now an admin.</value>
+  </data>
+  <data name="Chat_YouAdminRevoked" xml:space="preserve">
+    <value>You are no longer an admin.</value>
+  </data>
+  <data name="Chat_YouAreAFK" xml:space="preserve">
+    <value>You have gone AFK.</value>
+  </data>
+  <data name="Chat_YouClearedFlag" xml:space="preserve">
+    <value>You have cleared your flag.</value>
+  </data>
+  <data name="Chat_YouClearedRoomTopic" xml:space="preserve">
+    <value>You have cleared the room topic.</value>
+  </data>
+  <data name="Chat_YouClearedRoomWelcome" xml:space="preserve">
+    <value>You have cleared the room welcome.</value>
+  </data>
+  <data name="Chat_YouEnteredRoom" xml:space="preserve">
+    <value>You just entered {0}.</value>
+  </data>
+  <data name="Chat_YouGrantedRoomAccess" xml:space="preserve">
+    <value>You have been granted access to {0}.</value>
+  </data>
+  <data name="Chat_YouGrantedRoomOwnership" xml:space="preserve">
+    <value>You are now an owner of {0}.</value>
+  </data>
+  <data name="Chat_YouInvitedUserToRoom" xml:space="preserve">
+    <value>Invitation to {0} to join #{1} has been sent.</value>
+  </data>
+  <data name="Chat_YouKickedFromRoom" xml:space="preserve">
+    <value>You were kicked from {0}.</value>
+  </data>
+  <data name="Chat_YouRevokedUserRoomAccess" xml:space="preserve">
+    <value>You have revoked {0}'s access to {1}.</value>
+  </data>
+  <data name="Chat_YourGravatarChanged" xml:space="preserve">
+    <value>Your gravatar has been set.</value>
+  </data>
+  <data name="Chat_YourNameChanged" xml:space="preserve">
+    <value>Your name is now {0}.</value>
+  </data>
+  <data name="Chat_YourNoteCleared" xml:space="preserve">
+    <value>Your note has been cleared.</value>
+  </data>
+  <data name="Chat_YourNoteSet" xml:space="preserve">
+    <value>Your note has been set.</value>
+  </data>
+  <data name="Chat_YourPasswordChanged" xml:space="preserve">
+    <value>Your password has been changed.</value>
+  </data>
+  <data name="Chat_YourPasswordSet" xml:space="preserve">
+    <value>Your password has been set.</value>
+  </data>
+  <data name="Chat_YourRoomAccessRevoked" xml:space="preserve">
+    <value>Your access to {0} has been revoked.</value>
+  </data>
+  <data name="Chat_YourRoomOwnershipRevoked" xml:space="preserve">
+    <value>You are no longer an owner of {0}.</value>
+  </data>
+  <data name="Chat_YouSetFlag" xml:space="preserve">
+    <value>You have set your flag to {0}.</value>
+  </data>
+  <data name="Chat_YouSetRoomTopic" xml:space="preserve">
+    <value>You have set the room topic to "{0}".</value>
+  </data>
+  <data name="Chat_YouSetRoomWelcome" xml:space="preserve">
+    <value>You have set the room welcome to "{0}".</value>
+  </data>
+  <data name="Client_Connected" xml:space="preserve">
+    <value>You're connected.</value>
+  </data>
+  <data name="Client_ConnectedStatus" xml:space="preserve">
+    <value>Status: Connected</value>
+  </data>
+  <data name="Client_Disconnected" xml:space="preserve">
+    <value>The connection to JabbR has been lost, trying to reconnect.</value>
+  </data>
+  <data name="Client_OtherRooms" xml:space="preserve">
+    <value>Other Rooms</value>
+  </data>
+  <data name="Client_Reconnecting" xml:space="preserve">
+    <value>The connection to JabbR has been temporarily lost, trying to reconnect.</value>
+  </data>
+  <data name="Client_ShortcutLobby" xml:space="preserve">
+    <value>Go to the Lobby.</value>
+  </data>
+  <data name="Client_ShortcutSpecificTab" xml:space="preserve">
+    <value>Go to specific Tab.</value>
+  </data>
+  <data name="Client_ShortcutTabs" xml:space="preserve">
+    <value>Go to the next open room tab or Go to the previous open room tab.</value>
+  </data>
+  <data name="Client_Transport" xml:space="preserve">
+    <value>Transport: {0}</value>
+  </data>
+  <data name="Client_Uploading" xml:space="preserve">
+    <value>Uploading {0}.</value>
+  </data>
+  <data name="Close_CommandInfo" xml:space="preserve">
+    <value>Close the specified (or current) room. Only works if you're an owner of that room.</value>
+  </data>
+  <data name="Content_DisabledMessage" xml:space="preserve">
+    <value>Content collapsed because you have rich content disabled.</value>
+  </data>
+  <data name="Create_CommandInfo" xml:space="preserve">
+    <value>Create a room with the given name.</value>
+  </data>
+  <data name="Flag_CommandInfo" xml:space="preserve">
+    <value>Show a small flag which represents your nationality. Eg. /flag US for a USA flag. ISO Reference Chart: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 (Apologies to people with dual citizenship).</value>
+  </data>
+  <data name="Gravatar_CommandInfo" xml:space="preserve">
+    <value>Set your gravatar.</value>
+  </data>
+  <data name="Help_CommandInfo" xml:space="preserve">
+    <value>Show this list of commands.</value>
+  </data>
+  <data name="InviteCode_CommandInfo" xml:space="preserve">
+    <value>Show the current invite code.</value>
+  </data>
+  <data name="Invite_CommandInfo" xml:space="preserve">
+    <value>Invite a user to join a room. If it is private they must still either be granted access or given the access code to enter.</value>
+  </data>
+  <data name="Join_CommandInfo" xml:space="preserve">
+    <value>Join a room of your choice. If it is private and you have an invite code, enter it after the room name.</value>
+  </data>
+  <data name="Kick_CommandInfo" xml:space="preserve">
+    <value>Kick a user from the room. Note, this is only valid for owners of the room.</value>
+  </data>
+  <data name="Leave_CommandInfo" xml:space="preserve">
+    <value>Leave the specified (or current) room.</value>
+  </data>
+  <data name="List_CommandInfo" xml:space="preserve">
+    <value>Show a list of users in the room.</value>
+  </data>
+  <data name="Lock_CommandInfo" xml:space="preserve">
+    <value>Make a room private. Only works if you're the creator of that room.</value>
+  </data>
+  <data name="Logout_CommandInfo" xml:space="preserve">
+    <value>Log this client out from JabbR and remove browser cookie.</value>
+  </data>
+  <data name="Me_CommandInfo" xml:space="preserve">
+    <value>Type /me 'does anything'. Sends a message to everyone in the room.</value>
+  </data>
+  <data name="Msg_CommandInfo" xml:space="preserve">
+    <value>Send a private message to a specified user. @ is optional.</value>
+  </data>
+  <data name="Note_CommandInfo" xml:space="preserve">
+    <value>Set a note against your user account.</value>
+  </data>
+  <data name="Nudge_CommandInfo" xml:space="preserve">
+    <value>Send a nudge to the current room, or optionally provide a username to nudge that particular user.</value>
+  </data>
+  <data name="Open_CommandInfo" xml:space="preserve">
+    <value>Open a closed room. Only works if you're an owner of that room.</value>
+  </data>
+  <data name="RemoveOwner_CommandInfo" xml:space="preserve">
+    <value>Remove room owner permissions from a user. Only works if you're the creator of that room.</value>
+  </data>
+  <data name="ResetInviteCode_CommandInfo" xml:space="preserve">
+    <value>Reset the current invite code. This will render the previous invite code invalid.</value>
+  </data>
+  <data name="Topic_CommandInfo" xml:space="preserve">
+    <value>Set or clear the room topic. Exclude [topic] to clear the room's topic.</value>
+  </data>
+  <data name="Unallow_CommandInfo" xml:space="preserve">
+    <value>Revoke a user's permission to access a private room. Only works if you're an owner of that room.</value>
+  </data>
+  <data name="Welcome_CommandInfo" xml:space="preserve">
+    <value>Set or clear the welcome message displayed when users enter the room. Exclude [message] to remove the welcome.</value>
+  </data>
+  <data name="Where_CommandInfo" xml:space="preserve">
+    <value>List the rooms that user is in.</value>
+  </data>
+  <data name="Who_CommandInfo" xml:space="preserve">
+    <value>Show a list of all users, Use [name] to show specific information about that user.</value>
+  </data>
+  <data name="Account_NoEmailForUser" xml:space="preserve">
+    <value>No email found for {0}.</value>
+  </data>
+  <data name="Account_NoMatchingUser" xml:space="preserve">
+    <value>User {0} could not be found.</value>
+  </data>
+  <data name="Account_ResetExpiredToken" xml:space="preserve">
+    <value>The link used has expired.</value>
+  </data>
+  <data name="Account_ResetFailureMessage" xml:space="preserve">
+    <value>&lt;p&gt;Your password reset was unsuccessful: {0}.&lt;/p&gt;
+&lt;p&gt;If this is in error, please &lt;a href="{1}"&gt;try again&lt;/a&gt;.&lt;/p&gt;</value>
+  </data>
+  <data name="Account_ResetInvalidToken" xml:space="preserve">
+    <value>The link used is incorrect or has expired.</value>
+  </data>
+  <data name="Account_ResetPassword" xml:space="preserve">
+    <value>Reset password</value>
+  </data>
+  <data name="Account_ResetPasswordMessage" xml:space="preserve">
+    <value>&lt;a href="{0}"&gt;Reset your password&lt;/a&gt; if you've forgotten or lost your login information.</value>
+  </data>
+  <data name="Account_ResetPasswordSuccessMessage" xml:space="preserve">
+    <value>&lt;p&gt;A password reset email has been sent to the email address registered for user &lt;strong&gt;{0}&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;If you don't see this email in your inbox within 15 minutes, look for it in your junk-mail folder.&lt;/p&gt;</value>
+  </data>
+  <data name="Account_ResetRequest" xml:space="preserve">
+    <value>Request reset</value>
+  </data>
+  <data name="Account_ResetSuccessMessage" xml:space="preserve">
+    <value>&lt;p&gt;Your password has been reset successfully. &lt;/p&gt;
+&lt;p&gt;You should be able to &lt;a href="{0}"&gt;sign in&lt;/a&gt; with your new password.&lt;/p&gt;</value>
+  </data>
+  <data name="Administration_EmailSender" xml:space="preserve">
+    <value>Email Sender</value>
+  </data>
+  <data name="Administration_EmailSettings" xml:space="preserve">
+    <value>Email Settings</value>
+  </data>
+  <data name="Administration_ResetPasswordAllowed" xml:space="preserve">
+    <value>Allow User Password Reset</value>
+  </data>
+  <data name="Administration_ResetPasswordValidDurationHours" xml:space="preserve">
+    <value>Reset Password Valid Through (Hours)</value>
+  </data>
+  <data name="Client_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="Client_UploadNoPreview" xml:space="preserve">
+    <value>No preview available for this file type.</value>
+  </data>
+  <data name="Client_UploadDropTarget" xml:space="preserve">
+    <value>Drop files here</value>
+  </data>
+</root>

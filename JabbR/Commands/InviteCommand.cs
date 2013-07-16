@@ -3,14 +3,14 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("invite", "Invite a user to join a room.", "user [room]", "room")]
+    [Command("invite", "Invite_CommandInfo", "user [room]", "room")]
     public class InviteCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException("Who do you want to invite?");
+                throw new InvalidOperationException(LanguageResources.Invite_UserRequired);
             }
 
             string targetUserName = args[0];
@@ -19,14 +19,14 @@ namespace JabbR.Commands
 
             if (targetUser == callingUser)
             {
-                throw new InvalidOperationException("You can't invite yourself!");
+                throw new InvalidOperationException(LanguageResources.Invite_CannotInviteSelf);
             }
 
             string roomName = args.Length > 1 ? args[1] : callerContext.RoomName;
 
             if (String.IsNullOrEmpty(roomName))
             {
-                throw new InvalidOperationException("Which room do you want to invite them to?");
+                throw new InvalidOperationException(LanguageResources.Invite_RoomRequired);
             }
 
             ChatRoom targetRoom = context.Repository.VerifyRoom(roomName, mustBeOpen: false);
