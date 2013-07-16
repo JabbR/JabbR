@@ -1125,4 +1125,7 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="Client_UploadNoPreview" xml:space="preserve">
     <value>No preview available for this file type.</value>
   </data>
+  <data name="Client_UploadDropTarget" xml:space="preserve">
+    <value>Drop files here</value>
+  </data>
 </root>

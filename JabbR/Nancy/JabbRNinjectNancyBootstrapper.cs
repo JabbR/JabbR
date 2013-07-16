@@ -33,8 +33,6 @@ namespace JabbR.Nancy
 
             pipelines.BeforeRequest.AddItemToStartOfPipeline(FlowPrincipal);
             pipelines.BeforeRequest.AddItemToStartOfPipeline(SetCulture);
-
-            pipelines.AfterRequest.AddItemToStartOfPipeline(SetContentType);
         }
 
         private Response FlowPrincipal(NancyContext context)
@@ -69,14 +67,6 @@ namespace JabbR.Nancy
             Thread.CurrentThread.CurrentCulture = ctx.Culture;
             Thread.CurrentThread.CurrentUICulture = ctx.Culture;
             return null;
-        }
-
-        private void SetContentType(NancyContext ctx)
-        {
-            if (ctx.Response.ContentType.Contains("text/html"))
-            {
-                ctx.Response.ContentType = "text/html; charset=utf-8";
-            }
         }
 
         private static T Get<T>(IDictionary<string, object> env, string key)
