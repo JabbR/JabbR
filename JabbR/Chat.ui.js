@@ -893,6 +893,10 @@
             $('#tabs, #tabs-dropdown').dragsort({
                 placeHolderTemplate: '<li class="room"><a><span class="content"></span></a></li>',
                 dragBetween: true,
+                dragStart: function() {
+                    var roomName = $(this).closest('li').data('name');
+                    activateOrOpenRoom(roomName);
+                },
                 dragEnd: function () {
                     var roomTabOrder = [],
                         $roomTabs = $('#tabs li, #tabs-dropdown li');

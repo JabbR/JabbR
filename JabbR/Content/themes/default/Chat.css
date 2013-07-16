@@ -600,7 +600,7 @@ li.user.typing .gravatar {
         display: inline-block;
         float: left;
         padding: 0;
-        margin: 0px 0px 0px 0px;
+        margin: 0;
         height: 35px;
         position: relative;
         background: #fff;
@@ -609,7 +609,7 @@ li.user.typing .gravatar {
         font-weight: bold;
         cursor: pointer;
         border: 1px solid #e5e5e5;
-        border-bottom-width: 0px;
+        border-bottom-width: 0;
     }
 
     #tabs li:not(:first-child) {
@@ -673,6 +673,11 @@ li.user.typing .gravatar {
             opacity: 0.5;
             font-size: 18px;
         }
+
+            #tabs li:hover .close,
+            #tabs li.current .close {
+                color: #FFF;
+            }
             
             #tabs li .close:hover {
                 opacity: 0.75;

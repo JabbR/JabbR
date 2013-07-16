@@ -1,7 +1,7 @@
-// jQuery List DragSort v0.5.1
+// jQuery List DragSort v0.5.1-cmaish
 // Website: http://dragsort.codeplex.com/
 // License: http://dragsort.codeplex.com/license
-
+// This version from: https://github.com/cmaish/dragsort
 (function($) {
 
 	$.fn.dragsort = function(options) {
@@ -92,6 +92,9 @@
 
 					list = lists[$(this).attr("data-listidx")];
 					list.draggedItem = $(e.target).closest(opts.itemSelector);
+				    
+				    //raise event
+					opts.dragStart.apply(list.draggedItem);
 
 					//record current position so on dragend we know if the dragged item changed position or not
 					list.draggedItem.attr("data-origpos", $(this).attr("data-listidx") + "-" + list.getItems().index(list.draggedItem));
@@ -165,7 +168,7 @@
 					$(document).bind("mousemove", list.swapItems);
 					$(document).bind("mouseup", list.dropItem);
 					if (opts.scrollContainer != window)
-						$(window).bind("DOMMouseScroll mousewheel", list.wheel);
+					    $(window).bind("DOMMouseScroll mousewheel", list.wheel);
 				},
 
 				//set position of draggedItem
@@ -359,6 +362,7 @@
 		itemSelector: "",
 		dragSelector: "",
 		dragSelectorExclude: "input, textarea",
+		dragStart: function () { },
 		dragEnd: function() { },
 		dragBetween: false,
 		placeHolderTemplate: "",
