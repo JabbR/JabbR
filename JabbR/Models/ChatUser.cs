@@ -85,7 +85,7 @@ namespace JabbR.Models
 
             set
             {
-                this.RawPreferences = value.Serialize();
+                value.Serialize(this);
             }
         }
     }

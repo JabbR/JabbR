@@ -23,9 +23,9 @@ namespace JabbR.Models
             return preferences;
         }
 
-        public string Serialize()
+        public void Serialize(ChatUser chatUser)
         {
-            return JsonConvert.SerializeObject(this);
+            chatUser.RawPreferences = JsonConvert.SerializeObject(this);
         }
 
         public IList<string> TabOrder { get; set; }
