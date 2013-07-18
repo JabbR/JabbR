@@ -149,11 +149,11 @@
     </script>
     <script id="new-tab-template" type="text/x-jquery-tmpl">
         <li id="tabs-${id}" class="room" data-name="${name}" data-closed="${closed}" data-trimmable="true" role="tab">
-            <span class="lock hide"><i class="icon-lock"></i></span>
-            <span class="readonly hide"><i class="icon-ban-circle"></i></span>
-            <button> 
+            <a> 
+                <i class="icon-lock lock hide"></i>
+                <i class="icon-ban-circle readonly hide"></i>
                 <span class="content">${name}</span>
-            </button>
+            </a>
             <button class="close">&times;</button>
         </li>
     </script>
@@ -261,7 +261,7 @@
     </script>
     <!--/Gravatar Profile Template-->
 </head>
-<body>
+<body @if (Model.IsAdmin) { @Html.Raw("class=\"home-admin\""); }>
     <section id="page" role="application">
         <header id="heading" role="heading">
             <div class="banner" role="banner">
@@ -269,14 +269,22 @@
             </div>
             <nav>
                 <ul id="tabs" role="tablist">
-                    <li id="tabs-lobby" class="current lobby" data-name="Lobby" data-trimmable="false" role="tab">
-                        <button accesskey="l">
+                    <li id="tabs-lobby" class="current lobby no-close" data-name="Lobby" data-trimmable="false" role="tab">
+                        <a accesskey="l">
                             <span class="content">@LanguageResources.Client_Lobby</span>
-                        </button>
+                        </a>
                     </li>
                 </ul>
             </nav>
             <div id="main-menu" class="pull-right">
+                <div id="tabs-dropdown-container" role="tablist">
+                    <button class="dropdown-toggle" data-toggle="dropdown" id="tabs-dropdown-rooms">
+                        <i class="icon-chevron-down"></i>
+                    </button>
+                  
+                    <ul id="tabs-dropdown" class="dropdown-menu pull-right" aria-labelledby="tabs-dropdown-rooms">
+                    </ul>
+                </div>
                 <div id="connectionStatus" class="connection-status" data-toggle="popover" data-placement="bottom">
                     <i class="icon-connection-status"></i>
                 <div id="connection-info-popover" class="popover"><div class="arrow"></div><div class="popover-inner"><i class="popover-title-icon icon-globe" style="display: none;"></i><h3 class="popover-title" style="display: none;"></h3><div class="popover-content"><p></p></div></div></div>
@@ -460,6 +468,7 @@
             .Add("~/Scripts/json2.min.js")
             .Add("~/Scripts/bootstrap.js")
             .Add("~/Scripts/jquery.color-2.1.2.min.js")
+            .Add("~/Scripts/jquery.dragsort-0.5.1.min.js")
             .Add("~/Scripts/jquery.pulse.min.js")
             .Add("~/Scripts/jquery.KeyTips.js")
             .Add("~/Scripts/jquery.signalR-2.0.0-rc1-130702-b94.min.js")

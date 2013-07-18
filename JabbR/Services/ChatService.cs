@@ -5,6 +5,8 @@ using System.Text.RegularExpressions;
 using JabbR.Models;
 using JabbR.UploadHandlers;
 
+using Newtonsoft.Json;
+
 namespace JabbR.Services
 {
     public class ChatService : IChatService
@@ -353,6 +355,10 @@ namespace JabbR.Services
             // Add this user to the room
             _repository.AddUserRoom(user, room);
 
+            ChatUserPreferences userPreferences = user.Preferences;
+            userPreferences.TabOrder.Add(room.Name);
+            user.Preferences = userPreferences;
+
             // Clear the cache
             _cache.RemoveUserInRoom(user, room);
         }
@@ -395,6 +401,10 @@ namespace JabbR.Services
 
             // Remove the user from this room
             _repository.RemoveUserRoom(user, room);
+
+            ChatUserPreferences userPreferences = user.Preferences;
+            userPreferences.TabOrder.Remove(room.Name);
+            user.Preferences = userPreferences;
 
             _repository.CommitChanges();
         }

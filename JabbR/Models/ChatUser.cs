@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using JabbR.Infrastructure;
 
 namespace JabbR.Models
@@ -44,6 +45,8 @@ namespace JabbR.Models
         public string RequestPasswordResetId { get; set; }
         public DateTimeOffset? RequestPasswordResetValidThrough { get; set; }
 
+        public string RawPreferences { get; set; }
+
         // List of clients that are currently connected for this user
         public virtual ICollection<ChatUserIdentity> Identities { get; set; }
         public virtual ICollection<ChatClient> ConnectedClients { get; set; }
@@ -70,6 +73,20 @@ namespace JabbR.Models
         public bool HasUserNameAndPasswordCredentials()
         {
             return !String.IsNullOrEmpty(HashedPassword) && !String.IsNullOrEmpty(Name);
+        }
+
+        [NotMapped]
+        public ChatUserPreferences Preferences
+        {
+            get
+            {
+                return ChatUserPreferences.GetPreferences(this);
+            }
+
+            set
+            {
+                value.Serialize(this);
+            }
         }
     }
 }

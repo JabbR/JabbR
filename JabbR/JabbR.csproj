@@ -869,6 +869,9 @@
     <EmbeddedResource Include="Migrations\201307020008436_AllowUserResetPassword.resx">
       <DependentUpon>201307020008436_AllowUserResetPassword.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201307012142294_AddChatUserPreferences.resx">
+      <DependentUpon>201307012142294_AddChatUserPreferences.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -878,6 +881,8 @@
     <Content Include="Scripts\jquery-migrate-1.0.0.min.js" />
     <Content Include="Scripts\jquery.color-2.1.2.js" />
     <Content Include="Scripts\jquery.color-2.1.2.min.js" />
+    <Content Include="Scripts\jquery.dragsort-0.5.1.js" />
+    <Content Include="Scripts\jquery.dragsort-0.5.1.min.js" />
     <Content Include="Scripts\jquery.history.js" />
     <Content Include="Scripts\jquery.autotabcomplete.js" />
     <Content Include="Scripts\jquery.captureDocumentWrite.js" />
@@ -1016,8 +1021,13 @@
     <Compile Include="Migrations\201307020008436_AllowUserResetPassword.Designer.cs">
       <DependentUpon>201307020008436_AllowUserResetPassword.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201307012142294_AddChatUserPreferences.cs" />
+    <Compile Include="Migrations\201307012142294_AddChatUserPreferences.Designer.cs">
+      <DependentUpon>201307012142294_AddChatUserPreferences.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\ClientNotification.cs" />
+    <Compile Include="Models\ChatUserPreferences.cs" />
     <Compile Include="Models\Mapping\AttachmentMap.cs" />
     <Compile Include="Models\Mapping\NotificationMap.cs" />
     <Compile Include="Models\MessageType.cs" />

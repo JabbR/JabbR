@@ -497,6 +497,24 @@ namespace JabbR
             CheckStatus();
         }
 
+        public void TabOrderChanged(string[] tabOrdering)
+        {
+            string userId = Context.User.GetUserId();
+
+            ChatUser user = _repository.GetUserById(userId);
+
+            ChatUserPreferences userPreferences = user.Preferences;
+            userPreferences.TabOrder = tabOrdering.ToList();
+            user.Preferences = userPreferences;
+            
+            _repository.CommitChanges();
+
+            foreach (var client in user.ConnectedClients)
+            {
+                Clients.Client(client.Id).updateTabOrder(tabOrdering);
+            }
+        }
+
         private void LogOn(ChatUser user, string clientId, bool reconnecting)
         {
             if (!reconnecting)
@@ -551,7 +569,7 @@ namespace JabbR
                 }
 
                 // Initialize the chat with the rooms the user is in
-                Clients.Caller.logOn(rooms, privateRooms);
+                Clients.Caller.logOn(rooms, privateRooms, user.Preferences);
             }
         }
 

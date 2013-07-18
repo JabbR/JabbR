@@ -180,7 +180,7 @@
 
     function getAllRoomElements() {
         var rooms = [];
-        $("ul#tabs > li.room").each(function () {
+        $("ul#tabs > li.room, ul#tabs-dropdown > li.room").each(function () {
             rooms[rooms.length] = getRoomElements($(this).data("name"));
         });
         return rooms;
@@ -327,7 +327,8 @@
             scrollHandler = null,
             userContainer = null,
             roomOwnersHeader = utility.getLanguageResource('Chat_UserOwnerHeader'),
-            usersHeader = utility.getLanguageResource('Chat_UserHeader');
+            usersHeader = utility.getLanguageResource('Chat_UserHeader'),
+            $tabsDropdown = $tabs.last();
 
         if (room.exists()) {
             return false;
@@ -347,8 +348,9 @@
         }
 
         roomCache[roomName.toString().toUpperCase()] = true;
-
-        templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabs);
+        
+        templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabsDropdown);
+        chat.ui.updateTabOverflow();
 
         $messages = $('<ul/>').attr('id', 'messages-' + roomId)
                               .addClass('messages')
@@ -368,12 +370,6 @@
             .appendTo(userContainer);
         templates.userlist.tmpl({ listname: usersHeader, id: 'userlist-' + roomId + '-active' })
             .appendTo(userContainer);
-        
-        $tabs.find('li')
-            .not('.lobby')
-            .sortElements(function (a, b) {
-                return $(a).data('name').toString().toUpperCase() > $(b).data('name').toString().toUpperCase() ? 1 : -1;
-            });
 
         scrollHandler = function (ev) {
             var messageId = null;
@@ -423,6 +419,8 @@
             room.users.remove();
             room.roomTopic.remove();
             setAccessKeys();
+            
+            chat.ui.updateTabOverflow();
         }
     }
 
@@ -724,7 +722,8 @@
             preferencesChanged: 'jabbr.ui.preferencesChanged',
             loggedOut: 'jabbr.ui.loggedOut',
             reloadMessages: 'jabbr.ui.reloadMessages',
-            fileUploaded: 'jabbr.ui.fileUploaded'
+            fileUploaded: 'jabbr.ui.fileUploaded',
+            tabOrderChanged: 'jabbr.ui.tabOrderChanged'
         },
 
         help: {
@@ -738,7 +737,7 @@
             $ui = $(this);
             preferences = state || {};
             $chatArea = $('#chat-area');
-            $tabs = $('#tabs');
+            $tabs = $('#tabs, #tabs-dropdown');
             $submitButton = $('#send');
             $newMessage = $('#new-message');
             $roomActions = $('#room-actions');
@@ -852,12 +851,12 @@
                 }
             });
             
-            $document.on('click', '#tabs li', function () {
+            $document.on('click', '#tabs li, #tabs-dropdown li', function () {
                 var roomName = $(this).data('name');
                 activateOrOpenRoom(roomName);
             });
 
-            $document.on('mousedown', '#tabs li.room', function (ev) {
+            $document.on('mousedown', '#tabs li.room, #tabs-dropdown li.room', function (ev) {
                 // if middle mouse
                 if (ev.which === 2) {
                     $ui.trigger(ui.events.closeRoom, [$(this).data('name')]);
@@ -882,13 +881,32 @@
                 }
             });
 
-            $document.on('click', '#tabs li .close', function (ev) {
+            $document.on('click', '#tabs li .close, #tabs-dropdown li .close', function (ev) {
                 var roomName = $(this).closest('li').data('name');
 
                 $ui.trigger(ui.events.closeRoom, [roomName]);
 
                 ev.preventDefault();
                 return false;
+            });
+
+            $('#tabs, #tabs-dropdown').dragsort({
+                placeHolderTemplate: '<li class="room"><a><span class="content"></span></a></li>',
+                dragBetween: true,
+                dragStart: function() {
+                    var roomName = $(this).closest('li').data('name');
+                    activateOrOpenRoom(roomName);
+                },
+                dragEnd: function () {
+                    var roomTabOrder = [],
+                        $roomTabs = $('#tabs li, #tabs-dropdown li');
+                    
+                    for (var i = 0; i < $roomTabs.length; i++) {
+                        roomTabOrder[i] = $($roomTabs[i]).data('name');
+                    }
+                    
+                    $ui.trigger(ui.events.tabOrderChanged, [roomTabOrder]);
+                }
             });
 
             // handle click on notifications
@@ -1149,6 +1167,7 @@
             $window.resize(function () {
                 var room = getCurrentRoomElements();
                 room.scrollToBottom();
+                chat.ui.updateTabOverflow();
             });
 
             $newMessage.keydown(function (ev) {
@@ -2200,6 +2219,54 @@
             for (var i = 0; i < rooms.length; i++) {
                 rooms[i].trimHistory();
             }
+        },
+        updateTabOrder: function (tabOrder) {
+            $.each(tabOrder.reverse(), function(el, name) {
+                $tabs.find('li[data-name="' + name + '"]').prependTo($tabs.first());
+            });
+
+            chat.ui.updateTabOverflow();
+        },
+        updateTabOverflow: function () {
+            var lastOffsetLeft = 0,
+                sliceIndex = -1,
+                $roomTabs = null,
+                $tabsList = $tabs.first(),
+                $tabsDropdown = $tabs.last(),
+                overflowedRoomTabs = null,
+                $tabsDropdownButton = $('#tabs-dropdown-rooms');
+            
+            // move all tabs to the first list
+            $tabs.last().find('li').each(function() { $(this).detach().appendTo($tabsList); });
+
+            // find overflow and move it all to the dropdown list ul
+            $roomTabs = $tabsList.find('li');
+            $roomTabs.each(function (idx, el) {
+                if (sliceIndex !== -1) {
+                    return;
+                }
+
+                var thisOffsetLeft = $(this).offset().left;
+                if (thisOffsetLeft <= lastOffsetLeft) {
+                    sliceIndex = idx;
+                    return;
+                }
+
+                lastOffsetLeft = thisOffsetLeft;
+            });
+
+            // move all elements from here to the dropdown list
+            if (sliceIndex !== -1) {
+                $tabsDropdownButton.fadeIn('slow');
+                overflowedRoomTabs = $roomTabs.slice(sliceIndex);
+                for (var i = overflowedRoomTabs.length - 1; i >= 0; i--) {
+                    $(overflowedRoomTabs[i]).prependTo($tabsDropdown);
+                }
+            } else {
+                $tabsDropdownButton.fadeOut('slow').parent().removeClass('open');
+            }
+
+            return;
         }
     };
 
