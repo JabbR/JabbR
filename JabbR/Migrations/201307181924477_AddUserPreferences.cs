@@ -3,7 +3,7 @@ namespace JabbR.Models.Migrations
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class AddChatUserPreferences : DbMigration
+    public partial class AddUserPreferences : DbMigration
     {
         public override void Up()
         {
