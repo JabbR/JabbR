@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using JabbR.Infrastructure;
 
-using Newtonsoft.Json;
-
 namespace JabbR.Models
 {
     public class ChatUser
