@@ -201,7 +201,6 @@
     // Save some state in a cookie
     function updateCookie() {
         var state = {
-            tabOrder: chat.state.tabOrder,
             activeRoom: chat.state.activeRoom,
             preferences: ui.getState()
         },
@@ -270,7 +269,7 @@
     };
 
     // Called when a returning users join chat
-    chat.client.logOn = function (rooms, myRooms, tabOrder) {
+    chat.client.logOn = function (rooms, myRooms, userPreferences) {
         privateRooms = myRooms;
 
         var loadRooms = function () {
@@ -291,7 +290,7 @@
             }
         });
 
-        chat.state.tabOrder = tabOrder;
+        chat.state.tabOrder = userPreferences.TabOrder;
         ui.updateTabOrder(chat.state.tabOrder);
         
         ui.setUserName(chat.state.name);

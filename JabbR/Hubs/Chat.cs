@@ -569,7 +569,7 @@ namespace JabbR
                 }
 
                 // Initialize the chat with the rooms the user is in
-                Clients.Caller.logOn(rooms, privateRooms, user.Preferences.TabOrder);
+                Clients.Caller.logOn(rooms, privateRooms, user.Preferences);
             }
         }
 
