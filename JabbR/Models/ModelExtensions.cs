@@ -1,9 +1,20 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace JabbR.Models
 {
     public static class ModelExtensions
     {
+        public static IList<string> GetConnections(this ChatUser user)
+        {
+            return user.ConnectedClients.Select(c => c.Id).ToList();
+        }
+
+        public static IList<string> GetRoomNames(this ChatUser user)
+        {
+            return user.Rooms.Select(r => r.Name).ToList();
+        }
 
         public static void EnsureAllowed(this ChatUser user, ChatRoom room)
         {
