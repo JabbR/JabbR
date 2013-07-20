@@ -6,7 +6,7 @@ using JabbR.Services;
 using JabbR.UploadHandlers;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.Owin.Security.DataProtection;
-using Microsoft.Owin.Security.Forms;
+using Microsoft.Owin.Security.Cookies;
 using Nancy.Authentication.WorldDomination;
 using Nancy.Bootstrappers.Ninject;
 using Newtonsoft.Json;
@@ -33,7 +33,7 @@ namespace JabbR
             kernel.Bind<IDataProtector>()
                   .To<JabbRDataProtection>();
 
-            kernel.Bind<IFormsAuthenticationProvider>()
+            kernel.Bind<ICookiesAuthenticationProvider>()
                   .To<JabbRFormsAuthenticationProvider>();
 
             kernel.Bind<ILogger>()

@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using JabbR.Models;
 using JabbR.Services;
 using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.Forms;
+using Microsoft.Owin.Security.Cookies;
 using Newtonsoft.Json;
 using Microsoft.Owin;
 
 namespace JabbR.Infrastructure
 {
-    public class JabbRFormsAuthenticationProvider : IFormsAuthenticationProvider
+    public class JabbRFormsAuthenticationProvider : ICookiesAuthenticationProvider
     {
         private readonly IJabbrRepository _repository;
         private readonly IMembershipService _membershipService;
@@ -22,12 +22,12 @@ namespace JabbR.Infrastructure
             _membershipService = membershipService;
         }
 
-        public Task ValidateIdentity(FormsValidateIdentityContext context)
+        public Task ValidateIdentity(CookiesValidateIdentityContext context)
         {
             return TaskAsyncHelper.Empty;
         }
 
-        public void ResponseSignIn(FormsResponseSignInContext context)
+        public void ResponseSignIn(CookiesResponseSignInContext context)
         {
             var authResult = new AuthenticationResult
             {
@@ -109,7 +109,7 @@ namespace JabbR.Infrastructure
                                        cookieOptions);
         }
 
-        private static void AddClaim(FormsResponseSignInContext context, ChatUser user)
+        private static void AddClaim(CookiesResponseSignInContext context, ChatUser user)
         {
             // Do nothing if the user is banned
             if (user.IsBanned)
@@ -129,17 +129,17 @@ namespace JabbR.Infrastructure
             EnsurePersistentCookie(context);
         }
 
-        private static void EnsurePersistentCookie(FormsResponseSignInContext context)
+        private static void EnsurePersistentCookie(CookiesResponseSignInContext context)
         {
-            if (context.Extra == null)
+            if (context.Properties == null)
             {
-                context.Extra = new AuthenticationExtra();
+                context.Properties = new AuthenticationProperties();
             }
 
-            context.Extra.IsPersistent = true;
+            context.Properties.IsPersistent = true;
         }
 
-        private ChatUser GetLoggedInUser(FormsResponseSignInContext context)
+        private ChatUser GetLoggedInUser(CookiesResponseSignInContext context)
         {
             var principal = context.Request.User as ClaimsPrincipal;
 
