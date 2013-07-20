@@ -110,10 +110,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.0.0-rc1-20720-478\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Mapping, Version=0.24.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Mapping.0.24.0-pre-20629-428\lib\net40\Microsoft.Owin.Mapping.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Owin.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Owin.Security.2.0.0-rc1-20720-478\lib\net45\Microsoft.Owin.Security.dll</HintPath>

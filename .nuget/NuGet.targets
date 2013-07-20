@@ -23,9 +23,8 @@
             <PackageSource Include="https://nuget.org/api/v2/" />
             <PackageSource Include="https://my-nuget-source/nuget/" />
         -->
+        <PackageSource Include="http://www.myget.org/F/aspnetwebstacknightlyrelease/" />
         <PackageSource Include="http://www.myget.org/F/aspnetwebstacknightly/" />
-        <PackageSource Include="http://www.myget.org/F/katana/" />
-        <PackageSource Include="http://www.myget.org/F/owin/" />
         <PackageSource Include="https://nuget.org/api/v2/" />
     </ItemGroup>
 
