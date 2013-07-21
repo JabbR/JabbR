@@ -622,13 +622,11 @@ li.user.typing .gravatar {
             font-weight: normal;
             color: #f5f5f5;
             padding: 8px 24px 6px 8px;
-            opacity: 0.75;
             font-size: 0;
         }
 
         #tabs li a:hover,
         #tabs li.current a {
-            opacity: 1;
             text-decoration: none;
         }
 
@@ -655,7 +653,7 @@ li.user.typing .gravatar {
 
         #tabs li.current,        
         #tabs li:hover {
-            background-color: #e5e5e5;
+            background-color: #e5e5e5 !important; /* background is set on the element in js for inactive rooms */
             border-color: #e5e5e5;
         }
 

@@ -19,7 +19,7 @@
             // Check if we're on our last glow
             if (n !== 0) {
                 // Go dark
-                $tab.animate({ backgroundColor: '#004B85', color: '#FFF' }, 800, function () {
+                $tab.animate({ backgroundColor: '#003259', color: '#FFF' }, 800, function () {
                     // Glow the tab again
                     glowTab($tab, n);
                 });
