@@ -697,6 +697,17 @@ li.user.typing .gravatar {
 
     #tabs-dropdown li {
         position: relative;
+        cursor: pointer;
+        background-color: #fff !important;
+    }
+
+    #tabs-dropdown li:hover {
+        background-color: #00103F !important;
+    }
+
+    #tabs-dropdown li:hover a,
+    #tabs-dropdown li:hover .close {
+        color: #fff;
     }
 
     #tabs-dropdown li a i.hide {
@@ -719,7 +730,7 @@ li.user.typing .gravatar {
 
     #tabs-dropdown li.current {
         color: #00103f;
-        background: #e5e5e5;
+        background-color: #e5e5e5 !important;
         border-bottom-color: #e5e5e5;
     }
 
