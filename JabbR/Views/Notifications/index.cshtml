@@ -71,7 +71,7 @@
                                         <p class="@(notification.HtmlEncoded ? "" : "linkify")">@notification.Message</p>
                                         <small>
                                             <img class="gravatar" src="https://secure.gravatar.com/avatar/@notification.FromUserImage?s=16&amp;d=mm" />
-                                                @Html.Raw(String.Format(Encoder.HtmlEncode(LanguageResources.Notifications_MetadataInfo), 
+                                                @Html.Raw(String.Format(LanguageResources.Notifications_MetadataInfo, 
                                                                         Encoder.HtmlEncode(notification.FromUserName), 
                                                                         Encoder.HtmlEncode(notification.RoomName), 
                                                                         Encoder.HtmlEncode(notification.WhenString)))
