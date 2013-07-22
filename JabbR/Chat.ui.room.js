@@ -8,7 +8,7 @@
         }
 
         // Go light
-        $tab.animate({ backgroundColor: '#ffffff', color: '#00103f' }, 800, function () {
+        $tab.animate({ backgroundColor: '#004B85', color: '#FFF' }, 800, function () {
             // Stop if we're not unread anymore
             if (!$tab.hasClass('unread')) {
                 return;
@@ -19,14 +19,14 @@
             // Check if we're on our last glow
             if (n !== 0) {
                 // Go dark
-                $tab.animate({ backgroundColor: '#f5f5f5', color: '#00103f' }, 800, function () {
+                $tab.animate({ backgroundColor: '#003259', color: '#FFF' }, 800, function () {
                     // Glow the tab again
                     glowTab($tab, n);
                 });
             }
             else {
                 // Leave the tab highlighted
-                $tab.animate({ backgroundColor: '#f5f5f5', color: '#00103f' }, 800);
+                $tab.animate({ backgroundColor: '#004B85', color: '#FFF' }, 800);
             }
         });
     }
