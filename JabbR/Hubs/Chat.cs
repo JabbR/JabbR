@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -362,11 +363,11 @@ namespace JabbR
             return rooms;
         }
 
-        public IEnumerable<MessageViewModel> GetPreviousMessages(string messageId)
+        public async Task<IEnumerable<MessageViewModel>> GetPreviousMessages(string messageId)
         {
-            var previousMessages = (from m in _repository.GetPreviousMessages(messageId)
-                                    orderby m.When descending
-                                    select m).Take(100);
+            var previousMessages = await (from m in _repository.GetPreviousMessages(messageId)
+                                          orderby m.When descending
+                                          select m).Take(100).ToListAsync();
 
 
             return previousMessages.AsEnumerable()
@@ -374,7 +375,7 @@ namespace JabbR
                                    .Select(m => new MessageViewModel(m));
         }
 
-        public RoomViewModel GetRoomInfo(string roomName)
+        public async Task<RoomViewModel> GetRoomInfo(string roomName)
         {
             if (String.IsNullOrEmpty(roomName))
             {
@@ -391,15 +392,15 @@ namespace JabbR
                 return null;
             }
 
-            var recentMessages = (from m in _repository.GetMessagesByRoom(room)
-                                  orderby m.When descending
-                                  select m).Take(50).ToList();
+            var recentMessages = await (from m in _repository.GetMessagesByRoom(room)
+                                        orderby m.When descending
+                                        select m).Take(50).ToListAsync();
 
             // Reverse them since we want to get them in chronological order
             recentMessages.Reverse();
 
             // Get online users through the repository
-            IEnumerable<ChatUser> onlineUsers = _repository.GetOnlineUsers(room).ToList();
+            List<ChatUser> onlineUsers = await _repository.GetOnlineUsers(room).ToListAsync();
 
             return new RoomViewModel
             {
@@ -507,10 +508,7 @@ namespace JabbR
 
             _repository.CommitChanges();
 
-            foreach (var client in user.ConnectedClients)
-            {
-                Clients.Client(client.Id).updateTabOrder(tabOrdering);
-            }
+            Clients.Clients(user.GetConnections()).updateTabOrder(tabOrdering);
         }
 
         private void LogOn(ChatUser user, string clientId, bool reconnecting)
