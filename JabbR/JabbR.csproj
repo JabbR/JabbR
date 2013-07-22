@@ -83,7 +83,7 @@
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.0-rc1-130721-b118\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.0-rc1-130722-b119\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -888,8 +888,8 @@
     <Content Include="Scripts\jquery.pubsub.js" />
     <Content Include="Scripts\jquery.pulse.js" />
     <Content Include="Scripts\jquery.pulse.min.js" />
-    <Content Include="Scripts\jquery.signalR-2.0.0-rc1-130721-b118.js" />
-    <Content Include="Scripts\jquery.signalR-2.0.0-rc1-130721-b118.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.0-rc1-130722-b119.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.0-rc1-130722-b119.min.js" />
     <Content Include="Scripts\jquery.sortElements.js" />
     <Content Include="Scripts\jquery.timeago.0.10.js" />
     <Content Include="Scripts\jQuery.tmpl.js" />
