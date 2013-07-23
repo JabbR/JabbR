@@ -346,21 +346,19 @@ namespace JabbR
             };
         }
 
-        public IEnumerable<LobbyRoomViewModel> GetRooms()
+        public Task<List<LobbyRoomViewModel>> GetRooms()
         {
             string userId = Context.User.GetUserId();
             ChatUser user = _repository.VerifyUserId(userId);
 
-            var rooms = _repository.GetAllowedRooms(user).Select(r => new LobbyRoomViewModel
+            return _repository.GetAllowedRooms(user).Select(r => new LobbyRoomViewModel
             {
                 Name = r.Name,
                 Count = r.Users.Count(u => u.Status != (int)UserStatus.Offline),
                 Private = r.Private,
                 Closed = r.Closed,
                 Topic = r.Topic
-            }).ToList();
-
-            return rooms;
+            }).ToListAsync();
         }
 
         public async Task<IEnumerable<MessageViewModel>> GetPreviousMessages(string messageId)
