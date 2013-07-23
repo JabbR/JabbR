@@ -323,7 +323,9 @@ namespace JabbR.Services
             var room = new ChatRoom
             {
                 Name = name,
-                Creator = user
+                Creator = user,
+                OwnersCanAllow = true,
+                UsersCanAllow = true
             };
 
             room.Owners.Add(user);
@@ -337,7 +339,7 @@ namespace JabbR.Services
 
         public void JoinRoom(ChatUser user, ChatRoom room, string inviteCode)
         {
-            // Throw if the room is private but the user isn't allowed
+            // Throw if the room requires the user to be allowed but the user isn't allowed
             if (room.Private)
             {
                 // First, check if the invite code is correct
@@ -346,6 +348,7 @@ namespace JabbR.Services
                     // It is, add the user to the allowed users so that future joins will work
                     room.AllowedUsers.Add(user);
                 }
+
                 if (!room.IsUserAllowed(user))
                 {
                     throw new InvalidOperationException(String.Format(LanguageResources.Join_LockedAccessPermission, room.Name));
@@ -366,6 +369,7 @@ namespace JabbR.Services
         public void SetInviteCode(ChatUser user, ChatRoom room, string inviteCode)
         {
             EnsureOwnerOrAdmin(user, room);
+
             if (!room.Private)
             {
                 throw new InvalidOperationException(LanguageResources.InviteCode_PrivateRoomRequired);
@@ -499,14 +503,11 @@ namespace JabbR.Services
             targetRoom.Owners.Add(targetUser);
             targetUser.OwnedRooms.Add(targetRoom);
 
-            if (targetRoom.Private)
+            if (targetRoom.Private && !targetRoom.AllowedUsers.Contains(targetUser))
             {
-                if (!targetRoom.AllowedUsers.Contains(targetUser))
-                {
-                    // If the room is private make this user allowed
-                    targetRoom.AllowedUsers.Add(targetUser);
-                    targetUser.AllowedRooms.Add(targetRoom);
-                }
+                // If the room is private make this user allowed
+                targetRoom.AllowedUsers.Add(targetUser);
+                targetUser.AllowedRooms.Add(targetRoom);
             }
         }
 
@@ -664,7 +665,7 @@ namespace JabbR.Services
 
         public void AllowUser(ChatUser user, ChatUser targetUser, ChatRoom targetRoom)
         {
-            EnsureOwnerOrAdmin(user, targetRoom);
+            targetRoom.EnsureUserCanAllow(user);
 
             if (!targetRoom.Private)
             {
@@ -731,8 +732,10 @@ namespace JabbR.Services
                 throw new InvalidOperationException(String.Format(LanguageResources.RoomAlreadyLocked, targetRoom.Name));
             }
 
-            // Make the room private
+            // Make the room private and set the join properties
             targetRoom.Private = true;
+            targetRoom.OwnersCanAllow = true;
+            targetRoom.UsersCanAllow = true;
 
             // Add the creator to the allowed list
             targetRoom.AllowedUsers.Add(user);

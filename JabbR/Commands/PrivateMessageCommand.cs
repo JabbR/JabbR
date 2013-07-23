@@ -4,6 +4,8 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
+    using System.Collections.Generic;
+
     [Command("msg", "Msg_CommandInfo", "@user message", "user")]
     public class PrivateMessageCommand : UserCommand
     {
@@ -29,7 +31,39 @@ namespace JabbR.Commands
                 throw new InvalidOperationException(String.Format(LanguageResources.Msg_MessageRequired, toUser.Name));
             }
 
-            context.NotificationService.SendPrivateMessage(callingUser, toUser, messageText);
+            // sort members in room
+            var roomUsers = new List<string> { callingUser.Id, toUser.Id };
+            string roomName = string.Join("_", roomUsers.OrderBy(e => e).ToArray());
+
+            var privateMessageRoom = context.Repository.GetRoomByName(roomName);
+            if (privateMessageRoom == null)
+            {
+                privateMessageRoom = new ChatRoom
+                {
+                    Name = roomName,
+                    Creator = null,
+                    OwnersCanAllow = false,
+                    UsersCanAllow = false,
+                    Private = true
+                };
+                privateMessageRoom.AllowedUsers.Add(callingUser);
+                privateMessageRoom.AllowedUsers.Add(toUser);
+
+                context.Repository.Add(privateMessageRoom);
+                context.Repository.CommitChanges();
+            }
+
+            if (!context.Repository.IsUserInRoom(context.Cache, callingUser, privateMessageRoom))
+            {
+                // Join the room
+                context.Service.JoinRoom(callingUser, privateMessageRoom, null);
+                context.Repository.CommitChanges();
+            }
+
+            context.NotificationService.JoinRoom(callingUser, privateMessageRoom);
+            ((Chat)context.NotificationService).Send(messageText, privateMessageRoom.Name);
+
+            context.NotificationService.SendPrivateMessage(privateMessageRoom, callingUser, toUser, messageText);
         }
     }
 }

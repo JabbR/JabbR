@@ -36,7 +36,7 @@ namespace JabbR.Models
         {
             return from r in rooms
                    where !r.Private ||
-                         r.Private && r.AllowedUsers.Any(u => u.Id == userId)
+                         (r.Private && r.AllowedUsers.Any(u => u.Id == userId))
                    select r;
         }
 

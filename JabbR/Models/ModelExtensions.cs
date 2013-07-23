@@ -36,5 +36,13 @@ namespace JabbR.Models
                 throw new InvalidOperationException(String.Format(LanguageResources.RoomClosed, room.Name));
             }
         }
+
+        public static void EnsureUserCanAllow(this ChatRoom room, ChatUser user)
+        {
+            if ((room.Owners.Contains(user) && room.OwnersCanAllow) || room.UsersCanAllow)
+            {
+                throw new InvalidOperationException(String.Format(LanguageResources.RoomCannotAllow, room.Name));
+            }
+        }
     }
 }

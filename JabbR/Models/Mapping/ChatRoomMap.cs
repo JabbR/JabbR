@@ -24,6 +24,8 @@ namespace JabbR.Models.Mapping
             this.Property(r => r.LastNudged).HasColumnName("LastNudged");
             this.Property(r => r.Name).HasColumnName("Name");
             this.Property(r => r.CreatorKey).HasColumnName("Creator_Key");
+            this.Property(r => r.OwnersCanAllow).HasColumnName("OwnersCanAllow");
+            this.Property(r => r.UsersCanAllow).HasColumnName("UsersCanAllow");
             this.Property(r => r.Private).HasColumnName("Private");
             this.Property(r => r.InviteCode).HasColumnName("InviteCode");
             this.Property(r => r.Closed).HasColumnName("Closed");

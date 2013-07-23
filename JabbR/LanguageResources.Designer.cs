@@ -2651,6 +2651,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You cannot allow users into {0}..
+        /// </summary>
+        public static string RoomCannotAllow {
+            get {
+                return ResourceManager.GetString("RoomCannotAllow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lobby is not a valid chat room name..
         /// </summary>
         public static string RoomCannotBeNamedLobby {

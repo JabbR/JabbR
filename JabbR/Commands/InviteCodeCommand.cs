@@ -26,6 +26,8 @@ namespace JabbR.Commands
             // ensure the user could join the room if they wanted to
             callingUser.EnsureAllowed(targetRoom);
 
+            targetRoom.EnsureUserCanAllow(callingUser);
+
             if (String.IsNullOrEmpty(targetRoom.InviteCode))
             {
                 context.Service.SetInviteCode(callingUser, targetRoom, RandomUtils.NextInviteCode());

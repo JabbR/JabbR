@@ -1129,4 +1129,7 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="Client_UploadDropTarget" xml:space="preserve">
     <value>Drop files here</value>
   </data>
+  <data name="RoomCannotAllow" xml:space="preserve">
+    <value>You cannot allow users into {0}.</value>
+  </data>
 </root>

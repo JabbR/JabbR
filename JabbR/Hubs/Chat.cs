@@ -800,12 +800,11 @@ namespace JabbR
             Clients.Group(room.Name).sendMeMessage(user.Name, content, room.Name);
         }
 
-        void INotificationService.SendPrivateMessage(ChatUser fromUser, ChatUser toUser, string messageText)
+        void INotificationService.SendPrivateMessage(ChatRoom room, ChatUser fromUser, ChatUser toUser, string messageText)
         {
             // Send a message to the sender and the sendee
-            Clients.Clients(fromUser.GetConnections()).sendPrivateMessage(fromUser.Name, toUser.Name, messageText);
-
-            Clients.Clients(toUser.GetConnections()).sendPrivateMessage(fromUser.Name, toUser.Name, messageText);
+            Clients.Clients(fromUser.GetConnections()).sendPrivateMessage(room.Name, fromUser.Name, toUser.Name, messageText);
+            Clients.Clients(toUser.GetConnections()).receivePrivateMessage(room.Name, fromUser.Name, toUser.Name, messageText);
         }
 
         void INotificationService.PostNotification(ChatRoom room, ChatUser user, string message)

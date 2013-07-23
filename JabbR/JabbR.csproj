@@ -808,6 +808,7 @@
     <EmbeddedResource Include="LanguageResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>LanguageResources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201208211555032_BanUser.resx">
       <DependentUpon>201208211555032_BanUser.cs</DependentUpon>
@@ -863,6 +864,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201307181924477_AddUserPreferences.resx">
       <DependentUpon>201307181924477_AddUserPreferences.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201307230435317_AddRoomAllowJoinSettings.resx">
+      <DependentUpon>201307230435317_AddRoomAllowJoinSettings.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
@@ -1014,6 +1018,10 @@
     <Compile Include="Migrations\201307181924477_AddUserPreferences.cs" />
     <Compile Include="Migrations\201307181924477_AddUserPreferences.Designer.cs">
       <DependentUpon>201307181924477_AddUserPreferences.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201307230435317_AddRoomAllowJoinSettings.cs" />
+    <Compile Include="Migrations\201307230435317_AddRoomAllowJoinSettings.Designer.cs">
+      <DependentUpon>201307230435317_AddRoomAllowJoinSettings.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\ClientNotification.cs" />

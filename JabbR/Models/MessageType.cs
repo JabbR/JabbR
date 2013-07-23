@@ -2,7 +2,7 @@
 {
     public enum MessageType
     {
-        Default,
-        Notification
+        Default = 0,
+        Notification = 1
     }
 }

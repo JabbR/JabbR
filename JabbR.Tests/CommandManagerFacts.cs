@@ -3202,7 +3202,7 @@ namespace JabbR.Test
                 bool result = commandManager.TryHandleCommand("/msg dfowler2 what is up?");
 
                 Assert.True(result);
-                notificationService.Verify(x => x.SendPrivateMessage(user, user2, "what is up?"), Times.Once());
+                notificationService.Verify(x => x.SendPrivateMessage(null, user, user2, "what is up?"), Times.Once());
             }
         }
 
@@ -3306,7 +3306,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var room = new ChatRoom { Name = "test", };
+                var room = new ChatRoom { Name = "test" };
                 repository.Add(room);
                 var service = new ChatService(cache, repository);
                 var notificationService = new Mock<INotificationService>();

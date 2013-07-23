@@ -655,14 +655,16 @@
         ui.addMessage(utility.getLanguageResource('Chat_UserPerformsAction', name, message), 'action', room);
     };
 
-    chat.client.sendPrivateMessage = function (from, to, message) {
-        if (isSelf({ Name: to })) {
-            // Force notification for direct messages
-            ui.notify(true);
-            ui.setLastPrivate(from);
-        }
-
-        ui.addPrivateMessage(utility.getLanguageResource('Chat_PrivateMessage', from, to, message), 'pm');
+    chat.client.sendPrivateMessage = function (roomName, from, to, message) {
+        $ui.trigger(ui.events.openRoom, [roomName]);
+    };
+    
+    chat.client.receivePrivateMessage = function (roomName, from, to, message) {
+        // Force notification for direct messages
+        ui.notify(true);
+        ui.setLastPrivate(from);
+        
+        $ui.trigger(ui.events.openRoom, [roomName]);
     };
 
     chat.client.sendInvite = function (from, to, room) {
