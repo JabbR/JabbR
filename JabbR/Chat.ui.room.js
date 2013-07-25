@@ -145,7 +145,7 @@
     };
 
     Room.prototype.exists = function () {
-        return this.tab.length > 0;
+        return this.tab.length > 0 || this.messages.length > 0;
     };
 
     Room.prototype.isClosed = function () {
@@ -173,7 +173,7 @@
     Room.prototype.makeInactive = function () {
         this.tab.removeClass('current');
 
-        this.messages.removeClass('current')
+        this.messages.not('.messages-pm').removeClass('current')
                      .hide();
 
         this.users.removeClass('current')

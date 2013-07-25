@@ -49,7 +49,6 @@
         $closedRoomFilter = null,
         updateTimeout = 15000,
         $richness = null,
-        lastPrivate = null,
         roomCache = {},
         $reloadMessageNotification = null,
         popoverTimer = null,
@@ -72,6 +71,7 @@
         sortedRoomList = null,
         maxRoomsToLoad = 100,
         lastLoadedRoomIndex = 0,
+        $lobbyPrivateMessageRooms = null,
         $lobbyPrivateRooms = null,
         $lobbyOtherRooms = null,
         $roomLoadingIndicator = null,
@@ -145,6 +145,13 @@
         });
         return sortedList;
     }
+    
+    function sortPrivateMessagingRoomList(listToSort) {
+        var sortedList = listToSort.sort(function (a, b) {
+            return a.Topic.toString().toUpperCase().localeCompare(b.Topic.toString().toUpperCase());
+        });
+        return sortedList;
+    }
 
     function getRoomElements(roomName) {
         var roomId = getRoomId(roomName);
@@ -203,7 +210,7 @@
 
     function updateLobbyRoomCount(room, count) {
         var lobby = getLobby(),
-            $targetList = room.Private === true ? lobby.owners : lobby.users,
+            $targetList = (room.RoomType === ui.roomType.Private ? lobby.owners : lobby.users), //todo: handle private message rooms
             $room = $targetList.find('[data-room="' + room.Name + '"]'),
             $count = $room.find('.count'),
             roomName = room.Name.toString().toUpperCase();
@@ -217,7 +224,7 @@
             $count.text(utility.getLanguageResource('Client_OccupantsMany', count));
         }
 
-        if (room.Private === true) {
+        if (room.RoomType === chat.ui.roomType.privateRoom) {
             $room.addClass('locked');
         } else {
             $room.removeClass('locked');
@@ -248,7 +255,7 @@
             roomName = roomViewModel.Name.toString().toUpperCase(),
             count = roomViewModel.Count,
             closed = roomViewModel.Closed,
-            $targetList = roomViewModel.Private ? lobby.owners : lobby.users;
+            $targetList = room.RoomType === ui.roomType.privateRoom ? lobby.owners : lobby.users; //TODO: private message rooms
 
         var nextListElement = getNextRoomListElement($targetList, roomName, count, closed);
 
@@ -317,7 +324,6 @@
     }
 
     function addRoom(roomViewModel) {
-        // Do nothing if the room exists
         var roomName = roomViewModel.Name,
             room = getRoomElements(roomViewModel.Name),
             roomId = null,
@@ -330,6 +336,7 @@
             usersHeader = utility.getLanguageResource('Chat_UserHeader'),
             $tabsDropdown = $tabs.last();
 
+        // Do nothing if the room exists
         if (room.exists()) {
             return false;
         }
@@ -339,7 +346,7 @@
         // Add the tab
         viewModel = {
             id: roomId,
-            name: roomName,
+            name: roomViewModel.RoomType !== ui.roomType.privateMessageRoom ? roomName : roomViewModel.Topic,
             closed: roomViewModel.Closed
         };
 
@@ -349,57 +356,94 @@
 
         roomCache[roomName.toString().toUpperCase()] = true;
         
-        templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabsDropdown);
-        chat.ui.updateTabOverflow();
+        if (roomViewModel.RoomType === ui.roomType.privateMessageRoom) {
+            templates.tabprivatemessage.tmpl(viewModel).data('name', roomName).appendTo($chatArea);
+            $messages = $('<ul/>').attr('id', 'messages-' + roomId)
+                              .addClass('messages messages-pm')
+                              .appendTo($chatArea)
+                              .hide();
+            
+            scrollHandler = function (ev) {
+                var messageId = null;
 
-        $messages = $('<ul/>').attr('id', 'messages-' + roomId)
+                // Do nothing if there's nothing else
+                if ($(this).data('full') === true) {
+                    return;
+                }
+
+                // If you're we're near the top, raise the event, but if the scroll
+                // bar is small enough that we're at the bottom edge, ignore it.
+                // We have to use the ui version because the room object above is
+                // not fully initialized, so there are no messages.
+                if ($(this).scrollTop() <= scrollTopThreshold && !ui.isNearTheEnd(roomId)) {
+                    var $child = $messages.children('.message:first');
+                    if ($child.length > 0) {
+                        messageId = $child.attr('id')
+                                          .substr(2); // Remove the "m-"
+                        $ui.trigger(ui.events.scrollRoomTop, [{ name: roomName, messageId: messageId }]);
+                    }
+                }
+            };
+
+            // Hookup the scroll handler since event delegation doesn't work with scroll events
+            $messages.bind('scroll', scrollHandler);
+
+            // Store the scroll handler so we can remove it later
+            $messages.data('scrollHandler', scrollHandler);
+        } else
+        {
+            templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabsDropdown);
+            chat.ui.updateTabOverflow();
+            
+            $messages = $('<ul/>').attr('id', 'messages-' + roomId)
                               .addClass('messages')
                               .appendTo($chatArea)
                               .hide();
 
-        $roomTopic = $('<div/>').attr('id', 'roomTopic-' + roomId)
-                              .addClass('roomTopic')
-                              .appendTo($topicBar)
-                              .hide();
+            $roomTopic = $('<div/>').attr('id', 'roomTopic-' + roomId)
+                                  .addClass('roomTopic')
+                                  .appendTo($topicBar)
+                                  .hide();
 
-        userContainer = $('<div/>').attr('id', 'userlist-' + roomId)
-            .addClass('users')
-            .appendTo($chatArea).hide();
-        templates.userlist.tmpl({ listname: roomOwnersHeader, id: 'userlist-' + roomId + '-owners' })
-            .addClass('owners')
-            .appendTo(userContainer);
-        templates.userlist.tmpl({ listname: usersHeader, id: 'userlist-' + roomId + '-active' })
-            .appendTo(userContainer);
+            userContainer = $('<div/>').attr('id', 'userlist-' + roomId)
+                .addClass('users')
+                .appendTo($chatArea).hide();
+            templates.userlist.tmpl({ listname: roomOwnersHeader, id: 'userlist-' + roomId + '-owners' })
+                .addClass('owners')
+                .appendTo(userContainer);
+            templates.userlist.tmpl({ listname: usersHeader, id: 'userlist-' + roomId + '-active' })
+                .appendTo(userContainer);
 
-        scrollHandler = function (ev) {
-            var messageId = null;
+            scrollHandler = function (ev) {
+                var messageId = null;
 
-            // Do nothing if there's nothing else
-            if ($(this).data('full') === true) {
-                return;
-            }
-
-            // If you're we're near the top, raise the event, but if the scroll
-            // bar is small enough that we're at the bottom edge, ignore it.
-            // We have to use the ui version because the room object above is
-            // not fully initialized, so there are no messages.
-            if ($(this).scrollTop() <= scrollTopThreshold && !ui.isNearTheEnd(roomId)) {
-                var $child = $messages.children('.message:first');
-                if ($child.length > 0) {
-                    messageId = $child.attr('id')
-                                      .substr(2); // Remove the "m-"
-                    $ui.trigger(ui.events.scrollRoomTop, [{ name: roomName, messageId: messageId }]);
+                // Do nothing if there's nothing else
+                if ($(this).data('full') === true) {
+                    return;
                 }
-            }
-        };
 
-        // Hookup the scroll handler since event delegation doesn't work with scroll events
-        $messages.bind('scroll', scrollHandler);
+                // If you're we're near the top, raise the event, but if the scroll
+                // bar is small enough that we're at the bottom edge, ignore it.
+                // We have to use the ui version because the room object above is
+                // not fully initialized, so there are no messages.
+                if ($(this).scrollTop() <= scrollTopThreshold && !ui.isNearTheEnd(roomId)) {
+                    var $child = $messages.children('.message:first');
+                    if ($child.length > 0) {
+                        messageId = $child.attr('id')
+                                          .substr(2); // Remove the "m-"
+                        $ui.trigger(ui.events.scrollRoomTop, [{ name: roomName, messageId: messageId }]);
+                    }
+                }
+            };
 
-        // Store the scroll handler so we can remove it later
-        $messages.data('scrollHandler', scrollHandler);
+            // Hookup the scroll handler since event delegation doesn't work with scroll events
+            $messages.bind('scroll', scrollHandler);
 
-        setAccessKeys();
+            // Store the scroll handler so we can remove it later
+            $messages.data('scrollHandler', scrollHandler);
+
+            setAccessKeys();
+        }
 
         lobbyLoaded = false;
         return true;
@@ -732,6 +776,12 @@
             room: 'room',
             user: 'user'
         },
+        
+        roomType: {
+            publicRoom: 0,
+            privateRoom: 1, 
+            privateMessageRoom: 2
+        },
 
         initialize: function (state) {
             $ui = $(this);
@@ -769,10 +819,12 @@
                 message: $('#new-message-template'),
                 notification: $('#new-notification-template'),
                 separator: $('#message-separator-template'),
+                tabprivatemessage: $('#new-tab-private-message-template'),
                 tab: $('#new-tab-template'),
                 gravatarprofile: $('#gravatar-profile-template'),
                 commandhelp: $('#command-help-template'),
                 multiline: $('#multiline-content-template'),
+                lobbyprivatemessageroom: $('#new-lobby-private-message-room-template'),
                 lobbyroom: $('#new-lobby-room-template'),
                 otherlobbyroom: $('#new-other-lobby-room-template')
             };
@@ -793,6 +845,7 @@
             $loadingHistoryIndicator = $('#loadingRoomHistory');
 
             $loadMoreRooms = $('#load-more-rooms-item');
+            $lobbyPrivateMessageRooms = $('#lobby-private-message');
             $lobbyPrivateRooms = $('#lobby-private');
             $lobbyOtherRooms = $('#lobby-other');
             $roomLoadingIndicator = $('#room-loading');
@@ -883,6 +936,15 @@
 
             $document.on('click', '#tabs li .close, #tabs-dropdown li .close', function (ev) {
                 var roomName = $(this).closest('li').data('name');
+
+                $ui.trigger(ui.events.closeRoom, [roomName]);
+
+                ev.preventDefault();
+                return false;
+            });
+            
+            $document.on('click', '.tab-pm .close', function (ev) {
+                var roomName = $(this).closest('div').data('name');
 
                 $ui.trigger(ui.events.closeRoom, [roomName]);
 
@@ -1190,12 +1252,6 @@
                         triggerSend();
                         ev.preventDefault();
                         return false;
-                    case Keys.Space:
-                        // Check for "/r " to reply to last private message
-                        if ($(this).val() === "/r" && lastPrivate) {
-                            ui.setMessage("/msg " + lastPrivate);
-                        }
-                        break;
                 }
             });
 
@@ -1420,9 +1476,13 @@
             return room.isNearTheEnd();
         },
         setRoomLoading: setRoomLoading,
-        populateLobbyRooms: function (rooms, privateRooms) {
+        populateLobbyRooms: function (rooms, privateRooms, privateMessageRooms) {
             var lobby = getLobby(),
                 i;
+            
+            // todo: make lobby something different to a room and add this in construction
+            lobby.privateMessageRooms = $('#userlist-lobby-private-message');
+
             if (!lobby.isInitialized()) {
 
                 // Populate the room cache
@@ -1437,15 +1497,30 @@
                 // sort private lobby rooms
                 var privateSorted = sortRoomList(privateRooms);
                 
-                // sort other lobby rooms but filter out private rooms
+                // sort private messaging rooms
+                var privateMessageSorted = sortPrivateMessagingRoomList(privateMessageRooms);
+                
+                // sort other lobby rooms but filter out private and private messaging rooms
                 sortedRoomList = sortRoomList(rooms).filter(function (room) {
-                    return !privateSorted.some(function (allowed) {
+                    return !(privateSorted.some(function (allowed) {
                         return allowed.Name === room.Name;
-                    });
+                    }) || privateMessageSorted.some(function (pmRoom) {
+                        return pmRoom.Name === room.Name;
+                    }));
                 });
 
+                lobby.privateMessageRooms.empty();
                 lobby.owners.empty();
                 lobby.users.empty();
+                
+                var listOfPrivateMessageRooms = $('<ul/>');
+                if (privateMessageSorted.length > 0) {
+                    populateLobbyRoomList(privateMessageSorted, templates.lobbyprivatemessageroom, listOfPrivateMessageRooms);
+                    listOfPrivateMessageRooms.children('li').appendTo(lobby.privateMessageRooms);
+                    $lobbyPrivateMessageRooms.show();
+                } else {
+                    $lobbyPrivateMessageRooms.hide();
+                }
 
                 var listOfPrivateRooms = $('<ul/>');
                 if (privateSorted.length > 0) {
@@ -2167,9 +2242,6 @@
                  .find('.admin')
                  .text('');
             room.updateUserStatus($user);
-        },
-        setLastPrivate: function (userName) {
-            lastPrivate = userName;
         },
         shouldCollapseContent: shouldCollapseContent,
         collapseRichContent: collapseRichContent,

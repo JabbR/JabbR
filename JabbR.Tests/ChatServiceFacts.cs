@@ -520,7 +520,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.AllowedUsers.Add(user);
                 user.AllowedRooms.Add(room);
@@ -544,7 +544,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
@@ -565,7 +565,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
@@ -755,7 +755,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     Creator = user
                 };
                 room.Owners.Add(user);
@@ -792,7 +792,7 @@ namespace JabbR.Test
                 {
                     Name = "Room",
                     Creator = user,
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.Owners.Add(user);
                 user.OwnedRooms.Add(room);
@@ -1389,7 +1389,7 @@ namespace JabbR.Test
 
                 service.LockRoom(user, room);
 
-                Assert.True(room.Private);
+                Assert.True(room.RoomType == RoomType.Private);
                 Assert.True(user.AllowedRooms.Contains(room));
                 Assert.True(room.AllowedUsers.Contains(user));
             }
@@ -1407,7 +1407,7 @@ namespace JabbR.Test
                 {
                     Name = "Room",
                     Creator = user,
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.Owners.Add(user);
                 user.OwnedRooms.Add(room);
@@ -1444,7 +1444,7 @@ namespace JabbR.Test
 
                 service.LockRoom(user, room);
 
-                Assert.True(room.Private);
+                Assert.True(room.RoomType == RoomType.Private);
                 Assert.True(user.AllowedRooms.Contains(room));
                 Assert.True(room.AllowedUsers.Contains(user));
             }
@@ -1526,7 +1526,7 @@ namespace JabbR.Test
 
                 service.LockRoom(admin, room);
 
-                Assert.True(room.Private);
+                Assert.True(room.RoomType == RoomType.Private);
                 Assert.True(admin.AllowedRooms.Contains(room));
                 Assert.True(room.AllowedUsers.Contains(admin));
             }
@@ -1576,7 +1576,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.Users.Add(user);
                 user.Rooms.Add(room);
@@ -1603,7 +1603,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.Users.Add(user);
                 room.AllowedUsers.Add(user2);
@@ -1634,7 +1634,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.Owners.Add(user);
                 user.OwnedRooms.Add(room);
@@ -1662,7 +1662,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.Users.Add(admin);
                 admin.Rooms.Add(room);
@@ -1720,7 +1720,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     Creator = user
                 };
                 room.Users.Add(user);
@@ -1752,7 +1752,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.Users.Add(user);
                 user.Rooms.Add(room);
@@ -1780,7 +1780,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.AllowedUsers.Add(user2);
                 room.Users.Add(admin);
@@ -1814,7 +1814,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.Users.Add(user);
                 room.Owners.Add(user);
@@ -1845,7 +1845,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 user.OwnedRooms.Add(room);
                 room.Owners.Add(user);
@@ -1884,7 +1884,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.AllowedUsers.Add(user2);
                 room.Owners.Add(user);
@@ -1920,7 +1920,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.Users.Add(admin);
                 admin.Rooms.Add(room);
@@ -1957,7 +1957,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.Users.Add(admin);
                 admin.Rooms.Add(room);
@@ -1999,7 +1999,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     Creator = creator
                 };
                 room.Users.Add(admin);
@@ -2045,7 +2045,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 owner.OwnedRooms.Add(room);
                 room.Owners.Add(owner);
@@ -2083,7 +2083,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "Room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.Users.Add(admin);
                 admin.Rooms.Add(room);

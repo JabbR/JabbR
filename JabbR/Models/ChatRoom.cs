@@ -25,7 +25,7 @@ namespace JabbR.Models
         public bool UsersCanAllow { get; set; }
 
         // Private rooms
-        public bool Private { get; set; }
+        public RoomType RoomType { get; set; }
         public virtual ICollection<ChatUser> AllowedUsers { get; set; }
         public string InviteCode { get; set; }
 

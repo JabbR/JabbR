@@ -1460,6 +1460,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Conversations.
+        /// </summary>
+        public static string Client_Conversations {
+            get {
+                return ResourceManager.GetString("Client_Conversations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All.
         /// </summary>
         public static string Client_DateRangeAll {
@@ -1648,6 +1657,15 @@ namespace JabbR {
         public static string Client_Lobby {
             get {
                 return ResourceManager.GetString("Client_Lobby", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No matching conversations.
+        /// </summary>
+        public static string Client_NoMatchingConversations {
+            get {
+                return ResourceManager.GetString("Client_NoMatchingConversations", resourceCulture);
             }
         }
         

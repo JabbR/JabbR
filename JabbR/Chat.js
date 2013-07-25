@@ -19,7 +19,8 @@
         $ui = $(ui),
         messageSendingDelay = 1500,
         pendingMessages = {},
-        privateRooms = null;
+        privateRooms = null,
+        privateMessageRooms = null;
 
     function failPendingMessages() {
         for (var id in pendingMessages) {
@@ -132,7 +133,7 @@
             // Populate the user list with room names
             chat.server.getRooms()
                 .done(function (rooms) {
-                    ui.populateLobbyRooms(rooms, privateRooms);
+                    ui.populateLobbyRooms(rooms, privateRooms, privateMessageRooms);
                     ui.setInitialized('Lobby');
                 });
         }
@@ -250,7 +251,7 @@
 
         ui.setActiveRoom(room.Name);
 
-        if (room.Private) {
+        if (room.RoomType === ui.roomType.privateRoom) {
             ui.setRoomLocked(room.Name);
         }
         if (room.Closed) {
@@ -259,18 +260,21 @@
 
         if (added) {
             populateRoom(room.Name).done(function () {
-                ui.addMessage(utility.getLanguageResource('Chat_YouEnteredRoom', room.Name), 'notification', room.Name);
+                if (room.RoomType !== ui.roomType.privateMessageRoom) { // manually suppress notifications in private messages for now
+                    ui.addMessage(utility.getLanguageResource('Chat_YouEnteredRoom', room.Name), 'notification', room.Name);
 
-                if (room.Welcome) {
-                    ui.addMessage(room.Welcome, 'welcome', room.Name);
+                    if (room.Welcome) {
+                        ui.addMessage(room.Welcome, 'welcome', room.Name);
+                    }
                 }
             });
         }
     };
 
     // Called when a returning users join chat
-    chat.client.logOn = function (rooms, myRooms, userPreferences) {
+    chat.client.logOn = function (rooms, myRooms, myPrivateMessageRooms, userPreferences) {
         privateRooms = myRooms;
+        privateMessageRooms = myPrivateMessageRooms;
 
         var loadRooms = function () {
             $.each(rooms, function (index, room) {
@@ -282,7 +286,8 @@
 
         $.each(rooms, function (index, room) {
             ui.addRoom(room);
-            if (room.Private) {
+            
+            if (room.RoomType === ui.roomType.privateRoom) {
                 ui.setRoomLocked(room.Name);
             }
             if (room.Closed) {
@@ -420,13 +425,13 @@
         updateUnread(room, isMentioned);
     };
 
-    chat.client.addUser = function (user, room, isOwner) {
+    chat.client.addUser = function (user, room, isOwner, suppressNotification) {
         var viewModel = getUserViewModel(user, isOwner);
 
         var added = ui.addUser(viewModel, room);
 
         if (added) {
-            if (!isSelf(user)) {
+            if (!isSelf(user) && !suppressNotification) {
                 ui.addMessage(utility.getLanguageResource('Chat_UserEnteredRoom', user.Name, room), 'notification', room);
             }
         }
@@ -655,14 +660,13 @@
         ui.addMessage(utility.getLanguageResource('Chat_UserPerformsAction', name, message), 'action', room);
     };
 
-    chat.client.sendPrivateMessage = function (roomName, from, to, message) {
+    chat.client.sendPrivateMessage = function (roomName, from, to) {
         $ui.trigger(ui.events.openRoom, [roomName]);
     };
     
-    chat.client.receivePrivateMessage = function (roomName, from, to, message) {
+    chat.client.receivePrivateMessage = function (roomName, from, to) {
         // Force notification for direct messages
         ui.notify(true);
-        ui.setLastPrivate(from);
         
         $ui.trigger(ui.events.openRoom, [roomName]);
     };
@@ -724,15 +728,17 @@
         }
     };
 
-    chat.client.leave = function (user, room) {
+    chat.client.leave = function (user, room, suppressNotification) {
         if (isSelf(user)) {
             ui.setActiveRoom('Lobby');
             ui.removeRoom(room);
         }
         else {
             ui.removeUser(user, room);
-            var message = utility.getLanguageResource('Chat_UserLeftRoom', user.Name, room);
-            ui.addMessage(message, 'notification', room);
+            if (!suppressNotification) {
+                var message = utility.getLanguageResource('Chat_UserLeftRoom', user.Name, room);
+                ui.addMessage(message, 'notification', room);
+            }
         }
     };
 
@@ -804,10 +810,10 @@
         }
     };
     
-    chat.client.listAllowedUsers = function (room, isPrivate, users) {
+    chat.client.listAllowedUsers = function (room, roomType, users) {
         var message;
         
-        if (!isPrivate) {
+        if (room.RoomType === ui.roomType.publicRoom) {
             message = utility.getLanguageResource('Chat_RoomNotPrivateAllowed', room);
         } else if (users.length === 0) {
             message = utility.getLanguageResource('Chat_RoomPrivateNoUsersAllowed', room);
@@ -817,14 +823,13 @@
         
         ui.addMessage(message, 'list-header');
 
-        if (isPrivate && users.length > 0) {
+        if (room.RoomType !== ui.roomType.publicRoom && users.length > 0) {
             ui.addMessage(users.join(', '), 'list-item');
         }
     };
 
     chat.client.showUsersRoomList = function (user, rooms) {
         var message;
-        var status = "Currently " + user.Status;
         if (rooms.length === 0) {
             message = utility.getLanguageResource('Chat_UserNotInRooms', user.Name, user.Status);
             ui.addMessage(message, 'list-header');

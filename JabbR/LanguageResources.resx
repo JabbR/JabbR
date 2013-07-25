@@ -1132,4 +1132,10 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="RoomCannotAllow" xml:space="preserve">
     <value>You cannot allow users into {0}.</value>
   </data>
+  <data name="Client_Conversations" xml:space="preserve">
+    <value>Conversations</value>
+  </data>
+  <data name="Client_NoMatchingConversations" xml:space="preserve">
+    <value>No matching conversations</value>
+  </data>
 </root>

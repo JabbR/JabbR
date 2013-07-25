@@ -32,7 +32,7 @@ namespace JabbR.Commands
             ChatRoom targetRoom = context.Repository.VerifyRoom(roomName, mustBeOpen: false);
 
             // if the user isn't in the allowed user list, check that the user can invite people, then add the target user to the allowed list
-            if (targetRoom.Private && !targetRoom.IsUserAllowed(targetUser))
+            if (targetRoom.RoomType != RoomType.Public && !targetRoom.IsUserAllowed(targetUser))
             {
                 context.Service.AllowUser(callingUser, targetUser, targetRoom);
 

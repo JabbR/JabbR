@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using JabbR.Models;
 
 namespace JabbR.ViewModels
 {
@@ -7,7 +8,7 @@ namespace JabbR.ViewModels
     {
         public string Name { get; set; }
         public int Count { get; set; }
-        public bool Private { get; set; }
+        public RoomType RoomType { get; set; }
         public bool Closed { get; set; }
         public string Topic { get; set; }
     }

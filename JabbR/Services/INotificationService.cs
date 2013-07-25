@@ -30,7 +30,7 @@ namespace JabbR.Services
         void ChangeWelcome(ChatUser user, ChatRoom room);
 
         void PostNotification(ChatRoom room, ChatUser user, string message);
-        void SendPrivateMessage(ChatRoom room, ChatUser user, ChatUser targetUser, string messageText);
+        void SendPrivateMessage(ChatRoom room, ChatUser user, ChatUser targetUser);
         void LeaveRoom(ChatUser user, ChatRoom room);
 
         void AddOwner(ChatUser targetUser, ChatRoom targetRoom);

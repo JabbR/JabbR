@@ -35,8 +35,8 @@ namespace JabbR.Models
         public static IEnumerable<ChatRoom> Allowed(this IEnumerable<ChatRoom> rooms, string userId)
         {
             return from r in rooms
-                   where !r.Private ||
-                         (r.Private && r.AllowedUsers.Any(u => u.Id == userId))
+                   where r.RoomType == RoomType.Public ||
+                         (r.RoomType != RoomType.Public && r.AllowedUsers.Any(u => u.Id == userId))
                    select r;
         }
 

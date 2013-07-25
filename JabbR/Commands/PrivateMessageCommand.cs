@@ -33,7 +33,7 @@ namespace JabbR.Commands
 
             // sort members in room
             var roomUsers = new List<string> { callingUser.Id, toUser.Id };
-            string roomName = string.Join("_", roomUsers.OrderBy(e => e).ToArray());
+            string roomName = "PM_" + string.Join("_", roomUsers.OrderBy(e => e).ToArray());
 
             var privateMessageRoom = context.Repository.GetRoomByName(roomName);
             if (privateMessageRoom == null)
@@ -44,7 +44,7 @@ namespace JabbR.Commands
                     Creator = null,
                     OwnersCanAllow = false,
                     UsersCanAllow = false,
-                    Private = true
+                    RoomType = RoomType.PrivateMessage
                 };
                 privateMessageRoom.AllowedUsers.Add(callingUser);
                 privateMessageRoom.AllowedUsers.Add(toUser);
@@ -62,8 +62,6 @@ namespace JabbR.Commands
 
             context.NotificationService.JoinRoom(callingUser, privateMessageRoom);
             ((Chat)context.NotificationService).Send(messageText, privateMessageRoom.Name);
-
-            context.NotificationService.SendPrivateMessage(privateMessageRoom, callingUser, toUser, messageText);
         }
     }
 }

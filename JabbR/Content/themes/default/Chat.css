@@ -225,6 +225,52 @@ form#send-message {
     max-height: 250px;
 }
 
+.messages-pm {
+    left: auto;
+    right: 0px;
+    width: 340px;
+    top: auto;
+    bottom: 40px;
+    height: 300px;
+    border-left: 1px solid #ccc;
+    z-index: 10;
+}
+
+    .messages-pm li.message {
+        border-left-width: 30px;
+    }
+
+    .messages-pm .message .left {
+        margin-left: -32px;
+        width: 30px;
+    }
+
+        .messages-pm .message .left .name {
+            display: none;
+        }
+
+.tab-pm {
+    position: absolute;
+    left: auto;
+    right: 0px;
+    width: 320px;
+    background-color: #003259;
+    top: auto;
+    bottom: 350px;
+    height: 22px;
+    z-index: 10;
+    padding: 4px 11px;
+}
+
+    .tab-pm a,
+    .tab-pm .close {
+        color: #f5f5f5;
+    }
+
+    .tab-pm a:hover {
+        text-decoration: none;
+    }
+
 .roomTopic {
     position: absolute;
     margin-left: 5px;
@@ -282,12 +328,22 @@ form#send-message {
 }
 
 #userlist-lobby,
-#userlist-lobby-owners {
+#userlist-lobby-owners,
+#userlist-lobby-private-message {
     position: relative;
     margin: 0 5px;
     top: 10px;
     background: none;
 }
+
+    #userlist-lobby-private-message li {
+        display: block;
+        margin-left: 10px;
+    }
+
+    #userlist-lobby-private-message li:hover {
+        cursor: pointer;
+    }
 
     #userlist-lobby li {
         display: block;
@@ -298,7 +354,8 @@ form#send-message {
     }
 
         #userlist-lobby li.empty,
-        #userlist-lobby-owners li.empty {
+        #userlist-lobby-owners li.empty,
+        #userlist-lobby-private-message li.empty {
             color: #909090;
             display: inline-block;
             font-style: italic;

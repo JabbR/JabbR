@@ -323,9 +323,7 @@ namespace JabbR.Services
             var room = new ChatRoom
             {
                 Name = name,
-                Creator = user,
-                OwnersCanAllow = true,
-                UsersCanAllow = true
+                Creator = user
             };
 
             room.Owners.Add(user);
@@ -340,7 +338,7 @@ namespace JabbR.Services
         public void JoinRoom(ChatUser user, ChatRoom room, string inviteCode)
         {
             // Throw if the room requires the user to be allowed but the user isn't allowed
-            if (room.Private)
+            if (room.RoomType != RoomType.Public)
             {
                 // First, check if the invite code is correct
                 if (!String.IsNullOrEmpty(inviteCode) && String.Equals(inviteCode, room.InviteCode, StringComparison.OrdinalIgnoreCase))
@@ -370,7 +368,8 @@ namespace JabbR.Services
         {
             EnsureOwnerOrAdmin(user, room);
 
-            if (!room.Private)
+            // throw on public or private messaging rooms
+            if (room.RoomType != RoomType.Private)
             {
                 throw new InvalidOperationException(LanguageResources.InviteCode_PrivateRoomRequired);
             }
@@ -503,7 +502,7 @@ namespace JabbR.Services
             targetRoom.Owners.Add(targetUser);
             targetUser.OwnedRooms.Add(targetRoom);
 
-            if (targetRoom.Private && !targetRoom.AllowedUsers.Contains(targetUser))
+            if (targetRoom.RoomType != RoomType.Public && !targetRoom.AllowedUsers.Contains(targetUser))
             {
                 // If the room is private make this user allowed
                 targetRoom.AllowedUsers.Add(targetUser);
@@ -667,7 +666,7 @@ namespace JabbR.Services
         {
             targetRoom.EnsureUserCanAllow(user);
 
-            if (!targetRoom.Private)
+            if (targetRoom.RoomType != RoomType.Private)
             {
                 throw new InvalidOperationException(String.Format(LanguageResources.RoomNotPrivate, targetRoom.Name));
             }
@@ -692,7 +691,7 @@ namespace JabbR.Services
                 throw new InvalidOperationException(LanguageResources.UnAllow_CannotUnallowSelf);
             }
 
-            if (!targetRoom.Private)
+            if (targetRoom.RoomType != RoomType.Private)
             {
                 throw new InvalidOperationException(String.Format(LanguageResources.RoomNotPrivate, targetRoom.Name));
             }
@@ -727,13 +726,13 @@ namespace JabbR.Services
         {
             EnsureOwnerOrAdmin(user, targetRoom);
 
-            if (targetRoom.Private)
+            if (targetRoom.RoomType == RoomType.Private)
             {
                 throw new InvalidOperationException(String.Format(LanguageResources.RoomAlreadyLocked, targetRoom.Name));
             }
 
             // Make the room private and set the join properties
-            targetRoom.Private = true;
+            targetRoom.RoomType = RoomType.Private;
             targetRoom.OwnersCanAllow = true;
             targetRoom.UsersCanAllow = true;
 

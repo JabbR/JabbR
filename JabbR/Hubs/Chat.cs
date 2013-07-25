@@ -162,7 +162,7 @@ namespace JabbR
             ChatUser user = _repository.VerifyUserId(userId);
             ChatRoom room = _repository.VerifyUserRoom(_cache, user, clientMessage.Room);
 
-            if (room == null || (room.Private && !user.AllowedRooms.Contains(room)))
+            if (room == null || (room.RoomType != RoomType.Public && !user.AllowedRooms.Contains(room)))
             {
                 return false;
             }
@@ -210,6 +210,16 @@ namespace JabbR
                 _resourceProcessor.ProcessUrls(urls, Clients, room.Name, chatMessage.Id);
             }
 
+            // if it's a private message, notify all involved parties
+            //_service.SendPrivateMessage(room);
+            if (room.RoomType == RoomType.PrivateMessage)
+            {
+                foreach (var toUser in room.AllowedUsers.Where(u => u != user))
+                {
+                    ((INotificationService)this).SendPrivateMessage(room, user, toUser);
+                }
+            }
+
             return true;
         }
 
@@ -226,7 +236,7 @@ namespace JabbR
                 // 3. If you're mentioned in a private room that you don't have access to
                 if (mentionedUser == null ||
                     mentionedUser == message.User ||
-                    (message.Room.Private && !mentionedUser.AllowedRooms.Contains(message.Room)))
+                    (message.Room.RoomType != RoomType.Public && !mentionedUser.AllowedRooms.Contains(message.Room)))
                 {
                     continue;
                 }
@@ -310,7 +320,7 @@ namespace JabbR
                     var isOwner = user.OwnedRooms.Contains(room);
 
                     // Tell the people in this room that you've joined
-                    Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner);
+                    Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner, room.RoomType == RoomType.PrivateMessage);
                 }
             }
             else
@@ -355,7 +365,7 @@ namespace JabbR
             {
                 Name = r.Name,
                 Count = r.Users.Count(u => u.Status != (int)UserStatus.Offline),
-                Private = r.Private,
+                RoomType = r.RoomType,
                 Closed = r.Closed,
                 Topic = r.Topic
             }).ToListAsync();
@@ -385,7 +395,7 @@ namespace JabbR
 
             ChatRoom room = _repository.GetRoomByName(roomName);
 
-            if (room == null || (room.Private && !user.AllowedRooms.Contains(room)))
+            if (room == null || (room.RoomType != RoomType.Public && !user.AllowedRooms.Contains(room)))
             {
                 return null;
             }
@@ -408,7 +418,7 @@ namespace JabbR
                 Owners = from u in room.Owners.Online()
                          select u.Name,
                 RecentMessages = recentMessages.Select(m => new MessageViewModel(m)),
-                Topic = room.Topic ?? String.Empty,
+                Topic = room.BuildRoomTopic(user) ?? String.Empty,
                 Welcome = room.Welcome ?? String.Empty,
                 Closed = room.Closed
             };
@@ -429,7 +439,7 @@ namespace JabbR
             // User must be an owner
             if (room == null ||
                 !room.Owners.Contains(user) ||
-                (room.Private && !user.AllowedRooms.Contains(room)))
+                (room.RoomType != RoomType.Public && !user.AllowedRooms.Contains(room)))
             {
                 throw new InvalidOperationException(LanguageResources.PostNotification_NotAllowed);
             }
@@ -469,7 +479,7 @@ namespace JabbR
             ChatUser user = _repository.GetUserById(userId);
             ChatRoom room = _repository.VerifyUserRoom(_cache, user, roomName);
 
-            if (room == null || (room.Private && !user.AllowedRooms.Contains(room)))
+            if (room == null || (room.RoomType != RoomType.Public && !user.AllowedRooms.Contains(room)))
             {
                 return;
             }
@@ -522,6 +532,7 @@ namespace JabbR
 
             var rooms = new List<RoomViewModel>();
             var privateRooms = new List<LobbyRoomViewModel>();
+            var privateMessageRooms = new List<LobbyRoomViewModel>();
             var userViewModel = new UserViewModel(user);
             var ownedRooms = user.OwnedRooms.Select(r => r.Key);
 
@@ -530,7 +541,7 @@ namespace JabbR
                 var isOwner = ownedRooms.Contains(room.Key);
 
                 // Tell the people in this room that you've joined
-                Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner);
+                Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner, room.RoomType == RoomType.PrivateMessage);
 
                 // Add the caller to the group so they receive messages
                 Groups.Add(clientId, room.Name);
@@ -541,8 +552,9 @@ namespace JabbR
                     rooms.Add(new RoomViewModel
                     {
                         Name = room.Name,
-                        Private = room.Private,
-                        Closed = room.Closed
+                        RoomType = room.RoomType,
+                        Closed = room.Closed,
+                        Topic = room.BuildRoomTopic(user)
                     });
                 }
             }
@@ -552,18 +564,32 @@ namespace JabbR
             {
                 foreach (var r in user.AllowedRooms)
                 {
-                    privateRooms.Add(new LobbyRoomViewModel
+                    if (r.RoomType == RoomType.Private)
                     {
-                        Name = r.Name,
-                        Count = _repository.GetOnlineUsers(r).Count(),
-                        Private = r.Private,
-                        Closed = r.Closed,
-                        Topic = r.Topic
-                    });
+                        privateRooms.Add(new LobbyRoomViewModel
+                        {
+                            Name = r.Name,
+                            Count = _repository.GetOnlineUsers(r).Count(),
+                            RoomType = r.RoomType,
+                            Closed = r.Closed,
+                            Topic = r.BuildRoomTopic(user)
+                        });
+                    }
+                    else
+                    {
+                        privateMessageRooms.Add(new LobbyRoomViewModel
+                        {
+                            Name = r.Name,
+                            Count = _repository.GetOnlineUsers(r).Count(),
+                            RoomType = r.RoomType,
+                            Closed = r.Closed,
+                            Topic = r.BuildRoomTopic(user)
+                        });
+                    }
                 }
 
                 // Initialize the chat with the rooms the user is in
-                Clients.Caller.logOn(rooms, privateRooms, user.Preferences);
+                Clients.Caller.logOn(rooms, privateRooms, privateMessageRooms, user.Preferences);
             }
         }
 
@@ -642,7 +668,7 @@ namespace JabbR
         private void LeaveRoom(ChatUser user, ChatRoom room)
         {
             var userViewModel = new UserViewModel(user);
-            Clients.Group(room.Name).leave(userViewModel, room.Name);
+            Clients.Group(room.Name).leave(userViewModel, room.Name, room.RoomType == RoomType.PrivateMessage);
 
             foreach (var client in user.ConnectedClients)
             {
@@ -699,8 +725,9 @@ namespace JabbR
             var roomViewModel = new RoomViewModel
             {
                 Name = room.Name,
-                Private = room.Private,
+                RoomType = room.RoomType,
                 Welcome = room.Welcome ?? String.Empty,
+                Topic = room.BuildRoomTopic(user),
                 Closed = room.Closed
             };
 
@@ -710,7 +737,7 @@ namespace JabbR
             Clients.Clients(user.GetConnections()).joinRoom(roomViewModel);
 
             // Tell the people in this room that you've joined
-            Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner);
+            Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner, room.RoomType == RoomType.PrivateMessage);
 
             // Notify users of the room count change
             OnRoomChanged(room);
@@ -800,11 +827,11 @@ namespace JabbR
             Clients.Group(room.Name).sendMeMessage(user.Name, content, room.Name);
         }
 
-        void INotificationService.SendPrivateMessage(ChatRoom room, ChatUser fromUser, ChatUser toUser, string messageText)
+        void INotificationService.SendPrivateMessage(ChatRoom room, ChatUser fromUser, ChatUser toUser)
         {
             // Send a message to the sender and the sendee
-            Clients.Clients(fromUser.GetConnections()).sendPrivateMessage(room.Name, fromUser.Name, toUser.Name, messageText);
-            Clients.Clients(toUser.GetConnections()).receivePrivateMessage(room.Name, fromUser.Name, toUser.Name, messageText);
+            Clients.Clients(fromUser.GetConnections()).sendPrivateMessage(room.Name, fromUser.Name, toUser.Name);
+            Clients.Clients(toUser.GetConnections()).receivePrivateMessage(room.Name, fromUser.Name, toUser.Name);
         }
 
         void INotificationService.PostNotification(ChatRoom room, ChatUser user, string message)
@@ -839,7 +866,7 @@ namespace JabbR
 
         void INotificationService.ListAllowedUsers(ChatRoom room)
         {
-            Clients.Caller.listAllowedUsers(room.Name, room.Private, room.AllowedUsers.Select(s => s.Name));
+            Clients.Caller.listAllowedUsers(room.Name, room.RoomType, room.AllowedUsers.Select(s => s.Name));
         }
 
         void INotificationService.LockRoom(ChatUser targetUser, ChatRoom room)
@@ -1062,7 +1089,7 @@ namespace JabbR
             var roomViewModel = new RoomViewModel
             {
                 Name = room.Name,
-                Private = room.Private,
+                RoomType = room.RoomType,
                 Closed = room.Closed
             };
 

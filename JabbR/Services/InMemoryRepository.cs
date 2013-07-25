@@ -135,8 +135,8 @@ namespace JabbR.Services
         {
             return _rooms
                 .Where(r =>
-                    (!r.Private) ||
-                    (r.Private && r.AllowedUsers.Contains(user)))
+                    (r.RoomType == RoomType.Public) ||
+                    (r.RoomType != RoomType.Public && r.AllowedUsers.Contains(user)))
                 .AsQueryable();
         }
 

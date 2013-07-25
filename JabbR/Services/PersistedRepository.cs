@@ -133,8 +133,8 @@ namespace JabbR.Services
             // All public and private rooms the user can see.
             return _db.Rooms
                 .Where(r =>
-                       (!r.Private) ||
-                       (r.Private && r.AllowedUsers.Any(u => u.Key == user.Key)));
+                       (r.RoomType == RoomType.Public) ||
+                       (r.RoomType != RoomType.Public && r.AllowedUsers.Any(u => u.Key == user.Key)));
         }
 
         public IQueryable<Notification> GetNotificationsByUser(ChatUser user)

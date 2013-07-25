@@ -868,6 +868,9 @@
     <EmbeddedResource Include="Migrations\201307230435317_AddRoomAllowJoinSettings.resx">
       <DependentUpon>201307230435317_AddRoomAllowJoinSettings.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201307231938582_RoomPrivateToRoomType.resx">
+      <DependentUpon>201307231938582_RoomPrivateToRoomType.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -1023,6 +1026,10 @@
     <Compile Include="Migrations\201307230435317_AddRoomAllowJoinSettings.Designer.cs">
       <DependentUpon>201307230435317_AddRoomAllowJoinSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201307231938582_RoomPrivateToRoomType.cs" />
+    <Compile Include="Migrations\201307231938582_RoomPrivateToRoomType.Designer.cs">
+      <DependentUpon>201307231938582_RoomPrivateToRoomType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\ClientNotification.cs" />
     <Compile Include="Models\ChatUserPreferences.cs" />
@@ -1031,6 +1038,7 @@
     <Compile Include="Models\MessageType.cs" />
     <Compile Include="Models\ModelExtensions.cs" />
     <Compile Include="Models\Notification.cs" />
+    <Compile Include="Models\RoomType.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Nancy\AdministrationModule.cs" />
     <Compile Include="Nancy\ClaimsPrincipalUserIdentity.cs" />

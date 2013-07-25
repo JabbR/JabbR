@@ -303,7 +303,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.Users.Add(user);
                 room.Owners.Add(user);
@@ -342,7 +342,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     InviteCode = "123456"
                 };
                 room.Users.Add(user);
@@ -375,7 +375,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     InviteCode = "123456"
                 };
                 room.Users.Add(user);
@@ -414,7 +414,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     InviteCode = "123456"
                 };
                 room.Users.Add(user);
@@ -453,7 +453,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     Closed = true,
                     InviteCode = "123456"
                 };
@@ -464,7 +464,7 @@ namespace JabbR.Test
                 var room2 = new ChatRoom
                 {
                     Name = "room2",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     Closed = true,
                     InviteCode = "123456"
                 };
@@ -505,7 +505,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     InviteCode = "123456"
                 };
                 room.Owners.Add(user);
@@ -541,7 +541,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     Closed = true,
                     InviteCode = "123456"
                 };
@@ -552,7 +552,7 @@ namespace JabbR.Test
                 var room2 = new ChatRoom
                 {
                     Name = "room2",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     InviteCode = "123456"
                 };
                 room2.Owners.Add(user);
@@ -591,7 +591,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = roomName,
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.Users.Add(user);
                 repository.Add(room);
@@ -625,7 +625,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = roomName,
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.Users.Add(user);
                 room.AllowedUsers.Add(user);
@@ -660,7 +660,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = roomName,
-                    Private = true,
+                    RoomType = RoomType.Private,
                     InviteCode = "123456"
                 };
                 room.Users.Add(user);
@@ -695,7 +695,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = roomName,
-                    Private = true,
+                    RoomType = RoomType.Private,
                     InviteCode = "123456"
                 };
                 room.Users.Add(user);
@@ -833,7 +833,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 repository.Add(room);
 
@@ -866,7 +866,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     InviteCode = "123456"
                 };
                 repository.Add(room);
@@ -900,7 +900,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 repository.Add(room);
 
@@ -933,7 +933,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     InviteCode = "123456"
                 };
                 repository.Add(room);
@@ -966,7 +966,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 room.AllowedUsers.Add(user);
                 repository.Add(room);
@@ -999,7 +999,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 repository.Add(room);
 
@@ -3202,7 +3202,7 @@ namespace JabbR.Test
                 bool result = commandManager.TryHandleCommand("/msg dfowler2 what is up?");
 
                 Assert.True(result);
-                notificationService.Verify(x => x.SendPrivateMessage(null, user, user2, "what is up?"), Times.Once());
+                notificationService.Verify(x => x.SendPrivateMessage(null, user, user2), Times.Once());
             }
         }
 
@@ -4020,7 +4020,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 user.OwnedRooms.Add(room);
                 room.Owners.Add(user);
@@ -4062,7 +4062,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     Closed = true
                 };
                 user.OwnedRooms.Add(room);
@@ -4105,7 +4105,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 user.OwnedRooms.Add(room);
                 room.Owners.Add(user);
@@ -4144,7 +4144,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room", 
-                    Private = true, 
+                    RoomType = RoomType.Private, 
                     AllowedUsers = new Collection<ChatUser>() { user },
                     Users = new Collection<ChatUser>() { user }
                 };
@@ -4179,7 +4179,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = false,
+                    RoomType = RoomType.Public,
                     Users = new Collection<ChatUser>() { user }
                 };
                 repository.Add(room);
@@ -4213,14 +4213,14 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     AllowedUsers = new Collection<ChatUser>() { user },
                 };
                 repository.Add(room);
                 var room2 = new ChatRoom
                 {
                     Name = "room2",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     AllowedUsers = new Collection<ChatUser>() { user },
                     Users = new Collection<ChatUser>() { user }
                 };
@@ -4255,7 +4255,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     Closed = true,
                     AllowedUsers = new Collection<ChatUser>() { user },
                 };
@@ -4263,7 +4263,7 @@ namespace JabbR.Test
                 var room2 = new ChatRoom
                 {
                     Name = "room2",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     AllowedUsers = new Collection<ChatUser>() { user },
                     Users = new Collection<ChatUser>() { user }
                 };
@@ -4323,7 +4323,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     AllowedUsers = new Collection<ChatUser>() { },
                     Users = new Collection<ChatUser>() { }
                 };
@@ -4331,7 +4331,7 @@ namespace JabbR.Test
                 var room2 = new ChatRoom
                 {
                     Name = "room2",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     AllowedUsers = new Collection<ChatUser>() { user },
                     Users = new Collection<ChatUser>() { user }
                 };
@@ -4392,7 +4392,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = false
+                    RoomType = RoomType.Public
                 };
                 room.Creator = user;
                 room.Owners.Add(user);
@@ -4412,7 +4412,7 @@ namespace JabbR.Test
 
                 Assert.True(result);
                 notificationService.Verify(x => x.LockRoom(user, room), Times.Once());
-                Assert.True(room.Private);
+                Assert.True(room.RoomType == RoomType.Private);
             }
 
             [Fact]
@@ -4454,7 +4454,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = false
+                    RoomType = RoomType.Public
                 };
                 room.Creator = user;
                 room.Owners.Add(user);
@@ -4474,7 +4474,7 @@ namespace JabbR.Test
 
                 Assert.True(result);
                 notificationService.Verify(x => x.LockRoom(user, room), Times.Once());
-                Assert.True(room.Private);
+                Assert.True(room.RoomType == RoomType.Private);
             }
 
             [Fact]
@@ -4491,7 +4491,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = false,
+                    RoomType = RoomType.Public,
                     Closed = true
                 };
                 room.Creator = user;
@@ -4512,7 +4512,7 @@ namespace JabbR.Test
 
                 Assert.True(result);
                 notificationService.Verify(x => x.LockRoom(user, room), Times.Once());
-                Assert.True(room.Private);
+                Assert.True(room.RoomType == RoomType.Private);
             }
         }
 
@@ -4846,7 +4846,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 user.OwnedRooms.Add(room);
                 room.Owners.Add(user);
@@ -4961,7 +4961,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true
+                    RoomType = RoomType.Private
                 };
                 user.OwnedRooms.Add(room);
                 room.Owners.Add(user);
@@ -5005,7 +5005,7 @@ namespace JabbR.Test
                 var room = new ChatRoom
                 {
                     Name = "room",
-                    Private = true,
+                    RoomType = RoomType.Private,
                     Closed = true
                 };
                 user.OwnedRooms.Add(room);

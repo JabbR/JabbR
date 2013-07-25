@@ -73,7 +73,7 @@ namespace JabbR.WebApi
                 return Request.CreateJabbrErrorMessage(HttpStatusCode.NotFound, ex.Message, filenamePrefix);
             }
 
-            if (chatRoom.Private)
+            if (chatRoom.RoomType != RoomType.Public)
             {
                 // TODO: Allow viewing messages using auth token
                 return Request.CreateJabbrErrorMessage(HttpStatusCode.NotFound, String.Format(LanguageResources.RoomNotFound, chatRoom.Name), filenamePrefix);

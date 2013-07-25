@@ -18,7 +18,7 @@ namespace JabbR.Models
 
         public static void EnsureAllowed(this ChatUser user, ChatRoom room)
         {
-            if (room.Private && !room.IsUserAllowed(user))
+            if (room.RoomType != RoomType.Public && !room.IsUserAllowed(user))
             {
                 throw new InvalidOperationException(String.Format(LanguageResources.RoomAccessPermission, room.Name));
             }
@@ -43,6 +43,16 @@ namespace JabbR.Models
             {
                 throw new InvalidOperationException(String.Format(LanguageResources.RoomCannotAllow, room.Name));
             }
+        }
+
+        public static string BuildRoomTopic(this ChatRoom room, ChatUser caller)
+        {
+            if (!string.IsNullOrEmpty(room.Topic) || room.RoomType != RoomType.PrivateMessage)
+            {
+                return room.Topic;
+            }
+
+            return string.Join(", ", room.AllowedUsers.Where(u => u != caller).Select(u => u.Name));
         }
     }
 }
