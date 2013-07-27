@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Objects.SqlClient;
+using System.Data.Entity.SqlServer;
 using System.Linq;
 using System.Reflection;
 using System.Threading;

@@ -1,10 +1,6 @@
 ﻿using System;
-using System.IdentityModel.Selectors;
-using System.IdentityModel.Services.Configuration;
-using System.IdentityModel.Tokens;
 using System.IO;
 using System.Net.Http.Formatting;
-using System.ServiceModel.Security;
 using System.Web.Http;
 using JabbR;
 using JabbR.Hubs;
@@ -17,10 +13,9 @@ using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Transports;
 using Microsoft.Owin;
+using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataHandler;
 using Microsoft.Owin.Security.DataProtection;
-using Microsoft.Owin.Security.Federation;
-using Microsoft.Owin.Security.Forms;
 using Newtonsoft.Json.Serialization;
 using Ninject;
 using Owin;
@@ -66,11 +61,9 @@ namespace JabbR
 
         private static void SetupAuth(IAppBuilder app, IKernel kernel)
         {
-            var ticketHandler = new TicketDataHandler(kernel.Get<IDataProtector>());
+            var ticketDataFormat = new TicketDataFormat(kernel.Get<IDataProtector>());
 
-            app.Use(typeof(FixCookieHandler), ticketHandler);
-
-            app.UseFormsAuthentication(new FormsAuthenticationOptions
+            app.UseCookieAuthentication(new CookiesAuthenticationOptions
             {
                 LoginPath = "/account/login",
                 LogoutPath = "/account/logout",
@@ -78,8 +71,8 @@ namespace JabbR
                 AuthenticationType = Constants.JabbRAuthType,
                 CookieName = "jabbr.id",
                 ExpireTimeSpan = TimeSpan.FromDays(30),
-                TicketDataHandler = ticketHandler,
-                Provider = kernel.Get<IFormsAuthenticationProvider>()
+                TicketDataFormat = ticketDataFormat,
+                Provider = kernel.Get<ICookiesAuthenticationProvider>()
             });
 
             //var config = new FederationConfiguration(loadConfig: false);

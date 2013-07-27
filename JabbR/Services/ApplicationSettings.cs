@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using JabbR.Infrastructure;
 
@@ -24,9 +25,15 @@ namespace JabbR.Services
 
         public bool AllowUserRegistration { get; set; }
 
+        public bool AllowUserResetPassword { get; set; }
+
+        public int RequestResetPasswordValidThroughInHours { get; set; }
+
         public bool AllowRoomCreation { get; set; }
 
         public IDictionary<string, string> AuthenticationProviders { get; set; }
+
+        public string EmailSender { get; set; }
 
         public static ApplicationSettings GetDefaultSettings()
         {
@@ -36,7 +43,10 @@ namespace JabbR.Services
                 VerificationKey = CryptoHelper.ToHex(GenerateRandomBytes()),
                 MaxFileUploadBytes = 5242880,
                 AllowUserRegistration = true,
-                AllowRoomCreation = true
+                AllowRoomCreation = true,
+                AllowUserResetPassword = false,
+                RequestResetPasswordValidThroughInHours = 6,
+                EmailSender = String.Empty
             };
         }
 

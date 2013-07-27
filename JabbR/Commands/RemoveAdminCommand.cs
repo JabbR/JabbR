@@ -10,7 +10,7 @@ namespace JabbR.Commands
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException("Which admin do you want to remove?");
+                throw new InvalidOperationException(LanguageResources.RemoveAdmin_UserRequired);
             }
 
             string targetUserName = args[0];

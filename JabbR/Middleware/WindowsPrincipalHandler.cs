@@ -4,8 +4,6 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using JabbR.Infrastructure;
-using Owin.Types;
-using Owin.Types.Extensions;
 
 namespace JabbR.Middleware
 {

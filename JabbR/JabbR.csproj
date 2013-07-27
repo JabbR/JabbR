@@ -61,9 +61,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EcmaScript.Net.1.0.1.0\lib\net20\EcmaScript.NET.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.0.0-rc1-20720\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.0.0-rc1-20720\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.6.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -79,7 +83,7 @@
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.0-rc1-130702-b94\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.0-rc1-130722-b119\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -92,43 +96,35 @@
     </Reference>
     <Reference Include="Microsoft.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.2.0.0-rc1-20629-428\lib\net45\Microsoft.Owin.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.2.0.0-rc1-20721-479\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Diagnostics, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Diagnostics.2.0.0-rc1-20629-428\lib\net40\Microsoft.Owin.Diagnostics.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Diagnostics.2.0.0-rc1-20721-479\lib\net40\Microsoft.Owin.Diagnostics.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.FileSystems, Version=0.24.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.FileSystems.0.24.0-pre-20629-428\lib\net40\Microsoft.Owin.FileSystems.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.FileSystems.0.24.0-pre-20721-479\lib\net40\Microsoft.Owin.FileSystems.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.0.0-rc1-20629-428\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Mapping, Version=0.24.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Mapping.0.24.0-pre-20629-428\lib\net40\Microsoft.Owin.Mapping.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.0.0-rc1-20721-479\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.2.0.0-rc1-20629-428\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.2.0.0-rc1-20721-479\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.2.0.0-rc1-20721-479\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Federation, Version=0.24.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.Federation.0.24.0-pre-20629-428\lib\net45\Microsoft.Owin.Security.Federation.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.Forms.2.0.0-rc1-20629-428\lib\net45\Microsoft.Owin.Security.Forms.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.Federation.0.24.0-pre-20721-479\lib\net45\Microsoft.Owin.Security.Federation.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.StaticFiles, Version=0.24.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.StaticFiles.0.24.0-pre-20629-428\lib\net40\Microsoft.Owin.StaticFiles.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <Private>True</Private>
-      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.StaticFiles.0.24.0-pre-20721-479\lib\net40\Microsoft.Owin.StaticFiles.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=1.8.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.1.8.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
@@ -184,7 +180,6 @@
     </Reference>
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Data.Services.Client" />
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.identitymodel.services" />
@@ -234,7 +229,7 @@
     <Content Include="Chat.js" />
     <Content Include="Chat.toast.js" />
     <Content Include="Chat.twitter.js" />
-    <Content Include="Chat.ui.filePaste.js" />
+    <Content Include="Chat.ui.fileUpload.js" />
     <Content Include="Chat.ui.js" />
     <Content Include="Chat.ui.room.js" />
     <Content Include="Chat.utility.js" />
@@ -810,6 +805,10 @@
     <Content Include="notifications.js" />
     <Content Include="notifications.unreadcounter.js" />
     <Content Include="robots.txt" />
+    <EmbeddedResource Include="LanguageResources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>LanguageResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201208211555032_BanUser.resx">
       <DependentUpon>201208211555032_BanUser.cs</DependentUpon>
     </EmbeddedResource>
@@ -859,6 +858,12 @@
     <EmbeddedResource Include="Migrations\201306180311195_ExtendChatUserFlagLength.resx">
       <DependentUpon>201306180311195_ExtendChatUserFlagLength.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201307020008436_AllowUserResetPassword.resx">
+      <DependentUpon>201307020008436_AllowUserResetPassword.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201307181924477_AddUserPreferences.resx">
+      <DependentUpon>201307181924477_AddUserPreferences.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Scripts\jquery-1.9.0.intellisense.js" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -868,6 +873,8 @@
     <Content Include="Scripts\jquery-migrate-1.0.0.min.js" />
     <Content Include="Scripts\jquery.color-2.1.2.js" />
     <Content Include="Scripts\jquery.color-2.1.2.min.js" />
+    <Content Include="Scripts\jquery.dragsort-0.5.1.js" />
+    <Content Include="Scripts\jquery.dragsort-0.5.1.min.js" />
     <Content Include="Scripts\jquery.history.js" />
     <Content Include="Scripts\jquery.autotabcomplete.js" />
     <Content Include="Scripts\jquery.captureDocumentWrite.js" />
@@ -881,8 +888,8 @@
     <Content Include="Scripts\jquery.pubsub.js" />
     <Content Include="Scripts\jquery.pulse.js" />
     <Content Include="Scripts\jquery.pulse.min.js" />
-    <Content Include="Scripts\jquery.signalR-2.0.0-rc1-130702-b94.js" />
-    <Content Include="Scripts\jquery.signalR-2.0.0-rc1-130702-b94.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.0-rc1-130722-b119.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.0-rc1-130722-b119.min.js" />
     <Content Include="Scripts\jquery.sortElements.js" />
     <Content Include="Scripts\jquery.timeago.0.10.js" />
     <Content Include="Scripts\jQuery.tmpl.js" />
@@ -923,10 +930,22 @@
     <Content Include="Views\Notifications\index.cshtml" />
     <Content Include="Views\Home\monitor.cshtml" />
     <Content Include="Views\Administration\index.cshtml" />
+    <Content Include="Views\EmailTemplates\RequestResetPassword.cshtml" />
+    <Content Include="Views\EmailTemplates\RequestResetPassword.text.cshtml" />
+    <Content Include="Views\Account\requestresetpassword.cshtml" />
+    <Content Include="Views\Account\requestresetpasswordsuccess.cshtml" />
+    <Content Include="Views\Account\resetpassword.cshtml" />
+    <Content Include="Views\Account\resetpassworderror.cshtml" />
+    <Content Include="Views\Account\resetpasswordsuccess.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Infrastructure\AuthenticationManagerExtensions.cs" />
-    <Compile Include="Middleware\FixCookieHandler.cs" />
+    <Compile Include="Infrastructure\EnumerableExtensions.cs" />
+    <Compile Include="Infrastructure\HttpServerUtility.cs" />
+    <Compile Include="LanguageResources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LanguageResources.resx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\Startup.DependencyInjection.cs" />
     <Compile Include="Commands\AllowedCommand.cs" />
     <Compile Include="ContentProviders\Core\ContentProviderProcessor.cs" />
@@ -988,8 +1007,17 @@
     <Compile Include="Migrations\201306180311195_ExtendChatUserFlagLength.Designer.cs">
       <DependentUpon>201306180311195_ExtendChatUserFlagLength.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201307020008436_AllowUserResetPassword.cs" />
+    <Compile Include="Migrations\201307020008436_AllowUserResetPassword.Designer.cs">
+      <DependentUpon>201307020008436_AllowUserResetPassword.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201307181924477_AddUserPreferences.cs" />
+    <Compile Include="Migrations\201307181924477_AddUserPreferences.Designer.cs">
+      <DependentUpon>201307181924477_AddUserPreferences.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\ClientNotification.cs" />
+    <Compile Include="Models\ChatUserPreferences.cs" />
     <Compile Include="Models\Mapping\AttachmentMap.cs" />
     <Compile Include="Models\Mapping\NotificationMap.cs" />
     <Compile Include="Models\MessageType.cs" />
@@ -1048,6 +1076,19 @@
     <Compile Include="Nancy\NotificationsModule.cs" />
     <Compile Include="Nancy\SessionExtensions.cs" />
     <Compile Include="Services\DefaultUserAuthenticator.cs" />
+    <Compile Include="Services\Email\Email.cs" />
+    <Compile Include="Services\Email\EmailService.cs" />
+    <Compile Include="Services\Email\EmailTemplate.cs" />
+    <Compile Include="Services\Email\DynamicModel.cs" />
+    <Compile Include="Services\Email\FileEmailTemplateContentReader.cs" />
+    <Compile Include="Services\Email\IEmailSender.cs" />
+    <Compile Include="Services\Email\IEmailService.cs" />
+    <Compile Include="Services\Email\IEmailTemplate.cs" />
+    <Compile Include="Services\Email\IEmailTemplateContentReader.cs" />
+    <Compile Include="Services\Email\IEmailTemplateEngine.cs" />
+    <Compile Include="Services\Email\RazorEmailTemplateContentReader.cs" />
+    <Compile Include="Services\Email\RazorEmailTemplateEngine.cs" />
+    <Compile Include="Services\Email\SmtpClientEmailSender.cs" />
     <Compile Include="Services\IJabbrConfiguration.cs" />
     <Compile Include="Services\ISettingsManager.cs" />
     <Compile Include="Services\IUserAuthenticator.cs" />
@@ -1310,7 +1351,6 @@
   <ItemGroup>
     <Content Include="Chat.emoji.js" />
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

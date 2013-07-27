@@ -3,7 +3,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("allowed", "Show a list of all users allowed in the given room.", "[room]", "room")]
+    [Command("allowed", "Allowed_CommandInfo", "[room]", "room")]
     public class AllowedCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
@@ -12,7 +12,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(targetRoomName))
             {
-                throw new InvalidOperationException("Which room do you want to list the allowed users of?");
+                throw new InvalidOperationException(LanguageResources.Allowed_RoomRequired);
             }
 
             ChatRoom room = context.Repository.VerifyRoom(targetRoomName, mustBeOpen: false);

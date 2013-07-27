@@ -104,7 +104,7 @@ form#send-message {
     padding-top: 10px;
     width: 100%;
     height: 30px;
-    background: #f5f5f5;
+    background-color: #e5e5e5;
     color: #00103f;
 }
 
@@ -217,7 +217,7 @@ form#send-message {
             width: 16px;
             display: inline-block;
             float: left;
-            margin: 0 2px;
+            margin: 0 2px 0 0;
         }
 
 .message img {
@@ -501,8 +501,7 @@ form#send-message {
     .users li.typing {
         background-image: url('../../images/typing.png');
         background-repeat: no-repeat;
-        background-position: 5px 12px;
-        background-size: 12px auto;
+        background-position: 10px 12px;
     }
 
     .users li.room.locked .lock {
@@ -539,12 +538,19 @@ li.user.typing .user-status {
     -moz-box-shadow: none;
     box-shadow: none;
     background: none;
-    padding-left: 5px;
-    padding-right: 5px;
 }
 
-.users .idle .user-status {
+li.user.typing .gravatar {
+    visibility: hidden;
+}
+
+.inactive .user-status {
     background-color: #ffaa22;
+}
+
+.offline .user-status,
+.absent .user-status {
+    background-color: #e5e5e5;
 }
 
 .users .details {
@@ -575,120 +581,157 @@ li.user.typing .user-status {
 
 #tabs {
     padding: 0 0 0 0;
-    margin: 9px 90px;
+    margin: 9px 200px 0 90px;
     left: 0;
-    right: 160px;
+    right: 0;
     position: absolute;
     z-index: 1000;
     min-width: 120px;
+    height: 37px;
+    overflow: hidden;
+}
+
+.home-admin #tabs {
+    /* wider for additional admin buttons */
+    margin-right: 236px;
 }
 
     #tabs li {
         display: inline-block;
+        float: left;
         padding: 0;
-        margin: 0px 0px 0px 0px;
-        height: 35px;
+        margin: 0;
+        height: 36px;
         position: relative;
-        background: #fff;
-        color: #00103f;
-        color: rgba(0, 16, 63, 0.6);
-        font-weight: bold;
+        background-color: #003259;
         cursor: pointer;
-        border: 1px solid #e5e5e5;
+        border: 1px solid #00103f;
+        border-bottom-width: 0;
+        border-top-width: 0;
     }
 
-#tabs li:not(.lobby) {
-            border-left: none;
+    #tabs li:not(:first-child) {
+        border-left: none;
+    }
+
+        #tabs li a {
+            height: inherit;
+            display: inline-block;
+            vertical-align: middle;
+            font-family: sans-serif;
+            font-weight: normal;
+            color: #f5f5f5;
+            padding: 8px 24px 6px 8px;
+            font-size: 0;
         }
 
-        #tabs li button {
-            height: inherit;
-            margin: 0;
-            padding: 0 20px 0 0;
-            border: none;
-            outline: 0;
-            background-color: transparent;
-            color: inherit;
-            cursor: inherit;
+        #tabs li a:hover,
+        #tabs li.current a {
+            text-decoration: none;
+        }
+
+        #tabs li a i,
+        #tabs li a span {
+            display: inline-block;
+        }
+
+        #tabs li a i.hide {
+            display: none;
+        }
+
+        #tabs li a i {
+            font-size: 14px;
+        }
+
+        #tabs li a span {
             font-size: 16px;
         }
 
-        #tabs li.current {
+        #tabs li.no-close a {
+            padding-right: 8px;
+        }
+
+        #tabs li.current,        
+        #tabs li:hover {
+            background-color: #e5e5e5 !important; /* background is set on the element in js for inactive rooms */
+            border-color: #e5e5e5;
+        }
+
+        #tabs li:hover a,
+        #tabs li.current a,
+        #tabs li:hover .close,
+        #tabs li.current .close {
             color: #00103f;
-            background: #f5f5f5;
-            border-bottom-color: #f5f5f5;
         }
-
-        #tabs li .content {
-            margin: 6px 10px 6px 10px;
-        }
-
-        #tabs li.locked .content {
-            margin: 6px 10px 6px 27px;
-        }
-
-        #tabs li.closed .content {
-            margin: 6px 10px 6px 27px;
-        }
-
-        #tabs li.closed.locked .content {
-            margin: 6px 10px 6px 47px;
-        }
-
+        
         #tabs li .close {
             position: absolute;
-            top: 8px;
-            right: 0;
+            top: 9px;
+            right: 4px;
             width: 16px;
             height: 16px;
+            opacity: 0.5;
+            font-size: 18px;
+            color: #f5f5f5;
+        }
+            
+        #tabs li .close:hover {
+            opacity: 0.75;
         }
 
-        #tabs li.locked .lock {
-            position: absolute;
-            top: 8px;
-            margin-left: 5px;
-        }
-
-        #tabs li.closed .readonly {
-            position: absolute;
-            top: 8px;
-            margin-left: 5px;
-        }
-
-        #tabs li.closed.locked .readonly {
-            margin-left: 25px;
-        }
-
-        #tabs li:hover,
-        #tabs li.current:hover {
-            background-color: #e5e5e5;
-            color: #00103f;
-        }
-
-li.room {
-    cursor: pointer;
+#tabs-dropdown-container {
+    float: left;
+    margin-top: 9px;
+    position: relative;
 }
 
-    li.room:hover {
-        background-color: #f5f5f5;
+    #tabs-dropdown-container .dropdown-toggle {
+        display: none;
+        border: none;
+        outline: 0;
+        background-color: transparent;
+        color: #fff;
+        height: 36px;
+        margin-right: 4px;
     }
 
-#tabs li.lobby {
-    margin-right: -4px;
-    color: #00103f;
-    color: rgba(0, 16, 63, 1);
-    padding-right: 0;
-    border-color: #e5e5e5;
-}
-
-#tabs li.lobby button {
-        padding-right: 0;
+    #tabs-dropdown li {
+        position: relative;
+        cursor: pointer;
+        background-color: #fff !important;
     }
 
-    #tabs li.lobby.current {
-        background-color: #fafafa;
+    #tabs-dropdown li:hover {
+        background-color: #00103F !important;
+    }
+
+    #tabs-dropdown li:hover a,
+    #tabs-dropdown li:hover .close {
+        color: #fff;
+    }
+
+    #tabs-dropdown li a i.hide {
+        display: none;
+    }
+
+    #tabs-dropdown li .close {
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        width: 16px;
+        height: 16px;
+        opacity: 0.5;
+        font-size: 18px;
+    }
+            
+        #tabs-dropdown li .close:hover {
+            opacity: 0.75;
+        }
+
+    #tabs-dropdown li.current {
         color: #00103f;
-        border-bottom: #fafafa;
+        background-color: #e5e5e5 !important;
+        border-bottom-color: #e5e5e5;
     }
 
 #send-message {
@@ -2168,19 +2211,16 @@ li.clearfix {
 
 #releaseArea {
     padding: 10px 0;
-}
-
-#releaseTag {
     font-size: smaller;
     margin: 0;
 }
 
-    #releaseTag a {
+    #releaseArea a {
         color: #1C94C4;
         text-decoration: none;
     }
 
-        #releaseTag a:hover {
+        #releaseArea a:hover {
             color: #1C94C4;
             text-decoration: underline;
         }
@@ -2345,13 +2385,21 @@ li.clearfix {
 
 .windows-auth,
 .usernamepassword-auth,
-.user-registration {
+.user-registration,
+.user-request-reset-password {
     margin: 20px -40px;
 }
 
-    .user-registration .validation-summary-errors {
+.user-reset-password {
+    margin: 20px;
+}
+
+    .user-registration .validation-summary-errors,
+    .user-request-reset-password .validation-summary-errors,
+    .user-reset-password .validation-summary-errors {
         margin: 20px 200px;
     }
+
 
     .usernamepassword-auth .control-group {
         margin-left: 40px;
@@ -2701,20 +2749,18 @@ h3.userlist-header {
 .connection-status {
     float: left;
     position: relative;
-    top: 20px;
+    margin-top: 9px;
 }
 
 .icon-connection-status {
     background-color: #77d42a;
-    -webkit-border-radius: 8px;
-    -moz-border-radius: 8px;
-    border-radius: 8px;
-    display: inline-block;
-    padding: 6px;
+    display: block;
+    width: 10px;
+    height: 36px;
 }
 
 .reconnecting .icon-connection-status {
-    background-color: #ffec64;
+    background-color: #ffaa22;
 }
 
 .disconnected .icon-connection-status {
@@ -2752,7 +2798,7 @@ h3.userlist-header {
     color: white;
 }
 
-.idle-since {
+.inactive-since {
     float: right;
     font-size: 11px;
     font-weight: bold;
@@ -2780,7 +2826,7 @@ h3.userlist-header {
     box-shadow: none;
     border: 1px solid #e5e5e5;
     border-radius: 4px 4px 0 0;
-    margin: 9px 5px 0 5px;
+    margin: 9px 5px 0 0;
 }
 
 .navbar .nav {
@@ -2864,7 +2910,7 @@ h3.userlist-header {
         width: 200px;
     }
 
-    .user.idle .details.admin .name-container .name {
+    .user.inactive .details.admin .name-container .name {
         width: 72px;
     }
 
@@ -2979,7 +3025,7 @@ h3.userlist-header {
         width: 45px;
     }
 
-    .user .details .name-container .idle-since {
+    .user .details .name-container .inactive-since {
         float: left;
     }
 
@@ -2989,10 +3035,6 @@ h3.userlist-header {
 
     .flag-container {
         display: none;
-    }
-
-    #tabs {
-        overflow: auto;
     }
 }
 
@@ -3019,4 +3061,48 @@ h3.userlist-header {
     border-radius: 0px !important;
     border-collapse: collapse !important;
     background-image: none !important;
+}
+
+#drop-file-target {
+    display: none;
+}
+
+.drop-file-text {
+    font-size: 72pt;
+    display: block;
+    position: absolute;
+    line-height: 50px;
+    top: 50%;
+    left: 40%;
+    margin: -82px 0 0 -180px;
+    text-shadow: 3px 3px 4px #000;
+    color: #fff;
+    z-index: -1;
+}
+
+/* Make admin screens nicer */
+.administration .form-horizontal .control-label {
+  width: 260px;
+}
+
+.administration .form-horizontal .controls {
+  margin-left: 280px;
+  *margin-left: 0;
+}
+
+.administration .form-horizontal .controls:first-child {
+  *padding-left: 280px;
+}
+
+@media (max-width: 480px)
+{
+    .administration .form-horizontal .control-label
+    {
+        width: auto;
+    }
+
+    .administration .form-horizontal .controls
+    {
+        margin-left: 0;
+    }
 }

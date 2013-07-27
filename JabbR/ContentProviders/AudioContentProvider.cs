@@ -19,7 +19,7 @@ namespace JabbR.ContentProviders
             string url = request.RequestUri.ToString();
             return TaskAsyncHelper.FromResult(new ContentProviderResult()
             {
-                Content = String.Format(@"<audio controls=""controls"" src=""{0}"">Your browser does not support the audio tag.</audio>", Encoder.HtmlAttributeEncode(url)),
+                Content = String.Format(@"<audio controls=""controls"" src=""{1}"">{0}</audio>", LanguageResources.AudioTagSupportRequired, Encoder.HtmlAttributeEncode(url)),
                 Title = request.RequestUri.AbsoluteUri
             });
         }

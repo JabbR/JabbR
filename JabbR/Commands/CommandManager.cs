@@ -113,11 +113,11 @@ namespace JabbR.Commands
             }
             catch (CommandNotFoundException)
             {
-                throw new InvalidOperationException(String.Format("'{0}' is not a valid command.", commandName));
+                throw new InvalidOperationException(String.Format(LanguageResources.CommandNotFound, commandName));
             }
             catch (CommandAmbiguityException e)
             {
-                throw new InvalidOperationException(String.Format("'{0}' is ambiguous: {1}.", commandName, String.Join(", ", e.Ambiguities)));
+                throw new InvalidOperationException(String.Format(LanguageResources.CommandAmbiguous, commandName, String.Join(", ", e.Ambiguities)));
             }
 
             command.Execute(context, callerContext, args);

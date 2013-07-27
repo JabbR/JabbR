@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Owin.Types;
 using Microsoft.Owin;
 
 namespace JabbR.Middleware

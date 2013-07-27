@@ -33,7 +33,7 @@
         var $this = $(this),
             content = $this.html();
 
-        content = utility.processContent(content, templates);
+        content = utility.processContent(content, templates, null, true);
         $this.html(content);
     });
 

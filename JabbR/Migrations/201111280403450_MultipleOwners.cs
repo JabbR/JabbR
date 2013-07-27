@@ -19,7 +19,7 @@ namespace JabbR.Models.Migrations
             
             AddColumn("ChatRooms", "Creator_Key", c => c.Int());
             AddForeignKey("ChatRooms", "Creator_Key", "ChatUsers", "Key");
-            DropForeignKey("ChatRooms", "Owner_Key", "ChatUsers", "Key");
+            DropForeignKey("ChatRooms", "Owner_Key", "ChatUsers");
             DropColumn("ChatRooms", "Owner_Key");
         }
         
@@ -27,9 +27,9 @@ namespace JabbR.Models.Migrations
         {
             AddColumn("ChatRooms", "Owner_Key", c => c.Int());
             AddForeignKey("ChatRooms", "Owner_Key", "ChatUsers", "Key");
-            DropForeignKey("ChatRoomChatUsers", "ChatUser_Key", "ChatUsers", "Key");
-            DropForeignKey("ChatRoomChatUsers", "ChatRoom_Key", "ChatRooms", "Key");
-            DropForeignKey("ChatRooms", "Creator_Key", "ChatUsers", "Key");
+            DropForeignKey("ChatRoomChatUsers", "ChatUser_Key", "ChatUsers");
+            DropForeignKey("ChatRoomChatUsers", "ChatRoom_Key", "ChatRooms");
+            DropForeignKey("ChatRooms", "Creator_Key", "ChatUsers");
             DropColumn("ChatRooms", "Creator_Key");
             DropTable("ChatRoomChatUsers");
         }

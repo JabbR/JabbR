@@ -61,13 +61,6 @@
         $connectionInfoContent = null,
         $fileUploadButton = null,
         $hiddenFile = null,
-        $uploadForm = null,
-        $previewUpload = null,
-        $imageUploadPreview = null,
-        $unknownUploadPreview = null,
-        $previewUploadButton = null,
-        $previewCancelButton = null,
-        $uploadCallback = null,
         $fileRoom = null,
         $fileConnectionId = null,
         connectionInfoStatus = null,
@@ -187,7 +180,7 @@
 
     function getAllRoomElements() {
         var rooms = [];
-        $("ul#tabs > li.room").each(function () {
+        $("ul#tabs > li.room, ul#tabs-dropdown > li.room").each(function () {
             rooms[rooms.length] = getRoomElements($(this).data("name"));
         });
         return rooms;
@@ -217,11 +210,11 @@
 
         $room.css('background-color', '#f5f5f5');
         if (count === 0) {
-            $count.text('Unoccupied');
+            $count.text(utility.getLanguageResource('Client_OccupantsZero'));
         } else if (count === 1) {
-            $count.text('1 occupant');
+            $count.text(utility.getLanguageResource('Client_OccupantsOne'));
         } else {
-            $count.text(count + ' occupants');
+            $count.text(utility.getLanguageResource('Client_OccupantsMany', count));
         }
 
         if (room.Private === true) {
@@ -332,7 +325,10 @@
             $messages = null,
             $roomTopic = null,
             scrollHandler = null,
-            userContainer = null;
+            userContainer = null,
+            roomOwnersHeader = utility.getLanguageResource('Chat_UserOwnerHeader'),
+            usersHeader = utility.getLanguageResource('Chat_UserHeader'),
+            $tabsDropdown = $tabs.last();
 
         if (room.exists()) {
             return false;
@@ -352,8 +348,9 @@
         }
 
         roomCache[roomName.toString().toUpperCase()] = true;
-
-        templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabs);
+        
+        templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabsDropdown);
+        chat.ui.updateTabOverflow();
 
         $messages = $('<ul/>').attr('id', 'messages-' + roomId)
                               .addClass('messages')
@@ -368,17 +365,11 @@
         userContainer = $('<div/>').attr('id', 'userlist-' + roomId)
             .addClass('users')
             .appendTo($chatArea).hide();
-        templates.userlist.tmpl({ listname: 'Room Owners', id: 'userlist-' + roomId + '-owners' })
+        templates.userlist.tmpl({ listname: roomOwnersHeader, id: 'userlist-' + roomId + '-owners' })
             .addClass('owners')
             .appendTo(userContainer);
-        templates.userlist.tmpl({ listname: 'Users', id: 'userlist-' + roomId + '-active' })
+        templates.userlist.tmpl({ listname: usersHeader, id: 'userlist-' + roomId + '-active' })
             .appendTo(userContainer);
-        
-        $tabs.find('li')
-            .not('.lobby')
-            .sortElements(function (a, b) {
-                return $(a).data('name').toString().toUpperCase() > $(b).data('name').toString().toUpperCase() ? 1 : -1;
-            });
 
         scrollHandler = function (ev) {
             var messageId = null;
@@ -428,6 +419,8 @@
             room.users.remove();
             room.roomTopic.remove();
             setAccessKeys();
+            
+            chat.ui.updateTabOverflow();
         }
     }
 
@@ -481,7 +474,7 @@
 
     function collapseRichContent(content) {
         content = content.replace(/class="collapsible_box/g, 'style="display: none;" class="collapsible_box');
-        return content.replace(/class="collapsible_title"/g, 'class="collapsible_title" title="Content collapsed because you have Rich-Content disabled"');
+        return content.replace(/class="collapsible_title"/g, 'class="collapsible_title" title="' + utility.getLanguageResource('Content_DisabledMessage') + '"');
     }
 
     function triggerFocus() {
@@ -559,9 +552,12 @@
     }
 
     function anyRoomPreference(name, value) {
+        var rooms = $.map(getAllRoomElements(), function (r) { return "_room_" + r.getName(); });
         for (var key in preferences) {
-            if (preferences[key][name] === value) {
-                return true;
+            if (rooms.indexOf(key) != -1) {
+                if (preferences[key][name] === value) {
+                    return true;
+                }
             }
         }
         return false;
@@ -651,7 +647,7 @@
     function updateRoomTopic(roomViewModel) {
         var room = getRoomElements(roomViewModel.Name);
         var topic = roomViewModel.Topic;
-        var topicHtml = topic === '' ? 'You\'re chatting in ' + roomViewModel.Name : ui.processContent(topic);
+        var topicHtml = topic === '' ? utility.getLanguageResource('Chat_DefaultTopic', roomViewModel.Name) : ui.processContent(topic);
         var roomTopic = room.roomTopic;
         var isVisibleRoom = getCurrentRoomElements().getName() === roomViewModel.Name;
 
@@ -689,8 +685,8 @@
             template: $connectionInfoPopover,
             content: function () {
                 var connectionInfo = $connectionInfoContent;
-                connectionInfo.find(connectionInfoStatus).text('Status: Connected');
-                connectionInfo.find(connectionInfoTransport).text('Transport: ' + transport);
+                connectionInfo.find(connectionInfoStatus).text(utility.getLanguageResource('Client_ConnectedStatus'));
+                connectionInfo.find(connectionInfoTransport).text(utility.getLanguageResource('Client_Transport', transport));
                 return connectionInfo.html();
             }
         };
@@ -706,52 +702,6 @@
         
         // re-filter lists
         $lobbyRoomFilterForm.submit();
-    }
-    
-    function showUploadPreview(file, type, uploader) {
-        $uploadCallback = uploader;
-        $imageUploadPreview.show();
-        $unknownUploadPreview.hide();
-        //set image url
-        if (file.dataURL) {
-            $previewUpload.find('h3').text('Uploading from clipboard');
-            $imageUploadPreview.attr('src', file.dataURL);
-        } else {
-            $previewUpload.find('h3').text('Uploading: ' + file.name);
-            if (type == 'image') {
-                //uploading an actual file
-                $imageUploadPreview.attr('src', file.data.result);
-            } else {
-                //nothing just yet
-                $imageUploadPreview.hide();
-                $unknownUploadPreview.show();
-            }
-        }
-            
-        $previewUpload.modal();
-    }
-
-    function initializeUploadPreview(e, file, type) {
-        showUploadPreview({ data: e.target, name: file.name }, type, function () {
-            var path = $hiddenFile.val(),
-                slash = path.lastIndexOf('\\'),
-                name = path.substring(slash + 1),
-                uploader = {
-                    submitFile: function (connectionId, room) {
-                        $fileConnectionId.val(connectionId);
-
-                        $fileRoom.val(room);
-
-                        $uploadForm.submit();
-
-                        $hiddenFile.val('');
-                    }
-                };
-
-            ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
-
-            $ui.trigger(ui.events.fileUploaded, [uploader]);
-        });
     }
 
     var ui = {
@@ -772,7 +722,8 @@
             preferencesChanged: 'jabbr.ui.preferencesChanged',
             loggedOut: 'jabbr.ui.loggedOut',
             reloadMessages: 'jabbr.ui.reloadMessages',
-            fileUploaded: 'jabbr.ui.fileUploaded'
+            fileUploaded: 'jabbr.ui.fileUploaded',
+            tabOrderChanged: 'jabbr.ui.tabOrderChanged'
         },
 
         help: {
@@ -786,7 +737,7 @@
             $ui = $(this);
             preferences = state || {};
             $chatArea = $('#chat-area');
-            $tabs = $('#tabs');
+            $tabs = $('#tabs, #tabs-dropdown');
             $submitButton = $('#send');
             $newMessage = $('#new-message');
             $roomActions = $('#room-actions');
@@ -802,11 +753,6 @@
             $disconnectDialog = $('#disconnect-dialog');
             $login = $('#jabbr-login');
             $helpPopup = $('#jabbr-help');
-            $previewUpload = $('#jabbr-upload-preview');
-            $imageUploadPreview = $('#jabbr-upload-preview #image-upload-preview');
-            $unknownUploadPreview = $('#jabbr-upload-preview #unknown-upload-preview');
-            $previewUploadButton = $('#jabbr-upload-preview #upload-preview-upload');
-            $previewCancelButton = $('#jabbr-upload-preview #upload-preview-cancel');
             $helpBody = $('#jabbr-help .help-body');
             $shortCutHelp = $('#jabbr-help #shortcut');
             $globalCmdHelp = $('#jabbr-help #global');
@@ -833,7 +779,6 @@
             $reloadMessageNotification = $('#reloadMessageNotification');
             $fileUploadButton = $('.upload-button');
             $hiddenFile = $('#hidden-file');
-            $uploadForm = $('#upload');
             $fileRoom = $('#file-room');
             $fileConnectionId = $('#file-connection-id');
             $connectionStatus = $('#connectionStatus');
@@ -906,12 +851,12 @@
                 }
             });
             
-            $document.on('click', '#tabs li', function () {
+            $document.on('click', '#tabs li, #tabs-dropdown li', function () {
                 var roomName = $(this).data('name');
                 activateOrOpenRoom(roomName);
             });
 
-            $document.on('mousedown', '#tabs li.room', function (ev) {
+            $document.on('mousedown', '#tabs li.room, #tabs-dropdown li.room', function (ev) {
                 // if middle mouse
                 if (ev.which === 2) {
                     $ui.trigger(ui.events.closeRoom, [$(this).data('name')]);
@@ -924,11 +869,11 @@
                 spinner.addClass('icon-spin');
                 spinner.show();
                 var loader = $loadMoreRooms.find('.load-more-rooms a');
-                loader.html(' Loading more rooms...');
+                loader.html(' ' + utility.getLanguageResource('LoadingMessage'));
                 loadMoreLobbyRooms();
                 spinner.hide();
                 spinner.removeClass('icon-spin');
-                loader.html('Load More...');
+                loader.html(utility.getLanguageResource('Client_LoadMore'));
                 if (lastLoadedRoomIndex < sortedRoomList.length) {
                     $loadMoreRooms.show();
                 } else {
@@ -936,13 +881,32 @@
                 }
             });
 
-            $document.on('click', '#tabs li .close', function (ev) {
+            $document.on('click', '#tabs li .close, #tabs-dropdown li .close', function (ev) {
                 var roomName = $(this).closest('li').data('name');
 
                 $ui.trigger(ui.events.closeRoom, [roomName]);
 
                 ev.preventDefault();
                 return false;
+            });
+
+            $('#tabs, #tabs-dropdown').dragsort({
+                placeHolderTemplate: '<li class="room"><a><span class="content"></span></a></li>',
+                dragBetween: true,
+                dragStart: function() {
+                    var roomName = $(this).closest('li').data('name');
+                    activateOrOpenRoom(roomName);
+                },
+                dragEnd: function () {
+                    var roomTabOrder = [],
+                        $roomTabs = $('#tabs li, #tabs-dropdown li');
+                    
+                    for (var i = 0; i < $roomTabs.length; i++) {
+                        roomTabOrder[i] = $($roomTabs[i]).data('name');
+                    }
+                    
+                    $ui.trigger(ui.events.tabOrderChanged, [roomTabOrder]);
+                }
             });
 
             // handle click on notifications
@@ -1078,7 +1042,7 @@
                         isCurrentlyVisible = $this.next().is(":visible");
 
                     if (enabled) {
-                        $this.attr('title', 'Content collapsed because you have Rich-Content disabled');
+                        $this.attr('title', utility.getLanguageResource('Content_DisabledMessage'));
                     } else {
                         $this.removeAttr('title');
                     }
@@ -1203,6 +1167,7 @@
             $window.resize(function () {
                 var room = getCurrentRoomElements();
                 room.scrollToBottom();
+                chat.ui.updateTabOverflow();
             });
 
             $newMessage.keydown(function (ev) {
@@ -1297,73 +1262,6 @@
             // Load preferences
             loadPreferences();
 
-            // Crazy browser hack
-            $hiddenFile[0].style.left = '-800px';
-
-            $.imagePaste(function (file) {
-                showUploadPreview(file, 'clipboard', function() {
-                    var name = 'clipboard-data',
-                        uploader = {
-                            submitFile: function (connectionId, room) {
-                                $fileConnectionId.val(connectionId);
-
-                                $fileRoom.val(room);
-                                $.ajax({
-                                    url: '/upload-clipboard',
-                                    dataType: 'json',
-                                    type: 'POST',
-                                    data: {
-                                        file: $imageUploadPreview.attr('src'),
-                                        room: room,
-                                        connectionId: connectionId
-                                    }
-                                }).done(function (result) {
-                                    //remove image from preview
-                                    $imageUploadPreview.attr('src', '');
-                                });
-
-                                $hiddenFile.val(''); //hide upload dialog
-                            }
-                        };
-
-                    ui.addMessage('Uploading \'' + name + '\'.', 'broadcast');
-
-                    $ui.trigger(ui.events.fileUploaded, [uploader]);
-
-                });
-            });
-
-            $previewUploadButton.on('click', function () {
-                // Callback is initialized when previewUpload is
-                // created. This button is only available when
-                // modal is being shown. Hence should never be
-                // stale. 
-                $uploadCallback();
-                $previewUpload.modal('hide');
-            });
-
-            $previewCancelButton.on('click', function() {
-                $previewUpload.modal('hide');
-            });
-
-            $hiddenFile.change(function (e) {
-                var file = e.target.files[0];
-                
-                if (!file.type.match('image.*')) {
-                    initializeUploadPreview(e, file, 'non-image');
-                    return;
-                }
-                
-                var reader = new FileReader();
-                reader.onload = (function(f) {
-                    return function (e) {
-                        initializeUploadPreview(e, file, 'image');
-                    };
-                })(file);
-                
-                reader.readAsDataURL(file);
-            });
-
             // Configure livestamp to only update every 30s since display granularity is by minute anyway (saves CPU cycles)
             $.livestamp.interval(30 * 1000);
 
@@ -1371,6 +1269,7 @@
                 ui.trimRoomMessageHistory();
             }, trimRoomHistoryFrequency);
         },
+        
         run: function () {
             $.history.init(function (hash) {
                 var roomName = getRoomNameFromHash(hash);
@@ -1553,10 +1452,10 @@
                     populateLobbyRoomList(privateSorted, templates.lobbyroom, listOfPrivateRooms);
                     listOfPrivateRooms.children('li').appendTo(lobby.owners);
                     $lobbyPrivateRooms.show();
-                    $lobbyOtherRooms.find('nav-header').html('Other Rooms');
+                    $lobbyOtherRooms.find('nav-header').html(utility.getLanguageResource('Client_OtherRooms'));
                 } else {
                     $lobbyPrivateRooms.hide();
-                    $lobbyOtherRooms.find('nav-header').html('Rooms');
+                    $lobbyOtherRooms.find('nav-header').html(utility.getLanguageResource('Client_Rooms'));
                 }
 
                 var listOfRooms = $('<ul/>');
@@ -1579,7 +1478,8 @@
         },
         addUser: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
-                $user = null;
+                $user = null,
+                $userMessages = room.messages.find(getUserClassName(userViewModel.name));
 
             // Remove all users that are being removed
             room.users.find('.removing').remove();
@@ -1596,6 +1496,8 @@
             $user.data('owner', userViewModel.owner);
             $user.data('admin', userViewModel.admin);
 
+            $userMessages.find('.user').removeClass('offline active inactive absent present').addClass('active present');
+
             room.addUser(userViewModel, $user);
             updateNote(userViewModel, $user);
             updateFlag(userViewModel, $user);
@@ -1604,46 +1506,65 @@
         },
         setUserActivity: function (userViewModel) {
             var $user = $('.users').find(getUserClassName(userViewModel.name)),
-                active = $user.data('active'),
-                $idleSince = $user.find('.idle-since');
+                $inactiveSince = $user.find('.inactive-since'),
+                $userMessages = $('.messages').find(getUserClassName(userViewModel.name));
 
-            if (userViewModel.active === true) {
-                if ($user.hasClass('idle')) {
-                    $user.removeClass('idle');
-                    $idleSince.livestamp('destroy');
+            if (userViewModel.active === true && userViewModel.afk === false) {
+                if ($user.hasClass('inactive')) {
+                    $user.removeClass('inactive');
+                    $inactiveSince.livestamp('destroy');
                 }
+                
+                $userMessages.find('.user').removeClass('offline active inactive').addClass('active');
             } else {
-                if (!$user.hasClass('idle')) {
-                    $user.addClass('idle');
+                if (!$user.hasClass('inactive')) {
+                    $user.addClass('inactive');
                 }
 
-                if (!$idleSince.html()) {
-                    $idleSince.livestamp(userViewModel.lastActive);
+                if (!$inactiveSince.html()) {
+                    $inactiveSince.livestamp(userViewModel.lastActive);
                 }
+                
+                $userMessages.find('.user').removeClass('offline active inactive').addClass('inactive');
             }
 
             updateNote(userViewModel, $user);
         },
         setUserActive: function ($user) {
-            var $idleSince = $user.find('.idle-since');
+            var $inactiveSince = $user.find('.inactive-since'),
+                $userMessages = $('.messages').find(getUserClassName($user.data('name')));
+            
             if ($user.data('active') === true) {
                 return false;
             }
             $user.attr('data-active', true);
             $user.data('active', true);
-            $user.removeClass('idle');
-            if ($idleSince.livestamp('isLiveStamp')) {
-                $idleSince.livestamp('destroy');
+            $user.removeClass('inactive');
+            if ($inactiveSince.livestamp('isLiveStamp')) {
+                $inactiveSince.livestamp('destroy');
             }
+            
+            $userMessages.find('.user').removeClass('offline active inactive').addClass('active');
+
             return true;
         },
         setUserInActive: function ($user) {
+            var $userMessages = $('.messages').find(getUserClassName($user.data('name'))),
+                $inactiveSince = $user.find('.inactive-since');
+            
             if ($user.data('active') === false) {
                 return false;
             }
             $user.attr('data-active', false);
             $user.data('active', false);
-            $user.addClass('idle');
+            $user.addClass('inactive');
+            
+            if (!$inactiveSince.html()) {
+                $inactiveSince.livestamp(new Date());
+            }
+            
+            $userMessages.find('.user').removeClass('offline active inactive').addClass('inactive');
+            
             return true;
         },
         changeUserName: function (oldName, user, roomName) {
@@ -1679,7 +1600,8 @@
         },
         removeUser: function (user, roomName) {
             var room = getRoomElements(roomName),
-                $user = room.getUser(user.Name);
+                $user = room.getUser(user.Name),
+                $userMessages = room.messages.find(getUserClassName(user.Name));
 
             $user.addClass('removing')
                 .fadeOut('slow', function () {
@@ -1692,6 +1614,8 @@
                         room.setListState(room.activeUsers);
                     }
                 });
+            
+            $userMessages.find('.user').removeClass('absent present').addClass('absent');
         },
         setUserTyping: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
@@ -1870,11 +1794,11 @@
             if (room.isInitialized()) {
                 if (isMention) {
                     // Always do sound notification for mentions if any room as sound enabled
-                    if (anyRoomPreference('hasSound') === true) {
+                    if (anyRoomPreference('hasSound', true) === true) {
                         ui.notify(true);
                     }
 
-                    if (focus === false && anyRoomPreference('canToast') === true) {
+                    if (focus === false && anyRoomPreference('canToast', true) === true) {
                         // Only toast if there's no focus (even on mentions)
                         ui.toast(message, true, roomName);
                     }
@@ -2027,7 +1951,7 @@
                     .hide()
                     .find('.info').text('');    // clear any prior text
                 $notification.find('.info')
-                    .text(' (plus ' + $notifications.length + ' hidden... click to expand)')
+                    .text(' ' + utility.getLanguageResource('Chat_ExpandHiddenMessages', $notifications.length))
                     .removeClass('collapse');
             }
         },
@@ -2037,7 +1961,7 @@
                 topBefore = $notification.position().top;
 
             $notification.find('.info')
-                .text(' (click to collapse)')
+                .text(' ' + utility.getLanguageResource('Chat_CollapseHiddenMessages'))
                 .addClass('collapse');
             $notifications.show();
 
@@ -2143,7 +2067,7 @@
                 switch (status) {
                     case 0: // Connected
                         $connectionStatus.removeClass('reconnecting disconnected');
-                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions('You\'re connected.'));
+                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions(utility.getLanguageResource('Client_Connected')));
                         $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-ok-sign');
                         $connectionStatus.popover('show');
                         popoverTimer = setTimeout(function () {
@@ -2154,7 +2078,7 @@
                         break;
                     case 1: // Reconnecting
                         $connectionStatus.removeClass('disconnected').addClass('reconnecting');
-                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions('The connection to JabbR has been temporarily lost, trying to reconnect.'));
+                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions(utility.getLanguageResource('Client_Reconnecting')));
                         $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-question-sign');
                         $connectionStatus.popover('show');
                         popoverTimer = setTimeout(function () {
@@ -2164,7 +2088,7 @@
                         break;
                     case 2: // Disconnected
                         $connectionStatus.removeClass('reconnecting').addClass('disconnected');
-                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions('The connection to JabbR has been lost, trying to reconnect.'));
+                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions(utility.getLanguageResource('Client_Disconnected')));
                         $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-exclamation-sign');
                         $connectionStatus.popover('show');
                         popoverTimer = setTimeout(function () {
@@ -2231,7 +2155,7 @@
                 .attr('data-admin', true)
                 .data('admin', true)
                 .find('.admin')
-                .text('(admin)');
+                .text('(' + utility.getLanguageResource('Client_AdminTag') + ')');
             room.updateUserStatus($user);
         },
         clearRoomAdmin: function (adminName, roomName) {
@@ -2295,6 +2219,54 @@
             for (var i = 0; i < rooms.length; i++) {
                 rooms[i].trimHistory();
             }
+        },
+        updateTabOrder: function (tabOrder) {
+            $.each(tabOrder.reverse(), function(el, name) {
+                $tabs.find('li[data-name="' + name + '"]').prependTo($tabs.first());
+            });
+
+            chat.ui.updateTabOverflow();
+        },
+        updateTabOverflow: function () {
+            var lastOffsetLeft = 0,
+                sliceIndex = -1,
+                $roomTabs = null,
+                $tabsList = $tabs.first(),
+                $tabsDropdown = $tabs.last(),
+                overflowedRoomTabs = null,
+                $tabsDropdownButton = $('#tabs-dropdown-rooms');
+            
+            // move all tabs to the first list
+            $tabs.last().find('li').each(function() { $(this).detach().appendTo($tabsList); });
+
+            // find overflow and move it all to the dropdown list ul
+            $roomTabs = $tabsList.find('li');
+            $roomTabs.each(function (idx, el) {
+                if (sliceIndex !== -1) {
+                    return;
+                }
+
+                var thisOffsetLeft = $(this).offset().left;
+                if (thisOffsetLeft <= lastOffsetLeft) {
+                    sliceIndex = idx;
+                    return;
+                }
+
+                lastOffsetLeft = thisOffsetLeft;
+            });
+
+            // move all elements from here to the dropdown list
+            if (sliceIndex !== -1) {
+                $tabsDropdownButton.fadeIn('slow');
+                overflowedRoomTabs = $roomTabs.slice(sliceIndex);
+                for (var i = overflowedRoomTabs.length - 1; i >= 0; i--) {
+                    $(overflowedRoomTabs[i]).prependTo($tabsDropdown);
+                }
+            } else {
+                $tabsDropdownButton.fadeOut('slow').parent().removeClass('open');
+            }
+
+            return;
         }
     };
 

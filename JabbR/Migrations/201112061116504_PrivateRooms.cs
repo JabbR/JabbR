@@ -22,8 +22,8 @@ namespace JabbR.Models.Migrations
         
         public override void Down()
         {
-            DropForeignKey("ChatRoomChatUser1", "ChatUser_Key", "ChatUsers", "Key");
-            DropForeignKey("ChatRoomChatUser1", "ChatRoom_Key", "ChatRooms", "Key");
+            DropForeignKey("ChatRoomChatUser1", "ChatUser_Key", "ChatUsers");
+            DropForeignKey("ChatRoomChatUser1", "ChatRoom_Key", "ChatRooms");
             DropColumn("ChatRooms", "Private");
             DropTable("ChatRoomChatUser1");
         }

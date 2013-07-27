@@ -13,7 +13,7 @@ namespace JabbR.ContentProviders
             return TaskAsyncHelper.FromResult(new ContentProviderResult()
             {
                 Content = String.Format(_iframedMeetingFormat, request.RequestUri.AbsoluteUri),
-                Title = "Join Me Meeting: " + request.RequestUri.AbsoluteUri.ToString()
+                Title = String.Format(LanguageResources.JoinMeContent_DefaultTitle, request.RequestUri.AbsoluteUri)
             });
         }
 

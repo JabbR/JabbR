@@ -31,7 +31,7 @@ namespace JabbR.Services
 
         public void Add(Attachment attachment)
         {
-            _attachments.Add(attachment);   
+            _attachments.Add(attachment);
         }
 
         public void Add(ChatRoom room)
@@ -185,6 +185,13 @@ namespace JabbR.Services
                 return identity.User;
             }
             return null;
+        }
+
+        public ChatUser GetUserByRequestResetPasswordId(string userName, string requestResetPasswordId)
+        {
+            return _users.FirstOrDefault(u => u.RequestPasswordResetId != null &&
+                                              u.RequestPasswordResetId.Equals(requestResetPasswordId, StringComparison.OrdinalIgnoreCase) &&
+                                              u.RequestPasswordResetValidThrough > DateTimeOffset.UtcNow);
         }
 
         public Notification GetNotificationById(int notificationId)

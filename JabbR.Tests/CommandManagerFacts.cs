@@ -153,7 +153,7 @@ namespace JabbR.Test
                 var commandManager = new CommandManager("1", "1", "room", service, repository, cache, notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/message"));
-                Assert.Equal("'message' is not a valid command.", ex.Message);
+                Assert.Equal("message is not a valid command.", ex.Message);
             }
 
             [Fact]
@@ -181,7 +181,7 @@ namespace JabbR.Test
                 var commandManager = new CommandManager("1", "1", "room", service, repository, cache, notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/a"));
-                Assert.True(ex.Message.StartsWith("'a' is ambiguous: "));
+                Assert.True(ex.Message.StartsWith("a is ambiguous: "));
             }
 
             [Fact]
@@ -641,7 +641,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invitecode"));
-                Assert.Equal("You are not an owner of room '" + roomName + "'.", ex.Message);
+                Assert.Equal("You are not an owner of " + roomName + ".", ex.Message);
             }
 
             [Fact]
@@ -712,7 +712,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/resetinvitecode"));
-                Assert.Equal("You are not an owner of room '" + roomName + "'.", ex.Message);
+                Assert.Equal("You are not an owner of " + roomName + ".", ex.Message);
             }
         }
 
@@ -848,7 +848,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join room"));
-                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, make sure to enter it in the /join command",
+                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, enter it in the /join command",
                              ex.Message);
             }
 
@@ -882,7 +882,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join room 789012"));
-                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, make sure to enter it in the /join command",
+                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, enter it in the /join command",
                              ex.Message);
             }
 
@@ -915,7 +915,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join room 789012"));
-                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, make sure to enter it in the /join command",
+                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, enter it in the /join command",
                              ex.Message);
             }
 
@@ -1014,7 +1014,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/join room"));
-                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, make sure to enter it in the /join command",
+                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, enter it in the /join command",
                              ex.Message);
             }
         }
@@ -1151,7 +1151,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/addowner dfowler2"));
-                Assert.Equal("The room 'test' is closed.", ex.Message);
+                Assert.Equal("test is closed.", ex.Message);
             }
 
             [Fact]
@@ -1382,7 +1382,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/removeowner dfowler2 test"));
-                Assert.Equal("The room 'test' is closed.", ex.Message);
+                Assert.Equal("test is closed.", ex.Message);
             }
 
             [Fact]
@@ -1423,7 +1423,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/removeowner dfowler2 test"));
-                Assert.Equal("You are not the creator of room 'test'.", ex.Message);
+                Assert.Equal("You are not the creator of test.", ex.Message);
             }
         }
 
@@ -1506,7 +1506,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/create Test"));
-                Assert.Equal("The room 'Test' already exists.", ex.Message);
+                Assert.Equal("Test already exists.", ex.Message);
             }
 
             [Fact]
@@ -1567,7 +1567,7 @@ namespace JabbR.Test
 
                 // Act & Assert.
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/create " + roomName));
-                Assert.Equal("The room '" + roomName + "' already exists but it's closed.", ex.Message);
+                Assert.Equal(roomName + " already exists, but it's closed.", ex.Message);
             }
 
             [Fact]
@@ -2034,7 +2034,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/kick fowler3"));
-                Assert.Equal("Unable to find user 'fowler3'.", ex.Message);
+                Assert.Equal("Unable to find fowler3.", ex.Message);
             }
 
             [Fact]
@@ -2081,7 +2081,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/kick dfowler3"));
-                Assert.Equal("'dfowler3' isn't in 'room'.", ex.Message);
+                Assert.Equal("dfowler3 isn't in room.", ex.Message);
             }
 
             [Fact]
@@ -2184,7 +2184,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/kick dfowler3 room"));
-                Assert.Equal("The room 'room' is closed.", ex.Message);
+                Assert.Equal("room is closed.", ex.Message);
             }
 
             [Fact]
@@ -2266,7 +2266,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/kick dfowler"));
-                Assert.Equal("You are not an owner of room 'room'.", ex.Message);
+                Assert.Equal("You are not an owner of room.", ex.Message);
             }
 
             [Fact]
@@ -2481,7 +2481,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/ban fowler3"));
-                Assert.Equal("Unable to find user 'fowler3'.", ex.Message);
+                Assert.Equal("Unable to find fowler3.", ex.Message);
             }
 
             [Fact]
@@ -2757,7 +2757,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/list test"));
-                Assert.Equal("Unable to find room 'test'.", ex.Message);
+                Assert.Equal("Unable to find test.", ex.Message);
             }
 
             [Fact]
@@ -2907,7 +2907,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/list room"));
-                Assert.Equal("The room 'room' is closed.", ex.Message);
+                Assert.Equal("room is closed.", ex.Message);
             }
         }
 
@@ -3041,37 +3041,12 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/me is testing"));
-                Assert.Equal("The room 'room' is closed.", ex.Message);
+                Assert.Equal("room is closed.", ex.Message);
             }
         }
 
         public class MsgCommand
         {
-            [Fact]
-            public void ThrowsIfThereIsOnlyOneUser()
-            {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var user = new ChatUser
-                {
-                    Name = "dfowler",
-                    Id = "1"
-                };
-                repository.Add(user);
-                var service = new ChatService(cache, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/msg"));
-                Assert.Equal("You're the only person in here...", ex.Message);
-            }
-
             [Fact]
             public void MissingUserNameThrows()
             {
@@ -3105,7 +3080,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void ThrowsIfUserDoesntExists()
+            public void ThrowsIfUserDoesntExist()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -3132,7 +3107,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/msg dfowler3"));
-                Assert.Equal("Unable to find user 'dfowler3'.", ex.Message);
+                Assert.Equal("Unable to find dfowler3.", ex.Message);
             }
 
             [Fact]
@@ -3194,7 +3169,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/msg dfowler2 "));
-                Assert.Equal("What do you want to say to 'dfowler2'?", ex.Message);
+                Assert.Equal("What do you want to say to dfowler2?", ex.Message);
             }
 
             [Fact]
@@ -3280,7 +3255,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invite dfowler2"));
-                Assert.Equal("Unable to find user 'dfowler2'.", ex.Message);
+                Assert.Equal("Unable to find dfowler2.", ex.Message);
             }
 
             [Fact]
@@ -3376,7 +3351,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invite dfowler2 asfasfdsad"));
-                Assert.Equal("Unable to find room 'asfasfdsad'.", ex.Message);
+                Assert.Equal("Unable to find asfasfdsad.", ex.Message);
             }
 
             [Fact]
@@ -3408,7 +3383,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/invite void"));
-                Assert.Equal("Unable to find user 'void'.", ex.Message);
+                Assert.Equal("Unable to find void.", ex.Message);
             }
 
             [Fact]
@@ -3446,38 +3421,6 @@ namespace JabbR.Test
         public class NudgeCommand
         {
             [Fact]
-            public void ThrowsIfThereIsOnlyOneUser()
-            {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var user = new ChatUser
-                {
-                    Name = "dfowler",
-                    Id = "1"
-                };
-                repository.Add(user);
-                var room = new ChatRoom
-                {
-                    Name = "room"
-                };
-                room.Users.Add(user);
-                user.Rooms.Add(room);
-                repository.Add(room);
-                var service = new ChatService(cache, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nudge void"));
-                Assert.Equal("You're the only person in here...", ex.Message);
-            }
-
-            [Fact]
             public void ThrowsIfUserDoesntExists()
             {
                 var repository = new InMemoryRepository();
@@ -3505,7 +3448,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nudge void"));
-                Assert.Equal("Unable to find user 'void'.", ex.Message);
+                Assert.Equal("Unable to find void.", ex.Message);
             }
 
             [Fact]
@@ -3738,7 +3681,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/nudge"));
-                Assert.Equal("The room 'room' is closed.", ex.Message);
+                Assert.Equal("room is closed.", ex.Message);
             }
         }
 
@@ -3820,7 +3763,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/who sethwebster"));
-                Assert.Equal("We didn't find anyone with the username sethwebster.", ex.Message);
+                Assert.Equal("Unable to find sethwebster.", ex.Message);
             }
         }
 
@@ -3873,7 +3816,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/where dfow"));
-                Assert.Equal("Unable to find user 'dfow'.", ex.Message);
+                Assert.Equal("Unable to find dfow.", ex.Message);
             }
 
             [Fact]
@@ -3954,7 +3897,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/allow dfowler2"));
-                Assert.Equal("Unable to find user 'dfowler2'.", ex.Message);
+                Assert.Equal("Unable to find dfowler2.", ex.Message);
             }
 
             [Fact]
@@ -4016,7 +3959,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/allow dfowler2 asfasfdsad"));
-                Assert.Equal("Unable to find room 'asfasfdsad'.", ex.Message);
+                Assert.Equal("Unable to find asfasfdsad.", ex.Message);
             }
 
             [Fact]
@@ -4363,7 +4306,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/allowed room3"));
-                Assert.Equal("Unable to find room 'room3'.", ex.Message);
+                Assert.Equal("Unable to find room3.", ex.Message);
             }
 
             [Fact]
@@ -4494,7 +4437,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/lock room"));
-                Assert.Equal("Unable to find room 'room'.", ex.Message);
+                Assert.Equal("Unable to find room.", ex.Message);
             }
 
             [Fact]
@@ -4667,7 +4610,7 @@ namespace JabbR.Test
                 // Act & Assert.
                 const string roomName = "ruroh";
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/close " + roomName));
-                Assert.Equal("Unable to find room '" + roomName + "'.", ex.Message);
+                Assert.Equal("Unable to find " + roomName + ".", ex.Message);
             }
 
             [Fact]
@@ -4702,7 +4645,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/close " + roomName));
-                Assert.Equal("You are not an owner of room '" + roomName + "'.", ex.Message);
+                Assert.Equal("You are not an owner of " + roomName + ".", ex.Message);
             }
 
             [Fact]
@@ -4849,7 +4792,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/unallow dfowler2"));
-                Assert.Equal("Unable to find user 'dfowler2'.", ex.Message);
+                Assert.Equal("Unable to find dfowler2.", ex.Message);
             }
 
             [Fact]
@@ -4955,7 +4898,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/unallow dfowler2 asfasfdsad"));
-                Assert.Equal("Unable to find room 'asfasfdsad'.", ex.Message);
+                Assert.Equal("Unable to find asfasfdsad.", ex.Message);
             }
 
             [Fact]
@@ -5310,7 +5253,7 @@ namespace JabbR.Test
                 // Act & Assert.
                 const string roomName = "ruroh";
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/open " + roomName));
-                Assert.Equal("Unable to find room '" + roomName + "'.", ex.Message);
+                Assert.Equal("Unable to find " + roomName + ".", ex.Message);
             }
 
             [Fact]
@@ -5380,7 +5323,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/open " + roomName));
-                Assert.Equal("You are not an owner of room '" + roomName + "'.", ex.Message);
+                Assert.Equal("You are not an owner of " + roomName + ".", ex.Message);
             }
 
             [Fact]
@@ -5454,7 +5397,7 @@ namespace JabbR.Test
                 string topicLine = "This is the room's topic";
                 var exception = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/topic " + topicLine));
 
-                Assert.Equal("You are not an owner of room 'room'.", exception.Message);    
+                Assert.Equal("You are not an owner of room.", exception.Message);    
             }
 
             [Fact]
@@ -5522,7 +5465,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
                 string topicLine = "This is the room's topic";
                 InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/topic " + topicLine));
-                Assert.Equal("The room 'room' is closed.", ex.Message);
+                Assert.Equal("room is closed.", ex.Message);
             }
 
             [Fact]
@@ -5707,7 +5650,7 @@ namespace JabbR.Test
                 string welcomeMessage = "This is the room's welcome message";
                 var exception = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/welcome " + welcomeMessage));
 
-                Assert.Equal("You are not an owner of room 'room'.", exception.Message);
+                Assert.Equal("You are not an owner of room.", exception.Message);
             }
 
             [Fact]
@@ -5740,7 +5683,7 @@ namespace JabbR.Test
                 string welcomeMessage = "This is the room's welcome message";
                 var exception = Assert.Throws<InvalidOperationException>(() => commandManager.TryHandleCommand("/welcome " + welcomeMessage));
 
-                Assert.Equal("The room 'room' is closed.", exception.Message);
+                Assert.Equal("room is closed.", exception.Message);
             }
 
             [Fact]

@@ -8,7 +8,7 @@
         }
 
         // Go light
-        $tab.animate({ backgroundColor: '#e5e5e5', color: '#77d42a' }, 800, function () {
+        $tab.animate({ backgroundColor: '#004B85', color: '#FFF' }, 800, function () {
             // Stop if we're not unread anymore
             if (!$tab.hasClass('unread')) {
                 return;
@@ -19,14 +19,14 @@
             // Check if we're on our last glow
             if (n !== 0) {
                 // Go dark
-                $tab.animate({ backgroundColor: '#164C85', color: '#ffffff' }, 800, function () {
+                $tab.animate({ backgroundColor: '#003259', color: '#FFF' }, 800, function () {
                     // Glow the tab again
                     glowTab($tab, n);
                 });
             }
             else {
                 // Leave the tab highlighted
-                $tab.animate({ backgroundColor: '#043C4C', color: '#ffffff' }, 800);
+                $tab.animate({ backgroundColor: '#004B85', color: '#FFF' }, 800);
             }
         });
     }
@@ -193,9 +193,11 @@
                 .css('backgroundColor', '')
                 .css('color', '')
                 .data('unread', 0)
-                .data('hasMentions', false)
-                .find('.content')
-                .text(this.getName());
+                .data('hasMentions', false);
+        
+        if (this.tab.is('.room')) {
+            this.tab.find('.content').text(this.getName());
+        }
 
         this.messages.addClass('current')
                      .show();
@@ -251,18 +253,18 @@
         if (userViewModel.owner) {
             this.addUserToList($user, this.owners);
         } else {
-            this.changeIdle($user, userViewModel.active);
+            this.changeInactive($user, userViewModel.active);
 
             this.addUserToList($user, this.activeUsers);
 
         }
     };
 
-    Room.prototype.changeIdle = function ($user, isActive) {
+    Room.prototype.changeInactive = function ($user, isActive) {
         if (isActive) {
-            $user.removeClass('idle');
+            $user.removeClass('inactive');
         } else {
-            $user.addClass('idle');
+            $user.addClass('inactive');
         }
     };
 
@@ -296,7 +298,7 @@
         }
 
         if (!this.appearsInList($user, this.activeUsers)) {
-            this.changeIdle($user, status);
+            this.changeInactive($user, status);
 
             this.addUserToList($user, this.activeUsers);
         }

@@ -71,10 +71,10 @@ namespace JabbR.Models.Migrations
         
         public override void Down()
         {
-            DropForeignKey("ChatUserChatRooms", "ChatRoom_Key", "ChatRooms", "Key");
-            DropForeignKey("ChatUserChatRooms", "ChatUser_Key", "ChatUsers", "Key");
-            DropForeignKey("ChatMessages", "User_Key", "ChatUsers", "Key");
-            DropForeignKey("ChatMessages", "Room_Key", "ChatRooms", "Key");
+            DropForeignKey("ChatUserChatRooms", "ChatRoom_Key", "ChatRooms");
+            DropForeignKey("ChatUserChatRooms", "ChatUser_Key", "ChatUsers");
+            DropForeignKey("ChatMessages", "User_Key", "ChatUsers");
+            DropForeignKey("ChatMessages", "Room_Key", "ChatRooms");
             DropTable("ChatUserChatRooms");
             DropTable("EdmMetadata");
             DropTable("ChatUsers");

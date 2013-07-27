@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
 using JabbR.Infrastructure;
@@ -18,7 +19,8 @@ namespace JabbR.Nancy
                              IJabbrRepository repository,
                              IAuthenticationService authService,
                              IChatNotificationService notificationService,
-                             IUserAuthenticator authenticator)
+                             IUserAuthenticator authenticator,
+                             IEmailService emailService)
             : base("/account")
         {
             Get["/"] = _ =>
@@ -55,12 +57,12 @@ namespace JabbR.Nancy
 
                 if (String.IsNullOrEmpty(username))
                 {
-                    this.AddValidationError("username", "Name is required");
+                    this.AddValidationError("username", LanguageResources.Authentication_NameRequired);
                 }
 
                 if (String.IsNullOrEmpty(password))
                 {
-                    this.AddValidationError("password", "Password is required");
+                    this.AddValidationError("password", LanguageResources.Authentication_PassRequired);
                 }
 
                 try
@@ -79,7 +81,7 @@ namespace JabbR.Nancy
                     // Swallow the exception    
                 }
 
-                this.AddValidationError("_FORM", "Login failed. Check your username/password.");
+                this.AddValidationError("_FORM", LanguageResources.Authentication_GenericFailure);
 
                 return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
             };
@@ -107,7 +109,7 @@ namespace JabbR.Nancy
 
                 bool requirePassword = !Principal.Identity.IsAuthenticated;
 
-                if (requirePassword && 
+                if (requirePassword &&
                     !applicationSettings.AllowUserRegistration)
                 {
                     return HttpStatusCode.NotFound;
@@ -142,12 +144,12 @@ namespace JabbR.Nancy
 
                 if (String.IsNullOrEmpty(username))
                 {
-                    this.AddValidationError("username", "Name is required");
+                    this.AddValidationError("username", LanguageResources.Authentication_NameRequired);
                 }
 
                 if (String.IsNullOrEmpty(email))
                 {
-                    this.AddValidationError("email", "Email is required");
+                    this.AddValidationError("email", LanguageResources.Authentication_EmailRequired);
                 }
 
                 try
@@ -204,7 +206,7 @@ namespace JabbR.Nancy
 
                 if (user.Identities.Count == 1 && !user.HasUserNameAndPasswordCredentials())
                 {
-                    Request.AddAlertMessage("error", "You cannot unlink this account because you would lose your ability to login.");
+                    Request.AddAlertMessage("error", LanguageResources.Account_UnlinkRequiresMultipleIdentities);
                     return Response.AsRedirect("~/account/#identityProviders");
                 }
 
@@ -214,7 +216,7 @@ namespace JabbR.Nancy
                 {
                     repository.Remove(identity);
 
-                    Request.AddAlertMessage("success", String.Format("Successfully unlinked {0} account.", provider));
+                    Request.AddAlertMessage("success", String.Format(LanguageResources.Account_UnlinkCompleted, provider));
                     return Response.AsRedirect("~/account/#identityProviders");
                 }
 
@@ -250,7 +252,7 @@ namespace JabbR.Nancy
 
                 if (ModelValidationResult.IsValid)
                 {
-                    Request.AddAlertMessage("success", "Successfully added a password.");
+                    Request.AddAlertMessage("success", LanguageResources.Authentication_PassAddSuccess);
                     return Response.AsRedirect("~/account/#changePassword");
                 }
 
@@ -275,7 +277,7 @@ namespace JabbR.Nancy
 
                 if (String.IsNullOrEmpty(oldPassword))
                 {
-                    this.AddValidationError("oldPassword", "Old password is required");
+                    this.AddValidationError("oldPassword", LanguageResources.Authentication_OldPasswordRequired);
                 }
 
                 ValidatePassword(password, confirmPassword);
@@ -297,7 +299,7 @@ namespace JabbR.Nancy
 
                 if (ModelValidationResult.IsValid)
                 {
-                    Request.AddAlertMessage("success", "Successfully changed your password.");
+                    Request.AddAlertMessage("success", LanguageResources.Authentication_PassChangeSuccess);
                     return Response.AsRedirect("~/account/#changePassword");
                 }
 
@@ -336,11 +338,157 @@ namespace JabbR.Nancy
                 {
                     notificationService.OnUserNameChanged(user, oldUsername, username);
 
-                    Request.AddAlertMessage("success", "Successfully changed your username.");
+                    Request.AddAlertMessage("success", LanguageResources.Authentication_NameChangeCompleted);
                     return Response.AsRedirect("~/account/#changeUsername");
                 }
 
                 return GetProfileView(authService, user);
+            };
+
+            Get["/requestresetpassword"] = _ =>
+            {
+                if (IsAuthenticated)
+                {
+                    return Response.AsRedirect("~/account/#changePassword");
+                }
+
+                if (!Principal.Identity.IsAuthenticated &&
+                    !applicationSettings.AllowUserResetPassword ||
+                    string.IsNullOrWhiteSpace(applicationSettings.EmailSender))
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
+                return View["requestresetpassword"];
+            };
+
+            Post["/requestresetpassword"] = _ =>
+            {
+                if (IsAuthenticated)
+                {
+                    return Response.AsRedirect("~/account/#changePassword");
+                }
+
+                if (!Principal.Identity.IsAuthenticated &&
+                    !applicationSettings.AllowUserResetPassword ||
+                    string.IsNullOrWhiteSpace(applicationSettings.EmailSender))
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
+                string username = Request.Form.username;
+
+                if (String.IsNullOrEmpty(username))
+                {
+                    this.AddValidationError("username", LanguageResources.Authentication_NameRequired);
+                }
+
+                try
+                {
+                    if (ModelValidationResult.IsValid)
+                    {
+                        ChatUser user = repository.GetUserByName(username);
+
+                        if (user == null)
+                        {
+                            this.AddValidationError("username", String.Format(LanguageResources.Account_NoMatchingUser, username));
+                        }
+                        else if (String.IsNullOrWhiteSpace(user.Email))
+                        {
+                            this.AddValidationError("username", String.Format(LanguageResources.Account_NoEmailForUser, username));
+                        }
+                        else
+                        {
+                            membershipService.RequestResetPassword(user, applicationSettings.RequestResetPasswordValidThroughInHours);
+                            repository.CommitChanges();
+
+                            emailService.SendRequestResetPassword(user, this.Request.Url.SiteBase + "/account/resetpassword/");
+
+                            return View["requestresetpasswordsuccess", username];
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.AddValidationError("_FORM", ex.Message);
+                }
+
+                return View["requestresetpassword"];
+            };
+
+            Get["/resetpassword/{id}"] = parameters =>
+            {
+                if (!applicationSettings.AllowUserResetPassword ||
+                    string.IsNullOrWhiteSpace(applicationSettings.EmailSender))
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
+                string resetPasswordToken = parameters.id;
+                string userName = membershipService.GetUserNameFromToken(resetPasswordToken);
+
+                // Is the token not valid, maybe some character change?
+                if (userName == null)
+                {
+                    return View["resetpassworderror", LanguageResources.Account_ResetInvalidToken];
+                }
+                else
+                {
+                    ChatUser user = repository.GetUserByRequestResetPasswordId(userName, resetPasswordToken);
+
+                    // Is the token expired?
+                    if (user == null)
+                    {
+                        return View["resetpassworderror", LanguageResources.Account_ResetExpiredToken];
+                    }
+                    else
+                    {
+                        return View["resetpassword", user.RequestPasswordResetId];
+                    }
+                }
+            };
+
+            Post["/resetpassword/{id}"] = parameters =>
+            {
+                if (!applicationSettings.AllowUserResetPassword ||
+                    string.IsNullOrWhiteSpace(applicationSettings.EmailSender))
+                {
+                    return HttpStatusCode.NotFound;
+                }
+
+                string resetPasswordToken = parameters.id;
+                string newPassword = Request.Form.password;
+                string confirmNewPassword = Request.Form.confirmPassword;
+
+                ValidatePassword(newPassword, confirmNewPassword);
+
+                try
+                {
+                    if (ModelValidationResult.IsValid)
+                    {
+                        string userName = membershipService.GetUserNameFromToken(resetPasswordToken);
+                        ChatUser user = repository.GetUserByRequestResetPasswordId(userName, resetPasswordToken);
+
+                        // Is the token expired?
+                        if (user == null)
+                        {
+                            return View["resetpassworderror", LanguageResources.Account_ResetExpiredToken];
+                        }
+                        else
+                        {
+                            membershipService.ResetUserPassword(user, newPassword);
+                            repository.CommitChanges();
+
+                            return View["resetpasswordsuccess"];
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    this.AddValidationError("_FORM", ex.Message);
+                }
+
+                return View["resetpassword", resetPasswordToken];
             };
         }
 
@@ -348,12 +496,12 @@ namespace JabbR.Nancy
         {
             if (String.IsNullOrEmpty(password))
             {
-                this.AddValidationError("password", "Password is required");
+                this.AddValidationError("password", LanguageResources.Authentication_PassRequired);
             }
 
             if (!String.Equals(password, confirmPassword))
             {
-                this.AddValidationError("confirmPassword", "Passwords don't match");
+                this.AddValidationError("confirmPassword", LanguageResources.Authentication_PassNonMatching);
             }
         }
 
@@ -361,12 +509,12 @@ namespace JabbR.Nancy
         {
             if (String.IsNullOrEmpty(username))
             {
-                this.AddValidationError("username", "Username is required");
+                this.AddValidationError("username", LanguageResources.Authentication_NameRequired);
             }
 
             if (!String.Equals(username, confirmUsername))
             {
-                this.AddValidationError("confirmUsername", "Usernames don't match");
+                this.AddValidationError("confirmUsername", LanguageResources.Authentication_NameNonMatching);
             }
         }
 

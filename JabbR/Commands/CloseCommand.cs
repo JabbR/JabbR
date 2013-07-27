@@ -4,7 +4,7 @@ using JabbR.Models;
 
 namespace JabbR.Commands
 {
-    [Command("close", "Close a room. Only works if you're an owner of that room.", "[room]", "room")]
+    [Command("close", "Close_CommandInfo", "[room]", "room")]
     public class CloseCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
@@ -13,7 +13,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(roomName))
             {
-                throw new InvalidOperationException("Which room do you want to close?");
+                throw new InvalidOperationException(LanguageResources.Close_RoomRequired);
             }
 
             ChatRoom room = context.Repository.VerifyRoom(roomName);
