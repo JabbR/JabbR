@@ -63,7 +63,7 @@ namespace JabbR
         {
             var ticketDataFormat = new TicketDataFormat(kernel.Get<IDataProtector>());
 
-            app.UseCookieAuthentication(new CookiesAuthenticationOptions
+            app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 LoginPath = "/account/login",
                 LogoutPath = "/account/logout",
@@ -72,7 +72,7 @@ namespace JabbR
                 CookieName = "jabbr.id",
                 ExpireTimeSpan = TimeSpan.FromDays(30),
                 TicketDataFormat = ticketDataFormat,
-                Provider = kernel.Get<ICookiesAuthenticationProvider>()
+                Provider = kernel.Get<ICookieAuthenticationProvider>()
             });
 
             //var config = new FederationConfiguration(loadConfig: false);

@@ -29,10 +29,9 @@ namespace JabbR.Middleware
                 {
                     await _next(env);
 
-                    var request = new OwinRequest(env);
-                    var response = new OwinResponse(env);
+                    var context = new OwinContext(env);
 
-                    if (response.StatusCode == 401)
+                    if (context.Response.StatusCode == 401)
                     {
                         // We're going no add the identifier claim
                         var nameClaim = windowsPrincipal.FindFirst(ClaimTypes.Name);
@@ -55,10 +54,9 @@ namespace JabbR.Middleware
                         claims.Add(new Claim(ClaimTypes.AuthenticationMethod, "Windows"));
                         var identity = new ClaimsIdentity(claims, Constants.JabbRAuthType);
 
-                        response.Authentication.SignIn(identity);
+                        context.Authentication.SignIn(identity);
 
-                        response.StatusCode = 302;
-                        response.Headers.Set("Location", request.PathBase + request.Path);
+                        context.Response.Redirect(context.Request.PathBase + context.Request.Path);
                     }
 
                     return;

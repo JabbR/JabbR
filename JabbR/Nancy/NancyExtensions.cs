@@ -16,10 +16,10 @@ namespace JabbR.Nancy
         public static Response SignIn(this NancyModule module, IEnumerable<Claim> claims)
         {
             var env = Get<IDictionary<string, object>>(module.Context.Items, NancyOwinHost.RequestEnvironmentKey);
-            var owinResponse = new OwinResponse(env);
+            var owinContext = new OwinContext(env);
 
             var identity = new ClaimsIdentity(claims, Constants.JabbRAuthType);
-            owinResponse.Authentication.SignIn(identity);
+            owinContext.Authentication.SignIn(identity);
 
             string returnUrl = module.Request.Query.redirect_uri;
             if (String.IsNullOrWhiteSpace(returnUrl))
@@ -47,9 +47,9 @@ namespace JabbR.Nancy
         public static void SignOut(this NancyModule module)
         {
             var env = Get<IDictionary<string, object>>(module.Context.Items, NancyOwinHost.RequestEnvironmentKey);
-            var owinResponse = new OwinResponse(env);
+            var owinContext = new OwinContext(env);
 
-            owinResponse.Authentication.SignOut(Constants.JabbRAuthType);
+            owinContext.Authentication.SignOut(Constants.JabbRAuthType);
         }
 
         public static void AddValidationError(this NancyModule module, string propertyName, string errorMessage)

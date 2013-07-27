@@ -33,7 +33,7 @@ namespace JabbR
             kernel.Bind<IDataProtector>()
                   .To<JabbRDataProtection>();
 
-            kernel.Bind<ICookiesAuthenticationProvider>()
+            kernel.Bind<ICookieAuthenticationProvider>()
                   .To<JabbRFormsAuthenticationProvider>();
 
             kernel.Bind<ILogger>()
