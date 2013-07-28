@@ -1813,6 +1813,7 @@
             processMessage(message);
 
             $message.find('.middle').html(message.message);
+            $message.find('.right .time').attr('title', message.fulldate).text(message.when);
             $message.attr('id', 'm-' + message.id);
 
         },
