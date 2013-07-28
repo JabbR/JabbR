@@ -522,11 +522,15 @@
             ui.addMessage('Note: ' + userInfo.Note, 'list-item');
         }
 
-        $.getJSON('https://secure.gravatar.com/' + userInfo.Hash + '.json?callback=?', function (profile) {
-            ui.showGravatarProfile(profile.entry[0]);
-        });
+        if (userInfo.Hash) {
+            $.getJSON('https://secure.gravatar.com/' + userInfo.Hash + '.json?callback=?').done(function (profile) {
+                if (profile && profile.entry) {
+                    ui.showGravatarProfile(profile.entry[0]);
+                }
+            });
+        }
 
-        chat.showUsersOwnedRoomList(userInfo.Name, userInfo.OwnedRooms);
+        chat.client.showUsersOwnedRoomList(userInfo.Name, userInfo.OwnedRooms);
     };
 
     chat.client.setPassword = function () {

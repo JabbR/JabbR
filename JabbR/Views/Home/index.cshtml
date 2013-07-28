@@ -252,7 +252,7 @@
                 <div class="gravatar_${hash} gravatarProfile">
                     <div class="user">
                         <img src="${thumbnailUrl}">
-                        <span class="name">${preferredUsername}</span> (${name.formatted})
+                        <span class="name">${preferredUsername}</span>{{if name.formatted}} (${name.formatted}){{/if}}
                         <p><a href="${profileUrl}" target="_blank">${profileUrl}</a></p>
                     </div>
                 </div>
