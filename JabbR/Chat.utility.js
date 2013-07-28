@@ -178,8 +178,9 @@
         },
         randomUniqueId: function (prefix) {
             var n = Math.floor(Math.random() * 100);
-            while ($("#" + prefix + n.toString()).length > 0)
+            while ($("#" + prefix + n.toString()).length > 0) {
                 n = Math.Floor(Math.random() * 100);
+            }
             return prefix + n;
         },
         markdownToHtml: function (content) {
@@ -209,4 +210,4 @@
 
     window.chat.utility = utility;
 
-})(jQuery, window, window.Emoji, window.Markdown, window.linkify, window.moment, window.languageResources);
+})(window.jQuery, window, window.Emoji, window.Markdown, window.linkify, window.moment, window.languageResources);

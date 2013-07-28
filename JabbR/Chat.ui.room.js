@@ -1,4 +1,6 @@
 ﻿(function ($, window, chat) {
+    "use strict";
+    
     var trimRoomHistoryMaxMessages = 200;
 
     function glowTab($tab, n) {
@@ -371,4 +373,4 @@
     };
 
     chat.Room = Room;
-}(jQuery, window, window.chat));
+}(window.jQuery, window, window.chat));

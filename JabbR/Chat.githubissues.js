@@ -62,4 +62,4 @@
         elements.attr("href", user.data.html_url);
     };
 
-})(jQuery, window, chat.ui);
+})(window.jQuery, window, chat.ui);

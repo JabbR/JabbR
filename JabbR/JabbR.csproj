@@ -793,7 +793,6 @@
     <Content Include="Content\KeyTips.min.css" />
     <Content Include="Content\popup-back.gif" />
     <Content Include="Content\qunit.css" />
-    <Content Include="Chat.pinnedWindows.js" />
     <Content Include="Chat.githubissues.js" />
     <Content Include="Content\themes\default\Chat.githubissues.css" />
     <Content Include="Content\themes\default\Chat.nuget.css" />
