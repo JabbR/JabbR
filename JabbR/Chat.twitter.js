@@ -23,4 +23,4 @@
         }
     };
 
-})(jQuery, window, chat.ui);
+})(window.jQuery, window, chat.ui);

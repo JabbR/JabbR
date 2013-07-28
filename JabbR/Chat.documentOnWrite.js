@@ -36,4 +36,4 @@
             }
         });
     };
-})(jQuery, window, chat.ui, chat.utility);
+})(window.jQuery, window, chat.ui, chat.utility);

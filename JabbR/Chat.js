@@ -23,9 +23,11 @@
 
     function failPendingMessages() {
         for (var id in pendingMessages) {
-            clearTimeout(pendingMessages[id]);
-            ui.failMessage(id);
-            delete pendingMessages[id];
+            if (pendingMessages.hasOwnProperty(id)) {
+                clearTimeout(pendingMessages[id]);
+                ui.failMessage(id);
+                delete pendingMessages[id];
+            }
         }
     }
 
@@ -822,7 +824,6 @@
 
     chat.client.showUsersRoomList = function (user, rooms) {
         var message;
-        var status = "Currently " + user.Status;
         if (rooms.length === 0) {
             message = utility.getLanguageResource('Chat_UserNotInRooms', user.Name, user.Status);
             ui.addMessage(message, 'list-header');
@@ -1111,7 +1112,7 @@
 
     });
 
-    $(ui).bind(ui.events.preferencesChanged, function (ev) {
+    $(ui).bind(ui.events.preferencesChanged, function () {
         updateCookie();
     });
 
@@ -1176,7 +1177,7 @@
             connection.hub.start(options)
                           .done(function () {
                               chat.server.join()
-                              .fail(function (e) {
+                              .fail(function () {
                                   // So refresh the page, our auth token is probably gone
                                   performLogout();
                               })
@@ -1229,7 +1230,7 @@
                                       // ui.showReloadMessageNotification();
 
                                       // Turn the firehose back on
-                                      chat.server.join(true).fail(function (e) {
+                                      chat.server.join(true).fail(function () {
                                           // So refresh the page, our auth token is probably gone
                                           performLogout();
                                       });
@@ -1237,7 +1238,7 @@
                 }, 5000);
             });
 
-            connection.hub.error(function (err) {
+            connection.hub.error(function () {
                 // Make all pending messages failed if there's an error
                 failPendingMessages();
             });
@@ -1246,4 +1247,4 @@
         initConnection();
     });
 
-})(jQuery, $.connection, window, window.chat.ui, window.chat.utility);
+})(window.jQuery, window.jQuery.connection, window, window.chat.ui, window.chat.utility);

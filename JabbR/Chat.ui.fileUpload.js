@@ -1,23 +1,16 @@
 ﻿(function ($, ui, utility) {
-    var $hiddenFile = null,
-        $previewUpload = null,
-        $imageUploadPreview = null,
-        $unknownUploadPreview = null,
-        $previewUploadButton = null,
-        $previewCancelButton = null,
-        $fileRoom = null,
-        $fileConnectionId = null,
+    "use strict";
+    
+    var $ui = $(ui),
+        $hiddenFile = $('#hidden-file'),
+        $previewUpload = $('#jabbr-upload-preview'),
+        $imageUploadPreview = $('#jabbr-upload-preview #image-upload-preview'),
+        $unknownUploadPreview = $('#jabbr-upload-preview #unknown-upload-preview'),
+        $previewUploadButton = $('#jabbr-upload-preview #upload-preview-upload'),
+        $previewCancelButton = $('#jabbr-upload-preview #upload-preview-cancel'),
+        $fileRoom = $('#file-room'),
+        $fileConnectionId = $('#file-connection-id'),
         $uploadCallback = null;
-
-    $ui = $(ui);
-    $previewUpload = $('#jabbr-upload-preview');
-    $imageUploadPreview = $('#jabbr-upload-preview #image-upload-preview');
-    $unknownUploadPreview = $('#jabbr-upload-preview #unknown-upload-preview');
-    $previewUploadButton = $('#jabbr-upload-preview #upload-preview-upload');
-    $previewCancelButton = $('#jabbr-upload-preview #upload-preview-cancel');
-    $hiddenFile = $('#hidden-file');
-    $fileRoom = $('#file-room');
-    $fileConnectionId = $('#file-connection-id');
 
     function showUploadPreview(file, type, uploader) {
         $uploadCallback = uploader;
@@ -29,7 +22,7 @@
             $imageUploadPreview.attr('src', file.dataURL);
         } else {
             $previewUpload.find('h3').text(utility.getLanguageResource('Client_Uploading', file.name));
-            if (type == 'image') {
+            if (type === 'image') {
                 //uploading an actual file
                 $imageUploadPreview.attr('src', file.data.result);
             } else {
@@ -54,7 +47,7 @@
                     xhr: function () {
                         var h = $.ajaxSettings.xhr();
                         if (h.upload) {
-                            h.upload.addEventListener("progress", function (progressEvent) {
+                            h.upload.addEventListener("progress", function () {
                                 //empty handler for future progress bar for upload
                             });
                         }
@@ -69,7 +62,7 @@
                         size: file.length,
                         type: file.type
                     }
-                }).done(function (result) {
+                }).done(function () {
                     //remove image from preview
                     $imageUploadPreview.attr('src', '');
                 });
@@ -203,7 +196,7 @@
         $previewUpload.modal('hide');
     });
 
-    $(document).on('dragenter dragover', '.messages.current', function (e) {
+    $(document).on('dragenter dragover', '.messages.current', function () {
         //show drag target
         //get css position
         //width,height
@@ -243,7 +236,7 @@
         return false; //required for IE
     });
 
-    $('#drop-file-target').on('click', function (e) {
+    $('#drop-file-target').on('click', function () {
         $('#drop-file-target').fadeOut(500);
     });
 
@@ -256,7 +249,7 @@
                 var file = e.originalEvent.dataTransfer.files[0];
 
                 var reader = new FileReader();
-                reader.onload = (function (f) {
+                reader.onload = (function () {
                     return function (loadEvent) {
                         showUploadPreview({ dataURL: loadEvent.target.result, name: file.name }, file.name, function () {
                             file.data = loadEvent.target.result;
@@ -281,7 +274,7 @@
         var file = e.target.files[0];
 
         var reader = new FileReader();
-        reader.onload = (function (f) {
+        reader.onload = (function () {
             return function (e) {
                 showUploadPreview({ dataURL: e.target.result, name: file.name }, file.name, function () {
                     file.data = e.target.result;
@@ -294,4 +287,4 @@
         reader.readAsDataURL(file);
     });
 
-})(jQuery, window.chat.ui, window.chat.utility);
+})(window.jQuery, window.chat.ui, window.chat.utility);
