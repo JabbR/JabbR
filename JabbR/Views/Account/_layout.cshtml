@@ -37,6 +37,14 @@
               $el.attr('action', action + document.location.hash);
             }
           });
+          $('a').each(function() {
+            var $el = $(this),
+              href = $el.attr('href');
+            
+            if (href.indexOf('#') === -1) {
+              $el.attr('href', href + document.location.hash);
+            }
+          });
         }(jQuery));
     </script>
 </body>

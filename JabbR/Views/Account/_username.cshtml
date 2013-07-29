@@ -1,6 +1,6 @@
 ﻿@using JabbR;
 
-    <form class="form-horizontal" action="@Url.Content("~/account/login")@Html.RequestQuery()" method="post">
+    <form class="form-horizontal" action="@Url.Content("~/account/login" + Html.RequestQuery())" method="post">
         @Html.ValidationSummary()
         <div class="control-group">
             <div class="controls">
@@ -30,13 +30,13 @@
                     @if (Model.AllowUserRegistration)
                     {
                         <p>
-                            @Html.Raw(String.Format(LanguageResources.Account_RegisterMessage, Url.Content("~/account/register")))
+                            @Html.Raw(String.Format(LanguageResources.Account_RegisterMessage, Url.Content("~/account/register" + Html.RequestQuery())))
                         </p>
                     }
                     @if (Model.AllowUserResetPassword && Model.HasEmailSender)
                     { 
                         <p>
-                            @Html.Raw(String.Format(LanguageResources.Account_ResetPasswordMessage, Url.Content("~/account/requestresetpassword")))      
+                            @Html.Raw(String.Format(LanguageResources.Account_ResetPasswordMessage, Url.Content("~/account/requestresetpassword"  + Html.RequestQuery())))      
                         </p>   
                     }
                 </div>

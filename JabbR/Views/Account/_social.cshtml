@@ -9,7 +9,7 @@
 @model SocialLoginViewModel
     <div class="control-group">
         <div class="controls">
-            <form action="@Url.Content("~/account/unlink")" method="POST">
+            <form action="@Url.Content("~/account/unlink" + Html.RequestQuery())" method="POST">
                 <div class="row">
                     <div class="span7 offset1">
                         @foreach (var provider in Model.ConfiguredProviders)
