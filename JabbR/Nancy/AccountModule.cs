@@ -38,7 +38,7 @@ namespace JabbR.Nancy
             {
                 if (IsAuthenticated)
                 {
-                    return Response.AsRedirect("~/");
+                    return this.AsRedirectQueryStringOrDefault("~/");
                 }
 
                 return View["login", GetLoginViewModel(applicationSettings, repository, authService)];
@@ -48,7 +48,7 @@ namespace JabbR.Nancy
             {
                 if (IsAuthenticated)
                 {
-                    return Response.AsRedirect("~/");
+                    return this.AsRedirectQueryStringOrDefault("~/");
                 }
 
                 string username = Request.Form.username;
@@ -103,7 +103,7 @@ namespace JabbR.Nancy
             {
                 if (IsAuthenticated)
                 {
-                    return Response.AsRedirect("~/");
+                    return this.AsRedirectQueryStringOrDefault("~/");
                 }
 
                 bool requirePassword = !Principal.Identity.IsAuthenticated;
@@ -131,7 +131,7 @@ namespace JabbR.Nancy
 
                 if (IsAuthenticated)
                 {
-                    return Response.AsRedirect("~/");
+                    return this.AsRedirectQueryStringOrDefault("~/");
                 }
 
                 ViewBag.requirePassword = requirePassword;

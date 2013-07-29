@@ -19,11 +19,11 @@ namespace JabbR.Nancy
 
         public dynamic Process(NancyModule nancyModule, AuthenticateCallbackData model)
         {
-            Response response = nancyModule.Response.AsRedirect("~/");
+            Response response = nancyModule.AsRedirectQueryStringOrDefault("~/");
 
             if (nancyModule.IsAuthenticated())
             {
-                response = nancyModule.Response.AsRedirect("~/account/#identityProviders");
+                response = nancyModule.AsRedirectQueryStringOrDefault("~/account/#identityProviders");
             }
 
             if (model.Exception != null)
@@ -46,7 +46,6 @@ namespace JabbR.Nancy
                 {
                     claims.Add(new Claim(ClaimTypes.Email, information.Email));
                 }
-
 
                 nancyModule.SignIn(claims);
             }

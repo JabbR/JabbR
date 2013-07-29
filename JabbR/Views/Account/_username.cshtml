@@ -1,6 +1,6 @@
 ﻿@using JabbR;
 
-    <form class="form-horizontal" action="@Url.Content("~/account/login")" method="post">
+    <form class="form-horizontal" action="@Url.Content("~/account/login")@Html.RequestQuery()" method="post">
         @Html.ValidationSummary()
         <div class="control-group">
             <div class="controls">
