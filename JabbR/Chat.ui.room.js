@@ -155,9 +155,6 @@
 
         this.tab.addClass('current')
                 .removeClass('unread')
-                .stop(true, true)
-                .css('backgroundColor', '')
-                .css('color', '')
                 .data('unread', 0)
                 .data('hasMentions', false);
 
