@@ -126,7 +126,7 @@ namespace JabbR
 
             hubPipeline.AddModule(kernel.Get<LoggingHubPipelineModule>());
 
-            app.MapHubs(config);
+            app.MapSignalR(config);
 
             var monitor = new PresenceMonitor(kernel, connectionManager, heartbeat);
             monitor.Start();

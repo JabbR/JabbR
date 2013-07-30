@@ -24,8 +24,12 @@
         parseFailed: "Failed at parsing response: {0}",
         longPollFailed: "Long polling request failed.",
         eventSourceFailedToConnect: "EventSource failed to connect.",
+        eventSourceError: "Error raised by EventSource",
         webSocketClosed: "WebSocket closed.",
-        invalidPingServerResponse: "Invalid ping response when pinging server: '{0}'.",
+        pingServerFailedInvalidResponse: "Invalid ping response when pinging server: '{0}'.",
+        pingServerFailed: "Failed to ping server.",
+        pingServerFailedStatusCode: "Failed to ping server.  Server responded with status code {0}, stopping the connection.",
+        pingServerFailedParse: "Failed to parse ping server response, stopping the connection.",
         noConnectionTransport: "Connection is in an invalid state, there is no transport active."
     };
 
@@ -188,6 +192,15 @@
                 s = s.replace("{" + i + "}", arguments[i + 1]);
             }
             return s;
+        },
+
+        firefoxMajorVersion: function(userAgent) {
+            // Firefox user agents: http://useragentstring.com/pages/Firefox/
+                                            var matches = userAgent.match(/Firefox\/(\d+)/);
+            if (!matches || !matches.length || matches.length < 2) {
+                return 0;
+            }
+            return parseInt(matches[1], 10 /* radix */);
         }
     };
 
@@ -380,8 +393,7 @@
                     pingInterval: 300000,
                     waitForPageLoad: true,
                     transport: "auto",
-                    jsonp: false,
-                    withCredentials: true
+                    jsonp: false
                 },
                 initialize,
                 deferred = connection._deferral || $.Deferred(), // Check to see if there is a pre-existing deferral that's being built on, if so we want to keep using it
@@ -413,8 +425,7 @@
             }
 
             connection._.config = config;
-            connection.withCredentials = config.withCredentials;
-
+            
             // Check to see if start is being called prior to page load
             // If waitForPageLoad is true we then want to re-direct function call to the window load event
             if (!_pageLoaded && config.waitForPageLoad === true) {
@@ -464,11 +475,15 @@
 
             if (this.isCrossDomain(connection.url)) {
                 connection.log("Auto detected cross domain url.");
-
+                
                 if (config.transport === "auto") {
                     // Try webSockets and longPolling since SSE doesn't support CORS
                     // TODO: Support XDM with foreverFrame
                     config.transport = ["webSockets", "longPolling"];
+                }
+
+                if (typeof (config.withCredentials) === "undefined") {
+                    config.withCredentials = true;
                 }
 
                 // Determine if jsonp is the only choice for negotiation, ajaxSend and ajaxAbort.
@@ -484,6 +499,8 @@
 
                 connection.contentType = signalR._.defaultContentType;
             }
+
+            connection.withCredentials = config.withCredentials;
 
             connection.ajaxDataType = config.jsonp ? "jsonp" : "text";
 
@@ -569,7 +586,12 @@
 
                             // wire the stop handler for when the user leaves the page
                             _pageWindow.bind("unload", function () {
-                                connection.stop(false /* async */);
+                                // Firefox 11+ doesn't allow sync XHR withCredentials: https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest#withCredentials
+                                var asyncAbort = !!connection.withCredentials && signalR._.firefoxMajorVersion(window.navigator.userAgent) >= 11;
+
+                                connection.log("Window unloading, stopping the connection");
+
+                                connection.stop(asyncAbort);
                             });
                         }
                     }, onFailed);
@@ -1007,7 +1029,13 @@
                                 data = connection._parseResponse(result);
                             }
                             catch (error) {
-                                deferral.reject(error);
+                                deferral.reject(
+                                    signalR._.transportError(
+                                        signalR.resources.pingServerFailedParse,
+                                        connection.transport,
+                                        error
+                                    )
+                                );
                                 connection.stop();
                                 return;
                             }
@@ -1016,18 +1044,46 @@
                                 deferral.resolve();
                             }
                             else {
-                                deferral.reject(signalR._.transportError(signalR._.format(signalR.resources.invalidPingServerResponse, result.responseText), connection.transport));
+                                deferral.reject(
+                                    signalR._.transportError(
+                                        signalR._.format(signalR.resources.pingServerFailedInvalidResponse, result.responseText),
+                                        connection.transport
+                                    )
+                                );
                             }
                         },
                         error: function (error) {
-                            deferral.reject(error);
+                            if (error.status === 401 || error.status === 403) {
+                                deferral.reject(
+                                    signalR._.transportError(
+                                        signalR._.format(signalR.resources.pingServerFailedStatusCode, error.status),
+                                        connection.transport,
+                                        error
+                                    )
+                                );
+                                connection.stop();
+                            }
+                            else {
+                                deferral.reject(
+                                    signalR._.transportError(
+                                        signalR.resources.pingServerFailed,
+                                        connection.transport,
+                                        error
+                                    )
+                                );
+                            }
                         }
                     }
                 ));
 
             }
             else {
-                deferral.reject(signalR._.transportError(signalR.resources.noConnectionTransport, connection.transport));
+                deferral.reject(
+                    signalR._.transportError(
+                        signalR.resources.noConnectionTransport,
+                        connection.transport
+                    )
+                );
             }
 
             return deferral.promise();
@@ -1602,29 +1658,31 @@
                 // Only handle an error if the error is from the current Event Source.
                 // Sometimes on disconnect the server will push down an error event
                 // to an expired Event Source.
-                if (this === connection.eventSource) {
-                    if (!opened) {
-                        if (onFailed) {
-                            onFailed();
-                        }
+                if (this !== connection.eventSource) {
+                    return;
+                }
 
-                        return;
+                if (!opened) {
+                    if (onFailed) {
+                        onFailed();
                     }
 
-                    connection.log("EventSource readyState: " + connection.eventSource.readyState);
+                    return;
+                }
 
-                    if (e.eventPhase === window.EventSource.CLOSED) {
-                        // We don't use the EventSource's native reconnect function as it
-                        // doesn't allow us to change the URL when reconnecting. We need
-                        // to change the URL to not include the /connect suffix, and pass
-                        // the last message id we received.
-                        connection.log("EventSource reconnecting due to the server connection ending");
-                        that.reconnect(connection);
-                    } else {
-                        // connection error
-                        connection.log("EventSource error");
-                        $connection.triggerHandler(events.onError);
-                    }
+                connection.log("EventSource readyState: " + connection.eventSource.readyState);
+
+                if (e.eventPhase === window.EventSource.CLOSED) {
+                    // We don't use the EventSource's native reconnect function as it
+                    // doesn't allow us to change the URL when reconnecting. We need
+                    // to change the URL to not include the /connect suffix, and pass
+                    // the last message id we received.
+                    connection.log("EventSource reconnecting due to the server connection ending");
+                    that.reconnect(connection);
+                } else {
+                    // connection error
+                    connection.log("EventSource error");
+                    $connection.triggerHandler(events.onError, [signalR._.transportError(signalR.resources.eventSourceError, connection.transport, e)]);
                 }
             }, false);
         },
@@ -1909,11 +1967,11 @@
                     window.clearTimeout(privateData.reconnectTimeoutId);
                     privateData.reconnectTimeoutId = null;
 
-                    if (changeState(connection,
+                    if (changeState(instance,
                                     signalR.connectionState.reconnecting,
                                     signalR.connectionState.connected) === true) {
                         // Successfully reconnected!
-                        connection.log("Raising the reconnect event");
+                        instance.log("Raising the reconnect event");
                         $(instance).triggerHandler(events.onReconnect);
                     }
                 },
@@ -1970,7 +2028,7 @@
 
                                 // If there's currently a timeout to trigger reconnect, fire it now before processing messages
                                 if (privateData.reconnectTimeoutId !== null) {
-                                    fireReconnected();
+                                    fireReconnected(instance);
                                 }
 
                                 if (minData) {
@@ -1995,7 +2053,11 @@
                                 shouldReconnect = data && data.ShouldReconnect;
                                 if (shouldReconnect) {
                                     // Transition into the reconnecting state
-                                    transportLogic.ensureReconnectingState(instance);
+                                    // If this fails then that means that the user transitioned the connection into a invalid state in processMessages.
+                                    if (!transportLogic.ensureReconnectingState(instance))
+                                    {
+                                        return;
+                                    }
                                 }
 
                                 // We never want to pass a raiseReconnect flag after a successful poll.  This is handled via the error function
