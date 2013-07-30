@@ -651,9 +651,13 @@ li.user.typing .gravatar {
             padding-right: 8px;
         }
 
+        #tabs li.unread {
+            background-color: #004b85;
+        }
+
         #tabs li.current,        
         #tabs li:hover {
-            background-color: #e5e5e5 !important; /* background is set on the element in js for inactive rooms */
+            background-color: #e5e5e5;
             border-color: #e5e5e5;
         }
 
@@ -698,11 +702,11 @@ li.user.typing .gravatar {
     #tabs-dropdown li {
         position: relative;
         cursor: pointer;
-        background-color: #fff !important;
+        background-color: #fff;
     }
 
     #tabs-dropdown li:hover {
-        background-color: #00103F !important;
+        background-color: #00103F;
     }
 
     #tabs-dropdown li:hover a,
