@@ -2414,32 +2414,24 @@ li.clearfix {
     padding: 0 20px;
 }
 
-.icon-twitter-logo {
-    background-image: url('../../images/twitter_white.png');
-    background-repeat: no-repeat;
-    background-position: center left;
-    height: 16px;
-    width: 16px;
-    margin: 3px 10px 0 -10px;
-}
+    .social-auth .btn-provider {
+        font-size: 17.5px;
+        width: 220px;
+        padding: 6px 0;
+        margin-left: 15px;
+    }
 
-.icon-facebook-logo {
-    background-image: url('../../images/facebook_white.png');
-    background-repeat: no-repeat;
-    background-position: center left;
-    height: 16px;
-    width: 16px;
-    margin: 0 10px;
-}
+    .social-auth .icon-google:before {
+        content: "\f0d5";
+    }
 
-.icon-google-logo {
-    background-image: url('../../images/google_white.png');
-    background-repeat: no-repeat;
-    background-position: center left;
-    height: 16px;
-    width: 16px;
-    margin: 5px 10px 0 -10px;
-}
+    .social-auth [class^="icon-"],
+    .social-auth [class*=" icon-"] {
+        display: inline-block;
+        min-width: 25px;
+        margin-left: 10px;
+        float: left;
+    }
 
 .icon-link {
     background-image: url('../../images/link.png');

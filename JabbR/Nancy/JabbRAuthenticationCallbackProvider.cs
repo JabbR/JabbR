@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
+
 using JabbR.Services;
 using Nancy;
 using Nancy.SimpleAuthentication;
@@ -19,11 +21,27 @@ namespace JabbR.Nancy
 
         public dynamic Process(NancyModule nancyModule, AuthenticateCallbackData model)
         {
-            Response response = nancyModule.AsRedirectQueryStringOrDefault("~/");
+            Response response;
 
-            if (nancyModule.IsAuthenticated())
+            // for when infrastructure is merged in 
+            Uri returnUrl = null; // model.ReturnUrl
+
+            if (returnUrl != null)
             {
-                response = nancyModule.AsRedirectQueryStringOrDefault("~/account/#identityProviders");
+                // correct encoding on absoluteUri returned.  SA assumes that what we enter is a path, so just grab whatever's on there
+                string redirectUri = returnUrl.PathAndQuery;
+                redirectUri = Regex.Replace(redirectUri, "%3f", @"?", RegexOptions.IgnoreCase);
+                redirectUri = redirectUri.Replace("%23", "#");
+                response = nancyModule.Response.AsRedirect("~" + redirectUri);
+            }
+            else
+            {
+                response = nancyModule.AsRedirectQueryStringOrDefault("~/");
+
+                if (nancyModule.IsAuthenticated())
+                {
+                    response = nancyModule.AsRedirectQueryStringOrDefault("~/account/#identityProviders");
+                }
             }
 
             if (model.Exception != null)

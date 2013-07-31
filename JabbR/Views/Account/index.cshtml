@@ -1,5 +1,6 @@
 ﻿@using JabbR
 @using JabbR.ViewModels
+@using SquishIt.Framework
 @model ProfilePageViewModel
 
 @{
@@ -12,9 +13,15 @@
 <head>
     <meta charset="UTF-8">
     <title>JabbR - account</title>
-    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/Content/bootstrap-responsive.min.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/Content/themes/default/Chat.css")" rel="stylesheet" />
+    @{ 
+        WriteLiteral(Bundle.Css()
+            .Add("~/Content/bootstrap.min.css")
+            .Add("~/Content/bootstrap-responsive.min.css")
+            .Add("~/Content/font-awesome.min.css")
+            .Add("~/Content/themes/default/Chat.css")
+            .Add("~/Content/emoji20.css")
+            .Render("~/Content/JabbR_#.css"));
+    }
 </head>
 <body class="user-profile">
     <section id="page" role="application">

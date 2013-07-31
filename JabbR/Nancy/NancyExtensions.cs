@@ -96,7 +96,7 @@ namespace JabbR.Nancy
 
         public static Response AsRedirectQueryStringOrDefault(this NancyModule module, string defaultUrl)
         {
-            string returnUrl = module.Request.Query.redirect_uri;
+            string returnUrl = module.Request.Query.returnUrl;
             if (String.IsNullOrWhiteSpace(returnUrl))
             {
                 returnUrl = defaultUrl;
