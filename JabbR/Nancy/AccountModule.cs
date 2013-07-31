@@ -8,7 +8,6 @@ using JabbR.Models;
 using JabbR.Services;
 using JabbR.ViewModels;
 using Nancy;
-using WorldDomination.Web.Authentication;
 
 namespace JabbR.Nancy
 {
