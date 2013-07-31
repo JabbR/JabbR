@@ -754,9 +754,7 @@
     <Content Include="Content\images\emojis\zap.png" />
     <Content Include="Content\images\emojis\zzz.png" />
     <Content Include="Content\images\error.png" />
-    <Content Include="Content\images\facebook_white.png" />
     <Content Include="Content\images\flags.png" />
-    <Content Include="Content\images\google_white.png" />
     <Content Include="Content\images\link.png" />
     <Content Include="Content\images\loading.gif" />
     <Content Include="Content\images\lockwhite.png" />
@@ -782,7 +780,6 @@
     <Content Include="Content\images\pop-out-icon.png" />
     <Content Include="Content\images\sound-off.png" />
     <Content Include="Content\images\sound-on.png" />
-    <Content Include="Content\images\twitter_white.png" />
     <Content Include="Content\images\typing.png" />
     <Content Include="Content\images\Clippy.png" />
     <Content Include="Content\images\StopWatch.png" />
