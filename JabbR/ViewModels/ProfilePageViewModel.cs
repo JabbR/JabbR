@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using JabbR.Models;
 using JabbR.Services;
-using WorldDomination.Web.Authentication;
+using SimpleAuthentication.Core;
 
 namespace JabbR.ViewModels
 {

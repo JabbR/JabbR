@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using JabbR.Services;
 using Nancy;
-using Nancy.Authentication.WorldDomination;
-using WorldDomination.Web.Authentication;
+using Nancy.SimpleAuthentication;
+using SimpleAuthentication.Core;
 
 namespace JabbR.Nancy
 {
