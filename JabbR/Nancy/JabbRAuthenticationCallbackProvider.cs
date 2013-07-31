@@ -23,16 +23,9 @@ namespace JabbR.Nancy
         {
             Response response;
 
-            // for when infrastructure is merged in 
-            Uri returnUrl = null; // model.ReturnUrl
-
-            if (returnUrl != null)
+            if (model.ReturnUrl != null)
             {
-                // correct encoding on absoluteUri returned.  SA assumes that what we enter is a path, so just grab whatever's on there
-                string redirectUri = returnUrl.PathAndQuery;
-                redirectUri = Regex.Replace(redirectUri, "%3f", @"?", RegexOptions.IgnoreCase);
-                redirectUri = redirectUri.Replace("%23", "#");
-                response = nancyModule.Response.AsRedirect("~" + redirectUri);
+                response = nancyModule.Response.AsRedirect("~" + model.ReturnUrl);
             }
             else
             {
