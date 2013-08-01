@@ -2419,6 +2419,11 @@ li.clearfix {
         width: 220px;
         padding: 6px 0;
         margin-left: 15px;
+        text-align: left;
+    }
+
+    .social-auth .icon-windowslive:before {
+        content: "\f090";
     }
 
     .social-auth .icon-google:before {
@@ -2428,9 +2433,8 @@ li.clearfix {
     .social-auth [class^="icon-"],
     .social-auth [class*=" icon-"] {
         display: inline-block;
-        min-width: 25px;
-        margin-left: 10px;
-        float: left;
+        width: 45px;
+        margin-left: 42px;
     }
 
 .icon-link {
