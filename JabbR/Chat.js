@@ -74,7 +74,9 @@
         performLogout().done(function () {
             chat.server.send('/logout', chat.state.activeRoom)
                 .fail(function (e) {
-                    ui.addMessage(e, 'error', chat.state.activeRoom);
+                    if (!e.message) {
+                        ui.addMessage(e, 'error', chat.state.activeRoom);
+                    }
                 });
         });
     }
@@ -990,7 +992,9 @@
                 })
                 .fail(function (e) {
                     ui.failMessage(id);
-                    ui.addMessage(e, 'error');
+                    if (!e.message) {
+                        ui.addMessage(e, 'error');
+                    }
                 });
         }
         catch (e) {
@@ -1027,7 +1031,9 @@
             chat.server.send('/join ' + room, chat.state.activeRoom)
                 .fail(function (e) {
                     ui.setActiveRoom('Lobby');
-                    ui.addMessage(e, 'error');
+                    if (!e.message) {
+                        ui.addMessage(e, 'error');
+                    }
                 });
         }
         catch (e) {
@@ -1039,7 +1045,9 @@
         try {
             chat.server.send('/leave ' + room, chat.state.activeRoom)
                 .fail(function (e) {
-                    ui.addMessage(e, 'error');
+                    if (!e.message) {
+                        ui.addMessage(e, 'error');
+                    }
                 });
         }
         catch (e) {
