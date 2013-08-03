@@ -350,7 +350,7 @@
         roomCache[roomName.toString().toUpperCase()] = true;
         
         templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabsDropdown);
-        chat.ui.updateTabOverflow();
+        ui.updateTabOverflow();
 
         $messages = $('<ul/>').attr('id', 'messages-' + roomId)
                               .addClass('messages')
@@ -420,7 +420,7 @@
             room.roomTopic.remove();
             setAccessKeys();
             
-            chat.ui.updateTabOverflow();
+            ui.updateTabOverflow();
         }
     }
 
@@ -881,7 +881,7 @@
             });
 
             $('#tabs, #tabs-dropdown').dragsort({
-                placeHolderTemplate: '<li class="room"><a><span class="content"></span></a></li>',
+                placeHolderTemplate: '<li class="room placeholder"><a><span class="content"></span></a></li>',
                 dragBetween: true,
                 dragStart: function() {
                     var roomName = $(this).closest('li').data('name');
@@ -896,6 +896,10 @@
                     }
                     
                     $ui.trigger(ui.events.tabOrderChanged, [roomTabOrder]);
+                    
+                    // check for tab overflow for one edge case - sort order hasn't changed but user 
+                    // dragged the last item in the main list to be the first item in the dropdown.
+                    ui.updateTabOverflow();
                 }
             });
 
@@ -1151,13 +1155,15 @@
                 var room = getCurrentRoomElements();
                 room.makeActive();
 
+                ui.updateTabOverflow();
+
                 triggerFocus();
             });
 
             $window.resize(function () {
                 var room = getCurrentRoomElements();
                 room.scrollToBottom();
-                chat.ui.updateTabOverflow();
+                ui.updateTabOverflow();
             });
 
             $newMessage.keydown(function (ev) {
@@ -1326,6 +1332,8 @@
                 }
 
                 room.makeActive();
+                
+                ui.updateTabOverflow();
 
                 if (room.isLobby()) {
                     $roomActions.hide();
@@ -1368,6 +1376,7 @@
             }
 
             room.updateUnread(isMentioned);
+            ui.updateTabOverflow();
         },
         scrollToBottom: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
@@ -2218,7 +2227,7 @@
                 $tabs.find('li[data-name="' + name + '"]').prependTo($tabs.first());
             });
 
-            chat.ui.updateTabOverflow();
+            ui.updateTabOverflow();
         },
         updateTabOverflow: function () {
             var lastOffsetLeft = 0,
@@ -2229,11 +2238,11 @@
                 overflowedRoomTabs = null,
                 $tabsDropdownButton = $('#tabs-dropdown-rooms');
             
-            // move all tabs to the first list
-            $tabs.last().find('li').each(function() { $(this).detach().appendTo($tabsList); });
+            // move all (non-dragsort) tabs to the first list
+            $tabs.last().find('li:not(.placeholder)').each(function () { $(this).detach().appendTo($tabsList); });
 
             // find overflow and move it all to the dropdown list ul
-            $roomTabs = $tabsList.find('li');
+            $roomTabs = $tabsList.find('li:not(.placeholder)');
             $roomTabs.each(function (idx) {
                 if (sliceIndex !== -1) {
                     return;
