@@ -459,7 +459,7 @@
     };
 
     chat.client.userAllowed = function (user, room) {
-        ui.addMessage(utility.getLanguageResource('Chat_YouGrantedRoomAccess', user, room), 'notification', this.state.activeRoom);
+        ui.addMessage(utility.getLanguageResource('Chat_UserGrantedRoomAccess', user, room), 'notification', this.state.activeRoom);
     };
 
     chat.client.unallowUser = function (user, room) {
