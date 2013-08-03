@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
+
 using JabbR.Services;
 using Nancy;
 using Nancy.SimpleAuthentication;
@@ -19,11 +21,20 @@ namespace JabbR.Nancy
 
         public dynamic Process(NancyModule nancyModule, AuthenticateCallbackData model)
         {
-            Response response = nancyModule.Response.AsRedirect("~/");
+            Response response;
 
-            if (nancyModule.IsAuthenticated())
+            if (model.ReturnUrl != null)
             {
-                response = nancyModule.Response.AsRedirect("~/account/#identityProviders");
+                response = nancyModule.Response.AsRedirect("~" + model.ReturnUrl);
+            }
+            else
+            {
+                response = nancyModule.AsRedirectQueryStringOrDefault("~/");
+
+                if (nancyModule.IsAuthenticated())
+                {
+                    response = nancyModule.AsRedirectQueryStringOrDefault("~/account/#identityProviders");
+                }
             }
 
             if (model.Exception != null)
@@ -46,7 +57,6 @@ namespace JabbR.Nancy
                 {
                     claims.Add(new Claim(ClaimTypes.Email, information.Email));
                 }
-
 
                 nancyModule.SignIn(claims);
             }

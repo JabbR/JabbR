@@ -1,4 +1,5 @@
 ﻿@using JabbR;
+@using SquishIt.Framework
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -6,9 +7,15 @@
     <meta charset="UTF-8" />
     <title>JabbR</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"> 
-    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/Content/bootstrap-responsive.min.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/Content/themes/default/Chat.css")" rel="stylesheet" />
+    @{ 
+        WriteLiteral(Bundle.Css()
+            .Add("~/Content/bootstrap.min.css")
+            .Add("~/Content/bootstrap-responsive.min.css")
+            .Add("~/Content/font-awesome.min.css")
+            .Add("~/Content/themes/default/Chat.css")
+            .Add("~/Content/emoji20.css")
+            .Render("~/Content/JabbR_#.css"));
+    }
   </head>
 <body>
     <div class="container">
@@ -28,6 +35,28 @@
     <script type="text/javascript">
         (function($) {
             $('input.error').closest('.control-group').addClass('error');
+
+            $('form').each(function () {
+                var $el = $(this),
+                    action = $el.attr('action');
+            
+                if (action.indexOf('#') === -1) {
+                    $el.attr('action', action + document.location.hash);
+                }
+            });
+
+            $('a').each(function() {
+                var $el = $(this),
+                    href = $el.attr('href');
+            
+                if (href.indexOf('#') === -1) {
+                    if ($el.is('.btn-provider')) {
+                        href = href + encodeURIComponent(document.location.hash);
+                    }
+              
+                    $el.attr('href', href + document.location.hash);
+                }
+            });
         }(jQuery));
     </script>
 </body>

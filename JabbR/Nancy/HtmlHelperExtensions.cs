@@ -142,5 +142,15 @@ namespace JabbR
 
             return NonEncodedHtmlString.Empty;
         }
+
+        public static string RequestQuery<TModel>(this HtmlHelpers<TModel> htmlHelper)
+        {
+            if (htmlHelper.RenderContext.Context.Request.Url != null && !String.IsNullOrEmpty(htmlHelper.RenderContext.Context.Request.Url.Query))
+            {
+                return "?" + htmlHelper.RenderContext.Context.Request.Url.Query;
+            }
+
+            return String.Empty;
+        }
     }
 }
