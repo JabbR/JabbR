@@ -209,7 +209,6 @@
             $topic = $room.find('.topic'),
             roomName = room.Name.toString().toUpperCase();
 
-        $room.css('background-color', '#f5f5f5');
         if (room.Count === 0) {
             $count.text(utility.getLanguageResource('Client_OccupantsZero'));
         } else if (room.Count === 1) {
@@ -242,7 +241,7 @@
         }
 
         // Do a little animation
-        $room.animate({ backgroundColor: '#ffffff' }, 800);
+        $room.css('-webkit-animation-play-state', 'running').css('animation-play-state', 'running');
     }
 
     function addRoomToLobby(roomViewModel) {

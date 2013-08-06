@@ -291,10 +291,33 @@ form#send-message {
 
     #userlist-lobby li {
         display: block;
+        animation: room-fade 0.8s linear 1;
+        -webkit-animation: room-fade 0.8s linear 1;
+        animation-play-state: paused;
+        -webkit-animation-play-state: paused;
     }
 
     #userlist-lobby-owners li {
-        display: inline;
+        display: inline-block;
+        margin: 0 5px 10px 5px;
+        height: 102px;
+        animation: room-fade 0.8s linear 1;
+        -webkit-animation: room-fade 0.8s linear 1;
+        animation-play-state: paused;
+        -webkit-animation-play-state: paused;
+    }
+
+    @-webkit-keyframes room-fade
+    {
+        0% { background-color: #FFFFFF; }
+        2% { background-color: #F5F5F5; }
+        100% { background-color: #FFFFFF; }
+    }
+
+    @keyframes room-fade {
+        0% { background-color: #FFFFFF; }
+        2% { background-color: #F5F5F5; }
+        100% { background-color: #FFFFFF; }
     }
 
         #userlist-lobby li.empty,
@@ -361,7 +384,6 @@ form#send-message {
 #userlist-lobby-owners li div.room-row {
     display: inline-block;
     width: 250px;
-    margin: 10px 5px;
     padding: 5px;
     border: 1px solid #e5e5e5;
 }
