@@ -9,7 +9,7 @@
         public static readonly string LogOn = "logOn";
         public static readonly string LogOut = "logOut";
         public static readonly string Kick = "kick";
-        public static readonly string UpdateRoomCount = "updateRoomCount";
+        public static readonly string UpdateRoom = "updateRoom";
         public static readonly string UpdateActivity = "updateActivity";
         public static readonly string MarkInactive = "markInactive";
         public static readonly string SendPrivateMessage = "sendPrivateMessage";
