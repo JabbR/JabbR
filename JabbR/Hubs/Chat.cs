@@ -224,9 +224,11 @@ namespace JabbR
                 // 1. If the mentioned user doesn't exist.
                 // 2. If you mention yourself
                 // 3. If you're mentioned in a private room that you don't have access to
+                // 4. You've already been mentioned in this message
                 if (mentionedUser == null ||
                     mentionedUser == message.User ||
-                    (message.Room.Private && !mentionedUser.AllowedRooms.Contains(message.Room)))
+                    (message.Room.Private && !mentionedUser.AllowedRooms.Contains(message.Room)) ||
+                    mentionedUsers.Contains(mentionedUser))
                 {
                     continue;
                 }
