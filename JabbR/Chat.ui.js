@@ -883,9 +883,17 @@
             $('#tabs, #tabs-dropdown').dragsort({
                 placeHolderTemplate: '<li class="room placeholder"><a><span class="content"></span></a></li>',
                 dragBetween: true,
-                dragStart: function() {
-                    var roomName = $(this).closest('li').data('name');
-                    activateOrOpenRoom(roomName);
+                dragStart: function () {
+                    var roomName = $(this).closest('li').data('name'),
+                        closeButton = $(this).find('.close');
+
+                    // if we have a close that we're over, close the window and bail, otherwise activate the tab
+                    if (closeButton.length > 0 && closeButton.is(':hover')) {
+                        $ui.trigger(ui.events.closeRoom, [roomName]);
+                        return false;
+                    } else {
+                        activateOrOpenRoom(roomName);
+                    }
                 },
                 dragEnd: function () {
                     var roomTabOrder = [],
