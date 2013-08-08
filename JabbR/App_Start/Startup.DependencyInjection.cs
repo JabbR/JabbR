@@ -11,6 +11,7 @@ using Nancy.Bootstrappers.Ninject;
 using Nancy.SimpleAuthentication;
 using Newtonsoft.Json;
 using Ninject;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR
 {
@@ -37,6 +38,9 @@ namespace JabbR
 
             kernel.Bind<ILogger>()
                   .To<RealtimeLogger>();
+
+            kernel.Bind<IUserIdProvider>()
+                  .To<JabbrUserIdProvider>();
 
             kernel.Bind<IJabbrConfiguration>()
                   .ToConstant(configuration);

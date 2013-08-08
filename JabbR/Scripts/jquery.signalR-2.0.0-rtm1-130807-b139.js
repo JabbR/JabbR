@@ -1,7 +1,7 @@
 /* jquery.signalR.core.js */
 /*global window:false */
 /*!
- * ASP.NET SignalR JavaScript Library v2.0.0-rc1
+ * ASP.NET SignalR JavaScript Library v2.0.0-rtm1
  * http://signalr.net/
  *
  * Copyright (C) Microsoft Corporation. All rights reserved.
@@ -10,7 +10,7 @@
 
 /// <reference path="Scripts/jquery-1.6.4.js" />
 /// <reference path="jquery.signalR.version.js" />
-(function ($, window) {
+(function ($, window, undefined) {
     "use strict";
 
     var resources = {
@@ -676,7 +676,7 @@
                             // Timeout to designate when to force the connection into reconnecting converted to milliseconds
                             keepAliveData.timeout = res.KeepAliveTimeout * 1000;
 
-                            // Timeout to designate when to warn the developer that the connection may be dead or is hanging.
+                            // Timeout to designate when to warn the developer that the connection may be dead or is not responding.
                             keepAliveData.timeoutWarning = keepAliveData.timeout * connection.keepAliveWarnAt;
 
                             // Instantiate the frequency in which we check the keep alive.  It must be short in order to not miss/pick up any changes
@@ -936,7 +936,7 @@
 /*global window:false */
 /// <reference path="jquery.signalR.core.js" />
 
-(function ($, window) {
+(function ($, window, undefined) {
     "use strict";
 
     var signalR = $.signalR,
@@ -1403,7 +1403,7 @@
 /*global window:false */
 /// <reference path="jquery.signalR.transports.common.js" />
 
-(function ($, window) {
+(function ($, window, undefined) {
     "use strict";
 
     var signalR = $.signalR,
@@ -1544,7 +1544,7 @@
 /*global window:false */
 /// <reference path="jquery.signalR.transports.common.js" />
 
-(function ($, window) {
+(function ($, window, undefined) {
     "use strict";
 
     var signalR = $.signalR,
@@ -1723,7 +1723,7 @@
 /*global window:false */
 /// <reference path="jquery.signalR.transports.common.js" />
 
-(function ($, window) {
+(function ($, window, undefined) {
     "use strict";
 
     var signalR = $.signalR,
@@ -1924,7 +1924,7 @@
 /*global window:false */
 /// <reference path="jquery.signalR.transports.common.js" />
 
-(function ($, window) {
+(function ($, window, undefined) {
     "use strict";
 
     var signalR = $.signalR,
@@ -2162,10 +2162,11 @@
 /*global window:false */
 /// <reference path="jquery.signalR.core.js" />
 
-(function ($, window) {
+(function ($, window, undefined) {
     "use strict";
 
-    var eventNamespace = ".hubProxy";
+    var eventNamespace = ".hubProxy",
+        signalR = $.signalR;
 
     function makeEventName(event) {
         return event + eventNamespace;
@@ -2204,7 +2205,9 @@
         var callbacks = connection._.invocationCallbacks,
             callback;
         
-        connection.log("Clearing hub invocation callbacks with error: " + error + ".");
+        if (hasMembers(callbacks)) {
+            connection.log("Clearing hub invocation callbacks with error: " + error + ".");
+        }
         
         // Reset the callback cache now as we have a local var referencing it
         connection._.invocationCallbackId = 0;
@@ -2316,7 +2319,9 @@
                 data = { H: that.hubName, M: methodName, A: argValues, I: connection._.invocationCallbackId },
                 d = $.Deferred(),
                 callback = function (minResult) {
-                    var result = that._maximizeHubResponse(minResult);
+                    var result = that._maximizeHubResponse(minResult),
+                        source,
+                        error;
 
                     // Update the hub state
                     $.extend(that.state, result.State);
@@ -2326,7 +2331,13 @@
                         if (result.StackTrace) {
                             connection.log(result.Error + "\n" + result.StackTrace + ".");
                         }
-                        d.rejectWith(that, [result.Error]);
+
+                        // result.ErrorData is only set if a HubException was thrown
+                        source = result.ErrorData ? "HubException" : "Exception";
+                        error = signalR._.error(result.Error, source);
+                        error.data = result.ErrorData;
+
+                        d.rejectWith(that, [error]);
                     } else {
                         // Server invocation succeeded, resolve the deferred
                         d.resolveWith(that, [result.Result]);
@@ -2351,7 +2362,8 @@
                 Result: minHubResponse.R,
                 Id: minHubResponse.I,
                 Error: minHubResponse.E,
-                StackTrace: minHubResponse.T
+                StackTrace: minHubResponse.T,
+                ErrorData: minHubResponse.D
             };
         }
     };
@@ -2555,6 +2567,6 @@
 
 /*global window:false */
 /// <reference path="jquery.signalR.core.js" />
-(function ($) {
-    $.signalR.version = "2.0.0-rc1";
+(function ($, undefined) {
+    $.signalR.version = "2.0.0-rtm1";
 }(window.jQuery));
