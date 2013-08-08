@@ -5,6 +5,7 @@ using System.Security.Claims;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Services;
+using Microsoft.AspNet.SignalR;
 using Moq;
 using Xunit;
 
@@ -386,8 +387,8 @@ namespace JabbR.Test
                 repository.Add(user);
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.AddRoom(user, "Lobby"));
-                Assert.Throws<InvalidOperationException>(() => service.AddRoom(user, "LObbY"));
+                Assert.Throws<HubException>(() => service.AddRoom(user, "Lobby"));
+                Assert.Throws<HubException>(() => service.AddRoom(user, "LObbY"));
             }
 
             [Fact]
@@ -401,7 +402,7 @@ namespace JabbR.Test
                 repository.Add(user);
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.AddRoom(user, "Invalid name"));
+                Assert.Throws<HubException>(() => service.AddRoom(user, "Invalid name"));
             }
 
             [Fact]
@@ -420,7 +421,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository, settings);
 
-                Assert.Throws<InvalidOperationException>(() => service.AddRoom(user, "NewRoom"));
+                Assert.Throws<HubException>(() => service.AddRoom(user, "NewRoom"));
             }
 
             [Fact]
@@ -460,7 +461,7 @@ namespace JabbR.Test
                 repository.Add(user);
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.AddRoom(user, "Invalid.name"));
+                Assert.Throws<HubException>(() => service.AddRoom(user, "Invalid.name"));
             }
 
             [Fact]
@@ -549,7 +550,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.JoinRoom(user, room, null));
+                Assert.Throws<HubException>(() => service.JoinRoom(user, room, null));
             }
 
             [Fact]
@@ -680,7 +681,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.AddOwner(user, user, room));
+                Assert.Throws<HubException>(() => service.AddOwner(user, user, room));
             }
 
             [Fact]
@@ -703,7 +704,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.AddOwner(user, user, room));
+                Assert.Throws<HubException>(() => service.AddOwner(user, user, room));
             }
 
             [Fact]
@@ -875,7 +876,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.RemoveOwner(user, user2, room));
+                Assert.Throws<HubException>(() => service.RemoveOwner(user, user2, room));
             }
 
             [Fact]
@@ -913,7 +914,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.RemoveOwner(user, user2, room));
+                Assert.Throws<HubException>(() => service.RemoveOwner(user, user2, room));
             }
 
             [Fact]
@@ -979,7 +980,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user, room));
+                Assert.Throws<HubException>(() => service.KickUser(user, user, room));
             }
 
             [Fact]
@@ -1010,7 +1011,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
+                Assert.Throws<HubException>(() => service.KickUser(user, user2, room));
             }
 
             [Fact]
@@ -1041,7 +1042,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
+                Assert.Throws<HubException>(() => service.KickUser(user, user2, room));
             }
 
             [Fact]
@@ -1077,7 +1078,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.KickUser(user, user2, room));
+                Assert.Throws<HubException>(() => service.KickUser(user, user2, room));
             }
 
             [Fact]
@@ -1265,7 +1266,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.KickUser(owner, admin, room));
+                Assert.Throws<HubException>(() => service.KickUser(owner, admin, room));
             }
 
             [Fact]
@@ -1418,7 +1419,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.LockRoom(user, room));
+                Assert.Throws<HubException>(() => service.LockRoom(user, room));
             }
 
             [Fact]
@@ -1561,7 +1562,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.AllowUser(user, user2, room));
+                Assert.Throws<HubException>(() => service.AllowUser(user, user2, room));
             }
 
             [Fact]
@@ -1583,7 +1584,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.AllowUser(user, user, room));
+                Assert.Throws<HubException>(() => service.AllowUser(user, user, room));
             }
 
             [Fact]
@@ -1614,7 +1615,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.AllowUser(user, user2, room));
+                Assert.Throws<HubException>(() => service.AllowUser(user, user2, room));
             }
 
             [Fact]
@@ -1705,7 +1706,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.UnallowUser(user, user2, room));
+                Assert.Throws<HubException>(() => service.UnallowUser(user, user2, room));
             }
 
             [Fact]
@@ -1732,7 +1733,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.UnallowUser(user, user, room));
+                Assert.Throws<HubException>(() => service.UnallowUser(user, user, room));
             }
 
             [Fact]
@@ -1759,7 +1760,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.UnallowUser(user, user2, room));
+                Assert.Throws<HubException>(() => service.UnallowUser(user, user2, room));
             }
 
             [Fact]
@@ -1823,7 +1824,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.UnallowUser(user, user2, room));
+                Assert.Throws<HubException>(() => service.UnallowUser(user, user2, room));
             }
 
             [Fact]
@@ -1864,7 +1865,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.UnallowUser(user, user2, room));
+                Assert.Throws<HubException>(() => service.UnallowUser(user, user2, room));
             }
 
             [Fact]
@@ -2062,7 +2063,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.UnallowUser(owner, admin, room));
+                Assert.Throws<HubException>(() => service.UnallowUser(owner, admin, room));
             }
 
             [Fact]
@@ -2126,7 +2127,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.AddAdmin(nonAdmin, user));
+                Assert.Throws<HubException>(() => service.AddAdmin(nonAdmin, user));
             }
 
             [Fact]
@@ -2175,7 +2176,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.RemoveAdmin(nonAdmin, user));
+                Assert.Throws<HubException>(() => service.RemoveAdmin(nonAdmin, user));
             }
 
             [Fact]
@@ -2221,7 +2222,7 @@ namespace JabbR.Test
 
                 var service = new ChatService(new Mock<ICache>().Object, repository);
 
-                Assert.Throws<InvalidOperationException>(() => service.ChangeWelcome(nonAdmin, room, null));
+                Assert.Throws<HubException>(() => service.ChangeWelcome(nonAdmin, room, null));
             }
 
             [Fact]
