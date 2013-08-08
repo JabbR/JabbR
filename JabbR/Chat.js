@@ -74,8 +74,8 @@
         performLogout().done(function () {
             chat.server.send('/logout', chat.state.activeRoom)
                 .fail(function (e) {
-                    if (!e.message) {
-                        ui.addMessage(e, 'error', chat.state.activeRoom);
+                    if (e.source === 'HubException' || e.source === 'Exception') {
+                        ui.addMessage(e.message, 'error', chat.state.activeRoom);
                     }
                 });
         });
@@ -992,8 +992,8 @@
                 })
                 .fail(function (e) {
                     ui.failMessage(id);
-                    if (!e.message) {
-                        ui.addMessage(e, 'error');
+                    if (e.source === 'HubException' || e.source === 'Exception') {
+                        ui.addMessage(e.message, 'error');
                     }
                 });
         }
@@ -1031,8 +1031,8 @@
             chat.server.send('/join ' + room, chat.state.activeRoom)
                 .fail(function (e) {
                     ui.setActiveRoom('Lobby');
-                    if (!e.message) {
-                        ui.addMessage(e, 'error');
+                    if (e.source === 'HubException' || e.source === 'Exception') {
+                        ui.addMessage(e.message, 'error');
                     }
                 });
         }
@@ -1045,8 +1045,8 @@
         try {
             chat.server.send('/leave ' + room, chat.state.activeRoom)
                 .fail(function (e) {
-                    if (!e.message) {
-                        ui.addMessage(e, 'error');
+                    if (e.source === 'HubException' || e.source === 'Exception') {
+                        ui.addMessage(e.message, 'error');
                     }
                 });
         }
