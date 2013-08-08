@@ -1,5 +1,6 @@
 ﻿using System;
 using JabbR.Models;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
@@ -10,7 +11,7 @@ namespace JabbR.Commands
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException(LanguageResources.Join_RoomRequired);
+                throw new HubException(LanguageResources.Join_RoomRequired);
             }
 
             // Extract arguments

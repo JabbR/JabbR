@@ -170,7 +170,7 @@ namespace JabbR
             // REVIEW: Is it better to use the extension method room.EnsureOpen here?
             if (room.Closed)
             {
-                throw new InvalidOperationException(String.Format(LanguageResources.SendMessageRoomClosed, clientMessage.Room));
+                throw new HubException(String.Format(LanguageResources.SendMessageRoomClosed, clientMessage.Room));
             }
 
             // Update activity *after* ensuring the user, this forces them to be active
@@ -433,7 +433,7 @@ namespace JabbR
                 !room.Owners.Contains(user) ||
                 (room.Private && !user.AllowedRooms.Contains(room)))
             {
-                throw new InvalidOperationException(LanguageResources.PostNotification_NotAllowed);
+                throw new HubException(LanguageResources.PostNotification_NotAllowed);
             }
 
             var chatMessage = new ChatMessage

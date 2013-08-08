@@ -4,6 +4,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using JabbR.Models;
 using JabbR.Services;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
@@ -113,11 +114,11 @@ namespace JabbR.Commands
             }
             catch (CommandNotFoundException)
             {
-                throw new InvalidOperationException(String.Format(LanguageResources.CommandNotFound, commandName));
+                throw new HubException(String.Format(LanguageResources.CommandNotFound, commandName));
             }
             catch (CommandAmbiguityException e)
             {
-                throw new InvalidOperationException(String.Format(LanguageResources.CommandAmbiguous, commandName, String.Join(", ", e.Ambiguities)));
+                throw new HubException(String.Format(LanguageResources.CommandAmbiguous, commandName, String.Join(", ", e.Ambiguities)));
             }
 
             command.Execute(context, callerContext, args);

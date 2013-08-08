@@ -1,5 +1,6 @@
 ﻿using System;
 using JabbR.Models;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
@@ -10,18 +11,18 @@ namespace JabbR.Commands
         {
             if (args.Length > 1)
             {
-                throw new InvalidOperationException(LanguageResources.RoomInvalidNameSpaces);
+                throw new HubException(LanguageResources.RoomInvalidNameSpaces);
             }
 
             if (args.Length == 0)
             {
-                throw new InvalidOperationException(LanguageResources.RoomRequired);
+                throw new HubException(LanguageResources.RoomRequired);
             }
 
             string roomName = args[0];
             if (String.IsNullOrWhiteSpace(roomName))
             {
-                throw new InvalidOperationException(LanguageResources.RoomRequired);
+                throw new HubException(LanguageResources.RoomRequired);
             }
 
             ChatRoom room = context.Repository.GetRoomByName(roomName);
@@ -30,11 +31,11 @@ namespace JabbR.Commands
             {
                 if (!room.Closed)
                 {
-                    throw new InvalidOperationException(String.Format(LanguageResources.RoomExists, roomName));
+                    throw new HubException(String.Format(LanguageResources.RoomExists, roomName));
                 }
                 else
                 {
-                    throw new InvalidOperationException(String.Format(LanguageResources.RoomExistsButClosed, roomName));
+                    throw new HubException(String.Format(LanguageResources.RoomExistsButClosed, roomName));
                 }
             }
 

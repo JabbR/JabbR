@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using JabbR.Models;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
@@ -11,7 +12,7 @@ namespace JabbR.Commands
         {
             if (args.Length == 0 || String.IsNullOrWhiteSpace(args[0]))
             {
-                throw new InvalidOperationException(LanguageResources.Msg_UserRequired);
+                throw new HubException(LanguageResources.Msg_UserRequired);
             }
 
             var toUserName = args[0];
@@ -19,14 +20,14 @@ namespace JabbR.Commands
 
             if (toUser == callingUser)
             {
-                throw new InvalidOperationException(LanguageResources.Msg_CannotMsgSelf);
+                throw new HubException(LanguageResources.Msg_CannotMsgSelf);
             }
 
             string messageText = String.Join(" ", args.Skip(1)).Trim();
 
             if (String.IsNullOrEmpty(messageText))
             {
-                throw new InvalidOperationException(String.Format(LanguageResources.Msg_MessageRequired, toUser.Name));
+                throw new HubException(String.Format(LanguageResources.Msg_MessageRequired, toUser.Name));
             }
 
             context.NotificationService.SendPrivateMessage(callingUser, toUser, messageText);

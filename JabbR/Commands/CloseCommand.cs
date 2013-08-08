@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using JabbR.Models;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
@@ -13,7 +14,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(roomName))
             {
-                throw new InvalidOperationException(LanguageResources.Close_RoomRequired);
+                throw new HubException(LanguageResources.Close_RoomRequired);
             }
 
             ChatRoom room = context.Repository.VerifyRoom(roomName);

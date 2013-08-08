@@ -1,5 +1,6 @@
 ﻿using System;
 using JabbR.Models;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
@@ -10,7 +11,7 @@ namespace JabbR.Commands
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException(LanguageResources.AddAdmin_UserRequired);
+                throw new HubException(LanguageResources.AddAdmin_UserRequired);
             }
 
             string targetUserName = args[0];

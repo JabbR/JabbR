@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using JabbR.Models;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
@@ -15,7 +16,7 @@ namespace JabbR.Commands
 
             if (args.Length  == 0)
             {
-                throw new InvalidOperationException(LanguageResources.Me_ActionRequired);
+                throw new HubException(LanguageResources.Me_ActionRequired);
             }
 
             var content = String.Join(" ", args);

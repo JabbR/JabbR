@@ -1,6 +1,7 @@
 ﻿using System;
 using JabbR.Models;
 using JabbR.Services;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
@@ -21,7 +22,7 @@ namespace JabbR.Commands
 
             if (user == null)
             {
-                throw new InvalidOperationException(String.Format(LanguageResources.UserNotFound, name));
+                throw new HubException(String.Format(LanguageResources.UserNotFound, name));
             }
 
             context.NotificationService.ShowUserInfo(user);

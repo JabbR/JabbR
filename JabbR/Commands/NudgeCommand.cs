@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using JabbR.Models;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
@@ -35,7 +36,7 @@ namespace JabbR.Commands
             }
             else
             {
-                throw new InvalidOperationException(String.Format(LanguageResources.NudgeRoom_Throttled, betweenNudges.TotalSeconds));
+                throw new HubException(String.Format(LanguageResources.NudgeRoom_Throttled, betweenNudges.TotalSeconds));
             }
         }
 
@@ -47,13 +48,13 @@ namespace JabbR.Commands
 
             if (toUser == callingUser)
             {
-                throw new InvalidOperationException(LanguageResources.NudgeUser_CannotNudgeSelf);
+                throw new HubException(LanguageResources.NudgeUser_CannotNudgeSelf);
             }
 
             var betweenNudges = TimeSpan.FromSeconds(60);
             if (toUser.LastNudged.HasValue && toUser.LastNudged > DateTime.Now.Subtract(betweenNudges))
             {
-                throw new InvalidOperationException(String.Format(LanguageResources.NudgeUser_Throttled, betweenNudges.TotalSeconds));
+                throw new HubException(String.Format(LanguageResources.NudgeUser_Throttled, betweenNudges.TotalSeconds));
             }
 
             toUser.LastNudged = DateTime.Now;

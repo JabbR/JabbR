@@ -1,5 +1,6 @@
 ﻿using System;
 using JabbR.Models;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
@@ -10,7 +11,7 @@ namespace JabbR.Commands
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException(LanguageResources.RemoveOwner_UserRequired);
+                throw new HubException(LanguageResources.RemoveOwner_UserRequired);
             }
 
             string targetUserName = args[0];
@@ -21,7 +22,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(roomName))
             {
-                throw new InvalidOperationException(LanguageResources.RemoveOwner_RoomRequired);
+                throw new HubException(LanguageResources.RemoveOwner_RoomRequired);
             }
 
             ChatRoom targetRoom = context.Repository.VerifyRoom(roomName);

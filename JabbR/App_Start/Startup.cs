@@ -120,8 +120,7 @@ namespace JabbR
 
             var config = new HubConfiguration
             {
-                Resolver = resolver,
-                EnableDetailedErrors = true
+                Resolver = resolver
             };
 
             hubPipeline.AddModule(kernel.Get<LoggingHubPipelineModule>());

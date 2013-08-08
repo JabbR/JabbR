@@ -1,6 +1,7 @@
 ﻿using System;
 using JabbR.Infrastructure;
 using JabbR.Models;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
@@ -11,14 +12,14 @@ namespace JabbR.Commands
         {
             if (String.IsNullOrEmpty(callerContext.RoomName))
             {
-                throw new InvalidOperationException(LanguageResources.InvokeFromRoomRequired);
+                throw new HubException(LanguageResources.InvokeFromRoomRequired);
             }
 
             string targetRoomName = args.Length > 0 ? args[0] : callerContext.RoomName;
 
             if (String.IsNullOrEmpty(targetRoomName))
             {
-                throw new InvalidOperationException(LanguageResources.InviteCode_RoomRequired);
+                throw new HubException(LanguageResources.InviteCode_RoomRequired);
             }
 
             ChatRoom targetRoom = context.Repository.VerifyRoom(targetRoomName, mustBeOpen: false);
