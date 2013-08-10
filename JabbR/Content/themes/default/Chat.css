@@ -628,6 +628,7 @@ li.user.typing .gravatar {
         #tabs li a:hover,
         #tabs li.current a {
             text-decoration: none;
+            background-color: #e5e5e5;
         }
 
         #tabs li a i,
@@ -651,9 +652,28 @@ li.user.typing .gravatar {
             padding-right: 8px;
         }
 
+        #tabs li.unread {
+            background-color: #004b85;
+            animation: btn-fade-unread 2s linear 3.5;
+            -webkit-animation: btn-fade-unread 2s linear 3.5;
+        }
+
+        @-webkit-keyframes btn-fade-unread
+        {
+          0% { background-color: #003259; }
+          50% { background-color: #004b85; }
+          100% { background-color: #003259; }
+        }
+
+        @keyframes btn-fade-unread {
+          0% { background-color: #003259; }
+          50% { background-color: #004b85; }
+          100% { background-color: #003259; }
+        }
+
         #tabs li.current,        
         #tabs li:hover {
-            background-color: #e5e5e5 !important; /* background is set on the element in js for inactive rooms */
+            background-color: #e5e5e5;
             border-color: #e5e5e5;
         }
 
@@ -698,11 +718,11 @@ li.user.typing .gravatar {
     #tabs-dropdown li {
         position: relative;
         cursor: pointer;
-        background-color: #fff !important;
+        background-color: #fff;
     }
 
     #tabs-dropdown li:hover {
-        background-color: #00103F !important;
+        background-color: #00103F;
     }
 
     #tabs-dropdown li:hover a,
@@ -2414,32 +2434,28 @@ li.clearfix {
     padding: 0 20px;
 }
 
-.icon-twitter-logo {
-    background-image: url('../../images/twitter_white.png');
-    background-repeat: no-repeat;
-    background-position: center left;
-    height: 16px;
-    width: 16px;
-    margin: 3px 10px 0 -10px;
-}
+    .social-auth .btn-provider {
+        font-size: 17.5px;
+        width: 220px;
+        padding: 6px 0;
+        margin-left: 15px;
+        text-align: left;
+    }
 
-.icon-facebook-logo {
-    background-image: url('../../images/facebook_white.png');
-    background-repeat: no-repeat;
-    background-position: center left;
-    height: 16px;
-    width: 16px;
-    margin: 0 10px;
-}
+    .social-auth .icon-windowslive:before {
+        content: "\f090";
+    }
 
-.icon-google-logo {
-    background-image: url('../../images/google_white.png');
-    background-repeat: no-repeat;
-    background-position: center left;
-    height: 16px;
-    width: 16px;
-    margin: 5px 10px 0 -10px;
-}
+    .social-auth .icon-google:before {
+        content: "\f0d5";
+    }
+
+    .social-auth [class^="icon-"],
+    .social-auth [class*=" icon-"] {
+        display: inline-block;
+        width: 45px;
+        margin-left: 42px;
+    }
 
 .icon-link {
     background-image: url('../../images/link.png');

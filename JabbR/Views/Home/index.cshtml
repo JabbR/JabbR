@@ -153,8 +153,8 @@
                 <i class="icon-lock lock hide"></i>
                 <i class="icon-ban-circle readonly hide"></i>
                 <span class="content">${name}</span>
+                <button class="close">&times;</button>
             </a>
-            <button class="close">&times;</button>
         </li>
     </script>
     <script id="command-help-template" type="text/x-jquery-tmpl">
@@ -252,7 +252,7 @@
                 <div class="gravatar_${hash} gravatarProfile">
                     <div class="user">
                         <img src="${thumbnailUrl}">
-                        <span class="name">${preferredUsername}</span> (${name.formatted})
+                        <span class="name">${preferredUsername}</span>{{if name.formatted}} (${name.formatted}){{/if}}
                         <p><a href="${profileUrl}" target="_blank">${profileUrl}</a></p>
                     </div>
                 </div>
@@ -463,7 +463,7 @@
     <div id="drop-file-target"><h1 class="drop-file-text">@LanguageResources.Client_UploadDropTarget</h1></div>
     @{
         WriteLiteral(Bundle.JavaScript().ForceDebugIf(() => Model.DebugMode)
-            .Add("~/Scripts/jquery-1.9.0.min.js")
+            .Add("~/Scripts/jquery-2.0.3.min.js")
             .Add("~/Scripts/jquery-migrate-1.0.0.min.js")
             .Add("~/Scripts/json2.min.js")
             .Add("~/Scripts/bootstrap.js")
@@ -471,7 +471,7 @@
             .Add("~/Scripts/jquery.dragsort-0.5.1.min.js")
             .Add("~/Scripts/jquery.pulse.min.js")
             .Add("~/Scripts/jquery.KeyTips.js")
-            .Add("~/Scripts/jquery.signalR-2.0.0-rc1-130722-b119.min.js")
+            .Add("~/Scripts/jquery.signalR-2.0.0-rtm1-130807-b139.min.js")
             .Render("~/Scripts/JabbR1_#.js"));
     }
     <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
@@ -503,7 +503,6 @@
             .Add("~/Chat.ui.fileUpload.js")
             .Add("~/Chat.documentOnWrite.js")
             .Add("~/Chat.twitter.js")
-            .Add("~/Chat.pinnedWindows.js")
             .Add("~/Chat.githubissues.js")
             .Add("~/Chat.js")
             .Render("~/Scripts/JabbR2_#.js"));

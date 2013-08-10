@@ -1,4 +1,4 @@
-/// <reference path="Scripts/jquery-1.7.js" />
+/// <reference path="Scripts/jquery-2.0.3.js" />
 (function($, window, utility) {
     "use strict";
 
@@ -47,7 +47,7 @@
                 this.current = null;
             }
         },
-        enableToast: function(callback) {
+        enableToast: function() {
             var deferred = $.Deferred();
             // If not configured, request permission
             if(this.isNotConfigured()) {
@@ -148,4 +148,4 @@
 
     window.chat.toast = toast;
 
-})(jQuery, window, window.chat.utility);
+})(window.jQuery, window, window.chat.utility);

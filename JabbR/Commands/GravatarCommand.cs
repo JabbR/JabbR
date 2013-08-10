@@ -2,6 +2,7 @@
 using System.Linq;
 using JabbR.Infrastructure;
 using JabbR.Models;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
@@ -14,7 +15,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrWhiteSpace(email))
             {
-                throw new InvalidOperationException(LanguageResources.Gravatar_EmailRequired);
+                throw new HubException(LanguageResources.Gravatar_EmailRequired);
             }
 
             string hash = email.ToLowerInvariant().ToMD5();

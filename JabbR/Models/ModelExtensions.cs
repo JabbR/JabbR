@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Models
 {
@@ -20,7 +21,7 @@ namespace JabbR.Models
         {
             if (room.Private && !room.IsUserAllowed(user))
             {
-                throw new InvalidOperationException(String.Format(LanguageResources.RoomAccessPermission, room.Name));
+                throw new HubException(String.Format(LanguageResources.RoomAccessPermission, room.Name));
             }
         }
 
@@ -33,7 +34,7 @@ namespace JabbR.Models
         {
             if (room.Closed)
             {
-                throw new InvalidOperationException(String.Format(LanguageResources.RoomClosed, room.Name));
+                throw new HubException(String.Format(LanguageResources.RoomClosed, room.Name));
             }
         }
     }

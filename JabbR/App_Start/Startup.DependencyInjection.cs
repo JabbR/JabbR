@@ -7,11 +7,11 @@ using JabbR.UploadHandlers;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.Owin.Security.DataProtection;
 using Microsoft.Owin.Security.Cookies;
-using Nancy.Authentication.WorldDomination;
 using Nancy.Bootstrappers.Ninject;
+using Nancy.SimpleAuthentication;
 using Newtonsoft.Json;
 using Ninject;
-using WorldDomination.Web.Authentication;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR
 {
@@ -33,11 +33,14 @@ namespace JabbR
             kernel.Bind<IDataProtector>()
                   .To<JabbRDataProtection>();
 
-            kernel.Bind<ICookiesAuthenticationProvider>()
+            kernel.Bind<ICookieAuthenticationProvider>()
                   .To<JabbRFormsAuthenticationProvider>();
 
             kernel.Bind<ILogger>()
                   .To<RealtimeLogger>();
+
+            kernel.Bind<IUserIdProvider>()
+                  .To<JabbrUserIdProvider>();
 
             kernel.Bind<IJabbrConfiguration>()
                   .ToConstant(configuration);
@@ -88,10 +91,10 @@ namespace JabbR
                   .To<DefaultUserAuthenticator>();
 
             kernel.Bind<IAuthenticationService>()
-                  .ToConstant(new AuthenticationService());
+                  .To<AuthenticationService>();
 
             kernel.Bind<IAuthenticationCallbackProvider>()
-                      .To<JabbRAuthenticationCallbackProvider>();
+                  .To<JabbRAuthenticationCallbackProvider>();
 
             kernel.Bind<ICache>()
                   .To<DefaultCache>()

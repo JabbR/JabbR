@@ -1,4 +1,4 @@
-﻿/// <reference path="Scripts/jquery-1.7.js" />
+﻿/// <reference path="Scripts/jquery-2.0.3.js" />
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 /// <reference path="Chat.ui.js" />
@@ -23,9 +23,11 @@
 
     function failPendingMessages() {
         for (var id in pendingMessages) {
-            clearTimeout(pendingMessages[id]);
-            ui.failMessage(id);
-            delete pendingMessages[id];
+            if (pendingMessages.hasOwnProperty(id)) {
+                clearTimeout(pendingMessages[id]);
+                ui.failMessage(id);
+                delete pendingMessages[id];
+            }
         }
     }
 
@@ -72,7 +74,9 @@
         performLogout().done(function () {
             chat.server.send('/logout', chat.state.activeRoom)
                 .fail(function (e) {
-                    ui.addMessage(e, 'error', chat.state.activeRoom);
+                    if (e.source === 'HubException' || e.source === 'Exception') {
+                        ui.addMessage(e.message, 'error', chat.state.activeRoom);
+                    }
                 });
         });
     }
@@ -455,7 +459,7 @@
     };
 
     chat.client.userAllowed = function (user, room) {
-        ui.addMessage(utility.getLanguageResource('Chat_YouGrantedRoomAccess', user, room), 'notification', this.state.activeRoom);
+        ui.addMessage(utility.getLanguageResource('Chat_UserGrantedRoomAccess', user, room), 'notification', this.state.activeRoom);
     };
 
     chat.client.unallowUser = function (user, room) {
@@ -520,11 +524,15 @@
             ui.addMessage('Note: ' + userInfo.Note, 'list-item');
         }
 
-        $.getJSON('https://secure.gravatar.com/' + userInfo.Hash + '.json?callback=?', function (profile) {
-            ui.showGravatarProfile(profile.entry[0]);
-        });
+        if (userInfo.Hash) {
+            $.getJSON('https://secure.gravatar.com/' + userInfo.Hash + '.json?callback=?').done(function (profile) {
+                if (profile && profile.entry) {
+                    ui.showGravatarProfile(profile.entry[0]);
+                }
+            });
+        }
 
-        chat.showUsersOwnedRoomList(userInfo.Name, userInfo.OwnedRooms);
+        chat.client.showUsersOwnedRoomList(userInfo.Name, userInfo.OwnedRooms);
     };
 
     chat.client.setPassword = function () {
@@ -822,7 +830,6 @@
 
     chat.client.showUsersRoomList = function (user, rooms) {
         var message;
-        var status = "Currently " + user.Status;
         if (rooms.length === 0) {
             message = utility.getLanguageResource('Chat_UserNotInRooms', user.Name, user.Status);
             ui.addMessage(message, 'list-header');
@@ -985,7 +992,9 @@
                 })
                 .fail(function (e) {
                     ui.failMessage(id);
-                    ui.addMessage(e, 'error');
+                    if (e.source === 'HubException' || e.source === 'Exception') {
+                        ui.addMessage(e.message, 'error');
+                    }
                 });
         }
         catch (e) {
@@ -1022,7 +1031,9 @@
             chat.server.send('/join ' + room, chat.state.activeRoom)
                 .fail(function (e) {
                     ui.setActiveRoom('Lobby');
-                    ui.addMessage(e, 'error');
+                    if (e.source === 'HubException' || e.source === 'Exception') {
+                        ui.addMessage(e.message, 'error');
+                    }
                 });
         }
         catch (e) {
@@ -1034,7 +1045,9 @@
         try {
             chat.server.send('/leave ' + room, chat.state.activeRoom)
                 .fail(function (e) {
-                    ui.addMessage(e, 'error');
+                    if (e.source === 'HubException' || e.source === 'Exception') {
+                        ui.addMessage(e.message, 'error');
+                    }
                 });
         }
         catch (e) {
@@ -1111,7 +1124,7 @@
 
     });
 
-    $(ui).bind(ui.events.preferencesChanged, function (ev) {
+    $(ui).bind(ui.events.preferencesChanged, function () {
         updateCookie();
     });
 
@@ -1176,7 +1189,7 @@
             connection.hub.start(options)
                           .done(function () {
                               chat.server.join()
-                              .fail(function (e) {
+                              .fail(function () {
                                   // So refresh the page, our auth token is probably gone
                                   performLogout();
                               })
@@ -1229,7 +1242,7 @@
                                       // ui.showReloadMessageNotification();
 
                                       // Turn the firehose back on
-                                      chat.server.join(true).fail(function (e) {
+                                      chat.server.join(true).fail(function () {
                                           // So refresh the page, our auth token is probably gone
                                           performLogout();
                                       });
@@ -1237,7 +1250,7 @@
                 }, 5000);
             });
 
-            connection.hub.error(function (err) {
+            connection.hub.error(function () {
                 // Make all pending messages failed if there's an error
                 failPendingMessages();
             });
@@ -1246,4 +1259,4 @@
         initConnection();
     });
 
-})(jQuery, $.connection, window, window.chat.ui, window.chat.utility);
+})(window.jQuery, window.jQuery.connection, window, window.chat.ui, window.chat.utility);

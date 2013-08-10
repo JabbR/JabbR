@@ -9,6 +9,8 @@ using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Bootstrappers.Ninject;
 using Nancy.Owin;
+using Nancy.Security;
+
 using Ninject;
 
 namespace JabbR.Nancy
@@ -30,6 +32,8 @@ namespace JabbR.Nancy
         protected override void ApplicationStartup(IKernel container, IPipelines pipelines)
         {
             base.ApplicationStartup(container, pipelines);
+
+            Csrf.Enable(pipelines);
 
             pipelines.BeforeRequest.AddItemToStartOfPipeline(FlowPrincipal);
             pipelines.BeforeRequest.AddItemToStartOfPipeline(SetCulture);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using JabbR.Models;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
@@ -11,7 +12,7 @@ namespace JabbR.Commands
         {
             if (args.Length == 0)
             {
-                throw new InvalidOperationException(LanguageResources.Ban_UserRequired);
+                throw new HubException(LanguageResources.Ban_UserRequired);
             }
 
             string targetUserName = args[0];

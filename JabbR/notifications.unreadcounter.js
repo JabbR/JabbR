@@ -1,6 +1,8 @@
 ﻿(function ($) {
-    var $unreadCounter = null,
-        count = null;
+    "use strict";
+    
+    var $unreadCounter = $('#js-unread-counter'),
+        count = $unreadCounter.data('unread');
 
     function set(newCount) {
         count = newCount;
@@ -8,12 +10,12 @@
         $unreadCounter.data('unread', count);
     }
 
-    $.subscribe('notifications.read', function (ev) {
+    $.subscribe('notifications.read', function () {
         set(count - 1);
         handleChange();
     });
 
-    $.subscribe('notifications.readAll', function (ev) {
+    $.subscribe('notifications.readAll', function () {
         set(0);
         handleChange();
     });
@@ -23,7 +25,4 @@
             $.publish('notifications.empty');
         }
     }
-
-    $unreadCounter = $('#js-unread-counter');
-    count = $unreadCounter.data('unread');
-}(jQuery));
+}(window.jQuery));

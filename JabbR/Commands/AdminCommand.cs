@@ -1,5 +1,6 @@
 ﻿using System;
 using JabbR.Models;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
@@ -9,7 +10,7 @@ namespace JabbR.Commands
         {
             if (!callingUser.IsAdmin)
             {
-                throw new InvalidOperationException(LanguageResources.AdminRequired);
+                throw new HubException(LanguageResources.AdminRequired);
             }
 
             ExecuteAdminOperation(context, callerContext, callingUser, args);

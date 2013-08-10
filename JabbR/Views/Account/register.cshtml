@@ -3,7 +3,7 @@
     Layout = "_layout.cshtml";
 }
 <div class="user-registration">
-    <form class="form-horizontal" action="@Url.Content("~/account/create")" method="post">
+    <form class="form-horizontal" action="@Url.Content("~/account/create" + Html.RequestQuery())" method="post">
         @Html.ValidationSummary()
         <div class="control-group">
             <div class="controls">
@@ -43,7 +43,7 @@
         <div class="control-group">
             <div class="controls">
                 <button type="submit" class="btn">@LanguageResources.Account_Register</button>
-                <a href="@Url.Content("~/")" class="btn">@LanguageResources.Account_Cancel</a>
+                <a href="@Url.Content("~/account/login" + Html.RequestQuery())" class="btn">@LanguageResources.Account_Cancel</a>
             </div>
         </div>
         @Html.AntiForgeryToken()

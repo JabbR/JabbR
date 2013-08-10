@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
@@ -11,7 +12,7 @@ namespace JabbR.Commands
 
             if (String.IsNullOrEmpty(messageText))
             {
-                throw new InvalidOperationException(LanguageResources.Broadcast_MessageRequired);
+                throw new HubException(LanguageResources.Broadcast_MessageRequired);
             }
 
             context.NotificationService.BroadcastMessage(callingUser, messageText);

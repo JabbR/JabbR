@@ -1,4 +1,4 @@
-﻿/// <reference path="Scripts/jquery-1.7.js" />
+﻿/// <reference path="Scripts/jquery-2.0.3.js" />
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 /// <reference path="Chat.toast.js" />
@@ -6,7 +6,7 @@
 /// <reference path="Scripts/moment.min.js" />
 
 /*jshint bitwise:false */
-(function ($, window, document, chat, utility, emoji, linkify) {
+(function ($, window, document, chat, utility, emoji, moment) {
     "use strict";
 
     var $chatArea = null,
@@ -350,7 +350,7 @@
         roomCache[roomName.toString().toUpperCase()] = true;
         
         templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabsDropdown);
-        chat.ui.updateTabOverflow();
+        ui.updateTabOverflow();
 
         $messages = $('<ul/>').attr('id', 'messages-' + roomId)
                               .addClass('messages')
@@ -371,7 +371,7 @@
         templates.userlist.tmpl({ listname: usersHeader, id: 'userlist-' + roomId + '-active' })
             .appendTo(userContainer);
 
-        scrollHandler = function (ev) {
+        scrollHandler = function () {
             var messageId = null;
 
             // Do nothing if there's nothing else
@@ -420,7 +420,7 @@
             room.roomTopic.remove();
             setAccessKeys();
             
-            chat.ui.updateTabOverflow();
+            ui.updateTabOverflow();
         }
     }
 
@@ -450,8 +450,7 @@
     }
 
     function processMessage(message, roomName) {
-        var isFromCollapibleContentProvider = isFromCollapsibleContentProvider(message.message),
-            collapseContent = shouldCollapseContent(message.message, roomName);
+        var collapseContent = shouldCollapseContent(message.message, roomName);
 
         message.when = message.date.formatTime(true);
         message.fulldate = message.date.toLocaleString();
@@ -515,18 +514,10 @@
     }
 
     function loadRoomPreferences(roomName) {
-        var roomPreferences = getRoomPreference(roomName);
-
         // Placeholder for room level preferences
         toggleElement($sound, 'hasSound', roomName);
         toggleElement($toast, 'canToast', roomName);
         toggleRichness($richness, roomName);
-    }
-
-    function setPreference(name, value) {
-        preferences[name] = value;
-
-        $(ui).trigger(ui.events.preferencesChanged);
     }
 
     function setRoomPreference(roomName, name, value) {
@@ -554,7 +545,7 @@
     function anyRoomPreference(name, value) {
         var rooms = $.map(getAllRoomElements(), function (r) { return "_room_" + r.getName(); });
         for (var key in preferences) {
-            if (rooms.indexOf(key) != -1) {
+            if (rooms.indexOf(key) !== -1) {
                 if (preferences[key][name] === value) {
                     return true;
                 }
@@ -864,8 +855,7 @@
             });
 
             $document.on('click', '#load-more-rooms-item', function () {
-                var spinner = $loadMoreRooms.find('i'),
-                    lobby = getLobby();
+                var spinner = $loadMoreRooms.find('i');
                 spinner.addClass('icon-spin');
                 spinner.show();
                 var loader = $loadMoreRooms.find('.load-more-rooms a');
@@ -891,11 +881,19 @@
             });
 
             $('#tabs, #tabs-dropdown').dragsort({
-                placeHolderTemplate: '<li class="room"><a><span class="content"></span></a></li>',
+                placeHolderTemplate: '<li class="room placeholder"><a><span class="content"></span></a></li>',
                 dragBetween: true,
-                dragStart: function() {
-                    var roomName = $(this).closest('li').data('name');
-                    activateOrOpenRoom(roomName);
+                dragStart: function () {
+                    var roomName = $(this).closest('li').data('name'),
+                        closeButton = $(this).find('.close');
+
+                    // if we have a close that we're over, close the window and bail, otherwise activate the tab
+                    if (closeButton.length > 0 && closeButton.is(':hover')) {
+                        $ui.trigger(ui.events.closeRoom, [roomName]);
+                        return false;
+                    } else {
+                        activateOrOpenRoom(roomName);
+                    }
                 },
                 dragEnd: function () {
                     var roomTabOrder = [],
@@ -906,11 +904,15 @@
                     }
                     
                     $ui.trigger(ui.events.tabOrderChanged, [roomTabOrder]);
+                    
+                    // check for tab overflow for one edge case - sort order hasn't changed but user 
+                    // dragged the last item in the main list to be the first item in the dropdown.
+                    ui.updateTabOverflow();
                 }
             });
 
             // handle click on notifications
-            $document.on('click', '.notification a.info', function (ev) {
+            $document.on('click', '.notification a.info', function () {
                 var $notification = $(this).closest('.notification');
 
                 if ($(this).hasClass('collapse')) {
@@ -971,7 +973,7 @@
             });
 
             // handle click on names in chat / room list
-            var prepareMessage = function (ev) {
+            var prepareMessage = function () {
                 if (readOnly) {
                     return false;
                 }
@@ -1037,7 +1039,7 @@
                 setRoomPreference(room.getName(), 'blockRichness', !enabled);
 
                 // toggle all rich-content for current room
-                $richContentMessages.each(function (index) {
+                $richContentMessages.each(function () {
                     var $this = $(this),
                         isCurrentlyVisible = $this.next().is(":visible");
 
@@ -1064,7 +1066,7 @@
 
                 if (enabled) {
                     // If it's enabled toggle the preference
-                    setRoomPreference(room.getName(), 'canToast', !enabled);
+                    setRoomPreference(room.getName(), 'canToast', false);
                     $this.toggleClass('off');
                 }
                 else {
@@ -1161,13 +1163,15 @@
                 var room = getCurrentRoomElements();
                 room.makeActive();
 
+                ui.updateTabOverflow();
+
                 triggerFocus();
             });
 
             $window.resize(function () {
                 var room = getCurrentRoomElements();
                 room.scrollToBottom();
-                chat.ui.updateTabOverflow();
+                ui.updateTabOverflow();
             });
 
             $newMessage.keydown(function (ev) {
@@ -1219,7 +1223,13 @@
                             // exclude current username from autocomplete
                             return room.users.find('li[data-name != "' + ui.getUserName() + '"]')
                                          .not('.room')
-                                         .map(function () { return ($(this).data('name') + ' ' || "").toString(); });
+                                         .map(function () {
+                                             if ($(this).data('name')) {
+                                                 return $(this).data('name') + ' ';
+                                             }
+
+                                             return '';
+                                         });
                         case '#':
                             return getRoomsNames();
 
@@ -1330,6 +1340,8 @@
                 }
 
                 room.makeActive();
+                
+                ui.updateTabOverflow();
 
                 if (room.isLobby()) {
                     $roomActions.hide();
@@ -1372,6 +1384,7 @@
             }
 
             room.updateUnread(isMentioned);
+            ui.updateTabOverflow();
         },
         scrollToBottom: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
@@ -1817,6 +1830,7 @@
             processMessage(message);
 
             $message.find('.middle').html(message.message);
+            $message.find('.right .time').attr('title', message.fulldate).text(message.when);
             $message.attr('id', 'm-' + message.id);
 
         },
@@ -1873,9 +1887,7 @@
             return templates.notification.tmpl(message);
         },
         addMessageBeforeTarget: function (content, type, $target) {
-            var $element = null;
-
-            $element = ui.prepareNotificationMessage(content, type);
+            var $element = ui.prepareNotificationMessage(content, type);
 
             $target.before($element);
 
@@ -1884,9 +1896,7 @@
         addMessage: function (content, type, roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements(),
                 nearEnd = room.isNearTheEnd(),
-                $element = null;
-
-            $element = ui.prepareNotificationMessage(content, type);
+                $element = ui.prepareNotificationMessage(content, type);
 
             this.appendMessage($element, room);
 
@@ -2225,7 +2235,7 @@
                 $tabs.find('li[data-name="' + name + '"]').prependTo($tabs.first());
             });
 
-            chat.ui.updateTabOverflow();
+            ui.updateTabOverflow();
         },
         updateTabOverflow: function () {
             var lastOffsetLeft = 0,
@@ -2236,12 +2246,12 @@
                 overflowedRoomTabs = null,
                 $tabsDropdownButton = $('#tabs-dropdown-rooms');
             
-            // move all tabs to the first list
-            $tabs.last().find('li').each(function() { $(this).detach().appendTo($tabsList); });
+            // move all (non-dragsort) tabs to the first list
+            $tabs.last().find('li:not(.placeholder)').each(function () { $(this).detach().appendTo($tabsList); });
 
             // find overflow and move it all to the dropdown list ul
-            $roomTabs = $tabsList.find('li');
-            $roomTabs.each(function (idx, el) {
+            $roomTabs = $tabsList.find('li:not(.placeholder)');
+            $roomTabs.each(function (idx) {
                 if (sliceIndex !== -1) {
                     return;
                 }
@@ -2274,4 +2284,4 @@
         window.chat = {};
     }
     window.chat.ui = ui;
-})(jQuery, window, window.document, window.chat, window.chat.utility, window.Emoji, window.linkify);
+})(window.jQuery, window, window.document, window.chat, window.chat.utility, window.Emoji, window.moment);

@@ -11,7 +11,7 @@ using Microsoft.Owin;
 
 namespace JabbR.Infrastructure
 {
-    public class JabbRFormsAuthenticationProvider : ICookiesAuthenticationProvider
+    public class JabbRFormsAuthenticationProvider : ICookieAuthenticationProvider
     {
         private readonly IJabbrRepository _repository;
         private readonly IMembershipService _membershipService;
@@ -22,12 +22,12 @@ namespace JabbR.Infrastructure
             _membershipService = membershipService;
         }
 
-        public Task ValidateIdentity(CookiesValidateIdentityContext context)
+        public Task ValidateIdentity(CookieValidateIdentityContext context)
         {
             return TaskAsyncHelper.Empty;
         }
 
-        public void ResponseSignIn(CookiesResponseSignInContext context)
+        public void ResponseSignIn(CookieResponseSignInContext context)
         {
             var authResult = new AuthenticationResult
             {
@@ -109,7 +109,7 @@ namespace JabbR.Infrastructure
                                        cookieOptions);
         }
 
-        private static void AddClaim(CookiesResponseSignInContext context, ChatUser user)
+        private static void AddClaim(CookieResponseSignInContext context, ChatUser user)
         {
             // Do nothing if the user is banned
             if (user.IsBanned)
@@ -129,7 +129,7 @@ namespace JabbR.Infrastructure
             EnsurePersistentCookie(context);
         }
 
-        private static void EnsurePersistentCookie(CookiesResponseSignInContext context)
+        private static void EnsurePersistentCookie(CookieResponseSignInContext context)
         {
             if (context.Properties == null)
             {
@@ -139,7 +139,7 @@ namespace JabbR.Infrastructure
             context.Properties.IsPersistent = true;
         }
 
-        private ChatUser GetLoggedInUser(CookiesResponseSignInContext context)
+        private ChatUser GetLoggedInUser(CookieResponseSignInContext context)
         {
             var principal = context.Request.User as ClaimsPrincipal;
 
