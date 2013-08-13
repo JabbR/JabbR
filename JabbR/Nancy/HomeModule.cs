@@ -41,7 +41,7 @@ namespace JabbR.Nancy
                     return View["index", viewModel];
                 }
 
-                if (Principal.HasPartialIdentity())
+                if (Principal != null && Principal.HasPartialIdentity())
                 {
                     // If the user is partially authenticated then take them to the register page
                     return Response.AsRedirect("~/account/register");
@@ -57,7 +57,7 @@ namespace JabbR.Nancy
                 if (principal == null ||
                     !principal.HasClaim(JabbRClaimTypes.Admin))
                 {
-                    return 403;
+                    return HttpStatusCode.Forbidden;
                 }
 
                 return View["monitor"];
@@ -87,7 +87,7 @@ namespace JabbR.Nancy
                     {
                         contentType = "application/octet-stream";
                     }
-                    
+
                     UploadFile(
                         uploadHandler,
                         Principal.GetUserId(),
