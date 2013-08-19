@@ -255,7 +255,7 @@
             $targetList = roomViewModel.Private ? lobby.owners : lobby.users,
             i = null;
 
-        roomViewModel.ProcessedTopic = ui.processContent(roomViewModel.Topic);
+        roomViewModel.processedTopic = ui.processContent(roomViewModel.Topic);
         $room = templates.lobbyroom.tmpl(roomViewModel);
 
         var nextListElement = getNextRoomListElement($targetList, roomName, count, closed);
@@ -1472,11 +1472,11 @@
                 
                 // Process the topics
                 for (i = 0; i < rooms.length; ++i) {
-                    rooms[i].ProcessedTopic = ui.processContent(rooms[i].Topic);
+                    rooms[i].processedTopic = ui.processContent(rooms[i].Topic);
                 }
                 
                 for (i = 0; i < privateRooms.length; ++i) {
-                    privateRooms[i].ProcessedTopic = ui.processContent(privateRooms[i].Topic);
+                    privateRooms[i].processedTopic = ui.processContent(privateRooms[i].Topic);
                 }
 
                 // Populate the room cache
