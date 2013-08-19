@@ -56,7 +56,7 @@ namespace JabbR.Middleware
 
                         context.Authentication.SignIn(identity);
 
-                        context.Response.Redirect(context.Request.PathBase + context.Request.Path);
+                        context.Response.Redirect((context.Request.PathBase + context.Request.Path).Value);
                     }
 
                     return;

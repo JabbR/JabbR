@@ -65,8 +65,8 @@ namespace JabbR
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
-                LoginPath = "/account/login",
-                LogoutPath = "/account/logout",
+                LoginPath = new PathString("/account/login"),
+                LogoutPath = new PathString("/account/logout"),
                 CookieHttpOnly = true,
                 AuthenticationType = Constants.JabbRAuthType,
                 CookieName = "jabbr.id",
