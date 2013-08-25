@@ -4,10 +4,10 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using JabbR.Infrastructure;
+using Microsoft.Owin;
 
 namespace JabbR.Middleware
 {
-    using Microsoft.Owin;
     using AppFunc = Func<IDictionary<string, object>, Task>;
 
     public class WindowsPrincipalHandler
