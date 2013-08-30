@@ -13,6 +13,7 @@ using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Transports;
 using Microsoft.Owin;
+using Microsoft.Owin.Extensions;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataHandler;
 using Microsoft.Owin.Security.DataProtection;
@@ -65,8 +66,8 @@ namespace JabbR
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
-                LoginPath = "/account/login",
-                LogoutPath = "/account/logout",
+                LoginPath = new PathString("/account/login"),
+                LogoutPath = new PathString("/account/logout"),
                 CookieHttpOnly = true,
                 AuthenticationType = Constants.JabbRAuthType,
                 CookieName = "jabbr.id",
@@ -74,6 +75,10 @@ namespace JabbR
                 TicketDataFormat = ticketDataFormat,
                 Provider = kernel.Get<ICookieAuthenticationProvider>()
             });
+
+            app.Use(typeof(WindowsPrincipalHandler));
+
+            app.UseStageMarker(PipelineStage.Authenticate);
 
             //var config = new FederationConfiguration(loadConfig: false);
             //config.WsFederationConfiguration.Issuer = "";
@@ -93,8 +98,6 @@ namespace JabbR
             //    FederationConfiguration = config,
             //    Provider = new FederationAuthenticationProvider()
             //});
-
-            app.Use(typeof(WindowsPrincipalHandler));
         }
 
         private static void SetupNancy(IKernel kernel, IAppBuilder app)

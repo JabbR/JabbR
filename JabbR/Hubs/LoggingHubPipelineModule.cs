@@ -13,10 +13,10 @@ namespace JabbR.Hubs
             _logger = logger;
         }
 
-        protected override void OnIncomingError(Exception ex, IHubIncomingInvokerContext context)
+        protected override void OnIncomingError(ExceptionContext exceptionContext, IHubIncomingInvokerContext context)
         {
             _logger.LogError("{0}: Failure while invoking '{1}'.", context.Hub.Context.Request.User.GetUserId(), context.MethodDescriptor.Name);
-            _logger.Log(ex);
+            _logger.Log(exceptionContext.Error);
         }
     }
 }

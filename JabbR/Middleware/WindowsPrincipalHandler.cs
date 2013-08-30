@@ -4,10 +4,10 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using JabbR.Infrastructure;
+using Microsoft.Owin;
 
 namespace JabbR.Middleware
 {
-    using Microsoft.Owin;
     using AppFunc = Func<IDictionary<string, object>, Task>;
 
     public class WindowsPrincipalHandler
@@ -21,46 +21,42 @@ namespace JabbR.Middleware
 
         public async Task Invoke(IDictionary<string, object> env)
         {
-            object value;
-            if (env.TryGetValue("server.User", out value))
+            var context = new OwinContext(env);
+
+            var windowsPrincipal = context.Request.User as WindowsPrincipal;
+            if (windowsPrincipal != null && windowsPrincipal.Identity.IsAuthenticated)
             {
-                var windowsPrincipal = value as WindowsPrincipal;
-                if (windowsPrincipal != null && windowsPrincipal.Identity.IsAuthenticated)
+                await _next(env);
+
+                if (context.Response.StatusCode == 401)
                 {
-                    await _next(env);
+                    // We're going no add the identifier claim
+                    var nameClaim = windowsPrincipal.FindFirst(ClaimTypes.Name);
 
-                    var context = new OwinContext(env);
+                    // This is the domain name
+                    string name = nameClaim.Value;
 
-                    if (context.Response.StatusCode == 401)
-                    {
-                        // We're going no add the identifier claim
-                        var nameClaim = windowsPrincipal.FindFirst(ClaimTypes.Name);
+                    // If the name is something like DOMAIN\username then
+                    // grab the name part
+                    var parts = name.Split(new[] { '\\' }, 2);
 
-                        // This is the domain name
-                        string name = nameClaim.Value;
+                    string shortName = parts.Length == 1 ? parts[0] : parts[parts.Length - 1];
 
-                        // If the name is something like DOMAIN\username then
-                        // grab the name part
-                        var parts = name.Split(new[] { '\\' }, 2);
+                    // REVIEW: Do we want to preserve the other claims?
 
-                        string shortName = parts.Length == 1 ? parts[0] : parts[parts.Length - 1];
+                    // Normalize the claims here
+                    var claims = new List<Claim>();
+                    claims.Add(new Claim(ClaimTypes.NameIdentifier, name));
+                    claims.Add(new Claim(ClaimTypes.Name, shortName));
+                    claims.Add(new Claim(ClaimTypes.AuthenticationMethod, "Windows"));
+                    var identity = new ClaimsIdentity(claims, Constants.JabbRAuthType);
 
-                        // REVIEW: Do we want to preserve the other claims?
+                    context.Authentication.SignIn(identity);
 
-                        // Normalize the claims here
-                        var claims = new List<Claim>();
-                        claims.Add(new Claim(ClaimTypes.NameIdentifier, name));
-                        claims.Add(new Claim(ClaimTypes.Name, shortName));
-                        claims.Add(new Claim(ClaimTypes.AuthenticationMethod, "Windows"));
-                        var identity = new ClaimsIdentity(claims, Constants.JabbRAuthType);
-
-                        context.Authentication.SignIn(identity);
-
-                        context.Response.Redirect(context.Request.PathBase + context.Request.Path);
-                    }
-
-                    return;
+                    context.Response.Redirect((context.Request.PathBase + context.Request.Path).Value);
                 }
+
+                return;
             }
 
             await _next(env);
