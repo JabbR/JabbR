@@ -47,14 +47,14 @@ namespace JabbR.Client
         public event Action<string, User, string> UsernameChanged;
         public event Action<User, string> NoteChanged;
         public event Action<User, string> FlagChanged;
-        public event Action<Room> TopicChanged;
+        public event Action<string, string, string> TopicChanged;
         public event Action<User, string> OwnerAdded;
         public event Action<User, string> OwnerRemoved;
         public event Action<string, string, string> AddMessageContent;
         public event Action<Room> JoinedRoom;
 
         // Global
-        public event Action<Room, int> RoomCountChanged;
+        public event Action<Room> RoomChanged;
         public event Action<User> UserActivityChanged;
         public event Action<IEnumerable<User>> UsersInactive;
 
@@ -331,9 +331,9 @@ namespace JabbR.Client
                 Execute(Kicked, kicked => kicked(room));
             });
 
-            _chat.On<Room, int>(ClientEvents.UpdateRoomCount, (room, count) =>
+            _chat.On<Room>(ClientEvents.UpdateRoom, (room) =>
             {
-                Execute(RoomCountChanged, roomCountChanged => roomCountChanged(room, count));
+                Execute(RoomChanged, roomChanged => roomChanged(room));
             });
 
             _chat.On<User, string>(ClientEvents.UpdateActivity, (user, roomName) =>
@@ -381,9 +381,9 @@ namespace JabbR.Client
                 Execute(FlagChanged, flagChanged => flagChanged(user, room));
             });
 
-            _chat.On<Room>(ClientEvents.TopicChanged, (room) =>
+            _chat.On<string, string, string>(ClientEvents.TopicChanged, (roomName, topic, who) =>
             {
-                Execute(TopicChanged, topicChanged => topicChanged(room));
+                Execute(TopicChanged, topicChanged => topicChanged(roomName, topic, who));
             });
 
             _chat.On<User, string>(ClientEvents.OwnerAdded, (user, room) =>

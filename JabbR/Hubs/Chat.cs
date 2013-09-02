@@ -866,6 +866,9 @@ namespace JabbR
             {
                 Clients.User(user.Id).roomClosed(room.Name);
             }
+
+            // notify everyone to update their lobby
+            OnRoomChanged(room);
         }
 
         void INotificationService.UnCloseRoom(IEnumerable<ChatUser> users, ChatRoom room)
@@ -875,6 +878,9 @@ namespace JabbR
             {
                 Clients.User(user.Id).roomUnClosed(room.Name);
             }
+
+            // notify everyone to update their lobby
+            OnRoomChanged(room);
         }
 
         void INotificationService.LogOut(ChatUser user, string clientId)
@@ -992,17 +998,10 @@ namespace JabbR
 
         void INotificationService.ChangeTopic(ChatUser user, ChatRoom room)
         {
-            bool isTopicCleared = String.IsNullOrWhiteSpace(room.Topic);
-            var parsedTopic = room.Topic ?? String.Empty;
-            Clients.Group(room.Name).topicChanged(room.Name, isTopicCleared, parsedTopic, user.Name);
-            // Create the view model
-            var roomViewModel = new RoomViewModel
-            {
-                Name = room.Name,
-                Topic = parsedTopic,
-                Closed = room.Closed
-            };
-            Clients.Group(room.Name).changeTopic(roomViewModel);
+            Clients.Group(room.Name).topicChanged(room.Name, room.Topic ?? String.Empty, user.Name);
+
+            // trigger a lobby update
+            OnRoomChanged(room);
         }
 
         void INotificationService.ChangeWelcome(ChatUser user, ChatRoom room)
@@ -1066,11 +1065,20 @@ namespace JabbR
             {
                 Name = room.Name,
                 Private = room.Private,
-                Closed = room.Closed
+                Closed = room.Closed,
+                Topic = room.Topic ?? String.Empty,
+                Count = _repository.GetOnlineUsers(room).Count()
             };
 
-            // Update the room count
-            Clients.All.updateRoomCount(roomViewModel, _repository.GetOnlineUsers(room).Count());
+            // notify all clients who can see the room
+            if (!room.Private)
+            {
+                Clients.All.updateRoom(roomViewModel);
+            }
+            else
+            {
+                Clients.Clients(_repository.GetAllowedClientIds(room)).updateRoom(roomViewModel);
+            }
         }
 
         private ClientState GetClientState()

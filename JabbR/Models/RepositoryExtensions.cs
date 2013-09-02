@@ -143,5 +143,11 @@ namespace JabbR.Models
         {
             return source.Where(n => n.Room.Name == roomName);
         }
+
+        public static IList<string> GetAllowedClientIds(this IJabbrRepository repository, ChatRoom room)
+        {
+            int[] allowedUserKeys = room.AllowedUsers.Select(u => u.Key).ToArray();
+            return repository.Clients.Where(c => allowedUserKeys.Contains(c.UserKey)).Select(c => c.Id).ToList();
+        }
     }
 }

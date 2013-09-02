@@ -109,7 +109,7 @@
                         ui.addChatMessage(viewModel, room);
                     });
 
-                    ui.changeRoomTopic(roomInfo);
+                    ui.changeRoomTopic(roomInfo.Name, roomInfo.Topic);
 
                     // mark room as initialized to differentiate messages
                     // that are added after initial population
@@ -365,8 +365,8 @@
         ui.clearRoomOwner(user.Name, room);
     };
 
-    chat.client.updateRoomCount = function (room, count) {
-        ui.updateLobbyRoomCount(room, count);
+    chat.client.updateRoom = function (room) {
+        ui.updateLobbyRoom(room);
     };
 
     chat.client.markInactive = function (users) {
@@ -577,13 +577,10 @@
         }
     };
 
-    chat.client.changeTopic = function (room) {
-        ui.changeRoomTopic(room);
-    };
+    chat.client.topicChanged = function (roomName, topic, who) {
+        var message,
+            isCleared = (topic === '');
 
-    chat.client.topicChanged = function (roomName, isCleared, topic, who) {
-        var message;
-        
         if (who === ui.getUserName()) {
             if (!isCleared) {
                 message = utility.getLanguageResource('Chat_YouSetRoomTopic', topic);
@@ -599,6 +596,8 @@
         }
 
         ui.addMessage(message, 'notification', roomName);
+        
+        ui.changeRoomTopic(roomName, topic);
     };
 
     chat.client.welcomeChanged = function (isCleared, welcome) {
