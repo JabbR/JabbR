@@ -23,8 +23,13 @@ namespace JabbR.Client
         private HubConnection _connection;
 
         public JabbRClient(string url)
-            : this(url, authenticationProvider: null, transportFactory: () => new AutoTransport(new DefaultHttpClient()))
+            : this(url, authenticationProvider: null)
         { }
+
+        public JabbRClient(string url, IAuthenticationProvider authenticationProvider) : 
+            this(url, authenticationProvider, transportFactory: () => new AutoTransport(new DefaultHttpClient()))
+        {
+        }
 
         public JabbRClient(string url, IAuthenticationProvider authenticationProvider, Func<IClientTransport> transportFactory)
         {
