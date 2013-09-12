@@ -12,7 +12,7 @@ namespace JabbR.Client.Sample
     {
         static void Main(string[] args)
         {
-            string server = "http://localhost:16207/";
+            string server = "https://jabbr-staging.apphb.com";
             string roomName = "test";
             string userName = "testclient";
             string password = "password";

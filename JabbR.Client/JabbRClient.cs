@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using JabbR.Client.Models;
 using JabbR.Models;
 using Microsoft.AspNet.SignalR.Client;
 using Microsoft.AspNet.SignalR.Client.Http;
-using Microsoft.AspNet.SignalR.Client.Hubs;
 using Microsoft.AspNet.SignalR.Client.Transports;
 using Newtonsoft.Json.Linq;
 
@@ -26,7 +24,7 @@ namespace JabbR.Client
             : this(url, authenticationProvider: null)
         { }
 
-        public JabbRClient(string url, IAuthenticationProvider authenticationProvider) : 
+        public JabbRClient(string url, IAuthenticationProvider authenticationProvider) :
             this(url, authenticationProvider, transportFactory: () => new AutoTransport(new DefaultHttpClient()))
         {
         }
@@ -111,52 +109,38 @@ namespace JabbR.Client
             }
         }
 
-        public Task<LogOnInfo> Connect(string name, string password)
+        public async Task<LogOnInfo> Connect(string name, string password)
         {
-            var taskCompletionSource = new TaskCompletionSource<LogOnInfo>();
+            _connection = await _authenticationProvider.Connect(name, password);
 
-            _authenticationProvider.Connect(name, password)
-                .Then(connection =>
-                {
-                    _connection = connection;
+            if (TraceWriter != null)
+            {
+                _connection.TraceWriter = TraceWriter;
+            }
 
-                    if (TraceWriter != null)
-                    {
-                        _connection.TraceWriter = TraceWriter;
-                    }
+            _connection.TraceLevel = TraceLevel;
 
-                    _connection.TraceLevel = TraceLevel;
+            _chat = _connection.CreateHubProxy("chat");
 
-                    _chat = _connection.CreateHubProxy("chat");
+            SubscribeToEvents();
 
-                    SubscribeToEvents();
+            await _connection.Start(_transportFactory());
 
-                    return _connection.Start(_transportFactory());
-                })
-                .Then(tcs => LogOn(tcs), taskCompletionSource)
-                .Catch(ex => taskCompletionSource.TrySetException(ex));
-
-            return taskCompletionSource.Task;
+            return await LogOn();
         }
 
-        private void LogOn(TaskCompletionSource<LogOnInfo> tcs)
+        private async Task<LogOnInfo> LogOn()
         {
+            var tcs = new TaskCompletionSource<LogOnInfo>();
+
             IDisposable logOn = null;
-
-            Action<LogOnInfo> callback = logOnInfo =>
-            {
-                if (logOn != null)
-                {
-                    logOn.Dispose();
-                }
-
-                tcs.TrySetResult(logOnInfo);
-            };
 
             // Wait for the logOn callback to get triggered
             logOn = _chat.On<IEnumerable<Room>, JArray>(ClientEvents.LogOn, (rooms, privateRooms) =>
             {
-                callback(new LogOnInfo
+                logOn.Dispose();
+
+                tcs.TrySetResult(new LogOnInfo
                 {
                     Rooms = rooms,
                     UserId = (string)_chat["id"]
@@ -164,18 +148,9 @@ namespace JabbR.Client
             });
 
             // Join JabbR
-            _chat.Invoke("Join").ContinueWith(task =>
-            {
-                if (task.IsFaulted)
-                {
-                    tcs.TrySetUnwrappedException(task.Exception);
-                }
-                else if (task.IsCanceled)
-                {
-                    tcs.TrySetCanceled();
-                }
-            },
-            TaskContinuationOptions.NotOnRanToCompletion);
+            await _chat.Invoke("Join");
+
+            return await tcs.Task;
         }
 
         public Task<User> GetUserInfo()
@@ -208,7 +183,7 @@ namespace JabbR.Client
             return _chat.Invoke("PostNotification", notification);
         }
 
-        public Task CreateRoom(string roomName)
+        public async Task CreateRoom(string roomName)
         {
             var tcs = new TaskCompletionSource<object>();
 
@@ -217,15 +192,16 @@ namespace JabbR.Client
             createRoom = _chat.On<Room>(ClientEvents.RoomCreated, room =>
             {
                 createRoom.Dispose();
+
                 tcs.SetResult(null);
             });
 
-            SendCommand("create {0}", roomName).ContinueWithNotComplete(tcs);
+            await SendCommand("create {0}", roomName);
 
-            return tcs.Task;
+            await tcs.Task;
         }
 
-        public Task JoinRoom(string roomName)
+        public async Task JoinRoom(string roomName)
         {
             var tcs = new TaskCompletionSource<object>();
 
@@ -238,9 +214,9 @@ namespace JabbR.Client
                 tcs.SetResult(null);
             });
 
-            SendCommand("join {0}", roomName).ContinueWithNotComplete(tcs);
+            await SendCommand("join {0}", roomName);
 
-            return tcs.Task;
+            await tcs.Task;
         }
 
         public Task LeaveRoom(string roomName)
@@ -406,27 +382,39 @@ namespace JabbR.Client
             });
         }
 
-        private void OnDisconnected()
+        private async void OnDisconnected()
         {
-            TaskAsyncHelper.Delay(TimeSpan.FromSeconds(5)).Then(() =>
+            await TaskAsyncHelper.Delay(TimeSpan.FromSeconds(5));
+
+            try
             {
-                _connection.Start(_transportFactory()).Then(() =>
-                {
-                    // Join JabbR
-                    _chat.Invoke("Join", false);
-                });
-            });
+                await _connection.Start(_transportFactory());
+
+                // Join JabbR
+                await _chat.Invoke("Join", false);
+            }
+            catch (Exception ex)
+            {
+                _connection.Trace(TraceLevels.Events, ex.Message);
+            }
         }
 
-        private static void Execute<T>(T handlers, Action<T> action) where T : class
+        private void Execute<T>(T handlers, Action<T> action) where T : class
         {
             Task.Factory.StartNew(() =>
             {
                 if (handlers != null)
                 {
-                    action(handlers);
+                    try
+                    {
+                        action(handlers);
+                    }
+                    catch (Exception ex)
+                    {
+                        _connection.Trace(TraceLevels.Events, ex.Message);
+                    }
                 }
-            }).Catch();
+            });
         }
 
         private Task SendCommand(string command, params object[] args)
