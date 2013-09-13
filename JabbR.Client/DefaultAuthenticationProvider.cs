@@ -28,7 +28,7 @@ namespace JabbR.Client
             var handler = new HttpClientHandler
             {
 #else
-            var handler = new WebRequestHandler 
+            var handler = new WebRequestHandler
             {
 #endif
                 CookieContainer = cookieJar
@@ -44,13 +44,6 @@ namespace JabbR.Client
             var response = await client.PostAsync(authUri.Uri, new FormUrlEncodedContent(parameters));
 
             response.EnsureSuccessStatusCode();
-            
-            // Verify the cookie
-            var cookie = cookieJar.GetCookies(new Uri(_url));
-            if (cookie == null || cookie["jabbr.id"] == null)
-            {
-                throw new SecurityException("Didn't get a cookie from JabbR! Ensure your User Name/Password are correct");
-            }
 
             // Create a hub connection and give it our cookie jar
             var connection = new HubConnection(_url)
