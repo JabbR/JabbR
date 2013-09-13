@@ -1,8 +1,11 @@
-﻿using Cirrious.MvvmCross.ViewModels;
+﻿using Cirrious.CrossCore;
+using Cirrious.MvvmCross.ViewModels;
+using JabbR.Client.UI.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Input;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
@@ -37,6 +40,20 @@ namespace JabbR.Client.UI.Core.ViewModels
                 RaisePropertyChanged(() => ErrorMessage);
                 HasError = !String.IsNullOrEmpty(value);
             }
+        }
+
+        public ICommand CloseCommand
+        {
+            get
+            {
+                return new MvxCommand(RequestClose);
+            }
+        }
+
+        protected void RequestClose()
+        {
+            var closer = Mvx.Resolve<IViewModelCloser>();
+            closer.RequestClose(this);
         }
     }
 }

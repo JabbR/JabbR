@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:Cirrious.MvvmCross.WindowsPhone.Views;assembly=Cirrious.MvvmCross.WindowsPhone"
+    xmlns:controls="clr-namespace:JabbR.Client.WP8.UI.Controls"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -17,12 +18,44 @@
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <!--Pivot Control-->
-        <phone:Pivot Title="{Binding UserName}">
+        <phone:Pivot Title="{Binding CurrentUser.Name}">
             <!--Pivot item one-->
-            <phone:PivotItem Header="rooms">
-                <Grid/>
+            <phone:PivotItem Header="current rooms">
+                <ListBox ItemsSource="{Binding CurrentRooms}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="RoomName" Text="{Binding Name}" Style="{StaticResource PhoneTextTitle2Style}"/>
+                                <TextBlock Grid.Row="1" x:Name="RoomTopic" Text="{Binding Topic}" Style="{StaticResource PhoneTextAccentStyle}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </phone:PivotItem>
+            <phone:PivotItem Header="all rooms">
+                <ListBox ItemsSource="{Binding Rooms}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock x:Name="RoomName" Text="{Binding Name}" Style="{StaticResource PhoneTextTitle2Style}"/>
+                                <TextBlock Grid.Row="1" x:Name="RoomTopic" Text="{Binding Topic}" Style="{StaticResource PhoneTextAccentStyle}"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
             </phone:PivotItem>
         </phone:Pivot>
+        <controls:BindableApplicationBar>
+            <controls:BindableApplicationBarMenuItem Text="Sign Out" controls:AppBarItemClick.Command="{Binding SignOutCommand}"/>
+        </controls:BindableApplicationBar>
     </Grid>
     
 </views:MvxPhonePage>

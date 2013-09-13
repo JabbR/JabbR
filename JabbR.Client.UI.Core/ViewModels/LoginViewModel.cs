@@ -1,5 +1,6 @@
 ﻿using Akavache;
 using Cirrious.MvvmCross.ViewModels;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,24 +16,29 @@ namespace JabbR.Client.UI.Core.ViewModels
         : BaseViewModel
     {
         readonly IJabbRClient _client;
+        bool _isConnected;
         public LoginViewModel(IJabbRClient client)
         {
             _client = client;
             PageName = "login";
-            Init();
         }
 
         public void Init()
         {
-            LoginInfo loginInfo = null;
-            //BlobCache.Secure.GetLoginAsync(_client.SourceUrl)
-            //    .Subscribe(info => loginInfo = info);
-            if (loginInfo != null)
+            if (_isConnected)
             {
-                UserName = loginInfo.UserName;
-                Password = loginInfo.Password;
-                DoSignIn();
+                _client.LogOut();
+                _client.Disconnect();
             }
+            //LoginInfo loginInfo = null;
+            ////BlobCache.Secure.GetLoginAsync(_client.SourceUrl)
+            ////    .Subscribe(info => loginInfo = info);
+            //if (loginInfo != null)
+            //{
+            //    UserName = loginInfo.UserName;
+            //    Password = loginInfo.Password;
+            //    DoSignIn();
+            //}
         }
 
         private string _userName;
@@ -85,8 +91,8 @@ namespace JabbR.Client.UI.Core.ViewModels
                 //BlobCache.Secure.SaveLogin(UserName, Password, _client.SourceUrl, TimeSpan.FromDays(7));
 
                 var user = await _client.GetUserInfo();
-
-                ShowViewModel<MainViewModel>(new { userName = user.Name, loginInfo = info });
+                
+                ShowViewModel<MainViewModel>(new { userJson = JsonConvert.SerializeObject(user), roomsJson = JsonConvert.SerializeObject(info.Rooms) });
             }
             catch (Exception ex)
             {
