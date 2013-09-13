@@ -9,6 +9,7 @@ namespace JabbR.Services
         IQueryable<ChatRoom> Rooms { get; }
         IQueryable<ChatUser> Users { get; }
         IQueryable<ChatClient> Clients { get; }
+        IQueryable<Settings> Settings { get; }
 
         IQueryable<ChatUser> GetOnlineUsers(ChatRoom room);
         IQueryable<ChatUser> GetOnlineUsers();
@@ -41,6 +42,7 @@ namespace JabbR.Services
         void Add(ChatUser user);
         void Add(ChatUserIdentity identity);
         void Add(Attachment attachment);
+        void Add(Settings settings);
 
         void Remove(ChatClient client);
         void Remove(ChatRoom room);

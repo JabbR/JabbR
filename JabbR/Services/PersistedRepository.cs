@@ -39,6 +39,16 @@ namespace JabbR.Services
         {
             get { return _db.Clients; }
         }
+        public IQueryable<Settings> Settings
+        {
+            get { return _db.Settings; }
+        }
+
+        public void Add(Settings settings)
+        {
+            _db.Settings.Add(settings);
+            _db.SaveChanges();
+        }
 
         public void Add(ChatRoom room)
         {

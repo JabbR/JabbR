@@ -1028,6 +1028,7 @@
     <Compile Include="Models\MessageType.cs" />
     <Compile Include="Models\ModelExtensions.cs" />
     <Compile Include="Models\Notification.cs" />
+    <Compile Include="Infrastructure\QueryableExtensions.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Nancy\AdministrationModule.cs" />
     <Compile Include="Nancy\ClaimsPrincipalUserIdentity.cs" />
