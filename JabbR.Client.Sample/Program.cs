@@ -162,10 +162,7 @@ namespace JabbR.Client.Sample
 
             HttpResponseMessage response = await client.PostAsync("/account/create", content);
 
-            if (!response.IsSuccessStatusCode)
-            {
-                Console.WriteLine("Failed to create account");
-            }
+            response.EnsureSuccessStatusCode();
         }
     }
 }

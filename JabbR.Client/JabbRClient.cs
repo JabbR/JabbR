@@ -14,27 +14,25 @@ namespace JabbR.Client
 {
     public class JabbRClient : IJabbRClient
     {
-        private readonly IAuthenticationProvider _authenticationProvider;
+        private readonly IAuthenticationProvider _defaultAuthenticationProvider;
         private readonly Func<IClientTransport> _transportFactory;
 
         private IHubProxy _chat;
         private HubConnection _connection;
+        private IAuthenticationProvider _authenticationProvider;
 
-        public JabbRClient(string url)
-            : this(url, authenticationProvider: null)
-        { }
-
-        public JabbRClient(string url, IAuthenticationProvider authenticationProvider) :
-            this(url, authenticationProvider, transportFactory: () => new AutoTransport(new DefaultHttpClient()))
+        public JabbRClient(string url) :
+            this(url, transportFactory: () => new AutoTransport(new DefaultHttpClient()))
         {
         }
 
-        public JabbRClient(string url, IAuthenticationProvider authenticationProvider, Func<IClientTransport> transportFactory)
+        public JabbRClient(string url, Func<IClientTransport> transportFactory)
         {
             SourceUrl = url;
-            _authenticationProvider = authenticationProvider ?? new DefaultAuthenticationProvider(url);
             _transportFactory = transportFactory;
             TraceLevel = TraceLevels.All;
+
+            _defaultAuthenticationProvider = new DefaultAuthenticationProvider(url);
         }
 
         public event Action<Message, string> MessageReceived;
@@ -64,6 +62,18 @@ namespace JabbR.Client
         public bool AutoReconnect { get; set; }
         public TextWriter TraceWriter { get; set; }
         public TraceLevels TraceLevel { get; set; }
+
+        public IAuthenticationProvider AuthenticationProvider
+        {
+            get
+            {
+                return _authenticationProvider ?? _defaultAuthenticationProvider;
+            }
+            set
+            {
+                _authenticationProvider = value;
+            }
+        }
 
         public HubConnection Connection
         {
@@ -111,7 +121,7 @@ namespace JabbR.Client
 
         public async Task<LogOnInfo> Connect(string name, string password)
         {
-            _connection = await _authenticationProvider.Connect(name, password);
+            _connection = await AuthenticationProvider.Connect(name, password);
 
             if (TraceWriter != null)
             {
