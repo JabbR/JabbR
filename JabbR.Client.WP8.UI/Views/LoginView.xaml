@@ -35,7 +35,7 @@
                     <TextBox x:Name="Username" Text="{Binding UserName, Mode=TwoWay}"/>
                     <TextBlock Text="Password" Style="{StaticResource PhoneTextAccentStyle}"/>
                     <PasswordBox x:Name="Password" Password="{Binding Password, Mode=TwoWay}"/>
-                    <Button x:Name="Login" Content="Login" Command="{Binding SignInCommand}"/>
+                    <Button x:Name="Login" Content="Login" Command="{Binding SignInCommand}" IsEnabled="{Binding CanDoSignIn}"/>
                     <!--Button x:Name="SocialLogin" Content="Social Login" /-->
                 </StackPanel>
             </Grid>

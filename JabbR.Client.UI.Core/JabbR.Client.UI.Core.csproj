@@ -39,6 +39,7 @@
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\LoginViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\RoomViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Akavache.Portable">

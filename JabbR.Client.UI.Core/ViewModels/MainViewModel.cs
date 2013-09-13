@@ -62,15 +62,38 @@ namespace JabbR.Client.UI.Core.ViewModels
             Rooms = new ObservableCollection<Room>(rooms);
         }
 
+        private ICommand _openRoomCommand;
+        public ICommand OpenRoomCommand
+        {
+            get { return _openRoomCommand ?? new MvxCommand<Room>(DoOpenRoom); }
+        }
+
+        private ICommand _joinRoomCommand;
+        public ICommand JoinRoomCommand
+        {
+            get { return _joinRoomCommand ?? new MvxCommand<Room>(DoJoinRoom); }
+        }
+
         private ICommand _signOutCommand;
         public ICommand SignOutCommand
         {
             get { return _signOutCommand ?? new MvxCommand(DoSignOut); }
         }
 
+        private void DoOpenRoom(Room room)
+        {
+            ShowViewModel<RoomViewModel>(new { roomName = room.Name });
+        }
+
+        private void DoJoinRoom(Room room)
+        {
+            _client.JoinRoom(room.Name);
+            ShowViewModel<RoomViewModel>(new { roomJson = JsonConvert.SerializeObject(room) });
+        }
+
         private void DoSignOut()
         {
-            _client.Disconnect();
+            _client.LogOut();
             RequestClose();
         }
     }

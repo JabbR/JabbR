@@ -16,7 +16,6 @@ namespace JabbR.Client.UI.Core.ViewModels
         : BaseViewModel
     {
         readonly IJabbRClient _client;
-        bool _isConnected;
         public LoginViewModel(IJabbRClient client)
         {
             _client = client;
@@ -25,10 +24,10 @@ namespace JabbR.Client.UI.Core.ViewModels
 
         public void Init()
         {
-            if (_isConnected)
+            if (IsConnected)
             {
-                _client.LogOut();
                 _client.Disconnect();
+                IsConnected = false;
             }
             //LoginInfo loginInfo = null;
             ////BlobCache.Secure.GetLoginAsync(_client.SourceUrl)
@@ -41,6 +40,18 @@ namespace JabbR.Client.UI.Core.ViewModels
             //}
         }
 
+        private bool _isConnected;
+        public bool IsConnected
+        {
+            get { return _isConnected; }
+            set
+            {
+                _isConnected = value;
+                RaisePropertyChanged(() => IsConnected);
+                RaisePropertyChanged(() => CanDoSignIn);
+            }
+        }
+
         private string _userName;
         public string UserName
         {
@@ -49,6 +60,7 @@ namespace JabbR.Client.UI.Core.ViewModels
             {
                 _userName = value;
                 RaisePropertyChanged(() => UserName);
+                RaisePropertyChanged(() => CanDoSignIn);
             }
         }
 
@@ -60,6 +72,7 @@ namespace JabbR.Client.UI.Core.ViewModels
             {
                 _password = value;
                 RaisePropertyChanged(() => Password);
+                RaisePropertyChanged(() => CanDoSignIn);
             }
         }
 
@@ -75,7 +88,7 @@ namespace JabbR.Client.UI.Core.ViewModels
 
         public bool CanDoSignIn
         {
-            get { return (!String.IsNullOrEmpty(UserName) && !String.IsNullOrEmpty(Password)); }
+            get { return (!_isConnected && !String.IsNullOrEmpty(UserName) && !String.IsNullOrEmpty(Password)); }
         }
 
         private async void DoSignIn()
@@ -88,10 +101,12 @@ namespace JabbR.Client.UI.Core.ViewModels
             try
             {
                 var info = await _client.Connect(UserName, Password);
+                IsConnected = true;
                 //BlobCache.Secure.SaveLogin(UserName, Password, _client.SourceUrl, TimeSpan.FromDays(7));
 
                 var user = await _client.GetUserInfo();
-                
+                UserName = String.Empty;
+                Password = String.Empty;
                 ShowViewModel<MainViewModel>(new { userJson = JsonConvert.SerializeObject(user), roomsJson = JsonConvert.SerializeObject(info.Rooms) });
             }
             catch (Exception ex)
