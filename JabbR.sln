@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.20827.3
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JabbR", "JabbR\JabbR.csproj", "{16204F16-6354-4B68-BB0F-1A4F109FC92B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JabbR.Tests", "JabbR.Tests\JabbR.Tests.csproj", "{45AB4285-8B37-47FD-9D38-40E6BC5D2E13}"
@@ -106,9 +108,9 @@ Global
 		{67C398DE-8818-4479-ACA9-3C7D9C61F5AA}.Debug|ARM.ActiveCfg = Debug|ARM
 		{67C398DE-8818-4479-ACA9-3C7D9C61F5AA}.Debug|ARM.Build.0 = Debug|ARM
 		{67C398DE-8818-4479-ACA9-3C7D9C61F5AA}.Debug|ARM.Deploy.0 = Debug|ARM
-		{67C398DE-8818-4479-ACA9-3C7D9C61F5AA}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{67C398DE-8818-4479-ACA9-3C7D9C61F5AA}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{67C398DE-8818-4479-ACA9-3C7D9C61F5AA}.Debug|Mixed Platforms.Deploy.0 = Debug|x86
+		{67C398DE-8818-4479-ACA9-3C7D9C61F5AA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{67C398DE-8818-4479-ACA9-3C7D9C61F5AA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{67C398DE-8818-4479-ACA9-3C7D9C61F5AA}.Debug|Mixed Platforms.Deploy.0 = Debug|Any CPU
 		{67C398DE-8818-4479-ACA9-3C7D9C61F5AA}.Debug|x86.ActiveCfg = Debug|x86
 		{67C398DE-8818-4479-ACA9-3C7D9C61F5AA}.Debug|x86.Build.0 = Debug|x86
 		{67C398DE-8818-4479-ACA9-3C7D9C61F5AA}.Debug|x86.Deploy.0 = Debug|x86
