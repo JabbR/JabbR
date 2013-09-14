@@ -1,14 +1,7 @@
-﻿using Akavache;
+﻿using System;
+using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
@@ -27,8 +20,10 @@ namespace JabbR.Client.UI.Core.ViewModels
             if (IsConnected)
             {
                 _client.Disconnect();
+
                 IsConnected = false;
             }
+
             //LoginInfo loginInfo = null;
             ////BlobCache.Secure.GetLoginAsync(_client.SourceUrl)
             ////    .Subscribe(info => loginInfo = info);
@@ -98,21 +93,35 @@ namespace JabbR.Client.UI.Core.ViewModels
                 ErrorMessage = "Please enter a username and password";
                 return;
             }
+
             try
             {
-                var info = await _client.Connect(UserName, Password);
+                IsLoading = true;
+
+                var loginInfo = await _client.Connect(UserName, Password);
+
                 IsConnected = true;
+
                 //BlobCache.Secure.SaveLogin(UserName, Password, _client.SourceUrl, TimeSpan.FromDays(7));
 
                 var user = await _client.GetUserInfo();
+                
                 UserName = String.Empty;
                 Password = String.Empty;
-                ShowViewModel<MainViewModel>(new { userJson = JsonConvert.SerializeObject(user), roomsJson = JsonConvert.SerializeObject(info.Rooms) });
+
+                ShowViewModel<MainViewModel>(new
+                {
+                    userJson = JsonConvert.SerializeObject(user),
+                    roomsJson = JsonConvert.SerializeObject(loginInfo.Rooms)
+                });
             }
             catch (Exception ex)
             {
                 ErrorMessage = ex.GetBaseException().Message;
-                return;
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
     }
