@@ -88,7 +88,7 @@ namespace JabbR.Client.UI.Core.ViewModels
         private void DoJoinRoom(Room room)
         {
             _client.JoinRoom(room.Name);
-            ShowViewModel<RoomViewModel>(new { roomJson = JsonConvert.SerializeObject(room) });
+            ShowViewModel<RoomViewModel>(new { roomName = room.Name });
         }
 
         private void DoSignOut()
