@@ -25,5 +25,18 @@ namespace JabbR.Client.WP8.UI.Views
             BindingExpression binding = textbox.GetBindingExpression(TextBox.TextProperty);
             binding.UpdateSource();
         }
+
+        private void Pivot_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (((Pivot)sender).SelectedIndex)
+            {
+                case 0:
+                    AppBar.IsVisible = true;
+                    break;
+                default:
+                    AppBar.IsVisible = false;
+                    break;
+            }
+        }
     }
 }

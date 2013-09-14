@@ -93,6 +93,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Bootstrap\VisibilityPluginBootstrap.cs" />
     <Compile Include="Controls\AppBarItemClick.cs" />
     <Compile Include="Controls\AppBarItemCommandBehavior.cs" />
     <Compile Include="Controls\BindableApplicationBar.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Controls\BindableApplicationBarMenuItem.cs" />
     <Compile Include="Converters\HashToGravatarConverter.cs" />
     <Compile Include="Converters\HtmlToStringConverter.cs" />
+    <Compile Include="Converters\NativeVisibilityConverter.cs" />
     <Compile Include="DebugTrace.cs" />
     <Compile Include="ExtensionMethods\VisualTree.cs" />
     <Compile Include="LocalizedStrings.cs" />
@@ -451,6 +453,12 @@
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Localization">
       <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.0.12\lib\sl4-wp71\Cirrious.MvvmCross.Localization.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Visibility">
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Visibility.3.0.12\lib\sl4-wp71\Cirrious.MvvmCross.Plugins.Visibility.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Visibility.WindowsPhone">
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Visibility.3.0.12\lib\sl4-wp71\Cirrious.MvvmCross.Plugins.Visibility.WindowsPhone.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.WindowsPhone">
       <HintPath>..\packages\MvvmCross.HotTuna.MvvmCrossLibraries.3.0.12\lib\sl4-wp71\Cirrious.MvvmCross.WindowsPhone.dll</HintPath>
