@@ -1,13 +1,9 @@
-﻿using Cirrious.MvvmCross.ViewModels;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
+using Cirrious.MvvmCross.ViewModels;
 using JabbR.Client.Models;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
@@ -85,15 +81,15 @@ namespace JabbR.Client.UI.Core.ViewModels
             ShowViewModel<RoomViewModel>(new { roomName = room.Name });
         }
 
-        private void DoJoinRoom(Room room)
+        private async void DoJoinRoom(Room room)
         {
-            _client.JoinRoom(room.Name);
+            await _client.JoinRoom(room.Name);
             ShowViewModel<RoomViewModel>(new { roomName = room.Name });
         }
 
-        private void DoSignOut()
+        private async void DoSignOut()
         {
-            _client.LogOut();
+            await _client.LogOut();
             RequestClose();
         }
     }
