@@ -1,4 +1,5 @@
-﻿using JabbR.Client.Models;
+﻿using Cirrious.MvvmCross.ViewModels;
+using JabbR.Client.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
@@ -16,6 +18,18 @@ namespace JabbR.Client.UI.Core.ViewModels
         public RoomViewModel(IJabbRClient client)
         {
             _client = client;
+        }
+
+        private string _message;
+        public string Message
+        {
+            get { return _message; }
+            set
+            {
+                _message = value;
+                RaisePropertyChanged(() => Message);
+                RaisePropertyChanged(() => CanSendMessage);
+            }
         }
 
         private Room _room;
@@ -40,17 +54,6 @@ namespace JabbR.Client.UI.Core.ViewModels
             }
         }
 
-        //private ObservableCollection<User> _owners;
-        //public ObservableCollection<User> Owners 
-        //{
-        //    get { return _owners; }
-        //    set
-        //    {
-        //        _owners = value;
-        //        RaisePropertyChanged(() => Owners);
-        //    }
-        //}
-
         private ObservableCollection<User> _users;
         public ObservableCollection<User> Users
         {
@@ -59,6 +62,36 @@ namespace JabbR.Client.UI.Core.ViewModels
             {
                 _users = value;
                 RaisePropertyChanged(() => Users);
+            }   
+        }
+
+        private ICommand _sendMessageCommand;
+        public ICommand SendMessageCommand
+        {
+            get { return _sendMessageCommand ?? new MvxCommand(DoSendMessage); }
+        }
+
+        public bool CanSendMessage
+        {
+            get { return !String.IsNullOrEmpty(Message); }
+        }
+
+        private async void DoSendMessage()
+        {
+            if (CanSendMessage)
+            {
+                try
+                {
+                    var result = await _client.Send(Message, Room.Name);
+                    if (result)
+                    {
+                        Message = String.Empty;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessage = ex.GetBaseException().Message;
+                }
             }
         }
 

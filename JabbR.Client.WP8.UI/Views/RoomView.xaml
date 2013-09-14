@@ -22,8 +22,8 @@
         <converters:HastToGravatarConverter x:Key="HashToGravatarConverter"/>
         <converters:HtmlToStringConverter x:Key="HtmlToStringConverter"/>
     </views:MvxPhonePage.Resources>
-    <Grid x:Name="LayoutRoot" Background="Transparent" Margin="0">
-        <phone:Pivot Title="{Binding Room.Name}">
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <phone:Pivot Title="{Binding Room.Name}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <phone:PivotItem Header="messages">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -31,36 +31,48 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <ListBox x:Name="RecentMessage"
-                                 Height="550"
-                                 ItemsSource="{Binding Messages}">
+                             Height="465"
+                             Margin="0,-5,0,-50"
+                             VerticalAlignment="Top"
+                             ItemsSource="{Binding Messages}">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="50"/>
-                                        <RowDefinition Height="*"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="50"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Image Grid.RowSpan="2" Height="50" Width="50" Margin="0,0,6,0" Source="{Binding User.Hash, Converter={StaticResource HashToGravatarConverter}}"/>
-                                    <TextBlock Grid.Column="1" Margin="6,0,0,0" VerticalAlignment="Bottom" Text="{Binding User.Name}" Style="{StaticResource PhoneTextLargeStyle}">
-                                        <TextBlock.Foreground>
-                                            <SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
-                                        </TextBlock.Foreground>
-                                    </TextBlock>
-                                    <TextBlock Grid.Row="1" Grid.Column="1" Margin="6,0,0,0" TextWrapping="Wrap" Text="{Binding Content, Converter={StaticResource HtmlToStringConverter}, Mode=OneWay}" Style="{StaticResource PhoneTextNormalStyle}"/>
-                                    <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding When.LocalDateTime}" Style="{StaticResource PhoneTextSmallStyle}" FontSize="13.333"></TextBlock>
-                                </Grid>
+                                <ListBoxItem HorizontalContentAlignment="Stretch" Padding="12">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="50"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="50"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Image Grid.RowSpan="2" Height="50" Width="50" Margin="0,0,6,0" Source="{Binding User.Hash, Converter={StaticResource HashToGravatarConverter}}"/>
+                                        <TextBlock Grid.Column="1" Margin="6,0,0,0" VerticalAlignment="Bottom" Text="{Binding User.Name}" Style="{StaticResource PhoneTextLargeStyle}">
+                                            <TextBlock.Foreground>
+                                                <SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
+                                            </TextBlock.Foreground>
+                                        </TextBlock>
+                                        <TextBlock Grid.Row="1" Grid.Column="1" Margin="6,0,0,0" TextWrapping="Wrap" Text="{Binding Content, Converter={StaticResource HtmlToStringConverter}, Mode=OneWay}" Style="{StaticResource PhoneTextNormalStyle}"/>
+                                        <TextBlock Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" Text="{Binding When.LocalDateTime}" Style="{StaticResource PhoneTextSmallStyle}" FontSize="13.333"></TextBlock>
+                                    </Grid>
+                                </ListBoxItem>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
                     <TextBox x:Name="Message"
-                                 Grid.Row="1"
-                                 Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=Explicit}" 
-                                 InputScope="Text" FontFamily="Segoe UI Symbol" HorizontalContentAlignment="Stretch" BorderThickness="0" TextWrapping="Wrap"/>
+                             Grid.Row="1"
+                             Margin="0,6,0,0"
+                             Text="{Binding Message, Mode=TwoWay, UpdateSourceTrigger=Explicit}" 
+                             TextChanged="Message_TextChanged"
+                             InputScope="Text" FontFamily="Segoe UI Symbol" HorizontalContentAlignment="Stretch" BorderThickness="0" TextWrapping="Wrap"/>
                 </Grid>
             </phone:PivotItem>
 
@@ -75,7 +87,7 @@
             </phone:PivotItem>
         </phone:Pivot>
         <controls:BindableApplicationBar IsVisible="True" IsEnabled="True">
-            <controls:BindableApplicationBarIconButton IconUri="/Assets/AppBar/appbar.send.text.rest.png" Text="Send" controls:AppBarItemClick.Command="{Binding SendCommand}" />
+            <controls:BindableApplicationBarIconButton IconUri="/Assets/AppBar/appbar.send.text.rest.png" Text="Send" controls:AppBarItemClick.Command="{Binding SendMessageCommand}" />
         </controls:BindableApplicationBar>
     </Grid>
 
