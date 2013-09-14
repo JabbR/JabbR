@@ -57,7 +57,7 @@
                 </ListBox>
             </phone:PivotItem>
         </phone:Pivot>
-        <controls:BindableApplicationBar>
+        <controls:BindableApplicationBar Mode="Minimized" Opacity="0.5">
             <controls:BindableApplicationBarMenuItem Text="Sign Out" controls:AppBarItemClick.Command="{Binding SignOutCommand}"></controls:BindableApplicationBarMenuItem>
         </controls:BindableApplicationBar>
     </Grid>
