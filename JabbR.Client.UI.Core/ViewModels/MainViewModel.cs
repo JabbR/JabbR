@@ -3,8 +3,6 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using JabbR.Client.Models;
-using Newtonsoft.Json;
-using Cirrious.CrossCore;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
@@ -91,7 +89,7 @@ namespace JabbR.Client.UI.Core.ViewModels
         private async void DoJoinRoom(Room room)
         {
             await _client.JoinRoom(room.Name);
-            ShowViewModel<RoomViewModel>(new RoomViewModel.NavigationParameter { RoomName = room.Name });
+            DoOpenRoom(room);
         }
 
         private async void DoSignOut()

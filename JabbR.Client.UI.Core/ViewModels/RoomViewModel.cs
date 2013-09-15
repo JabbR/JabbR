@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using JabbR.Client.Models;
-using Cirrious.CrossCore;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {

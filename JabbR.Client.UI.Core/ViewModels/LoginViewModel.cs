@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
-using Newtonsoft.Json;
-using Cirrious.CrossCore;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
@@ -24,16 +22,6 @@ namespace JabbR.Client.UI.Core.ViewModels
 
                 IsConnected = false;
             }
-
-            //LoginInfo loginInfo = null;
-            ////BlobCache.Secure.GetLoginAsync(_client.SourceUrl)
-            ////    .Subscribe(info => loginInfo = info);
-            //if (loginInfo != null)
-            //{
-            //    UserName = loginInfo.UserName;
-            //    Password = loginInfo.Password;
-            //    DoSignIn();
-            //}
         }
 
         private bool _isConnected;
@@ -102,8 +90,6 @@ namespace JabbR.Client.UI.Core.ViewModels
                 var loginInfo = await _client.Connect(UserName, Password);
 
                 IsConnected = true;
-
-                //BlobCache.Secure.SaveLogin(UserName, Password, _client.SourceUrl, TimeSpan.FromDays(7));
 
                 var user = await _client.GetUserInfo();
                 

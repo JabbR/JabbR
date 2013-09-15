@@ -43,9 +43,6 @@
     <Compile Include="ViewModels\RoomViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Akavache.Portable">
-      <HintPath>..\packages\akavache.portable.3.0.2\lib\portable-net45+win8+wp8\Akavache.Portable.dll</HintPath>
-    </Reference>
     <Reference Include="Cirrious.CrossCore">
       <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.0.12\lib\sl4-wp71\Cirrious.CrossCore.dll</HintPath>
     </Reference>
