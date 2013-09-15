@@ -121,7 +121,7 @@
             </phone:PivotItem>
         </phone:Pivot>
         <controls:BindableApplicationBar Grid.Row="2" x:Name="AppBar">
-            <controls:BindableApplicationBarIconButton IconUri="/Assets/AppBar/appbar.send.text.rest.png" Text="Send" controls:AppBarItemClick.Command="{Binding SendMessageCommand}" />
+            <controls:BindableApplicationBarIconButton IconUri="/Assets/AppBar/appbar.send.text.rest.png" Text="Send" controls:AppBarItemClick.Command="{Binding SendMessageCommand}" IsEnabled="{Binding CanSendMessage, Mode=TwoWay}"/>
         </controls:BindableApplicationBar>
     </Grid>
 </views:MvxPhonePage>
