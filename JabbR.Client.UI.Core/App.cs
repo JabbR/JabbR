@@ -20,5 +20,10 @@ namespace JabbR.Client.UI.Core
             
             RegisterAppStart<LoginViewModel>();
         }
+
+        protected override IMvxViewModelLocator CreateDefaultViewModelLocator()
+        {
+            return new CustomViewModelLocator();
+        }
     }
 }

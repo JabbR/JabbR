@@ -4,12 +4,19 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using JabbR.Client.Models;
 using Newtonsoft.Json;
+using Cirrious.CrossCore;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
     public class MainViewModel
         : BaseViewModel
     {
+        public class NavigationParameters : NavigationParametersBase
+        {
+            public User CurrentUser { get; set; }
+            public IEnumerable<Room> Rooms { get; set; }
+        }
+
         private readonly IJabbRClient _client;
 
         private User _currentUser;
@@ -50,10 +57,10 @@ namespace JabbR.Client.UI.Core.ViewModels
             _client = client;
         }
 
-        public async void Init(string userJson, string roomsJson)
+        public async void Init(NavigationParameters parameters)
         {
-            CurrentUser = JsonConvert.DeserializeObject<User>(userJson);
-            CurrentRooms = new ObservableCollection<Room>(JsonConvert.DeserializeObject<IEnumerable<Room>>(roomsJson));
+            CurrentUser = parameters.CurrentUser;
+            CurrentRooms = new ObservableCollection<Room>(parameters.Rooms);
             var rooms = await _client.GetRooms();
             Rooms = new ObservableCollection<Room>(rooms);
         }
@@ -78,13 +85,13 @@ namespace JabbR.Client.UI.Core.ViewModels
 
         private void DoOpenRoom(Room room)
         {
-            ShowViewModel<RoomViewModel>(new { roomName = room.Name });
+            ShowViewModel<RoomViewModel>(new RoomViewModel.NavigationParameter { RoomName = room.Name });
         }
 
         private async void DoJoinRoom(Room room)
         {
             await _client.JoinRoom(room.Name);
-            ShowViewModel<RoomViewModel>(new { roomName = room.Name });
+            ShowViewModel<RoomViewModel>(new RoomViewModel.NavigationParameter { RoomName = room.Name });
         }
 
         private async void DoSignOut()

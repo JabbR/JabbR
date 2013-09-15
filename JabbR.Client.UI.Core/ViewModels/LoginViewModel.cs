@@ -2,6 +2,7 @@
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using Newtonsoft.Json;
+using Cirrious.CrossCore;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
@@ -109,10 +110,10 @@ namespace JabbR.Client.UI.Core.ViewModels
                 UserName = String.Empty;
                 Password = String.Empty;
 
-                ShowViewModel<MainViewModel>(new
+                this.ShowViewModel<MainViewModel>(new MainViewModel.NavigationParameters
                 {
-                    userJson = JsonConvert.SerializeObject(user),
-                    roomsJson = JsonConvert.SerializeObject(loginInfo.Rooms)
+                    CurrentUser = user,
+                    Rooms = loginInfo.Rooms
                 });
             }
             catch (Exception ex)

@@ -3,11 +3,31 @@ using System.Windows.Input;
 using Cirrious.CrossCore;
 using Cirrious.MvvmCross.ViewModels;
 using JabbR.Client.UI.Core.Interfaces;
+using System.Collections.Generic;
+using Cirrious.CrossCore.Platform;
+using Newtonsoft.Json;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
+    public abstract class NavigationParametersBase
+    {
+        public const string Key = "Nav";
+    }
+
     public class BaseViewModel : MvxViewModel
     {
+
+        protected void ShowViewModel<TViewModel>(NavigationParametersBase parameters)
+            where TViewModel : IMvxViewModel
+        {
+            var text = JsonConvert.SerializeObject(parameters);
+            this.ShowViewModel<TViewModel>(new MvxBundle(new Dictionary<string, string>()
+                    {
+                        { NavigationParametersBase.Key, text }
+                    }
+            ));
+        }
+
         private string _displayName = "JabbR";
         public string DisplayName
         {

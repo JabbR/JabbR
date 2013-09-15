@@ -3,12 +3,19 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using JabbR.Client.Models;
+using Cirrious.CrossCore;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
     public class RoomViewModel 
         : BaseViewModel
     {
+        public class NavigationParameter
+            : NavigationParametersBase
+        {
+            public string RoomName { get; set; }
+        }
+
         readonly IJabbRClient _client;
         public RoomViewModel(IJabbRClient client)
         {
@@ -90,9 +97,9 @@ namespace JabbR.Client.UI.Core.ViewModels
             }
         }
 
-        public async void Init(string roomName)
+        public async void Init(NavigationParameter parameters)
         {
-            var room = await _client.GetRoomInfo(roomName);
+            var room = await _client.GetRoomInfo(parameters.RoomName);
             Room = room;
             Messages = new ObservableCollection<Message>(Room.RecentMessages);
             Users = new ObservableCollection<User>(Room.Users);
