@@ -10,7 +10,7 @@ namespace JabbR.Services
     public class RecentMessageCache : IRecentMessageCache
     {
         private ConcurrentDictionary<string, RoomCache> _cache = new ConcurrentDictionary<string, RoomCache>();
-        private static readonly List<MessageViewModel> _emptyList = new List<MessageViewModel>();
+        internal static readonly List<MessageViewModel> _emptyList = new List<MessageViewModel>();
 
         private readonly int _numberOfMessages;
 
@@ -112,6 +112,24 @@ namespace JabbR.Services
 
                 _populateHandle.Set();
             }
+        }
+    }
+
+    public class NoopCache : IRecentMessageCache
+    {
+        public void Add(ChatMessage message)
+        {
+            
+        }
+
+        public void Add(string room, List<ChatMessage> messages)
+        {
+            
+        }
+
+        public IList<MessageViewModel> GetRecentMessages(string roomName)
+        {
+            return RecentMessageCache._emptyList;
         }
     }
 }
