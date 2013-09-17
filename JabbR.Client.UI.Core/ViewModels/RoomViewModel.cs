@@ -57,6 +57,17 @@ namespace JabbR.Client.UI.Core.ViewModels
             }
         }
 
+        private Message _currentItem;
+        public Message CurrentItem
+        {
+            get { return _currentItem; }
+            set
+            {
+                _currentItem = value;
+                RaisePropertyChanged(() => CurrentItem);
+            }
+        }
+
         private ObservableCollection<Message> _messages;
         public ObservableCollection<Message> Messages
         {
@@ -126,7 +137,11 @@ namespace JabbR.Client.UI.Core.ViewModels
         {
             if (Room.Name == room)
             {
-                Dispatcher.RequestMainThreadAction(() => Messages.Add(message));
+                Dispatcher.RequestMainThreadAction(() => 
+                {
+                    Messages.Add(message);
+                    CurrentItem = message;
+                });
             }
         }
     }

@@ -19,6 +19,14 @@ namespace JabbR.Client.WP8.UI.Views
             InitializeComponent();
         }
 
+        private void Messages_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems != null && e.AddedItems.Count > 0)
+            {
+                Messages.ScrollIntoView(e.AddedItems[0]);
+            }
+        }
+
         private void Message_TextChanged(object sender, TextChangedEventArgs e)
         {
             var textbox = sender as TextBox;

@@ -35,11 +35,13 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <ListBox x:Name="RecentMessage"
+                    <ListBox x:Name="Messages"
                              Height="465"
                              Margin="0,-5,0,-50"
                              VerticalAlignment="Top"
-                             ItemsSource="{Binding Messages}">
+                             ItemsSource="{Binding Messages}"
+                             SelectedItem="{Binding CurrentItem, Mode=TwoWay}"
+                             SelectionChanged="Messages_OnSelectionChanged">
                         <ListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="HorizontalAlignment" Value="Stretch"/>

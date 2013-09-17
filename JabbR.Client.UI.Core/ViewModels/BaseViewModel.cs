@@ -16,6 +16,9 @@ namespace JabbR.Client.UI.Core.ViewModels
 
     public class BaseViewModel : MvxViewModel
     {
+        public BaseViewModel()
+        {
+        }
 
         protected void ShowViewModel<TViewModel>(NavigationParametersBase parameters)
             where TViewModel : IMvxViewModel
