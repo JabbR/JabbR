@@ -385,7 +385,7 @@ namespace JabbR.Test
                     Name = "foo"
                 };
                 repository.Add(user);
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.AddRoom(user, "Lobby"));
                 Assert.Throws<HubException>(() => service.AddRoom(user, "LObbY"));
@@ -400,7 +400,7 @@ namespace JabbR.Test
                     Name = "foo"
                 };
                 repository.Add(user);
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.AddRoom(user, "Invalid name"));
             }
@@ -419,7 +419,7 @@ namespace JabbR.Test
                     AllowRoomCreation = false
                 };
 
-                var service = new ChatService(new Mock<ICache>().Object, repository, settings);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository, settings);
 
                 Assert.Throws<HubException>(() => service.AddRoom(user, "NewRoom"));
             }
@@ -439,7 +439,7 @@ namespace JabbR.Test
                     AllowRoomCreation = false
                 };
 
-                var service = new ChatService(new Mock<ICache>().Object, repository, settings);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository, settings);
                 ChatRoom room = service.AddRoom(user, "NewRoom");
 
                 Assert.NotNull(room);
@@ -459,7 +459,7 @@ namespace JabbR.Test
                     Name = "foo"
                 };
                 repository.Add(user);
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.AddRoom(user, "Invalid.name"));
             }
@@ -473,7 +473,7 @@ namespace JabbR.Test
                     Name = "foo"
                 };
                 repository.Add(user);
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 ChatRoom room = service.AddRoom(user, "NewRoom");
 
@@ -501,7 +501,7 @@ namespace JabbR.Test
                 {
                     Name = "Room"
                 };
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.JoinRoom(user, room, null);
 
@@ -525,7 +525,7 @@ namespace JabbR.Test
                 };
                 room.AllowedUsers.Add(user);
                 user.AllowedRooms.Add(room);
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.JoinRoom(user, room, null);
 
@@ -548,7 +548,7 @@ namespace JabbR.Test
                     Private = true
                 };
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.JoinRoom(user, room, null));
             }
@@ -569,7 +569,7 @@ namespace JabbR.Test
                     Private = true
                 };
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.JoinRoom(user, room, null);
 
@@ -592,7 +592,7 @@ namespace JabbR.Test
                     AfkNote = "note!?"
                 };
                 repository.Add(user);
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.UpdateActivity(user, "client1", userAgent: null);
                 var clients = user.ConnectedClients.ToList();
@@ -624,7 +624,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.LeaveRoom(user, room);
 
@@ -652,7 +652,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
                 ChatMessage message = service.AddMessage(user, room, Guid.NewGuid().ToString(), "Content");
 
                 Assert.NotNull(message);
@@ -679,7 +679,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.AddOwner(user, user, room));
             }
@@ -702,7 +702,7 @@ namespace JabbR.Test
                 user.OwnedRooms.Add(room);
                 user.Rooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.AddOwner(user, user, room));
             }
@@ -731,7 +731,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.AddOwner(user, user2, room);
 
@@ -767,7 +767,7 @@ namespace JabbR.Test
                 user2.AllowedRooms.Add(room);
                 room.AllowedUsers.Add(user2);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.AddOwner(user, user2, room);
 
@@ -800,7 +800,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.AddOwner(user, user2, room);
 
@@ -834,7 +834,7 @@ namespace JabbR.Test
                 admin.Rooms.Add(room);
                 room.Users.Add(admin);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.AddOwner(admin, user2, room);
 
@@ -874,7 +874,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.Users.Add(user2);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.RemoveOwner(user, user2, room));
             }
@@ -912,7 +912,7 @@ namespace JabbR.Test
                 room.Owners.Add(user2);
                 user2.OwnedRooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.RemoveOwner(user, user2, room));
             }
@@ -948,7 +948,7 @@ namespace JabbR.Test
                 room.Owners.Add(user2);
                 user2.OwnedRooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.RemoveOwner(admin, user2, room);
 
@@ -978,7 +978,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.KickUser(user, user, room));
             }
@@ -1009,7 +1009,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.Users.Add(user2);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.KickUser(user, user2, room));
             }
@@ -1040,7 +1040,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.KickUser(user, user2, room));
             }
@@ -1076,7 +1076,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.Users.Add(user2);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.KickUser(user, user2, room));
             }
@@ -1113,7 +1113,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.Users.Add(user2);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.KickUser(user, user2, room);
 
@@ -1148,7 +1148,7 @@ namespace JabbR.Test
                 room.Users.Add(admin);
                 room.Users.Add(user2);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.KickUser(admin, user2, room);
 
@@ -1186,7 +1186,7 @@ namespace JabbR.Test
                 room.Users.Add(admin);
                 room.Users.Add(user2);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.KickUser(admin, user2, room);
 
@@ -1226,7 +1226,7 @@ namespace JabbR.Test
                 room.Users.Add(admin);
                 room.Users.Add(creator);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.KickUser(admin, creator, room);
 
@@ -1264,7 +1264,7 @@ namespace JabbR.Test
                 room.Users.Add(admin);
                 room.Users.Add(owner);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.KickUser(owner, admin, room));
             }
@@ -1298,7 +1298,7 @@ namespace JabbR.Test
                 room.Users.Add(admin);
                 room.Users.Add(otherAdmin);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.KickUser(admin, otherAdmin, room);
 
@@ -1331,7 +1331,7 @@ namespace JabbR.Test
                 });
 
                 repository.Add(user);
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.DisconnectClient("foo");
 
@@ -1356,7 +1356,7 @@ namespace JabbR.Test
                 });
 
                 repository.Add(user);
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 string userId = service.DisconnectClient("foo");
 
@@ -1386,7 +1386,7 @@ namespace JabbR.Test
                 user.OwnedRooms.Add(room);
                 user.Rooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.LockRoom(user, room);
 
@@ -1417,7 +1417,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.LockRoom(user, room));
             }
@@ -1441,7 +1441,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.LockRoom(user, room);
 
@@ -1489,7 +1489,7 @@ namespace JabbR.Test
                     u.Rooms.Add(room);
                     repository.Add(u);
                 }
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.LockRoom(creator, room);
 
@@ -1523,7 +1523,7 @@ namespace JabbR.Test
                 room.Users.Add(admin);
                 admin.Rooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.LockRoom(admin, room);
 
@@ -1560,7 +1560,7 @@ namespace JabbR.Test
                 room.Owners.Add(user);
                 user.OwnedRooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.AllowUser(user, user2, room));
             }
@@ -1582,7 +1582,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.AllowUser(user, user, room));
             }
@@ -1613,7 +1613,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.AllowedRooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.AllowUser(user, user2, room));
             }
@@ -1642,7 +1642,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.AllowUser(user, user2, room);
 
@@ -1668,7 +1668,7 @@ namespace JabbR.Test
                 room.Users.Add(admin);
                 admin.Rooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.AllowUser(admin, admin, room);
 
@@ -1704,7 +1704,7 @@ namespace JabbR.Test
                 room.Owners.Add(user);
                 user.OwnedRooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.UnallowUser(user, user2, room));
             }
@@ -1731,7 +1731,7 @@ namespace JabbR.Test
                 room.AllowedUsers.Add(user);
                 user.AllowedRooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.UnallowUser(user, user, room));
             }
@@ -1758,7 +1758,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.UnallowUser(user, user2, room));
             }
@@ -1788,7 +1788,7 @@ namespace JabbR.Test
                 admin.Rooms.Add(room);
                 user2.AllowedRooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.UnallowUser(admin, user2, room);
 
@@ -1822,7 +1822,7 @@ namespace JabbR.Test
                 user.OwnedRooms.Add(room);
                 user.Rooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.UnallowUser(user, user2, room));
             }
@@ -1863,7 +1863,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.Users.Add(user2);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.UnallowUser(user, user2, room));
             }
@@ -1894,7 +1894,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.AllowedRooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.UnallowUser(user, user2, room);
 
@@ -1931,7 +1931,7 @@ namespace JabbR.Test
                 room.AllowedUsers.Add(user);
                 user.AllowedRooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.UnallowUser(admin, user, room);
 
@@ -1973,7 +1973,7 @@ namespace JabbR.Test
                 room.AllowedUsers.Add(owner);
                 owner.AllowedRooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.UnallowUser(admin, owner, room);
 
@@ -2016,7 +2016,7 @@ namespace JabbR.Test
                 room.AllowedUsers.Add(creator);
                 creator.AllowedRooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.UnallowUser(admin, creator, room);
 
@@ -2061,7 +2061,7 @@ namespace JabbR.Test
                 room.Users.Add(owner);
                 room.Users.Add(admin);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.UnallowUser(owner, admin, room));
             }
@@ -2097,7 +2097,7 @@ namespace JabbR.Test
                 room.AllowedUsers.Add(otherAdmin);
                 otherAdmin.AllowedRooms.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.UnallowUser(admin, otherAdmin, room);
 
@@ -2125,7 +2125,7 @@ namespace JabbR.Test
                 repository.Add(nonAdmin);
                 repository.Add(user);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.AddAdmin(nonAdmin, user));
             }
@@ -2147,7 +2147,7 @@ namespace JabbR.Test
                 repository.Add(admin);
                 repository.Add(user);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.AddAdmin(admin, user);
 
@@ -2174,7 +2174,7 @@ namespace JabbR.Test
                 repository.Add(nonAdmin);
                 repository.Add(user);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.RemoveAdmin(nonAdmin, user));
             }
@@ -2196,7 +2196,7 @@ namespace JabbR.Test
                 repository.Add(admin);
                 repository.Add(user);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.RemoveAdmin(admin, user);
 
@@ -2220,7 +2220,7 @@ namespace JabbR.Test
                 repository.Add(nonAdmin);
                 repository.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 Assert.Throws<HubException>(() => service.ChangeWelcome(nonAdmin, room, null));
             }
@@ -2240,7 +2240,7 @@ namespace JabbR.Test
                 repository.Add(admin);
                 repository.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.ChangeWelcome(admin, room, welcome);
 
@@ -2261,7 +2261,7 @@ namespace JabbR.Test
                 repository.Add(admin);
                 repository.Add(room);
 
-                var service = new ChatService(new Mock<ICache>().Object, repository);
+                var service = new ChatService(new Mock<ICache>().Object, new Mock<IRecentMessageCache>().Object, repository);
 
                 service.ChangeWelcome(admin, room, "");
 

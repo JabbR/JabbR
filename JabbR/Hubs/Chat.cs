@@ -21,18 +21,21 @@ namespace JabbR
 
         private readonly IJabbrRepository _repository;
         private readonly IChatService _service;
+        private readonly IRecentMessageCache _recentMessageCache;
         private readonly ICache _cache;
         private readonly ContentProviderProcessor _resourceProcessor;
         private readonly ILogger _logger;
 
         public Chat(ContentProviderProcessor resourceProcessor,
                     IChatService service,
+                    IRecentMessageCache recentMessageCache,
                     IJabbrRepository repository,
                     ICache cache,
                     ILogger logger)
         {
             _resourceProcessor = resourceProcessor;
             _service = service;
+            _recentMessageCache = recentMessageCache;
             _repository = repository;
             _cache = cache;
             _logger = logger;
@@ -391,12 +394,21 @@ namespace JabbR
                 return null;
             }
 
-            var recentMessages = await (from m in _repository.GetMessagesByRoom(room)
-                                        orderby m.When descending
-                                        select m).Take(50).ToListAsync();
+            var recentMessages = _recentMessageCache.GetRecentMessages(room.Name);
 
-            // Reverse them since we want to get them in chronological order
-            recentMessages.Reverse();
+            // If we haven't cached enough messages just populate it now
+            if (recentMessages.Count == 0)
+            {
+                var messages = await (from m in _repository.GetMessagesByRoom(room)
+                                      orderby m.When descending
+                                      select m).Take(50).ToListAsync();
+                // Reverse them since we want to get them in chronological order
+                messages.Reverse();
+
+                _recentMessageCache.Add(room.Name, messages);
+
+                recentMessages = messages.Select(m => new MessageViewModel(m)).ToList();
+            }
 
             // Get online users through the repository
             List<ChatUser> onlineUsers = await _repository.GetOnlineUsers(room).ToListAsync();
@@ -408,7 +420,7 @@ namespace JabbR
                         select new UserViewModel(u),
                 Owners = from u in room.Owners.Online()
                          select u.Name,
-                RecentMessages = recentMessages.Select(m => new MessageViewModel(m)),
+                RecentMessages = recentMessages,
                 Topic = room.Topic ?? String.Empty,
                 Welcome = room.Welcome ?? String.Empty,
                 Closed = room.Closed

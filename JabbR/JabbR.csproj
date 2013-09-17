@@ -1095,10 +1095,12 @@
     <Compile Include="Services\Email\RazorEmailTemplateEngine.cs" />
     <Compile Include="Services\Email\SmtpClientEmailSender.cs" />
     <Compile Include="Services\IJabbrConfiguration.cs" />
+    <Compile Include="Services\IRecentMessageCache.cs" />
     <Compile Include="Services\ISettingsManager.cs" />
     <Compile Include="Services\IUserAuthenticator.cs" />
     <Compile Include="Services\JabbrConfiguration.cs" />
     <Compile Include="Services\PresenceMonitor.cs" />
+    <Compile Include="Services\RecentMessageCache.cs" />
     <Compile Include="Services\SettingsKeyProvider.cs" />
     <Compile Include="Services\ApplicationSettings.cs" />
     <Compile Include="Services\DefaultCache.cs" />

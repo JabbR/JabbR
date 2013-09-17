@@ -21,7 +21,7 @@ namespace JabbR.Test
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
 
@@ -37,7 +37,7 @@ namespace JabbR.Test
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
 
@@ -52,7 +52,7 @@ namespace JabbR.Test
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
             
@@ -70,7 +70,7 @@ namespace JabbR.Test
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
                 
@@ -88,7 +88,7 @@ namespace JabbR.Test
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
 
@@ -106,7 +106,7 @@ namespace JabbR.Test
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
 
@@ -120,7 +120,7 @@ namespace JabbR.Test
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
 
@@ -134,7 +134,7 @@ namespace JabbR.Test
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var user = new ChatUser
                 {
@@ -162,7 +162,7 @@ namespace JabbR.Test
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var user = new ChatUser
                 {
@@ -190,7 +190,7 @@ namespace JabbR.Test
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
 
                 var commandManager = new CommandManager("1", "1", "room", service, repository, cache, notificationService.Object);
@@ -206,7 +206,7 @@ namespace JabbR.Test
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
 
                 var commandManager = new CommandManager("1", "1", "room", service, repository, cache, notificationService.Object);
@@ -239,7 +239,7 @@ namespace JabbR.Test
                     HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -276,7 +276,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -309,7 +309,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -348,7 +348,7 @@ namespace JabbR.Test
                 };
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -382,7 +382,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.AllowedUsers.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -421,7 +421,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.AllowedUsers.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -473,7 +473,7 @@ namespace JabbR.Test
                 room2.AllowedUsers.Add(user);
                 repository.Add(room2);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -512,7 +512,7 @@ namespace JabbR.Test
                 room.Owners.Add(user);
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -560,7 +560,7 @@ namespace JabbR.Test
                 room2.Users.Add(user);
                 repository.Add(room2);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -596,7 +596,7 @@ namespace JabbR.Test
                 };
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -631,7 +631,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.AllowedUsers.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -666,7 +666,7 @@ namespace JabbR.Test
                 };
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -702,7 +702,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 room.AllowedUsers.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -739,7 +739,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -771,7 +771,7 @@ namespace JabbR.Test
                     Name = "room"
                 };
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -805,7 +805,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -838,7 +838,7 @@ namespace JabbR.Test
                 };
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -872,7 +872,7 @@ namespace JabbR.Test
                 };
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -905,7 +905,7 @@ namespace JabbR.Test
                 };
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -939,7 +939,7 @@ namespace JabbR.Test
                 };
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -972,7 +972,7 @@ namespace JabbR.Test
                 room.AllowedUsers.Add(user);
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1004,7 +1004,7 @@ namespace JabbR.Test
                 };
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1033,7 +1033,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1058,7 +1058,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1097,7 +1097,7 @@ namespace JabbR.Test
                 roomOwnerUser.Rooms.Add(room);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1141,7 +1141,7 @@ namespace JabbR.Test
                 roomOwnerUser.Rooms.Add(room);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1180,7 +1180,7 @@ namespace JabbR.Test
                 roomOwnerUser.Rooms.Add(room);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1212,7 +1212,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1237,7 +1237,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1279,7 +1279,7 @@ namespace JabbR.Test
                 room.Owners.Add(targetUser);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1325,7 +1325,7 @@ namespace JabbR.Test
                 room.Owners.Add(targetUser);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1372,7 +1372,7 @@ namespace JabbR.Test
                 room.Owners.Add(targetUser);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1413,7 +1413,7 @@ namespace JabbR.Test
                 room.Owners.Add(targetUser);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1441,7 +1441,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1466,7 +1466,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1496,7 +1496,7 @@ namespace JabbR.Test
                     Name = "Test"
                 };
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1521,7 +1521,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1556,7 +1556,7 @@ namespace JabbR.Test
                 };
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1582,7 +1582,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1613,7 +1613,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1638,7 +1638,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1671,7 +1671,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1701,7 +1701,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1733,7 +1733,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1763,7 +1763,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1792,7 +1792,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1823,7 +1823,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1851,7 +1851,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1889,7 +1889,7 @@ namespace JabbR.Test
                 room.Owners.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1930,7 +1930,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -1979,7 +1979,7 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 user3.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2024,7 +2024,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2071,7 +2071,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2120,7 +2120,7 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 user3.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2174,7 +2174,7 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 user3.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2215,7 +2215,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2256,7 +2256,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "2",
@@ -2299,7 +2299,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "2",
@@ -2342,7 +2342,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2385,7 +2385,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2427,7 +2427,7 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2471,7 +2471,7 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2515,7 +2515,7 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2550,7 +2550,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2585,7 +2585,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2622,7 +2622,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2658,7 +2658,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2694,7 +2694,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2722,7 +2722,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2747,7 +2747,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2787,7 +2787,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var userList = new List<string>();
                 notificationService.Setup(m => m.ListUsers(It.IsAny<ChatRoom>(), It.IsAny<IEnumerable<string>>()))
@@ -2838,7 +2838,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var userList = new List<string>();
                 notificationService.Setup(m => m.ListUsers(It.IsAny<ChatRoom>(), It.IsAny<IEnumerable<string>>()))
@@ -2890,7 +2890,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var userList = new List<string>();
                 notificationService.Setup(m => m.ListUsers(It.IsAny<ChatRoom>(), It.IsAny<IEnumerable<string>>()))
@@ -2932,7 +2932,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2964,7 +2964,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -2996,7 +2996,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3031,7 +3031,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3066,7 +3066,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3097,7 +3097,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3128,7 +3128,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3159,7 +3159,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3190,7 +3190,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3220,7 +3220,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3245,7 +3245,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3276,7 +3276,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3309,7 +3309,7 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom { Name = "test", };
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3341,7 +3341,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3373,7 +3373,7 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3404,7 +3404,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3438,7 +3438,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3469,7 +3469,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3500,7 +3500,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3535,7 +3535,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3579,7 +3579,7 @@ namespace JabbR.Test
                 room.Users.Add(user2);
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3623,7 +3623,7 @@ namespace JabbR.Test
                 room.Users.Add(user2);
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3671,7 +3671,7 @@ namespace JabbR.Test
                 room.Users.Add(user2);
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3699,7 +3699,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3726,7 +3726,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3753,7 +3753,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3781,7 +3781,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3806,7 +3806,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3831,7 +3831,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3862,7 +3862,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3887,7 +3887,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3918,7 +3918,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3949,7 +3949,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -3987,7 +3987,7 @@ namespace JabbR.Test
                 user.OwnedRooms.Add(room);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4026,7 +4026,7 @@ namespace JabbR.Test
                 user.OwnedRooms.Add(room);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4069,7 +4069,7 @@ namespace JabbR.Test
                 user.OwnedRooms.Add(room);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4111,7 +4111,7 @@ namespace JabbR.Test
                 user.OwnedRooms.Add(room);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4150,7 +4150,7 @@ namespace JabbR.Test
                     Users = new Collection<ChatUser>() { user }
                 };
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4184,7 +4184,7 @@ namespace JabbR.Test
                     Users = new Collection<ChatUser>() { user }
                 };
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4226,7 +4226,7 @@ namespace JabbR.Test
                     Users = new Collection<ChatUser>() { user }
                 };
                 repository.Add(room2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4269,7 +4269,7 @@ namespace JabbR.Test
                     Users = new Collection<ChatUser>() { user }
                 };
                 repository.Add(room2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4296,7 +4296,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4337,7 +4337,7 @@ namespace JabbR.Test
                     Users = new Collection<ChatUser>() { user }
                 };
                 repository.Add(room2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4365,7 +4365,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4399,7 +4399,7 @@ namespace JabbR.Test
                 room.Owners.Add(user);
                 user.OwnedRooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4427,7 +4427,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4461,7 +4461,7 @@ namespace JabbR.Test
                 room.Owners.Add(user);
                 user.OwnedRooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4499,7 +4499,7 @@ namespace JabbR.Test
                 room.Owners.Add(user);
                 user.OwnedRooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4531,7 +4531,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4569,7 +4569,7 @@ namespace JabbR.Test
 
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4598,7 +4598,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4635,7 +4635,7 @@ namespace JabbR.Test
                 // Add a room owner.
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4672,7 +4672,7 @@ namespace JabbR.Test
 
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4726,7 +4726,7 @@ namespace JabbR.Test
                 // verify that these users we passed into the closeRoom method.
                 var users = room.Users.ToList();
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4757,7 +4757,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4782,7 +4782,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4813,7 +4813,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4854,7 +4854,7 @@ namespace JabbR.Test
                 user2.AllowedRooms.Add(room);
                 room.AllowedUsers.Add(user2);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4888,7 +4888,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4928,7 +4928,7 @@ namespace JabbR.Test
                 user2.AllowedRooms.Add(room);
                 room.AllowedUsers.Add(user2);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -4969,7 +4969,7 @@ namespace JabbR.Test
                 user2.AllowedRooms.Add(room);
                 room.AllowedUsers.Add(user2);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5014,7 +5014,7 @@ namespace JabbR.Test
                 user2.AllowedRooms.Add(room);
                 room.AllowedUsers.Add(user2);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5047,7 +5047,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5077,7 +5077,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5106,7 +5106,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5136,7 +5136,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5163,7 +5163,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5186,7 +5186,7 @@ namespace JabbR.Test
                 // Arrange.
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         null,
@@ -5213,7 +5213,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5241,7 +5241,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5278,7 +5278,7 @@ namespace JabbR.Test
                 room.Owners.Add(roomOwner);
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5313,7 +5313,7 @@ namespace JabbR.Test
                 };
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5350,7 +5350,7 @@ namespace JabbR.Test
                 room.Owners.Add(roomOwner);
                 repository.Add(room);
 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5386,7 +5386,7 @@ namespace JabbR.Test
                 };
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5419,7 +5419,7 @@ namespace JabbR.Test
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5455,7 +5455,7 @@ namespace JabbR.Test
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5487,7 +5487,7 @@ namespace JabbR.Test
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5520,7 +5520,7 @@ namespace JabbR.Test
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5551,7 +5551,7 @@ namespace JabbR.Test
                     Id = "1"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5578,7 +5578,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5605,7 +5605,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5639,7 +5639,7 @@ namespace JabbR.Test
                 };
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5672,7 +5672,7 @@ namespace JabbR.Test
                 };
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5703,7 +5703,7 @@ namespace JabbR.Test
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5736,7 +5736,7 @@ namespace JabbR.Test
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5768,7 +5768,7 @@ namespace JabbR.Test
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, repository);
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
                                                         "1",
@@ -5790,7 +5790,7 @@ namespace JabbR.Test
         {
             var repository = new InMemoryRepository();
             var cache = new Mock<ICache>().Object;
-            var service = new ChatService(cache, repository);
+            var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
             var notificationService = new Mock<INotificationService>();
             var commandManager = new CommandManager("clientid",
                                                     null,
