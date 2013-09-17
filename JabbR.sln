@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.20827.3
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JabbR", "JabbR\JabbR.csproj", "{16204F16-6354-4B68-BB0F-1A4F109FC92B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JabbR.Tests", "JabbR.Tests\JabbR.Tests.csproj", "{45AB4285-8B37-47FD-9D38-40E6BC5D2E13}"
@@ -26,14 +24,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C286B5
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".build", ".build", "{E4364FCF-C7B4-4346-A890-12C6E4A08A5C}"
-	ProjectSection(SolutionItems) = preProject
-		Build.proj = Build.proj
-		.build\MSBuild.Community.Tasks.dll = .build\MSBuild.Community.Tasks.dll
-		.build\MSBuild.Community.Tasks.targets = .build\MSBuild.Community.Tasks.targets
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JabbR.Client.Portable", "JabbR.Client.Portable\JabbR.Client.Portable.csproj", "{3786FC2E-7FC9-43EC-B137-41B070DE37D8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{F8B28AB9-6B21-40C5-839F-98461F50A5D9}"
+	ProjectSection(SolutionItems) = preProject
+		build.cmd = build.cmd
+		Build\Build.proj = Build\Build.proj
+		Build\MSBuild.Community.Tasks.dll = Build\MSBuild.Community.Tasks.dll
+		Build\MSBuild.Community.Tasks.targets = Build\MSBuild.Community.Tasks.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
