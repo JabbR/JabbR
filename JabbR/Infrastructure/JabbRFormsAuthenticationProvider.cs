@@ -150,5 +150,10 @@ namespace JabbR.Infrastructure
 
             return null;
         }
+
+        public void ApplyRedirect(CookieApplyRedirectContext context)
+        {
+            context.Response.Redirect(context.RedirectUri);
+        }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
+using System.Net.Http;
 using System.Security;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNet.SignalR.Client;
-using Microsoft.AspNet.SignalR.Client.Hubs;
 
 namespace JabbR.Client
 {
@@ -17,47 +17,41 @@ namespace JabbR.Client
             _url = url;
         }
 
-        public Task<HubConnection> Connect(string userName, string password)
+        public async Task<HubConnection> Connect(string userName, string password)
         {
-            var content = String.Format("username={0}&password={1}", Uri.EscapeUriString(userName), Uri.EscapeUriString(password));
-            var contentBytes = Encoding.ASCII.GetBytes(content);
-
             var authUri = new UriBuilder(_url);
             authUri.Path += authUri.Path.EndsWith("/") ? "account/login" : "/account/login";
 
             var cookieJar = new CookieContainer();
-            var request = (HttpWebRequest)WebRequest.Create(authUri.Uri);
-            request.CookieContainer = cookieJar;
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = contentBytes.Length;
 
-            return request.GetHttpRequestStreamAsync()
-                .Then(stream => stream.WriteAsync(contentBytes).Then(() => stream.Dispose()))
-                .Then(() => request.GetHttpResponseAsync())
-                .Then(response => {
-                    var respStatusCode = response.StatusCode;
-                    
-                    if (respStatusCode < HttpStatusCode.OK || respStatusCode > (HttpStatusCode)299)
-                    {
-                        throw new WebException(String.Format("Response status code does not indicate success: {0}", respStatusCode));
-                    }
-                    
-                    // Verify the cookie
-                    var cookie = cookieJar.GetCookies(new Uri(_url));
-                    if (cookie == null || cookie["jabbr.id"] == null)
-                    {
-                        throw new SecurityException("Didn't get a cookie from JabbR! Ensure your User Name/Password are correct");
-                    }
-                    
-                    // Create a hub connection and give it our cookie jar
-                    var connection = new HubConnection(_url)
-                    {
-                        CookieContainer = cookieJar
-                    };
-                    
-                    return connection;
-            });
+#if PORTABLE
+            var handler = new HttpClientHandler
+            {
+#else
+            var handler = new WebRequestHandler
+            {
+#endif
+                CookieContainer = cookieJar
+            };
+
+            var client = new HttpClient(handler);
+
+            var parameters = new Dictionary<string, string> {
+                { "username" , userName },
+                { "password" , password }
+            };
+
+            var response = await client.PostAsync(authUri.Uri, new FormUrlEncodedContent(parameters));
+
+            response.EnsureSuccessStatusCode();
+
+            // Create a hub connection and give it our cookie jar
+            var connection = new HubConnection(_url)
+            {
+                CookieContainer = cookieJar
+            };
+
+            return connection;
         }
     }
 }

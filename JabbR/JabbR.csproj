@@ -15,8 +15,6 @@
     <AssemblyName>JabbR</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>4.0</OldToolsVersion>
@@ -81,12 +79,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Iesi.Collections.4.0.1.4000\lib\net40\Iesi.Collections.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.0.0-rtm1-130818-b157\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.1.0-pre-130916-b211\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.0.0-rtm1-130818-b157\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.1.0-pre-130916-b211\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -99,35 +98,35 @@
     </Reference>
     <Reference Include="Microsoft.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.2.0.0-rtw2-20818-575-dev\lib\net45\Microsoft.Owin.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.2.0.1-rtw1-20916-628-dev\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Diagnostics, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Diagnostics.2.0.0-rtw2-20818-575-dev\lib\net40\Microsoft.Owin.Diagnostics.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Diagnostics.2.0.1-rtw1-20916-628-dev\lib\net40\Microsoft.Owin.Diagnostics.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.FileSystems, Version=0.24.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Owin.FileSystems, Version=0.26.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.FileSystems.0.24.0-pre-20818-575-dev\lib\net40\Microsoft.Owin.FileSystems.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.FileSystems.0.26.0-pre-20916-628-dev\lib\net40\Microsoft.Owin.FileSystems.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.0.0-rtw2-20818-575-dev\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.0.1-rtw1-20916-628-dev\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.2.0.0-rtw2-20818-575-dev\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.2.0.1-rtw1-20916-628-dev\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Cookies, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.2.0.0-rtw2-20818-575-dev\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.2.0.1-rtw1-20916-628-dev\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Security.Federation, Version=0.24.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.Federation.0.24.0-pre-20725-492-rel\lib\net45\Microsoft.Owin.Security.Federation.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.Security.Federation.0.24.0-pre-20725-492-dev\lib\net45\Microsoft.Owin.Security.Federation.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.StaticFiles, Version=0.24.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Owin.StaticFiles, Version=0.26.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.StaticFiles.0.24.0-pre-20818-575-dev\lib\net40\Microsoft.Owin.StaticFiles.dll</HintPath>
+      <HintPath>..\packages\Microsoft.Owin.StaticFiles.0.26.0-pre-20916-628-dev\lib\net45\Microsoft.Owin.StaticFiles.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -891,8 +890,8 @@
     <Content Include="Scripts\jquery.pubsub.js" />
     <Content Include="Scripts\jquery.pulse.js" />
     <Content Include="Scripts\jquery.pulse.min.js" />
-    <Content Include="Scripts\jquery.signalR-2.0.0-rtm1-130818-b157.js" />
-    <Content Include="Scripts\jquery.signalR-2.0.0-rtm1-130818-b157.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.1.0-pre-130916-b211.js" />
+    <Content Include="Scripts\jquery.signalR-2.1.0-pre-130916-b211.min.js" />
     <Content Include="Scripts\jquery.sortElements.js" />
     <Content Include="Scripts\jquery.timeago.0.10.js" />
     <Content Include="Scripts\jQuery.tmpl.js" />
@@ -1028,6 +1027,7 @@
     <Compile Include="Models\MessageType.cs" />
     <Compile Include="Models\ModelExtensions.cs" />
     <Compile Include="Models\Notification.cs" />
+    <Compile Include="Infrastructure\QueryableExtensions.cs" />
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Nancy\AdministrationModule.cs" />
     <Compile Include="Nancy\ClaimsPrincipalUserIdentity.cs" />
@@ -1381,7 +1381,6 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
   <PropertyGroup>
     <PostBuildEvent>
 if $(ConfigurationName) == Debug (

@@ -13,6 +13,7 @@ namespace JabbR.Services
         private readonly ICollection<ChatRoom> _rooms;
         private readonly ICollection<Attachment> _attachments;
         private readonly ICollection<Notification> _notifications;
+        private readonly ICollection<Settings> _settings;
 
         public InMemoryRepository()
         {
@@ -21,6 +22,7 @@ namespace JabbR.Services
             _identities = new SafeCollection<ChatUserIdentity>();
             _attachments = new SafeCollection<Attachment>();
             _notifications = new SafeCollection<Notification>();
+            _settings = new SafeCollection<Settings>();
         }
 
         public IQueryable<ChatRoom> Rooms { get { return _rooms.AsQueryable(); } }
@@ -28,6 +30,8 @@ namespace JabbR.Services
         public IQueryable<ChatUser> Users { get { return _users.AsQueryable(); } }
 
         public IQueryable<ChatClient> Clients { get { return _users.SelectMany(u => u.ConnectedClients).AsQueryable(); } }
+
+        public IQueryable<Settings> Settings { get { return _settings.AsQueryable(); } }
 
         public void Add(Attachment attachment)
         {
@@ -51,6 +55,11 @@ namespace JabbR.Services
             {
                 identity.User.Identities.Add(identity);
             }
+        }
+
+        public void Add(Settings settings)
+        {
+            _settings.Add(settings);
         }
 
         public void Add(ChatMessage message)

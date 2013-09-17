@@ -201,20 +201,20 @@
                      });
     }
 
-    function updateLobbyRoomCount(room, count) {
+    function updateLobbyRoom(room) {
         var lobby = getLobby(),
             $targetList = room.Private === true ? lobby.owners : lobby.users,
             $room = $targetList.find('[data-room="' + room.Name + '"]'),
             $count = $room.find('.count'),
+            $topic = $room.find('.topic'),
             roomName = room.Name.toString().toUpperCase();
 
-        $room.css('background-color', '#f5f5f5');
-        if (count === 0) {
+        if (room.Count === 0) {
             $count.text(utility.getLanguageResource('Client_OccupantsZero'));
-        } else if (count === 1) {
+        } else if (room.Count === 1) {
             $count.text(utility.getLanguageResource('Client_OccupantsOne'));
         } else {
-            $count.text(utility.getLanguageResource('Client_OccupantsMany', count));
+            $count.text(utility.getLanguageResource('Client_OccupantsMany', room.Count));
         }
 
         if (room.Private === true) {
@@ -228,10 +228,12 @@
         } else {
             $room.removeClass('closed');
         }
+        
+        $topic.text(room.Topic);
 
-        var nextListElement = getNextRoomListElement($targetList, roomName, count, room.Closed);
+        var nextListElement = getNextRoomListElement($targetList, roomName, room.Count, room.Closed);
 
-        $room.data('count', count);
+        $room.data('count', room.Count);
         if (nextListElement !== null) {
             $room.insertBefore(nextListElement);
         } else {
@@ -239,7 +241,7 @@
         }
 
         // Do a little animation
-        $room.animate({ backgroundColor: '#ffffff' }, 800);
+        $room.css('-webkit-animation-play-state', 'running').css('animation-play-state', 'running');
     }
 
     function addRoomToLobby(roomViewModel) {
@@ -635,12 +637,11 @@
         }
     }
 
-    function updateRoomTopic(roomViewModel) {
-        var room = getRoomElements(roomViewModel.Name);
-        var topic = roomViewModel.Topic;
-        var topicHtml = topic === '' ? utility.getLanguageResource('Chat_DefaultTopic', roomViewModel.Name) : ui.processContent(topic);
+    function updateRoomTopic(roomName, topic) {
+        var room = getRoomElements(roomName);
+        var topicHtml = topic === '' ? utility.getLanguageResource('Chat_DefaultTopic', roomName) : ui.processContent(topic);
         var roomTopic = room.roomTopic;
-        var isVisibleRoom = getCurrentRoomElements().getName() === roomViewModel.Name;
+        var isVisibleRoom = getCurrentRoomElements().getName() === roomName;
 
         if (isVisibleRoom) {
             roomTopic.hide();
@@ -1369,7 +1370,7 @@
 
             room.close();
         },
-        updateLobbyRoomCount: updateLobbyRoomCount,
+        updateLobbyRoom: updateLobbyRoom,
         updatePrivateLobbyRooms: function (roomName) {
             var lobby = getLobby(),
                 $room = lobby.users.find('li[data-name="' + roomName + '"]');
@@ -2140,8 +2141,8 @@
 
             updateFlag(userViewModel, $user);
         },
-        changeRoomTopic: function (roomViewModel) {
-            updateRoomTopic(roomViewModel);
+        changeRoomTopic: function (roomName, topic) {
+            updateRoomTopic(roomName, topic);
         },
         confirmMessage: function (id) {
             $('#m-' + id).removeClass('failed')

@@ -22,12 +22,12 @@ namespace JabbR.Client
         event Action<string, User, string> UsernameChanged;
         event Action<User, string> NoteChanged;
         event Action<User, string> FlagChanged;
-        event Action<Room> TopicChanged;
+        event Action<string, string, string> TopicChanged;
         event Action<User, string> OwnerAdded;
         event Action<User, string> OwnerRemoved;
         event Action<string, string, string> AddMessageContent;
         event Action<Room> JoinedRoom;
-        event Action<Room, int> RoomCountChanged;
+        event Action<Room> RoomChanged;
         event Action<User> UserActivityChanged;
         event Action<IEnumerable<User>> UsersInactive;
         event Action Disconnected;
