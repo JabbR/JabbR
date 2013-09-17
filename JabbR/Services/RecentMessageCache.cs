@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 using JabbR.Models;
 using JabbR.ViewModels;
 using Microsoft.AspNet.SignalR.Messaging;
@@ -8,7 +9,7 @@ namespace JabbR.Services
 {
     public class RecentMessageCache : IRecentMessageCache
     {
-        private ConcurrentDictionary<string, MessageStore<MessageViewModel>> _cache = new ConcurrentDictionary<string, MessageStore<MessageViewModel>>();
+        private ConcurrentDictionary<string, RoomCache> _cache = new ConcurrentDictionary<string, RoomCache>();
         private static readonly List<MessageViewModel> _emptyList = new List<MessageViewModel>();
 
         private readonly int _numberOfMessages;
@@ -25,23 +26,28 @@ namespace JabbR.Services
 
         public void Add(string room, List<ChatMessage> messages)
         {
-            _cache.TryAdd(room, CreateStore(messages));
+            var roomCache = new RoomCache(_numberOfMessages);
+
+            _cache.TryAdd(room, roomCache);
+
+            roomCache.Populate(messages);
         }
 
         public void Add(ChatMessage message)
         {
-            MessageStore<MessageViewModel> store;
-            if (_cache.TryGetValue(message.Room.Name, out store))
+            // We need to block here so that we always a
+            RoomCache roomCache;
+            if (_cache.TryGetValue(message.Room.Name, out roomCache))
             {
                 // Only cache if there's been a store created for this room already
-                store.Add(new MessageViewModel(message));
+                roomCache.Add(message);
             }
         }
 
         public IList<MessageViewModel> GetRecentMessages(string roomName)
         {
-            MessageStore<MessageViewModel> store;
-            if (_cache.TryGetValue(roomName, out store))
+            RoomCache roomCache;
+            if (_cache.TryGetValue(roomName, out roomCache))
             {
                 List<MessageViewModel> messages = null;
                 int count = _numberOfMessages;
@@ -51,7 +57,7 @@ namespace JabbR.Services
 
                 do
                 {
-                    result = store.GetMessages(min, count);
+                    result = roomCache.Store.GetMessages(min, count);
 
                     // Optimized
                     if (min == 0 && !result.HasMoreData)
@@ -79,16 +85,33 @@ namespace JabbR.Services
             return _emptyList;
         }
 
-        private MessageStore<MessageViewModel> CreateStore(List<ChatMessage> messages)
+        private class RoomCache
         {
-            var store = new MessageStore<MessageViewModel>((uint)_numberOfMessages);
+            private readonly ManualResetEventSlim _populateHandle = new ManualResetEventSlim();
 
-            foreach (var message in messages)
+            public MessageStore<MessageViewModel> Store { get; private set; }
+
+            public RoomCache(int size)
             {
-                store.Add(new MessageViewModel(message));
+                Store = new MessageStore<MessageViewModel>((uint)size);
             }
 
-            return store;
+            public void Add(ChatMessage message)
+            {
+                _populateHandle.Wait();
+
+                Store.Add(new MessageViewModel(message));
+            }
+
+            public void Populate(List<ChatMessage> messages)
+            {
+                foreach (var message in messages)
+                {
+                    Store.Add(new MessageViewModel(message));
+                }
+
+                _populateHandle.Set();
+            }
         }
     }
 }
