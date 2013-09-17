@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using JabbR.Client.Models;
+using Newtonsoft.Json;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
-    public class RoomViewModel 
+    public class RoomViewModel
         : BaseViewModel
     {
         public class NavigationParameter
@@ -33,6 +35,17 @@ namespace JabbR.Client.UI.Core.ViewModels
             }
         }
 
+        private User _currentUser;
+        public User CurrentUser
+        {
+            get { return _currentUser; }
+            set
+            {
+                _currentUser = value;
+                RaisePropertyChanged(() => CurrentUser);
+            }
+        }
+
         private Room _room;
         public Room Room
         {
@@ -45,7 +58,7 @@ namespace JabbR.Client.UI.Core.ViewModels
         }
 
         private ObservableCollection<Message> _messages;
-        public ObservableCollection<Message> Messages 
+        public ObservableCollection<Message> Messages
         {
             get { return _messages; }
             set
@@ -63,7 +76,7 @@ namespace JabbR.Client.UI.Core.ViewModels
             {
                 _users = value;
                 RaisePropertyChanged(() => Users);
-            }   
+            }
         }
 
         private ICommand _sendMessageCommand;
@@ -84,6 +97,7 @@ namespace JabbR.Client.UI.Core.ViewModels
                 try
                 {
                     var result = await _client.Send(Message, Room.Name);
+
                     if (result)
                     {
                         Message = String.Empty;
@@ -102,6 +116,18 @@ namespace JabbR.Client.UI.Core.ViewModels
             Room = room;
             Messages = new ObservableCollection<Message>(Room.RecentMessages);
             Users = new ObservableCollection<User>(Room.Users);
+
+            // Does this get registered multiple times? Is there a dispose method we can use
+            // to unsubscribe
+            _client.MessageReceived += OnMessageReceived;
+        }
+
+        private void OnMessageReceived(Message message, string room)
+        {
+            if (Room.Name == room)
+            {
+                Dispatcher.RequestMainThreadAction(() => Messages.Add(message));
+            }
         }
     }
 }
