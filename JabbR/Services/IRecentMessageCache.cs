@@ -10,6 +10,6 @@ namespace JabbR.Services
 
         void Add(string room, List<ChatMessage> messages);
 
-        IList<MessageViewModel> GetRecentMessages(string roomName);
+        ICollection<MessageViewModel> GetRecentMessages(string roomName);
     }
 }

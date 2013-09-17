@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using JabbR.Models;
@@ -22,12 +23,12 @@ namespace JabbR.Tests
                 cache.Add(MakeMessage("dfowler", "room", "Hello_" + i));
             }
 
-            var messages = cache.GetRecentMessages("room");
+            var messages = cache.GetRecentMessages("room").ToList();
 
             Assert.Equal(10, messages.Count);
 
             // The impl of the message store allocates bucket sizes optimized for the GC so it's not exact
-            for (int i = 64, j = 0; i <= 73; i++, j++)
+            for (int i = 90, j = 0; i <= 99; i++, j++)
             {
                 Assert.Equal("Hello_" + i, messages[j].Content);
             }
@@ -61,7 +62,7 @@ namespace JabbR.Tests
 
             wh.Wait();
 
-            var messages = cache.GetRecentMessages("room");
+            var messages = cache.GetRecentMessages("room").ToList();
 
             Assert.Equal(10, messages.Count);
 

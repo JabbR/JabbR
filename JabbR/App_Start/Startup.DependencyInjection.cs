@@ -25,7 +25,7 @@ namespace JabbR
                 .To<JabbrContext>();
 
             kernel.Bind<IRecentMessageCache>()
-                  .To<NoopCache>()
+                  .To<RecentMessageCache>()
                   .InSingletonScope();
 
             kernel.Bind<IJabbrRepository>()

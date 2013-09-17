@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using JabbR.Models;
 using JabbR.ViewModels;
-using Microsoft.AspNet.SignalR.Messaging;
 
 namespace JabbR.Services
 {
@@ -44,42 +43,12 @@ namespace JabbR.Services
             }
         }
 
-        public IList<MessageViewModel> GetRecentMessages(string roomName)
+        public ICollection<MessageViewModel> GetRecentMessages(string roomName)
         {
             RoomCache roomCache;
             if (_cache.TryGetValue(roomName, out roomCache))
             {
-                List<MessageViewModel> messages = null;
-                int count = _numberOfMessages;
-                ulong min = 0;
-
-                MessageStoreResult<MessageViewModel> result;
-
-                do
-                {
-                    result = roomCache.Store.GetMessages(min, count);
-
-                    // Optimized
-                    if (min == 0 && !result.HasMoreData)
-                    {
-                        // Don't create a new list if all of the data is in the first chunk
-                        return result.Messages;
-                    }
-                    else if (messages == null)
-                    {
-                        // Create the list for the number of messages we want to return
-                        messages = new List<MessageViewModel>(_numberOfMessages);
-                    }
-
-                    min = result.FirstMessageId + (ulong)result.Messages.Count;
-
-                    count -= result.Messages.Count;
-
-                    messages.AddRange(result.Messages);
-
-                } while (count > 0 && result.HasMoreData);
-
-                return messages;
+                return roomCache.GetMessages();
             }
 
             return _emptyList;
@@ -88,48 +57,45 @@ namespace JabbR.Services
         private class RoomCache
         {
             private readonly ManualResetEventSlim _populateHandle = new ManualResetEventSlim();
+            private readonly LinkedList<MessageViewModel> _store;
 
-            public MessageStore<MessageViewModel> Store { get; private set; }
+            private readonly int _size;
 
             public RoomCache(int size)
             {
-                Store = new MessageStore<MessageViewModel>((uint)size);
+                _size = size;
+                _store = new LinkedList<MessageViewModel>();
             }
 
             public void Add(ChatMessage message)
             {
                 _populateHandle.Wait();
 
-                Store.Add(new MessageViewModel(message));
+                lock (_store)
+                {
+                    if (_store.Count >= _size)
+                    {
+                        _store.RemoveFirst();
+                    }
+
+                    _store.AddLast(new MessageViewModel(message));
+                }
             }
 
             public void Populate(List<ChatMessage> messages)
             {
                 foreach (var message in messages)
                 {
-                    Store.Add(new MessageViewModel(message));
+                    _store.AddLast(new MessageViewModel(message));
                 }
 
                 _populateHandle.Set();
             }
-        }
-    }
 
-    public class NoopCache : IRecentMessageCache
-    {
-        public void Add(ChatMessage message)
-        {
-            
-        }
-
-        public void Add(string room, List<ChatMessage> messages)
-        {
-            
-        }
-
-        public IList<MessageViewModel> GetRecentMessages(string roomName)
-        {
-            return RecentMessageCache._emptyList;
+            public ICollection<MessageViewModel> GetMessages()
+            {
+                return _store;
+            }
         }
     }
 }
