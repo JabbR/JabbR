@@ -80,6 +80,28 @@
                 });
         });
     }
+    
+    function populateRooms(rooms) {
+        var d = $.Deferred();
+        
+        connection.hub.log('getRoomInfo(' + rooms.join(', ') + ')');
+
+        // Populate the list of users rooms and messages 
+        chat.server.getRoomsInfo(rooms)
+            .done(function (roomInfos) {
+                connection.hub.log('getRoomsInfo.done(' + rooms.join(', ') + ')');
+                    $.each(roomInfos, function (index, roomInfo) {
+                        populateRoomFromInfo(roomInfo);
+                    });
+                
+                    d.resolveWith(chat);
+                })
+                .fail(function (e) {
+                    connection.hub.log('getRoomsInfo.failed(' + room + ', ' + e + ')');
+                    d.rejectWith(chat);
+                });
+        return d.promise();
+    }
 
     function populateRoom(room) {
         var d = $.Deferred();
@@ -90,45 +112,50 @@
         chat.server.getRoomInfo(room)
                 .done(function (roomInfo) {
                     connection.hub.log('getRoomInfo.done(' + room + ')');
-
-                    $.each(roomInfo.Users, function () {
-                        var userViewModel = getUserViewModel(this);
-                        ui.addUser(userViewModel, room);
-                        ui.setUserActivity(userViewModel);
-                    });
-
-                    $.each(roomInfo.Owners, function () {
-                        ui.setRoomOwner(this, room);
-                    });
-
-                    var messageIds = [];
-                    $.each(roomInfo.RecentMessages, function () {
-                        var viewModel = getMessageViewModel(this);
-
-                        messageIds.push(viewModel.id);
-                        ui.addChatMessage(viewModel, room);
-                    });
-
-                    ui.changeRoomTopic(roomInfo.Name, roomInfo.Topic);
-
-                    // mark room as initialized to differentiate messages
-                    // that are added after initial population
-                    ui.setInitialized(room);
-                    ui.scrollToBottom(room);
-                    ui.setRoomListStatuses(room);
+                    
+                    populateRoomFromInfo(roomInfo);
 
                     d.resolveWith(chat);
-
-                    // Watch the messages after the defer, since room messages
-                    // may be appended if we are just joining the room
-                    ui.watchMessageScroll(messageIds, room);
                 })
                 .fail(function (e) {
                     connection.hub.log('getRoomInfo.failed(' + room + ', ' + e + ')');
                     d.rejectWith(chat);
                 });
-
         return d.promise();
+    }
+    
+    function populateRoomFromInfo(roomInfo) {
+        var room = roomInfo.Name;
+
+        $.each(roomInfo.Users, function () {
+            var userViewModel = getUserViewModel(this);
+            ui.addUser(userViewModel, room);
+            ui.setUserActivity(userViewModel);
+        });
+
+        $.each(roomInfo.Owners, function () {
+            ui.setRoomOwner(this, room);
+        });
+
+        var messageIds = [];
+        $.each(roomInfo.RecentMessages, function () {
+            var viewModel = getMessageViewModel(this);
+
+            messageIds.push(viewModel.id);
+            ui.addChatMessage(viewModel, room);
+        });
+
+        ui.changeRoomTopic(roomInfo.Name, roomInfo.Topic);
+
+        // mark room as initialized to differentiate messages
+        // that are added after initial population
+        ui.setInitialized(room);
+        ui.scrollToBottom(room);
+        ui.setRoomListStatuses(room);
+
+        // Watch the messages after the defer, since room messages
+        // may be appended if we are just joining the room
+        ui.watchMessageScroll(messageIds, room);
     }
 
     function populateLobbyRooms() {
@@ -277,11 +304,14 @@
         privateRooms = myRooms;
 
         var loadRooms = function () {
+            var filteredRooms = [];
             $.each(rooms, function (index, room) {
                 if (chat.state.activeRoom !== room.Name) {
-                    populateRoom(room.Name);
+                    filteredRooms.push(room.Name);
                 }
             });
+            
+            populateRooms(filteredRooms);
         };
 
         $.each(rooms, function (index, room) {
