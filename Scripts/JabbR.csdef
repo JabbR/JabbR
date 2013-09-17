@@ -20,6 +20,7 @@
     </Imports>
     <Startup>
         <Task commandLine="signalr.exe ipc" executionContext="elevated"></Task>
+        <Task commandLine="newrelic.cmd" executionContext="elevated"></Task>
     </Startup>
   </WebRole>
 </ServiceDefinition>

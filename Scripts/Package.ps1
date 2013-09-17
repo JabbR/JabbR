@@ -27,6 +27,12 @@ require-param -value $remoteDesktopUsername -paramName "remoteDesktopUsername"
 require-param -value $sqlAzureConnectionString -paramName "sqlAzureConnectionString"
 
 # Helper Functions
+function replace-file {
+    param($path, $oldValue, $newValue)
+    $value = get-content $path | Foreach-Object { $_ -replace $oldValue, $newValue }
+    set-Content $path $value
+}
+
 function set-certificatethumbprint {
   param($path, $name, $value)
   $xml = [xml](get-content $path)
@@ -116,12 +122,18 @@ if ((test-path $cspkgFolder) -eq $false) {
 cp $webConfigPath $webConfigBakPath
 cp $cscfgPath $cscfgBakPath
 cp $libPath\signalr.exe $binPath\signalr.exe
+cp $libPath\signalr.exe $binPath\signalr.exe
+cp $libPath\newrelic.cmd $binPath\newrelic.cmd
+cp $libPath\NewRelicAgent_x64_2.10.40.0.msi $binPath\NewRelicAgent_x64_2.10.40.0.msi
 
 # Set app settngs
 set-appsetting -path $webConfigPath -name "jabbr:requireHttps" -value $true
 set-appsetting -path $webConfigPath -name "jabbr:releaseBranch" -value $commitBranch
 set-appsetting -path $webConfigPath -name "jabbr:releaseSha" -value $commitSha
 set-appsetting -path $webConfigPath -name "jabbr:releaseTime" -value (Get-Date -format "MM/dd/yyyy HH:mm")
+
+# Setup newrelic key
+replace-file $binPath\newrelic.cmd -oldValue "%NEWRELIC_KEY%" -newValue $env:NEWRELIC_KEY
 
 # Set auth providers
 if($googleKey -and $googleSecret)
