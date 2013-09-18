@@ -1042,6 +1042,15 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="Me_CommandInfo" xml:space="preserve">
     <value>Type /me 'does anything'. Sends a message to everyone in the room.</value>
   </data>
+  <data name="Meme_CommandInfo" xml:space="preserve">
+    <value>Create a meme picture. This leverages the UpBoat.me RESTful api.</value>
+  </data>
+  <data name="Meme_DataRequired" xml:space="preserve">
+    <value>What type of meme do you want to generate and with what message? You need to provide 3 seperate arguments delimeted by spaces. Help: here's the list of memes: http://upboat.me/List .</value>
+  </data>
+  <data name="Meme_IncorrectNumberOfArguments" xml:space="preserve">
+    <value>Incorrect number of meme arguments. You need to provide 3 seperate arguments delimeted by spaces. (TIP: use a dash (eg: -) to display a space in your message.</value>
+  </data>
   <data name="Msg_CommandInfo" xml:space="preserve">
     <value>Send a private message to a specified user. @ is optional.</value>
   </data>
