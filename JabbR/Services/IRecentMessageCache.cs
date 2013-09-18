@@ -8,7 +8,7 @@ namespace JabbR.Services
     {
         void Add(ChatMessage message);
 
-        void Add(string room, List<ChatMessage> messages);
+        void Add(string room, ICollection<MessageViewModel> messages);
 
         ICollection<MessageViewModel> GetRecentMessages(string roomName);
     }

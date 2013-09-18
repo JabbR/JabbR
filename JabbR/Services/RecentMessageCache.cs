@@ -23,18 +23,18 @@ namespace JabbR.Services
             _numberOfMessages = numberOfMessages;
         }
 
-        public void Add(string room, List<ChatMessage> messages)
+        public void Add(string room, ICollection<MessageViewModel> messages)
         {
             var roomCache = new RoomCache(_numberOfMessages);
 
-            _cache.TryAdd(room, roomCache);
-
-            roomCache.Populate(messages);
+            if (_cache.TryAdd(room, roomCache))
+            {
+                roomCache.Populate(messages);
+            }
         }
 
         public void Add(ChatMessage message)
         {
-            // We need to block here so that we always a
             RoomCache roomCache;
             if (_cache.TryGetValue(message.Room.Name, out roomCache))
             {
@@ -69,6 +69,7 @@ namespace JabbR.Services
 
             public void Add(ChatMessage message)
             {
+                // We need to block here so that we always a
                 _populateHandle.Wait();
 
                 lock (_store)
@@ -82,11 +83,11 @@ namespace JabbR.Services
                 }
             }
 
-            public void Populate(List<ChatMessage> messages)
+            public void Populate(ICollection<MessageViewModel> messages)
             {
                 foreach (var message in messages)
                 {
-                    _store.AddLast(new MessageViewModel(message));
+                    _store.AddLast(message);
                 }
 
                 _populateHandle.Set();

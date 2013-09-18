@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using JabbR.Models;
 using JabbR.Services;
+using JabbR.ViewModels;
 using Xunit;
 
 namespace JabbR.Tests
@@ -16,7 +17,7 @@ namespace JabbR.Tests
             var cache = new RecentMessageCache(10);
 
             // Prime the cache
-            cache.Add("room", new List<ChatMessage>());
+            cache.Add("room", new List<MessageViewModel>());
 
             for (int i = 0; i < 100; i++)
             {
@@ -38,12 +39,12 @@ namespace JabbR.Tests
         public void ThreadSafety()
         {
             var cache = new RecentMessageCache(10);
-            var initial = new List<ChatMessage>();
+            var initial = new List<MessageViewModel>();
             var wh = new ManualResetEventSlim();
 
             for (int i = 0; i < 5; i++)
             {
-                initial.Add(MakeMessage("dfowler", "room", "Hello_" + i));
+                initial.Add(new MessageViewModel(MakeMessage("dfowler", "room", "Hello_" + i)));
             }
 
             Task.Run(() =>

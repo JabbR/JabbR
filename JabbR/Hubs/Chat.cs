@@ -432,9 +432,9 @@ namespace JabbR
                 // Reverse them since we want to get them in chronological order
                 messages.Reverse();
 
-                _recentMessageCache.Add(room.Name, messages);
-
                 recentMessages = messages.Select(m => new MessageViewModel(m)).ToList();
+
+                _recentMessageCache.Add(room.Name, recentMessages);
             }
 
             // Get online users through the repository
