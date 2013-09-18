@@ -1473,7 +1473,7 @@
                 }
 
                 var listOfRooms = $('<ul/>');
-                populateLobbyRoomList(sortedRoomList.splice(0, maxRoomsToLoad), templates.lobbyroom, listOfRooms);
+                populateLobbyRoomList(sortedRoomList.slice(0, maxRoomsToLoad), templates.lobbyroom, listOfRooms);
                 lastLoadedRoomIndex = listOfRooms.children('li').length;
                 listOfRooms.children('li').appendTo(lobby.users);
                 if (lastLoadedRoomIndex < sortedRoomList.length) {
