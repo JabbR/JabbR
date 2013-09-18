@@ -88,18 +88,14 @@
 
         // Populate the list of users rooms and messages 
         chat.server.getRoomsInfo(rooms)
-            .done(function (roomInfos) {
+            .done(function () {
                 connection.hub.log('getRoomsInfo.done(' + rooms.join(', ') + ')');
-                    $.each(roomInfos, function (index, roomInfo) {
-                        populateRoomFromInfo(roomInfo);
-                    });
-                
-                    d.resolveWith(chat);
-                })
-                .fail(function (e) {
-                    connection.hub.log('getRoomsInfo.failed(' + room + ', ' + e + ')');
-                    d.rejectWith(chat);
-                });
+                d.resolveWith(chat);
+            })
+            .fail(function (e) {
+                connection.hub.log('getRoomsInfo.failed(' + room + ', ' + e + ')');
+                d.rejectWith(chat);
+            });
         return d.promise();
     }
 
@@ -371,6 +367,10 @@
                 loadRooms();
             });
         }
+    };
+
+    chat.client.roomLoaded = function(roomInfo) {
+        populateRoomFromInfo(roomInfo);
     };
 
     chat.client.logOut = function () {

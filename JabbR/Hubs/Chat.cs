@@ -377,18 +377,14 @@ namespace JabbR
                                    .Select(m => new MessageViewModel(m));
         }
 
-        public async Task<RoomViewModel[]> GetRoomsInfo(string[] roomNames)
+        public async Task GetRoomsInfo(string[] roomNames)
         {
             // can't async whenall because we'd be hitting a single EF context with multiple concurrent queries.
-            var roomInfo = new List<RoomViewModel>();
-
             foreach (var roomName in roomNames)
             {
-                var roomInfoVal = await GetRoomInfo(roomName);
-                roomInfo.Add(roomInfoVal);
+                var roomInfo = await GetRoomInfo(roomName);
+                Clients.Caller.roomLoaded(roomInfo);
             }
-
-            return roomInfo.ToArray();
         }
 
         public async Task<RoomViewModel> GetRoomInfo(string roomName)
