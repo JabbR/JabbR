@@ -157,19 +157,25 @@
         // may be appended if we are just joining the room
         ui.watchMessageScroll(messageIds, room);
     }
-
+    
     function populateLobbyRooms() {
+        var d = $.Deferred();
+        
         try {
             // Populate the user list with room names
             chat.server.getRooms()
                 .done(function (rooms) {
                     ui.populateLobbyRooms(rooms, privateRooms);
                     ui.setInitialized('Lobby');
+                    d.resolveWith(chat);
                 });
         }
         catch (e) {
             connection.hub.log('getRooms failed');
+            d.rejectWith(chat);
         }
+        
+        return d.promise();
     }
 
     function scrollIfNecessary(callback, room) {
@@ -314,6 +320,20 @@
             populateRooms(filteredRooms);
         };
 
+        var loadCommands = function() {
+            // get list of available commands
+            chat.server.getCommands()
+                .done(function (commands) {
+                    ui.setCommands(commands);
+                });
+
+            // get list of available shortcuts
+            chat.server.getShortcuts()
+                .done(function (shortcuts) {
+                    ui.setShortcuts(shortcuts);
+                });
+        };
+
         $.each(rooms, function (index, room) {
             ui.addRoom(room);
             if (room.Private) {
@@ -337,15 +357,19 @@
         ui.setActiveRoom(this.state.activeRoom || 'Lobby');
 
         if (this.state.activeRoom) {
-            // Populate lobby rooms for intellisense
-            populateLobbyRooms();
-
             // Always populate the active room first then load the other rooms so it looks fast :)
-            populateRoom(this.state.activeRoom).done(loadRooms);
+            populateRoom(this.state.activeRoom).done(function() {
+                loadCommands();
+                populateLobbyRooms();
+                loadRooms();
+            });
         }
         else {
-            // There's no active room so we don't care
-            loadRooms();
+            // Populate the lobby first then everything else
+            populateLobbyRooms().done(function () {
+                loadCommands();
+                loadRooms();
+            });
         }
     };
 
@@ -1100,8 +1124,6 @@
 
     $ui.bind(ui.events.activeRoomChanged, function (ev, room) {
         if (room === 'Lobby') {
-            populateLobbyRooms();
-
             // Remove the active room
             chat.state.activeRoom = undefined;
         }
@@ -1218,23 +1240,10 @@
             connection.hub.start(options)
                           .done(function () {
                               chat.server.join()
-                              .fail(function () {
-                                  // So refresh the page, our auth token is probably gone
-                                  performLogout();
-                              })
-                              .done(function () {
-                                  // get list of available commands
-                                  chat.server.getCommands()
-                                      .done(function (commands) {
-                                          ui.setCommands(commands);
-                                      });
-
-                                  // get list of available shortcuts
-                                  chat.server.getShortcuts()
-                                      .done(function (shortcuts) {
-                                          ui.setShortcuts(shortcuts);
-                                      });
-                              });
+                                  .fail(function() {
+                                      // So refresh the page, our auth token is probably gone
+                                      performLogout();
+                                  });
                           });
 
             connection.hub.stateChanged(function (change) {
