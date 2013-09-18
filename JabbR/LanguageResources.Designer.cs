@@ -1048,9 +1048,18 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} has gone AFK..
         /// </summary>
-        public static string Chat_UserIsAFK {
+        public static string Chat_UserIsAfk {
             get {
-                return ResourceManager.GetString("Chat_UserIsAFK", resourceCulture);
+                return ResourceManager.GetString("Chat_UserIsAfk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has gone AFK, with the message &quot;{1}&quot;..
+        /// </summary>
+        public static string Chat_UserIsAfkNote {
+            get {
+                return ResourceManager.GetString("Chat_UserIsAfkNote", resourceCulture);
             }
         }
         
@@ -1091,7 +1100,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} has set their note..
+        ///   Looks up a localized string similar to {0} has set their note to &quot;{1}&quot;..
         /// </summary>
         public static string Chat_UserNoteSet {
             get {
@@ -1219,9 +1228,18 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You have gone AFK..
         /// </summary>
-        public static string Chat_YouAreAFK {
+        public static string Chat_YouAreAfk {
             get {
-                return ResourceManager.GetString("Chat_YouAreAFK", resourceCulture);
+                return ResourceManager.GetString("Chat_YouAreAfk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have gone AFK, with the message &quot;{0}&quot;..
+        /// </summary>
+        public static string Chat_YouAreAfkNote {
+            get {
+                return ResourceManager.GetString("Chat_YouAreAfkNote", resourceCulture);
             }
         }
         
@@ -1334,7 +1352,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your note has been set..
+        ///   Looks up a localized string similar to Your note has been set to &quot;{0}&quot;..
         /// </summary>
         public static string Chat_YourNoteSet {
             get {

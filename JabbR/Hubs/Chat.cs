@@ -983,13 +983,20 @@ namespace JabbR
             }
         }
 
+        void INotificationService.ChangeAfk(ChatUser user)
+        {
+            // Create the view model
+            var userViewModel = new UserViewModel(user);
+
+            // Tell all users in rooms to change the note
+            foreach (var room in user.Rooms)
+            {
+                Clients.Group(room.Name).changeAfk(userViewModel, room.Name);
+            }
+        }
+
         void INotificationService.ChangeNote(ChatUser user)
         {
-            bool isNoteCleared = user.Note == null;
-
-            // Update the calling client
-            Clients.User(user.Id).noteChanged(user.IsAfk, isNoteCleared);
-
             // Create the view model
             var userViewModel = new UserViewModel(user);
 

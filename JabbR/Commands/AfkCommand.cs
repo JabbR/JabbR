@@ -17,7 +17,7 @@ namespace JabbR.Commands
             callingUser.AfkNote = String.IsNullOrWhiteSpace(message) ? null : message;
             callingUser.IsAfk = true;
 
-            context.NotificationService.ChangeNote(callingUser);
+            context.NotificationService.ChangeAfk(callingUser);
 
             context.Repository.CommitChanges();
         }

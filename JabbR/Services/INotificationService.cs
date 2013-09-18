@@ -24,6 +24,7 @@ namespace JabbR.Services
 
         void ChangePassword();
         void SetPassword();
+        void ChangeAfk(ChatUser user);
         void ChangeNote(ChatUser user);
         void ChangeFlag(ChatUser user);
         void ChangeTopic(ChatUser user, ChatRoom room);

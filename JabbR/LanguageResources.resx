@@ -846,7 +846,7 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="Chat_UserInvitedYouToRoom" xml:space="preserve">
     <value>{0} has invited you to #{1}. Click the room name to join.</value>
   </data>
-  <data name="Chat_UserIsAFK" xml:space="preserve">
+  <data name="Chat_UserIsAfk" xml:space="preserve">
     <value>{0} has gone AFK.</value>
   </data>
   <data name="Chat_UserLeftRoom" xml:space="preserve">
@@ -862,7 +862,7 @@ Use ? or type /? to display the FAQ and list of commands.</value>
     <value>{0} has cleared their note.</value>
   </data>
   <data name="Chat_UserNoteSet" xml:space="preserve">
-    <value>{0} has set their note.</value>
+    <value>{0} has set their note to "{1}".</value>
   </data>
   <data name="Chat_UserNotInRooms" xml:space="preserve">
     <value>{0} (Currently {1}) is not in any rooms.</value>
@@ -904,7 +904,7 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="Chat_YouAdminRevoked" xml:space="preserve">
     <value>You are no longer an admin.</value>
   </data>
-  <data name="Chat_YouAreAFK" xml:space="preserve">
+  <data name="Chat_YouAreAfk" xml:space="preserve">
     <value>You have gone AFK.</value>
   </data>
   <data name="Chat_YouClearedFlag" xml:space="preserve">
@@ -944,7 +944,7 @@ Use ? or type /? to display the FAQ and list of commands.</value>
     <value>Your note has been cleared.</value>
   </data>
   <data name="Chat_YourNoteSet" xml:space="preserve">
-    <value>Your note has been set.</value>
+    <value>Your note has been set to "{0}".</value>
   </data>
   <data name="Chat_YourPasswordChanged" xml:space="preserve">
     <value>Your password has been changed.</value>
@@ -1128,5 +1128,11 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   </data>
   <data name="Client_UploadDropTarget" xml:space="preserve">
     <value>Drop files here</value>
+  </data>
+  <data name="Chat_UserIsAfkNote" xml:space="preserve">
+    <value>{0} has gone AFK, with the message "{1}".</value>
+  </data>
+  <data name="Chat_YouAreAfkNote" xml:space="preserve">
+    <value>You have gone AFK, with the message "{0}".</value>
   </data>
 </root>

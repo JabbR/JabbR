@@ -592,38 +592,53 @@
         ui.addMessage(utility.getLanguageResource('Chat_YourPasswordSet'), 'notification', this.state.activeRoom);
     };
 
-    // Called when you have added or cleared a note
-    chat.client.noteChanged = function (isAfk, isCleared) {
+    chat.client.changeAfk = function (user, room) {
+        var viewModel = getUserViewModel(user);
+
+        ui.changeNote(viewModel, room);
+
         var message;
-        if (isAfk) {
-            message = utility.getLanguageResource('Chat_YouAreAFK');
-        } else if (!isCleared) {
-            message = utility.getLanguageResource('Chat_YourNoteSet');
+        
+        if (!isSelf(user)) {
+            if (user.AfkNote) {
+                message = utility.getLanguageResource('Chat_UserIsAfkNote', user.Name, user.AfkNote);
+            } else {
+                message = utility.getLanguageResource('Chat_UserIsAfk', user.Name);
+            }
         } else {
-            message = utility.getLanguageResource('Chat_YourNoteCleared');
+            if (user.AfkNote) {
+                message = utility.getLanguageResource('Chat_YouAreAfkNote', user.AfkNote);
+            } else {
+                message = utility.getLanguageResource('Chat_YouAreAfk');
+            }
         }
         
-        ui.addMessage(message, 'notification', this.state.activeRoom);
+        ui.addMessage(message, 'notification', room);
     };
-
+    
     // Make sure all the people in all the rooms know that a user has changed their note.
     chat.client.changeNote = function (user, room) {
         var viewModel = getUserViewModel(user);
 
         ui.changeNote(viewModel, room);
 
+        var message;
+
         if (!isSelf(user)) {
-            var message;
-            if (user.IsAfk === true) {
-                message = utility.getLanguageResource('Chat_UserIsAFK', user.Name);
-            } else if (user.Note) {
-                message = utility.getLanguageResource('Chat_UserNoteSet', user.Name);
+            if (user.Note) {
+                message = utility.getLanguageResource('Chat_UserNoteSet', user.Name, user.Note);
             } else {
                 message = utility.getLanguageResource('Chat_UserNoteCleared', user.Name);
             }
-
-            ui.addMessage(message, 'notification', room);
+        } else {
+            if (user.Note) {
+                message = utility.getLanguageResource('Chat_YourNoteSet', user.Note);
+            } else {
+                message = utility.getLanguageResource('Chat_YourNoteCleared');
+            }
         }
+        
+        ui.addMessage(message, 'notification', room);
     };
 
     chat.client.topicChanged = function (roomName, topic, who) {
