@@ -82,7 +82,7 @@
     }
     
     function populateRooms(rooms) {       
-        connection.hub.log('getRoomInfo(' + rooms.join(', ') + ')');
+        connection.hub.log('loadRooms(' + rooms.join(', ') + ')');
 
         // Populate the list of users rooms and messages 
         chat.server.loadRooms(rooms)
