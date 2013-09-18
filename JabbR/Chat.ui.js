@@ -1946,7 +1946,7 @@
             });
         },
         getCommands: function () {
-            return ui.commands;
+            return ui.commands || [];
         },
         setCommands: function (commands) {
             ui.commands = commands;
