@@ -1938,17 +1938,39 @@
         hasFocus: function () {
             return focus;
         },
-        getShortcuts: function () {
-            return ui.shortcuts;
-        },
         setShortcuts: function (shortcuts) {
-            ui.shortcuts = shortcuts;
+            $shortCutHelp.empty();
+
+            $.each(shortcuts, function () {
+                $shortCutHelp.append(templates.commandhelp.tmpl(this));
+            });
         },
         getCommands: function () {
-            return ui.commands;
+            return ui.commands || [];
         },
         setCommands: function (commands) {
             ui.commands = commands;
+            
+            $globalCmdHelp.empty();
+            $roomCmdHelp.empty();
+            $userCmdHelp.empty();
+            
+            $.each(ui.getCommands(), function () {
+                switch (this.Group) {
+                    case ui.help.shortcut:
+                        $shortCutHelp.append(templates.commandhelp.tmpl(this));
+                        break;
+                    case ui.help.global:
+                        $globalCmdHelp.append(templates.commandhelp.tmpl(this));
+                        break;
+                    case ui.help.room:
+                        $roomCmdHelp.append(templates.commandhelp.tmpl(this));
+                        break;
+                    case ui.help.user:
+                        $userCmdHelp.append(templates.commandhelp.tmpl(this));
+                        break;
+                }
+            });
         },
         setInitialized: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
@@ -2029,29 +2051,6 @@
             $disconnectDialog.modal();
         },
         showHelp: function () {
-            $shortCutHelp.empty();
-            $globalCmdHelp.empty();
-            $roomCmdHelp.empty();
-            $userCmdHelp.empty();
-            $.each(ui.getCommands(), function () {
-                switch (this.Group) {
-                    case ui.help.shortcut:
-                        $shortCutHelp.append(templates.commandhelp.tmpl(this));
-                        break;
-                    case ui.help.global:
-                        $globalCmdHelp.append(templates.commandhelp.tmpl(this));
-                        break;
-                    case ui.help.room:
-                        $roomCmdHelp.append(templates.commandhelp.tmpl(this));
-                        break;
-                    case ui.help.user:
-                        $userCmdHelp.append(templates.commandhelp.tmpl(this));
-                        break;
-                }
-            });
-            $.each(ui.getShortcuts(), function () {
-                $shortCutHelp.append(templates.commandhelp.tmpl(this));
-            });
             $helpPopup.modal();
         },
         showUpdateUI: function () {

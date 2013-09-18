@@ -80,6 +80,19 @@
                 });
         });
     }
+    
+    function populateRooms(rooms) {       
+        connection.hub.log('getRoomInfo(' + rooms.join(', ') + ')');
+
+        // Populate the list of users rooms and messages 
+        chat.server.loadRooms(rooms)
+            .done(function () {
+                connection.hub.log('loadRooms.done(' + rooms.join(', ') + ')');
+            })
+            .fail(function (e) {
+                connection.hub.log('loadRooms.failed(' + room + ', ' + e + ')');
+            });
+    }
 
     function populateRoom(room) {
         var d = $.Deferred();
@@ -90,59 +103,70 @@
         chat.server.getRoomInfo(room)
                 .done(function (roomInfo) {
                     connection.hub.log('getRoomInfo.done(' + room + ')');
-
-                    $.each(roomInfo.Users, function () {
-                        var userViewModel = getUserViewModel(this);
-                        ui.addUser(userViewModel, room);
-                        ui.setUserActivity(userViewModel);
-                    });
-
-                    $.each(roomInfo.Owners, function () {
-                        ui.setRoomOwner(this, room);
-                    });
-
-                    var messageIds = [];
-                    $.each(roomInfo.RecentMessages, function () {
-                        var viewModel = getMessageViewModel(this);
-
-                        messageIds.push(viewModel.id);
-                        ui.addChatMessage(viewModel, room);
-                    });
-
-                    ui.changeRoomTopic(roomInfo.Name, roomInfo.Topic);
-
-                    // mark room as initialized to differentiate messages
-                    // that are added after initial population
-                    ui.setInitialized(room);
-                    ui.scrollToBottom(room);
-                    ui.setRoomListStatuses(room);
+                    
+                    populateRoomFromInfo(roomInfo);
 
                     d.resolveWith(chat);
-
-                    // Watch the messages after the defer, since room messages
-                    // may be appended if we are just joining the room
-                    ui.watchMessageScroll(messageIds, room);
                 })
                 .fail(function (e) {
                     connection.hub.log('getRoomInfo.failed(' + room + ', ' + e + ')');
                     d.rejectWith(chat);
                 });
-
         return d.promise();
     }
+    
+    function populateRoomFromInfo(roomInfo) {
+        var room = roomInfo.Name;
 
+        $.each(roomInfo.Users, function () {
+            var userViewModel = getUserViewModel(this);
+            ui.addUser(userViewModel, room);
+            ui.setUserActivity(userViewModel);
+        });
+
+        $.each(roomInfo.Owners, function () {
+            ui.setRoomOwner(this, room);
+        });
+
+        var messageIds = [];
+        $.each(roomInfo.RecentMessages, function () {
+            var viewModel = getMessageViewModel(this);
+
+            messageIds.push(viewModel.id);
+            ui.addChatMessage(viewModel, room);
+        });
+
+        ui.changeRoomTopic(roomInfo.Name, roomInfo.Topic);
+
+        // mark room as initialized to differentiate messages
+        // that are added after initial population
+        ui.setInitialized(room);
+        ui.scrollToBottom(room);
+        ui.setRoomListStatuses(room);
+
+        // Watch the messages after the defer, since room messages
+        // may be appended if we are just joining the room
+        ui.watchMessageScroll(messageIds, room);
+    }
+    
     function populateLobbyRooms() {
+        var d = $.Deferred();
+        
         try {
             // Populate the user list with room names
             chat.server.getRooms()
                 .done(function (rooms) {
                     ui.populateLobbyRooms(rooms, privateRooms);
                     ui.setInitialized('Lobby');
+                    d.resolveWith(chat);
                 });
         }
         catch (e) {
             connection.hub.log('getRooms failed');
+            d.rejectWith(chat);
         }
+        
+        return d.promise();
     }
 
     function scrollIfNecessary(callback, room) {
@@ -277,11 +301,28 @@
         privateRooms = myRooms;
 
         var loadRooms = function () {
+            var filteredRooms = [];
             $.each(rooms, function (index, room) {
                 if (chat.state.activeRoom !== room.Name) {
-                    populateRoom(room.Name);
+                    filteredRooms.push(room.Name);
                 }
             });
+            
+            populateRooms(filteredRooms);
+        };
+
+        var loadCommands = function() {
+            // get list of available commands
+            chat.server.getCommands()
+                .done(function (commands) {
+                    ui.setCommands(commands);
+                });
+
+            // get list of available shortcuts
+            chat.server.getShortcuts()
+                .done(function (shortcuts) {
+                    ui.setShortcuts(shortcuts);
+                });
         };
 
         $.each(rooms, function (index, room) {
@@ -307,16 +348,24 @@
         ui.setActiveRoom(this.state.activeRoom || 'Lobby');
 
         if (this.state.activeRoom) {
-            // Populate lobby rooms for intellisense
-            populateLobbyRooms();
-
             // Always populate the active room first then load the other rooms so it looks fast :)
-            populateRoom(this.state.activeRoom).done(loadRooms);
+            populateRoom(this.state.activeRoom).done(function() {
+                loadCommands();
+                populateLobbyRooms();
+                loadRooms();
+            });
         }
         else {
-            // There's no active room so we don't care
-            loadRooms();
+            // Populate the lobby first then everything else
+            populateLobbyRooms().done(function () {
+                loadCommands();
+                loadRooms();
+            });
         }
+    };
+
+    chat.client.roomLoaded = function(roomInfo) {
+        populateRoomFromInfo(roomInfo);
     };
 
     chat.client.logOut = function () {
@@ -1070,8 +1119,6 @@
 
     $ui.bind(ui.events.activeRoomChanged, function (ev, room) {
         if (room === 'Lobby') {
-            populateLobbyRooms();
-
             // Remove the active room
             chat.state.activeRoom = undefined;
         }
@@ -1188,23 +1235,10 @@
             connection.hub.start(options)
                           .done(function () {
                               chat.server.join()
-                              .fail(function () {
-                                  // So refresh the page, our auth token is probably gone
-                                  performLogout();
-                              })
-                              .done(function () {
-                                  // get list of available commands
-                                  chat.server.getCommands()
-                                      .done(function (commands) {
-                                          ui.setCommands(commands);
-                                      });
-
-                                  // get list of available shortcuts
-                                  chat.server.getShortcuts()
-                                      .done(function (shortcuts) {
-                                          ui.setShortcuts(shortcuts);
-                                      });
-                              });
+                                  .fail(function() {
+                                      // So refresh the page, our auth token is probably gone
+                                      performLogout();
+                                  });
                           });
 
             connection.hub.stateChanged(function (change) {
