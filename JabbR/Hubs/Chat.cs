@@ -377,7 +377,7 @@ namespace JabbR
                                    .Select(m => new MessageViewModel(m));
         }
 
-        public async Task GetRoomsInfo(string[] roomNames)
+        public async Task LoadRooms(string[] roomNames)
         {
             // can't async whenall because we'd be hitting a single EF context with multiple concurrent queries.
             foreach (var roomName in roomNames)

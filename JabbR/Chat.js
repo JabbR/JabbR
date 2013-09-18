@@ -81,22 +81,17 @@
         });
     }
     
-    function populateRooms(rooms) {
-        var d = $.Deferred();
-        
+    function populateRooms(rooms) {       
         connection.hub.log('getRoomInfo(' + rooms.join(', ') + ')');
 
         // Populate the list of users rooms and messages 
-        chat.server.getRoomsInfo(rooms)
+        chat.server.loadRooms(rooms)
             .done(function () {
-                connection.hub.log('getRoomsInfo.done(' + rooms.join(', ') + ')');
-                d.resolveWith(chat);
+                connection.hub.log('loadRooms.done(' + rooms.join(', ') + ')');
             })
             .fail(function (e) {
-                connection.hub.log('getRoomsInfo.failed(' + room + ', ' + e + ')');
-                d.rejectWith(chat);
+                connection.hub.log('loadRooms.failed(' + room + ', ' + e + ')');
             });
-        return d.promise();
     }
 
     function populateRoom(room) {
