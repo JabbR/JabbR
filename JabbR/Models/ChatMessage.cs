@@ -24,7 +24,7 @@ namespace JabbR.Models
         public int? RoomKey { get; set; }
         public int? UserKey { get; set; }
 
-        // Notificaitons
+        // Notifications
         public string ImageUrl { get; set; }
         public string Source { get; set; }
 

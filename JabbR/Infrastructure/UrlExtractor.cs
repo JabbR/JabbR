@@ -26,7 +26,7 @@ namespace JabbR.Infrastructure
                 {
                     urls.Add(url);
                 }
-            };
+            }
 
             return urls.ToList();
         }
