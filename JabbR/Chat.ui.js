@@ -1230,6 +1230,9 @@
                                              }
 
                                              return '';
+                                         })
+                                         .sort(function(a, b) {
+                                             return a.toString().toUpperCase().localeCompare(b.toString().toUpperCase());
                                          });
                         case '#':
                             return getRoomsNames();
@@ -1950,7 +1953,7 @@
         },
         setCommands: function (commands) {
             ui.commands = commands.sort(function(a, b) {
-                 return a.Name.toUpperCase().localeCompare(b.Name.toUpperCase());
+                return a.Name.toString().toUpperCase().localeCompare(b.Name.toString().toUpperCase());
             });
             
             $globalCmdHelp.empty();
