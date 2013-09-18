@@ -379,15 +379,27 @@ namespace JabbR
 
         public async Task LoadRooms(string[] roomNames)
         {
-            // can't async whenall because we'd be hitting a single EF context with multiple concurrent queries.
-            foreach (var roomName in roomNames)
+            string userId = Context.User.GetUserId();
+            ChatUser user = _repository.VerifyUserId(userId);
+
+            var rooms = await _repository.Rooms.Where(r => roomNames.Contains(r.Name))
+                                               .ToListAsync();
+
+            // Can't async whenall because we'd be hitting a single 
+            // EF context with multiple concurrent queries.
+            foreach (var room in rooms)
             {
-                var roomInfo = await GetRoomInfo(roomName);
+                if (room == null || (room.Private && !user.AllowedRooms.Contains(room)))
+                {
+                    continue;
+                }
+
+                var roomInfo = await GetRoomInfoCore(room);
                 Clients.Caller.roomLoaded(roomInfo);
             }
         }
 
-        public async Task<RoomViewModel> GetRoomInfo(string roomName)
+        public Task<RoomViewModel> GetRoomInfo(string roomName)
         {
             if (String.IsNullOrEmpty(roomName))
             {
@@ -404,6 +416,11 @@ namespace JabbR
                 return null;
             }
 
+            return GetRoomInfoCore(room);
+        }
+
+        private async Task<RoomViewModel> GetRoomInfoCore(ChatRoom room)
+        {
             var recentMessages = _recentMessageCache.GetRecentMessages(room.Name);
 
             // If we haven't cached enough messages just populate it now
