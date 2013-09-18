@@ -1949,7 +1949,9 @@
             return ui.commands || [];
         },
         setCommands: function (commands) {
-            ui.commands = commands;
+            ui.commands = commands.sort(function(a, b) {
+                 return a.Name.toUpperCase().localeCompare(b.Name.toUpperCase());
+            });
             
             $globalCmdHelp.empty();
             $roomCmdHelp.empty();
