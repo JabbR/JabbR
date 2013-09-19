@@ -1132,11 +1132,6 @@
                 var room = getCurrentRoomElements(),
                     $lobbyRoomsLists = $lobbyPrivateRooms.add($lobbyOtherRooms);
 
-                // bounce on any room other than lobby
-                if (!room.isLobby()) {
-                    return false;
-                }
-
                 // hide all elements except those that match the input / closed filters
                 $lobbyRoomsLists
                     .find('li:not(.empty)')
