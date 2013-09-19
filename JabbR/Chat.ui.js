@@ -202,6 +202,12 @@
             $count = $room.find('.count'),
             $topic = $room.find('.topic'),
             roomName = room.Name.toString().toUpperCase();
+        
+        // if we don't find the room, we need to create it
+        if ($room.length == 0) {
+            addRoomToLobby(room);
+            return;
+        }
 
         if (room.Count === 0) {
             $count.text(utility.getLanguageResource('Client_OccupantsZero'));
@@ -255,6 +261,21 @@
         }
 
         filterIndividualRoom($room);
+        lobby.setListState($targetList);
+        
+        roomCache[roomName.toString().toUpperCase()] = true;
+
+        // don't try to populate the sortedRoomList while we're initially filling up the lobby
+        if (sortedRoomList) {
+            var sortedRoomInsertIndex = sortedRoomList.length;
+            for (var i = 0; i < sortedRoomList.length; i++) {
+                if (sortedRoomList[i].Name.toString().toUpperCase().localeCompare(roomName) > 0) {
+                    sortedRoomInsertIndex = i;
+                    break;
+                }
+            }
+            sortedRoomList.splice(sortedRoomInsertIndex, 0, roomViewModel);
+        }
     }
     
     function getNextRoomListElement($targetList, roomName, count, closed) {
@@ -342,8 +363,6 @@
         if (!roomCache[roomName.toString().toUpperCase()]) {
             addRoomToLobby(roomViewModel);
         }
-
-        roomCache[roomName.toString().toUpperCase()] = true;
         
         templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabsDropdown);
         ui.updateTabOverflow();
