@@ -23,6 +23,15 @@
         <converters:HtmlToStringConverter x:Key="HtmlToStringConverter"/>
         <converters:NativeVisibilityConverter x:Key="NativeVisibilityConverter"/>
     </views:MvxPhonePage.Resources>
+
+    <shell:SystemTray.ProgressIndicator>
+        <shell:ProgressIndicator 
+            IsIndeterminate="True" 
+            IsVisible="{Binding IsLoading}"
+            Text="{Binding LoadingText}"
+            x:Name="LoadingProgressBar" />
+    </shell:SystemTray.ProgressIndicator>
+    
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <phone:Pivot Title="{Binding Room.Name}" 
                      SelectionChanged="Pivot_SelectionChanged"

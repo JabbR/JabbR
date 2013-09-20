@@ -50,6 +50,17 @@ namespace JabbR.Client.UI.Core.ViewModels
             }
         }
 
+        private string _loadingText;
+        public string LoadingText
+        {
+            get { return _loadingText; }
+            set
+            {
+                _loadingText = value;
+                RaisePropertyChanged(() => LoadingText);
+            }
+        }
+
         private bool _hasError;
         public bool HasError
         {
@@ -86,5 +97,8 @@ namespace JabbR.Client.UI.Core.ViewModels
             var closer = Mvx.Resolve<IViewModelCloser>();
             closer.RequestClose(this);
         }
+
+        public virtual void Deactivate()
+        { }
     }
 }

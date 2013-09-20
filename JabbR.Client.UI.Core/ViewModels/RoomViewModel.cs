@@ -123,11 +123,23 @@ namespace JabbR.Client.UI.Core.ViewModels
 
         public async void Init(NavigationParameter parameters)
         {
-            var room = await _client.GetRoomInfo(parameters.RoomName);
-            Room = room;
-            Messages = new ObservableCollection<Message>(Room.RecentMessages);
-            Users = new ObservableCollection<User>(Room.Users);
-
+            try
+            {
+                IsLoading = true;
+                LoadingText = "Loading...";
+                var room = await _client.GetRoomInfo(parameters.RoomName);
+                Room = room;
+                Messages = new ObservableCollection<Message>(Room.RecentMessages);
+                Users = new ObservableCollection<User>(Room.Users);
+            }
+            catch (Exception ex)
+            {
+            }
+            finally
+            {
+                IsLoading = false;
+                LoadingText = String.Empty;
+            }
             // Does this get registered multiple times? Is there a dispose method we can use
             // to unsubscribe
             _client.MessageReceived += OnMessageReceived;
@@ -143,6 +155,11 @@ namespace JabbR.Client.UI.Core.ViewModels
                     CurrentItem = message;
                 });
             }
+        }
+
+        public override void Deactivate()
+        {
+            _client.MessageReceived -= OnMessageReceived;
         }
     }
 }

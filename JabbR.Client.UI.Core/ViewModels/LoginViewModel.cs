@@ -16,24 +16,6 @@ namespace JabbR.Client.UI.Core.ViewModels
 
         public void Init()
         {
-            if (IsConnected)
-            {
-                _client.Disconnect();
-
-                IsConnected = false;
-            }
-        }
-
-        private bool _isConnected;
-        public bool IsConnected
-        {
-            get { return _isConnected; }
-            set
-            {
-                _isConnected = value;
-                RaisePropertyChanged(() => IsConnected);
-                RaisePropertyChanged(() => CanDoSignIn);
-            }
         }
 
         private string _userName;
@@ -72,24 +54,16 @@ namespace JabbR.Client.UI.Core.ViewModels
 
         public bool CanDoSignIn
         {
-            get { return (!_isConnected && !String.IsNullOrEmpty(UserName) && !String.IsNullOrEmpty(Password)); }
+            get { return (!String.IsNullOrEmpty(UserName) && !String.IsNullOrEmpty(Password)); }
         }
 
         private async void DoSignIn()
         {
-            if (!CanDoSignIn)
-            {
-                ErrorMessage = "Please enter a username and password";
-                return;
-            }
-
             try
             {
                 IsLoading = true;
-
+                LoadingText = "Logging in...";
                 var loginInfo = await _client.Connect(UserName, Password);
-
-                IsConnected = true;
 
                 var user = await _client.GetUserInfo();
                 

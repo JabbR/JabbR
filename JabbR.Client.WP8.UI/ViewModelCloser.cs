@@ -2,6 +2,7 @@
 using Cirrious.MvvmCross.ViewModels;
 using Cirrious.MvvmCross.Views;
 using JabbR.Client.UI.Core.Interfaces;
+using JabbR.Client.UI.Core.ViewModels;
 using Microsoft.Phone.Controls;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,20 @@ namespace JabbR.Client.WP8.UI
         public ViewModelCloser(PhoneApplicationFrame frame)
         {
             _frame = frame;
+            _frame.Navigating += _frame_Navigating;
+        }
+
+        void _frame_Navigating(object sender, System.Windows.Navigation.NavigatingCancelEventArgs e)
+        {
+            if (e.NavigationMode == System.Windows.Navigation.NavigationMode.Back)
+            {
+                var viewModel = ((_frame.Content as IMvxView).ViewModel as BaseViewModel);
+                if (viewModel != null)
+                {
+                    MvxTrace.Trace("deactivate for {0}", viewModel.GetType().Name);
+                    viewModel.Deactivate();
+                }
+            }
         }
 
         public void RequestClose(IMvxViewModel viewModel)

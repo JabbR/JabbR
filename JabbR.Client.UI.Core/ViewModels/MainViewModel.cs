@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using JabbR.Client.Models;
+using System;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
@@ -59,8 +60,22 @@ namespace JabbR.Client.UI.Core.ViewModels
         {
             CurrentUser = parameters.CurrentUser;
             CurrentRooms = new ObservableCollection<Room>(parameters.Rooms);
-            var rooms = await _client.GetRooms();
-            Rooms = new ObservableCollection<Room>(rooms);
+            try
+            {
+                IsLoading = true;
+                LoadingText = "Loading...";
+                var rooms = await _client.GetRooms();
+                Rooms = new ObservableCollection<Room>(rooms);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                IsLoading = false;
+                LoadingText = String.Empty;
+            }
         }
 
         private ICommand _openRoomCommand;
@@ -92,10 +107,15 @@ namespace JabbR.Client.UI.Core.ViewModels
             DoOpenRoom(room);
         }
 
-        private async void DoSignOut()
+        private void DoSignOut()
         {
-            await _client.LogOut();
+            Deactivate();
             RequestClose();
+        }
+
+        public override void Deactivate()
+        {
+            _client.LogOut();
         }
     }
 }
