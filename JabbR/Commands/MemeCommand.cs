@@ -5,7 +5,7 @@ using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
-    [Command("meme", "Meme_CommandInfo", "meme-type/top-line/bottom-line", "user")]
+    [Command("meme","Meme_CommandInfo", "meme-type top-line bottom-line", "user")]
     public class MemeCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
