@@ -5211,7 +5211,7 @@ namespace JabbR.Test
 
                 // Assert.
                 Assert.True(result);
-                notificationService.Verify(x => x.GenerateMeme(user, room, "http://upboat.me/aa/top-line/bottom-line.jpg"), Times.Once());
+                notificationService.Verify(x => x.GenerateMeme(user, room, "https://upboat.me/aa/top-line/bottom-line.jpg"), Times.Once());
             }
 
             [Fact]
