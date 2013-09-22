@@ -6,6 +6,24 @@ using JabbR.ViewModels;
 
 namespace JabbR.Services
 {
+    public class NoopCache : IRecentMessageCache
+    {
+        public void Add(ChatMessage message)
+        {
+            
+        }
+
+        public void Add(string room, ICollection<MessageViewModel> messages)
+        {
+            
+        }
+
+        public ICollection<MessageViewModel> GetRecentMessages(string roomName)
+        {
+            return RecentMessageCache._emptyList;
+        }
+    }
+
     public class RecentMessageCache : IRecentMessageCache
     {
         private ConcurrentDictionary<string, RoomCache> _cache = new ConcurrentDictionary<string, RoomCache>();
