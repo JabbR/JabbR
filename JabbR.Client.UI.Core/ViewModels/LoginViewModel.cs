@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
+using JabbR.Client.UI.Core.Interfaces;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
@@ -8,7 +9,8 @@ namespace JabbR.Client.UI.Core.ViewModels
         : BaseViewModel
     {
         readonly IJabbRClient _client;
-        public LoginViewModel(IJabbRClient client)
+        public LoginViewModel(IJabbRClient client, IGlobalProgressIndicator progress)
+            : base(progress)
         {
             _client = client;
             PageName = "login";
@@ -61,8 +63,7 @@ namespace JabbR.Client.UI.Core.ViewModels
         {
             try
             {
-                IsLoading = true;
-                LoadingText = "Logging in...";
+                Progress.SetStatus("Logging in...", true);
                 var loginInfo = await _client.Connect(UserName, Password);
 
                 var user = await _client.GetUserInfo();
@@ -82,7 +83,7 @@ namespace JabbR.Client.UI.Core.ViewModels
             }
             finally
             {
-                IsLoading = false;
+                Progress.ClearStatus();
             }
         }
     }

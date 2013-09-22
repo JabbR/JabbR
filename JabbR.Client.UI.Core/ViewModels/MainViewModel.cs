@@ -4,6 +4,7 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using JabbR.Client.Models;
 using System;
+using JabbR.Client.UI.Core.Interfaces;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
@@ -51,7 +52,8 @@ namespace JabbR.Client.UI.Core.ViewModels
             }
         }
 
-        public MainViewModel(IJabbRClient client)
+        public MainViewModel(IJabbRClient client, IGlobalProgressIndicator progress)
+            : base(progress)
         {
             _client = client;
         }
@@ -62,8 +64,7 @@ namespace JabbR.Client.UI.Core.ViewModels
             CurrentRooms = new ObservableCollection<Room>(parameters.Rooms);
             try
             {
-                IsLoading = true;
-                LoadingText = "Loading...";
+                Progress.SetStatus("Loading...", true);
                 var rooms = await _client.GetRooms();
                 Rooms = new ObservableCollection<Room>(rooms);
             }
@@ -73,8 +74,7 @@ namespace JabbR.Client.UI.Core.ViewModels
             }
             finally
             {
-                IsLoading = false;
-                LoadingText = String.Empty;
+                Progress.ClearStatus();
             }
         }
 

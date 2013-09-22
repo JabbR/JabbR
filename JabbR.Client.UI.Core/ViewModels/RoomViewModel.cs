@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using JabbR.Client.Models;
 using Newtonsoft.Json;
+using JabbR.Client.UI.Core.Interfaces;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
@@ -18,7 +19,8 @@ namespace JabbR.Client.UI.Core.ViewModels
         }
 
         readonly IJabbRClient _client;
-        public RoomViewModel(IJabbRClient client)
+        public RoomViewModel(IJabbRClient client, IGlobalProgressIndicator progress)
+            : base(progress)
         {
             _client = client;
         }
@@ -125,8 +127,7 @@ namespace JabbR.Client.UI.Core.ViewModels
         {
             try
             {
-                IsLoading = true;
-                LoadingText = "Loading...";
+                Progress.SetStatus("Loading...", true);
                 var room = await _client.GetRoomInfo(parameters.RoomName);
                 Room = room;
                 Messages = new ObservableCollection<Message>(Room.RecentMessages);
@@ -137,8 +138,7 @@ namespace JabbR.Client.UI.Core.ViewModels
             }
             finally
             {
-                IsLoading = false;
-                LoadingText = String.Empty;
+                Progress.ClearStatus();
             }
             // Does this get registered multiple times? Is there a dispose method we can use
             // to unsubscribe

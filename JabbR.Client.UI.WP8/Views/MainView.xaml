@@ -17,14 +17,6 @@
     SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="True" Margin="0,1,0,-1">
 
-    <shell:SystemTray.ProgressIndicator>
-        <shell:ProgressIndicator 
-            IsIndeterminate="True" 
-            IsVisible="{Binding IsLoading}"
-            Text="{Binding LoadingText}"
-            x:Name="LoadingProgressBar" />
-    </shell:SystemTray.ProgressIndicator>
-
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <!--Pivot Control-->

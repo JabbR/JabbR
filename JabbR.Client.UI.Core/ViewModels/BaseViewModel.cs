@@ -16,8 +16,10 @@ namespace JabbR.Client.UI.Core.ViewModels
 
     public class BaseViewModel : MvxViewModel
     {
-        public BaseViewModel()
+        readonly IGlobalProgressIndicator _progress;
+        public BaseViewModel(IGlobalProgressIndicator progress)
         {
+            _progress = progress;
         }
 
         protected void ShowViewModel<TViewModel>(NavigationParametersBase parameters)
@@ -30,6 +32,8 @@ namespace JabbR.Client.UI.Core.ViewModels
                     }
             ));
         }
+
+        public IGlobalProgressIndicator Progress { get { return _progress; } }
 
         private string _displayName = "JabbR";
         public string DisplayName

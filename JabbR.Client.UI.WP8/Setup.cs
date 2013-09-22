@@ -10,10 +10,12 @@ namespace JabbR.Client.UI.WP8
     public class Setup : MvxPhoneSetup
     {
         private readonly IViewModelCloser _closer;
+        private readonly GlobalProgressIndicator _progressIndicator;
 
         public Setup(PhoneApplicationFrame rootFrame) : base(rootFrame)
         {
             _closer = new ViewModelCloser(rootFrame);
+            _progressIndicator = new GlobalProgressIndicator(rootFrame);
         }
 
         protected override IMvxApplication CreateApp()
@@ -24,6 +26,7 @@ namespace JabbR.Client.UI.WP8
         protected override void InitializeLastChance()
         {
             Mvx.RegisterSingleton<IViewModelCloser>(_closer);
+            Mvx.RegisterSingleton<IGlobalProgressIndicator>(_progressIndicator);
             base.InitializeLastChance();
         }
         
