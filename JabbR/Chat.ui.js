@@ -264,7 +264,7 @@
         filterIndividualRoom($room);
         lobby.setListState($targetList);
         
-        roomCache[roomName.toString().toUpperCase()] = true;
+        roomCache[roomName] = true;
 
         // don't try to populate the sortedRoomList while we're initially filling up the lobby
         if (sortedRoomList) {
@@ -276,6 +276,16 @@
                 }
             }
             sortedRoomList.splice(sortedRoomInsertIndex, 0, roomViewModel);
+        }
+        
+        // handle updates on rooms not currently displayed to clients by removing from the public room list
+        if (publicRoomList) {
+            for (var i = 0; i < publicRoomList.length; i++) {
+                if (publicRoomList[i].Name.toString().toUpperCase().localeCompare(roomName) === 0) {
+                    publicRoomList.splice(i, 1);
+                    break;
+                }
+            }
         }
         
         // if it's a private room, make sure that we're displaying the private room section
