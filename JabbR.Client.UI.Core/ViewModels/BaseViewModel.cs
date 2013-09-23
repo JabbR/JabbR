@@ -16,7 +16,7 @@ namespace JabbR.Client.UI.Core.ViewModels
 
     public class BaseViewModel : MvxViewModel
     {
-        readonly IGlobalProgressIndicator _progress;
+        private readonly IGlobalProgressIndicator _progress;
         public BaseViewModel(IGlobalProgressIndicator progress)
         {
             _progress = progress;
