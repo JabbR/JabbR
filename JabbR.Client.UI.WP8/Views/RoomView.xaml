@@ -11,6 +11,7 @@
     xmlns:views="clr-namespace:Cirrious.MvvmCross.WindowsPhone.Views;assembly=Cirrious.MvvmCross.WindowsPhone"
     xmlns:controls="clr-namespace:JabbR.Client.UI.WP8.Controls"
     xmlns:converters="clr-namespace:JabbR.Client.UI.WP8.Converters"
+    xmlns:extensions="clr-namespace:JabbR.Client.UI.WP8.Extensions"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -36,20 +37,24 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
-                    <ListBox x:Name="Messages"
-                             Height="465"
-                             Margin="0,-5,0,-50"
-                             VerticalAlignment="Top"
-                             ItemsSource="{Binding Messages}"
-                             SelectedItem="{Binding CurrentItem, Mode=TwoWay}"
-                             SelectionChanged="Messages_OnSelectionChanged">
-                        <ListBox.ItemContainerStyle>
+                    <extensions:ExtendedListBox 
+                        x:Name="Messages"
+                        Height="465"
+                        Margin="0,-5,0,-50"
+                        VerticalAlignment="Top"
+                        IsBouncy="False"
+                        AtEndCommand="{Binding FetchNextMessagesCommand}"
+                        ItemsSource="{Binding Messages}"
+                        SelectedItem="{Binding CurrentItem, Mode=TwoWay}"
+                        Template="{StaticResource BetterExtendedListBox}"
+                        SelectionChanged="Messages_OnSelectionChanged">
+                        <extensions:ExtendedListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                                 <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                             </Style>
-                        </ListBox.ItemContainerStyle>
-                        <ListBox.ItemTemplate>
+                        </extensions:ExtendedListBox.ItemContainerStyle>
+                        <extensions:ExtendedListBox.ItemTemplate>
                             <DataTemplate>
                                 <ListBoxItem HorizontalContentAlignment="Stretch" Padding="12">
                                     <Grid>
@@ -73,8 +78,8 @@
                                     </Grid>
                                 </ListBoxItem>
                             </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                        </extensions:ExtendedListBox.ItemTemplate>
+                    </extensions:ExtendedListBox>
                     <TextBox x:Name="Message"
                              Grid.Row="1"
                              Margin="0,6,0,0"

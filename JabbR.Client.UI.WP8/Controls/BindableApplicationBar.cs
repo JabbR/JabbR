@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
-using JabbR.Client.UI.WP8.ExtensionMethods;
+using JabbR.Client.UI.WP8.Extensions;
 using System.Windows.Media;
 using System.Collections;
 

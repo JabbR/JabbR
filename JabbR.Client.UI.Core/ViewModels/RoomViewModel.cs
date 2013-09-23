@@ -92,6 +92,39 @@ namespace JabbR.Client.UI.Core.ViewModels
             }
         }
 
+        private ICommand _fetchNextMessagesCommand;
+        public ICommand FetchNextMessagesCommand
+        {
+            get { return _fetchNextMessagesCommand ?? new MvxCommand<object>(FetchNextMessages); }
+        }
+
+        private async void FetchNextMessages(object obj)
+        {
+            var message = obj as Message;
+            if (message != null)
+            {
+                Dispatcher.RequestMainThreadAction(() => 
+                    Progress.SetStatus("Loading messages...", true)
+                );
+
+                try
+                {
+                    var fetchedMessages = await _client.GetPreviousMessages(message.Id);
+                    Messages = new ObservableCollection<Message>(fetchedMessages.Concat(Messages));
+                    Dispatcher.RequestMainThreadAction(() =>
+                    {
+                        Progress.ClearStatus();
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Dispatcher.RequestMainThreadAction(() => 
+                        Progress.SetStatus("Failed loading messages.", false)
+                    );
+                }
+            }
+        }
+
         private ICommand _sendMessageCommand;
         public ICommand SendMessageCommand
         {
@@ -135,13 +168,13 @@ namespace JabbR.Client.UI.Core.ViewModels
             }
             catch (Exception ex)
             {
+                Progress.SetStatus("Failed to initialise room...", false);
             }
             finally
             {
                 Progress.ClearStatus();
             }
-            // Does this get registered multiple times? Is there a dispose method we can use
-            // to unsubscribe
+
             _client.MessageReceived += OnMessageReceived;
         }
 
@@ -149,7 +182,7 @@ namespace JabbR.Client.UI.Core.ViewModels
         {
             if (Room.Name == room)
             {
-                Dispatcher.RequestMainThreadAction(() => 
+                Dispatcher.RequestMainThreadAction(() =>
                 {
                     Messages.Add(message);
                     CurrentItem = message;

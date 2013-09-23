@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
-namespace JabbR.Client.UI.WP8.ExtensionMethods
+namespace JabbR.Client.UI.WP8.Extensions
 {
     /// <summary>
     /// Couple of simple helpers for walking the visual tree.

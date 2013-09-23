@@ -103,8 +103,10 @@
     <Compile Include="Converters\HtmlToStringConverter.cs" />
     <Compile Include="Converters\NativeVisibilityConverter.cs" />
     <Compile Include="DebugTrace.cs" />
-    <Compile Include="ExtensionMethods\VisualTree.cs" />
+    <Compile Include="Extensions\ExtendedListBox.cs" />
+    <Compile Include="Extensions\VisualTree.cs" />
     <Compile Include="GlobalProgressIndicator.cs" />
+    <Compile Include="Helpers\StateManager.cs" />
     <Compile Include="LocalizedStrings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\AppResources.Designer.cs">
