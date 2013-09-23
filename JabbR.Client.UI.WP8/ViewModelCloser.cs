@@ -4,11 +4,6 @@ using Cirrious.MvvmCross.Views;
 using JabbR.Client.UI.Core.Interfaces;
 using JabbR.Client.UI.Core.ViewModels;
 using Microsoft.Phone.Controls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JabbR.Client.UI.WP8
 {

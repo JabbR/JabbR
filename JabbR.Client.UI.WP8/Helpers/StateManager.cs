@@ -1,10 +1,5 @@
 ﻿using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -19,17 +14,6 @@ namespace JabbR.Client.UI.WP8.Helpers
         {
             PhoneApplicationService.Current.State[key] = item;
         }
-
-        //public static dynamic GetState(string key)
-        //{
-        //    dynamic item = default(dynamic);
-        //    if (PhoneApplicationService.Current.State.ContainsKey(key))
-        //    {
-        //        item = PhoneApplicationService.Current.State[key] as dynamic;
-        //        PhoneApplicationService.Current.State.Remove(key);
-        //    }
-        //    return item;
-        //}
 
         public static void SaveScrollViewerOffset(DependencyObject dependencyObject)
         {

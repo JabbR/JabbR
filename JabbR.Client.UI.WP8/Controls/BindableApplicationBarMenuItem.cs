@@ -1,9 +1,6 @@
 ﻿using Microsoft.Phone.Shell;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Windows;
 
 namespace JabbR.Client.UI.WP8.Controls

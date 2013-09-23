@@ -1,16 +1,13 @@
-﻿using Microsoft.Phone.Controls;
+﻿using JabbR.Client.UI.WP8.Extensions;
+using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
-using JabbR.Client.UI.WP8.Extensions;
 using System.Windows.Media;
-using System.Collections;
 
 namespace JabbR.Client.UI.WP8.Controls
 {
