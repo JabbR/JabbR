@@ -1506,6 +1506,34 @@
             // re-filter lists
             $lobbyRoomFilterForm.submit();
         },
+        removeLobbyRoom: function (roomName) {
+            var roomNameUppercase = roomName.toString().toUpperCase();
+            
+            if (roomCache[roomNameUppercase]) {
+                delete roomCache[roomNameUppercase];
+            }
+            
+            // find the element in the sorted room list and remove it
+            for (var i = 0; i < sortedRoomList.length; i++) {
+                if (sortedRoomList[i].Name.toString().toUpperCase().localeCompare(roomNameUppercase) === 0) {
+                    sortedRoomList.splice(i, 1);
+                    break;
+                }
+            }
+            
+            // find the element in the lobby public room list and remove it
+            for (var i = 0; i < publicRoomList.length; i++) {
+                if (publicRoomList[i].Name.toString().toUpperCase().localeCompare(roomNameUppercase) === 0) {
+                    publicRoomList.splice(i, 1);
+                    break;
+                }
+            }
+            
+            // remove the items from the lobby screen
+            var lobby = getLobby(),
+                $room = lobby.users.add(lobby.owners).find('[data-room="' + roomName + '"]');
+            $room.remove();
+        },
         addUser: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
                 $user = null,

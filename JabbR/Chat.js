@@ -372,13 +372,17 @@
         performLogout();
     };
 
-    chat.client.lockRoom = function (user, room) {
+    chat.client.lockRoom = function (user, room, userHasAccess) {
         if (!isSelf(user) && this.state.activeRoom === room) {
             ui.addMessage(utility.getLanguageResource('Chat_UserLockedRoom', user.Name, room), 'notification', this.state.activeRoom);
         }
 
-        ui.setRoomLocked(room);
-        ui.updatePrivateLobbyRooms(room);
+        if (userHasAccess) {
+            ui.setRoomLocked(room);
+            ui.updatePrivateLobbyRooms(room);
+        } else {
+            ui.removeLobbyRoom(room);
+        }
     };
 
     // Called when this user locked a room
@@ -503,16 +507,20 @@
 
     // User single client commands
 
-    chat.client.allowUser = function (room) {
+    chat.client.allowUser = function (room, roomInfo) {
         ui.addMessage(utility.getLanguageResource('Chat_YouGrantedRoomAccess', room), 'notification', this.state.activeRoom);
+
+        ui.updateLobbyRoom(roomInfo);
     };
 
     chat.client.userAllowed = function (user, room) {
         ui.addMessage(utility.getLanguageResource('Chat_UserGrantedRoomAccess', user, room), 'notification', this.state.activeRoom);
     };
 
-    chat.client.unallowUser = function (user, room) {
+    chat.client.unallowUser = function (room) {
         ui.addMessage(utility.getLanguageResource('Chat_YourRoomAccessRevoked', room), 'notification', this.state.activeRoom);
+
+        ui.removeLobbyRoom(room);
     };
 
     chat.client.userUnallowed = function (user, room) {
