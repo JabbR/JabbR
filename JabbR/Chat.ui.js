@@ -250,6 +250,7 @@
             roomName = roomViewModel.Name.toString().toUpperCase(),
             count = roomViewModel.Count,
             closed = roomViewModel.Closed,
+            nonPublic = roomViewModel.Private,
             $targetList = roomViewModel.Private ? lobby.owners : lobby.users;
 
         var nextListElement = getNextRoomListElement($targetList, roomName, count, closed);
@@ -275,6 +276,12 @@
                 }
             }
             sortedRoomList.splice(sortedRoomInsertIndex, 0, roomViewModel);
+        }
+        
+        // if it's a private room, make sure that we're displaying the private room section
+        if (nonPublic) {
+            $lobbyPrivateRooms.show();
+            $lobbyOtherRooms.find('.nav-header').html(utility.getLanguageResource('Client_OtherRooms'));
         }
     }
     
@@ -1482,10 +1489,10 @@
                     populateLobbyRoomList(privateSorted, templates.lobbyroom, listOfPrivateRooms);
                     listOfPrivateRooms.children('li').appendTo(lobby.owners);
                     $lobbyPrivateRooms.show();
-                    $lobbyOtherRooms.find('nav-header').html(utility.getLanguageResource('Client_OtherRooms'));
+                    $lobbyOtherRooms.find('.nav-header').html(utility.getLanguageResource('Client_OtherRooms'));
                 } else {
                     $lobbyPrivateRooms.hide();
-                    $lobbyOtherRooms.find('nav-header').html(utility.getLanguageResource('Client_Rooms'));
+                    $lobbyOtherRooms.find('.nav-header').html(utility.getLanguageResource('Client_Rooms'));
                 }
 
                 var listOfRooms = $('<ul/>');
@@ -1533,6 +1540,12 @@
             var lobby = getLobby(),
                 $room = lobby.users.add(lobby.owners).find('[data-room="' + roomName + '"]');
             $room.remove();
+            
+            // if we have no private rooms, hide the private rooms section and change the text on the rooms header
+            if (lobby.owners.find('li:not(.empty)').length <= 1) {
+                $lobbyPrivateRooms.hide();
+                $lobbyOtherRooms.find('.nav-header').html(utility.getLanguageResource('Client_Rooms'));
+            }
         },
         addUser: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
