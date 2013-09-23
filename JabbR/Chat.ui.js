@@ -204,7 +204,7 @@
             roomName = room.Name.toString().toUpperCase();
         
         // if we don't find the room, we need to create it
-        if ($room.length == 0) {
+        if ($room.length === 0) {
             addRoomToLobby(room);
             return;
         }
@@ -251,7 +251,8 @@
             count = roomViewModel.Count,
             closed = roomViewModel.Closed,
             nonPublic = roomViewModel.Private,
-            $targetList = roomViewModel.Private ? lobby.owners : lobby.users;
+            $targetList = roomViewModel.Private ? lobby.owners : lobby.users,
+            i = null;
 
         var nextListElement = getNextRoomListElement($targetList, roomName, count, closed);
 
@@ -269,7 +270,7 @@
         // don't try to populate the sortedRoomList while we're initially filling up the lobby
         if (sortedRoomList) {
             var sortedRoomInsertIndex = sortedRoomList.length;
-            for (var i = 0; i < sortedRoomList.length; i++) {
+            for (i = 0; i < sortedRoomList.length; i++) {
                 if (sortedRoomList[i].Name.toString().toUpperCase().localeCompare(roomName) > 0) {
                     sortedRoomInsertIndex = i;
                     break;
@@ -280,7 +281,7 @@
         
         // handle updates on rooms not currently displayed to clients by removing from the public room list
         if (publicRoomList) {
-            for (var i = 0; i < publicRoomList.length; i++) {
+            for (i = 0; i < publicRoomList.length; i++) {
                 if (publicRoomList[i].Name.toString().toUpperCase().localeCompare(roomName) === 0) {
                     publicRoomList.splice(i, 1);
                     break;
@@ -1524,14 +1525,15 @@
             $lobbyRoomFilterForm.submit();
         },
         removeLobbyRoom: function (roomName) {
-            var roomNameUppercase = roomName.toString().toUpperCase();
+            var roomNameUppercase = roomName.toString().toUpperCase(),
+                i = null;
             
             if (roomCache[roomNameUppercase]) {
                 delete roomCache[roomNameUppercase];
             }
             
             // find the element in the sorted room list and remove it
-            for (var i = 0; i < sortedRoomList.length; i++) {
+            for (i = 0; i < sortedRoomList.length; i++) {
                 if (sortedRoomList[i].Name.toString().toUpperCase().localeCompare(roomNameUppercase) === 0) {
                     sortedRoomList.splice(i, 1);
                     break;
@@ -1539,7 +1541,7 @@
             }
             
             // find the element in the lobby public room list and remove it
-            for (var i = 0; i < publicRoomList.length; i++) {
+            for (i = 0; i < publicRoomList.length; i++) {
                 if (publicRoomList[i].Name.toString().toUpperCase().localeCompare(roomNameUppercase) === 0) {
                     publicRoomList.splice(i, 1);
                     break;
