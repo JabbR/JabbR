@@ -5,4 +5,4 @@ if "%config%" == "" (
 )
 
 .nuget\NuGet.exe restore JabbR.sln -configFile %~dp0\.nuget\NuGet.config -nocache
-msbuild %~dp0\Build\Build.proj /p:Configuration="%config%" /v:M /fl /flp:LogFile=msbuild.log;Verbosity=Normal /nr:false /p:VisualStudioVersion=11.0
+msbuild %~dp0\Build\Build.proj /p:Configuration="%config%" /v:M /fl /flp:LogFile=msbuild.log;Verbosity=Normal /nr:false
