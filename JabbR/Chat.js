@@ -90,7 +90,7 @@
                 connection.hub.log('loadRooms.done(' + rooms.join(', ') + ')');
             })
             .fail(function (e) {
-                connection.hub.log('loadRooms.failed(' + room + ', ' + e + ')');
+                connection.hub.log('loadRooms.failed(' + rooms.join(', ') + ', ' + e + ')');
             });
     }
 

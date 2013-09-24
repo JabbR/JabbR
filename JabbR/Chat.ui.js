@@ -1564,7 +1564,7 @@
             $room.remove();
             
             // if we have no private rooms, hide the private rooms section and change the text on the rooms header
-            if (lobby.owners.find('li:not(.empty)').length <= 1) {
+            if (lobby.owners.find('li:not(.empty)').length === 0) {
                 $lobbyPrivateRooms.hide();
                 $lobbyOtherRooms.find('.nav-header').html(utility.getLanguageResource('Client_Rooms'));
             }
