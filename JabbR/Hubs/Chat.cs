@@ -1056,6 +1056,11 @@ namespace JabbR
             Clients.User(user.Id).welcomeChanged(isWelcomeCleared, parsedWelcome);
         }
 
+        void INotificationService.GenerateMeme(ChatUser user, ChatRoom room, string message)
+        {
+            Send(message, room.Name);
+        }
+
         void INotificationService.AddAdmin(ChatUser targetUser)
         {
             // Tell this client it's an owner
