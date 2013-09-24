@@ -129,13 +129,16 @@
     
     function addRoomToLobby(roomViewModel) {
         var lobby = getLobby(),
-            $room = templates.lobbyroom.tmpl(roomViewModel),
+            $room = null,
             roomName = roomViewModel.Name.toString().toUpperCase(),
             count = roomViewModel.Count,
             closed = roomViewModel.Closed,
             nonPublic = roomViewModel.Private,
             $targetList = roomViewModel.Private ? lobby.owners : lobby.users,
             i = null;
+        
+        roomViewModel.processedTopic = ui.processContent(roomViewModel.Topic);
+        $room = templates.lobbyroom.tmpl(roomViewModel);
 
         var nextListElement = getNextRoomListElement($targetList, roomName, count, closed);
 
@@ -265,7 +268,8 @@
                 $room = $targetList.find('[data-room="' + room.Name + '"]'),
                 $count = $room.find('.count'),
                 $topic = $room.find('.topic'),
-                roomName = room.Name.toString().toUpperCase();
+                roomName = room.Name.toString().toUpperCase(),
+                processedTopic = ui.processContent(room.Topic);
 
             // if we don't find the room, we need to create it
             if ($room.length === 0) {
@@ -293,7 +297,7 @@
                 $room.removeClass('closed');
             }
 
-            $topic.text(room.Topic);
+            $topic.html(processedTopic);
 
             var nextListElement = getNextRoomListElement($targetList, roomName, room.Count, room.Closed);
 
@@ -315,7 +319,7 @@
                 delete roomCache[roomNameUppercase];
             }
             
-                // find the element in the sorted room list and remove it
+            // find the element in the sorted room list and remove it
             for (i = 0; i < sortedRoomList.length; i++) {
                 if (sortedRoomList[i].Name.toString().toUpperCase().localeCompare(roomNameUppercase) === 0) {
                     sortedRoomList.splice(i, 1);
@@ -323,7 +327,7 @@
                 }
             }
             
-                // find the element in the lobby public room list and remove it
+            // find the element in the lobby public room list and remove it
             for (i = 0; i < publicRoomList.length; i++) {
                 if (publicRoomList[i].Name.toString().toUpperCase().localeCompare(roomNameUppercase) === 0) {
                     publicRoomList.splice(i, 1);
@@ -331,13 +335,13 @@
                 }
             }
             
-                // remove the items from the lobby screen
+            // remove the items from the lobby screen
             var lobby = getLobby(),
-                $room = lobby.users.add(lobby.owners).find('[data-room="' + roomName + '"]');
+            $room = lobby.users.add(lobby.owners).find('[data-room="' + roomName + '"]');
             $room.remove();
             
-                // if we have no private rooms, hide the private rooms section and change the text on the rooms header
-            if (lobby.owners.find('li:not(.empty)').length <= 1) {
+            // if we have no private rooms, hide the private rooms section and change the text on the rooms header
+            if (lobby.owners.find('li:not(.empty)').length === 0) {
                 $lobbyPrivateRooms.hide();
                 $lobbyOtherRooms.find('.nav-header').html(utility.getLanguageResource('Client_Rooms'));
             }
@@ -352,6 +356,14 @@
             var lobby = getLobby(),
                 i;
             if (!lobby.isInitialized()) {
+                // Process the topics
+                for (i = 0; i < rooms.length; ++i) {
+                    rooms[i].processedTopic = ui.processContent(rooms[i].Topic);
+                }
+
+                for (i = 0; i < privateRooms.length; ++i) {
+                    privateRooms[i].processedTopic = ui.processContent(privateRooms[i].Topic);
+                }
 
                 // Populate the room cache
                 for (i = 0; i < rooms.length; ++i) {
