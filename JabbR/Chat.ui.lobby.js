@@ -223,15 +223,8 @@
             });
 
             $document.on('click', '#load-more-rooms-item', function () {
-                var spinner = $loadMoreRooms.find('i');
-                spinner.addClass('icon-spin');
-                spinner.show();
-                var loader = $loadMoreRooms.find('.load-more-rooms a');
-                loader.html(' ' + utility.getLanguageResource('LoadingMessage'));
                 loadMoreLobbyRooms();
-                spinner.hide();
-                spinner.removeClass('icon-spin');
-                loader.html(utility.getLanguageResource('Client_LoadMore'));
+
                 if (lastLoadedRoomIndex < publicRoomList.length) {
                     $loadMoreRooms.show();
                 } else {
