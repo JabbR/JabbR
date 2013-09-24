@@ -1,4 +1,4 @@
-﻿(function ($, window, chat) {
+﻿(function ($, window, chat, utility) {
     "use strict";
     
     var trimRoomHistoryMaxMessages = 200;
@@ -201,17 +201,6 @@
         this.tab.find('.lock').removeClass('hide');
     };
 
-    Room.prototype.setListState = function (list) {
-        var emptyStatus = list.children('li.empty'),
-            visibleItems = list.children('li:not(.empty)').filter(function() { return $(this).css('display') !== 'none'; });
-        
-        if (visibleItems.length > 0) {
-            emptyStatus.remove();
-        } else if (emptyStatus.length === 0) {
-            list.append($('<li class="empty" />').text(list.data('emptyMessage')));
-        }
-    };
-
     Room.prototype.addUser = function (userViewModel, $user) {
         if (userViewModel.owner) {
             this.addUserToList($user, this.owners);
@@ -234,9 +223,9 @@
     Room.prototype.addUserToList = function ($user, list) {
         var oldParentList = $user.parent('ul');
         $user.appendTo(list);
-        this.setListState(list);
+        utility.updateEmptyListItem(list);
         if (oldParentList.length > 0) {
-            this.setListState(oldParentList);
+            utility.updateEmptyListItem(oldParentList);
         }
         this.sortList(list, $user);
     };
@@ -334,4 +323,4 @@
     };
 
     chat.Room = Room;
-}(window.jQuery, window, window.chat));
+}(window.jQuery, window, window.chat, window.chat.utility));

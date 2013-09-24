@@ -1313,9 +1313,9 @@
                     $(this).remove();
 
                     if (owner === true) {
-                        room.setListState(room.owners);
+                        utility.updateEmptyListItem(room.owners);
                     } else {
-                        room.setListState(room.activeUsers);
+                        utility.updateEmptyListItem(room.activeUsers);
                     }
                 });
             
@@ -1910,7 +1910,7 @@
         },
         setRoomListStatuses: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
-            room.setListState(room.owners);
+            utility.updateEmptyListItem(room.owners);
         },
         processContent: function (content) {
             return utility.processContent(content, templates, ui.lobby.roomCache);

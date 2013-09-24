@@ -14,28 +14,8 @@
         $lobbyOtherRoomList = null,
         $lobbyPrivateRoomList = null,
         roomCache = {},
-        $document = $(document),
         templates = null,
         Keys = { Enter: 13 };
-    
-    function setListState(list) {
-        var emptyStatus = list.children('li.empty'),
-            visibleItems = list.children('li:not(.empty)').filter(function () { return $(this).css('display') !== 'none'; });
-
-        if (visibleItems.length > 0) {
-            emptyStatus.remove();
-        } else if (emptyStatus.length === 0) {
-            list.append($('<li class="empty" />').text(list.data('emptyMessage')));
-        }
-    }
-    
-    function loadMoreLobbyRooms() {
-        $.tmpl(templates.lobbyroom, publicRoomList.slice(lastLoadedRoomIndex, lastLoadedRoomIndex + maxRoomsToLoad)).appendTo($lobbyOtherRoomList);
-        lastLoadedRoomIndex += maxRoomsToLoad;
-
-        // re-filter lists
-        $lobbyRoomFilterForm.submit();
-    }
     
     function activateOrOpenRoom(roomName) {
         var room = ui.getRoomElements(roomName);
@@ -117,16 +97,13 @@
     function addRoomToLobby(roomViewModel) {
         var $room = null,
             roomName = roomViewModel.Name.toString().toUpperCase(),
-            count = roomViewModel.Count,
-            closed = roomViewModel.Closed,
-            nonPublic = roomViewModel.Private,
             $targetList = roomViewModel.Private ? $lobbyPrivateRoomList : $lobbyOtherRoomList,
             i = null;
         
         roomViewModel.processedTopic = ui.processContent(roomViewModel.Topic);
         $room = templates.lobbyroom.tmpl(roomViewModel);
 
-        var nextListElement = getNextRoomListElement($targetList, roomName, count, closed);
+        var nextListElement = getNextRoomListElement($targetList, roomName, roomViewModel.Count, roomViewModel.Closed);
 
         if (nextListElement !== null) {
             $room.insertBefore(nextListElement);
@@ -135,7 +112,7 @@
         }
 
         filterIndividualRoom($room);
-        setListState($targetList);
+        utility.updateEmptyListItem($targetList);
 
         roomCache[roomName] = true;
 
@@ -162,7 +139,7 @@
         }
 
         // if it's a private room, make sure that we're displaying the private room section
-        if (nonPublic) {
+        if (roomViewModel.Private) {
             $lobbyPrivateRooms.show();
             $lobbyOtherRooms.find('.nav-header').html(utility.getLanguageResource('Client_OtherRooms'));
         }
@@ -183,7 +160,7 @@
                 otherlobbyroom: $('#new-other-lobby-room-template')
             };
 
-            $document.on('click', 'li.room .room-row', function () {
+            $('li.room .room-row').on('click', function () {
                 var roomName = $(this).parent().data('name');
                 activateOrOpenRoom(roomName);
             });
@@ -217,19 +194,23 @@
                     .each(function () { filterIndividualRoom($(this)); });
 
                 $lobbyRoomsLists.find('ul').each(function () {
-                    setListState($(this));
+                    utility.updateEmptyListItem($(this));
                 });
                 return false;
             });
 
-            $document.on('click', '#load-more-rooms-item', function () {
-                loadMoreLobbyRooms();
+            $loadMoreRooms.on('click', function () {
+                $.tmpl(templates.lobbyroom, publicRoomList.slice(lastLoadedRoomIndex, lastLoadedRoomIndex + maxRoomsToLoad)).appendTo($lobbyOtherRoomList);
+                lastLoadedRoomIndex += maxRoomsToLoad;
 
                 if (lastLoadedRoomIndex < publicRoomList.length) {
                     $loadMoreRooms.show();
                 } else {
                     $loadMoreRooms.hide();
                 }
+
+                // re-filter lists
+                $lobbyRoomFilterForm.submit();
             });
         },
         hideForm: function() {
