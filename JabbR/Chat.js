@@ -156,7 +156,7 @@
             // Populate the user list with room names
             chat.server.getRooms()
                 .done(function (rooms) {
-                    ui.populateLobbyRooms(rooms, privateRooms);
+                    ui.lobby.populateLobbyRooms(rooms, privateRooms);
                     ui.setInitialized('Lobby');
                     d.resolveWith(chat);
                 });
@@ -379,9 +379,9 @@
 
         if (userHasAccess) {
             ui.setRoomLocked(room);
-            ui.updatePrivateLobbyRooms(room);
+            ui.lobby.updatePrivateLobbyRooms(room);
         } else {
-            ui.removeLobbyRoom(room);
+            ui.lobby.removeLobbyRoom(room);
         }
     };
 
@@ -419,7 +419,7 @@
     };
 
     chat.client.updateRoom = function (room) {
-        ui.updateLobbyRoom(room);
+        ui.lobby.updateLobbyRoom(room);
     };
 
     chat.client.markInactive = function (users) {
@@ -510,7 +510,7 @@
     chat.client.allowUser = function (room, roomInfo) {
         ui.addMessage(utility.getLanguageResource('Chat_YouGrantedRoomAccess', room), 'notification', this.state.activeRoom);
 
-        ui.updateLobbyRoom(roomInfo);
+        ui.lobby.updateLobbyRoom(roomInfo);
     };
 
     chat.client.userAllowed = function (user, room) {
@@ -520,7 +520,7 @@
     chat.client.unallowUser = function (room) {
         ui.addMessage(utility.getLanguageResource('Chat_YourRoomAccessRevoked', room), 'notification', this.state.activeRoom);
 
-        ui.removeLobbyRoom(room);
+        ui.lobby.removeLobbyRoom(room);
     };
 
     chat.client.userUnallowed = function (user, room) {
@@ -1239,6 +1239,7 @@
 
         // Initialize the ui, passing the user preferences
         ui.initialize(state.preferences);
+        ui.lobby.initialize();
 
         for (var i = 0; i < welcomeMessages.length; i++) {
             ui.addMessage(welcomeMessages, 'notification');

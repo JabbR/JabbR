@@ -233,6 +233,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="apple-touch-icon.png" />
+    <Content Include="Chat.ui.lobby.js" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\themes\default\Chat.bbcnews.css" />
