@@ -427,16 +427,13 @@
     }
 
     function setAccessKeys() {
-        $.each($tabs.find('li.room'), function (index, item) {
-            $(item).children('button').attr('accesskey', getRoomAccessKey(index));
+        $.each($tabs.find('li.room > a'), function (index, item) {
+            if (index < 10) {
+                $(item).attr('accesskey', ((index + 1) % 10).toString());
+            } else {
+                $(item).attr('accesskey', null);
+            }
         });
-    }
-
-    function getRoomAccessKey(index) {
-        if (index < 10) {
-            return index + 1;
-        }
-        return 0;
     }
 
     function navigateToRoom(roomName) {
@@ -2236,6 +2233,7 @@
             });
 
             ui.updateTabOverflow();
+            setAccessKeys();
         },
         updateTabOverflow: function () {
             var lastOffsetLeft = 0,
