@@ -1,8 +1,8 @@
-﻿using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 
 namespace JabbR.Client.UI.WP8.Helpers
 {

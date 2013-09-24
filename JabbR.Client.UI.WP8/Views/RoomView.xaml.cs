@@ -4,11 +4,11 @@ using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Navigation;
+using Cirrious.MvvmCross.WindowsPhone.Views;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using Cirrious.MvvmCross.WindowsPhone.Views;
-using System.Windows.Data;
 
 namespace JabbR.Client.UI.WP8.Views
 {

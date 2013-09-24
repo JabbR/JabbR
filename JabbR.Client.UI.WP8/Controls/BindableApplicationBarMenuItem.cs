@@ -1,7 +1,7 @@
-﻿using Microsoft.Phone.Shell;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using Microsoft.Phone.Shell;
 
 namespace JabbR.Client.UI.WP8.Controls
 {

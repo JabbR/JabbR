@@ -1,6 +1,6 @@
-﻿using Microsoft.Phone.Shell;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
+using Microsoft.Phone.Shell;
 
 namespace JabbR.Client.UI.WP8.Controls
 {

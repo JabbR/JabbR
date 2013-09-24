@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Input;
 using Cirrious.CrossCore;
+using Cirrious.CrossCore.Platform;
 using Cirrious.MvvmCross.ViewModels;
 using JabbR.Client.UI.Core.Interfaces;
-using System.Collections.Generic;
-using Cirrious.CrossCore.Platform;
 using Newtonsoft.Json;
 
 namespace JabbR.Client.UI.Core.ViewModels

@@ -1,8 +1,8 @@
-﻿using JabbR.Client.UI.Core.Interfaces;
+﻿using System;
+using System.ComponentModel;
+using JabbR.Client.UI.Core.Interfaces;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
-using System;
-using System.ComponentModel;
 
 namespace JabbR.Client.UI.WP8
 {

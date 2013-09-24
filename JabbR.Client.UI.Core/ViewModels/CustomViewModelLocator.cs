@@ -1,9 +1,9 @@
-﻿using Cirrious.CrossCore;
+﻿using System;
+using System.Reflection;
+using Cirrious.CrossCore;
 using Cirrious.CrossCore.Platform;
 using Cirrious.MvvmCross.ViewModels;
 using Newtonsoft.Json;
-using System;
-using System.Reflection;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {

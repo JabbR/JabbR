@@ -1,5 +1,4 @@
-﻿using JabbR.Client.UI.WP8.Helpers;
-using System;
+﻿using System;
 using System.Collections;
 using System.Linq;
 using System.Windows;
@@ -7,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
+using JabbR.Client.UI.WP8.Helpers;
 
 namespace JabbR.Client.UI.WP8.Extensions
 {

@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Resources;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Navigation;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
-using JabbR.Client.UI.WP8.Resources;
 using Cirrious.CrossCore;
 using Cirrious.MvvmCross.ViewModels;
+using JabbR.Client.UI.WP8.Resources;
+using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 
 namespace JabbR.Client.UI.WP8
 {
