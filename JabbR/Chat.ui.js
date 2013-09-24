@@ -201,13 +201,14 @@
             $room = $targetList.find('[data-room="' + room.Name + '"]'),
             $count = $room.find('.count'),
             $topic = $room.find('.topic'),
-            roomName = room.Name.toString().toUpperCase();
+            roomName = room.Name.toString().toUpperCase(),
+            processedTopic = ui.processContent(room.Topic);
         
         // if we don't find the room, we need to create it
         if ($room.length === 0) {
             addRoomToLobby(room);
             return;
-        }
+        }           
 
         if (room.Count === 0) {
             $count.text(utility.getLanguageResource('Client_OccupantsZero'));
@@ -228,8 +229,8 @@
         } else {
             $room.removeClass('closed');
         }
-        
-        $topic.text(room.Topic);
+
+        $topic.html(processedTopic);
 
         var nextListElement = getNextRoomListElement($targetList, roomName, room.Count, room.Closed);
 
@@ -246,13 +247,16 @@
 
     function addRoomToLobby(roomViewModel) {
         var lobby = getLobby(),
-            $room = templates.lobbyroom.tmpl(roomViewModel),
+            $room = null,
             roomName = roomViewModel.Name.toString().toUpperCase(),
             count = roomViewModel.Count,
             closed = roomViewModel.Closed,
             nonPublic = roomViewModel.Private,
             $targetList = roomViewModel.Private ? lobby.owners : lobby.users,
             i = null;
+
+        roomViewModel.processedTopic = ui.processContent(roomViewModel.Topic);
+        $room = templates.lobbyroom.tmpl(roomViewModel);
 
         var nextListElement = getNextRoomListElement($targetList, roomName, count, closed);
 
@@ -1465,6 +1469,15 @@
             var lobby = getLobby(),
                 i;
             if (!lobby.isInitialized()) {
+                
+                // Process the topics
+                for (i = 0; i < rooms.length; ++i) {
+                    rooms[i].processedTopic = ui.processContent(rooms[i].Topic);
+                }
+                
+                for (i = 0; i < privateRooms.length; ++i) {
+                    privateRooms[i].processedTopic = ui.processContent(privateRooms[i].Topic);
+                }
 
                 // Populate the room cache
                 for (i = 0; i < rooms.length; ++i) {
