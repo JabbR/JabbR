@@ -5273,7 +5273,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
                 // Act.
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/meme"));
-                Assert.Equal("What type of meme do you want to generate and with what message? You need to provide 3 seperate arguments delimeted by spaces. Help: here's the list of memes: http://upboat.me/List .", ex.Message);
+                Assert.Equal("What type of meme do you want to generate, and with what message? You need to provide 3 seperate arguments delimeted by spaces. The list of available memes is at: https://upboat.me/List .", ex.Message);
             }
 
             [Fact]
@@ -5304,7 +5304,7 @@ namespace JabbR.Test
                                                         notificationService.Object);
                 // Act.
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/meme cd top-line"));
-                Assert.Equal("Incorrect number of meme arguments. You need to provide 3 seperate arguments delimeted by spaces. (TIP: use a dash (eg: -) to display a space in your message.", ex.Message);
+                Assert.Equal("Incorrect number of meme arguments. You need to provide 3 seperate arguments delimeted by spaces. Use a dash (eg: your-message) to display a space in your message.", ex.Message);
             }
         }
 
