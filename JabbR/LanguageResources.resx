@@ -1043,7 +1043,7 @@ Use ? or type /? to display the FAQ and list of commands.</value>
     <value>Type /me 'does anything'. Sends a message to everyone in the room.</value>
   </data>
   <data name="Meme_CommandInfo" xml:space="preserve">
-    <value>Create a meme picture. This leverages the UpBoat.me RESTful API.</value>
+    <value>Post a meme picture using the upboat.me RESTful API.</value>
   </data>
   <data name="Meme_DataRequired" xml:space="preserve">
     <value>What type of meme do you want to generate, and with what message? You need to provide 3 seperate arguments delimeted by spaces. The list of available memes is at: https://upboat.me/List .</value>

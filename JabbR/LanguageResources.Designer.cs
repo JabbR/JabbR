@@ -2390,7 +2390,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create a meme picture. This leverages the UpBoat.me RESTful API..
+        ///   Looks up a localized string similar to Post a meme picture using the upboat.me RESTful API..
         /// </summary>
         public static string Meme_CommandInfo {
             get {
