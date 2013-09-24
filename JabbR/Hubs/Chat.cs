@@ -763,8 +763,18 @@ namespace JabbR
 
         void INotificationService.AllowUser(ChatUser targetUser, ChatRoom targetRoom)
         {
-            // Tell this client it's an owner
-            Clients.User(targetUser.Id).allowUser(targetRoom.Name);
+            // Build a viewmodel for the room
+            var roomViewModel = new RoomViewModel
+            {
+                Name = targetRoom.Name,
+                Private = targetRoom.Private,
+                Closed = targetRoom.Closed,
+                Topic = targetRoom.Topic ?? String.Empty,
+                Count = _repository.GetOnlineUsers(targetRoom).Count()
+            };
+
+            // Tell this client it's allowed.  Pass down a viewmodel so that we can add the room to the lobby.
+            Clients.User(targetUser.Id).allowUser(targetRoom.Name, roomViewModel);
 
             // Tell the calling client the granting permission into the room was successful
             Clients.Caller.userAllowed(targetUser.Name, targetRoom.Name);
@@ -775,7 +785,7 @@ namespace JabbR
             // Kick the user from the room when they are unallowed
             ((INotificationService)this).KickUser(targetUser, targetRoom);
 
-            // Tell this client it's an owner
+            // Tell this client it's no longer allowed
             Clients.User(targetUser.Id).unallowUser(targetRoom.Name);
 
             // Tell the calling client the granting permission into the room was successful
@@ -887,8 +897,9 @@ namespace JabbR
         {
             var userViewModel = new UserViewModel(targetUser);
 
-            // Tell the room it's locked
-            Clients.All.lockRoom(userViewModel, room.Name);
+            // Tell everyone that the room's locked
+            Clients.Clients(_repository.GetAllowedClientIds(room)).lockRoom(userViewModel, room.Name, true);
+            Clients.AllExcept(_repository.GetAllowedClientIds(room).ToArray()).lockRoom(userViewModel, room.Name, false);
 
             // Tell the caller the room was successfully locked
             Clients.Caller.roomLocked(room.Name);

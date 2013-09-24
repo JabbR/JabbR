@@ -69,6 +69,7 @@
         $loadingHistoryIndicator = null,
         trimRoomHistoryFrequency = 1000 * 60 * 2, // 2 minutes in ms
         $loadMoreRooms = null,
+        publicRoomList = null,
         sortedRoomList = null,
         maxRoomsToLoad = 100,
         lastLoadedRoomIndex = 0,
@@ -190,15 +191,8 @@
         return getRoomElements('Lobby');
     }
 
-    function getRoomsNames() {
-        var lobby = getLobby();
-
-        return lobby.users.find('li')
-                     .map(function () {
-                         var room = $(this).data('name');
-                         roomCache[room.toString().toUpperCase()] = true;
-                         return room + ' ';
-                     });
+    function getRooms() {
+        return sortedRoomList;
     }
 
     function updateLobbyRoom(room) {
@@ -208,6 +202,12 @@
             $count = $room.find('.count'),
             $topic = $room.find('.topic'),
             roomName = room.Name.toString().toUpperCase();
+        
+        // if we don't find the room, we need to create it
+        if ($room.length === 0) {
+            addRoomToLobby(room);
+            return;
+        }
 
         if (room.Count === 0) {
             $count.text(utility.getLanguageResource('Client_OccupantsZero'));
@@ -250,7 +250,9 @@
             roomName = roomViewModel.Name.toString().toUpperCase(),
             count = roomViewModel.Count,
             closed = roomViewModel.Closed,
-            $targetList = roomViewModel.Private ? lobby.owners : lobby.users;
+            nonPublic = roomViewModel.Private,
+            $targetList = roomViewModel.Private ? lobby.owners : lobby.users,
+            i = null;
 
         var nextListElement = getNextRoomListElement($targetList, roomName, count, closed);
 
@@ -261,6 +263,37 @@
         }
 
         filterIndividualRoom($room);
+        lobby.setListState($targetList);
+        
+        roomCache[roomName] = true;
+
+        // don't try to populate the sortedRoomList while we're initially filling up the lobby
+        if (sortedRoomList) {
+            var sortedRoomInsertIndex = sortedRoomList.length;
+            for (i = 0; i < sortedRoomList.length; i++) {
+                if (sortedRoomList[i].Name.toString().toUpperCase().localeCompare(roomName) > 0) {
+                    sortedRoomInsertIndex = i;
+                    break;
+                }
+            }
+            sortedRoomList.splice(sortedRoomInsertIndex, 0, roomViewModel);
+        }
+        
+        // handle updates on rooms not currently displayed to clients by removing from the public room list
+        if (publicRoomList) {
+            for (i = 0; i < publicRoomList.length; i++) {
+                if (publicRoomList[i].Name.toString().toUpperCase().localeCompare(roomName) === 0) {
+                    publicRoomList.splice(i, 1);
+                    break;
+                }
+            }
+        }
+        
+        // if it's a private room, make sure that we're displaying the private room section
+        if (nonPublic) {
+            $lobbyPrivateRooms.show();
+            $lobbyOtherRooms.find('.nav-header').html(utility.getLanguageResource('Client_OtherRooms'));
+        }
     }
     
     function getNextRoomListElement($targetList, roomName, count, closed) {
@@ -348,8 +381,6 @@
         if (!roomCache[roomName.toString().toUpperCase()]) {
             addRoomToLobby(roomViewModel);
         }
-
-        roomCache[roomName.toString().toUpperCase()] = true;
         
         templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabsDropdown);
         ui.updateTabOverflow();
@@ -684,7 +715,7 @@
 
     function loadMoreLobbyRooms() {
         var lobby = getLobby(),
-            moreRooms = sortedRoomList.slice(lastLoadedRoomIndex, lastLoadedRoomIndex + maxRoomsToLoad);
+            moreRooms = publicRoomList.slice(lastLoadedRoomIndex, lastLoadedRoomIndex + maxRoomsToLoad);
 
         populateLobbyRoomList(moreRooms, templates.lobbyroom, lobby.users);
         lastLoadedRoomIndex = lastLoadedRoomIndex + maxRoomsToLoad;
@@ -862,7 +893,7 @@
                 spinner.hide();
                 spinner.removeClass('icon-spin');
                 loader.html(utility.getLanguageResource('Client_LoadMore'));
-                if (lastLoadedRoomIndex < sortedRoomList.length) {
+                if (lastLoadedRoomIndex < publicRoomList.length) {
                     $loadMoreRooms.show();
                 } else {
                     $loadMoreRooms.hide();
@@ -1135,11 +1166,6 @@
                 var room = getCurrentRoomElements(),
                     $lobbyRoomsLists = $lobbyPrivateRooms.add($lobbyOtherRooms);
 
-                // bounce on any room other than lobby
-                if (!room.isLobby()) {
-                    return false;
-                }
-
                 // hide all elements except those that match the input / closed filters
                 $lobbyRoomsLists
                     .find('li:not(.empty)')
@@ -1227,13 +1253,17 @@
                                              }
 
                                              return '';
+                                         })
+                                         .sort(function(a, b) {
+                                             return a.toString().toUpperCase().localeCompare(b.toString().toUpperCase());
                                          });
                         case '#':
-                            return getRoomsNames();
+                            return getRooms()
+                                .map(function (room) { return room.Name + ' '; });
 
                         case '/':
                             return ui.getCommands()
-                                         .map(function (cmd) { return cmd.Name + ' '; });
+                                .map(function (cmd) { return cmd.Name + ' '; });
 
                         case ':':
                             return emoji.getIcons();
@@ -1449,10 +1479,14 @@
                 var privateSorted = sortRoomList(privateRooms);
                 
                 // sort other lobby rooms but filter out private rooms
-                sortedRoomList = sortRoomList(rooms).filter(function (room) {
+                publicRoomList = sortRoomList(rooms).filter(function (room) {
                     return !privateSorted.some(function (allowed) {
                         return allowed.Name === room.Name;
                     });
+                });
+
+                sortedRoomList = rooms.sort(function(a, b) {
+                    return a.Name.toString().toUpperCase().localeCompare(b.Name.toString().toUpperCase());
                 });
 
                 lobby.owners.empty();
@@ -1463,17 +1497,17 @@
                     populateLobbyRoomList(privateSorted, templates.lobbyroom, listOfPrivateRooms);
                     listOfPrivateRooms.children('li').appendTo(lobby.owners);
                     $lobbyPrivateRooms.show();
-                    $lobbyOtherRooms.find('nav-header').html(utility.getLanguageResource('Client_OtherRooms'));
+                    $lobbyOtherRooms.find('.nav-header').html(utility.getLanguageResource('Client_OtherRooms'));
                 } else {
                     $lobbyPrivateRooms.hide();
-                    $lobbyOtherRooms.find('nav-header').html(utility.getLanguageResource('Client_Rooms'));
+                    $lobbyOtherRooms.find('.nav-header').html(utility.getLanguageResource('Client_Rooms'));
                 }
 
                 var listOfRooms = $('<ul/>');
-                populateLobbyRoomList(sortedRoomList.slice(0, maxRoomsToLoad), templates.lobbyroom, listOfRooms);
+                populateLobbyRoomList(publicRoomList.slice(0, maxRoomsToLoad), templates.lobbyroom, listOfRooms);
                 lastLoadedRoomIndex = listOfRooms.children('li').length;
                 listOfRooms.children('li').appendTo(lobby.users);
-                if (lastLoadedRoomIndex < sortedRoomList.length) {
+                if (lastLoadedRoomIndex < publicRoomList.length) {
                     $loadMoreRooms.show();
                 }
                 $lobbyOtherRooms.show();
@@ -1486,6 +1520,41 @@
 
             // re-filter lists
             $lobbyRoomFilterForm.submit();
+        },
+        removeLobbyRoom: function (roomName) {
+            var roomNameUppercase = roomName.toString().toUpperCase(),
+                i = null;
+            
+            if (roomCache[roomNameUppercase]) {
+                delete roomCache[roomNameUppercase];
+            }
+            
+            // find the element in the sorted room list and remove it
+            for (i = 0; i < sortedRoomList.length; i++) {
+                if (sortedRoomList[i].Name.toString().toUpperCase().localeCompare(roomNameUppercase) === 0) {
+                    sortedRoomList.splice(i, 1);
+                    break;
+                }
+            }
+            
+            // find the element in the lobby public room list and remove it
+            for (i = 0; i < publicRoomList.length; i++) {
+                if (publicRoomList[i].Name.toString().toUpperCase().localeCompare(roomNameUppercase) === 0) {
+                    publicRoomList.splice(i, 1);
+                    break;
+                }
+            }
+            
+            // remove the items from the lobby screen
+            var lobby = getLobby(),
+                $room = lobby.users.add(lobby.owners).find('[data-room="' + roomName + '"]');
+            $room.remove();
+            
+            // if we have no private rooms, hide the private rooms section and change the text on the rooms header
+            if (lobby.owners.find('li:not(.empty)').length <= 1) {
+                $lobbyPrivateRooms.hide();
+                $lobbyOtherRooms.find('.nav-header').html(utility.getLanguageResource('Client_Rooms'));
+            }
         },
         addUser: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
@@ -1946,7 +2015,9 @@
             return ui.commands || [];
         },
         setCommands: function (commands) {
-            ui.commands = commands;
+            ui.commands = commands.sort(function(a, b) {
+                return a.Name.toString().toUpperCase().localeCompare(b.Name.toString().toUpperCase());
+            });
             
             $globalCmdHelp.empty();
             $roomCmdHelp.empty();
