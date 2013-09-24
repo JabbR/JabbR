@@ -157,7 +157,6 @@
             chat.server.getRooms()
                 .done(function (rooms) {
                     ui.lobby.populateLobbyRooms(rooms, privateRooms);
-                    ui.setInitialized('Lobby');
                     d.resolveWith(chat);
                 });
         }
