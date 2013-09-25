@@ -162,7 +162,9 @@ namespace JabbR.Services
 
         public IQueryable<ChatMessage> GetMessagesByRoom(ChatRoom room)
         {
-            return _db.Messages.Include(r => r.User).Where(r => r.RoomKey == room.Key);
+            return _db.Messages.Include(m => m.User)
+                               .Include(m => m.Room)
+                               .Where(m => m.RoomKey == room.Key);
         }
 
         public IQueryable<ChatMessage> GetPreviousMessages(string messageId)

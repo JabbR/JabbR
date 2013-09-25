@@ -156,6 +156,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Nancy.Viewengines.Razor.0.18.0\lib\net40\Nancy.ViewEngines.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="NewRelic.Api.Agent">
+      <HintPath>..\packages\NewRelicWindowsAzure.2.10.40.0\lib\NewRelic.Api.Agent.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -194,9 +197,9 @@
     <Reference Include="System.IdentityModel" />
     <Reference Include="System.identitymodel.services" />
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Net.Http.Formatting, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.0.0-rc1-130807\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.1.0-alpha1-130922\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http.WebRequest" />
     <Reference Include="System.Runtime.Caching" />
@@ -208,12 +211,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\System.Spatial.5.6.0-rc1\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Http, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.0.0-rc1-130807\lib\net45\System.Web.Http.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.1.0-alpha1-130922\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http.Owin">
-      <HintPath>..\lib\System.Web.Http.Owin.dll</HintPath>
+    <Reference Include="System.Web.Http.Owin, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.1.0-alpha1-130922\lib\net45\System.Web.Http.Owin.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor.Unofficial, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -872,7 +876,8 @@
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
-    <Content Include="Scripts\jquery-migrate-1.0.0.min.js" />
+    <Content Include="Scripts\jquery-migrate-1.2.1.js" />
+    <Content Include="Scripts\jquery-migrate-1.2.1.min.js" />
     <Content Include="Scripts\jquery.color-2.1.2.js" />
     <Content Include="Scripts\jquery.color-2.1.2.min.js" />
     <Content Include="Scripts\jquery.dragsort-0.5.1.js" />
@@ -941,6 +946,7 @@
     <Content Include="Scripts\jquery-2.0.3.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\MemeCommand.cs" />
     <Compile Include="Infrastructure\AuthenticationService.cs" />
     <Compile Include="Infrastructure\EnumerableExtensions.cs" />
     <Compile Include="Infrastructure\HttpServerUtility.cs" />
@@ -1095,10 +1101,12 @@
     <Compile Include="Services\Email\RazorEmailTemplateEngine.cs" />
     <Compile Include="Services\Email\SmtpClientEmailSender.cs" />
     <Compile Include="Services\IJabbrConfiguration.cs" />
+    <Compile Include="Services\IRecentMessageCache.cs" />
     <Compile Include="Services\ISettingsManager.cs" />
     <Compile Include="Services\IUserAuthenticator.cs" />
     <Compile Include="Services\JabbrConfiguration.cs" />
     <Compile Include="Services\PresenceMonitor.cs" />
+    <Compile Include="Services\RecentMessageCache.cs" />
     <Compile Include="Services\SettingsKeyProvider.cs" />
     <Compile Include="Services\ApplicationSettings.cs" />
     <Compile Include="Services\DefaultCache.cs" />

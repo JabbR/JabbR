@@ -13,6 +13,7 @@ namespace JabbR.Services
     {
         private readonly IJabbrRepository _repository;
         private readonly ICache _cache;
+        private readonly IRecentMessageCache _recentMessageCache;
         private readonly ApplicationSettings _settings;
 
         private const int NoteMaximumLength = 140;
@@ -289,16 +290,21 @@ namespace JabbR.Services
                                                                                 {"zanzibar","Zanzibar"}
                                                   };
 
-        public ChatService(ICache cache, IJabbrRepository repository)
-            : this(cache, repository, ApplicationSettings.GetDefaultSettings())
+        public ChatService(ICache cache, IRecentMessageCache recentMessageCache, IJabbrRepository repository)
+            : this(cache,
+                   recentMessageCache,
+                   repository,  
+                   ApplicationSettings.GetDefaultSettings())
         {
         }
 
         public ChatService(ICache cache,
+                           IRecentMessageCache recentMessageCache,
                            IJabbrRepository repository,
                            ApplicationSettings settings)
         {
             _cache = cache;
+            _recentMessageCache = recentMessageCache;
             _repository = repository;
             _settings = settings;
         }
@@ -437,6 +443,8 @@ namespace JabbR.Services
                 Room = room,
                 HtmlEncoded = false
             };
+
+            _recentMessageCache.Add(chatMessage);
 
             _repository.Add(chatMessage);
 

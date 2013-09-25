@@ -1048,9 +1048,18 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to {0} has gone AFK..
         /// </summary>
-        public static string Chat_UserIsAFK {
+        public static string Chat_UserIsAfk {
             get {
-                return ResourceManager.GetString("Chat_UserIsAFK", resourceCulture);
+                return ResourceManager.GetString("Chat_UserIsAfk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} has gone AFK, with the message &quot;{1}&quot;..
+        /// </summary>
+        public static string Chat_UserIsAfkNote {
+            get {
+                return ResourceManager.GetString("Chat_UserIsAfkNote", resourceCulture);
             }
         }
         
@@ -1091,7 +1100,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} has set their note..
+        ///   Looks up a localized string similar to {0} has set their note to &quot;{1}&quot;..
         /// </summary>
         public static string Chat_UserNoteSet {
             get {
@@ -1219,9 +1228,18 @@ namespace JabbR {
         /// <summary>
         ///   Looks up a localized string similar to You have gone AFK..
         /// </summary>
-        public static string Chat_YouAreAFK {
+        public static string Chat_YouAreAfk {
             get {
-                return ResourceManager.GetString("Chat_YouAreAFK", resourceCulture);
+                return ResourceManager.GetString("Chat_YouAreAfk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have gone AFK, with the message &quot;{0}&quot;..
+        /// </summary>
+        public static string Chat_YouAreAfkNote {
+            get {
+                return ResourceManager.GetString("Chat_YouAreAfkNote", resourceCulture);
             }
         }
         
@@ -1334,7 +1352,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your note has been set..
+        ///   Looks up a localized string similar to Your note has been set to &quot;{0}&quot;..
         /// </summary>
         public static string Chat_YourNoteSet {
             get {
@@ -2368,6 +2386,33 @@ namespace JabbR {
         public static string Me_CommandInfo {
             get {
                 return ResourceManager.GetString("Me_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Post a meme picture using the upboat.me RESTful API..
+        /// </summary>
+        public static string Meme_CommandInfo {
+            get {
+                return ResourceManager.GetString("Meme_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to What type of meme do you want to generate, and with what message? You need to provide 3 seperate arguments delimeted by spaces. The list of available memes is at: https://upboat.me/List ..
+        /// </summary>
+        public static string Meme_DataRequired {
+            get {
+                return ResourceManager.GetString("Meme_DataRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Incorrect number of meme arguments. You need to provide 3 seperate arguments delimeted by spaces. Use a dash (eg: your-message) to display a space in your message..
+        /// </summary>
+        public static string Meme_IncorrectNumberOfArguments {
+            get {
+                return ResourceManager.GetString("Meme_IncorrectNumberOfArguments", resourceCulture);
             }
         }
         
