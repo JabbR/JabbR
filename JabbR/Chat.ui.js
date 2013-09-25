@@ -882,7 +882,9 @@
 
             $window.resize(function () {
                 var room = getCurrentRoomElements();
-                room.scrollToBottom();
+                if (room.type === 'Room') {
+                    room.scrollToBottom();
+                }
                 ui.updateTabOverflow();
             });
 
@@ -1074,9 +1076,10 @@
                     ui.lobby.showForm();
 
                     room.messages.hide();
+                    ui.toggleMessageSection(false);
+                } else {
+                    ui.toggleMessageSection(room.isClosed());
                 }
-
-                ui.toggleMessageSection(room.isClosed());
 
                 $ui.trigger(ui.events.activeRoomChanged, [roomName]);
                 triggerFocus();
@@ -1108,7 +1111,7 @@
         scrollToBottom: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
 
-            if (room.isActive()) {
+            if (room.type() === 'Room' && room.isActive()) {
                 room.scrollToBottom();
             }
         },
@@ -1414,8 +1417,8 @@
                 isMention = message.highlight,
                 isNotification = message.messageType === 1;
 
-            // bounce out of here if the room is closed
-            if (room.isClosed()) {
+            // bounce out of here if the room is closed, or its the lobby
+            if (room.type() === 'Room' && room.isClosed()) {
                 return;
             }
 

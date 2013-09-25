@@ -75,7 +75,7 @@
     };
 
     Room.prototype.setTopic = function(topic) {
-        var topicHtml = topic === '' ? utility.getLanguageResource('Chat_DefaultTopic', this.getName()) : ui.processContent(topic);
+        var topicHtml = topic === '' ? utility.getLanguageResource('Chat_DefaultTopic', this.getName()) : chat.ui.processContent(topic);
 
         if (this.isActive()) {
             this.roomTopic.hide();

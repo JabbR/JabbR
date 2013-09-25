@@ -69,17 +69,7 @@
     };
 
     LobbyTab.prototype.makeActive = function () {
-        var currUnread = this.getUnread(),
-            lastUnread = this.messages.find('.message-separator').data('unread') || 0;
-
-        this.tab.addClass('current')
-                .removeClass('unread')
-                .data('unread', 0)
-                .data('hasMentions', false);
-
-        if (this.tab.is('.room')) {
-            this.tab.find('.content').text(this.getName());
-        }
+        this.tab.addClass('current');
 
         this.messages.addClass('current')
                      .show();
@@ -89,12 +79,6 @@
 
         this.roomTopic.addClass('current')
                   .show();
-
-        // if no unread since last separator
-        // remove previous separator
-        if (currUnread <= lastUnread) {
-            this.removeSeparator();
-        }
     };
 
     LobbyTab.prototype.setInitialized = function () {
