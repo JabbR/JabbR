@@ -67,6 +67,7 @@
         roomLoadingDelay = 250,
         roomLoadingTimeout = null,
         Room = chat.Room,
+        LobbyTab = chat.LobbyTab,
         $unreadNotificationCount = null;
 
     function getRoomNameFromHash(hash) {
@@ -114,6 +115,10 @@
 
     function getRoomElements(roomName) {
         var roomId = getRoomId(roomName);
+        if (roomId === 'lobby') {
+            return new LobbyTab();
+        }
+        
         var room = new Room($('#tabs-' + roomId),
                         $('#userlist-' + roomId),
                         $('#userlist-' + roomId + '-owners'),
@@ -127,12 +132,7 @@
         var $tab = $tabs.find('li.current');
         var room;
         if ($tab.data('name') === 'Lobby') {
-            room = new Room($tab,
-                $('#userlist-lobby'),
-                $('#userlist-lobby-owners'),
-                $('#userlist-lobby-active'),
-                $('.messages.current'),
-                $('.roomTopic.current'));
+            room = new LobbyTab();
         } else {
             room = new Room($tab,
                 $('.users.current'),
@@ -239,18 +239,10 @@
     }
 
     function removeRoom(roomName) {
-        var room = getRoomElements(roomName),
-            scrollHandler = null;
+        var room = getRoomElements(roomName);
 
-        if (room.exists()) {
-            // Remove the scroll handler from this room
-            scrollHandler = room.messages.data('scrollHandler');
-            room.messages.unbind('scrollHandler', scrollHandler);
-
-            room.tab.remove();
-            room.messages.remove();
-            room.users.remove();
-            room.roomTopic.remove();
+        if (room.exists() && room.isClosable()) {
+            room.remove();
             setAccessKeys();
             
             ui.updateTabOverflow();
@@ -835,10 +827,6 @@
                     enabled = !$this.hasClass('off'),
                     room = getCurrentRoomElements();
 
-                if (room.isLobby()) {
-                    return;
-                }
-
                 if (enabled) {
                     // If it's enabled toggle the preference
                     setRoomPreference(room.getName(), 'canToast', false);
@@ -867,10 +855,7 @@
             $downloadIcon.click(function () {
                 var room = getCurrentRoomElements();
 
-                if (room.isLobby()) {
-                    return; //Show a message?
-                }
-
+                // room is always going to be the right type
                 if (room.isLocked()) {
                     return; //Show a message?
                 }

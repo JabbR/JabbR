@@ -7,60 +7,56 @@
         return '[data-name="' + userName + '"]';
     }
 
-    function Room($tab, $usersContainer, $usersOwners, $usersActive, $messages, $roomTopic) {
-        this.tab = $tab;
-        this.users = $usersContainer;
-        this.owners = $usersOwners;
-        this.activeUsers = $usersActive;
-        this.messages = $messages;
-        this.roomTopic = $roomTopic;
+    function LobbyTab() {
+        this.tab = $('#tabs-lobby');
+        this.users = $('#userlist-lobby');
+        this.owners = $('#userlist-lobby-owners');
+        this.activeUsers = $('#userlist-lobby-active');
+        this.messages = $('#messages-lobby');
+        this.roomTopic = $('#roomTopic-lobby');
 
         this.templates = {
             separator: $('#message-separator-template')
         };
     }
 
-    Room.prototype.type = function() {
-        return 'Room';
+    LobbyTab.prototype.type = function () {
+        return 'Lobby';
     };
     
-    Room.prototype.isClosable = function () {
-        return true;
-    };
-
-    Room.prototype.isLobby = function () {
+    LobbyTab.prototype.isClosable = function () {
         return false;
     };
+
+    LobbyTab.prototype.isLobby = function () {
+        return true;
+    };
     
 
-    Room.prototype.isLocked = function () {
-        return this.tab.hasClass('locked');
-    };
-
-    Room.prototype.hasMessages = function () {
+    LobbyTab.prototype.hasMessages = function () {
         return this.tab.data('messages');
     };
 
-    Room.prototype.updateMessages = function (value) {
+    LobbyTab.prototype.updateMessages = function (value) {
         this.tab.data('messages', value);
     };
 
-    Room.prototype.getUnread = function () {
+    LobbyTab.prototype.getUnread = function () {
         return this.tab.data('unread') || 0;
     };
 
-    Room.prototype.hasSeparator = function () {
+    LobbyTab.prototype.hasSeparator = function () {
         return this.messages.find('.message-separator').length > 0;
     };
 
-    Room.prototype.needsSeparator = function () {
+    LobbyTab.prototype.needsSeparator = function () {
         if (this.isActive()) {
             return false;
         }
         return this.isInitialized() && this.getUnread() === 5;
     };
 
-    Room.prototype.addSeparator = function () {
+    LobbyTab.prototype.addSeparator = function () {
         if (this.isLobby()) {
             return;
         }
@@ -75,13 +71,13 @@
         this.scrollToBottom();
     };
 
-    Room.prototype.removeSeparator = function () {
+    LobbyTab.prototype.removeSeparator = function () {
         this.messages.find('.message-separator').fadeOut(2000, function () {
             $(this).remove();
         });
     };
 
-    Room.prototype.updateUnread = function (isMentioned) {
+    LobbyTab.prototype.updateUnread = function (isMentioned) {
         var $tab = this.tab.addClass('unread'),
             $content = $tab.find('.content'),
             unread = ($tab.data('unread') || 0) + 1,
@@ -93,7 +89,7 @@
         $tab.data('hasMentions', hasMentions);
     };
 
-    Room.prototype.scrollToBottom = function () {
+    LobbyTab.prototype.scrollToBottom = function () {
         // IE will repaint if we do the Chrome bugfix and look jumpy
         if ($.browser.webkit) {
             // Chrome fix for hiding and showing scroll areas
@@ -102,56 +98,45 @@
         this.messages.scrollTop(this.messages[0].scrollHeight);
     };
 
-    Room.prototype.isNearTheEnd = function () {
+    LobbyTab.prototype.isNearTheEnd = function () {
         return this.messages.isNearTheEnd();
     };
 
-    Room.prototype.getName = function () {
+    LobbyTab.prototype.getName = function () {
         return this.tab.data('name');
     };
 
-    Room.prototype.isActive = function () {
+    LobbyTab.prototype.isActive = function () {
         return this.tab.hasClass('current');
     };
 
-    Room.prototype.exists = function () {
+    LobbyTab.prototype.exists = function () {
         return this.tab.length > 0;
     };
 
-    Room.prototype.isClosed = function () {
+    LobbyTab.prototype.isClosed = function () {
         return this.tab.attr('data-closed') === 'true';
     };
 
-    Room.prototype.close = function () {
+    LobbyTab.prototype.close = function () {
         this.tab.attr('data-closed', true);
         this.tab.addClass('closed');
         this.tab.find('.readonly').removeClass('hide');
     };
 
-    Room.prototype.unClose = function () {
+    LobbyTab.prototype.unClose = function () {
         this.tab.attr('data-closed', false);
         this.tab.removeClass('closed');
         this.tab.find('.readonly').addClass('hide');
     };
 
-    Room.prototype.clear = function () {
+    LobbyTab.prototype.clear = function () {
         this.messages.empty();
         this.owners.empty();
         this.activeUsers.empty();
     };
 
-    Room.prototype.remove = function() {
-        // Remove the scroll handler from this room
-        var scrollHandler = this.messages.data('scrollHandler');
-        this.messages.unbind('scrollHandler', scrollHandler);
-
-        this.tab.remove();
-        this.messages.remove();
-        this.users.remove();
-        this.roomTopic.remove();
-    };
-
-    Room.prototype.makeInactive = function () {
+    LobbyTab.prototype.makeInactive = function () {
         this.tab.removeClass('current');
 
         this.messages.removeClass('current')
@@ -164,7 +149,7 @@
                   .hide();
     };
 
-    Room.prototype.makeActive = function () {
+    LobbyTab.prototype.makeActive = function () {
         var currUnread = this.getUnread(),
             lastUnread = this.messages.find('.message-separator').data('unread') || 0;
 
@@ -193,30 +178,30 @@
         }
     };
 
-    Room.prototype.setInitialized = function () {
+    LobbyTab.prototype.setInitialized = function () {
         this.tab.data('initialized', true);
     };
 
-    Room.prototype.isInitialized = function () {
+    LobbyTab.prototype.isInitialized = function () {
         return this.tab.data('initialized') === true;
     };
 
     // Users
-    Room.prototype.getUser = function (userName) {
+    LobbyTab.prototype.getUser = function (userName) {
         return this.users.find(getUserClassName(userName));
     };
 
-    Room.prototype.getUserReferences = function (userName) {
+    LobbyTab.prototype.getUserReferences = function (userName) {
         return $.merge(this.getUser(userName),
                        this.messages.find(getUserClassName(userName)));
     };
 
-    Room.prototype.setLocked = function () {
+    LobbyTab.prototype.setLocked = function () {
         this.tab.addClass('locked');
         this.tab.find('.lock').removeClass('hide');
     };
 
-    Room.prototype.addUser = function (userViewModel, $user) {
+    LobbyTab.prototype.addUser = function (userViewModel, $user) {
         if (userViewModel.owner) {
             this.addUserToList($user, this.owners);
         } else {
@@ -227,7 +212,7 @@
         }
     };
 
-    Room.prototype.changeInactive = function ($user, isActive) {
+    LobbyTab.prototype.changeInactive = function ($user, isActive) {
         if (isActive) {
             $user.removeClass('inactive');
         } else {
@@ -235,7 +220,7 @@
         }
     };
 
-    Room.prototype.addUserToList = function ($user, list) {
+    LobbyTab.prototype.addUserToList = function ($user, list) {
         var oldParentList = $user.parent('ul');
         $user.appendTo(list);
         utility.updateEmptyListItem(list);
@@ -245,11 +230,11 @@
         this.sortList(list, $user);
     };
 
-    Room.prototype.appearsInList = function ($user, list) {
+    LobbyTab.prototype.appearsInList = function ($user, list) {
         return $user.parent('ul').attr('id') === list.attr('id');
     };
 
-    Room.prototype.updateUserStatus = function ($user) {
+    LobbyTab.prototype.updateUserStatus = function ($user) {
         var owner = $user.data('owner') || false;
 
         if (owner === true) {
@@ -271,7 +256,7 @@
         }
     };
 
-    Room.prototype.sortLists = function (user) {
+    LobbyTab.prototype.sortLists = function (user) {
         var isOwner = $(user).data('owner');
         if (isOwner) {
             this.sortList(this.owners, user);
@@ -280,7 +265,7 @@
         }
     };
 
-    Room.prototype.sortList = function (listToSort, user) {
+    LobbyTab.prototype.sortList = function (listToSort, user) {
         var listItems = listToSort.children('li:not(.empty)').get(),
             userName = ($(user).data('name') || '').toString(),
             userActive = $(user).data('active');
@@ -303,15 +288,15 @@
         }
     };
 
-    Room.prototype.canTrimHistory = function () {
+    LobbyTab.prototype.canTrimHistory = function () {
         return this.tab.data('trimmable') !== false;
     };
 
-    Room.prototype.setTrimmable = function (canTrimMessages) {
+    LobbyTab.prototype.setTrimmable = function (canTrimMessages) {
         this.tab.data('trimmable', canTrimMessages);
     };
 
-    Room.prototype.trimHistory = function (numberOfMessagesToKeep) {
+    LobbyTab.prototype.trimHistory = function (numberOfMessagesToKeep) {
         var lastIndex = null,
             $messagesToRemove = null,
             $roomMessages = this.messages.find('li'),
@@ -337,5 +322,5 @@
         $messagesToRemove.remove();
     };
 
-    chat.Room = Room;
+    chat.LobbyTab = LobbyTab;
 }(window.jQuery, window, window.chat, window.chat.utility));
