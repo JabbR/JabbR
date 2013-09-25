@@ -161,10 +161,6 @@
         return this.tab.hasClass('current');
     };
 
-    Room.prototype.exists = function () {
-        return this.tab.length > 0;
-    };
-
     Room.prototype.isClosed = function () {
         return this.tab.attr('data-closed') === 'true';
     };

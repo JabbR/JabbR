@@ -41,93 +41,12 @@
     };
 
 
-    LobbyTab.prototype.getUnread = function () {
-        return this.tab.data('unread') || 0;
-    };
-
-    LobbyTab.prototype.hasSeparator = function () {
-        return this.messages.find('.message-separator').length > 0;
-    };
-
-    LobbyTab.prototype.needsSeparator = function () {
-        if (this.isActive()) {
-            return false;
-        }
-        return this.isInitialized() && this.getUnread() === 5;
-    };
-
-    LobbyTab.prototype.addSeparator = function () {
-        if (this.isLobby()) {
-            return;
-        }
-
-        // find first correct unread message
-        var n = this.getUnread(),
-            $unread = this.messages.find('.message').eq(-(n + 1));
-
-        $unread.after(this.templates.separator.tmpl())
-            .data('unread', n); // store unread count
-
-        this.scrollToBottom();
-    };
-
-    LobbyTab.prototype.removeSeparator = function () {
-        this.messages.find('.message-separator').fadeOut(2000, function () {
-            $(this).remove();
-        });
-    };
-
-    LobbyTab.prototype.updateUnread = function (isMentioned) {
-        var $tab = this.tab.addClass('unread'),
-            $content = $tab.find('.content'),
-            unread = ($tab.data('unread') || 0) + 1,
-            hasMentions = $tab.data('hasMentions') || isMentioned; // Whether or not the user already has unread messages to him/her
-
-        $content.text((hasMentions ? '*' : '') + '(' + unread + ') ' + this.getName());
-
-        $tab.data('unread', unread);
-        $tab.data('hasMentions', hasMentions);
-    };
-
-    LobbyTab.prototype.scrollToBottom = function () {
-        // IE will repaint if we do the Chrome bugfix and look jumpy
-        if ($.browser.webkit) {
-            // Chrome fix for hiding and showing scroll areas
-            this.messages.scrollTop(this.messages.scrollTop() - 1);
-        }
-        this.messages.scrollTop(this.messages[0].scrollHeight);
-    };
-
-    LobbyTab.prototype.isNearTheEnd = function () {
-        return this.messages.isNearTheEnd();
-    };
-
     LobbyTab.prototype.getName = function () {
         return this.tab.data('name');
     };
 
     LobbyTab.prototype.isActive = function () {
         return this.tab.hasClass('current');
-    };
-
-    LobbyTab.prototype.exists = function () {
-        return this.tab.length > 0;
-    };
-
-    LobbyTab.prototype.isClosed = function () {
-        return this.tab.attr('data-closed') === 'true';
-    };
-
-    LobbyTab.prototype.close = function () {
-        this.tab.attr('data-closed', true);
-        this.tab.addClass('closed');
-        this.tab.find('.readonly').removeClass('hide');
-    };
-
-    LobbyTab.prototype.unClose = function () {
-        this.tab.attr('data-closed', false);
-        this.tab.removeClass('closed');
-        this.tab.find('.readonly').addClass('hide');
     };
 
     LobbyTab.prototype.clear = function () {

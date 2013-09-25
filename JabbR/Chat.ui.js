@@ -240,7 +240,7 @@
         var room = getRoomElements(roomName),
             roomId = getRoomId(roomName);
 
-        if (room.exists() && room.isClosable()) {
+        if (room != null && room.isClosable()) {
             room.remove();
             setAccessKeys();
             
@@ -1056,7 +1056,7 @@
 
             var currentRoom = getCurrentRoomElements();
 
-            if (room.exists()) {
+            if (room != null) {
                 if (currentRoom != null) {
                     currentRoom.makeInactive();
                     if (currentRoom.isLobby()) {
@@ -1910,8 +1910,7 @@
             return;
         },
         // todo make it so that we don't need these to be exported
-        getRoomElements: getRoomElements,
-        getCurrentRoomElements: getCurrentRoomElements
+        getRoomElements: getRoomElements
     };
 
     if (!window.chat) {
