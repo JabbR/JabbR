@@ -31,15 +31,15 @@
     LobbyTab.prototype.isLobby = function () {
         return true;
     };
-    
 
-    LobbyTab.prototype.hasMessages = function () {
-        return this.tab.data('messages');
+    LobbyTab.prototype.appendMessage = function (newMessage) {
+        // do something?
     };
 
-    LobbyTab.prototype.updateMessages = function (value) {
-        this.tab.data('messages', value);
+    LobbyTab.prototype.addMessage = function (content, type) {
+        // do something?
     };
+
 
     LobbyTab.prototype.getUnread = function () {
         return this.tab.data('unread') || 0;

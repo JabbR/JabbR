@@ -20,7 +20,7 @@
     function activateOrOpenRoom(roomName) {
         var room = ui.getRoomElements(roomName);
 
-        if (room.exists()) {
+        if (room != null) {
             ui.setActiveRoom(roomName);
         }
         else {
@@ -160,7 +160,7 @@
                 otherlobbyroom: $('#new-other-lobby-room-template')
             };
 
-            $('li.room .room-row').on('click', function () {
+            $(document).on('click', 'li.room .room-row', function () {
                 var roomName = $(this).parent().data('name');
                 activateOrOpenRoom(roomName);
             });

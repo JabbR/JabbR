@@ -3,10 +3,9 @@
 /// <reference path="Scripts/jquery.cookie.js" />
 /// <reference path="Chat.toast.js" />
 /// <reference path="Scripts/livestamp.min.js" />
-/// <reference path="Scripts/moment.min.js" />
 
 /*jshint bitwise:false */
-(function ($, window, document, chat, utility, emoji, moment) {
+(function ($, window, document, chat, utility, emoji) {
     "use strict";
 
     var $chatArea = null,
@@ -67,8 +66,9 @@
         roomLoadingDelay = 250,
         roomLoadingTimeout = null,
         Room = chat.Room,
-        LobbyTab = chat.LobbyTab,
-        $unreadNotificationCount = null;
+        lobby = new chat.LobbyTab(),
+        $unreadNotificationCount = null,
+        rooms = {};
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] === '/') {
@@ -84,6 +84,10 @@
     }
 
     function getRoomId(roomName) {
+        if (roomName == null) {
+            return null;
+        }
+        
         return window.escape(roomName.toString().toLowerCase()).replace(/[^A-Za-z0-9]/g, '_');
     }
 
@@ -116,47 +120,35 @@
     function getRoomElements(roomName) {
         var roomId = getRoomId(roomName);
         if (roomId === 'lobby') {
-            return new LobbyTab();
+            return lobby;
         }
-        
-        var room = new Room($('#tabs-' + roomId),
-                        $('#userlist-' + roomId),
-                        $('#userlist-' + roomId + '-owners'),
-                        $('#userlist-' + roomId + '-active'),
-                        $('#messages-' + roomId),
-                        $('#roomTopic-' + roomId));
-        return room;
+
+        return rooms[roomId];
     }
 
     function getCurrentRoomElements() {
         var $tab = $tabs.find('li.current');
-        var room;
-        if ($tab.data('name') === 'Lobby') {
-            room = new LobbyTab();
+        var roomId = getRoomId($tab.data('name'));
+        if (roomId === 'lobby') {
+            return lobby;
         } else {
-            room = new Room($tab,
-                $('.users.current'),
-                $('.userlist.current .owners'),
-                $('.userlist.current .active'),
-                $('.messages.current'),
-                $('.roomTopic.current'));
+            return rooms[roomId];
         }
-        return room;
     }
 
     function getAllRoomElements() {
-        var rooms = [];
+        var roomList = [];
         $("ul#tabs > li.room, ul#tabs-dropdown > li.room").each(function () {
-            rooms[rooms.length] = getRoomElements($(this).data("name"));
+            roomList[rooms.length] = getRoomElements($(this).data("name"));
         });
-        return rooms;
+        return roomList;
     }
 
     function addRoom(roomViewModel) {
         // Do nothing if the room exists
         var roomName = roomViewModel.Name,
             room = getRoomElements(roomViewModel.Name),
-            roomId = null,
+            roomId = getRoomId(roomName),
             viewModel = null,
             $messages = null,
             $roomTopic = null,
@@ -166,11 +158,10 @@
             usersHeader = utility.getLanguageResource('Chat_UserHeader'),
             $tabsDropdown = $tabs.last();
 
-        if (room.exists()) {
+        // if room exists
+        if (room != null) {
             return false;
         }
-
-        roomId = getRoomId(roomName);
 
         // Add the tab
         viewModel = {
@@ -234,12 +225,20 @@
         $messages.data('scrollHandler', scrollHandler);
 
         setAccessKeys();
-
+        
+        rooms[roomId] = new Room($('#tabs-' + roomId),
+                        $('#userlist-' + roomId),
+                        $('#userlist-' + roomId + '-owners'),
+                        $('#userlist-' + roomId + '-active'),
+                        $('#messages-' + roomId),
+                        $('#roomTopic-' + roomId));
+        
         return true;
     }
 
     function removeRoom(roomName) {
-        var room = getRoomElements(roomName);
+        var room = getRoomElements(roomName),
+            roomId = getRoomId(roomName);
 
         if (room.exists() && room.isClosable()) {
             room.remove();
@@ -247,6 +246,8 @@
             
             ui.updateTabOverflow();
         }
+
+        delete rooms[roomId];
     }
 
     function setAccessKeys() {
@@ -257,18 +258,6 @@
                 $(item).attr('accesskey', null);
             }
         });
-    }
-
-    function navigateToRoom(roomName) {
-        var hash = (document.location.hash || '#').substr(1),
-            hashRoomName = getRoomNameFromHash(hash);
-
-        if (hashRoomName && hashRoomName === roomName) {
-            ui.setActiveRoomCore(roomName);
-        }
-        else {
-            document.location.hash = '#/rooms/' + roomName;
-        }
     }
 
     function processMessage(message, roomName) {
@@ -459,19 +448,7 @@
 
     function updateRoomTopic(roomName, topic) {
         var room = getRoomElements(roomName);
-        var topicHtml = topic === '' ? utility.getLanguageResource('Chat_DefaultTopic', roomName) : ui.processContent(topic);
-        var roomTopic = room.roomTopic;
-        var isVisibleRoom = getCurrentRoomElements().getName() === roomName;
-
-        if (isVisibleRoom) {
-            roomTopic.hide();
-        }
-
-        roomTopic.html(topicHtml);
-
-        if (isVisibleRoom) {
-            roomTopic.fadeIn(2000);
-        }
+        room.setTopic(topic);
     }
 
     function getConnectionStateChangedPopoverOptions(statusText) {
@@ -618,7 +595,7 @@
             var activateOrOpenRoom = function(roomName) {
                 var room = getRoomElements(roomName);
 
-                if (room.exists()) {
+                if (room != null) {
                     ui.setActiveRoom(roomName);
                 }
                 else {
@@ -1055,7 +1032,17 @@
                  .data('owner', false);
             room.updateUserStatus($user);
         },
-        setActiveRoom: navigateToRoom,
+        setActiveRoom: function(roomName) {
+            var hash = (document.location.hash || '#').substr(1),
+                hashRoomName = getRoomNameFromHash(hash);
+
+            if (hashRoomName && hashRoomName === roomName) {
+                ui.setActiveRoomCore(roomName);
+            }
+            else {
+                document.location.hash = '#/rooms/' + roomName;
+            }
+        },
         setActiveRoomCore: function (roomName) {
             var room = getRoomElements(roomName);
 
@@ -1070,7 +1057,7 @@
             var currentRoom = getCurrentRoomElements();
 
             if (room.exists()) {
-                if (currentRoom.exists()) {
+                if (currentRoom != null) {
                     currentRoom.makeInactive();
                     if (currentRoom.isLobby()) {
                         ui.lobby.hideForm();
@@ -1570,45 +1557,11 @@
             return $element;
         },
         addMessage: function (content, type, roomName) {
-            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements(),
-                nearEnd = room.isNearTheEnd(),
-                $element = ui.prepareNotificationMessage(content, type);
-
-            this.appendMessage($element, room);
-
-            if (type === 'notification' && room.isLobby() === false) {
-                ui.collapseNotifications($element);
-            }
-
-            if (nearEnd) {
-                ui.scrollToBottom(roomName);
-            }
-
-            return $element;
+            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
+            return room.addMessage(content, type);
         },
         appendMessage: function (newMessage, room) {
-            // Determine if we need to show a new date header: Two conditions
-            // for instantly skipping are if this message is a date header, or
-            // if the room only contains non-chat messages and we're adding a
-            // non-chat message.
-            var isMessage = $(newMessage).is('.message');
-            if (!$(newMessage).is('.date-header') && (isMessage || room.hasMessages())) {
-                var lastMessage = room.messages.find('li[data-timestamp]').last(),
-                    lastDate = new Date(lastMessage.data('timestamp')),
-                    thisDate = new Date($(newMessage).data('timestamp'));
-
-                if (!lastMessage.length || thisDate.toDate().diffDays(lastDate.toDate())) {
-                    var dateDisplay = moment(thisDate);
-                    ui.addMessage(dateDisplay.format('dddd, MMMM Do YYYY'), 'date-header list-header', room.getName())
-                      .find('.right').remove(); // remove timestamp on date indicator
-                }
-            }
-
-            if (isMessage) {
-                room.updateMessages(true);
-            }
-
-            $(newMessage).appendTo(room.messages);
+            room.appendMessage(newMessage);
         },
         hasFocus: function () {
             return focus;
@@ -1965,4 +1918,4 @@
         window.chat = {};
     }
     window.chat.ui = ui;
-})(window.jQuery, window, window.document, window.chat, window.chat.utility, window.Emoji, window.moment);
+})(window.jQuery, window, window.document, window.chat, window.chat.utility, window.Emoji);

@@ -1,4 +1,4 @@
-﻿(function ($, window, chat, utility) {
+﻿(function ($, window, chat, utility, moment) {
     "use strict";
     
     var trimRoomHistoryMaxMessages = 200;
@@ -31,18 +31,65 @@
     Room.prototype.isLobby = function () {
         return false;
     };
-    
+
+    Room.prototype.appendMessage = function(newMessage) {
+        // Determine if we need to show a new date header: Two conditions
+        // for instantly skipping are if this message is a date header, or
+        // if the room only contains non-chat messages and we're adding a
+        // non-chat message.
+        var isMessage = $(newMessage).is('.message');
+        if (!$(newMessage).is('.date-header') && (isMessage || this.tab.data('messages'))) {
+            var lastMessage = this.messages.find('li[data-timestamp]').last(),
+                lastDate = new Date(lastMessage.data('timestamp')),
+                thisDate = new Date($(newMessage).data('timestamp'));
+
+            if (!lastMessage.length || thisDate.toDate().diffDays(lastDate.toDate())) {
+                var dateDisplay = moment(thisDate);
+                this.addMessage(dateDisplay.format('dddd, MMMM Do YYYY'), 'date-header list-header')
+                    .find('.right').remove(); // remove timestamp on date indicator
+            }
+        }
+
+        if (isMessage) {
+            this.tab.data('messages', true);
+        }
+
+        $(newMessage).appendTo(this.messages);
+    };
+
+    Room.prototype.addMessage = function(content, type) {
+        var nearEnd = this.isNearTheEnd(),
+            $element = chat.ui.prepareNotificationMessage(content, type);
+
+        this.appendMessage($element);
+
+        if (type === 'notification') {
+            chat.ui.collapseNotifications($element);
+        }
+
+        if (nearEnd) {
+            this.scrollToBottom();
+        }
+
+        return $element;
+    };
+
+    Room.prototype.setTopic = function(topic) {
+        var topicHtml = topic === '' ? utility.getLanguageResource('Chat_DefaultTopic', this.getName()) : ui.processContent(topic);
+
+        if (this.isActive()) {
+            this.roomTopic.hide();
+        }
+
+        this.roomTopic.html(topicHtml);
+
+        if (this.isActive()) {
+            this.roomTopic.fadeIn(2000);
+        }
+    };
 
     Room.prototype.isLocked = function () {
         return this.tab.hasClass('locked');
-    };
-
-    Room.prototype.hasMessages = function () {
-        return this.tab.data('messages');
-    };
-
-    Room.prototype.updateMessages = function (value) {
-        this.tab.data('messages', value);
     };
 
     Room.prototype.getUnread = function () {
@@ -338,4 +385,4 @@
     };
 
     chat.Room = Room;
-}(window.jQuery, window, window.chat, window.chat.utility));
+}(window.jQuery, window, window.chat, window.chat.utility, window.moment));
