@@ -199,31 +199,5 @@
         this.tab.data('trimmable', canTrimMessages);
     };
 
-    LobbyTab.prototype.trimHistory = function (numberOfMessagesToKeep) {
-        var lastIndex = null,
-            $messagesToRemove = null,
-            $roomMessages = this.messages.find('li'),
-            messageCount = $roomMessages.length;
-
-        numberOfMessagesToKeep = numberOfMessagesToKeep || trimRoomHistoryMaxMessages;
-
-        if (this.isLobby() || !this.canTrimHistory()) {
-            return;
-        }
-
-        if (numberOfMessagesToKeep < trimRoomHistoryMaxMessages) {
-            numberOfMessagesToKeep = trimRoomHistoryMaxMessages;
-        }
-
-        if (messageCount < numberOfMessagesToKeep) {
-            return;
-        }
-
-        lastIndex = messageCount - numberOfMessagesToKeep;
-        $messagesToRemove = $roomMessages.filter('li:lt(' + lastIndex + ')');
-
-        $messagesToRemove.remove();
-    };
-
     chat.LobbyTab = LobbyTab;
 }(window.jQuery, window, window.chat, window.chat.utility));
