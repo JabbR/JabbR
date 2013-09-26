@@ -127,7 +127,6 @@ cp $libPath\newrelic.cmd $binPath\newrelic.cmd
 cp $libPath\NewRelicAgent_x64_2.10.40.0.msi $binPath\NewRelicAgent_x64_2.10.40.0.msi
 
 # Set app settngs
-set-appsetting -path $webConfigPath -name "jabbr:requireHttps" -value $true
 set-appsetting -path $webConfigPath -name "jabbr:releaseBranch" -value $commitBranch
 set-appsetting -path $webConfigPath -name "jabbr:releaseSha" -value $commitSha
 set-appsetting -path $webConfigPath -name "jabbr:releaseTime" -value (Get-Date -format "MM/dd/yyyy HH:mm")
@@ -161,6 +160,7 @@ set-connectionstring -path $webConfigPath -name "JabbR" -value $sqlAzureConnecti
 set-releasemode $webConfigPath
 
 if($sslCertificateThumbprint) {
+  set-appsetting -path $webConfigPath -name "jabbr:requireHttps" -value $true
   set-certificatethumbprint -path $cscfgPath -name "jabbr" -value $sslCertificateThumbprint
 }
 
