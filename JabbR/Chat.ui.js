@@ -166,11 +166,8 @@
         }
 
         ui.tabList.addTab(viewModel);
-        ui.tabList.updateTabOverflow();
 
         rooms[roomId] = new Room(roomName, roomId);
-
-        ui.tabList.updateAccessKeys();
         
         return true;
     }
@@ -181,8 +178,7 @@
 
         if (room !== null && room.isClosable()) {
             room.remove();
-            ui.tabList.updateAccessKeys();
-            ui.tabList.updateTabOverflow();
+            ui.tabList.removeTab(roomId);
         }
 
         delete rooms[roomId];
@@ -215,9 +211,10 @@
         return content.replace(/class="collapsible_title"/g, 'class="collapsible_title" title="' + utility.getLanguageResource('Content_DisabledMessage') + '"');
     }
 
-    function triggerFocus() {
+    function triggerFocus($elem) {
+        $elem = $elem || $newMessage;
         if (!utility.isMobile && !readOnly) {
-            $newMessage.focus();
+            $elem.focus();
         }
 
         if (focus === false) {
@@ -599,21 +596,18 @@
             $document.on('keydown', function (ev) {
                 // ctrl + tab event is sent to the page in firefox when the user probably means to change browser tabs
                 if (ev.keyCode === Keys.Tab && !ev.ctrlKey && $newMessage.val() === "") {
-                    var index = chat.ui.tabList.getCurrentTabIndex(),
-                        tabCount = chat.ui.tabList.getTabCount();
+                    var tabName = null;
 
                     if (!ev.shiftKey) {
                         // Next tab
-                        index = index % tabCount + 1;
+                        tabName = ui.tabList.getNextTabName();
                     } else {
                         // Prev tab
-                        index = (index - 1) || tabCount;
+                        tabName = ui.tabList.getPreviousTabName();
                     }
 
-                    ui.setActiveRoom(chat.ui.tabList.getTabNameByIndex(index));
-                    if (!readOnly) {
-                        $newMessage.focus();
-                    }
+                    ui.setActiveRoom(tabName);
+
                 }
 
                 if (!$newMessage.is(':focus') && ev.shiftKey && ev.keyCode === Keys.Question) {
@@ -798,8 +792,6 @@
                 room.makeActive();
 
                 ui.tabList.updateTabOverflow();
-
-                triggerFocus();
             });
 
             $window.resize(function () {
@@ -989,6 +981,7 @@
             }
 
             room.makeActive();
+            ui.tabList.setCurrentTab(roomName);
                 
             ui.tabList.updateTabOverflow();
 
@@ -999,7 +992,6 @@
             }
 
             $ui.trigger(ui.events.activeRoomChanged, [roomName]);
-            triggerFocus();
             return true;
         },
         setRoomLocked: function (roomName) {
@@ -1254,73 +1246,8 @@
             room.setTrimmable(canTrimMessages);
         },
         prependChatMessages: function (messages, roomName) {
-            var room = getRoomElements(roomName),
-                $messages = room.messages,
-                $target = $messages.children().first(),
-                $previousMessage = null,
-                previousUser = null,
-                previousTimestamp = new Date().addDays(1); // Tomorrow so we always see a date line
-
-            if (messages.length === 0) {
-                // Mark this list as full
-                $messages.data('full', true);
-                return;
-            }
-
-            // If our top message is a date header, it might be incorrect, so we
-            // check to see if we should remove it so that it can be inserted
-            // again at a more appropriate time.
-            if ($target.is('.list-header.date-header')) {
-                var postedDate = new Date($target.text()).toDate();
-                var lastPrependDate = messages[messages.length - 1].date.toDate();
-
-                if (!lastPrependDate.diffDays(postedDate)) {
-                    $target.remove();
-                    $target = $messages.children().first();
-                }
-            }
-
-            // Populate the old messages
-            $.each(messages, function () {
-                processMessage(this, roomName);
-
-                if ($previousMessage) {
-                    previousUser = $previousMessage.data('name');
-                    previousTimestamp = new Date($previousMessage.data('timestamp') || new Date());
-                }
-
-                if (this.date.toDate().diffDays(previousTimestamp.toDate())) {
-                    ui.addMessageBeforeTarget(this.date.toLocaleDateString(), 'list-header', $target)
-                      .addClass('date-header')
-                      .find('.right').remove(); // remove timestamp on date indicator
-
-                    // Force a user name to show after the header
-                    previousUser = null;
-                }
-
-                // Determine if we need to show the user
-                this.showUser = !previousUser || previousUser !== this.name;
-
-                // Render the new message
-                $target.before(templates.message.tmpl(this));
-
-                if (this.showUser === false) {
-                    $previousMessage.addClass('continue');
-                }
-
-                $previousMessage = $('#m-' + this.id);
-            });
-
-            // If our old top message is a message from the same user as the
-            // last message in our prepended history, we can remove information
-            // and continue
-            if ($target.is('.message') && $target.data('name') === $previousMessage.data('name')) {
-                $target.find('.left').children().not('.state').remove();
-                $previousMessage.addClass('continue');
-            }
-
-            // Scroll to the bottom element so the user sees there's more messages
-            $target[0].scrollIntoView();
+            var room = getRoomElements(roomName);
+            room.prependChatMessages(messages);
         },
         addChatMessage: function (message, roomName) {
             var room = getRoomElements(roomName),
@@ -1672,6 +1599,7 @@
                 $fileUploadButton.removeAttr('disabled');
             }
         },
+        triggerFocus: triggerFocus,
         initializeConnectionStatus: function (transport) {
             $connectionStatus.popover(getConnectionInfoPopoverOptions(transport));
         },
@@ -1779,7 +1707,8 @@
             ui.tabList.updateTabOrder(tabOrder);
         },
         // todo make it so that we don't need these to be exported
-        getRoomElements: getRoomElements
+        getRoomElements: getRoomElements,
+        processMessage: processMessage
     };
 
     if (!window.chat) {

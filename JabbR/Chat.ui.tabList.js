@@ -24,6 +24,7 @@
                 tab: $('#new-tab-template')
             };
         },
+        
         getRoomTabNames: function () {
             var roomTabNames = [];
             $tabs.children('li.room').each(function () {
@@ -31,30 +32,35 @@
             });
             return roomTabNames;
         },
-        updateAccessKeys: function () {
-            // make first 10 non-lobby tabs have accesskeys 1-9,0
-            $.each($tabs.find('li:not(.lobby) > a'), function (index, item) {
-                if (index < 10) {
-                    $(item).attr('accesskey', ((index + 1) % 10).toString());
-                } else {
-                    $(item).attr('accesskey', null);
-                }
-            });
-        },
         getCurrentTabName: function() {
             var $tab = $tabs.children('li.current');
             return $tab.data('name');
         },
-        getCurrentTabIndex: function() {
-            return $tabs.children('li').index($tabs.children('li.current'));
+        setCurrentTab: function(tabName) {
+            $tabs.children('li.current').removeClass('current');
+            $tabs.children('li[data-name="' + tabName + '"]').addClass('current');
         },
-        getTabNameByIndex: function(index) {
-            return $tabs.children('li').eq(index).data('name');
+        addTab: function(tabViewModel) {
+            templates.tab.tmpl(tabViewModel).data('name', tabViewModel.name).appendTo($tabsDropdown);
+            
+            this.updateTabOverflow();
+            this._updateAccessKeys();
         },
-        getTabCount: function() {
-            return $tabs.children('li').length;
+        removeTab: function (tabName) {
+            $tabs.children('li[data-name="' + tabName + '"]').remove();
+            
+            this.updateTabOverflow();
+            this._updateAccessKeys();
         },
-        updateTabOverflow: function() {
+        updateTabOrder: function(tabNameArray) {
+            $.each(tabNameArray.reverse(), function (el, name) {
+                $tabs.children('li[data-name="' + name + '"]').prependTo($tabsList);
+            });
+
+            this.updateTabOverflow();
+            this._updateAccessKeys();
+        },
+        updateTabOverflow: function () {
             var lastOffsetLeft = 0,
                 sliceIndex = -1,
                 $roomTabs = null,
@@ -66,16 +72,11 @@
             // find overflow and move it all to the dropdown list ul
             $roomTabs = $tabsList.find('li:not(.placeholder)');
             $roomTabs.each(function (idx) {
-                if (sliceIndex !== -1) {
-                    return;
-                }
-
                 var thisOffsetLeft = $(this).offset().left;
                 if (thisOffsetLeft <= lastOffsetLeft) {
                     sliceIndex = idx;
-                    return;
+                    return false;
                 }
-
                 lastOffsetLeft = thisOffsetLeft;
             });
 
@@ -92,16 +93,16 @@
 
             return;
         },
-        addTab: function(tabViewModel) {
-            templates.tab.tmpl(tabViewModel).data('name', tabViewModel.name).appendTo($tabsDropdown);
-        },
-        updateTabOrder: function(tabOrder) {
-            $.each(tabOrder.reverse(), function (el, name) {
-                $tabs.find('li[data-name="' + name + '"]').prependTo($tabsList);
+        
+        _updateAccessKeys: function () {
+            // make first 10 non-lobby tabs have accesskeys 1-9,0
+            $.each($tabs.find('li:not(.lobby) > a'), function (index, item) {
+                if (index < 10) {
+                    $(item).attr('accesskey', ((index + 1) % 10).toString());
+                } else {
+                    $(item).attr('accesskey', null);
+                }
             });
-
-            this.updateTabOverflow();
-            this.updateAccessKeys();
         }
     };
 

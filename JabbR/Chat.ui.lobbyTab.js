@@ -63,6 +63,12 @@
                       .show();
         
         this.$lobbyRoomFilterForm.show();
+
+        this.triggerFocus();
+    };
+
+    LobbyTab.prototype.triggerFocus = function () {
+        chat.ui.triggerFocus(this.$roomFilterInput);
     };
 
     LobbyTab.prototype.setInitialized = function () {

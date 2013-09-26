@@ -1241,9 +1241,10 @@
         ui.tabList.initialize();
         ui.lobby.initialize();
 
-        for (var i = 0; i < welcomeMessages.length; i++) {
+        // TODO: actually do something useful with welcomeMessages.
+        /*for (var i = 0; i < welcomeMessages.length; i++) {
             ui.addMessage(welcomeMessages, 'notification');
-        }
+        }*/
 
         function initConnection() {
             var logging = $.cookie('jabbr.logging') === '1',

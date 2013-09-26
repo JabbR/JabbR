@@ -8,13 +8,16 @@
             $topicBar = $('#topic-bar'),
             
             templates = {
+                message: $('#new-message-template'),
                 userlist: $('#new-userlist-template'),
                 user: $('#new-user-template')
             };
-        
+
+        this.roomName = roomName;
         this.scrollTopThreshold = 75;
         this.trimRoomHistoryMaxMessages = 200;
         this.$roomActions = $('#room-actions');
+        this.tab = $('#tabs-' + roomId);
 
         this.messages = $('<ul/>').attr('id', 'messages-' + roomId)
                               .addClass('messages')
@@ -65,8 +68,6 @@
 
         // Store the scroll handler so we can remove it later
         this.messages.data('scrollHandler', scrollHandler);
-
-        this.tab = $('#tabs-' + roomId);
 
         this.templates = {
             separator: $('#message-separator-template')
@@ -125,6 +126,76 @@
         }
 
         return $element;
+    };
+
+    Room.prototype.prependChatMessages = function(messages) {
+        var $messages = this.messages,
+            $target = $messages.children().first(),
+            $previousMessage = null,
+            previousUser = null,
+            previousTimestamp = new Date().addDays(1); // Tomorrow so we always see a date line
+
+        if (messages.length === 0) {
+            // Mark this list as full
+            $messages.data('full', true);
+            return;
+        }
+
+        // If our top message is a date header, it might be incorrect, so we
+        // check to see if we should remove it so that it can be inserted
+        // again at a more appropriate time.
+        if ($target.is('.list-header.date-header')) {
+            var postedDate = new Date($target.text()).toDate();
+            var lastPrependDate = messages[messages.length - 1].date.toDate();
+
+            if (!lastPrependDate.diffDays(postedDate)) {
+                $target.remove();
+                $target = $messages.children().first();
+            }
+        }
+
+        // Populate the old messages
+        var _this = this;
+        $.each(messages, function () {
+            chat.ui.processMessage(this, _this.roomName);
+
+            if ($previousMessage) {
+                previousUser = $previousMessage.data('name');
+                previousTimestamp = new Date($previousMessage.data('timestamp') || new Date());
+            }
+
+            if (this.date.toDate().diffDays(previousTimestamp.toDate())) {
+                chat.ui.addMessageBeforeTarget(this.date.toLocaleDateString(), 'list-header', $target)
+                      .addClass('date-header')
+                      .find('.right').remove(); // remove timestamp on date indicator
+
+                // Force a user name to show after the header
+                previousUser = null;
+            }
+
+            // Determine if we need to show the user
+            this.showUser = !previousUser || previousUser !== this.name;
+
+            // Render the new message
+            $target.before(_this.templates.message.tmpl(this));
+
+            if (this.showUser === false) {
+                $previousMessage.addClass('continue');
+            }
+
+            $previousMessage = $('#m-' + this.id);
+        });
+
+        // If our old top message is a message from the same user as the
+        // last message in our prepended history, we can remove information
+        // and continue
+        if ($target.is('.message') && $target.data('name') === $previousMessage.data('name')) {
+            $target.find('.left').children().not('.state').remove();
+            $previousMessage.addClass('continue');
+        }
+
+        // Scroll to the bottom element so the user sees there's more messages
+        $target[0].scrollIntoView();
     };
 
     Room.prototype.setTopic = function (topic) {
@@ -235,7 +306,6 @@
         var scrollHandler = this.messages.data('scrollHandler');
         this.messages.unbind('scrollHandler', scrollHandler);
 
-        this.tab.remove();
         this.messages.remove();
         this.users.remove();
         this.roomTopic.remove();
@@ -285,6 +355,12 @@
         if (currUnread <= lastUnread) {
             this.removeSeparator();
         }
+
+        this.triggerFocus();
+    };
+
+    Room.prototype.triggerFocus = function() {
+        chat.ui.triggerFocus();
     };
 
     Room.prototype.setInitialized = function () {
