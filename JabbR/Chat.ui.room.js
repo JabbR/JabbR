@@ -6,6 +6,7 @@
             usersHeader = utility.getLanguageResource('Chat_UserHeader'),
             $chatArea = $('#chat-area'),
             $topicBar = $('#topic-bar'),
+            
             templates = {
                 userlist: $('#new-userlist-template'),
                 user: $('#new-user-template')
@@ -13,6 +14,7 @@
         
         this.scrollTopThreshold = 75;
         this.trimRoomHistoryMaxMessages = 200;
+        this.$roomActions = $('#room-actions');
 
         this.messages = $('<ul/>').attr('id', 'messages-' + roomId)
                               .addClass('messages')
@@ -228,12 +230,6 @@
         this.tab.find('.readonly').addClass('hide');
     };
 
-    Room.prototype.clear = function () {
-        this.messages.empty();
-        this.owners.empty();
-        this.activeUsers.empty();
-    };
-
     Room.prototype.remove = function() {
         // Remove the scroll handler from this room
         var scrollHandler = this.messages.data('scrollHandler');
@@ -256,6 +252,8 @@
 
         this.roomTopic.removeClass('current')
                   .hide();
+        
+        this.$roomActions.hide();
     };
 
     Room.prototype.makeActive = function () {
@@ -279,6 +277,8 @@
 
         this.roomTopic.addClass('current')
                   .show();
+        
+        this.$roomActions.show();
 
         // if no unread since last separator
         // remove previous separator

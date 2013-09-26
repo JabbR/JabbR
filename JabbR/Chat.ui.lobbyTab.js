@@ -2,12 +2,16 @@
     "use strict";
 
     function LobbyTab() {
-        this.tab = $('#tabs-lobby');
-        this.users = $('#userlist-lobby');
-        this.owners = $('#userlist-lobby-owners');
-        this.activeUsers = $('#userlist-lobby-active');
-        this.messages = $('#messages-lobby');
-        this.roomTopic = $('#roomTopic-lobby');
+        this.$tab = $('#tabs-lobby');       
+        this.$messages = $('#messages-lobby');
+        this.$loadMoreRooms = $('#load-more-rooms-item');
+        this.$lobbyPrivateRooms = $('#lobby-private');
+        this.$lobbyOtherRooms = $('#lobby-other');
+        this.$lobbyRoomFilterForm = $('#room-filter-form');
+        this.$roomFilterInput = $('#room-filter');
+        this.$closedRoomFilter = $('#room-filter-closed');
+        this.$lobbyOtherRoomList = $('#userlist-lobby');
+        this.$lobbyPrivateRoomList = $('#userlist-lobby-owners');
 
         this.templates = {
             
@@ -36,51 +40,37 @@
 
 
     LobbyTab.prototype.getName = function () {
-        return this.tab.data('name');
+        return this.$tab.data('name');
     };
 
     LobbyTab.prototype.isActive = function () {
-        return this.tab.hasClass('current');
-    };
-
-    LobbyTab.prototype.clear = function () {
-        this.messages.empty();
-        this.owners.empty();
-        this.activeUsers.empty();
+        return this.$tab.hasClass('current');
     };
 
     LobbyTab.prototype.makeInactive = function () {
-        this.tab.removeClass('current');
+        this.$tab.removeClass('current');
 
-        this.messages.removeClass('current')
-                     .hide();
-
-        this.users.removeClass('current')
-                  .hide();
-
-        this.roomTopic.removeClass('current')
-                  .hide();
+        this.$messages.removeClass('current')
+                      .hide();
+        
+        this.$lobbyRoomFilterForm.hide();
     };
 
     LobbyTab.prototype.makeActive = function () {
-        this.tab.addClass('current');
+        this.$tab.addClass('current');
 
-        this.messages.addClass('current')
-                     .show();
-
-        this.users.addClass('current')
-                  .show();
-
-        this.roomTopic.addClass('current')
-                  .show();
+        this.$messages.addClass('current')
+                      .show();
+        
+        this.$lobbyRoomFilterForm.show();
     };
 
     LobbyTab.prototype.setInitialized = function () {
-        this.tab.data('initialized', true);
+        this.$tab.data('initialized', true);
     };
 
     LobbyTab.prototype.isInitialized = function () {
-        return this.tab.data('initialized') === true;
+        return this.$tab.data('initialized') === true;
     };
 
     chat.LobbyTab = LobbyTab;

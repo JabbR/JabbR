@@ -213,12 +213,6 @@
                 $lobbyRoomFilterForm.submit();
             });
         },
-        hideForm: function() {
-            $lobbyRoomFilterForm.hide();
-        },
-        showForm: function() {
-            $lobbyRoomFilterForm.show();
-        },
         getRooms: function() {
             return sortedRoomList;
         },
@@ -356,12 +350,6 @@
                 $loadMoreRooms.show();
             }
             $lobbyOtherRooms.show();
-
-            if ($('#tabs-lobby').is('.current')) {
-                this.showForm();
-            } else {
-                this.hideForm();
-            }
 
             // re-filter lists
             $lobbyRoomFilterForm.submit();

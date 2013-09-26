@@ -11,7 +11,6 @@
     var $chatArea = null,
         $submitButton = null,
         $newMessage = null,
-        $roomActions = null,
         $toast = null,
         $disconnectDialog = null,
         $downloadIcon = null,
@@ -81,6 +80,8 @@
     }
 
     function getRoomId(roomName) {
+        // replace undefined with null
+        roomName = roomName || null;
         if (roomName === null) {
             return null;
         }
@@ -129,7 +130,7 @@
         if (roomId === 'lobby') {
             return lobby;
         } else {
-            return rooms[roomId];
+            return rooms[roomId] || null;
         }
     }
 
@@ -444,7 +445,6 @@
             $chatArea = $('#chat-area');
             $submitButton = $('#send');
             $newMessage = $('#new-message');
-            $roomActions = $('#room-actions');
             $toast = $('#room-preferences .toast');
             $sound = $('#room-preferences .sound');
             $richness = $('#room-preferences .richness');
@@ -986,10 +986,6 @@
 
             if (currentRoom !== null) {
                 currentRoom.makeInactive();
-                if (currentRoom.isLobby()) {
-                    ui.lobby.hideForm();
-                    $roomActions.show();
-                }
             }
 
             room.makeActive();
@@ -997,10 +993,6 @@
             ui.tabList.updateTabOverflow();
 
             if (room.isLobby()) {
-                $roomActions.hide();
-                ui.lobby.showForm();
-
-                room.messages.hide();
                 ui.toggleMessageSection(false);
             } else {
                 ui.toggleMessageSection(room.isClosed());
