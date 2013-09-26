@@ -1,26 +1,77 @@
 ﻿(function ($, window, chat, utility, moment) {
     "use strict";
-    
-    var trimRoomHistoryMaxMessages = 200;
 
-    function getUserClassName(userName) {
-        return '[data-name="' + userName + '"]';
-    }
+    function Room(roomName, roomId) {
+        var roomOwnersHeader = utility.getLanguageResource('Chat_UserOwnerHeader'),
+            usersHeader = utility.getLanguageResource('Chat_UserHeader'),
+            $chatArea = $('#chat-area'),
+            $topicBar = $('#topic-bar'),
+            templates = {
+                userlist: $('#new-userlist-template'),
+                user: $('#new-user-template')
+            };
+        
+        this.scrollTopThreshold = 75;
+        this.trimRoomHistoryMaxMessages = 200;
 
-    function Room($tab, $usersContainer, $usersOwners, $usersActive, $messages, $roomTopic) {
-        this.tab = $tab;
-        this.users = $usersContainer;
-        this.owners = $usersOwners;
-        this.activeUsers = $usersActive;
-        this.messages = $messages;
-        this.roomTopic = $roomTopic;
+        this.messages = $('<ul/>').attr('id', 'messages-' + roomId)
+                              .addClass('messages')
+                              .appendTo($chatArea)
+                              .hide();
+
+        this.roomTopic = $('<div/>').attr('id', 'roomTopic-' + roomId)
+                              .addClass('roomTopic')
+                              .appendTo($topicBar)
+                              .hide();
+        
+        this.users = $('<div/>').attr('id', 'userlist-' + roomId)
+            .addClass('users')
+            .appendTo($chatArea).hide();
+        this.owners = templates.userlist.tmpl({ listname: roomOwnersHeader, id: 'userlist-' + roomId + '-owners' })
+            .addClass('owners')
+            .appendTo(this.users)
+            .find('ul');
+        this.activeUsers = templates.userlist.tmpl({ listname: usersHeader, id: 'userlist-' + roomId + '-active' })
+            .appendTo(this.users)
+            .find('ul');
+
+        var _this = this;
+        var scrollHandler = function () {
+            var messageId = null;
+
+            // Do nothing if there's nothing else
+            if ($(this).data('full') === true) {
+                return;
+            }
+
+            // If you're we're near the top, raise the event, but if the scroll
+            // bar is small enough that we're at the bottom edge, ignore it.
+            // We have to use the ui version because the room object above is
+            // not fully initialized, so there are no messages.
+            if ($(this).scrollTop() <= _this.scrollTopThreshold && !chat.ui.isNearTheEnd(roomId)) {
+                var $child = _this.messages.children('.message:first');
+                if ($child.length > 0) {
+                    messageId = $child.attr('id')
+                                      .substr(2); // Remove the "m-"
+                    $(chat.ui).trigger(chat.ui.events.scrollRoomTop, [{ name: roomName, messageId: messageId }]);
+                }
+            }
+        };
+
+        // Hookup the scroll handler since event delegation doesn't work with scroll events
+        this.messages.bind('scroll', scrollHandler);
+
+        // Store the scroll handler so we can remove it later
+        this.messages.data('scrollHandler', scrollHandler);
+
+        this.tab = $('#tabs-' + roomId);
 
         this.templates = {
             separator: $('#message-separator-template')
         };
     }
 
-    Room.prototype.type = function() {
+    Room.prototype.type = function () {
         return 'Room';
     };
     
@@ -32,7 +83,7 @@
         return false;
     };
 
-    Room.prototype.appendMessage = function(newMessage) {
+    Room.prototype.appendMessage = function (newMessage) {
         // Determine if we need to show a new date header: Two conditions
         // for instantly skipping are if this message is a date header, or
         // if the room only contains non-chat messages and we're adding a
@@ -57,7 +108,7 @@
         $(newMessage).appendTo(this.messages);
     };
 
-    Room.prototype.addMessage = function(content, type) {
+    Room.prototype.addMessage = function (content, type) {
         var nearEnd = this.isNearTheEnd(),
             $element = chat.ui.prepareNotificationMessage(content, type);
 
@@ -74,7 +125,7 @@
         return $element;
     };
 
-    Room.prototype.setTopic = function(topic) {
+    Room.prototype.setTopic = function (topic) {
         var topicHtml = topic === '' ? utility.getLanguageResource('Chat_DefaultTopic', this.getName()) : chat.ui.processContent(topic);
 
         if (this.isActive()) {
@@ -246,12 +297,12 @@
 
     // Users
     Room.prototype.getUser = function (userName) {
-        return this.users.find(getUserClassName(userName));
+        return this.users.find('[data-name="' + userName + '"]');
     };
 
     Room.prototype.getUserReferences = function (userName) {
         return $.merge(this.getUser(userName),
-                       this.messages.find(getUserClassName(userName)));
+                       this.messages.find('[data-name="' + userName + '"]'));
     };
 
     Room.prototype.setLocked = function () {
@@ -360,14 +411,14 @@
             $roomMessages = this.messages.find('li'),
             messageCount = $roomMessages.length;
 
-        numberOfMessagesToKeep = numberOfMessagesToKeep || trimRoomHistoryMaxMessages;
+        numberOfMessagesToKeep = numberOfMessagesToKeep || this.trimRoomHistoryMaxMessages;
 
         if (this.isLobby() || !this.canTrimHistory()) {
             return;
         }
 
-        if (numberOfMessagesToKeep < trimRoomHistoryMaxMessages) {
-            numberOfMessagesToKeep = trimRoomHistoryMaxMessages;
+        if (numberOfMessagesToKeep < this.trimRoomHistoryMaxMessages) {
+            numberOfMessagesToKeep = this.trimRoomHistoryMaxMessages;
         }
 
         if (messageCount < numberOfMessagesToKeep) {

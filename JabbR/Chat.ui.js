@@ -9,7 +9,6 @@
     "use strict";
 
     var $chatArea = null,
-        $tabs = null,
         $submitButton = null,
         $newMessage = null,
         $roomActions = null,
@@ -27,7 +26,6 @@
         focus = true,
         readOnly = false,
         Keys = { Up: 38, Down: 40, Esc: 27, Enter: 13, Slash: 47, Space: 32, Tab: 9, Question: 191 },
-        scrollTopThreshold = 75,
         toast = window.chat.toast,
         preferences = null,
         $login = null,
@@ -59,7 +57,6 @@
         $fileConnectionId = null,
         connectionInfoStatus = null,
         connectionInfoTransport = null,
-        $topicBar = null,
         $loadingHistoryIndicator = null,
         trimRoomHistoryFrequency = 1000 * 60 * 2, // 2 minutes in ms
         $roomLoadingIndicator = null,
@@ -84,7 +81,7 @@
     }
 
     function getRoomId(roomName) {
-        if (roomName == null) {
+        if (roomName === null) {
             return null;
         }
         
@@ -123,12 +120,12 @@
             return lobby;
         }
 
-        return rooms[roomId];
+        return rooms[roomId] || null;
     }
 
     function getCurrentRoomElements() {
-        var $tab = $tabs.find('li.current');
-        var roomId = getRoomId($tab.data('name'));
+        var tabName = chat.ui.tabList.getCurrentTabName();
+        var roomId = getRoomId(tabName);
         if (roomId === 'lobby') {
             return lobby;
         } else {
@@ -138,8 +135,8 @@
 
     function getAllRoomElements() {
         var roomList = [];
-        $("ul#tabs > li.room, ul#tabs-dropdown > li.room").each(function () {
-            roomList[rooms.length] = getRoomElements($(this).data("name"));
+        $.each(chat.ui.tabList.getRoomNames(), function (idx, el) {
+            roomList.push(getRoomElements(el));
         });
         return roomList;
     }
@@ -149,17 +146,10 @@
         var roomName = roomViewModel.Name,
             room = getRoomElements(roomViewModel.Name),
             roomId = getRoomId(roomName),
-            viewModel = null,
-            $messages = null,
-            $roomTopic = null,
-            scrollHandler = null,
-            userContainer = null,
-            roomOwnersHeader = utility.getLanguageResource('Chat_UserOwnerHeader'),
-            usersHeader = utility.getLanguageResource('Chat_UserHeader'),
-            $tabsDropdown = $tabs.last();
+            viewModel = null;
 
         // if room exists
-        if (room != null) {
+        if (room !== null) {
             return false;
         }
 
@@ -173,65 +163,13 @@
         if (!ui.lobby.roomCache[roomName.toString().toUpperCase()]) {
             ui.lobby.addRoomToLobby(roomViewModel);
         }
-        
-        templates.tab.tmpl(viewModel).data('name', roomName).appendTo($tabsDropdown);
-        ui.updateTabOverflow();
 
-        $messages = $('<ul/>').attr('id', 'messages-' + roomId)
-                              .addClass('messages')
-                              .appendTo($chatArea)
-                              .hide();
+        ui.tabList.addTab(viewModel);
+        ui.tabList.updateTabOverflow();
 
-        $roomTopic = $('<div/>').attr('id', 'roomTopic-' + roomId)
-                              .addClass('roomTopic')
-                              .appendTo($topicBar)
-                              .hide();
+        rooms[roomId] = new Room(roomName, roomId);
 
-        userContainer = $('<div/>').attr('id', 'userlist-' + roomId)
-            .addClass('users')
-            .appendTo($chatArea).hide();
-        templates.userlist.tmpl({ listname: roomOwnersHeader, id: 'userlist-' + roomId + '-owners' })
-            .addClass('owners')
-            .appendTo(userContainer);
-        templates.userlist.tmpl({ listname: usersHeader, id: 'userlist-' + roomId + '-active' })
-            .appendTo(userContainer);
-
-        scrollHandler = function () {
-            var messageId = null;
-
-            // Do nothing if there's nothing else
-            if ($(this).data('full') === true) {
-                return;
-            }
-
-            // If you're we're near the top, raise the event, but if the scroll
-            // bar is small enough that we're at the bottom edge, ignore it.
-            // We have to use the ui version because the room object above is
-            // not fully initialized, so there are no messages.
-            if ($(this).scrollTop() <= scrollTopThreshold && !ui.isNearTheEnd(roomId)) {
-                var $child = $messages.children('.message:first');
-                if ($child.length > 0) {
-                    messageId = $child.attr('id')
-                                      .substr(2); // Remove the "m-"
-                    $ui.trigger(ui.events.scrollRoomTop, [{ name: roomName, messageId: messageId }]);
-                }
-            }
-        };
-
-        // Hookup the scroll handler since event delegation doesn't work with scroll events
-        $messages.bind('scroll', scrollHandler);
-
-        // Store the scroll handler so we can remove it later
-        $messages.data('scrollHandler', scrollHandler);
-
-        setAccessKeys();
-        
-        rooms[roomId] = new Room($('#tabs-' + roomId),
-                        $('#userlist-' + roomId),
-                        $('#userlist-' + roomId + '-owners'),
-                        $('#userlist-' + roomId + '-active'),
-                        $('#messages-' + roomId),
-                        $('#roomTopic-' + roomId));
+        ui.tabList.updateAccessKeys();
         
         return true;
     }
@@ -240,24 +178,13 @@
         var room = getRoomElements(roomName),
             roomId = getRoomId(roomName);
 
-        if (room != null && room.isClosable()) {
+        if (room !== null && room.isClosable()) {
             room.remove();
-            setAccessKeys();
-            
-            ui.updateTabOverflow();
+            ui.tabList.updateAccessKeys();
+            ui.tabList.updateTabOverflow();
         }
 
         delete rooms[roomId];
-    }
-
-    function setAccessKeys() {
-        $.each($tabs.find('li.room > a'), function (index, item) {
-            if (index < 10) {
-                $(item).attr('accesskey', ((index + 1) % 10).toString());
-            } else {
-                $(item).attr('accesskey', null);
-            }
-        });
     }
 
     function processMessage(message, roomName) {
@@ -515,7 +442,6 @@
             $ui = $(this);
             preferences = state || {};
             $chatArea = $('#chat-area');
-            $tabs = $('#tabs, #tabs-dropdown');
             $submitButton = $('#send');
             $newMessage = $('#new-message');
             $roomActions = $('#room-actions');
@@ -539,12 +465,10 @@
             $updatePopup = $('#jabbr-update');
             focus = true;
             templates = {
-                userlist: $('#new-userlist-template'),
                 user: $('#new-user-template'),
                 message: $('#new-message-template'),
                 notification: $('#new-notification-template'),
                 separator: $('#message-separator-template'),
-                tab: $('#new-tab-template'),
                 gravatarprofile: $('#gravatar-profile-template'),
                 commandhelp: $('#command-help-template'),
                 multiline: $('#multiline-content-template')
@@ -562,7 +486,6 @@
             $connectionInfoContent = $('#connection-info-content');
             connectionInfoStatus = '#connection-status';
             connectionInfoTransport = '#connection-transport';
-            $topicBar = $('#topic-bar');
             $loadingHistoryIndicator = $('#loadingRoomHistory');
 
             
@@ -595,7 +518,7 @@
             var activateOrOpenRoom = function(roomName) {
                 var room = getRoomElements(roomName);
 
-                if (room != null) {
+                if (room !== null) {
                     ui.setActiveRoom(roomName);
                 }
                 else {
@@ -651,7 +574,7 @@
                     
                     // check for tab overflow for one edge case - sort order hasn't changed but user 
                     // dragged the last item in the main list to be the first item in the dropdown.
-                    ui.updateTabOverflow();
+                    ui.tabList.updateTabOverflow();
                 }
             });
 
@@ -676,9 +599,8 @@
             $document.on('keydown', function (ev) {
                 // ctrl + tab event is sent to the page in firefox when the user probably means to change browser tabs
                 if (ev.keyCode === Keys.Tab && !ev.ctrlKey && $newMessage.val() === "") {
-                    var current = getCurrentRoomElements(),
-                        index = current.tab.index(),
-                        tabCount = $tabs.children().length - 1;
+                    var index = chat.ui.tabList.getCurrentTabIndex(),
+                        tabCount = chat.ui.tabList.getTabCount();
 
                     if (!ev.shiftKey) {
                         // Next tab
@@ -688,7 +610,7 @@
                         index = (index - 1) || tabCount;
                     }
 
-                    ui.setActiveRoom($tabs.children().eq(index).data('name'));
+                    ui.setActiveRoom(chat.ui.tabList.getTabNameByIndex(index));
                     if (!readOnly) {
                         $newMessage.focus();
                     }
@@ -875,7 +797,7 @@
                 var room = getCurrentRoomElements();
                 room.makeActive();
 
-                ui.updateTabOverflow();
+                ui.tabList.updateTabOverflow();
 
                 triggerFocus();
             });
@@ -885,7 +807,7 @@
                 if (room.type === 'Room') {
                     room.scrollToBottom();
                 }
-                ui.updateTabOverflow();
+                ui.tabList.updateTabOverflow();
             });
 
             $newMessage.keydown(function (ev) {
@@ -1049,6 +971,10 @@
             var room = getRoomElements(roomName);
 
             loadRoomPreferences(roomName);
+            
+            if (room === null) {
+                return false;
+            }
 
             if (room.isActive()) {
                 // Still trigger the event (just do less overall work)
@@ -1058,35 +984,31 @@
 
             var currentRoom = getCurrentRoomElements();
 
-            if (room != null) {
-                if (currentRoom != null) {
-                    currentRoom.makeInactive();
-                    if (currentRoom.isLobby()) {
-                        ui.lobby.hideForm();
-                        $roomActions.show();
-                    }
+            if (currentRoom !== null) {
+                currentRoom.makeInactive();
+                if (currentRoom.isLobby()) {
+                    ui.lobby.hideForm();
+                    $roomActions.show();
                 }
-
-                room.makeActive();
-                
-                ui.updateTabOverflow();
-
-                if (room.isLobby()) {
-                    $roomActions.hide();
-                    ui.lobby.showForm();
-
-                    room.messages.hide();
-                    ui.toggleMessageSection(false);
-                } else {
-                    ui.toggleMessageSection(room.isClosed());
-                }
-
-                $ui.trigger(ui.events.activeRoomChanged, [roomName]);
-                triggerFocus();
-                return true;
             }
 
-            return false;
+            room.makeActive();
+                
+            ui.tabList.updateTabOverflow();
+
+            if (room.isLobby()) {
+                $roomActions.hide();
+                ui.lobby.showForm();
+
+                room.messages.hide();
+                ui.toggleMessageSection(false);
+            } else {
+                ui.toggleMessageSection(room.isClosed());
+            }
+
+            $ui.trigger(ui.events.activeRoomChanged, [roomName]);
+            triggerFocus();
+            return true;
         },
         setRoomLocked: function (roomName) {
             var room = getRoomElements(roomName);
@@ -1106,7 +1028,7 @@
             }
 
             room.updateUnread(isMentioned);
-            ui.updateTabOverflow();
+            ui.tabList.updateTabOverflow();
         },
         scrollToBottom: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
@@ -1841,12 +1763,10 @@
         },
         closeRoom: function (roomName) {
             var room = getRoomElements(roomName);
-
             room.close();
         },
         unCloseRoom: function (roomName) {
             var room = getRoomElements(roomName);
-
             room.unClose();
         },
         setRoomListStatuses: function (roomName) {
@@ -1864,53 +1784,7 @@
             }
         },
         updateTabOrder: function (tabOrder) {
-            $.each(tabOrder.reverse(), function(el, name) {
-                $tabs.find('li[data-name="' + name + '"]').prependTo($tabs.first());
-            });
-
-            ui.updateTabOverflow();
-            setAccessKeys();
-        },
-        updateTabOverflow: function () {
-            var lastOffsetLeft = 0,
-                sliceIndex = -1,
-                $roomTabs = null,
-                $tabsList = $tabs.first(),
-                $tabsDropdown = $tabs.last(),
-                overflowedRoomTabs = null,
-                $tabsDropdownButton = $('#tabs-dropdown-rooms');
-            
-            // move all (non-dragsort) tabs to the first list
-            $tabs.last().find('li:not(.placeholder)').each(function () { $(this).detach().appendTo($tabsList); });
-
-            // find overflow and move it all to the dropdown list ul
-            $roomTabs = $tabsList.find('li:not(.placeholder)');
-            $roomTabs.each(function (idx) {
-                if (sliceIndex !== -1) {
-                    return;
-                }
-
-                var thisOffsetLeft = $(this).offset().left;
-                if (thisOffsetLeft <= lastOffsetLeft) {
-                    sliceIndex = idx;
-                    return;
-                }
-
-                lastOffsetLeft = thisOffsetLeft;
-            });
-
-            // move all elements from here to the dropdown list
-            if (sliceIndex !== -1) {
-                $tabsDropdownButton.fadeIn('slow');
-                overflowedRoomTabs = $roomTabs.slice(sliceIndex);
-                for (var i = overflowedRoomTabs.length - 1; i >= 0; i--) {
-                    $(overflowedRoomTabs[i]).prependTo($tabsDropdown);
-                }
-            } else {
-                $tabsDropdownButton.fadeOut('slow').parent().removeClass('open');
-            }
-
-            return;
+            ui.tabList.updateTabOrder(tabOrder);
         },
         // todo make it so that we don't need these to be exported
         getRoomElements: getRoomElements

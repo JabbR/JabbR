@@ -1238,6 +1238,7 @@
 
         // Initialize the ui, passing the user preferences
         ui.initialize(state.preferences);
+        ui.tabList.initialize();
         ui.lobby.initialize();
 
         for (var i = 0; i < welcomeMessages.length; i++) {

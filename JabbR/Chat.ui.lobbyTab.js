@@ -1,11 +1,5 @@
-﻿(function ($, window, chat, utility) {
+﻿(function ($, window, chat) {
     "use strict";
-    
-    var trimRoomHistoryMaxMessages = 200;
-
-    function getUserClassName(userName) {
-        return '[data-name="' + userName + '"]';
-    }
 
     function LobbyTab() {
         this.tab = $('#tabs-lobby');
@@ -16,7 +10,7 @@
         this.roomTopic = $('#roomTopic-lobby');
 
         this.templates = {
-            separator: $('#message-separator-template')
+            
         };
     }
 
@@ -32,11 +26,11 @@
         return true;
     };
 
-    LobbyTab.prototype.appendMessage = function (newMessage) {
+    LobbyTab.prototype.appendMessage = function (/*newMessage*/) {
         // do something?
     };
 
-    LobbyTab.prototype.addMessage = function (content, type) {
+    LobbyTab.prototype.addMessage = function (/*content, type*/) {
         // do something?
     };
 
@@ -89,115 +83,5 @@
         return this.tab.data('initialized') === true;
     };
 
-    // Users
-    LobbyTab.prototype.getUser = function (userName) {
-        return this.users.find(getUserClassName(userName));
-    };
-
-    LobbyTab.prototype.getUserReferences = function (userName) {
-        return $.merge(this.getUser(userName),
-                       this.messages.find(getUserClassName(userName)));
-    };
-
-    LobbyTab.prototype.setLocked = function () {
-        this.tab.addClass('locked');
-        this.tab.find('.lock').removeClass('hide');
-    };
-
-    LobbyTab.prototype.addUser = function (userViewModel, $user) {
-        if (userViewModel.owner) {
-            this.addUserToList($user, this.owners);
-        } else {
-            this.changeInactive($user, userViewModel.active);
-
-            this.addUserToList($user, this.activeUsers);
-
-        }
-    };
-
-    LobbyTab.prototype.changeInactive = function ($user, isActive) {
-        if (isActive) {
-            $user.removeClass('inactive');
-        } else {
-            $user.addClass('inactive');
-        }
-    };
-
-    LobbyTab.prototype.addUserToList = function ($user, list) {
-        var oldParentList = $user.parent('ul');
-        $user.appendTo(list);
-        utility.updateEmptyListItem(list);
-        if (oldParentList.length > 0) {
-            utility.updateEmptyListItem(oldParentList);
-        }
-        this.sortList(list, $user);
-    };
-
-    LobbyTab.prototype.appearsInList = function ($user, list) {
-        return $user.parent('ul').attr('id') === list.attr('id');
-    };
-
-    LobbyTab.prototype.updateUserStatus = function ($user) {
-        var owner = $user.data('owner') || false;
-
-        if (owner === true) {
-            if (!this.appearsInList($user, this.owners)) {
-                this.addUserToList($user, this.owners);
-            }
-            return;
-        }
-
-        var status = $user.data('active');
-        if (typeof status === "undefined") {
-            return;
-        }
-
-        if (!this.appearsInList($user, this.activeUsers)) {
-            this.changeInactive($user, status);
-
-            this.addUserToList($user, this.activeUsers);
-        }
-    };
-
-    LobbyTab.prototype.sortLists = function (user) {
-        var isOwner = $(user).data('owner');
-        if (isOwner) {
-            this.sortList(this.owners, user);
-        } else {
-            this.sortList(this.activeUsers, user);
-        }
-    };
-
-    LobbyTab.prototype.sortList = function (listToSort, user) {
-        var listItems = listToSort.children('li:not(.empty)').get(),
-            userName = ($(user).data('name') || '').toString(),
-            userActive = $(user).data('active');
-
-        for (var i = 0; i < listItems.length; i++) {
-            var otherName = ($(listItems[i]).data('name') || '').toString(),
-                otherActive = $(listItems[i]).data('active');
-
-            if (userActive === otherActive &&
-                userName.toUpperCase() < otherName.toUpperCase()) {
-                $(listItems[i]).before(user);
-                break;
-            } else if (userActive && !otherActive) {
-                $(listItems[i]).before(user);
-                break;
-            } else if (i === (listItems.length - 1)) {
-                $(listItems[i]).after(user);
-                break;
-            }
-        }
-    };
-
-    LobbyTab.prototype.canTrimHistory = function () {
-        return this.tab.data('trimmable') !== false;
-    };
-
-    LobbyTab.prototype.setTrimmable = function (canTrimMessages) {
-        this.tab.data('trimmable', canTrimMessages);
-    };
-
     chat.LobbyTab = LobbyTab;
-}(window.jQuery, window, window.chat, window.chat.utility));
+}(window.jQuery, window, window.chat));

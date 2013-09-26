@@ -20,7 +20,7 @@
     function activateOrOpenRoom(roomName) {
         var room = ui.getRoomElements(roomName);
 
-        if (room != null) {
+        if (room !== null) {
             ui.setActiveRoom(roomName);
         }
         else {
