@@ -99,27 +99,29 @@ namespace JabbR.Client.UI.Core.ViewModels
 
         private async void FetchNextMessages(object obj)
         {
+            if (Progress.IsLoading) return;
+
             var message = obj as Message;
             if (message != null)
             {
-                Dispatcher.RequestMainThreadAction(() => 
-                    Progress.SetStatus("Loading messages...", true)
-                );
+                Progress.SetStatus("Loading messages...", true);
 
                 try
                 {
                     var fetchedMessages = await _client.GetPreviousMessages(message.Id);
-                    Messages = new ObservableCollection<Message>(fetchedMessages.Concat(Messages));
+                    
                     Dispatcher.RequestMainThreadAction(() =>
                     {
-                        Progress.ClearStatus();
+                        foreach (var msg in fetchedMessages)
+                        {
+                            Messages.Add(msg);
+                        }
                     });
+                    Progress.ClearStatus();
                 }
                 catch (Exception ex)
                 {
-                    Dispatcher.RequestMainThreadAction(() => 
-                        Progress.SetStatus("Failed loading messages.", false)
-                    );
+                    Progress.SetStatus("Failed loading messages.", false);
                 }
             }
         }
@@ -141,6 +143,7 @@ namespace JabbR.Client.UI.Core.ViewModels
             {
                 try
                 {
+                    Progress.SetStatus("Sending message...", true);
                     var result = await _client.Send(Message, Room.Name);
 
                     if (result)
@@ -152,11 +155,17 @@ namespace JabbR.Client.UI.Core.ViewModels
                 {
                     ErrorMessage = ex.GetBaseException().Message;
                 }
+                finally
+                {
+                    Progress.ClearStatus();
+                }
             }
         }
 
         public async void Init(NavigationParameter parameters)
         {
+            if (Progress.IsLoading) return;
+
             try
             {
                 Progress.SetStatus("Loading...", true);
