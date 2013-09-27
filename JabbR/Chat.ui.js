@@ -291,12 +291,7 @@
         focus = true;
 
         if (msg) {
-            if (msg.toUpperCase() === '/LOGIN') {
-                ui.showLogin();
-            }
-            else {
-                $ui.trigger(ui.events.sendMessage, [msg]);
-            }
+            $ui.trigger(ui.events.sendMessage, [msg]);
         }
 
         $newMessage.val('');
@@ -1451,10 +1446,6 @@
         },
         getUserName: function () {
             return ui.name;
-        },
-        showLogin: function () {
-            $login.modal({ backdrop: true, keyboard: true });
-            return true;
         },
         showDisconnectUI: function () {
             $disconnectDialog.modal();
