@@ -2,6 +2,7 @@
     x:Class="JabbR.Client.UI.WP8.Views.RoomView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:scm="clr-namespace:System.ComponentModel;assembly=System.Windows"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
@@ -23,6 +24,13 @@
         <converters:HastToGravatarConverter x:Key="HashToGravatarConverter"/>
         <converters:HtmlToStringConverter x:Key="HtmlToStringConverter"/>
         <converters:NativeVisibilityConverter x:Key="NativeVisibilityConverter"/>
+        <CollectionViewSource x:Key="MessageView"
+                              Source="{Binding Messages}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="When"
+                                     Direction="Ascending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
     </views:MvxPhonePage.Resources>
     
     <Grid x:Name="LayoutRoot" Background="Transparent">
@@ -44,10 +52,9 @@
                         VerticalAlignment="Top"
                         IsBouncy="False"
                         AtEndCommand="{Binding FetchNextMessagesCommand}"
-                        ItemsSource="{Binding Messages}"
+                        ItemsSource="{Binding  Source={StaticResource MessageView}}"
                         SelectedItem="{Binding CurrentItem, Mode=TwoWay}"
-                        Template="{StaticResource BetterExtendedListBox}"
-                        SelectionChanged="Messages_OnSelectionChanged">
+                        Template="{StaticResource BetterExtendedListBox}">
                         <extensions:ExtendedListBox.ItemContainerStyle>
                             <Style TargetType="ListBoxItem">
                                 <Setter Property="HorizontalAlignment" Value="Stretch"/>

@@ -2,6 +2,7 @@
     x:Class="JabbR.Client.UI.WP8.Views.MainView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:scm="clr-namespace:System.ComponentModel;assembly=System.Windows"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
     xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
     xmlns:interactivity="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
@@ -16,14 +17,31 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="True" Margin="0,1,0,-1">
+    <views:MvxPhonePage.Resources>
+        <CollectionViewSource x:Key="CurrentRoomsView"
+                              Source="{Binding CurrentRooms}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Count"
+                                     Direction="Descending"/>
+                <scm:SortDescription PropertyName="Name"
+                                     Direction="Ascending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+        <CollectionViewSource x:Key="RoomsView"
+                              Source="{Binding Rooms}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Count"
+                                     Direction="Descending"/>
+                <scm:SortDescription PropertyName="Name"
+                                     Direction="Ascending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </views:MvxPhonePage.Resources>
 
-    <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <!--Pivot Control-->
         <phone:Pivot Title="{Binding CurrentUser.Name}">
-            <!--Pivot item one-->
             <phone:PivotItem Header="current rooms">
-                <ListBox x:Name="OpenRoomsList" ItemsSource="{Binding CurrentRooms}">
+                <ListBox x:Name="OpenRoomsList" ItemsSource="{Binding Source={StaticResource CurrentRoomsView}}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Margin="0,0,0,17">
@@ -34,13 +52,17 @@
                                 </interactivity:Interaction.Triggers>
                                 <TextBlock x:Name="RoomName" Text="{Binding Name}" Style="{StaticResource PhoneTextTitle2Style}"/>
                                 <TextBlock x:Name="RoomTopic" Text="{Binding Topic}" Style="{StaticResource PhoneTextAccentStyle}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="UsersCount" Text="{Binding Count}" Style="{StaticResource PhoneTextSmallStyle}" FontStyle="Italic"/>
+                                    <TextBlock x:Name="UsersCountText" Margin="-6,0,0,0" Text="Occupants" Style="{StaticResource PhoneTextSmallStyle}" FontStyle="Italic"/>
+                                </StackPanel>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
             </phone:PivotItem>
             <phone:PivotItem Header="all rooms">
-                <ListBox x:Name="RoomsList" ItemsSource="{Binding Rooms}">
+                <ListBox x:Name="RoomsList" ItemsSource="{Binding Source={StaticResource RoomsView}}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Margin="0,0,0,17">
@@ -51,6 +73,10 @@
                                 </interactivity:Interaction.Triggers>
                                 <TextBlock x:Name="RoomName" Text="{Binding Name}" Style="{StaticResource PhoneTextTitle2Style}"/>
                                 <TextBlock x:Name="RoomTopic" Text="{Binding Topic}" Style="{StaticResource PhoneTextAccentStyle}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="UsersCount" Text="{Binding Count}" Style="{StaticResource PhoneTextSmallStyle}" FontStyle="Italic"/>
+                                    <TextBlock x:Name="UsersCountText" Margin="-6,0,0,0" Text="Occupants" Style="{StaticResource PhoneTextSmallStyle}" FontStyle="Italic"/>
+                                </StackPanel>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
