@@ -806,6 +806,7 @@
     <Content Include="Content\themes\default\Chat.nuget.css" />
     <Content Include="Chat.ui.lobbyTab.js" />
     <Content Include="Chat.ui.tabList.js" />
+    <Content Include="Chat.ui.connectionStatus.js" />
     <Content Include="favicon.ico" />
     <Content Include="Content\images\big-logo.png" />
     <Content Include="Content\images\logo32.png" />

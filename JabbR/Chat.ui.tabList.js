@@ -78,6 +78,7 @@
                     return false;
                 }
                 lastOffsetLeft = thisOffsetLeft;
+                return true;
             });
 
             // move all elements from here to the dropdown list

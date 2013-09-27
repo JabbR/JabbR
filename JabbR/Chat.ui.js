@@ -43,19 +43,10 @@
         $richness = null,
         lastPrivate = null,
         $reloadMessageNotification = null,
-        popoverTimer = null,
-        $connectionStatus = null,
-        connectionState = -1,
-        $connectionStateChangedPopover = null,
-        connectionStateIcon = null,
-        $connectionInfoPopover = null,
-        $connectionInfoContent = null,
         $fileUploadButton = null,
         $hiddenFile = null,
         $fileRoom = null,
         $fileConnectionId = null,
-        connectionInfoStatus = null,
-        connectionInfoTransport = null,
         $loadingHistoryIndicator = null,
         trimRoomHistoryFrequency = 1000 * 60 * 2, // 2 minutes in ms
         $roomLoadingIndicator = null,
@@ -136,7 +127,7 @@
 
     function getAllRoomElements() {
         var roomList = [];
-        $.each(chat.ui.tabList.getRoomNames(), function (idx, el) {
+        $.each(chat.ui.tabList.getRoomTabNames(), function (idx, el) {
             roomList.push(getRoomElements(el));
         });
         return roomList;
@@ -178,7 +169,7 @@
 
         if (room !== null && room.isClosable()) {
             room.remove();
-            ui.tabList.removeTab(roomId);
+            ui.tabList.removeTab(roomName);
         }
 
         delete rooms[roomId];
@@ -313,8 +304,7 @@
 
         // always scroll to bottom after new message sent
         var room = getCurrentRoomElements();
-        room.scrollToBottom();
-        room.removeSeparator();
+        room.afterSend();
     }
 
     function updateNote(userViewModel, $user) {
@@ -374,37 +364,6 @@
     function updateRoomTopic(roomName, topic) {
         var room = getRoomElements(roomName);
         room.setTopic(topic);
-    }
-
-    function getConnectionStateChangedPopoverOptions(statusText) {
-        var options = {
-            html: true,
-            trigger: 'hover',
-            template: $connectionStateChangedPopover,
-            content: function () {
-                return statusText;
-            }
-        };
-        return options;
-    }
-
-    function getConnectionInfoPopoverOptions(transport) {
-        var options = {
-            html: true,
-            trigger: 'hover',
-            delay: {
-                show: 0,
-                hide: 500
-            },
-            template: $connectionInfoPopover,
-            content: function () {
-                var connectionInfo = $connectionInfoContent;
-                connectionInfo.find(connectionInfoStatus).text(utility.getLanguageResource('Client_ConnectedStatus'));
-                connectionInfo.find(connectionInfoTransport).text(utility.getLanguageResource('Client_Transport', transport));
-                return connectionInfo.html();
-            }
-        };
-        return options;
     }
 
     var ui = {
@@ -475,16 +434,7 @@
             $hiddenFile = $('#hidden-file');
             $fileRoom = $('#file-room');
             $fileConnectionId = $('#file-connection-id');
-            $connectionStatus = $('#connectionStatus');
-
-            $connectionStateChangedPopover = $('#connection-state-changed-popover');
-            connectionStateIcon = '#popover-content-icon';
-            $connectionInfoPopover = $('#connection-info-popover');
-            $connectionInfoContent = $('#connection-info-content');
-            connectionInfoStatus = '#connection-status';
-            connectionInfoTransport = '#connection-transport';
             $loadingHistoryIndicator = $('#loadingRoomHistory');
-
             
             $roomLoadingIndicator = $('#room-loading');
 
@@ -1184,23 +1134,8 @@
             }
         },
         removeUser: function (user, roomName) {
-            var room = getRoomElements(roomName),
-                $user = room.getUser(user.Name),
-                $userMessages = room.messages.find(getUserClassName(user.Name));
-
-            $user.addClass('removing')
-                .fadeOut('slow', function () {
-                    var owner = $user.data('owner') || false;
-                    $(this).remove();
-
-                    if (owner === true) {
-                        utility.updateEmptyListItem(room.owners);
-                    } else {
-                        utility.updateEmptyListItem(room.activeUsers);
-                    }
-                });
-            
-            $userMessages.find('.user').removeClass('absent present').addClass('absent');
+            var room = getRoomElements(roomName);
+            room.returnUser(user);
         },
         setUserTyping: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
@@ -1541,47 +1476,7 @@
             $reloadMessageNotification.show();
         },
         showStatus: function (status, transport) {
-            // Change the status indicator here
-            if (connectionState !== status) {
-                if (popoverTimer) {
-                    clearTimeout(popoverTimer);
-                }
-                connectionState = status;
-                $connectionStatus.popover('destroy');
-                switch (status) {
-                    case 0: // Connected
-                        $connectionStatus.removeClass('reconnecting disconnected');
-                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions(utility.getLanguageResource('Client_Connected')));
-                        $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-ok-sign');
-                        $connectionStatus.popover('show');
-                        popoverTimer = setTimeout(function () {
-                            $connectionStatus.popover('destroy');
-                            ui.initializeConnectionStatus(transport);
-                            popoverTimer = null;
-                        }, 2000);
-                        break;
-                    case 1: // Reconnecting
-                        $connectionStatus.removeClass('disconnected').addClass('reconnecting');
-                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions(utility.getLanguageResource('Client_Reconnecting')));
-                        $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-question-sign');
-                        $connectionStatus.popover('show');
-                        popoverTimer = setTimeout(function () {
-                            $connectionStatus.popover('hide');
-                            popoverTimer = null;
-                        }, 5000);
-                        break;
-                    case 2: // Disconnected
-                        $connectionStatus.removeClass('reconnecting').addClass('disconnected');
-                        $connectionStatus.popover(getConnectionStateChangedPopoverOptions(utility.getLanguageResource('Client_Disconnected')));
-                        $connectionStateChangedPopover.find(connectionStateIcon).addClass('icon-exclamation-sign');
-                        $connectionStatus.popover('show');
-                        popoverTimer = setTimeout(function () {
-                            $connectionStatus.popover('hide');
-                            popoverTimer = null;
-                        }, 5000);
-                        break;
-                }
-            }
+            ui.connectionStatus.showStatus(status, transport);
         },
         setReadOnly: function (isReadOnly) {
             readOnly = isReadOnly;
@@ -1601,7 +1496,7 @@
         },
         triggerFocus: triggerFocus,
         initializeConnectionStatus: function (transport) {
-            $connectionStatus.popover(getConnectionInfoPopoverOptions(transport));
+            ui.connectionStatus.initialize(transport);
         },
         changeNote: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),

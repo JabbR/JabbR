@@ -1,4 +1,4 @@
-﻿(function ($, window, chat) {
+﻿(function ($, window, chat, utility) {
     "use strict";
 
     function LobbyTab() {
@@ -12,6 +12,7 @@
         this.$closedRoomFilter = $('#room-filter-closed');
         this.$lobbyOtherRoomList = $('#userlist-lobby');
         this.$lobbyPrivateRoomList = $('#userlist-lobby-owners');
+        this.$lobbyRoomLists = $('#lobby-private, #lobby-other');
 
         this.templates = {
             
@@ -38,6 +39,10 @@
         // do something?
     };
 
+    LobbyTab.prototype.removeRoom = function(roomName) {
+        this.$lobbyRoomLists.find('li[data-room="' + roomName + "']").remove();
+        utility.updateEmptyListItem(this.$lobbyRoomLists);
+    };
 
     LobbyTab.prototype.getName = function () {
         return this.$tab.data('name');
@@ -48,8 +53,6 @@
     };
 
     LobbyTab.prototype.makeInactive = function () {
-        this.$tab.removeClass('current');
-
         this.$messages.removeClass('current')
                       .hide();
         
@@ -57,8 +60,6 @@
     };
 
     LobbyTab.prototype.makeActive = function () {
-        this.$tab.addClass('current');
-
         this.$messages.addClass('current')
                       .show();
         
@@ -70,6 +71,9 @@
     LobbyTab.prototype.triggerFocus = function () {
         chat.ui.triggerFocus(this.$roomFilterInput);
     };
+    
+    LobbyTab.prototype.afterSend = function () {
+    };
 
     LobbyTab.prototype.setInitialized = function () {
         this.$tab.data('initialized', true);
@@ -80,4 +84,4 @@
     };
 
     chat.LobbyTab = LobbyTab;
-}(window.jQuery, window, window.chat));
+}(window.jQuery, window, window.chat, window.chat.utility));

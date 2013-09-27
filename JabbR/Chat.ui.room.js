@@ -39,6 +39,7 @@
         this.activeUsers = templates.userlist.tmpl({ listname: usersHeader, id: 'userlist-' + roomId + '-active' })
             .appendTo(this.users)
             .find('ul');
+        this.userLists = this.owners.add(this.activeUsers);
 
         var _this = this;
         var scrollHandler = function () {
@@ -301,7 +302,9 @@
         this.tab.find('.readonly').addClass('hide');
     };
 
-    Room.prototype.remove = function() {
+    Room.prototype.remove = function () {
+        this.makeInactive();
+        
         // Remove the scroll handler from this room
         var scrollHandler = this.messages.data('scrollHandler');
         this.messages.unbind('scrollHandler', scrollHandler);
@@ -312,8 +315,6 @@
     };
 
     Room.prototype.makeInactive = function () {
-        this.tab.removeClass('current');
-
         this.messages.removeClass('current')
                      .hide();
 
@@ -330,8 +331,7 @@
         var currUnread = this.getUnread(),
             lastUnread = this.messages.find('.message-separator').data('unread') || 0;
 
-        this.tab.addClass('current')
-                .removeClass('unread')
+        this.tab.removeClass('unread')
                 .data('unread', 0)
                 .data('hasMentions', false);
 
@@ -363,6 +363,11 @@
         chat.ui.triggerFocus();
     };
 
+    Room.prototype.afterSend = function() {
+        this.scrollToBottom();
+        this.removeSeparator();
+    };
+
     Room.prototype.setInitialized = function () {
         this.tab.data('initialized', true);
     };
@@ -391,10 +396,25 @@
             this.addUserToList($user, this.owners);
         } else {
             this.changeInactive($user, userViewModel.active);
-
             this.addUserToList($user, this.activeUsers);
-
         }
+    };
+
+    Room.prototype.removeUser = function(user) {     
+        // recolour user to offline
+        this.getUserReferences
+            .find('.user')
+            .removeClass('absent present')
+            .addClass('absent');
+
+        var _this = this;
+        this.getUser(user.Name)
+            .addClass('removing')
+            .fadeOut('slow', function() {
+                $(this).remove();
+
+                utility.updateEmptyListItem(_this.userLists);
+            });
     };
 
     Room.prototype.changeInactive = function ($user, isActive) {
