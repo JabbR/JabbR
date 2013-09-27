@@ -802,7 +802,9 @@
 
     chat.client.leave = function (user, room) {
         if (isSelf(user)) {
-            ui.setActiveRoom('Lobby');
+            if (ui.tabList.getCurrentTabName() === room) {
+                ui.setActiveRoom('Lobby');
+            }
             ui.removeRoom(room);
         }
         else {
