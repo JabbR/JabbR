@@ -7,6 +7,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Navigation;
 using Cirrious.MvvmCross.WindowsPhone.Views;
+using JabbR.Client.UI.Core.ViewModels;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 
@@ -14,16 +15,40 @@ namespace JabbR.Client.UI.WP8.Views
 {
     public partial class RoomView : MvxPhonePage
     {
+        private int _offsetKnob = 5;
+        private bool _listLoaded;
+
         public RoomView()
         {
             InitializeComponent();
         }
 
-        private void Messages_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        void Messages_ItemRealized(object sender, ItemRealizationEventArgs e)
         {
-            if (e.AddedItems != null && e.AddedItems.Count > 0)
+            if (!_listLoaded)
             {
-                Messages.ScrollIntoView(e.AddedItems[0]);
+                Messages.ScrollTo(Messages.ItemsSource[Messages.ItemsSource.Count - 1]);
+                _listLoaded = true;
+            }
+            else
+            {
+                var vm = (DataContext as RoomViewModel);
+                if (!vm.Progress.IsLoading && Messages.ItemsSource != null && Messages.ItemsSource.Count >= _offsetKnob)
+                {
+                    if (e.ItemKind == LongListSelectorItemKind.Item)
+                    {
+                        if ((e.Container.Content).Equals(Messages.ItemsSource[_offsetKnob]))
+                        {
+                            if (!_listLoaded)
+                            {
+                                _listLoaded = true;
+                                return;
+                            }
+
+                            vm.FetchNextMessages(Messages.ItemsSource[0]);
+                        }
+                    }
+                }
             }
         }
 
@@ -44,6 +69,14 @@ namespace JabbR.Client.UI.WP8.Views
                 default:
                     AppBar.IsVisible = false;
                     break;
+            }
+        }
+
+        private void Messages_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(e.AddedItems != null && e.AddedItems.Count > 0)
+            {
+                Messages.ScrollTo(e.AddedItems[0]);
             }
         }
     }

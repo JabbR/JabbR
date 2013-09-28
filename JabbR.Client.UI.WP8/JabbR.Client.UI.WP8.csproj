@@ -104,6 +104,7 @@
     <Compile Include="Converters\NativeVisibilityConverter.cs" />
     <Compile Include="DebugTrace.cs" />
     <Compile Include="Extensions\ExtendedListBox.cs" />
+    <Compile Include="Extensions\ExtendedLongListSelector.cs" />
     <Compile Include="Extensions\VisualTree.cs" />
     <Compile Include="GlobalProgressIndicator.cs" />
     <Compile Include="Helpers\StateManager.cs" />

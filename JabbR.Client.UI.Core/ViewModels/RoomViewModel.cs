@@ -97,7 +97,7 @@ namespace JabbR.Client.UI.Core.ViewModels
             get { return _fetchNextMessagesCommand ?? new MvxCommand<object>(FetchNextMessages); }
         }
 
-        private async void FetchNextMessages(object obj)
+        public async void FetchNextMessages(object obj)
         {
             if (Progress.IsLoading) return;
 
@@ -105,7 +105,7 @@ namespace JabbR.Client.UI.Core.ViewModels
             if (message != null)
             {
                 Progress.SetStatus("Loading messages...", true);
-
+                
                 try
                 {
                     var fetchedMessages = await _client.GetPreviousMessages(message.Id);
@@ -114,7 +114,7 @@ namespace JabbR.Client.UI.Core.ViewModels
                     {
                         foreach (var msg in fetchedMessages)
                         {
-                            Messages.Add(msg);
+                            Messages.Insert(0, msg);
                         }
                     });
                     Progress.ClearStatus();
@@ -165,7 +165,7 @@ namespace JabbR.Client.UI.Core.ViewModels
         public async void Init(NavigationParameter parameters)
         {
             if (Progress.IsLoading) return;
-
+            
             try
             {
                 Progress.SetStatus("Loading...", true);
