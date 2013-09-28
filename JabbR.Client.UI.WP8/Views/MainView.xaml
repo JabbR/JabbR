@@ -11,6 +11,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:views="clr-namespace:Cirrious.MvvmCross.WindowsPhone.Views;assembly=Cirrious.MvvmCross.WindowsPhone"
     xmlns:controls="clr-namespace:JabbR.Client.UI.WP8.Controls"
+    xmlns:converters="clr-namespace:JabbR.Client.UI.WP8.Converters"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
@@ -18,6 +19,7 @@
     SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="True" Margin="0,1,0,-1">
     <views:MvxPhonePage.Resources>
+        <converters:HastToGravatarConverter x:Key="HashToGravatarConverter"/>
         <CollectionViewSource x:Key="CurrentRoomsView"
                               Source="{Binding CurrentRooms}">
             <CollectionViewSource.SortDescriptions>
@@ -39,7 +41,17 @@
     </views:MvxPhonePage.Resources>
 
     <Grid x:Name="LayoutRoot" Background="Transparent">
-        <phone:Pivot Title="{Binding CurrentUser.Name}">
+        <phone:Pivot>
+            <phone:Pivot.Title>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="25"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Height="25" Width="25" Source="{Binding CurrentUser.Hash, Converter={StaticResource HashToGravatarConverter}}"/>
+                    <TextBlock Grid.Column="1" Margin="6,0,0,0" VerticalAlignment="Bottom" Text="{Binding CurrentUser.Name}" Style="{StaticResource PhoneTextNormalStyle}"/>
+                </Grid>
+            </phone:Pivot.Title>
             <phone:PivotItem Header="current rooms">
                 <ListBox x:Name="OpenRoomsList" ItemsSource="{Binding Source={StaticResource CurrentRoomsView}}">
                     <ListBox.ItemTemplate>
