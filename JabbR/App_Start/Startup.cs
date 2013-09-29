@@ -9,6 +9,7 @@ using JabbR.Middleware;
 using JabbR.Nancy;
 using JabbR.Services;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Configuration;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Transports;
@@ -120,9 +121,13 @@ namespace JabbR
             var connectionManager = resolver.Resolve<IConnectionManager>();
             var heartbeat = resolver.Resolve<ITransportHeartbeat>();
             var hubPipeline = resolver.Resolve<IHubPipeline>();
+            var configuration = resolver.Resolve<IConfigurationManager>();
 
             kernel.Bind<IConnectionManager>()
                   .ToConstant(connectionManager);
+
+            // We need to extend this since the inital connect might take a while
+            configuration.TransportConnectTimeout = TimeSpan.FromSeconds(30);
 
             var config = new HubConfiguration
             {
