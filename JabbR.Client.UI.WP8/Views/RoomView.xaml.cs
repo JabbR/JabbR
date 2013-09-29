@@ -15,7 +15,7 @@ namespace JabbR.Client.UI.WP8.Views
 {
     public partial class RoomView : MvxPhonePage
     {
-        private int _offsetKnob = 5;
+        private int _offsetKnob = 0;
         private bool _listLoaded;
 
         public RoomView()
@@ -39,12 +39,6 @@ namespace JabbR.Client.UI.WP8.Views
                     {
                         if ((e.Container.Content).Equals(Messages.ItemsSource[_offsetKnob]))
                         {
-                            if (!_listLoaded)
-                            {
-                                _listLoaded = true;
-                                return;
-                            }
-
                             vm.FetchNextMessages(Messages.ItemsSource[0]);
                         }
                     }
@@ -74,10 +68,10 @@ namespace JabbR.Client.UI.WP8.Views
 
         private void Messages_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(e.AddedItems != null && e.AddedItems.Count > 0)
-            {
-                Messages.ScrollTo(e.AddedItems[0]);
-            }
+            //if(e.AddedItems != null && e.AddedItems.Count > 0)
+            //{
+            //    Messages.ScrollTo(e.AddedItems[0]);
+            //}
         }
     }
 }

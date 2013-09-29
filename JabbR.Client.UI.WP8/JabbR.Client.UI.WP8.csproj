@@ -99,6 +99,7 @@
     <Compile Include="Controls\BindableApplicationBar.cs" />
     <Compile Include="Controls\BindableApplicationBarIconButton.cs" />
     <Compile Include="Controls\BindableApplicationBarMenuItem.cs" />
+    <Compile Include="Converters\CountryToFlagConverter.cs" />
     <Compile Include="Converters\HashToGravatarConverter.cs" />
     <Compile Include="Converters\HtmlToStringConverter.cs" />
     <Compile Include="Converters\NativeVisibilityConverter.cs" />
