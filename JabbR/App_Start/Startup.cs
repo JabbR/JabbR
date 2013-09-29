@@ -64,7 +64,10 @@ namespace JabbR
         {
             var ticketDataFormat = new TicketDataFormat(kernel.Get<IDataProtector>());
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            var type = typeof(CookieAuthenticationOptions)
+                .Assembly.GetType("Microsoft.Owin.Security.Cookies.CookieAuthenticationMiddleware");
+
+            app.Use(type, app, new CookieAuthenticationOptions
             {
                 LoginPath = new PathString("/account/login"),
                 LogoutPath = new PathString("/account/logout"),
@@ -77,8 +80,6 @@ namespace JabbR
             });
 
             app.Use(typeof(WindowsPrincipalHandler));
-
-            app.UseStageMarker(PipelineStage.Authenticate);
 
             //var config = new FederationConfiguration(loadConfig: false);
             //config.WsFederationConfiguration.Issuer = "";
