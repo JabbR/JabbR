@@ -143,7 +143,7 @@ namespace JabbR.Client.UI.Core.ViewModels
             {
                 try
                 {
-                    Progress.SetStatus("Sending message...", true);
+                    Progress.SetStatus("Sending message...", true, new TimeSpan(0, 0, 0, 0, 500));
                     var result = await _client.Send(Message, Room.Name);
 
                     if (result)

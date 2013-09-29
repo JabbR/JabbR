@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace JabbR.Client.UI.Core.Interfaces
 {
@@ -9,5 +10,6 @@ namespace JabbR.Client.UI.Core.Interfaces
         bool IsLoading { get; set; }
         event PropertyChangedEventHandler PropertyChanged;
         void SetStatus(string message, bool isProgress);
+        void SetStatus(string message, bool isProgress, TimeSpan delay);
     }
 }

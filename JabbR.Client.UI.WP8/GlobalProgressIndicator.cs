@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Windows.Threading;
 using JabbR.Client.UI.Core.Interfaces;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
@@ -9,6 +10,7 @@ namespace JabbR.Client.UI.WP8
     public class GlobalProgressIndicator : IGlobalProgressIndicator
     {
         private ProgressIndicator _progressIndicator;
+        private readonly DispatcherTimer _timer = new DispatcherTimer();
 
         public GlobalProgressIndicator(PhoneApplicationFrame frame)
         {
@@ -52,15 +54,42 @@ namespace JabbR.Client.UI.WP8
 
         public void SetStatus(string message, bool isProgress)
         {
-            if (_loadingCount > 0)
-                ClearStatus();
+            SetStatus(message, isProgress, TimeSpan.Zero);
+        }
 
-            IsLoading = isProgress;
-            _progressIndicator.Text = message;
+        public void SetStatus(string message, bool isProgress, TimeSpan delay)
+        {
+            Action action = () =>
+            {
+                if (_loadingCount > 0)
+                    ClearStatus();
+
+                IsLoading = isProgress;
+                _progressIndicator.Text = message;
+            };
+
+            if (delay != TimeSpan.Zero)
+            {
+                _timer.Interval = delay;
+                _timer.Tick += (sender, args) =>
+                {
+                    action();
+                    _timer.Stop();
+                };
+                _timer.Start();
+            }
+            else
+            {
+                action();
+            }
         }
 
         public void ClearStatus()
         {
+            if(_timer.IsEnabled)
+            {
+                _timer.Stop();
+            }
             IsLoading = false;
             _progressIndicator.Text = String.Empty;
         }
