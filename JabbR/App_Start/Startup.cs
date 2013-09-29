@@ -79,6 +79,8 @@ namespace JabbR
                 Provider = kernel.Get<ICookieAuthenticationProvider>()
             });
 
+            app.Use(typeof(CustomAuthHandler));
+
             app.Use(typeof(WindowsPrincipalHandler));
 
             //var config = new FederationConfiguration(loadConfig: false);

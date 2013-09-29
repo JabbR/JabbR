@@ -62,7 +62,12 @@ namespace JabbR.Infrastructure
         public static bool HasRequiredClaims(this ClaimsPrincipal principal)
         {
             return principal.HasClaim(ClaimTypes.NameIdentifier) &&
-                   principal.HasClaim(ClaimTypes.Name) &&
+                   principal.HasClaim(ClaimTypes.Name);
+        }
+
+        public static bool HasAllClaims(this ClaimsPrincipal principal)
+        {
+            return principal.HasRequiredClaims() &&
                    !String.IsNullOrEmpty(principal.GetIdentityProvider());
         }
 

@@ -67,7 +67,7 @@ namespace JabbR.Infrastructure
                 }
 
             }
-            else if (principal.HasRequiredClaims())
+            else if (principal.HasAllClaims())
             {
                 ChatUser targetUser = null;
 
