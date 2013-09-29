@@ -6,7 +6,7 @@ namespace JabbR.Client.UI.Core
 {
     public class App : MvxApplication
     {
-        const string _serverUrl = "https://jabbr-staging.apphb.com";
+        const string _serverUrl = "https://jabbr.net";
 
         public override void Initialize()
         {
