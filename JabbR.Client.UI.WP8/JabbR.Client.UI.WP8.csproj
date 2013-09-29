@@ -103,6 +103,7 @@
     <Compile Include="Converters\HashToGravatarConverter.cs" />
     <Compile Include="Converters\HtmlToStringConverter.cs" />
     <Compile Include="Converters\NativeVisibilityConverter.cs" />
+    <Compile Include="Converters\UserStatusToColorConverter.cs" />
     <Compile Include="DebugTrace.cs" />
     <Compile Include="Extensions\ExtendedListBox.cs" />
     <Compile Include="Extensions\ExtendedLongListSelector.cs" />

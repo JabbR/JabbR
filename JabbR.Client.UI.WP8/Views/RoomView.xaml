@@ -25,6 +25,7 @@
         <converters:HastToGravatarConverter x:Key="HashToGravatarConverter"/>
         <converters:HtmlToStringConverter x:Key="HtmlToStringConverter"/>
         <converters:NativeVisibilityConverter x:Key="NativeVisibilityConverter"/>
+        <converters:UserStatusToColorConverter x:Key="UserStatusToColorConverter"/>
         <CollectionViewSource x:Key="UsersView"
                               Source="{Binding Users}">
             <CollectionViewSource.GroupDescriptions>
@@ -119,7 +120,10 @@
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Image Height="32" Width="32" Margin="0,0,6,0" Source="{Binding Hash, Converter={StaticResource HashToGravatarConverter}}"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <Border Height="32" Width="8" BorderThickness="5" BorderBrush="{Binding Status, Converter={StaticResource UserStatusToColorConverter}}"/>
+                                    <Image Height="32" Width="32" Margin="0,0,6,0" Source="{Binding Hash, Converter={StaticResource HashToGravatarConverter}}"/>
+                                </StackPanel>
                                 <TextBlock Grid.Column="1" Margin="6,0,0,0" Text="{Binding Name}" Style="{StaticResource PhoneTextLargeStyle}">
                                     <TextBlock.Foreground>
                                         <SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
