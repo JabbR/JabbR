@@ -116,7 +116,26 @@
                 </fieldset>
                 <fieldset id="identityProviders">
                     <legend>@LanguageResources.Administration_IdentityProviders</legend>
+                    <div class="control-group">                        
+                        <label for="facebookKey" class="control-label">Facebook</label>
+                        <div class="controls">
+                            <input type="text" id="facebookAppId" name="facebookAppId" class="input-xlarge" value="@Model.FacebookAppId" placeholder="Facebook app ID" title="Facebook app ID" />
+                            <input type="text" id="facebookAppSecret" name="facebookAppSecret" class="input-xlarge" value="@Model.FacebookAppSecret" placeholder="Facebook app secret" title="Facebook app secret" />
+                        </div>
+                    </div>
                     <div class="control-group">
+                        <label for="twitterKey" class="control-label">Twitter</label>
+                        <div class="controls">
+                            <input type="text" id="twitterConsumerKey" name="twitterConsumerKey" class="input-xlarge" value="@Model.TwitterConsumerKey" placeholder="Twitter consumer key" title="Twitter consumer key" />
+                            <input type="text" id="twitterConsumerSecret" name="twitterConsumerSecret" class="input-xlarge" value="@Model.TwitterConsumerSecret" placeholder="Twitter consumer secret" title="Twitter consumer secret" />
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <label for="googleKey" class="control-label">Google</label>
+                        <div class="controls">
+                            <input type="text" id="googleClientId" name="googleClientId" class="input-xlarge" value="@Model.GoogleClientID" placeholder="Google client id" title="Google client id" />
+                            <input type="text" id="googleClientSecret" name="googleClientSecret" class="input-xlarge" value="@Model.GoogleClientSecret" placeholder="Google client secret" title="Google client secret" />
+                        </div>
                     </div>
                 </fieldset>
                 <div class="control-group">
