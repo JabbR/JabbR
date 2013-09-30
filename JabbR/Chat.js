@@ -451,7 +451,7 @@
         scrollIfNecessary(function () {
 
             // Update your message when it comes from the server
-            ui.overwriteMessage(id, viewModel);
+            ui.overwriteMessage(id, viewModel, room);
         }, room);
 
         var isMentioned = viewModel.highlight === 'highlight';
@@ -465,7 +465,7 @@
         scrollIfNecessary(function () {
             // Update your message when it comes from the server
             if (ui.messageExists(viewModel.id)) {
-                ui.replaceMessage(viewModel);
+                ui.replaceMessage(viewModel, room);
             } else {
                 ui.addChatMessage(viewModel, room);
             }

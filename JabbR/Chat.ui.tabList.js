@@ -5,7 +5,7 @@
 /// <reference path="Scripts/livestamp.min.js" />
 
 /*jshint bitwise:false */
-(function ($, window, chat, ui, utility) {
+(function ($, window, chat, ui) {
     "use strict";
 
     var $tabs = null,
@@ -25,7 +25,14 @@
             };
         },
         
-        getRoomTabNames: function () {
+        getTabNames: function() {
+            var tabNames = [];
+            $tabs.children('li').each(function () {
+                tabNames.push($(this).data('name'));
+            });
+            return tabNames;
+        },
+        getRoomTabNames: function() {
             var roomTabNames = [];
             $tabs.children('li.room').each(function () {
                 roomTabNames.push($(this).data('name'));
@@ -40,6 +47,21 @@
             $tabs.children('li.current').removeClass('current');
             $tabs.children('li[data-name="' + tabName + '"]').addClass('current');
         },
+        getNextTabName: function() {
+            var tabNames = this.getTabNames(),
+                currentTabName = this.getCurrentTabName(),
+                tabIndex = tabNames.indexOf(currentTabName);
+
+            return tabNames[(tabIndex + 1) % tabNames.length];
+        },
+        getPreviousTabName: function() {
+            var tabNames = this.getTabNames(),
+                currentTabName = this.getCurrentTabName(),
+                tabIndex = tabNames.indexOf(currentTabName);
+
+            return tabNames[(tabIndex + tabNames.length - 1) % tabNames.length];
+        },
+
         addTab: function(tabViewModel) {
             templates.tab.tmpl(tabViewModel).data('name', tabViewModel.name).appendTo($tabsDropdown);
             
@@ -108,4 +130,4 @@
     };
 
     ui.tabList = tabList;
-}(window.jQuery, window, window.chat, window.chat.ui, window.chat.utility));
+}(window.jQuery, window, window.chat, window.chat.ui));

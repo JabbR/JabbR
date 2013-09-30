@@ -5,12 +5,14 @@
         var roomOwnersHeader = utility.getLanguageResource('Chat_UserOwnerHeader'),
             usersHeader = utility.getLanguageResource('Chat_UserHeader'),
             $chatArea = $('#chat-area'),
-            $topicBar = $('#topic-bar'),
+            $topicBar = $('#topic-bar');
             
-            templates = {
+        this.templates = {
                 message: $('#new-message-template'),
                 userlist: $('#new-userlist-template'),
-                user: $('#new-user-template')
+                user: $('#new-user-template'),
+                notification: $('#new-notification-template'),
+                separator: $('#message-separator-template')
             };
 
         this.roomName = roomName;
@@ -32,11 +34,11 @@
         this.users = $('<div/>').attr('id', 'userlist-' + roomId)
             .addClass('users')
             .appendTo($chatArea).hide();
-        this.owners = templates.userlist.tmpl({ listname: roomOwnersHeader, id: 'userlist-' + roomId + '-owners' })
+        this.owners = this.templates.userlist.tmpl({ listname: roomOwnersHeader, id: 'userlist-' + roomId + '-owners' })
             .addClass('owners')
             .appendTo(this.users)
             .find('ul');
-        this.activeUsers = templates.userlist.tmpl({ listname: usersHeader, id: 'userlist-' + roomId + '-active' })
+        this.activeUsers = this.templates.userlist.tmpl({ listname: usersHeader, id: 'userlist-' + roomId + '-active' })
             .appendTo(this.users)
             .find('ul');
         this.userLists = this.owners.add(this.activeUsers);
@@ -69,10 +71,6 @@
 
         // Store the scroll handler so we can remove it later
         this.messages.data('scrollHandler', scrollHandler);
-
-        this.templates = {
-            separator: $('#message-separator-template')
-        };
     }
 
     Room.prototype.type = function () {
@@ -114,7 +112,7 @@
 
     Room.prototype.addMessage = function (content, type) {
         var nearEnd = this.isNearTheEnd(),
-            $element = chat.ui.prepareNotificationMessage(content, type);
+            $element = this.prepareNotificationMessage(content, type);
 
         this.appendMessage($element);
 
@@ -128,7 +126,7 @@
 
         return $element;
     };
-
+    
     Room.prototype.prependChatMessages = function(messages) {
         var $messages = this.messages,
             $target = $messages.children().first(),
@@ -166,7 +164,8 @@
             }
 
             if (this.date.toDate().diffDays(previousTimestamp.toDate())) {
-                chat.ui.addMessageBeforeTarget(this.date.toLocaleDateString(), 'list-header', $target)
+                var $element = this.prepareNotificationMessage(this.date.toLocaleDateString(), 'list-header');
+                $target.before($element)
                       .addClass('date-header')
                       .find('.right').remove(); // remove timestamp on date indicator
 
@@ -197,6 +196,134 @@
 
         // Scroll to the bottom element so the user sees there's more messages
         $target[0].scrollIntoView();
+    };
+
+    Room.prototype.addChatMessage = function(message) {
+        var $previousMessage = this.messages.children().last(),
+            previousUser = null,
+            previousTimestamp = new Date().addDays(1), // Tomorrow so we always see a date line
+            showUserName = true,
+            isMention = message.highlight,
+            isNotification = message.messageType === 1;
+
+        // bounce out of here if the room is closed
+        if (this.isClosed()) {
+            return;
+        }
+
+        if ($previousMessage.length > 0) {
+            previousUser = $previousMessage.data('name');
+            previousTimestamp = new Date($previousMessage.data('timestamp') || new Date());
+        }
+
+        // Force a user name to show if a header will be displayed
+        if (message.date.toDate().diffDays(previousTimestamp.toDate())) {
+            previousUser = null;
+        }
+
+        // Determine if we need to show the user name next to the message
+        showUserName = previousUser !== message.name && !isNotification;
+        message.showUser = showUserName;
+
+        this.processMessage(message);
+
+        if (showUserName === false) {
+            $previousMessage.addClass('continue');
+        }
+
+        // check to see if room needs a separator
+        if (this.needsSeparator()) {
+            // if there's an existing separator, remove it
+            if (this.hasSeparator()) {
+                this.removeSeparator();
+            }
+            this.addSeparator();
+        }
+
+        if (isNotification === true) {
+            var model = {
+                id: message.id,
+                content: message.message,
+                img: message.imageUrl,
+                source: message.source,
+                encoded: true
+            };
+
+            this.addMessage(model, 'postedNotification');
+        } else {
+            this.appendMessage(this.templates.message.tmpl(message));
+        }
+
+        if (message.htmlContent) {
+            this.addChatMessageContent(message.id, message.htmlContent);
+        }
+
+        if (this.isInitialized()) {
+            if (isMention) {
+                // Always do sound notification for mentions if any room as sound enabled
+                if (chat.ui.anyRoomPreference('hasSound', true) === true) {
+                    chat.ui.notify(true);
+                }
+
+                if (focus === false && chat.ui.anyRoomPreference('canToast', true) === true) {
+                    // Only toast if there's no focus (even on mentions)
+                    chat.ui.toast(message, true, this.roomName);
+                }
+            } else {
+                // Only toast if chat isn't focused
+                if (focus === false) {
+                    chat.ui.notifyRoom(this.roomName);
+                    chat.ui.toastRoom(this.roomName, message);
+                }
+            }
+        }
+    };
+
+    Room.prototype.addChatMessageContent = function(id, content) {
+        var $message = $('#m-' + id),
+            $middle = $message.find('.middle'),
+            $body = $message.find('.content');
+
+        if (this.shouldCollapseContent(content, this.roomName)) {
+            content = this.collapseRichContent(content);
+        }
+
+        if ($middle.length === 0) {
+            $body.append('<p>' + content + '</p>');
+        } else {
+            $middle.append(content);
+        }
+    };
+
+    Room.prototype.prepareNotificationMessage = function(options, type) {
+        if (typeof options === 'string') {
+            options = { content: options, encoded: false };
+        }
+
+        var now = new Date(),
+            message = {
+                message: options.encoded ? options.content : chat.ui.processContent(options.content),
+                type: type,
+                date: now,
+                when: now.formatTime(true),
+                fulldate: now.toLocaleString(),
+                img: options.img,
+                source: options.source,
+                id: options.id
+            };
+
+        return this.templates.notification.tmpl(message);
+    };
+
+    Room.prototype.processMessage = function(message) {
+        var collapseContent = chat.ui.shouldCollapseContent(message.message);
+
+        message.when = message.date.formatTime(true);
+        message.fulldate = message.date.toLocaleString();
+
+        if (collapseContent) {
+            message.message = chat.ui.collapseRichContent(message.message);
+        }
     };
 
     Room.prototype.setTopic = function (topic) {
@@ -459,6 +586,95 @@
 
             this.addUserToList($user, this.activeUsers);
         }
+    };
+
+    Room.prototype.changeUserName = function(oldName, user) {
+        var $user = this.getUserReferences(oldName),
+            $userListUser = this.getUser(oldName);
+
+        // Update the user's name
+        $user.find('.name').fadeOut('normal', function() {
+            $(this).html(user.Name);
+            $(this).fadeIn('normal');
+        });
+        $user.data('name', user.Name);
+        $user.attr('data-name', user.Name);
+        
+        this.sortLists($userListUser);
+    };
+
+    Room.prototype.setRoomOwner = function(ownerName) {
+        var $user = this.getUser(ownerName);
+
+        $user.attr('data-owner', true)
+            .data('owner', true);
+        
+        this.updateUserStatus($user);
+    };
+
+    Room.prototype.clearRoomOwner = function(ownerName) {
+        var $user = this.getUser(ownerName);
+
+        $user.removeAttr('data-owner')
+             .data('owner', false);
+        
+        this.updateUserStatus($user);
+    };
+
+    Room.prototype.setRoomAdmin = function(adminName) {
+        var $user = this.getUser(adminName);
+        
+        $user.attr('data-admin', true)
+            .data('admin', true)
+            .find('.admin')
+            .text('(' + utility.getLanguageResource('Client_AdminTag') + ')');
+        
+        this.updateUserStatus($user);
+    };
+
+    Room.prototype.clearRoomAdmin = function(adminName) {
+        var $user = this.getUser(adminName);
+        $user.removeAttr('data-admin')
+             .data('admin', false)
+             .find('.admin')
+             .text('');
+        this.updateUserStatus($user);
+    };
+
+    Room.prototype.changeGravatar = function(user) {
+        var $user = this.getUserReferences(user.Name),
+            src = 'https://secure.gravatar.com/avatar/' + user.Hash + '?s=16&d=mm';
+
+        $user.find('.gravatar')
+             .attr('src', src);
+    };
+
+    Room.prototype.setUserTyping = function(userViewModel) {
+        var $user = this.getUser(userViewModel.name);
+
+        // if the user is somehow missing from room, add them
+        if ($user.length === 0) {
+            chat.ui.addUser(userViewModel, this.roomName);
+        }
+
+        // Do not show typing indicator for current user
+        if (userViewModel.name === chat.ui.getUserName()) {
+            return;
+        }
+
+        // Mark the user as typing
+        $user.addClass('typing');
+        var oldTimeout = $user.data('typing');
+
+        if (oldTimeout) {
+            clearTimeout(oldTimeout);
+        }
+
+        var timeout = window.setTimeout(function () {
+            $user.removeClass('typing');
+        }, 3000);
+
+        $user.data('typing', timeout);
     };
 
     Room.prototype.sortLists = function (user) {

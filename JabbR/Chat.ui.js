@@ -176,14 +176,8 @@
     }
 
     function processMessage(message, roomName) {
-        var collapseContent = shouldCollapseContent(message.message, roomName);
-
-        message.when = message.date.formatTime(true);
-        message.fulldate = message.date.toLocaleString();
-
-        if (collapseContent) {
-            message.message = collapseRichContent(message.message);
-        }
+        var room = getRoomElements(roomName);
+        room.processMessage(message);
     }
 
     function isFromCollapsibleContentProvider(content) {
@@ -356,11 +350,6 @@
         }
     }
 
-    function updateRoomTopic(roomName, topic) {
-        var room = getRoomElements(roomName);
-        room.setTopic(topic);
-    }
-
     var ui = {
 
         //lets store any events to be triggered as constants here to aid intellisense and avoid
@@ -418,7 +407,6 @@
             templates = {
                 user: $('#new-user-template'),
                 message: $('#new-message-template'),
-                notification: $('#new-notification-template'),
                 separator: $('#message-separator-template'),
                 gravatarprofile: $('#gravatar-profile-template'),
                 commandhelp: $('#command-help-template'),
@@ -878,20 +866,12 @@
         addRoom: addRoom,
         removeRoom: removeRoom,
         setRoomOwner: function (ownerName, roomName) {
-            var room = getRoomElements(roomName),
-                $user = room.getUser(ownerName);
-            $user
-                .attr('data-owner', true)
-                .data('owner', true);
-            room.updateUserStatus($user);
+            var room = getRoomElements(roomName);
+            room.setRoomOwner(ownerName);
         },
         clearRoomOwner: function (ownerName, roomName) {
-            var room = getRoomElements(roomName),
-                $user = room.getUser(ownerName);
-            $user
-                 .removeAttr('data-owner')
-                 .data('owner', false);
-            room.updateUserStatus($user);
+            var room = getRoomElements(roomName);
+            room.clearRoomOwner(ownerName);
         },
         setActiveRoom: function(roomName) {
             var hash = (document.location.hash || '#').substr(1),
@@ -941,12 +921,10 @@
         },
         setRoomLocked: function (roomName) {
             var room = getRoomElements(roomName);
-
             room.setLocked();
         },
         setRoomClosed: function (roomName) {
             var room = getRoomElements(roomName);
-
             room.close();
         },
         updateUnread: function (roomName, isMentioned) {
@@ -1005,7 +983,6 @@
 
             return room.isNearTheEnd();
         },
-        setRoomLoading: setRoomLoading,
         addUser: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
                 $user = null,
@@ -1098,26 +1075,12 @@
             return true;
         },
         changeUserName: function (oldName, user, roomName) {
-            var room = getRoomElements(roomName),
-                $user = room.getUserReferences(oldName),
-                $userListUser = room.getUser(oldName);
-
-            // Update the user's name
-            $user.find('.name').fadeOut('normal', function () {
-                $(this).html(user.Name);
-                $(this).fadeIn('normal');
-            });
-            $user.data('name', user.Name);
-            $user.attr('data-name', user.Name);
-            room.sortLists($userListUser);
+            var room = getRoomElements(roomName);
+            room.changeUserName(oldName, user);
         },
         changeGravatar: function (user, roomName) {
-            var room = getRoomElements(roomName),
-                $user = room.getUserReferences(user.Name),
-                src = 'https://secure.gravatar.com/avatar/' + user.Hash + '?s=16&d=mm';
-
-            $user.find('.gravatar')
-                 .attr('src', src);
+            var room = getRoomElements(roomName);
+            room.changeGravatar(user);
         },
         showGravatarProfile: function (profile) {
             var room = getCurrentRoomElements(),
@@ -1133,34 +1096,8 @@
             room.returnUser(user);
         },
         setUserTyping: function (userViewModel, roomName) {
-            var room = getRoomElements(roomName),
-                $user = room.getUser(userViewModel.name),
-                timeout = null;
-
-            // if the user is somehow missing from room, add them
-            if ($user.length === 0) {
-                ui.addUser(userViewModel, roomName);
-            }
-
-            // Do not show typing indicator for current user
-            if (userViewModel.name === ui.getUserName()) {
-                return;
-            }
-
-            // Mark the user as typing
-            $user.addClass('typing');
-            var oldTimeout = $user.data('typing');
-
-            if (oldTimeout) {
-                clearTimeout(oldTimeout);
-            }
-
-            timeout = window.setTimeout(function () {
-                $user.removeClass('typing');
-            },
-            3000);
-
-            $user.data('typing', timeout);
+            var room = getRoomElements(roomName);
+            room.setUserTyping(userViewModel);
         },
         setLoadingHistory: function (loadingHistory) {
             if (loadingHistory) {
@@ -1180,99 +1117,20 @@
             room.prependChatMessages(messages);
         },
         addChatMessage: function (message, roomName) {
-            var room = getRoomElements(roomName),
-                $previousMessage = room.messages.children().last(),
-                previousUser = null,
-                previousTimestamp = new Date().addDays(1), // Tomorrow so we always see a date line
-                showUserName = true,
-                isMention = message.highlight,
-                isNotification = message.messageType === 1;
-
-            // bounce out of here if the room is closed, or its the lobby
-            if (room.type() === 'Room' && room.isClosed()) {
-                return;
-            }
-
-            if ($previousMessage.length > 0) {
-                previousUser = $previousMessage.data('name');
-                previousTimestamp = new Date($previousMessage.data('timestamp') || new Date());
-            }
-
-            // Force a user name to show if a header will be displayed
-            if (message.date.toDate().diffDays(previousTimestamp.toDate())) {
-                previousUser = null;
-            }
-
-            // Determine if we need to show the user name next to the message
-            showUserName = previousUser !== message.name && !isNotification;
-            message.showUser = showUserName;
-
-            processMessage(message, roomName);
-
-            if (showUserName === false) {
-                $previousMessage.addClass('continue');
-            }
-
-            // check to see if room needs a separator
-            if (room.needsSeparator()) {
-                // if there's an existing separator, remove it
-                if (room.hasSeparator()) {
-                    room.removeSeparator();
-                }
-                room.addSeparator();
-            }
-
-            if (isNotification === true) {
-                var model = {
-                    id: message.id,
-                    content: message.message,
-                    img: message.imageUrl,
-                    source: message.source,
-                    encoded: true
-                };
-
-                ui.addMessage(model, 'postedNotification', roomName);
-            }
-            else {
-                this.appendMessage(templates.message.tmpl(message), room);
-            }
-
-            if (message.htmlContent) {
-                ui.addChatMessageContent(message.id, message.htmlContent, room.getName());
-            }
-
-            if (room.isInitialized()) {
-                if (isMention) {
-                    // Always do sound notification for mentions if any room as sound enabled
-                    if (anyRoomPreference('hasSound', true) === true) {
-                        ui.notify(true);
-                    }
-
-                    if (focus === false && anyRoomPreference('canToast', true) === true) {
-                        // Only toast if there's no focus (even on mentions)
-                        ui.toast(message, true, roomName);
-                    }
-                }
-                else {
-                    // Only toast if chat isn't focused
-                    if (focus === false) {
-                        ui.notifyRoom(roomName);
-                        ui.toastRoom(roomName, message);
-                    }
-                }
-            }
+            var room = getRoomElements(roomName);
+            room.addChatMessage(message);
         },
-        overwriteMessage: function (id, message) {
+        overwriteMessage: function (id, message, roomName) {
             var $message = $('#m-' + id);
-            processMessage(message);
+            processMessage(message, roomName);
 
             $message.find('.middle').html(message.message);
             $message.find('.right .time').attr('title', message.fulldate).text(message.when);
             $message.attr('id', 'm-' + message.id);
 
         },
-        replaceMessage: function (message) {
-            processMessage(message);
+        replaceMessage: function (message, room) {
+            processMessage(message, room);
 
             $('#m-' + message.id).find('.middle')
                                  .html(message.message);
@@ -1281,54 +1139,16 @@
             return $('#m-' + id).length > 0;
         },
         addChatMessageContent: function (id, content, roomName) {
-            var $message = $('#m-' + id),
-                $middle = $message.find('.middle'),
-                $body = $message.find('.content');
-
-            if (shouldCollapseContent(content, roomName)) {
-                content = collapseRichContent(content);
-            }
-
-            if ($middle.length === 0) {
-                $body.append('<p>' + content + '</p>');
-            }
-            else {
-                $middle.append(content);
-            }
+            var room = getRoomElements(roomName);
+            room.addChatMessageContent(id, content);
         },
         addPrivateMessage: function (content, type) {
             var rooms = getAllRoomElements();
             for (var r in rooms) {
-                if (rooms[r].getName() !== undefined && rooms[r].isClosed() === false) {
+                if (rooms[r].isClosed() === false) {
                     this.addMessage(content, type, rooms[r].getName());
                 }
             }
-        },
-        prepareNotificationMessage: function (options, type) {
-            if (typeof options === 'string') {
-                options = { content: options, encoded: false };
-            }
-
-            var now = new Date(),
-            message = {
-                message: options.encoded ? options.content : ui.processContent(options.content),
-                type: type,
-                date: now,
-                when: now.formatTime(true),
-                fulldate: now.toLocaleString(),
-                img: options.img,
-                source: options.source,
-                id: options.id
-            };
-
-            return templates.notification.tmpl(message);
-        },
-        addMessageBeforeTarget: function (content, type, $target) {
-            var $element = ui.prepareNotificationMessage(content, type);
-
-            $target.before($element);
-
-            return $element;
         },
         addMessage: function (content, type, roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
@@ -1502,7 +1322,8 @@
             updateFlag(userViewModel, $user);
         },
         changeRoomTopic: function (roomName, topic) {
-            updateRoomTopic(roomName, topic);
+            var room = getRoomElements(roomName);
+            room.setTopic(topic);
         },
         confirmMessage: function (id) {
             $('#m-' + id).removeClass('failed')
@@ -1520,30 +1341,16 @@
             }
         },
         setRoomAdmin: function (adminName, roomName) {
-            var room = getRoomElements(roomName),
-                $user = room.getUser(adminName);
-            $user
-                .attr('data-admin', true)
-                .data('admin', true)
-                .find('.admin')
-                .text('(' + utility.getLanguageResource('Client_AdminTag') + ')');
-            room.updateUserStatus($user);
+            var room = getRoomElements(roomName);
+            room.setRoomAdmin(adminName);
         },
         clearRoomAdmin: function (adminName, roomName) {
-            var room = getRoomElements(roomName),
-                $user = room.getUser(adminName);
-            $user
-                 .removeAttr('data-admin')
-                 .data('admin', false)
-                 .find('.admin')
-                 .text('');
-            room.updateUserStatus($user);
+            var room = getRoomElements(roomName);
+            room.clearRoomAdmin(adminName);
         },
         setLastPrivate: function (userName) {
             lastPrivate = userName;
         },
-        shouldCollapseContent: shouldCollapseContent,
-        collapseRichContent: collapseRichContent,
         toggleMessageSection: function (disabledIt) {
             if (disabledIt) {
                 // disable send button, textarea and file upload
@@ -1575,15 +1382,15 @@
             var room = getRoomElements(roomName);
             room.unClose();
         },
-        setRoomListStatuses: function (roomName) {
-            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
+        setRoomListStatuses: function (optionalRoomName) {
+            var room = optionalRoomName ? getRoomElements(optionalRoomName) : getCurrentRoomElements();
             utility.updateEmptyListItem(room.owners);
         },
         processContent: function (content) {
             return utility.processContent(content, templates, ui.lobby.roomCache);
         },
-        trimRoomMessageHistory: function (roomName) {
-            var rooms = roomName ? [getRoomElements(roomName)] : getAllRoomElements();
+        trimRoomMessageHistory: function (optionalRoomName) {
+            var rooms = optionalRoomName ? [getRoomElements(optionalRoomName)] : getAllRoomElements();
 
             for (var i = 0; i < rooms.length; i++) {
                 rooms[i].trimHistory();
@@ -1594,7 +1401,13 @@
         },
         // todo make it so that we don't need these to be exported
         getRoomElements: getRoomElements,
-        processMessage: processMessage
+        processMessage: processMessage,
+        anyRoomPreference: anyRoomPreference,
+        
+        isFromCollapsibleContentProvider: isFromCollapsibleContentProvider,
+        shouldCollapseContent: shouldCollapseContent,
+        collapseRichContent: collapseRichContent,
+        lobbyTab: lobby
     };
 
     if (!window.chat) {
