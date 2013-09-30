@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using JabbR.Client.Models;
 using JabbR.Models;
@@ -36,12 +37,15 @@ namespace JabbR.Client
         string SourceUrl { get; }
         bool AutoReconnect { get; set; }
         ICredentials Credentials { get; set; }
+        HubConnection Connection { get; }
 
         Task<LogOnInfo> Connect(string name, string password);
         Task<User> GetUserInfo();
         Task LogOut();
         Task<bool> Send(string message, string roomName);
         Task<bool> Send(ClientMessage message);
+        Task Send(ClientMessage message, CancellationToken cancel);
+        Task Send(ClientMessage message, TimeSpan timeout);
         Task CreateRoom(string roomName);
         Task JoinRoom(string roomName);
         Task LeaveRoom(string roomName);
