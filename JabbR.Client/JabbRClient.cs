@@ -184,10 +184,12 @@ namespace JabbR.Client
             return _chat.Invoke<bool>("Send", message);
         }
 
-        public Task Send(ClientMessage message, TimeSpan timeout)
+        public async Task Send(ClientMessage message, TimeSpan timeout)
         {
-            var cts = new CancellationTokenSource(timeout);
-            return Send(message, cts.Token);
+            using (var cts = new CancellationTokenSource(timeout))
+            {
+                await Send(message, cts.Token);
+            }
         }
 
         public async Task Send(ClientMessage message, CancellationToken cancel)
