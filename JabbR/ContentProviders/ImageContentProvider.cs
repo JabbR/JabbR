@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
@@ -33,26 +34,40 @@ namespace JabbR.ContentProviders
             if (_configuration.RequireHttps &&
                 !request.RequestUri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
             {
-                var uploadProcessor = _kernel.Get<UploadProcessor>();
-                var response = await Http.GetAsync(request.RequestUri);
-                string fileName = Path.GetFileName(request.RequestUri.LocalPath);
-                string contentType = GetContentType(request.RequestUri);
-                long contentLength = response.ContentLength;
-
-                using (Stream stream = response.GetResponseStream())
+                try
                 {
-                    UploadResult result = await uploadProcessor.HandleUpload(fileName, contentType, stream, contentLength);
+                    var uploadProcessor = _kernel.Get<UploadProcessor>();
+                    var response = await Http.GetAsync(request.RequestUri);
+                    string fileName = Path.GetFileName(request.RequestUri.LocalPath);
+                    string contentType = GetContentType(request.RequestUri);
+                    long contentLength = response.ContentLength;
 
-                    if (result != null)
+                    using (Stream stream = response.GetResponseStream())
                     {
-                        imageUrl = result.Url;
+                        UploadResult result = await uploadProcessor.HandleUpload(fileName, contentType, stream, contentLength);
+
+                        if (result != null)
+                        {
+                            imageUrl = result.Url;
+                        }
+                        else
+                        {
+                            Trace.TraceError("Failed to upload to blob storage. The upload result was null.");
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    // Trace the error then rethrow
+                    Trace.TraceError(ex.Message);
+
+                    throw;
                 }
             }
 
             return new ContentProviderResult()
             {
-                Content = String.Format(format, Encoder.HtmlAttributeEncode(href), 
+                Content = String.Format(format, Encoder.HtmlAttributeEncode(href),
                                                 Encoder.HtmlAttributeEncode(imageUrl)),
                 Title = href
             };
