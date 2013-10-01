@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using JabbR.Client.Models;
@@ -60,8 +61,8 @@ namespace JabbR.Client.UI.Core.ViewModels
             }
         }
 
-        private Message _addedMessage;
-        public Message AddedMessage
+        private MessageViewModel _addedMessage;
+        public MessageViewModel AddedMessage
         {
             get { return _addedMessage; }
             set
@@ -71,8 +72,8 @@ namespace JabbR.Client.UI.Core.ViewModels
             }
         }
 
-        private ObservableCollection<Message> _messages;
-        public ObservableCollection<Message> Messages
+        private ObservableCollection<MessageViewModel> _messages;
+        public ObservableCollection<MessageViewModel> Messages
         {
             get { return _messages; }
             set
@@ -116,7 +117,7 @@ namespace JabbR.Client.UI.Core.ViewModels
                     {
                         foreach (var msg in fetchedMessages)
                         {
-                            Messages.Insert(0, msg);
+                            Messages.Insert(0, new MessageViewModel { Message = msg, State = MessageState.Complete });
                         }
                     });
                     Progress.ClearStatus();
@@ -152,21 +153,24 @@ namespace JabbR.Client.UI.Core.ViewModels
                         Room = Room.Name,
                         Content = Message
                     };
-                    var result = await _client.Send(clientMessage);
-                    if (result)
-                    {
-                        var msg = new Message()
-                        {
-                            Id = clientMessage.Id,
-                            Content = clientMessage.Content,
-                            When = DateTimeOffset.Now,
-                            User = CurrentUser
-                        };
+                    
+                    await AddMessage(clientMessage);
 
-                        Messages.Add(msg);
-                        AddedMessage = msg;
-                        Message = String.Empty;
-                    }
+                    //var result = await _client.Send(clientMessage);
+                    //if (result)
+                    //{
+                    //    var msg = new Message()
+                    //    {
+                    //        Id = clientMessage.Id,
+                    //        Content = clientMessage.Content,
+                    //        When = DateTimeOffset.Now,
+                    //        User = CurrentUser
+                    //    };
+
+                    //    Messages.Add(new MessageViewModel { Message = msg, State = MessageState.New });
+                    //    AddedMessage = msg;
+                    //    Message = String.Empty;
+                    //}
                 }
                 catch (Exception ex)
                 {
@@ -189,7 +193,7 @@ namespace JabbR.Client.UI.Core.ViewModels
                 Progress.SetStatus("Loading...", true);
                 var room = await _client.GetRoomInfo(parameters.RoomName);
                 Room = room;
-                Messages = new ObservableCollection<Message>(Room.RecentMessages);
+                Messages = new ObservableCollection<MessageViewModel>(Room.RecentMessages.Select(m => new MessageViewModel { Message = m, State = MessageState.Complete }));
                 Users = new ObservableCollection<User>(Room.Users);
             }
             catch (Exception ex)
@@ -206,16 +210,86 @@ namespace JabbR.Client.UI.Core.ViewModels
 
         private void OnMessageReceived(Message message, string room)
         {
-            if (Room.Name == room && !Messages.Any(m => m.Id == message.Id))
+            if (Room.Name == room)
             {
                 Dispatcher.RequestMainThreadAction(() =>
                 {
-                    Messages.Add(message);
-                    AddedMessage = message;
+                    var msg = new MessageViewModel { Message = message, State = MessageState.Complete };
+                    Messages.Add(msg);
+                    AddedMessage = msg;
                 });
             }
         }
+        private async Task AddMessage(ClientMessage clientMessage)
+        {
+            var message = new MessageViewModel
+            {
+                Message = new Message { Id = clientMessage.Id, Content = clientMessage.Content, User = CurrentUser, When = DateTimeOffset.UtcNow },
+                State = MessageState.New
+            };
 
+            // Add the message locally
+            Messages.Add(message);
+            AddedMessage = message;
+
+            SendMessage(clientMessage, message);
+
+            WaitForSlowMessages(message);
+        }
+
+        private void WaitForSlowMessages(MessageViewModel message)
+        {
+            Task.Run(async () =>
+            {
+                await Task.Delay(TimeSpan.FromSeconds(2));
+
+                Dispatcher.RequestMainThreadAction(() =>
+                {
+                    lock (message)
+                    {
+                        if (message.State == MessageState.New)
+                        {
+                            message.State = MessageState.Slow;
+                        }
+                    }
+                });
+            });
+        }
+
+        private void SendMessage(ClientMessage clientMessage, MessageViewModel message)
+        {
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await _client.Send(clientMessage, TimeSpan.FromSeconds(5));
+
+                    Dispatcher.RequestMainThreadAction(() =>
+                    {
+                        lock (message)
+                        {
+                            message.State = MessageState.Complete;
+                        }
+                        AddedMessage = message;
+                        Message = String.Empty;
+                    });
+                }
+                catch (OperationCanceledException)
+                {
+                    Dispatcher.RequestMainThreadAction(() =>
+                    {
+                        lock (message)
+                        {
+                            if (message.State == MessageState.New || message.State == MessageState.Slow)
+                            {
+                                // Failed to send the message
+                                message.State = MessageState.Error;
+                            }
+                        }
+                    });
+                }
+            });
+        }
         public override void Deactivate()
         {
             _client.MessageReceived -= OnMessageReceived;
