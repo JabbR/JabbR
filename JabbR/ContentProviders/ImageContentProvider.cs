@@ -30,10 +30,14 @@ namespace JabbR.ContentProviders
             string imageUrl = request.RequestUri.ToString();
             string href = imageUrl;
 
+            Trace.TraceInformation("Processing image url " + imageUrl + ".");
+
             // Only proxy what we need to (non https images)
             if (_configuration.RequireHttps &&
                 !request.RequestUri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
             {
+                Trace.TraceInformation("Proxying of image url " + imageUrl + " is required.");
+
                 try
                 {
                     var uploadProcessor = _kernel.Get<UploadProcessor>();
@@ -44,7 +48,11 @@ namespace JabbR.ContentProviders
 
                     using (Stream stream = response.GetResponseStream())
                     {
+                        Trace.TraceInformation("Uploading content " + imageUrl + ".");
+
                         UploadResult result = await uploadProcessor.HandleUpload(fileName, contentType, stream, contentLength);
+
+                        Trace.TraceInformation("Uploading " + imageUrl + " complete.");
 
                         if (result != null)
                         {
@@ -63,6 +71,10 @@ namespace JabbR.ContentProviders
 
                     throw;
                 }
+            }
+            else
+            {
+                Trace.TraceInformation("No proxying required for " + imageUrl + ".");
             }
 
             return new ContentProviderResult()
