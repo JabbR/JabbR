@@ -49,9 +49,6 @@
         $fileConnectionId = null,
         $loadingHistoryIndicator = null,
         trimRoomHistoryFrequency = 1000 * 60 * 2, // 2 minutes in ms
-        $roomLoadingIndicator = null,
-        roomLoadingDelay = 250,
-        roomLoadingTimeout = null,
         Room = chat.Room,
         lobby = new chat.LobbyTab(),
         $unreadNotificationCount = null,
@@ -86,24 +83,6 @@
 
     function getRoomPreferenceKey(roomName) {
         return '_room_' + roomName;
-    }
-
-    function setRoomLoading(isLoading, roomName) {
-        if (isLoading) {
-            var room = getRoomElements(roomName);
-            if (!room.isInitialized()) {
-                roomLoadingTimeout = window.setTimeout(function () {
-                    $roomLoadingIndicator.find('i').addClass('icon-spin');
-                    $roomLoadingIndicator.show();
-                }, roomLoadingDelay);
-            }
-        } else {
-            if (roomLoadingTimeout) {
-                clearTimeout(roomLoadingDelay);
-            }
-            $roomLoadingIndicator.hide();
-            $roomLoadingIndicator.find('i').removeClass('icon-spin');
-        }
     }
 
     function getRoomElements(roomName) {
@@ -418,8 +397,6 @@
             $fileRoom = $('#file-room');
             $fileConnectionId = $('#file-connection-id');
             $loadingHistoryIndicator = $('#loadingRoomHistory');
-            
-            $roomLoadingIndicator = $('#room-loading');
 
             $unreadNotificationCount = $('#notification-unread-count');
             

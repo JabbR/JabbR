@@ -259,23 +259,6 @@ form#send-message {
     margin: 0;
 }
 
-#room-loading {
-    display: none;
-    margin: 10px 0;
-    position: relative;
-    top: 50px;
-    z-index: 1000;
-}
-
-    #room-loading i {
-        float: left;
-        margin: 0 10px;
-    }
-
-    #room-loading h3 {
-        font-weight: lighter;
-    }
-
 #lobby-private,
 #lobby-other {
     display: none;
