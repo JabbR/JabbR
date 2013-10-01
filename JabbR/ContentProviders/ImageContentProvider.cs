@@ -41,10 +41,16 @@ namespace JabbR.ContentProviders
                 try
                 {
                     var uploadProcessor = _kernel.Get<UploadProcessor>();
+
+                    Trace.TraceInformation("Http.GetAsync(" + request.RequestUri + ")");
+
                     var response = await Http.GetAsync(request.RequestUri);
                     string fileName = Path.GetFileName(request.RequestUri.LocalPath);
                     string contentType = GetContentType(request.RequestUri);
                     long contentLength = response.ContentLength;
+
+                    Trace.TraceInformation("Status code: " + response.StatusCode);
+                    Trace.TraceInformation("response.GetResponseStream()");
 
                     using (Stream stream = response.GetResponseStream())
                     {
