@@ -31,7 +31,6 @@
         scrollTopThreshold = 75,
         toast = window.chat.toast,
         preferences = null,
-        $login = null,
         lastCycledMessage = null,
         $helpPopup = null,
         $helpBody = null,
@@ -598,12 +597,7 @@
         focus = true;
 
         if (msg) {
-            if (msg.toUpperCase() === '/LOGIN') {
-                ui.showLogin();
-            }
-            else {
-                $ui.trigger(ui.events.sendMessage, [msg]);
-            }
+            $ui.trigger(ui.events.sendMessage, [msg]);
         }
 
         $newMessage.val('');
@@ -775,7 +769,6 @@
             $logout = $('#preferences .logout');
             $help = $('#preferences .help');
             $disconnectDialog = $('#disconnect-dialog');
-            $login = $('#jabbr-login');
             $helpPopup = $('#jabbr-help');
             $helpBody = $('#jabbr-help .help-body');
             $shortCutHelp = $('#jabbr-help #shortcut');
@@ -2123,10 +2116,6 @@
         },
         getUserName: function () {
             return ui.name;
-        },
-        showLogin: function () {
-            $login.modal({ backdrop: true, keyboard: true });
-            return true;
         },
         showDisconnectUI: function () {
             $disconnectDialog.modal();
