@@ -98,7 +98,7 @@ namespace JabbR.Client.UI.Core.ViewModels
 
         private void DoOpenRoom(Room room)
         {
-            ShowViewModel<RoomViewModel>(new RoomViewModel.NavigationParameter { RoomName = room.Name });
+            ShowViewModel<RoomViewModel>(new RoomViewModel.NavigationParameter { User = CurrentUser, RoomName = room.Name });
         }
 
         private async void DoJoinRoom(Room room)

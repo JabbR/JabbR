@@ -15,15 +15,35 @@ namespace JabbR.Client.UI.WP8.Extensions
 {
     public class ExtendedLongListSelector : LongListSelector
     {
-        public static readonly DependencyProperty SelectedItemProperty =
-            DependencyProperty.Register("SelectedItem", typeof(object), typeof(ExtendedLongListSelector), new PropertyMetadata(default(object)));
-
         public ExtendedLongListSelector()
         {
-            //SelectionChanged += (sender, args) =>
-            //{
-            //    SelectedItem = args.AddedItems[0];
-            //};
+            SelectionChanged += LongListSelector_SelectionChanged;
+        }
+
+        void LongListSelector_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            SelectedItem = base.SelectedItem;
+        }
+
+        public static readonly DependencyProperty SelectedItemProperty =
+            DependencyProperty.Register(
+                "SelectedItem",
+                typeof(object),
+                typeof(ExtendedLongListSelector),
+                new PropertyMetadata(null, OnSelectedItemChanged)
+            );
+
+        private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var selector = (LongListSelector)d;
+            selector.SelectedItem = e.NewValue;
+            selector.ScrollTo(e.NewValue);
+        }
+
+        public new object SelectedItem
+        {
+            get { return GetValue(SelectedItemProperty); }
+            set { SetValue(SelectedItemProperty, value); }
         }
     }
 }

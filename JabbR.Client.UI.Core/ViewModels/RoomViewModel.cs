@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Cirrious.MvvmCross.ViewModels;
 using JabbR.Client.Models;
 using JabbR.Client.UI.Core.Interfaces;
+using JabbR.Models;
 
 namespace JabbR.Client.UI.Core.ViewModels
 {
@@ -14,6 +15,7 @@ namespace JabbR.Client.UI.Core.ViewModels
         public class NavigationParameter
             : NavigationParametersBase
         {
+            public User User { get; set; }
             public string RoomName { get; set; }
         }
 
@@ -58,14 +60,14 @@ namespace JabbR.Client.UI.Core.ViewModels
             }
         }
 
-        private Message _currentItem;
-        public Message CurrentItem
+        private Message _addedMessage;
+        public Message AddedMessage
         {
-            get { return _currentItem; }
+            get { return _addedMessage; }
             set
             {
-                _currentItem = value;
-                RaisePropertyChanged(() => CurrentItem);
+                _addedMessage = value;
+                RaisePropertyChanged(() => AddedMessage);
             }
         }
 
@@ -144,10 +146,25 @@ namespace JabbR.Client.UI.Core.ViewModels
                 try
                 {
                     Progress.SetStatus("Sending message...", true, new TimeSpan(0, 0, 0, 0, 500));
-                    var result = await _client.Send(Message, Room.Name);
-
+                    var clientMessage = new ClientMessage()
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Room = Room.Name,
+                        Content = Message
+                    };
+                    var result = await _client.Send(clientMessage);
                     if (result)
                     {
+                        var msg = new Message()
+                        {
+                            Id = clientMessage.Id,
+                            Content = clientMessage.Content,
+                            When = DateTimeOffset.Now,
+                            User = CurrentUser
+                        };
+
+                        Messages.Add(msg);
+                        AddedMessage = msg;
                         Message = String.Empty;
                     }
                 }
@@ -168,6 +185,7 @@ namespace JabbR.Client.UI.Core.ViewModels
             
             try
             {
+                CurrentUser = parameters.User;
                 Progress.SetStatus("Loading...", true);
                 var room = await _client.GetRoomInfo(parameters.RoomName);
                 Room = room;
@@ -188,12 +206,12 @@ namespace JabbR.Client.UI.Core.ViewModels
 
         private void OnMessageReceived(Message message, string room)
         {
-            if (Room.Name == room)
+            if (Room.Name == room && !Messages.Any(m => m.Id == message.Id))
             {
                 Dispatcher.RequestMainThreadAction(() =>
                 {
                     Messages.Add(message);
-                    CurrentItem = message;
+                    AddedMessage = message;
                 });
             }
         }

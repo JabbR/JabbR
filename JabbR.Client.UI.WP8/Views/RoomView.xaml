@@ -65,7 +65,7 @@
                         VerticalAlignment="Top"
                         LayoutMode="List"
                         ItemsSource="{Binding Messages}"
-                        SelectedItem="{Binding CurrentItem, Mode=TwoWay}"
+                        SelectedItem="{Binding AddedMessage, Mode=TwoWay}"
                         ItemRealized="Messages_ItemRealized"
                         SelectionChanged="Messages_SelectionChanged">
                         <extensions:ExtendedLongListSelector.ItemTemplate>
