@@ -44,7 +44,9 @@ namespace JabbR.ContentProviders
 
                     Trace.TraceInformation("Http.GetAsync(" + request.RequestUri + ")");
 
-                    var response = await Http.GetAsync(request.RequestUri);
+                    var response = await Http.GetAsync(request.RequestUri)
+                                             .ConfigureAwait(continueOnCapturedContext: false);
+
                     string fileName = Path.GetFileName(request.RequestUri.LocalPath);
                     string contentType = GetContentType(request.RequestUri);
                     long contentLength = response.ContentLength;
@@ -56,7 +58,8 @@ namespace JabbR.ContentProviders
                     {
                         Trace.TraceInformation("Uploading content " + imageUrl + ".");
 
-                        UploadResult result = await uploadProcessor.HandleUpload(fileName, contentType, stream, contentLength);
+                        UploadResult result = await uploadProcessor.HandleUpload(fileName, contentType, stream, contentLength)
+                                                                   .ConfigureAwait(continueOnCapturedContext: false);
 
                         Trace.TraceInformation("Uploading " + imageUrl + " complete.");
 
