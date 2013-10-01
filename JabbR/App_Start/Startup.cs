@@ -127,8 +127,13 @@ namespace JabbR
             if (!String.IsNullOrEmpty(jabbrConfig.ServiceBusConnectionString) &&
                 !String.IsNullOrEmpty(jabbrConfig.ServiceBusTopicPrefix))
             {
-                resolver.UseServiceBus(jabbrConfig.ServiceBusConnectionString,
-                                       jabbrConfig.ServiceBusTopicPrefix);
+                var sbConfig = new ServiceBusScaleoutConfiguration(jabbrConfig.ServiceBusConnectionString,
+                                                                   jabbrConfig.ServiceBusTopicPrefix)
+                {
+                    TopicCount = 5
+                };
+
+                resolver.UseServiceBus(sbConfig);
             }
 
             kernel.Bind<IConnectionManager>()
