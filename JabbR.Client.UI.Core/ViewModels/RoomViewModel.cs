@@ -108,11 +108,11 @@ namespace JabbR.Client.UI.Core.ViewModels
             if (message != null)
             {
                 Progress.SetStatus("Loading messages...", true);
-                
+
                 try
                 {
                     var fetchedMessages = await _client.GetPreviousMessages(message.Id);
-                    
+
                     Dispatcher.RequestMainThreadAction(() =>
                     {
                         foreach (var msg in fetchedMessages)
@@ -153,7 +153,7 @@ namespace JabbR.Client.UI.Core.ViewModels
                         Room = Room.Name,
                         Content = Message
                     };
-                    
+
                     await AddMessage(clientMessage);
 
                     //var result = await _client.Send(clientMessage);
@@ -186,7 +186,7 @@ namespace JabbR.Client.UI.Core.ViewModels
         public async void Init(NavigationParameter parameters)
         {
             if (Progress.IsLoading) return;
-            
+
             try
             {
                 CurrentUser = parameters.User;
@@ -214,7 +214,11 @@ namespace JabbR.Client.UI.Core.ViewModels
             {
                 Dispatcher.RequestMainThreadAction(() =>
                 {
-                    var msg = new MessageViewModel { Message = message, State = MessageState.Complete };
+                    var msg = new MessageViewModel
+                    {
+                        Message = message,
+                        State = MessageState.Complete
+                    };
                     Messages.Add(msg);
                     AddedMessage = msg;
                 });
@@ -224,13 +228,21 @@ namespace JabbR.Client.UI.Core.ViewModels
         {
             var message = new MessageViewModel
             {
-                Message = new Message { Id = clientMessage.Id, Content = clientMessage.Content, User = CurrentUser, When = DateTimeOffset.UtcNow },
+                Message = new Message
+                {
+                    Id = clientMessage.Id,
+                    Content = clientMessage.Content,
+                    User = CurrentUser,
+                    When = DateTimeOffset.UtcNow
+                },
                 State = MessageState.New
             };
 
             // Add the message locally
             Messages.Add(message);
             AddedMessage = message;
+
+            Message = String.Empty;
 
             SendMessage(clientMessage, message);
 
@@ -270,8 +282,8 @@ namespace JabbR.Client.UI.Core.ViewModels
                         {
                             message.State = MessageState.Complete;
                         }
+
                         AddedMessage = message;
-                        Message = String.Empty;
                     });
                 }
                 catch (OperationCanceledException)
