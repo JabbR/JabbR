@@ -53,7 +53,7 @@ namespace JabbR
             app.UseErrorPage();
 
             SetupAuth(app, kernel);
-            SetupSignalR(kernel, app);
+            SetupSignalR(configuration, kernel, app);
             SetupWebApi(kernel, app);
             SetupMiddleware(kernel, app);
             SetupNancy(kernel, app);
@@ -115,13 +115,21 @@ namespace JabbR
             app.UseStaticFiles();
         }
 
-        private static void SetupSignalR(IKernel kernel, IAppBuilder app)
+        private static void SetupSignalR(IJabbrConfiguration jabbrConfig, IKernel kernel, IAppBuilder app)
         {
             var resolver = new NinjectSignalRDependencyResolver(kernel);
             var connectionManager = resolver.Resolve<IConnectionManager>();
             var heartbeat = resolver.Resolve<ITransportHeartbeat>();
             var hubPipeline = resolver.Resolve<IHubPipeline>();
             var configuration = resolver.Resolve<IConfigurationManager>();
+
+            // Enable service bus scale out
+            if (!String.IsNullOrEmpty(jabbrConfig.ServiceBusConnectionString) &&
+                !String.IsNullOrEmpty(jabbrConfig.ServiceBusTopicPrefix))
+            {
+                resolver.UseServiceBus(jabbrConfig.ServiceBusConnectionString,
+                                       jabbrConfig.ServiceBusTopicPrefix);
+            }
 
             kernel.Bind<IConnectionManager>()
                   .ToConstant(connectionManager);

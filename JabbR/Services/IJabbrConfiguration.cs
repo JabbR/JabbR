@@ -13,5 +13,8 @@ namespace JabbR.Services
         string DeploymentSha { get; }
         string DeploymentBranch { get; }
         string DeploymentTime { get; }
+
+        string ServiceBusConnectionString { get; }
+        string ServiceBusTopicPrefix { get; }
     }
 }
