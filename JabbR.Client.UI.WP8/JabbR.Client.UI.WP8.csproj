@@ -103,7 +103,8 @@
     <Compile Include="Converters\CountryToFlagConverter.cs" />
     <Compile Include="Converters\HashToGravatarConverter.cs" />
     <Compile Include="Converters\HtmlToStringConverter.cs" />
-    <Compile Include="Converters\MessageStatusSlowToBoolConverter.cs" />
+    <Compile Include="Converters\MessageStatusFailedToVisibilityConverter.cs" />
+    <Compile Include="Converters\MessageStatusSlowToBooleanConverter.cs" />
     <Compile Include="Converters\NativeVisibilityConverter.cs" />
     <Compile Include="Converters\UserStatusToColorConverter.cs" />
     <Compile Include="DebugTrace.cs" />
