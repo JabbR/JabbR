@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 
 namespace JabbR.ViewModels
 {
     public class StatusViewModel
     {
-        private readonly Dictionary<string, Exception> _systems = new Dictionary<string, Exception>();
+        private readonly List<SystemStatus> _systems = new List<SystemStatus>();
 
-        public IDictionary<string, Exception> Systems
+        public IList<SystemStatus> Systems
         {
             get
             {
@@ -21,7 +19,7 @@ namespace JabbR.ViewModels
         {
             get
             {
-                return !_systems.Values.Any(s => s != null);
+                return !_systems.Any(s => !(s.IsOK ?? true));
             }
         }
     }

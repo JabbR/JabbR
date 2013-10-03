@@ -29,7 +29,7 @@
             <div class="row" style="padding-top: 75px;">
                 <div class="row">
                     <div class="span12">
-                        <span class="administration-title pull-left">Status</span>
+                        <span class="administration-title pull-left">Status - @(Model.AllOK ? "All systems go!" : "Some errors :(")</span>
                     </div>
                 </div>
                 <hr />
@@ -37,29 +37,20 @@
             
             <table class="table">
                 <thead>
-                    <tr><th>System</th><th>Status</th><th>Error</th></tr>
+                    <tr><th>System</th><th>Status</th></tr>
                 </thead>
                 <tbody>
-                @foreach (var system in Model.Systems) {
-                    var ok = system.Value == null;
-                    <tr class="@(ok ? "success" : "error")">
-                        <td>@system.Key</td>
-                        <td>@(ok ? "OK" : "No good")</td>
-                        <td>@(system.Value != null ? system.Value.ToString() : "none")</td>
+                @foreach (JabbR.ViewModels.SystemStatus system in Model.Systems) {
+                    <tr>
+                        <td>@system.SystemName</td>
+                        <td class="@system.StatusCssClass"><strong>@system.StatusMessage</strong></td>
                     </tr>
                 }
                 </tbody>
             </table>
-
-            @(Model.AllOK ? "All systems go!" : "uh oh")
         </div>
     </section>
     <script src="@Url.Content("~/Scripts/jquery-2.0.3.min.js")"></script>
     <script src="@Url.Content("~/Scripts/bootstrap.min.js")"></script>
-    <script>
-        (function ($) {
-            
-        }(jQuery));
-    </script>
 </body>
 </html>
