@@ -24,6 +24,7 @@
         <converters:CountryToFlagConverter x:Key="CountryToFlagConverter"/>
         <converters:HastToGravatarConverter x:Key="HashToGravatarConverter"/>
         <converters:HtmlToStringConverter x:Key="HtmlToStringConverter"/>
+        <converters:MessageStatusSlowToBoolConverter x:Key="MessageStatusSlowToBoolConverter"/>
         <converters:NativeVisibilityConverter x:Key="NativeVisibilityConverter"/>
         <converters:UserStatusToColorConverter x:Key="UserStatusToColorConverter"/>
         <CollectionViewSource x:Key="UsersView"
@@ -80,8 +81,9 @@
                                         <ColumnDefinition Width="50"/>
                                         <ColumnDefinition Width="*"/>
                                     </Grid.ColumnDefinitions>
-                                    <Image Grid.RowSpan="2" Height="50" Width="50" Margin="0,0,6,0" Source="{Binding Message.User.Hash, Converter={StaticResource HashToGravatarConverter}}"/>
-                                    <TextBlock Grid.Column="1" Margin="6,0,0,0" VerticalAlignment="Bottom" Text="{Binding Message.User.Name}" Style="{StaticResource PhoneTextLargeStyle}">
+                                    <Image Height="50" Width="50" Margin="0,0,6,0" Source="{Binding Message.User.Hash, Converter={StaticResource HashToGravatarConverter}}"/>
+                                    <controls:ProgressRing Grid.Row="1" Margin="0,6,0,0" VerticalAlignment="Top" IsActive="{Binding State, Converter={StaticResource MessageStatusSlowToBoolConverter}}" Width="25" Height="25" />
+                                    <TextBlock Grid.Column="1" Margin="6,0,0,0" VerticalAlignment="Top" Text="{Binding Message.User.Name}" Style="{StaticResource PhoneTextLargeStyle}">
                                         <TextBlock.Foreground>
                                             <SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
                                         </TextBlock.Foreground>
