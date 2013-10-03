@@ -19,7 +19,7 @@ namespace JabbR.ViewModels
         {
             get
             {
-                return !_systems.Any(s => !(s.IsOK ?? true));
+                return _systems.All(s => s.IsOK ?? true);
             }
         }
     }

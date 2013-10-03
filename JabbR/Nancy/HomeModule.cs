@@ -85,7 +85,7 @@ namespace JabbR.Nancy
                 }
                 catch (Exception ex)
                 {
-                    signalrStatus.SetException(ex);
+                    signalrStatus.SetException(ex.GetBaseException());
                 }
 
                 // Try to talk to database
@@ -99,7 +99,7 @@ namespace JabbR.Nancy
                 }
                 catch (Exception ex)
                 {
-                    dbStatus.SetException(ex);
+                    dbStatus.SetException(ex.GetBaseException());
                 }
 
                 // Try to talk to storage
@@ -126,7 +126,7 @@ namespace JabbR.Nancy
                 }
                 catch (Exception ex)
                 {
-                    azureStorageStatus.SetException(ex);
+                    azureStorageStatus.SetException(ex.GetBaseException());
                 }
 
                 // Force failure

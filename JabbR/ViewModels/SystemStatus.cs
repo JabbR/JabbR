@@ -1,5 +1,5 @@
-﻿
-using System;
+﻿using System;
+
 namespace JabbR.ViewModels
 {
     public class SystemStatus
