@@ -1,6 +1,7 @@
 ﻿@using SquishIt.Framework;
 @using JabbR
 @using JabbR.Services
+@model StatusViewModel
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -34,7 +35,23 @@
                 <hr />
             </div>
             
-            OK
+            <table class="table">
+                <thead>
+                    <tr><th>System</th><th>Status</th><th>Error</th></tr>
+                </thead>
+                <tbody>
+                @foreach (var system in Model.Systems) {
+                    var ok = system.Value == null;
+                    <tr class="@(ok ? "success" : "error")">
+                        <td>@system.Key</td>
+                        <td>@(ok ? "OK" : "No good")</td>
+                        <td>@(system.Value != null ? system.Value.ToString() : "none")</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+
+            @(Model.AllOK ? "All systems go!" : "uh oh")
         </div>
     </section>
     <script src="@Url.Content("~/Scripts/jquery-2.0.3.min.js")"></script>

@@ -8,10 +8,10 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JabbR.Infrastructure;
 using JabbR.Services;
+using JabbR.UploadHandlers;
 using JabbR.ViewModels;
-
+using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.Security.Application;
-
 using Nancy;
 
 namespace JabbR.Nancy
@@ -20,7 +20,9 @@ namespace JabbR.Nancy
     {
         public HomeModule(ApplicationSettings settings,
                           IJabbrConfiguration configuration,
-                          UploadCallbackHandler uploadHandler)
+                          UploadCallbackHandler uploadHandler,
+                          IConnectionManager connectionManager,
+                          IJabbrRepository jabbrRepository)
         {
             Get["/"] = _ =>
             {
@@ -61,6 +63,67 @@ namespace JabbR.Nancy
                 }
 
                 return View["monitor"];
+            };
+
+            Get["/status"] = _ =>
+            {
+                var model = new StatusViewModel();
+
+                // Try to send a message via SignalR
+                // NOTE: Ideally we'd like to actually receive a message that we send, but right now
+                // that would require a full client instance. SignalR 2.1.0 plans to add a feature to
+                // easily support this on the server.
+                try
+                {
+                    var hubContext = connectionManager.GetHubContext<Chat>();
+                    var sendTask = (Task)hubContext.Clients.Client("doesn't exist").noMethodCalledThis();
+                    sendTask.Wait();
+
+                    model.Systems.Add("SignalR", null);
+                }
+                catch (Exception ex)
+                {
+                    model.Systems.Add("SignalR", ex);
+                }
+
+                // Try to talk to database
+                try
+                {
+                    var roomCount = jabbrRepository.Rooms.Count();
+                    model.Systems.Add("Database", null);
+                }
+                catch (Exception ex)
+                {
+                    model.Systems.Add("Database", ex);
+                }
+
+                // Try to talk to storage
+                //try
+                //{
+                //    using (var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("test")))
+                //    {
+                //        UploadFile(
+                //            uploadHandler,
+                //            Principal.GetUserId(),
+                //            Guid.NewGuid().ToString(),
+                //            "this room doesn't exist",
+                //            "statusCheck.txt",
+                //            "text",
+                //            stream).Wait();
+                //    }
+                //    model.Systems.Add("Upload storage", null);
+                //}
+                //catch (Exception ex)
+                //{
+                //    model.Systems.Add("Upload storage", ex);
+                //}
+
+                if (!model.AllOK)
+                {
+                    //Context.Response.StatusCode = HttpStatusCode.InternalServerError;
+                }
+
+                return View["status", model];
             };
 
             Post["/upload-file"] = _ =>

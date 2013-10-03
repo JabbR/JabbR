@@ -953,7 +953,7 @@
     <Content Include="Views\Account\resetpassworderror.cshtml" />
     <Content Include="Views\Account\resetpasswordsuccess.cshtml" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
-    <Content Include="Views\Status\index.cshtml" />
+    <Content Include="Views\Home\status.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\MemeCommand.cs" />
@@ -1097,7 +1097,6 @@
     <Compile Include="Nancy\HomeModule.cs" />
     <Compile Include="Nancy\NotificationsModule.cs" />
     <Compile Include="Nancy\SessionExtensions.cs" />
-    <Compile Include="Nancy\StatusModule.cs" />
     <Compile Include="Services\DefaultUserAuthenticator.cs" />
     <Compile Include="Services\Email\Email.cs" />
     <Compile Include="Services\Email\EmailService.cs" />
@@ -1139,6 +1138,7 @@
     <Compile Include="ViewModels\ProfilePageViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\SocialLoginViewModel.cs" />
+    <Compile Include="ViewModels\StatusViewModel.cs" />
     <Compile Include="WebApi\Model\ErrorModel.cs" />
     <Compile Include="Infrastructure\HttpRequestExtensions.cs" />
     <Compile Include="WebApi\MessagesController.cs" />
