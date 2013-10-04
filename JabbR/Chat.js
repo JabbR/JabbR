@@ -1241,7 +1241,7 @@
 
         // Initialize the ui, passing the user preferences
         ui.initialize(state.preferences);
-        ui.showSplashScreen();
+        //ui.showSplashScreen();
         for (var i = 0; i < welcomeMessages.length; i++) {
             ui.addMessage(welcomeMessages, 'notification');
         }
