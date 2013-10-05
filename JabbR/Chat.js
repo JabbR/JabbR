@@ -1272,7 +1272,7 @@
 
         function initConnection() {
             var logging = $.cookie('jabbr.logging') === '1',
-                transport = $.cookie('jabbr.transport'),
+                transport = $.cookie('jabbr.transport') || ['webSockets', 'serverSentEvents', 'longPolling'],
                 options = {};
 
             if (transport) {
