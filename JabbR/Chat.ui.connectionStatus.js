@@ -12,7 +12,8 @@
         $connectionInfoPopover = $('#connection-info-popover'),
         $connectionInfoContent = $('#connection-info-content'),
         connectionInfoStatus = '#connection-status',
-        connectionInfoTransport = '#connection-transport';
+        connectionInfoTransport = '#connection-transport',
+        $disconnectDialog = $('#disconnect-dialog');
     
     function getConnectionStateChangedPopoverOptions(statusText) {
         var options = {
@@ -86,7 +87,10 @@
                         $connectionStatus.popover('show');
                         popoverTimer = setTimeout(function () {
                             $connectionStatus.popover('hide');
-                            popoverTimer = null;
+                            popoverTimer = setTimeout(function() {
+                                $disconnectDialog.modal();
+                                popoverTimer = null;
+                            }, 10000);
                         }, 5000);
                         break;
                 }

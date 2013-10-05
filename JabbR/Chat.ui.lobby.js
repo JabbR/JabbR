@@ -1,73 +1,39 @@
 ﻿(function ($, window, chat, ui, utility) {
     "use strict";
 
-    var $loadMoreRooms = null,
-        publicRoomList = null,
-        sortedRoomList = null,
-        $lobbyPrivateRooms = null,
-        $lobbyOtherRooms = null,
-        $lobbyRoomFilterForm = null,
-        $roomFilterInput = null,
-        $closedRoomFilter = null,
+    var sortedRoomList = null,
         $lobbyOtherRoomList = null,
         $lobbyPrivateRoomList = null,
         roomCache = {};
     
-    function sortRoomList(listToSort) {
-        var sortedList = listToSort.sort(function (a, b) {
-            if (a.Closed && !b.Closed) {
-                return 1;
-            } else if (b.Closed && !a.Closed) {
-                return -1;
-            }
-
-            if (a.Count > b.Count) {
-                return -1;
-            } else if (b.Count > a.Count) {
-                return 1;
-            }
-
-            return a.Name.toString().toUpperCase().localeCompare(b.Name.toString().toUpperCase());
-        });
-        return sortedList;
-    }
-    
-    function addRoomToLobby(roomViewModel) {
-        var roomName = roomViewModel.Name.toString().toUpperCase(),
-            i = null;
-        
-        roomViewModel.processedTopic = ui.processContent(roomViewModel.Topic);
-        chat.ui.lobbyTab.addOrUpdateRoom(roomViewModel);
-        roomCache[roomName] = true;
-        
-        // don't try to populate the sortedRoomList while we're initially filling up the lobby
-        if (sortedRoomList) {
-            var sortedRoomInsertIndex = sortedRoomList.length;
-            for (i = 0; i < sortedRoomList.length; i++) {
-                if (sortedRoomList[i].Name.toString().toUpperCase().localeCompare(roomName) > 0) {
-                    sortedRoomInsertIndex = i;
-                    break;
-                }
-            }
-            sortedRoomList.splice(sortedRoomInsertIndex, 0, roomViewModel);
-        }
-    }
-    
     var lobby = {
         initialize: function () {
-            $loadMoreRooms = $('#load-more-rooms-item');
-            $lobbyPrivateRooms = $('#lobby-private');
-            $lobbyOtherRooms = $('#lobby-other');
-            $lobbyRoomFilterForm = $('#room-filter-form');
-            $roomFilterInput = $('#room-filter');
-            $closedRoomFilter = $('#room-filter-closed');
             $lobbyOtherRoomList = $('#userlist-lobby');
             $lobbyPrivateRoomList = $('#userlist-lobby-owners');
         },
         getRooms: function() {
             return sortedRoomList;
         },
-        addRoomToLobby: addRoomToLobby,
+        addRoomToLobby: function(roomViewModel) {
+            var roomName = roomViewModel.Name.toString().toUpperCase(),
+            i = null;
+
+            roomViewModel.processedTopic = ui.processContent(roomViewModel.Topic);
+            chat.ui.lobbyTab.addOrUpdateRoom(roomViewModel);
+            roomCache[roomName] = true;
+
+            // don't try to populate the sortedRoomList while we're initially filling up the lobby
+            if (sortedRoomList) {
+                var sortedRoomInsertIndex = sortedRoomList.length;
+                for (i = 0; i < sortedRoomList.length; i++) {
+                    if (sortedRoomList[i].Name.toString().toUpperCase().localeCompare(roomName) > 0) {
+                        sortedRoomInsertIndex = i;
+                        break;
+                    }
+                }
+                sortedRoomList.splice(sortedRoomInsertIndex, 0, roomViewModel);
+            }
+        },
         updateLobbyRoom: function (roomViewModel) {
             roomViewModel.processedTopic = ui.processContent(roomViewModel.Topic);
             chat.ui.lobbyTab.addOrUpdateRoom(roomViewModel);
@@ -88,30 +54,34 @@
                 }
             }
             
-            // find the element in the lobby public room list and remove it
-            for (i = 0; i < publicRoomList.length; i++) {
-                if (publicRoomList[i].Name.toString().toUpperCase().localeCompare(roomNameUppercase) === 0) {
-                    publicRoomList.splice(i, 1);
-                    break;
-                }
-            }
-            
             // remove the items from the lobby screen
-            var $room = $lobbyOtherRoomList.add($lobbyPrivateRoomList).find('[data-room="' + roomName + '"]');
-            $room.remove();
-            
-            // if we have no private rooms, hide the private rooms section and change the text on the rooms header
-            if ($lobbyPrivateRoomList.find('li:not(.empty)').length === 0) {
-                $lobbyPrivateRooms.hide();
-                $lobbyOtherRooms.find('.nav-header').html(utility.getLanguageResource('Client_Rooms'));
-            }
+            ui.lobbyTab.removeRoom(roomName);
         },
         updatePrivateLobbyRooms: function (roomName) {
+            // todo: make this a call to update the room.
             var $room = $lobbyOtherRoomList.find('li[data-name="' + roomName + '"]');
             $room.addClass('locked').appendTo($lobbyPrivateRoomList);
         },
-        populateLobbyRooms: function (rooms, privateRooms) {           
-            var startDate = new Date();
+        populateLobbyRooms: function (rooms, privateRooms) {
+            var sortRoomList = function(listToSort) {
+                var sortedList = listToSort.sort(function(a, b) {
+                    if (a.Closed && !b.Closed) {
+                        return 1;
+                    } else if (b.Closed && !a.Closed) {
+                        return -1;
+                    }
+
+                    if (a.Count > b.Count) {
+                        return -1;
+                    } else if (b.Count > a.Count) {
+                        return 1;
+                    }
+
+                    return a.Name.toString().toUpperCase().localeCompare(b.Name.toString().toUpperCase());
+                });
+                return sortedList;
+            };
+
             // sort private lobby rooms
             var privateSorted = sortRoomList(privateRooms);
             $.each(privateSorted, function (idx, elem) {
@@ -135,22 +105,15 @@
                     chat.ui.lobbyTab.addOrUpdateRoom(elem);
                 }
             });
+
+            publicRoomList.splice(0, 100);
+            chat.ui.lobbyTab.setMoreRooms(publicRoomList);
             $('#lobby-other').show();
-            alert(new Date() - startDate);
             
             // build alphabetically sorted room list for autocomplete
             sortedRoomList = rooms.sort(function (a, b) {
                 return a.Name.toString().toUpperCase().localeCompare(b.Name.toString().toUpperCase());
             });
-
-            /*
-            if (lastLoadedRoomIndex < publicRoomList.length) {
-                $loadMoreRooms.show();
-            }
-            $lobbyOtherRooms.show();
-
-            // re-filter lists
-            $lobbyRoomFilterForm.submit();*/
         },
         roomCache: roomCache
     };

@@ -12,7 +12,8 @@
         $tabsList = null,
         $tabsDropdown = null,
         $tabsDropdownButton = null,
-        templates = null;
+        templates = null,
+        Keys = { Tab: 9 };
 
     var tabList = {
         initialize: function () {
@@ -23,6 +24,91 @@
             templates = {
                 tab: $('#new-tab-template')
             };
+            
+            var activateOrOpenRoom = function (roomName) {
+                var room = ui.getRoomElements(roomName);
+
+                if (room !== null) {
+                    ui.setActiveRoom(roomName);
+                }
+                else {
+                    $(ui).trigger(ui.events.openRoom, [roomName]);
+                }
+            };
+
+            var _this = this;
+            
+            // handle tab cycling
+            $(document).on('keydown', function(ev) {
+                // ctrl + tab event is sent to the page in firefox when the user probably means to change browser tabs
+                if (ev.keyCode === Keys.Tab && !ev.ctrlKey && ui.getMessage() === "") {
+                    var tabName = null;
+
+                    if (!ev.shiftKey) {
+                        // Next tab
+                        tabName = _this.getNextTabName();
+                    } else {
+                        // Prev tab
+                        tabName = _this.getPreviousTabName();
+                    }
+
+                    activateOrOpenRoom(tabName);
+                }
+            });
+            
+            $(document).on('click', '#tabs li, #tabs-dropdown li', function () {
+                var roomName = $(this).data('name');
+                activateOrOpenRoom(roomName);
+            });
+
+            $(document).on('mousedown', '#tabs li.room, #tabs-dropdown li.room', function (ev) {
+                // if middle mouse
+                if (ev.which === 2) {
+                    $(ui).trigger(ui.events.closeRoom, [$(this).data('name')]);
+                }
+            });
+
+            $(document).on('click', '#tabs li .close, #tabs-dropdown li .close', function (ev) {
+                var roomName = $(this).closest('li').data('name');
+
+                $(ui).trigger(ui.events.closeRoom, [roomName]);
+
+                ev.preventDefault();
+                return false;
+            });
+
+            $('#tabs, #tabs-dropdown').dragsort({
+                placeHolderTemplate: '<li class="room placeholder"><a><span class="content"></span></a></li>',
+                dragBetween: true,
+                dragStart: function () {
+                    var roomName = $(this).closest('li').data('name'),
+                        closeButton = $(this).find('.close');
+
+                    // if we have a close that we're over, close the window and bail, otherwise activate the tab
+                    if (closeButton.length > 0 && closeButton.is(':hover')) {
+                        $(ui).trigger(ui.events.closeRoom, [roomName]);
+                        return false;
+                    } else {
+                        activateOrOpenRoom(roomName);
+                        return true;
+                    }
+                },
+                dragEnd: function () {
+                    var roomTabOrder = [],
+                        $roomTabs = $('#tabs li, #tabs-dropdown li');
+
+                    for (var i = 0; i < $roomTabs.length; i++) {
+                        roomTabOrder[i] = $($roomTabs[i]).data('name');
+                    }
+
+                    $(ui).trigger(ui.events.tabOrderChanged, [roomTabOrder]);
+
+                    // check for tab overflow for one edge case - sort order hasn't changed but user 
+                    // dragged the last item in the main list to be the first item in the dropdown.
+                    // todo: check if this is necessary
+                    ui.tabList.updateTabOverflow();
+                }
+            });
         },
         
         getTabNames: function() {

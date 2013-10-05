@@ -5,7 +5,7 @@
     
     function getNextRoomListElement($targetList, roomName, count, closed) {
         var nextListElement = null,
-            $lastListElement = $targetList.find('li:last'),
+            $lastListElement = $targetList.find('li:last:not(.empty)'),
             liRoomCount = $lastListElement.data('count'),
             liRoomClosed = $lastListElement.hasClass('closed'),
             name = $lastListElement.data('name'),
@@ -66,6 +66,8 @@
         this.$lobbyOtherRoomList = $('#userlist-lobby');
         this.$lobbyPrivateRoomList = $('#userlist-lobby-owners');
         this.$lobbyRoomLists = $('#lobby-private, #lobby-other');
+        this.moreRoomsList = [];
+        this.maxRoomsToLoad = 100;
 
         this.templates = {
             lobbyroom: $('#new-lobby-room-template')
@@ -115,10 +117,12 @@
         });
 
         this.$loadMoreRooms.on('click', function () {
-            $.tmpl(_this.templates.lobbyroom, _this.publicRoomList.slice(_this.lastLoadedRoomIndex, _this.lastLoadedRoomIndex + _this.maxRoomsToLoad)).appendTo(_this.$lobbyOtherRoomList);
-            _this.lastLoadedRoomIndex += _this.maxRoomsToLoad;
+            var loadRooms = _this.moreRoomsList.splice(0, _this.maxRoomsToLoad);
+            $.each(loadRooms, function(idx, elem) {
+                _this.addOrUpdateRoom(elem);
+            });
 
-            if (_this.lastLoadedRoomIndex < _this.publicRoomList.length) {
+            if (_this.moreRoomsList.length > 0) {
                 _this.$loadMoreRooms.show();
             } else {
                 _this.$loadMoreRooms.hide();
@@ -172,13 +176,11 @@
             this.filterIndividualRoom($room);
             utility.updateEmptyListItem($targetList);
 
-            // handle updates on rooms not currently displayed to clients by removing from the public room list
-            if (this.publicRoomList) {
-                for (var i = 0; i < this.publicRoomList.length; i++) {
-                    if (this.publicRoomList[i].Name.toString().toUpperCase().localeCompare(roomName) === 0) {
-                        this.publicRoomList.splice(i, 1);
-                        break;
-                    }
+            // handle updates on rooms not currently displayed to clients by removing from the more rooms list
+            for (var i = 0; i < this.moreRoomsList.length; i++) {
+                if (this.moreRoomsList[i].Name.toString().toUpperCase().localeCompare(roomName) === 0) {
+                    this.moreRoomsList.splice(i, 1);
+                    break;
                 }
             }
         } else {
@@ -224,6 +226,13 @@
         this.$lobbyRoomLists.find('li[data-room="' + roomName + "']").remove();
         utility.updateEmptyListItem(this.$lobbyRoomLists);
         this.updateListHeaders();
+    };
+
+    LobbyTab.prototype.setMoreRooms = function(roomList) {
+        this.moreRoomsList = roomList;
+        if (roomList.length > 0) {
+            this.$loadMoreRooms.show();
+        }
     };
 
     LobbyTab.prototype.getName = function () {

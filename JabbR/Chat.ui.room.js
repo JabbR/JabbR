@@ -284,7 +284,7 @@
             $middle = $message.find('.middle'),
             $body = $message.find('.content');
 
-        if (this.shouldCollapseContent(content, this.roomName)) {
+        if (chat.ui.shouldCollapseContent(content, this.roomName)) {
             content = this.collapseRichContent(content);
         }
 
@@ -490,7 +490,8 @@
         chat.ui.triggerFocus();
     };
 
-    Room.prototype.afterSend = function() {
+    Room.prototype.afterSend = function () {
+        // always scroll to the bottom after we send out a message
         this.scrollToBottom();
         this.removeSeparator();
     };
