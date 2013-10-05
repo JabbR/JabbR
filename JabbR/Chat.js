@@ -1260,6 +1260,7 @@
         var stateCookie = $.cookie('jabbr.state'),
             state = stateCookie ? JSON.parse(stateCookie) : {},
             initial = true,
+            initialized = false,
             welcomeMessages = utility.getLanguageResource('Chat_InitialMessages').split('\n');
 
         // Initialize the ui, passing the user preferences
@@ -1282,11 +1283,14 @@
             connection.hub.qs = "version=" + window.jabbrVersion;
             connection.hub.start(options)
                           .done(function () {
+
                               chat.server.join()
                                   .fail(function () {
                                       // So refresh the page, our auth token is probably gone
                                       performLogout();
                                   });
+
+                              initialized = true;
                           });
 
             connection.hub.stateChanged(function (change) {
@@ -1305,12 +1309,17 @@
 
                     initial = false;
                 }
+                else if (change.newState === $.connection.connectionState.disconnected && initial === true) {
+                    initial = false;
+                }
             });
 
             connection.hub.disconnected(function () {
-                connection.hub.log('Dropped the connection from the server. Restarting in 5 seconds.');
+                if (initialized === true) {
+                    connection.hub.log('Dropped the connection from the server. Restarting in 5 seconds.');
 
-                failPendingMessages();
+                    failPendingMessages();
+                }
 
                 ui.showStatus(2, '');
                 ui.setReadOnly(true);
@@ -1323,10 +1332,12 @@
                                       // ui.showReloadMessageNotification();
 
                                       // Turn the firehose back on
-                                      chat.server.join(true).fail(function () {
+                                      chat.server.join(initialized).fail(function () {
                                           // So refresh the page, our auth token is probably gone
                                           performLogout();
                                       });
+
+                                      initialized = true;
                                   });
                 }, 5000);
             });
