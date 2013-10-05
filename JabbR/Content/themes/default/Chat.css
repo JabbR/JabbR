@@ -273,8 +273,123 @@ form#send-message {
     }
 
     #room-loading h3 {
-        font-weight: lighter;
+        line-height: normal;
+        padding: 0 10px;
+        float: left;
+        font-size: 1.25em;
+        color: #999;
+        -webkit-text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+        text-shadow: 0 1px 0 rgba(255,255,255,0.5);
     }
+
+.loader {
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+    width: 99%;
+    margin-top: -5px;
+}
+
+.loader span {
+    background: #00103f;
+    display: inline-block;
+    position: relative;
+    width: 4px;
+    height: 4px;
+    position: absolute;
+    opacity: 0;
+}
+
+    .loader .dot_1 {
+        margin: 0 10px;
+        -moz-animation: loading 4s ease-in-out infinite;
+        -o-animation: loading 4s ease-in-out infinite;
+        -webkit-animation: loading 4s ease-in-out infinite;
+        animation: loading 4s ease-in-out infinite;
+    }
+
+    .loader .dot_2 {
+        margin: 0 10px;
+        -moz-animation: loading 4s ease-in-out .3s infinite;
+        -o-animation: loading 4s ease-in-out .3s infinite;
+        -webkit-animation: loading 4s ease-in-out .3s infinite;
+        animation: loading 4s ease-in-out .3s infinite;
+    }
+
+    .loader .dot_3 {
+        margin: 0 10px;
+        -moz-animation: loading 4s ease-in-out .6s infinite;
+        -o-animation: loading 4s ease-in-out .6s infinite;
+        -webkit-animation: loading 4s ease-in-out .6s infinite;
+        animation: loading 4s ease-in-out .6s infinite;
+    }
+
+    .loader .dot_4 {
+        margin: 0 10px;
+        -moz-animation: loading 4s ease-in-out .9s infinite;
+        -o-animation: loading 4s ease-in-out .9s infinite;
+        -webkit-animation: loading 4s ease-in-out .9s infinite;
+        animation: loading 4s ease-in-out .9s infinite;
+    }
+
+    .loader .dot_5 {
+        margin: 0 10px;
+        -moz-animation: loading 4s ease-in-out 1.2s infinite;
+        -o-animation: loading 4s ease-in-out 1.2s infinite;
+        -webkit-animation: loading 4s ease-in-out 1.2s infinite;
+        animation: loading 4s ease-in-out 1.2s infinite;
+    }
+
+@-moz-keyframes loading {
+	from {
+	    margin-left: -50%;
+	  	opacity: 0;
+  	}
+
+	50% {
+	    margin-left: 0;
+	  	opacity: 1;
+	}
+
+	to {
+	    margin-left: 50%;
+	  	opacity: 0;
+	}
+}
+
+@-webkit-keyframes loading {
+	from {
+	    margin-left: -50%;
+	  	opacity: 0;
+  	}
+
+	50% {
+	    margin-left: 0;
+	  	opacity: 1;
+	}
+
+	to {
+	    margin-left: 50%;
+	  	opacity: 0;
+	}
+}
+
+@keyframes loading {
+	from {
+	    margin-left: -50%;
+	  	opacity: 0;
+  	}
+
+	50% {
+	    margin-left: 0;
+	  	opacity: 1;
+	}
+
+	to {
+	    margin-left: 50%;
+	  	opacity: 0;
+	}
+}
 
 #lobby-private,
 #lobby-other {
