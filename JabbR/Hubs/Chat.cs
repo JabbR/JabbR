@@ -394,8 +394,22 @@ namespace JabbR
                     continue;
                 }
 
-                var roomInfo = await GetRoomInfoCore(room);
-                Clients.Caller.roomLoaded(roomInfo);
+                RoomViewModel roomInfo = null;
+
+                while (true)
+                {
+                    try
+                    {
+                        // If invoking roomLoaded fails don't get the roomInfo again
+                        roomInfo = roomInfo ?? await GetRoomInfoCore(room);
+                        Clients.Caller.roomLoaded(roomInfo);
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Log(ex);
+                    }
+                }
             }
         }
 
