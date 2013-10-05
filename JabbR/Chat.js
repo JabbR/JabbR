@@ -19,7 +19,8 @@
         $ui = $(ui),
         messageSendingDelay = 1500,
         pendingMessages = {},
-        privateRooms = null;
+        privateRooms = null,
+        roomsToLoad = 0;
 
     function failPendingMessages() {
         for (var id in pendingMessages) {
@@ -313,6 +314,9 @@
                 }
             });
 
+            // Set the amount of rooms to load
+            roomsToLoad = filteredRooms.length;
+
             populateRooms(filteredRooms);
         };
 
@@ -355,24 +359,40 @@
         if (this.state.activeRoom) {
             // Always populate the active room first then load the other rooms so it looks fast :)
             populateRoom(this.state.activeRoom).done(function () {
-                ui.hideSplashScreen();
                 loadCommands();
                 populateLobbyRooms();
+
                 loadRooms();
+
+                // No rooms to load just hide the splash screen
+                if (roomsToLoad === 0) {
+                    ui.hideSplashScreen();
+                }
             });
         }
         else {
             // Populate the lobby first then everything else
             populateLobbyRooms().done(function () {
-                ui.hideSplashScreen();
                 loadCommands();
                 loadRooms();
+
+                // No rooms to load just hide the splash screen
+                if (roomsToLoad === 0) {
+                    ui.hideSplashScreen();
+                }
             });
         }
     };
 
     chat.client.roomLoaded = function (roomInfo) {
         populateRoomFromInfo(roomInfo);
+
+        if (roomsToLoad === 1) {
+            ui.hideSplashScreen();
+        }
+        else {
+            roomsToLoad = roomsToLoad - 1;
+        }
     };
 
     chat.client.logOut = function () {
