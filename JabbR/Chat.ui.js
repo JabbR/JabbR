@@ -78,7 +78,8 @@
         roomLoadingDelay = 250,
         roomLoadingTimeout = null,
         Room = chat.Room,
-        $unreadNotificationCount = null;
+        $unreadNotificationCount = null,
+        $splashScreen = null;
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] === '/') {
@@ -813,6 +814,7 @@
             $lobbyPrivateRooms = $('#lobby-private');
             $lobbyOtherRooms = $('#lobby-other');
             $roomLoadingIndicator = $('#room-loading');
+            $splashScreen = $('#splash-screen');
 
             $unreadNotificationCount = $('#notification-unread-count');
             
@@ -2348,6 +2350,12 @@
             }
 
             return;
+        },
+        showSplashScreen: function () {
+            $splashScreen.fadeIn('slow');
+        },
+        hideSplashScreen: function () {
+            $splashScreen.fadeOut('slow');
         }
     };
 

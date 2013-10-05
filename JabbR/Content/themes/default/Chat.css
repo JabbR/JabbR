@@ -3076,6 +3076,38 @@ h3.userlist-header {
     }
 }
 
+.splash-screen-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    padding-top: 15%;
+}
+
+.jabbr-splash-logo {
+    height: 300px;
+    width: 350px;
+    background: url('../../images/splash-logo.png') no-repeat left center;
+    margin: 0 auto;
+}
+
+.progress-wrapper {
+    margin-left: -75px;
+}
+
+.progress {
+    width: 200px;
+    margin: 0 auto;
+}
+
+.progress .bar {
+    background-image: linear-gradient(45deg,rgba(255,255,255,1) 25%,transparent 25%,transparent 50%,rgba(255,255,255,1) 50%,rgba(255,255,255,1) 75%,transparent 75%,transparent);
+    background-color: #e5e5e5;
+}
+
 #image-upload-preview {
     display: block;
     margin: 0 auto;

@@ -350,6 +350,7 @@
         if (this.state.activeRoom) {
             // Always populate the active room first then load the other rooms so it looks fast :)
             populateRoom(this.state.activeRoom).done(function() {
+                ui.hideSplashScreen();
                 loadCommands();
                 populateLobbyRooms();
                 loadRooms();
@@ -358,6 +359,7 @@
         else {
             // Populate the lobby first then everything else
             populateLobbyRooms().done(function () {
+                ui.hideSplashScreen();
                 loadCommands();
                 loadRooms();
             });
