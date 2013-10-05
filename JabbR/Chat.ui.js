@@ -117,7 +117,7 @@
             }
         } else {
             if (roomLoadingTimeout) {
-                clearTimeout(roomLoadingDelay);
+                clearTimeout(roomLoadingTimeout);
             }
             $roomLoadingIndicator.hide();
             $roomLoadingIndicator.find('i').removeClass('icon-spin');
@@ -849,6 +849,11 @@
                 var room = getRoomElements(roomName);
 
                 if (room.exists()) {
+                    if (room.isInitialized()) {
+                        ui.setRoomLoading(false);
+                    } else {
+                        ui.setRoomLoading(true, roomName);
+                    }
                     ui.setActiveRoom(roomName);
                 }
                 else {
