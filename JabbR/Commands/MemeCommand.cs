@@ -25,7 +25,9 @@ namespace JabbR.Commands
             }
 
             ChatRoom callingRoom = context.Repository.GetRoomByName(callerContext.RoomName);
-            string message = String.Format("https://upboat.me/{0}/{1}/{2}.jpg", args[0], args[1], args[2]);
+            string topLine = Uri.EscapeDataString(args[1]);
+            string bottomLine = Uri.EscapeDataString(args[2]);
+            string message = String.Format("https://upboat.me/{0}/{1}/{2}.jpg", args[0], topLine, bottomLine);
 
             context.NotificationService.GenerateMeme(callingUser, callingRoom, message);
         }

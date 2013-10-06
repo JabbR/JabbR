@@ -31,7 +31,17 @@ namespace JabbR.Services
 
         public bool AllowRoomCreation { get; set; }
 
-        public IDictionary<string, string> AuthenticationProviders { get; set; }
+        public string FacebookAppId { get; set; }
+
+        public string FacebookAppSecret { get; set; }
+
+        public string TwitterConsumerKey { get; set; }
+
+        public string TwitterConsumerSecret { get; set; }
+
+        public string GoogleClientID { get; set; }
+
+        public string GoogleClientSecret { get; set; }
 
         public string EmailSender { get; set; }
 

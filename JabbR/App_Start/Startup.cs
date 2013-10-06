@@ -9,6 +9,7 @@ using JabbR.Middleware;
 using JabbR.Nancy;
 using JabbR.Services;
 using Microsoft.AspNet.SignalR;
+using Microsoft.AspNet.SignalR.Configuration;
 using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Transports;
@@ -52,7 +53,7 @@ namespace JabbR
             app.UseErrorPage();
 
             SetupAuth(app, kernel);
-            SetupSignalR(kernel, app);
+            SetupSignalR(configuration, kernel, app);
             SetupWebApi(kernel, app);
             SetupMiddleware(kernel, app);
             SetupNancy(kernel, app);
@@ -64,7 +65,10 @@ namespace JabbR
         {
             var ticketDataFormat = new TicketDataFormat(kernel.Get<IDataProtector>());
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
+            var type = typeof(CookieAuthenticationOptions)
+                .Assembly.GetType("Microsoft.Owin.Security.Cookies.CookieAuthenticationMiddleware");
+
+            app.Use(type, app, new CookieAuthenticationOptions
             {
                 LoginPath = new PathString("/account/login"),
                 LogoutPath = new PathString("/account/logout"),
@@ -76,9 +80,9 @@ namespace JabbR
                 Provider = kernel.Get<ICookieAuthenticationProvider>()
             });
 
-            app.Use(typeof(WindowsPrincipalHandler));
+            app.Use(typeof(CustomAuthHandler));
 
-            app.UseStageMarker(PipelineStage.Authenticate);
+            app.Use(typeof(WindowsPrincipalHandler));
 
             //var config = new FederationConfiguration(loadConfig: false);
             //config.WsFederationConfiguration.Issuer = "";
@@ -111,15 +115,32 @@ namespace JabbR
             app.UseStaticFiles();
         }
 
-        private static void SetupSignalR(IKernel kernel, IAppBuilder app)
+        private static void SetupSignalR(IJabbrConfiguration jabbrConfig, IKernel kernel, IAppBuilder app)
         {
             var resolver = new NinjectSignalRDependencyResolver(kernel);
             var connectionManager = resolver.Resolve<IConnectionManager>();
             var heartbeat = resolver.Resolve<ITransportHeartbeat>();
             var hubPipeline = resolver.Resolve<IHubPipeline>();
+            var configuration = resolver.Resolve<IConfigurationManager>();
+
+            // Enable service bus scale out
+            if (!String.IsNullOrEmpty(jabbrConfig.ServiceBusConnectionString) &&
+                !String.IsNullOrEmpty(jabbrConfig.ServiceBusTopicPrefix))
+            {
+                var sbConfig = new ServiceBusScaleoutConfiguration(jabbrConfig.ServiceBusConnectionString,
+                                                                   jabbrConfig.ServiceBusTopicPrefix)
+                {
+                    TopicCount = 5
+                };
+
+                resolver.UseServiceBus(sbConfig);
+            }
 
             kernel.Bind<IConnectionManager>()
                   .ToConstant(connectionManager);
+
+            // We need to extend this since the inital connect might take a while
+            configuration.TransportConnectTimeout = TimeSpan.FromSeconds(30);
 
             var config = new HubConfiguration
             {

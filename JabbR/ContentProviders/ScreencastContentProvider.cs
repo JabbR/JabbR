@@ -18,9 +18,9 @@ namespace JabbR.ContentProviders
             {
                 return new ContentProviderResult
                 {
-                    Content = String.Format(ContentFormat, 
-					                        HttpUtility.HtmlAttributeEncode(pageInfo.ImageURL), 
-					                        HttpUtility.HtmlAttributeEncode(pageInfo.Title)),
+                    Content = String.Format(ContentFormat,
+                                            HttpUtility.HtmlAttributeEncode(pageInfo.ImageURL),
+                                            HttpUtility.HtmlAttributeEncode(pageInfo.Title)),
                     Title = pageInfo.Title
                 };
             });
@@ -35,7 +35,7 @@ namespace JabbR.ContentProviders
         {
             //Force https for the url
             var builder = new UriBuilder(request.RequestUri) { Scheme = "https" };
-            
+
             return Http.GetAsync(builder.Uri).Then(response =>
             {
                 var pageInfo = new PageInfo();

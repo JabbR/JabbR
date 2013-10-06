@@ -31,7 +31,6 @@
         scrollTopThreshold = 75,
         toast = window.chat.toast,
         preferences = null,
-        $login = null,
         lastCycledMessage = null,
         $helpPopup = null,
         $helpBody = null,
@@ -79,7 +78,8 @@
         roomLoadingDelay = 250,
         roomLoadingTimeout = null,
         Room = chat.Room,
-        $unreadNotificationCount = null;
+        $unreadNotificationCount = null,
+        $splashScreen = null;
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] === '/') {
@@ -598,12 +598,7 @@
         focus = true;
 
         if (msg) {
-            if (msg.toUpperCase() === '/LOGIN') {
-                ui.showLogin();
-            }
-            else {
-                $ui.trigger(ui.events.sendMessage, [msg]);
-            }
+            $ui.trigger(ui.events.sendMessage, [msg]);
         }
 
         $newMessage.val('');
@@ -775,7 +770,6 @@
             $logout = $('#preferences .logout');
             $help = $('#preferences .help');
             $disconnectDialog = $('#disconnect-dialog');
-            $login = $('#jabbr-login');
             $helpPopup = $('#jabbr-help');
             $helpBody = $('#jabbr-help .help-body');
             $shortCutHelp = $('#jabbr-help #shortcut');
@@ -820,6 +814,7 @@
             $lobbyPrivateRooms = $('#lobby-private');
             $lobbyOtherRooms = $('#lobby-other');
             $roomLoadingIndicator = $('#room-loading');
+            $splashScreen = $('#splash-screen');
 
             $unreadNotificationCount = $('#notification-unread-count');
             
@@ -2124,10 +2119,6 @@
         getUserName: function () {
             return ui.name;
         },
-        showLogin: function () {
-            $login.modal({ backdrop: true, keyboard: true });
-            return true;
-        },
         showDisconnectUI: function () {
             $disconnectDialog.modal();
         },
@@ -2359,6 +2350,12 @@
             }
 
             return;
+        },
+        showSplashScreen: function () {
+            $splashScreen.fadeIn('slow');
+        },
+        hideSplashScreen: function () {
+            $splashScreen.fadeOut('slow');
         }
     };
 

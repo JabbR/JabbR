@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Resources;
@@ -8,10 +7,10 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JabbR.Infrastructure;
 using JabbR.Services;
+using JabbR.UploadHandlers;
 using JabbR.ViewModels;
-
+using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.Security.Application;
-
 using Nancy;
 
 namespace JabbR.Nancy
@@ -20,7 +19,9 @@ namespace JabbR.Nancy
     {
         public HomeModule(ApplicationSettings settings,
                           IJabbrConfiguration configuration,
-                          UploadCallbackHandler uploadHandler)
+                          UploadCallbackHandler uploadHandler,
+                          IConnectionManager connectionManager,
+                          IJabbrRepository jabbrRepository)
         {
             Get["/"] = _ =>
             {
@@ -61,6 +62,89 @@ namespace JabbR.Nancy
                 }
 
                 return View["monitor"];
+            };
+
+            Get["/status"] = _ =>
+            {
+                var model = new StatusViewModel();
+
+                // Try to send a message via SignalR
+                // NOTE: Ideally we'd like to actually receive a message that we send, but right now
+                // that would require a full client instance. SignalR 2.1.0 plans to add a feature to
+                // easily support this on the server.
+                var signalrStatus = new SystemStatus { SystemName = "SignalR messaging" };
+                model.Systems.Add(signalrStatus);
+
+                try
+                {
+                    var hubContext = connectionManager.GetHubContext<Chat>();
+                    var sendTask = (Task)hubContext.Clients.Client("doesn't exist").noMethodCalledThis();
+                    sendTask.Wait();
+
+                    signalrStatus.SetOK();
+                }
+                catch (Exception ex)
+                {
+                    signalrStatus.SetException(ex.GetBaseException());
+                }
+
+                // Try to talk to database
+                var dbStatus = new SystemStatus { SystemName = "Database" };
+                model.Systems.Add(dbStatus);
+
+                try
+                {
+                    var roomCount = jabbrRepository.Rooms.Count();
+                    dbStatus.SetOK();
+                }
+                catch (Exception ex)
+                {
+                    dbStatus.SetException(ex.GetBaseException());
+                }
+
+                // Try to talk to storage
+                var azureStorageStatus = new SystemStatus { SystemName = "Upload storage" };
+                model.Systems.Add(azureStorageStatus);
+
+                try
+                {
+                    if (!String.IsNullOrEmpty(settings.AzureblobStorageConnectionString))
+                    {
+                        var azure = new AzureBlobStorageHandler(settings);
+                        UploadResult result;
+                        using (var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("test")))
+                        {
+                            result = azure.UploadFile("statusCheck.txt", "text/plain", stream)
+                                          .Result;
+                        }
+                        azureStorageStatus.SetOK();
+                    }
+                    else
+                    {
+                        azureStorageStatus.StatusMessage = "Not configured";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    azureStorageStatus.SetException(ex.GetBaseException());
+                }
+
+                // Force failure
+                if (Context.Request.Query.fail)
+                {
+                    var failedSystem = new SystemStatus { SystemName = "Forced failure" };
+                    failedSystem.SetException(new ApplicationException("Forced failure for test purposes"));
+                    model.Systems.Add(failedSystem);
+                }
+
+                var view = View["status", model];
+
+                if (!model.AllOK)
+                {
+                    return view.WithStatusCode(HttpStatusCode.InternalServerError);
+                }
+
+                return view;
             };
 
             Post["/upload-file"] = _ =>

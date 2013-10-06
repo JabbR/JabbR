@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using JabbR.ContentProviders.Core;
@@ -29,30 +30,65 @@ namespace JabbR.ContentProviders
             string imageUrl = request.RequestUri.ToString();
             string href = imageUrl;
 
+            Trace.TraceInformation("Processing image url " + imageUrl + ".");
+
             // Only proxy what we need to (non https images)
             if (_configuration.RequireHttps &&
                 !request.RequestUri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
             {
-                var uploadProcessor = _kernel.Get<UploadProcessor>();
-                var response = await Http.GetAsync(request.RequestUri);
-                string fileName = Path.GetFileName(request.RequestUri.LocalPath);
-                string contentType = GetContentType(request.RequestUri);
-                long contentLength = response.ContentLength;
+                Trace.TraceInformation("Proxying of image url " + imageUrl + " is required.");
 
-                using (Stream stream = response.GetResponseStream())
+                try
                 {
-                    UploadResult result = await uploadProcessor.HandleUpload(fileName, contentType, stream, contentLength);
+                    var uploadProcessor = _kernel.Get<UploadProcessor>();
 
-                    if (result != null)
+                    Trace.TraceInformation("Http.GetAsync(" + request.RequestUri + ")");
+
+                    var response = await Http.GetAsync(request.RequestUri)
+                                             .ConfigureAwait(continueOnCapturedContext: false);
+
+                    string fileName = Path.GetFileName(request.RequestUri.LocalPath);
+                    string contentType = GetContentType(request.RequestUri);
+                    long contentLength = response.ContentLength;
+
+                    Trace.TraceInformation("Status code: " + response.StatusCode);
+                    Trace.TraceInformation("response.GetResponseStream()");
+
+                    using (Stream stream = response.GetResponseStream())
                     {
-                        imageUrl = result.Url;
+                        Trace.TraceInformation("Uploading content " + imageUrl + ".");
+
+                        UploadResult result = await uploadProcessor.HandleUpload(fileName, contentType, stream, contentLength)
+                                                                   .ConfigureAwait(continueOnCapturedContext: false);
+
+                        Trace.TraceInformation("Uploading " + imageUrl + " complete.");
+
+                        if (result != null)
+                        {
+                            imageUrl = result.Url;
+                        }
+                        else
+                        {
+                            Trace.TraceError("Failed to upload to blob storage. The upload result was null.");
+                        }
                     }
                 }
+                catch (Exception ex)
+                {
+                    // Trace the error then rethrow
+                    Trace.TraceError(ex.Message);
+
+                    throw;
+                }
+            }
+            else
+            {
+                Trace.TraceInformation("No proxying required for " + imageUrl + ".");
             }
 
             return new ContentProviderResult()
             {
-                Content = String.Format(format, Encoder.HtmlAttributeEncode(href), 
+                Content = String.Format(format, Encoder.HtmlAttributeEncode(href),
                                                 Encoder.HtmlAttributeEncode(imageUrl)),
                 Title = href
             };

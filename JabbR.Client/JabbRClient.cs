@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using JabbR.Client.Models;
 using JabbR.Models;
@@ -181,6 +182,41 @@ namespace JabbR.Client
         public Task<bool> Send(ClientMessage message)
         {
             return _chat.Invoke<bool>("Send", message);
+        }
+
+        public async Task Send(ClientMessage message, TimeSpan timeout)
+        {
+            using (var cts = new CancellationTokenSource(timeout))
+            {
+                await Send(message, cts.Token);
+            }
+        }
+
+        public async Task Send(ClientMessage message, CancellationToken cancel)
+        {
+            var tcs = new TaskCompletionSource<object>();
+            IDisposable subscription = null;
+
+            subscription = _chat.On<string, Message, string>(ClientEvents.ReplaceMessage, (id, _, __) =>
+            {
+                subscription.Dispose();
+
+                if (id == message.Id)
+                {
+                    tcs.TrySetResult(null);
+                }
+            });
+
+            IDisposable registration = cancel.Register(() =>
+            {
+                subscription.Dispose();
+                tcs.TrySetCanceled();
+            });
+
+            await _chat.Invoke<bool>("Send", message);
+            await tcs.Task;
+
+            registration.Dispose();
         }
 
         public Task PostNotification(ClientNotification notification, bool executeContentProviders)

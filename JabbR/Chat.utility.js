@@ -31,6 +31,9 @@
     }
 
     $.fn.isNearTheEnd = function () {
+        if (typeof this[0] === 'undefined') {
+            return false;
+        }
         // Because of some weird bug in Chrome, sometimes the scroll stops at
         // bottom-1. I'm just going to approximate here to hopefully handle most
         // cases where it gets buggy. I don't think anyone will complain about
