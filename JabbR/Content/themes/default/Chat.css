@@ -261,134 +261,34 @@ form#send-message {
 
 #room-loading {
     display: none;
-    margin: 10px 0;
-    position: relative;
-    top: 50px;
-    z-index: 1000;
-}
-
-    #room-loading i {
-        float: left;
-        margin: 0 10px;
-    }
-
-    #room-loading h3 {
-        line-height: normal;
-        padding: 0 10px;
-        float: left;
-        font-size: 1.25em;
-        color: #999;
-        -webkit-text-shadow: 0 1px 0 rgba(255,255,255,0.5);
-        text-shadow: 0 1px 0 rgba(255,255,255,0.5);
-    }
-
-.loader {
-    margin: 0 auto;
-    text-align: center;
-    position: relative;
-    width: 99%;
-    margin-top: -5px;
-}
-
-.loader span {
-    background: #00103f;
-    display: inline-block;
-    position: relative;
-    width: 4px;
-    height: 4px;
     position: absolute;
-    opacity: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    background-color: rgba(68, 68, 68, 0.5);
 }
 
-    .loader .dot_1 {
-        margin: 0 10px;
-        -moz-animation: loading 4s ease-in-out infinite;
-        -o-animation: loading 4s ease-in-out infinite;
-        -webkit-animation: loading 4s ease-in-out infinite;
-        animation: loading 4s ease-in-out infinite;
-    }
-
-    .loader .dot_2 {
-        margin: 0 10px;
-        -moz-animation: loading 4s ease-in-out .3s infinite;
-        -o-animation: loading 4s ease-in-out .3s infinite;
-        -webkit-animation: loading 4s ease-in-out .3s infinite;
-        animation: loading 4s ease-in-out .3s infinite;
-    }
-
-    .loader .dot_3 {
-        margin: 0 10px;
-        -moz-animation: loading 4s ease-in-out .6s infinite;
-        -o-animation: loading 4s ease-in-out .6s infinite;
-        -webkit-animation: loading 4s ease-in-out .6s infinite;
-        animation: loading 4s ease-in-out .6s infinite;
-    }
-
-    .loader .dot_4 {
-        margin: 0 10px;
-        -moz-animation: loading 4s ease-in-out .9s infinite;
-        -o-animation: loading 4s ease-in-out .9s infinite;
-        -webkit-animation: loading 4s ease-in-out .9s infinite;
-        animation: loading 4s ease-in-out .9s infinite;
-    }
-
-    .loader .dot_5 {
-        margin: 0 10px;
-        -moz-animation: loading 4s ease-in-out 1.2s infinite;
-        -o-animation: loading 4s ease-in-out 1.2s infinite;
-        -webkit-animation: loading 4s ease-in-out 1.2s infinite;
-        animation: loading 4s ease-in-out 1.2s infinite;
-    }
-
-@-moz-keyframes loading {
-	from {
-	    margin-left: -50%;
-	  	opacity: 0;
-  	}
-
-	50% {
-	    margin-left: 0;
-	  	opacity: 1;
-	}
-
-	to {
-	    margin-left: 50%;
-	  	opacity: 0;
-	}
+#loader-container {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
 }
-
-@-webkit-keyframes loading {
-	from {
-	    margin-left: -50%;
-	  	opacity: 0;
-  	}
-
-	50% {
-	    margin-left: 0;
-	  	opacity: 1;
-	}
-
-	to {
-	    margin-left: 50%;
-	  	opacity: 0;
-	}
+#loader-container h4 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -10px 0 0 -35px;
+    font-weight: normal;
 }
-
-@keyframes loading {
-	from {
-	    margin-left: -50%;
-	  	opacity: 0;
-  	}
-
-	50% {
-	    margin-left: 0;
-	  	opacity: 1;
-	}
-
-	to {
-	    margin-left: 50%;
-	  	opacity: 0;
-	}
+canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -75px 0 0 -75px;
 }
 
 #lobby-private,
