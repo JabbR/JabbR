@@ -1,16 +1,13 @@
 ﻿/*
-* Windows Azure Loading Style with Canvas
-* Taken from: http://codepen.io/btipling/pen/frkzg
-* Created by: Bjorn Tipling (http://codepen.io/btipling)
-*/
+ * Windows Azure Loading Style with Canvas
+ * Taken from: http://codepen.io/btipling/pen/frkzg
+ * Created by: Bjorn Tipling (http://codepen.io/btipling)
+ */
 
 window.requestAnimFrame = (function (callback) {
-    return window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.oRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        function (callback) { window.setTimeout(callback, 1000 / 60); }
+    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback) {
+        window.setTimeout(callback, 1000 / 60);
+    };
 })();
 
 
@@ -19,17 +16,15 @@ function colorHslToRgb(color) {
     h = color.h;
     s = color.s;
     l = color.l;
-    if (s == 0) {
+    if (s === 0) {
         r = g = b = l; // achromatic
     } else {
-        function hue2rgb(p, q, t) {
-            if (t < 0) t;// += 1;
-            if (t > 1) t;// -= 1;
-            if (t < 1 / 6) return p;// + (q - p) * 6 * t;
+        var hue2rgb = function (p, q, t) {
+            if (t < 1 / 6) return p; // + (q - p) * 6 * t;
             if (t < 1 / 2) return q;
-            if (t < 2 / 3) return p;// + (q - p) * (2 / 3 - t) * 6;
+            if (t < 2 / 3) return p; // + (q - p) * (2 / 3 - t) * 6;
             return p;
-        }
+        };
 
         var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
         var p = 2 * l - q;
@@ -49,8 +44,11 @@ function colorRgbToHsl(color) {
     r = color.r;
     g = color.g;
     b = color.b;
-    r /= 255, g /= 255, b /= 255;
-    var max = Math.max(r, g, b), min = Math.min(r, g, b);
+    r /= 255;
+    g /= 255;
+    b /= 255;
+    var max = Math.max(r, g, b),
+        min = Math.min(r, g, b);
     var h, s, l = (max + min) / 2;
 
     if (max == min) {
@@ -59,9 +57,15 @@ function colorRgbToHsl(color) {
         var d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
         switch (max) {
-            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-            case g: h = (b - r) / d + 2; break;
-            case b: h = (r - g) / d + 4; break;
+            case r:
+                h = (g - b) / d + (g < b ? 6 : 0);
+                break;
+            case g:
+                h = (b - r) / d + 2;
+                break;
+            case b:
+                h = (r - g) / d + 4;
+                break;
         }
         h /= 6;
     }
@@ -73,7 +77,7 @@ function colorRgbToHsl(color) {
 
 function main() {
     var colors, arcs, w, h, canvas, ctx, x, y, borderWidth, i, r, step,
-        startColor, addColor, numStripes;
+    startColor, addColor, numStripes;
 
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
@@ -107,7 +111,7 @@ function main() {
             offset: 1,
             frameStart: step * i
         });
-        r -= .1;
+        r -= 0.1;
         luminateColor(startColor);
     }
     run(arcs, ctx, canvas, 0, step);
@@ -142,7 +146,7 @@ function run(arcs, ctx, canvas, frame, step) {
                 colorRgbToHsl(c);
                 c.h += 0.001;
                 if (c.h >= 1) {
-                    c.h = .001;
+                    c.h = 0.001;
                 }
                 colorHslToRgb(c);
             }
