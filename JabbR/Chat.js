@@ -60,7 +60,7 @@
 
     function isCommand(msg) {
         var parts = msg.substr(1).split(' ');
-        if (msg[0] == '/' && parts.length > 0) {
+        if (msg[0] === '/' && parts.length > 0) {
             return commandNameLookup[parts[0]];
         }
 
