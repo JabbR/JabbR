@@ -20,7 +20,8 @@
         messageSendingDelay = 1500,
         pendingMessages = {},
         privateRooms = null,
-        roomsToLoad = 0;
+        roomsToLoad = 0,
+        commandNameLookup = {};
 
     function failPendingMessages() {
         for (var id in pendingMessages) {
@@ -55,6 +56,15 @@
         }
 
         return user.Note;
+    }
+
+    function isCommand(msg) {
+        var parts = msg.substr(1).split(' ');
+        if (msg[0] == '/' && parts.length > 0) {
+            return commandNameLookup[parts[0]];
+        }
+
+        return false;
     }
 
     function getFlagCssClass(user) {
@@ -325,6 +335,10 @@
             chat.server.getCommands()
                 .done(function (commands) {
                     ui.setCommands(commands);
+
+                    for (var i = 0; i < commands.length; ++i) {
+                        commandNameLookup[commands[i].Name] = true;
+                    }
                 });
 
             // get list of available shortcuts
@@ -1039,7 +1053,7 @@
             },
             messageCompleteTimeout = null;
 
-        if (msg[0] !== '/') {
+        if (!isCommand(msg)) {
 
             // if you're in the lobby, you can't send mesages (only commands)
             if (chat.state.activeRoom === undefined) {
