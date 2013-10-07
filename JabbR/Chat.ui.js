@@ -79,7 +79,8 @@
         roomLoadingTimeout = null,
         Room = chat.Room,
         $unreadNotificationCount = null,
-        $splashScreen = null;
+        $splashScreen = null,
+        roomReadyDeferreds = {};
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] === '/') {
@@ -439,6 +440,10 @@
         setAccessKeys();
 
         lobbyLoaded = false;
+
+        // ensure we have a resolved deferred in roomReadyDeferreds for the room
+        getRoomReadyDeferred(roomName).resolve();
+
         return true;
     }
 
@@ -458,6 +463,14 @@
             setAccessKeys();
             
             ui.updateTabOverflow();
+            
+            // reject the ready deferred if it's waiting
+            if (typeof roomReadyDeferreds[roomName] !== 'undefined' &&
+                roomReadyDeferreds[roomName] !== null &&
+                roomReadyDeferreds[roomName].state() === 'pending') {
+                roomReadyDeferreds[roomName].reject();
+            }
+            delete roomReadyDeferreds[roomName];
         }
     }
 
@@ -721,6 +734,14 @@
         
         // re-filter lists
         $lobbyRoomFilterForm.submit();
+    }
+    
+    function getRoomReadyDeferred(roomName) {
+        if (typeof roomReadyDeferreds[roomName] === 'undefined' || roomReadyDeferreds[roomName] === null) {
+            roomReadyDeferreds[roomName] = $.Deferred();
+        }
+        
+        return roomReadyDeferreds[roomName];
     }
 
     var ui = {
@@ -1528,6 +1549,9 @@
 
             // re-filter lists
             $lobbyRoomFilterForm.submit();
+            
+            // In case we ever try to defer against the lobby, ensure we have one that's resolved.
+            getRoomReadyDeferred('Lobby').resolve();
         },
         removeLobbyRoom: function (roomName) {
             var roomNameUppercase = roomName.toString().toUpperCase(),
@@ -1934,11 +1958,25 @@
                 $middle.append(content);
             }
         },
-        addPrivateMessage: function (content, type) {
+        getAllOpenRooms: function() {
             var rooms = getAllRoomElements();
+
             for (var r in rooms) {
                 if (rooms[r].getName() !== undefined && rooms[r].isClosed() === false) {
-                    this.addMessage(content, type, rooms[r].getName());
+                    
+                }
+            }
+        },
+        addPrivateMessage: function (content, type) {
+            var rooms = getAllRoomElements();
+            
+            // todo: I think that this should be in chat.js
+            for (var r in rooms) {
+                if (rooms[r].getName() !== undefined && rooms[r].isClosed() === false) {
+                    var _this = this;
+                    this.awaitRoomReady(rooms[r].getName(), this, function() {
+                        _this.addMessage(content, type, rooms[r].getName());
+                    });
                 }
             }
         },
@@ -2051,6 +2089,8 @@
         setInitialized: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
             room.setInitialized();
+
+            roomReadyDeferreds[roomName].resolve();
         },
         collapseNotifications: function ($notification) {
             // collapse multiple notifications
@@ -2356,6 +2396,16 @@
         },
         hideSplashScreen: function () {
             $splashScreen.fadeOut('slow');
+        },
+        getRoomReadyPromise: function(roomName) {
+            return getRoomReadyDeferred(roomName);
+        },
+        awaitRoomReady: function (roomName, funcThis, func, defaultRoomName) {
+            // if there's no roomName, then go with the default
+            // if there's still no roomName, then hook into the lobby 
+            // (we're probably trying to write to the currently active room, which should be loaded before the lobby [if it isn't the lobby itself])
+            roomName = roomName || defaultRoomName || 'Lobby';
+            return ui.getRoomReadyPromise(roomName).done(function() { func.apply(funcThis); });
         }
     };
 
