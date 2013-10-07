@@ -1958,27 +1958,24 @@
                 $middle.append(content);
             }
         },
-        getAllOpenRooms: function() {
-            var rooms = getAllRoomElements();
+        getOpenRoomNames: function() {
+            var openRooms = $.grep(getAllRoomElements(), function(elem) {
+                return (elem.getName() !== undefined && elem.isClosed() === false);
+            });
 
-            for (var r in rooms) {
-                if (rooms[r].getName() !== undefined && rooms[r].isClosed() === false) {
-                    
-                }
-            }
+            return $.map(openRooms, function(elem) {
+                return elem.getName();
+            });
         },
         addPrivateMessage: function (content, type) {
-            var rooms = getAllRoomElements();
+            var openRooms = this.getOpenRoomNames(),
+                _this = this;
             
-            // todo: I think that this should be in chat.js
-            for (var r in rooms) {
-                if (rooms[r].getName() !== undefined && rooms[r].isClosed() === false) {
-                    var _this = this;
-                    this.awaitRoomReady(rooms[r].getName(), this, function() {
-                        _this.addMessage(content, type, rooms[r].getName());
-                    });
-                }
-            }
+            $.each(openRooms, function (idx, elem) {
+                _this.awaitRoomReady(elem, _this, function() {
+                    _this.addMessage(content, type, elem);
+                });
+            });
         },
         prepareNotificationMessage: function (options, type) {
             if (typeof options === 'string') {
