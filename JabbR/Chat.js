@@ -322,21 +322,15 @@
         addWelcomeToRoom(message, chat.state.activeRoom);
     }
     
-    // TODO: these should probably be collapsed into addListToRoom(header, messages, roomName).
-    function addListHeaderToRoom(message, roomName) {
-        addMessageToRoom(message, roomName, 'list-header');
+    function addListToRoom(header, messages, roomName) {
+        addMessageToRoom(header, roomName, 'list-header');
+        $.each(messages, function() {
+            addMessageToRoom(this, roomName, 'list-item');
+        });
     }
-    
-    function addListHeaderToActiveRoom(message) {
-        addListHeaderToRoom(message, chat.state.activeRoom);
-    }
-    
-    function addListItemToRoom(message, roomName) {
-        addMessageToRoom(message, roomName, 'list-item');
-    }
-    
-    function addListItemToActiveRoom(message) {
-        addListItemToRoom(message, chat.state.activeRoom);
+
+    function addListToActiveRoom(header, messages) {
+        addListToRoom(header, messages, chat.state.activeRoom);
     }
     
     function addBroadcastToRoom(message, roomName) {
@@ -663,20 +657,25 @@
     };
 
     chat.client.showUserInfo = function (userInfo) {
-        var lastActivityDate = userInfo.LastActivity.fromJsonDate();
+        var lastActivityDate = userInfo.LastActivity.fromJsonDate(),
+            header,
+            list = [];
         var status = "Currently " + userInfo.Status;
         if (userInfo.IsAfk) {
             status += userInfo.Status === 'Active' ? ' but ' : ' and ';
             status += ' is Afk';
         }
-        addListHeaderToActiveRoom('User information for ' + userInfo.Name + ' (' + status + ' - last seen ' + $.timeago(lastActivityDate) + ')');
+        
+        header = 'User information for ' + userInfo.Name + ' (' + status + ' - last seen ' + $.timeago(lastActivityDate) + ')';
 
         if (userInfo.AfkNote) {
-            addListItemToActiveRoom('Afk: ' + userInfo.AfkNote);
+            list.push('Afk: ' + userInfo.AfkNote);
         }
         else if (userInfo.Note) {
-            addListItemToActiveRoom('Note: ' + userInfo.Note);
+            list.push('Note: ' + userInfo.Note);
         }
+
+        addListToActiveRoom(header, list);
 
         if (userInfo.Hash) {
             $.getJSON('https://secure.gravatar.com/' + userInfo.Hash + '.json?callback=?').done(function (profile) {
@@ -909,10 +908,10 @@
     };
 
     // Helpish commands
+    //TODO: remove, not called anywhere.
     chat.client.showRooms = function (rooms) {
-        addListHeaderToActiveRoom('Rooms');
         if (!rooms.length) {
-            addListItemToActiveRoom(utility.getLanguageResource('Chat_NoRoomsAvailable'));
+            addListToActiveRoom('Rooms', [utility.getLanguageResource('Chat_NoRoomsAvailable')]);
         }
         else {
             // sort rooms by count descending then name
@@ -932,9 +931,9 @@
                 return a.Name.toString().toUpperCase().localeCompare(b.Name.toString().toUpperCase());
             });
 
-            $.each(sorted, function () {
-                addListItemToActiveRoom(this.Name + ' (' + this.Count + ')');
-            });
+            addListToActiveRoom('Rooms', $.map(sorted, function () {
+                return this.Name + ' (' + this.Count + ')';
+            }));
         }
     };
 
@@ -943,71 +942,49 @@
     };
 
     chat.client.showUsersInRoom = function (room, names) {
-        addListHeaderToActiveRoom(utility.getLanguageResource('Chat_RoomUsersHeader', room));
+        var header = utility.getLanguageResource('Chat_RoomUsersHeader', room);
         if (names.length === 0) {
-            addListItemToActiveRoom(utility.getLanguageResource('Chat_RoomUsersEmpty'));
+            addListToActiveRoom(header, [utility.getLanguageResource('Chat_RoomUsersEmpty')]);
         } else {
-            $.each(names, function () {
-                addListItemToActiveRoom('- ' + this);
-            });
+            addListToActiveRoom(header, $.map(names, function () {
+                return '- ' + this;
+            }));
         }
     };
 
     chat.client.listUsers = function (users) {
-        var header;
-
         if (users.length === 0) {
-            header = utility.getLanguageResource('Chat_RoomSearchEmpty');
-            addListHeaderToActiveRoom(header);
+            addListToActiveRoom(utility.getLanguageResource('Chat_RoomSearchEmpty'), []);
         } else {
-            header = utility.getLanguageResource('Chat_RoomSearchResults');
-            addListHeaderToActiveRoom(header);
-            addListItemToActiveRoom(users.join(', '));
+            addListToActiveRoom(utility.getLanguageResource('Chat_RoomSearchResults'), [users.join(', ')]);
         }
     };
 
     chat.client.listAllowedUsers = function (room, isPrivate, users) {
-        var message;
-
         if (!isPrivate) {
-            message = utility.getLanguageResource('Chat_RoomNotPrivateAllowed', room);
+            addListToActiveRoom(utility.getLanguageResource('Chat_RoomNotPrivateAllowed', room), []);
         } else if (users.length === 0) {
-            message = utility.getLanguageResource('Chat_RoomPrivateNoUsersAllowed', room);
+            addListToActiveRoom(utility.getLanguageResource('Chat_RoomPrivateNoUsersAllowed', room), []);
         } else {
-            message = utility.getLanguageResource('Chat_RoomPrivateUsersAllowedResults', room);
-        }
-
-        addListHeaderToActiveRoom(message);
-
-        if (isPrivate && users.length > 0) {
-            addListItemToActiveRoom(users.join(', '));
+            addListToActiveRoom(utility.getLanguageResource('Chat_RoomPrivateUsersAllowedResults', room), [users.join(', ')]);
         }
     };
 
     chat.client.showUsersRoomList = function (user, rooms) {
-        var message;
         if (rooms.length === 0) {
-            message = utility.getLanguageResource('Chat_UserNotInRooms', user.Name, user.Status);
-            addListHeaderToActiveRoom(message);
+            addListToActiveRoom(utility.getLanguageResource('Chat_UserNotInRooms', user.Name, user.Status), []);
         }
         else {
-            message = utility.getLanguageResource('Chat_UserInRooms', user.Name, user.Status);
-            addListHeaderToActiveRoom(message);
-            addListItemToActiveRoom(rooms.join(', '));
+            addListToActiveRoom(utility.getLanguageResource('Chat_UserInRooms', user.Name, user.Status), [rooms.join(', ')]);
         }
     };
 
     chat.client.showUsersOwnedRoomList = function (user, rooms) {
-        var message;
-
         if (rooms.length === 0) {
-            message = utility.getLanguageResource('Chat_UserOwnsNoRooms', user);
-            addListHeaderToActiveRoom(message);
+            addListToActiveRoom(utility.getLanguageResource('Chat_UserOwnsNoRooms', user), []);
         }
         else {
-            message = utility.getLanguageResource('Chat_UserOwnsRooms', user);
-            addListHeaderToActiveRoom(message);
-            addListItemToActiveRoom(rooms.join(', '));
+            addListToActiveRoom(utility.getLanguageResource('Chat_UserOwnsRooms', user), [rooms.join(', ')]);
         }
     };
 
@@ -1097,8 +1074,7 @@
 
             // if you're in the lobby, you can't send mesages (only commands)
             if (chat.state.activeRoom === undefined) {
-                var message = utility.getLanguageResource('Chat_CannotSendLobby');
-                addErrorToActiveRoom(message);
+                addErrorToActiveRoom(utility.getLanguageResource('Chat_CannotSendLobby'));
                 return false;
             }
 
