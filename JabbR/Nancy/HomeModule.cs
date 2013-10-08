@@ -217,8 +217,6 @@ namespace JabbR.Nancy
                 "Chat_YouGrantedRoomOwnership",
                 "Chat_YourRoomOwnershipRevoked",
                 "Chat_YourGravatarChanged",
-                "Chat_YourPasswordSet",
-                "Chat_YourPasswordChanged",
                 "Chat_YouAreAfk",
                 "Chat_YouAreAfkNote",
                 "Chat_YourNoteSet",

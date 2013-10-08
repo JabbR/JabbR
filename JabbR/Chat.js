@@ -633,14 +633,6 @@
         chat.client.showUsersOwnedRoomList(userInfo.Name, userInfo.OwnedRooms);
     };
 
-    chat.client.setPassword = function () {
-        ui.addMessage(utility.getLanguageResource('Chat_YourPasswordSet'), 'notification', this.state.activeRoom);
-    };
-
-    chat.client.changePassword = function () {
-        ui.addMessage(utility.getLanguageResource('Chat_YourPasswordSet'), 'notification', this.state.activeRoom);
-    };
-
     chat.client.changeAfk = function (user, room) {
         var viewModel = getUserViewModel(user);
 

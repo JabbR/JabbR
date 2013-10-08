@@ -711,16 +711,6 @@ namespace JabbR
             LogOn(user, clientId, reconnecting: true);
         }
 
-        void INotificationService.ChangePassword()
-        {
-            Clients.Caller.changePassword();
-        }
-
-        void INotificationService.SetPassword()
-        {
-            Clients.Caller.setPassword();
-        }
-
         void INotificationService.KickUser(ChatUser targetUser, ChatRoom room)
         {
             foreach (var client in targetUser.ConnectedClients)
