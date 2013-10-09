@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.IO;
-using System.Security;
 using System.Threading.Tasks;
 using JabbR.Services;
 using Ninject;
@@ -25,7 +24,7 @@ namespace JabbR.UploadHandlers
 
         public bool IsValid(string fileName, string contentType)
         {
-            var settings = _settingsFunc();
+            ApplicationSettings settings = _settingsFunc();
 
             // Blob storage can handle any content
             return (!String.IsNullOrEmpty(settings.LocalFileSystemStoragePath) &&
@@ -34,17 +33,20 @@ namespace JabbR.UploadHandlers
 
         public async Task<UploadResult> UploadFile(string fileName, string contentType, Stream stream)
         {
-            var settings = _settingsFunc();
+            ApplicationSettings settings = _settingsFunc();
 
             // Randomize the filename everytime so we don't overwrite files
-            string randomFile = Guid.NewGuid().ToString();
+            string randomFile = Path.GetFileNameWithoutExtension(fileName) +
+                                "_" +
+                                Guid.NewGuid().ToString().Substring(0, 4) + Path.GetExtension(fileName);
+
 
             if (!Directory.Exists(settings.LocalFileSystemStoragePath))
             {
                 Directory.CreateDirectory(settings.LocalFileSystemStoragePath);
             }
 
-            var targetFile = Path.Combine(settings.LocalFileSystemStoragePath, randomFile);
+            string targetFile = Path.Combine(settings.LocalFileSystemStoragePath, randomFile);
 
             using (FileStream destinationStream = File.Create(targetFile))
             {
