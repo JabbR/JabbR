@@ -216,16 +216,16 @@
   <data name="Administration_AzureBlobStorageConnectionString" xml:space="preserve">
     <value>Azure Blob Storage Connectionstring</value>
   </data>
-  <data name="Administration_LocalBlobStoragePath" xml:space="preserve">
-    <value>Local Blob Storage Path</value>
+  <data name="Administration_LocalFileSystemStoragePath" xml:space="preserve">
+    <value>Local File System Storage Path</value>
   </data>
-  <data name="Administration_LocalBlobStoragePath_PlaceHolder" xml:space="preserve">
+  <data name="Administration_LocalFileSystemStoragePath_PlaceHolder" xml:space="preserve">
     <value>D:\path\to\my\files\</value>
   </data>
-  <data name="Administration_LocalBlobStorageUriPrefix" xml:space="preserve">
-    <value>Local Blob Storage Uri Prefix</value>
+  <data name="Administration_LocalFileSystemStorageUriPrefix" xml:space="preserve">
+    <value>Local File System Storage Uri Prefix</value>
   </data>
-  <data name="Administration_LocalBlobStorageUriPrefix_PlaceHolder" xml:space="preserve">
+  <data name="Administration_LocalFileSystemStorageUriPrefix_PlaceHolder" xml:space="preserve">
     <value>http://static.jabbr.net/files/</value>
   </data>
   <data name="Administration_Encryption" xml:space="preserve">

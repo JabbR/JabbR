@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Security;
 using System.Threading.Tasks;
 using JabbR.Services;
 using Ninject;
@@ -27,8 +28,8 @@ namespace JabbR.UploadHandlers
             var settings = _settingsFunc();
 
             // Blob storage can handle any content
-            return (!String.IsNullOrEmpty(settings.LocalBlobStoragePath) &&
-                    !String.IsNullOrEmpty(settings.LocalBlobStorageUriPrefix));
+            return (!String.IsNullOrEmpty(settings.LocalFileSystemStoragePath) &&
+                    !String.IsNullOrEmpty(settings.LocalFileSystemStorageUriPrefix));
         }
 
         public async Task<UploadResult> UploadFile(string fileName, string contentType, Stream stream)
@@ -40,15 +41,14 @@ namespace JabbR.UploadHandlers
                                 "_" +
                                 Guid.NewGuid().ToString().Substring(0, 4) + Path.GetExtension(fileName);
 
-            if (!Directory.Exists(_settingsFunc().LocalBlobStoragePath))
+            if (!Directory.Exists(_settingsFunc().LocalFileSystemStoragePath))
             {
-                Directory.CreateDirectory(_settingsFunc().LocalBlobStoragePath);
+                Directory.CreateDirectory(_settingsFunc().LocalFileSystemStoragePath);
             }
 
+            var targetFile = Path.Combine(settings.LocalFileSystemStoragePath, randomFile);
 
-            using (
-                FileStream destinationStream =
-                    File.Create(Path.Combine(settings.LocalBlobStoragePath, randomFile)))
+            using (FileStream destinationStream = File.Create(targetFile))
             {
                 await stream.CopyToAsync(destinationStream);
             }
@@ -56,7 +56,7 @@ namespace JabbR.UploadHandlers
 
             var result = new UploadResult
             {
-                Url = (new Uri(settings.LocalBlobStorageUriPrefix + randomFile)).ToString(),
+                Url = (new Uri(settings.LocalFileSystemStorageUriPrefix + randomFile)).ToString(),
                 Identifier = randomFile
             };
 

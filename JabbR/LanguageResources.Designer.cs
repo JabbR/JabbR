@@ -496,38 +496,38 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Local Blob Storage Path.
+        ///   Looks up a localized string similar to Local File System Storage Path.
         /// </summary>
-        public static string Administration_LocalBlobStoragePath {
+        public static string Administration_LocalFileSystemStoragePath {
             get {
-                return ResourceManager.GetString("Administration_LocalBlobStoragePath", resourceCulture);
+                return ResourceManager.GetString("Administration_LocalFileSystemStoragePath", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to D:\path\to\my\files\.
         /// </summary>
-        public static string Administration_LocalBlobStoragePath_PlaceHolder {
+        public static string Administration_LocalFileSystemStoragePath_PlaceHolder {
             get {
-                return ResourceManager.GetString("Administration_LocalBlobStoragePath_PlaceHolder", resourceCulture);
+                return ResourceManager.GetString("Administration_LocalFileSystemStoragePath_PlaceHolder", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Local Blob Storage Uri Prefix.
+        ///   Looks up a localized string similar to Local File System Storage Uri Prefix.
         /// </summary>
-        public static string Administration_LocalBlobStorageUriPrefix {
+        public static string Administration_LocalFileSystemStorageUriPrefix {
             get {
-                return ResourceManager.GetString("Administration_LocalBlobStorageUriPrefix", resourceCulture);
+                return ResourceManager.GetString("Administration_LocalFileSystemStorageUriPrefix", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to http://static.jabbr.net/files/.
         /// </summary>
-        public static string Administration_LocalBlobStorageUriPrefix_PlaceHolder {
+        public static string Administration_LocalFileSystemStorageUriPrefix_PlaceHolder {
             get {
-                return ResourceManager.GetString("Administration_LocalBlobStorageUriPrefix_PlaceHolder", resourceCulture);
+                return ResourceManager.GetString("Administration_LocalFileSystemStorageUriPrefix_PlaceHolder", resourceCulture);
             }
         }
         
