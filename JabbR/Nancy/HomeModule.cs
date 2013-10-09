@@ -137,7 +137,7 @@ namespace JabbR.Nancy
                 {
                     if (!String.IsNullOrEmpty(settings.LocalBlobStoragePath) && !String.IsNullOrEmpty(settings.LocalBlobStorageUriPrefix))
                     {
-                        var local = new LocalBlobStorageHandler(settings);
+                        var local = new LocalFileSystemStorageHandler(settings);
                         UploadResult localResult;
                         using (var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("test")))
                         {

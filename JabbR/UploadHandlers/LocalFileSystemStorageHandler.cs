@@ -7,30 +7,34 @@ using Ninject;
 
 namespace JabbR.UploadHandlers
 {
-    public class LocalBlobStorageHandler : IUploadHandler
+    public class LocalFileSystemStorageHandler : IUploadHandler
     {
         private readonly Func<ApplicationSettings> _settingsFunc;
 
         [ImportingConstructor]
-        public LocalBlobStorageHandler(IKernel kernel)
+        public LocalFileSystemStorageHandler(IKernel kernel)
         {
             _settingsFunc = () => kernel.Get<ApplicationSettings>();
         }
 
-        public LocalBlobStorageHandler(ApplicationSettings settings)
+        public LocalFileSystemStorageHandler(ApplicationSettings settings)
         {
             _settingsFunc = () => settings;
         }
 
         public bool IsValid(string fileName, string contentType)
         {
+            var settings = _settingsFunc();
+
             // Blob storage can handle any content
-            return (!String.IsNullOrEmpty(_settingsFunc().LocalBlobStoragePath) &&
-                    !String.IsNullOrEmpty(_settingsFunc().LocalBlobStorageUriPrefix));
+            return (!String.IsNullOrEmpty(settings.LocalBlobStoragePath) &&
+                    !String.IsNullOrEmpty(settings.LocalBlobStorageUriPrefix));
         }
 
         public async Task<UploadResult> UploadFile(string fileName, string contentType, Stream stream)
         {
+            var settings = _settingsFunc();
+
             // Randomize the filename everytime so we don't overwrite files
             string randomFile = Path.GetFileNameWithoutExtension(fileName) +
                                 "_" +
@@ -44,7 +48,7 @@ namespace JabbR.UploadHandlers
 
             using (
                 FileStream destinationStream =
-                    File.Create(Path.Combine(_settingsFunc().LocalBlobStoragePath, randomFile)))
+                    File.Create(Path.Combine(settings.LocalBlobStoragePath, randomFile)))
             {
                 await stream.CopyToAsync(destinationStream);
             }
@@ -52,7 +56,7 @@ namespace JabbR.UploadHandlers
 
             var result = new UploadResult
             {
-                Url = (new Uri(_settingsFunc().LocalBlobStorageUriPrefix + randomFile)).ToString(),
+                Url = (new Uri(settings.LocalBlobStorageUriPrefix + randomFile)).ToString(),
                 Identifier = randomFile
             };
 
