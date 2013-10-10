@@ -958,12 +958,14 @@
     <Content Include="Views\Home\status.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\BinaryBlob.cs" />
     <Compile Include="Commands\MemeCommand.cs" />
     <Compile Include="Infrastructure\AuthenticationService.cs" />
     <Compile Include="Infrastructure\EnumerableExtensions.cs" />
     <Compile Include="Infrastructure\HttpServerUtility.cs" />
     <Compile Include="Infrastructure\IAuthenticationService.cs" />
     <Compile Include="Infrastructure\JabbrUserIdProvider.cs" />
+    <Compile Include="Infrastructure\StringReaderExtensions.cs" />
     <Compile Include="LanguageResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
