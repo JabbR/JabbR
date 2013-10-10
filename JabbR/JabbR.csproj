@@ -818,6 +818,7 @@
     <Content Include="Content\images\logo32.png" />
     <Content Include="Content\images\small-logo.png" />
     <Content Include="Content\sounds\notification.wav" />
+    <Content Include="loader.js" />
     <Content Include="notifications.js" />
     <Content Include="notifications.unreadcounter.js" />
     <Content Include="robots.txt" />

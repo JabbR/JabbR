@@ -327,7 +327,10 @@
         </div>
         <div id="chat-area" role="tabpanel">
             <div id="room-loading">
-                <i class="icon-spinner icon-3x"> </i><h3>@LanguageResources.LoadingMessage</h3>
+                <div id="loader-container">
+                    <canvas id="canvas" width="150" height="150"></canvas>
+                    <h4>@LanguageResources.LoadingMessage</h4>
+                </div>
             </div>
             <div id="lobby-wrapper">
                 <div id="lobby-private">
@@ -513,6 +516,7 @@
             .Add("~/Chat.twitter.js")
             .Add("~/Chat.githubissues.js")
             .Add("~/Chat.js")
+            .Add("~/loader.js")
             .Render("~/Scripts/JabbR2_#.js"));
     }
     @if (Model.DebugMode)
