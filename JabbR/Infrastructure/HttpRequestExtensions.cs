@@ -17,7 +17,7 @@ namespace JabbR.Infrastructure
         /// <typeparam name="T">Type of the payload (usually inferred).</typeparam>
         /// <param name="request">Request message that is used to create output message.</param>
         /// <param name="statusCode">Status code to return to the client</param>
-        /// <param name="data">API payoad</param>
+        /// <param name="data">API payload</param>
         /// <param name="filenamePrefix">Filename to return to the client, if client requests so.</param>
         /// <returns>
         /// HttpResponseMessage that wraps the given payload

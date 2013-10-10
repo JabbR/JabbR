@@ -36,11 +36,11 @@ namespace JabbR.Test
 
             chat.Clients = new HubConnectionContext(mockPipeline.Object, mockedConnectionObject, "Chat", connectionId, clientState);
 
-            var prinicipal = new Mock<IPrincipal>();
+            var principal = new Mock<IPrincipal>();
 
             var request = new Mock<IRequest>();
             request.Setup(m => m.Cookies).Returns(cookies);
-            request.Setup(m => m.User).Returns(prinicipal.Object);
+            request.Setup(m => m.User).Returns(principal.Object);
 
             // setup context
             chat.Context = new HubCallerContext(request.Object, connectionId);

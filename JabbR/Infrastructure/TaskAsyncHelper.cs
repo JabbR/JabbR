@@ -148,8 +148,8 @@ namespace JabbR
                     tcs.SetException(faulted.Exception);
                     return;
                 }
-                var cancelled = completedTasks.FirstOrDefault(t => t.IsCanceled);
-                if (cancelled != null)
+                var canceled = completedTasks.FirstOrDefault(t => t.IsCanceled);
+                if (canceled != null)
                 {
                     tcs.SetCanceled();
                     return;
@@ -422,8 +422,8 @@ namespace JabbR
         {
             return Task.Factory.ContinueWhenAll(tasks, _ =>
             {
-                var cancelledTask = tasks.FirstOrDefault(task => task.IsCanceled);
-                if (cancelledTask != null)
+                var canceledTask = tasks.FirstOrDefault(task => task.IsCanceled);
+                if (canceledTask != null)
                     throw new TaskCanceledException();
 
                 var allExceptions =

@@ -60,7 +60,7 @@ namespace JabbR.Commands
             toUser.LastNudged = DateTime.Now;
             context.Repository.CommitChanges();
 
-            context.NotificationService.NugeUser(callingUser, toUser);
+            context.NotificationService.NudgeUser(callingUser, toUser);
         }
     }
 }

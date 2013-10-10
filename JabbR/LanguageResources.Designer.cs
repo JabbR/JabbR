@@ -1415,24 +1415,6 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your password has been changed..
-        /// </summary>
-        public static string Chat_YourPasswordChanged {
-            get {
-                return ResourceManager.GetString("Chat_YourPasswordChanged", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your password has been set..
-        /// </summary>
-        public static string Chat_YourPasswordSet {
-            get {
-                return ResourceManager.GetString("Chat_YourPasswordSet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Your access to {0} has been revoked..
         /// </summary>
         public static string Chat_YourRoomAccessRevoked {

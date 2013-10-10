@@ -178,6 +178,11 @@
         }
         return room;
     }
+    
+    function getActiveRoomName() {
+        //TODO: make this less DOM-read-ey
+        return $tabs.find('li.current').data('name');
+    }
 
     function getAllRoomElements() {
         var rooms = [];
@@ -1934,14 +1939,6 @@
                 $middle.append(content);
             }
         },
-        addPrivateMessage: function (content, type) {
-            var rooms = getAllRoomElements();
-            for (var r in rooms) {
-                if (rooms[r].getName() !== undefined && rooms[r].isClosed() === false) {
-                    this.addMessage(content, type, rooms[r].getName());
-                }
-            }
-        },
         prepareNotificationMessage: function (options, type) {
             if (typeof options === 'string') {
                 options = { content: options, encoded: false };
@@ -1968,6 +1965,7 @@
 
             return $element;
         },
+        //TODO swap around type and roomName parameters for consistency
         addMessage: function (content, type, roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements(),
                 nearEnd = room.isNearTheEnd(),
@@ -2008,6 +2006,49 @@
             }
 
             $(newMessage).appendTo(room.messages);
+        },
+        addNotification: function (message, roomName) {
+            this.addMessage(message, 'notification', roomName);
+        },
+        addNotificationToActiveRoom: function (message) {
+            this.addNotification(message, getActiveRoomName());
+        },
+        addError: function (message, roomName) {
+            this.addMessage(message, 'error', roomName);
+        },
+        addErrorToActiveRoom: function (message) {
+            this.addError(message, getActiveRoomName());
+        },
+        addWelcome: function (message, roomName) {
+            this.addMessage(message, 'welcome', roomName);
+        },
+        addWelcomeToActiveRoom: function(message) {
+            this.addWelcome(message, getActiveRoomName());
+        },
+        addList: function(header, messages, roomName) {
+            this.addMessage(header, 'list-header', roomName);
+            
+            var _this = this;
+            $.each(messages, function () {
+                _this.addMessage(this, 'list-item', roomName);
+            });
+        },
+        addListToActiveRoom: function(header, messages) {
+            this.addList(header, messages, getActiveRoomName());
+        },
+        addBroadcast: function(message, roomName) {
+            this.addMessage(message, 'broadcast', roomName);
+        },
+        addAction: function(message, roomName) {
+            this.addMessage(message, 'action', roomName);
+        },
+        addPrivateMessage: function (content) {
+            var rooms = getAllRoomElements();
+            for (var r in rooms) {
+                if (rooms[r].getName() !== undefined && rooms[r].isClosed() === false) {
+                    this.addMessage(content, 'pm', rooms[r].getName());
+                }
+            }
         },
         hasFocus: function () {
             return focus;

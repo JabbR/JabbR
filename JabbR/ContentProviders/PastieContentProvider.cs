@@ -7,7 +7,7 @@ namespace JabbR.ContentProviders
 {
     public class PastieContentProvider : EmbedContentProvider
     {
-        private static readonly Regex _pasiteIdRegex = new Regex(@"(\d+)");
+        private static readonly Regex _pastieIdRegex = new Regex(@"(\d+)");
 
         public override IEnumerable<string> Domains
         {
@@ -22,7 +22,7 @@ namespace JabbR.ContentProviders
         {
             get
             {
-                return _pasiteIdRegex;
+                return _pastieIdRegex;
             }
         }
 

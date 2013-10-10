@@ -964,12 +964,6 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="Chat_YourNoteSet" xml:space="preserve">
     <value>Your note has been set to "{0}".</value>
   </data>
-  <data name="Chat_YourPasswordChanged" xml:space="preserve">
-    <value>Your password has been changed.</value>
-  </data>
-  <data name="Chat_YourPasswordSet" xml:space="preserve">
-    <value>Your password has been set.</value>
-  </data>
   <data name="Chat_YourRoomAccessRevoked" xml:space="preserve">
     <value>Your access to {0} has been revoked.</value>
   </data>

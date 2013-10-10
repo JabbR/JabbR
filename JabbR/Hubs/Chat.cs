@@ -711,16 +711,6 @@ namespace JabbR
             LogOn(user, clientId, reconnecting: true);
         }
 
-        void INotificationService.ChangePassword()
-        {
-            Clients.Caller.changePassword();
-        }
-
-        void INotificationService.SetPassword()
-        {
-            Clients.Caller.setPassword();
-        }
-
         void INotificationService.KickUser(ChatUser targetUser, ChatRoom room)
         {
             foreach (var client in targetUser.ConnectedClients)
@@ -991,7 +981,7 @@ namespace JabbR
             Clients.User(user.Id).sendInvite(user.Name, targetUser.Name, targetRoom.Name);
         }
 
-        void INotificationService.NugeUser(ChatUser user, ChatUser targetUser)
+        void INotificationService.NudgeUser(ChatUser user, ChatUser targetUser)
         {
             // Send a nudge message to the sender and the sendee
             Clients.User(targetUser.Id).nudge(user.Name, targetUser.Name);
