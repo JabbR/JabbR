@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Security.Cryptography;
 using JabbR.Infrastructure;
 
@@ -48,6 +49,25 @@ namespace JabbR.Services
         public string GoogleClientSecret { get; set; }
 
         public string EmailSender { get; set; }
+
+
+        public static bool TryValidateSettings(ApplicationSettings settings, out IDictionary<string, string> errors)
+        {
+            errors = new Dictionary<string, string>();
+
+            if (!Path.IsPathRooted(settings.LocalFileSystemStoragePath))
+            {
+                errors.Add("LocalFileSystemStoragePath", "The path must be an absolute path");
+            }
+            else if (settings.LocalFileSystemStoragePath.StartsWith(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, StringComparison.OrdinalIgnoreCase))
+            {
+                errors.Add("LocalFileSystemStoragePath", "The path must not be under the JabbR root.");
+            }
+
+            // TODO: Add more validation
+
+            return errors.Count == 0;
+        }
 
         public static ApplicationSettings GetDefaultSettings()
         {

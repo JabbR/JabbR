@@ -46,7 +46,9 @@ namespace JabbR.UploadHandlers
                 Directory.CreateDirectory(settings.LocalFileSystemStoragePath);
             }
 
-            string targetFile = Path.Combine(settings.LocalFileSystemStoragePath, randomFile);
+            // REVIEW: Do we need to validate the settings here out of paranoia?
+            
+            string targetFile = Path.GetFullPath(Path.Combine(settings.LocalFileSystemStoragePath, randomFile));
 
             using (FileStream destinationStream = File.Create(targetFile))
             {
@@ -56,11 +58,22 @@ namespace JabbR.UploadHandlers
 
             var result = new UploadResult
             {
-                Url = (new Uri(settings.LocalFileSystemStorageUriPrefix + randomFile)).ToString(),
+                Url = GetFullUrl(settings.LocalFileSystemStorageUriPrefix, randomFile),
                 Identifier = randomFile
             };
 
             return result;
+        }
+
+        private string GetFullUrl(string prefix, string fileName)
+        {
+            if (!prefix.EndsWith("/"))
+            {
+                prefix += "/";
+            }
+
+            var prefixUri = new Uri(prefix);
+            return new Uri(prefixUri, fileName).ToString();
         }
     }
 }
