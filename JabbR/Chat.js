@@ -839,7 +839,10 @@
 
     chat.client.leave = function (user, room) {
         if (isSelf(user)) {
-            ui.setActiveRoom('Lobby');
+            if (chat.state.activeRoom === room) {
+                ui.setActiveRoom('Lobby');
+            }
+            
             ui.removeRoom(room);
         }
         else {
@@ -851,7 +854,10 @@
     chat.client.kick = function (room) {
         var message = utility.getLanguageResource('Chat_YouKickedFromRoom', room);
 
-        ui.setActiveRoom('Lobby');
+        if (chat.state.activeRoom === room) {
+            ui.setActiveRoom('Lobby');
+        }
+        
         ui.removeRoom(room);
         // it looks like we write to the lobby, but the activeRoom is set via a fragment, so this writes to the last active room.
         ui.addNotificationToActiveRoom(message);
