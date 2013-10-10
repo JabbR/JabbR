@@ -55,13 +55,16 @@ namespace JabbR.Services
         {
             errors = new Dictionary<string, string>();
 
-            if (!Path.IsPathRooted(settings.LocalFileSystemStoragePath))
+            if (!String.IsNullOrEmpty(settings.LocalFileSystemStoragePath))
             {
-                errors.Add("LocalFileSystemStoragePath", "The path must be an absolute path");
-            }
-            else if (settings.LocalFileSystemStoragePath.StartsWith(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, StringComparison.OrdinalIgnoreCase))
-            {
-                errors.Add("LocalFileSystemStoragePath", "The path must not be under the JabbR root.");
+                if (!Path.IsPathRooted(settings.LocalFileSystemStoragePath))
+                {
+                    errors.Add("LocalFileSystemStoragePath", "The path must be an absolute path");
+                }
+                else if (settings.LocalFileSystemStoragePath.StartsWith(AppDomain.CurrentDomain.SetupInformation.ApplicationBase, StringComparison.OrdinalIgnoreCase))
+                {
+                    errors.Add("LocalFileSystemStoragePath", "The path must not be under the JabbR root.");
+                }
             }
 
             // TODO: Add more validation
