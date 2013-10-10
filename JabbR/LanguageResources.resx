@@ -207,8 +207,26 @@
   <data name="Administration_AnalyticsGoogleId" xml:space="preserve">
     <value>Google Analytics ID</value>
   </data>
+  <data name="Administration_Storage_Azure" xml:space="preserve">
+    <value>Windows Azure</value>
+  </data>
+  <data name="Administration_Storage_Local" xml:space="preserve">
+    <value>Local Storage</value>
+  </data>
   <data name="Administration_AzureBlobStorageConnectionString" xml:space="preserve">
     <value>Azure Blob Storage Connectionstring</value>
+  </data>
+  <data name="Administration_LocalFileSystemStoragePath" xml:space="preserve">
+    <value>Local File System Storage Path</value>
+  </data>
+  <data name="Administration_LocalFileSystemStoragePath_PlaceHolder" xml:space="preserve">
+    <value>D:\path\to\my\files\</value>
+  </data>
+  <data name="Administration_LocalFileSystemStorageUriPrefix" xml:space="preserve">
+    <value>Local File System Storage Uri Prefix</value>
+  </data>
+  <data name="Administration_LocalFileSystemStorageUriPrefix_PlaceHolder" xml:space="preserve">
+    <value>http://static.jabbr.net/files/</value>
   </data>
   <data name="Administration_Encryption" xml:space="preserve">
     <value>Encryption</value>

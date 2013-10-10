@@ -19,6 +19,10 @@ namespace JabbR.Services
 
         public string AzureblobStorageConnectionString { get; set; }
 
+        public string LocalFileSystemStoragePath { get; set; }
+
+        public string LocalFileSystemStorageUriPrefix { get; set; }
+
         public int MaxFileUploadBytes { get; set; }
 
         public string GoogleAnalytics { get; set; }

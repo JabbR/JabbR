@@ -90,21 +90,6 @@
                         </div>
                     </div>
                 </fieldset>
-                <fieldset id="storage">
-                    <legend>@LanguageResources.Administration_Storage</legend>
-                    <div class="control-group">
-                        <label class="control-label" for="azureBlobStorageConnectionString">@LanguageResources.Administration_AzureBlobStorageConnectionString</label>
-                        <div class="controls">
-                            <input type="text" id="azureBlobStorageConnectionString" name="azureBlobStorageConnectionString" class="input-xlarge" value="@Model.AzureblobStorageConnectionString" placeholder="@LanguageResources.Administration_AzureBlobStorageConnectionString"/>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <label class="control-label" for="maxFileUploadBytes">@LanguageResources.Administration_MaxFileUploadBytes</label>
-                        <div class="controls">
-                            <input type="text" id="maxFileUploadBytes" name="maxFileUploadBytes" class="input-xlarge" value="@Model.MaxFileUploadBytes" placeholder="@LanguageResources.Administration_MaxFileUploadBytes"/>
-                        </div>
-                    </div>
-                </fieldset>
                 <fieldset id="analytics">
                     <legend>@LanguageResources.Administration_Analytics</legend>
                     <div class="control-group">
@@ -138,6 +123,51 @@
                         </div>
                     </div>
                 </fieldset>
+                <div class="row" style="padding-top: 75px;">
+                    <div class="row">
+                        <div class="span12">
+                            <span class="administration-title pull-left">@LanguageResources.Administration_Storage</span>
+                        </div>
+                    </div>
+                    <hr />
+                    <fieldset id="storageGeneral">
+                        <div class="control-group">
+                            <label class="control-label" for="maxFileUploadBytes">@LanguageResources.Administration_MaxFileUploadBytes</label>
+                            <div class="controls">
+                                <input type="text" id="maxFileUploadBytes" name="maxFileUploadBytes" class="input-xlarge" value="@Model.MaxFileUploadBytes" placeholder="@LanguageResources.Administration_MaxFileUploadBytes"/>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="control-group">
+                        <fieldset id="storageAzure">
+                            <legend>@LanguageResources.Administration_Storage_Azure</legend>
+                            <div class="control-group">
+                                <label class="control-label" for="azureBlobStorageConnectionString">@LanguageResources.Administration_AzureBlobStorageConnectionString</label>
+                                <div class="controls">
+                                    <input type="text" id="azureBlobStorageConnectionString" name="azureBlobStorageConnectionString" class="input-xlarge" value="@Model.AzureblobStorageConnectionString" placeholder="@LanguageResources.Administration_AzureBlobStorageConnectionString"/>
+                                </div>
+                            </div>
+
+                        </fieldset>
+                    </div>
+                    <div class="control-group">
+                        <fieldset id="storageLocal">
+                            <legend>@LanguageResources.Administration_Storage_Local</legend>
+                            <div class="control-group">
+                                <label class="control-label" for="localFileSystemStoragePath">@LanguageResources.Administration_LocalFileSystemStoragePath</label>
+                                <div class="controls">
+                                    <input type="text" id="localFileSystemStoragePath" name="localFileSystemStoragePath" class="input-xlarge" value="@Model.LocalFileSystemStoragePath" placeholder="@LanguageResources.Administration_LocalFileSystemStoragePath_PlaceHolder"/>
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="localFileSystemStorageUriPrefix">@LanguageResources.Administration_LocalFileSystemStorageUriPrefix</label>
+                                <div class="controls">
+                                    <input type="text" id="localFileSystemStorageUriPrefix" name="localFileSystemStorageUriPrefix" class="input-xlarge" value="@Model.LocalFileSystemStorageUriPrefix" placeholder="@LanguageResources.Administration_LocalFileSystemStorageUriPrefix_PlaceHolder"/>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
                 <div class="control-group">
                     <div class="controls">
                         <input type="submit" class="btn pull-right" value="@LanguageResources.SettingsSave" />

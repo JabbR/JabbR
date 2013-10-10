@@ -824,6 +824,7 @@
     <EmbeddedResource Include="LanguageResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>LanguageResources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201208211555032_BanUser.resx">
       <DependentUpon>201208211555032_BanUser.cs</DependentUpon>
@@ -1125,6 +1126,7 @@
     <Compile Include="Services\IChatNotificationService.cs" />
     <Compile Include="Services\SettingsManager.cs" />
     <Compile Include="UploadHandlers\AzureBlobStorageHandler.cs" />
+    <Compile Include="UploadHandlers\LocalFileSystemStorageHandler.cs" />
     <Compile Include="UploadHandlers\IUploadHandler.cs" />
     <Compile Include="Services\IKeyProvider.cs" />
     <Compile Include="Services\IMembershipService.cs" />

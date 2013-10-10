@@ -102,8 +102,8 @@ namespace JabbR.Nancy
                     dbStatus.SetException(ex.GetBaseException());
                 }
 
-                // Try to talk to storage
-                var azureStorageStatus = new SystemStatus { SystemName = "Upload storage" };
+                // Try to talk to azure storage
+                var azureStorageStatus = new SystemStatus { SystemName = "Azure Upload storage" };
                 model.Systems.Add(azureStorageStatus);
 
                 try
@@ -127,6 +127,33 @@ namespace JabbR.Nancy
                 catch (Exception ex)
                 {
                     azureStorageStatus.SetException(ex.GetBaseException());
+                }
+
+                //try to talk to local storage
+                var localStorageStatus = new SystemStatus { SystemName = "Local Upload storage" };
+                model.Systems.Add(localStorageStatus);
+
+                try
+                {
+                    if (!String.IsNullOrEmpty(settings.LocalFileSystemStoragePath) && !String.IsNullOrEmpty(settings.LocalFileSystemStorageUriPrefix))
+                    {
+                        var local = new LocalFileSystemStorageHandler(settings);
+                        UploadResult localResult;
+                        using (var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("test")))
+                        {
+                            localResult = local.UploadFile("statusCheck.txt", "text/plain", stream)
+                                          .Result;
+                        }
+                        localStorageStatus.SetOK();
+                    }
+                    else
+                    {
+                        localStorageStatus.StatusMessage = "Not configured";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    localStorageStatus.SetException(ex.GetBaseException());
                 }
 
                 // Force failure
