@@ -1112,11 +1112,8 @@ namespace JabbR
 
         void INotificationService.BroadcastMessage(ChatUser user, string messageText)
         {
-            // Tell all users in all rooms about this message
-            foreach (var room in _repository.Rooms)
-            {
-                Clients.Group(room.Name).broadcastMessage(messageText, room.Name);
-            }
+            // Tell all users about this message
+            Clients.All.broadcastMessage(messageText);
         }
 
         void INotificationService.ForceUpdate()

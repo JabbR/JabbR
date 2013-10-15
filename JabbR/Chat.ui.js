@@ -2039,13 +2039,21 @@
         addListToActiveRoom: function(header, messages) {
             this.addList(header, messages, getActiveRoomName());
         },
-        addBroadcast: function(message, roomName) {
-            this.addMessage(message, 'broadcast', roomName);
+        addBroadcast: function (message) {
+            //TODO add some behavior if the lobby is active and/or no rooms are joined
+            var rooms = getAllRoomElements();
+            for (var r in rooms) {
+                // broadcasts are relevent in *all* rooms, even closed ones
+                if (rooms[r].getName() !== undefined) {
+                    this.addMessage(message, 'broadcast', rooms[r].getName());
+                }
+            }
         },
         addAction: function(message, roomName) {
             this.addMessage(message, 'action', roomName);
         },
         addPrivateMessage: function (content) {
+            //TODO add some behavior if the lobby or a closed room is active and/or if no non-closed rooms are joined
             var rooms = getAllRoomElements();
             for (var r in rooms) {
                 if (rooms[r].getName() !== undefined && rooms[r].isClosed() === false) {

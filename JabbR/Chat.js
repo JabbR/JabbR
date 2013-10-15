@@ -947,8 +947,8 @@
         ui.addNotificationToActiveRoom(utility.getLanguageResource('Chat_YouAdminRevoked'));
     };
 
-    chat.client.broadcastMessage = function (message, room) {
-        ui.addBroadcast(utility.getLanguageResource('Chat_AdminBroadcast', message), room);
+    chat.client.broadcastMessage = function (message) {
+        ui.addBroadcast(utility.getLanguageResource('Chat_AdminBroadcast', message));
     };
 
     chat.client.outOfSync = function () {
