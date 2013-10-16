@@ -19,7 +19,7 @@ namespace JabbR.ContentProviders.Core
         }
 
         public void ProcessUrls(IEnumerable<string> links,
-                                IHubConnectionContext clients,
+                                IHubConnectionContext<dynamic> clients,
                                 string roomName,
                                 string messageId)
         {
