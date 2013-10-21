@@ -79,7 +79,8 @@
         roomLoadingTimeout = null,
         Room = chat.Room,
         $unreadNotificationCount = null,
-        $splashScreen = null;
+        $splashScreen = null,
+        activeRoomName = 'Lobby';
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] === '/') {
@@ -147,41 +148,23 @@
 
     function getRoomElements(roomName) {
         var roomId = getRoomId(roomName);
-        var room = new Room($('#tabs-' + roomId),
+        return new Room($('#tabs-' + roomId),
                         $('#userlist-' + roomId),
                         $('#userlist-' + roomId + '-owners'),
                         $('#userlist-' + roomId + '-active'),
                         $('#messages-' + roomId),
                         $('#roomTopic-' + roomId));
-        return room;
     }
 
-    function getCurrentRoomElements() {
-        var $tab = $tabs.find('li.current');
-        var room;
-        if ($tab.data('name') === 'Lobby') {
-            room = new Room($tab,
-                $('#userlist-lobby'),
-                $('#userlist-lobby-owners'),
-                $('#userlist-lobby-active'),
-                $('.messages.current'),
-                $('.roomTopic.current'));
-        } else {
-            room = new Room($tab,
-                $('.users.current'),
-                $('.userlist.current .owners'),
-                $('.userlist.current .active'),
-                $('.messages.current'),
-                $('.roomTopic.current'));
-        }
-        return room;
+    function getActiveRoomElements() {
+        var activeRoom = getActiveRoomName();
+        return getRoomElements(activeRoom);
     }
     
-    function getActiveRoomName() {
-        //TODO: make this less DOM-read-ey
-        return $tabs.find('li.current').data('name');
+    function getLobbyElements() {
+        return getRoomElements('Lobby');
     }
-
+    
     function getAllRoomElements() {
         var rooms = [];
         $("ul#tabs > li.room, ul#tabs-dropdown > li.room").each(function () {
@@ -189,9 +172,13 @@
         });
         return rooms;
     }
-
-    function getLobby() {
-        return getRoomElements('Lobby');
+    
+    function setActiveRoomName(roomName) {
+        activeRoomName = roomName;
+    }
+    
+    function getActiveRoomName() {
+        return activeRoomName;
     }
 
     function getRooms() {
@@ -199,7 +186,7 @@
     }
 
     function updateLobbyRoom(room) {
-        var lobby = getLobby(),
+        var lobby = getLobbyElements(),
             $targetList = room.Private === true ? lobby.owners : lobby.users,
             $room = $targetList.find('[data-room="' + room.Name + '"]'),
             $count = $room.find('.count'),
@@ -249,7 +236,7 @@
     }
 
     function addRoomToLobby(roomViewModel) {
-        var lobby = getLobby(),
+        var lobby = getLobbyElements(),
             $room = null,
             roomName = roomViewModel.Name.toString().toUpperCase(),
             count = roomViewModel.Count,
@@ -575,7 +562,7 @@
     }
 
     function getActiveRoomPreference(name) {
-        var room = getCurrentRoomElements();
+        var room = getActiveRoomElements();
         return getRoomPreference(room.getName(), name);
     }
 
@@ -608,7 +595,7 @@
         $newMessage.focus();
 
         // always scroll to bottom after new message sent
-        var room = getCurrentRoomElements();
+        var room = getActiveRoomElements();
         room.scrollToBottom();
         room.removeSeparator();
     }
@@ -672,7 +659,7 @@
         var room = getRoomElements(roomName);
         var topicHtml = topic === '' ? utility.getLanguageResource('Chat_DefaultTopic', roomName) : ui.processContent(topic);
         var roomTopic = room.roomTopic;
-        var isVisibleRoom = getCurrentRoomElements().getName() === roomName;
+        var isVisibleRoom = getActiveRoomName() === roomName;
 
         if (isVisibleRoom) {
             roomTopic.hide();
@@ -717,7 +704,7 @@
     }
 
     function loadMoreLobbyRooms() {
-        var lobby = getLobby(),
+        var lobby = getLobbyElements(),
             moreRooms = publicRoomList.slice(lastLoadedRoomIndex, lastLoadedRoomIndex + maxRoomsToLoad);
 
         populateLobbyRoomList(moreRooms, templates.lobbyroom, lobby.users);
@@ -969,7 +956,7 @@
             $document.on('keydown', function (ev) {
                 // ctrl + tab event is sent to the page in firefox when the user probably means to change browser tabs
                 if (ev.keyCode === Keys.Tab && !ev.ctrlKey && $newMessage.val() === "") {
-                    var current = getCurrentRoomElements(),
+                    var current = getActiveRoomElements(),
                         index = current.tab.index(),
                         tabCount = $tabs.children().length - 1;
 
@@ -1046,7 +1033,7 @@
             });
 
             $sound.click(function () {
-                var room = getCurrentRoomElements();
+                var room = getActiveRoomElements();
 
                 if (room.isLobby()) {
                     return;
@@ -1061,7 +1048,7 @@
             });
 
             $richness.click(function () {
-                var room = getCurrentRoomElements(),
+                var room = getActiveRoomElements(),
                     $richContentMessages = room.messages.find('h3.collapsible_title');
 
                 if (room.isLobby()) {
@@ -1095,7 +1082,7 @@
             $toast.click(function () {
                 var $this = $(this),
                     enabled = !$this.hasClass('off'),
-                    room = getCurrentRoomElements();
+                    room = getActiveRoomElements();
 
                 if (room.isLobby()) {
                     return;
@@ -1127,7 +1114,7 @@
             });
 
             $downloadIcon.click(function () {
-                var room = getCurrentRoomElements();
+                var room = getActiveRoomElements();
 
                 if (room.isLobby()) {
                     return; //Show a message?
@@ -1141,7 +1128,7 @@
             });
 
             $downloadDialogButton.click(function () {
-                var room = getCurrentRoomElements();
+                var room = getActiveRoomElements();
 
                 var url = document.location.href;
                 var nav = url.indexOf('#');
@@ -1171,7 +1158,7 @@
             $closedRoomFilter.click(function() { $lobbyRoomFilterForm.submit(); });
 
             $lobbyRoomFilterForm.submit(function () {
-                var room = getCurrentRoomElements(),
+                var room = getActiveRoomElements(),
                     $lobbyRoomsLists = $lobbyPrivateRooms.add($lobbyOtherRooms);
 
                 // hide all elements except those that match the input / closed filters
@@ -1192,7 +1179,7 @@
 
             $window.focus(function () {
                 // clear unread count in active room
-                var room = getCurrentRoomElements();
+                var room = getActiveRoomElements();
                 room.makeActive();
 
                 ui.updateTabOverflow();
@@ -1201,7 +1188,7 @@
             });
 
             $window.resize(function () {
-                var room = getCurrentRoomElements();
+                var room = getActiveRoomElements();
                 room.scrollToBottom();
                 ui.updateTabOverflow();
             });
@@ -1251,7 +1238,7 @@
                 get: function (prefix) {
                     switch (prefix) {
                         case '@':
-                            var room = getCurrentRoomElements();
+                            var room = getActiveRoomElements();
                             // exclude current username from autocomplete
                             return room.users.find('li[data-name != "' + ui.getUserName() + '"]')
                                          .not('.room')
@@ -1364,7 +1351,7 @@
                 return true;
             }
 
-            var currentRoom = getCurrentRoomElements();
+            var currentRoom = getActiveRoomElements();
 
             if (room.exists()) {
                 if (currentRoom.exists()) {
@@ -1375,6 +1362,7 @@
                     }
                 }
 
+                setActiveRoomName(roomName);
                 room.makeActive();
                 
                 ui.updateTabOverflow();
@@ -1407,13 +1395,13 @@
         },
         updateLobbyRoom: updateLobbyRoom,
         updatePrivateLobbyRooms: function (roomName) {
-            var lobby = getLobby(),
+            var lobby = getLobbyElements(),
                 $room = lobby.users.find('li[data-name="' + roomName + '"]');
 
             $room.addClass('locked').appendTo(lobby.owners);
         },
         updateUnread: function (roomName, isMentioned) {
-            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
+            var room = roomName ? getRoomElements(roomName) : getActiveRoomElements();
 
             if (ui.hasFocus() && room.isActive()) {
                 return;
@@ -1423,7 +1411,7 @@
             ui.updateTabOverflow();
         },
         scrollToBottom: function (roomName) {
-            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
+            var room = roomName ? getRoomElements(roomName) : getActiveRoomElements();
 
             if (room.isActive()) {
                 room.scrollToBottom();
@@ -1464,13 +1452,13 @@
             }
         },
         isNearTheEnd: function (roomName) {
-            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
+            var room = roomName ? getRoomElements(roomName) : getActiveRoomElements();
 
             return room.isNearTheEnd();
         },
         setRoomLoading: setRoomLoading,
         populateLobbyRooms: function (rooms, privateRooms) {
-            var lobby = getLobby(),
+            var lobby = getLobbyElements(),
                 i;
             if (!lobby.isInitialized()) {
                 
@@ -1563,7 +1551,7 @@
             }
             
             // remove the items from the lobby screen
-            var lobby = getLobby(),
+            var lobby = getLobbyElements(),
                 $room = lobby.users.add(lobby.owners).find('[data-room="' + roomName + '"]');
             $room.remove();
             
@@ -1687,7 +1675,7 @@
                  .attr('src', src);
         },
         showGravatarProfile: function (profile) {
-            var room = getCurrentRoomElements(),
+            var room = getActiveRoomElements(),
                 nearEnd = ui.isNearTheEnd();
 
             this.appendMessage(templates.gravatarprofile.tmpl(profile), room);
@@ -1746,7 +1734,7 @@
         },
         setLoadingHistory: function (loadingHistory) {
             if (loadingHistory) {
-                var room = getCurrentRoomElements();
+                var room = getActiveRoomElements();
                 $loadingHistoryIndicator.appendTo(room.messages);
                 $loadingHistoryIndicator.fadeIn('slow');
             } else {
@@ -1971,7 +1959,7 @@
         },
         //TODO swap around type and roomName parameters for consistency
         addMessage: function (content, type, roomName) {
-            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements(),
+            var room = roomName ? getRoomElements(roomName) : getActiveRoomElements(),
                 nearEnd = room.isNearTheEnd(),
                 $element = ui.prepareNotificationMessage(content, type);
 
@@ -2102,7 +2090,7 @@
             });
         },
         setInitialized: function (roomName) {
-            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
+            var room = roomName ? getRoomElements(roomName) : getActiveRoomElements();
             room.setInitialized();
         },
         collapseNotifications: function ($notification) {
@@ -2127,7 +2115,7 @@
                 .addClass('collapse');
             $notifications.show();
 
-            var room = getCurrentRoomElements(),
+            var room = getActiveRoomElements(),
                 topAfter = $notification.position().top,
                 scrollTop = room.messages.scrollTop();
 
@@ -2342,7 +2330,7 @@
             room.unClose();
         },
         setRoomListStatuses: function (roomName) {
-            var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();
+            var room = roomName ? getRoomElements(roomName) : getActiveRoomElements();
             room.setListState(room.owners);
         },
         processContent: function (content) {

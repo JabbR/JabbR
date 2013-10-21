@@ -50,7 +50,7 @@
     };
 
     Room.prototype.needsSeparator = function () {
-        if (this.isActive()) {
+        if (this.isCurrent()) {
             return false;
         }
         return this.isInitialized() && this.getUnread() === 5;
@@ -106,7 +106,7 @@
         return this.tab.data('name');
     };
 
-    Room.prototype.isActive = function () {
+    Room.prototype.isCurrent = function () {
         return this.tab.hasClass('current');
     };
 
@@ -136,6 +136,7 @@
         this.activeUsers.empty();
     };
 
+    // possibly in the future, inactive (not the focussed room) will not necessarily mean not-current (hidden) like it does now.
     Room.prototype.makeInactive = function () {
         this.tab.removeClass('current');
 
