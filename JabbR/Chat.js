@@ -37,16 +37,6 @@
         return chat.state.name === user.Name;
     }
 
-    function getNoteCssClass(user) {
-        if (user.IsAfk === true) {
-            return 'afk';
-        }
-        else if (user.Note) {
-            return 'message';
-        }
-        return '';
-    }
-
     function getNote(user) {
         if (user.IsAfk === true) {
             if (user.AfkNote) {
@@ -65,10 +55,6 @@
         }
 
         return false;
-    }
-
-    function getFlagCssClass(user) {
-        return (user.Flag) ? 'flag flag-' + user.Flag : '';
     }
 
     function performLogout() {
@@ -202,9 +188,7 @@
             hash: user.Hash,
             owner: isOwner,
             active: user.Active,
-            noteClass: getNoteCssClass(user),
             note: getNote(user),
-            flagClass: getFlagCssClass(user),
             flag: user.Flag,
             country: user.Country,
             lastActive: lastActive,

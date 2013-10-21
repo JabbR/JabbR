@@ -619,7 +619,7 @@
             noteTextEncoded = null,
             requireRoomUpdate = false;
 
-        if (userViewModel.noteClass === 'afk') {
+        if (userViewModel.afk) {
             noteText = userViewModel.note + ' (' + userViewModel.timeAgo + ')';
             requireRoomUpdate = ui.setUserInActive($user);
         }
@@ -651,19 +651,20 @@
     function updateFlag(userViewModel, $user) {
         var $flag = $user.find('.flag');
 
-        $flag.removeAttr('class');
-        $flag.addClass('flag');
-        $flag.removeAttr('title');
+        // find all css classes not beginning with flag-
+        var countryClasses = $flag.attr("class").split(" ").filter(function (item) {
+            return item.lastIndexOf("flag-", 0) === 0 ? "" : item;
+        });
 
-        if (userViewModel.flagClass) {
-            $flag.addClass(userViewModel.flagClass);
+        if (userViewModel.flag) {
+            countryClasses.push('flag-' + userViewModel.flag);
+            $flag.attr("class", countryClasses.join(" "));
+            $flag.attr('title', userViewModel.country);
             $flag.show();
         } else {
+            $flag.attr("class", countryClasses.join(" "));
+            $flag.removeAttr('title');
             $flag.hide();
-        }
-
-        if (userViewModel.country) {
-            $flag.attr('title', userViewModel.country);
         }
     }
 
