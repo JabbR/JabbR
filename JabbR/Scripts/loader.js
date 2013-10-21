@@ -1,4 +1,6 @@
-﻿/*
+﻿(function() {
+
+/*
  * Windows Azure Loading Style with Canvas
  * Taken from: http://codepen.io/btipling/pen/frkzg
  * Created by: Bjorn Tipling (http://codepen.io/btipling)
@@ -79,7 +81,7 @@ function main() {
     var colors, arcs, w, h, canvas, ctx, x, y, borderWidth, i, r, step,
     startColor, addColor, numStripes;
 
-    canvas = document.getElementById('canvas');
+    canvas = document.getElementById('loading-canvas');
     ctx = canvas.getContext('2d');
     w = canvas.width;
     h = canvas.height;
@@ -211,3 +213,5 @@ function drawArc(ctx, arcWidth, x, y, radius, start, end, color) {
 }
 
 main();
+
+}());

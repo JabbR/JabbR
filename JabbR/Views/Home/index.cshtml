@@ -328,7 +328,7 @@
         <div id="chat-area" role="tabpanel">
             <div id="room-loading">
                 <div id="loader-container">
-                    <canvas id="canvas" width="150" height="150"></canvas>
+                    <canvas id="loading-canvas" width="150" height="150"></canvas>
                     <h4>@LanguageResources.LoadingMessage</h4>
                 </div>
             </div>
@@ -506,6 +506,7 @@
             .Add("~/Scripts/jquery.history.js")
             .Add("~/Scripts/moment.min.js")
             .Add("~/Scripts/livestamp.min.js")
+            .Add("~/Scripts/loader.js")
             .Add("~/Chat.emoji.js")
             .Add("~/Chat.utility.js")
             .Add("~/Chat.toast.js")
@@ -516,7 +517,6 @@
             .Add("~/Chat.twitter.js")
             .Add("~/Chat.githubissues.js")
             .Add("~/Chat.js")
-            .Add("~/loader.js")
             .Render("~/Scripts/JabbR2_#.js"));
     }
     @if (Model.DebugMode)
