@@ -1345,7 +1345,7 @@
 
             loadRoomPreferences(roomName);
 
-            if (room.isActive()) {
+            if (room.isCurrent()) {
                 // Still trigger the event (just do less overall work)
                 $ui.trigger(ui.events.activeRoomChanged, [roomName]);
                 return true;
@@ -1403,7 +1403,7 @@
         updateUnread: function (roomName, isMentioned) {
             var room = roomName ? getRoomElements(roomName) : getActiveRoomElements();
 
-            if (ui.hasFocus() && room.isActive()) {
+            if (ui.hasFocus() && room.isCurrent()) {
                 return;
             }
 
@@ -1413,7 +1413,7 @@
         scrollToBottom: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getActiveRoomElements();
 
-            if (room.isActive()) {
+            if (room.isCurrent()) {
                 room.scrollToBottom();
             }
         },
@@ -1518,7 +1518,7 @@
                 $lobbyOtherRooms.show();
             }
 
-            if (lobby.isActive()) {
+            if (lobby.isCurrent()) {
                 // update cache of room names
                 $lobbyRoomFilterForm.show();
             }
