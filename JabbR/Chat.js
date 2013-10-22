@@ -1244,14 +1244,14 @@
                 if (change.newState === $.connection.connectionState.reconnecting) {
                     failPendingMessages();
 
-                    ui.showStatus(1, '');
+                    ui.connectionStatus.update(1, '');
                 }
                 else if (change.newState === $.connection.connectionState.connected) {
                     if (!initial) {
-                        ui.showStatus(0, $.connection.hub.transport.name);
+                        ui.connectionStatus.update(0, $.connection.hub.transport.name);
                         ui.setReadOnly(false);
                     } else {
-                        ui.initializeConnectionStatus($.connection.hub.transport.name);
+                        ui.connectionStatus.initialize($.connection.hub.transport.name);
                     }
 
                     initial = false;
@@ -1268,7 +1268,7 @@
                     failPendingMessages();
                 }
 
-                ui.showStatus(2, '');
+                ui.connectionStatus.update(2, '');
                 ui.setReadOnly(true);
 
                 // Restart the connection

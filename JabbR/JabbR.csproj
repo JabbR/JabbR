@@ -810,12 +810,13 @@
     <Content Include="Chat.githubissues.js" />
     <Content Include="Content\themes\default\Chat.githubissues.css" />
     <Content Include="Content\themes\default\Chat.nuget.css" />
+    <Content Include="Chat.ui.connectionStatus.js" />
     <Content Include="favicon.ico" />
     <Content Include="Content\images\big-logo.png" />
     <Content Include="Content\images\logo32.png" />
     <Content Include="Content\images\small-logo.png" />
     <Content Include="Content\sounds\notification.wav" />
-    <Content Include="loader.js" />
+    <Content Include="Scripts\loader.js" />
     <Content Include="notifications.js" />
     <Content Include="notifications.unreadcounter.js" />
     <Content Include="robots.txt" />
