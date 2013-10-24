@@ -892,9 +892,6 @@
     <Content Include="newrelic.cmd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <EmbeddedResource Include="Migrations\201310160533083_AddPrecisionToDateTimeOffsets.resx">
-      <DependentUpon>201310160533083_AddPrecisionToDateTimeOffsets.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
@@ -1050,10 +1047,6 @@
     <Compile Include="Migrations\201307181924477_AddUserPreferences.cs" />
     <Compile Include="Migrations\201307181924477_AddUserPreferences.Designer.cs">
       <DependentUpon>201307181924477_AddUserPreferences.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201310160533083_AddPrecisionToDateTimeOffsets.cs" />
-    <Compile Include="Migrations\201310160533083_AddPrecisionToDateTimeOffsets.Designer.cs">
-      <DependentUpon>201310160533083_AddPrecisionToDateTimeOffsets.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Attachment.cs" />
     <Compile Include="Models\ClientNotification.cs" />
