@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.SqlServer;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.ViewModels;
@@ -206,11 +208,11 @@ namespace JabbR.Services
 
             if (offlineUsers.Count > 0)
             {
-                PerformRoomAction(offlineUsers, roomGroup =>
+                PerformRoomAction(offlineUsers, async roomGroup =>
                 {
                     foreach (var user in roomGroup.Users)
                     {
-                        _hubContext.Clients.Group(roomGroup.Room.Name).leave(user, roomGroup.Room.Name);
+                        await _hubContext.Clients.Group(roomGroup.Room.Name).leave(user, roomGroup.Room.Name);
                     }
                 });
 
@@ -233,16 +235,16 @@ namespace JabbR.Services
 
             if (inactiveUsers.Count > 0)
             {
-                PerformRoomAction(inactiveUsers, roomGroup =>
+                PerformRoomAction(inactiveUsers, async roomGroup =>
                 {
-                    _hubContext.Clients.Group(roomGroup.Room.Name).markInactive(roomGroup.Users);
+                    await _hubContext.Clients.Group(roomGroup.Room.Name).markInactive(roomGroup.Users);
                 });
 
                 repo.CommitChanges();
             }
         }
 
-        private static void PerformRoomAction(List<ChatUser> users, Action<RoomGroup> action)
+        private static async void PerformRoomAction(List<ChatUser> users, Func<RoomGroup, Task> callback)
         {
             var roomGroups = from u in users
                              from r in u.Rooms
@@ -256,7 +258,14 @@ namespace JabbR.Services
 
             foreach (var roomGroup in roomGroups)
             {
-                action(roomGroup);
+                try
+                {
+                    await callback(roomGroup);
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceError("Error occurred: " + ex);
+                }
             }
         }
 
