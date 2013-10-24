@@ -52,7 +52,10 @@ namespace JabbR
                 app.Use(typeof(RequireHttpsHandler));
             }
 
-            app.UseErrorPage();
+            app.UseErrorPage(new Microsoft.Owin.Diagnostics.ErrorPageOptions
+            {
+                ShowExceptionDetails = true
+            });
 
             SetupAuth(app, kernel);
             SetupSignalR(configuration, kernel, app);
