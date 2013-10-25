@@ -13,6 +13,7 @@ namespace JabbR.ViewModels
         public Version Version { get; set; }
         public bool IsAdmin { get; set; }
         public string ClientLanguageResources { get; set; }
+        public int MaxMessageLength { get; set; }
      
         public bool ShowDetails
         {
