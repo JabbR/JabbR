@@ -348,7 +348,7 @@
             </div>
             <form id="send-message" action="#">
                 <div id="message-box">
-                    <textarea id="new-message" autocomplete="off" aria-autocomplete="none" accesskey="m"></textarea>
+                    <textarea id="new-message" autocomplete="off" aria-autocomplete="none" accesskey="m" @(Model.MaxMessageLength > 0 ? "maxlength=" + Model.MaxMessageLength : "")></textarea>
                 </div>
                 <input type="submit" id="send" value="@LanguageResources.Client_Send" class="send btn" />
             </form>

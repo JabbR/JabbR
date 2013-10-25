@@ -1156,4 +1156,10 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="Chat_YouAreAfkNote" xml:space="preserve">
     <value>You have gone AFK, with the message "{0}".</value>
   </data>
+  <data name="Administration_MaxMessageLength" xml:space="preserve">
+    <value>Max Message Length</value>
+  </data>
+  <data name="SendMessageTooLong" xml:space="preserve">
+    <value>You cannot post this message. It is too long.</value>
+  </data>
 </root>

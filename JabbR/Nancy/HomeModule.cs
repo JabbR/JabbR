@@ -34,7 +34,8 @@ namespace JabbR.Nancy
                         DebugMode = (bool)Context.Items["_debugMode"],
                         Version = Constants.JabbRVersion,
                         IsAdmin = Principal.HasClaim(JabbRClaimTypes.Admin),
-                        ClientLanguageResources = BuildClientResources()
+                        ClientLanguageResources = BuildClientResources(),
+                        MaxMessageLength = settings.MaxMessageLength
                     };
 
                     return View["index", viewModel];

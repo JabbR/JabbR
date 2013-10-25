@@ -63,6 +63,12 @@
                             @Html.CheckBox("allowRoomCreation", Model.AllowRoomCreation)
                         </div>
                     </div>
+                    <div class="control-group">
+                        <label class="control-label" for="maxMessageLength">@LanguageResources.Administration_MaxMessageLength</label>
+                        <div class="controls">
+                            <input type="text" id="maxMessageLength" name="maxMessageLength" class="input-xlarge" value="@Model.MaxMessageLength" placeholder="@LanguageResources.Administration_MaxMessageLength"/>
+                        </div>
+                    </div>
                 </fieldset>
                 <fieldset id="emailSettings">
                     <legend>@LanguageResources.Administration_EmailSettings</legend>

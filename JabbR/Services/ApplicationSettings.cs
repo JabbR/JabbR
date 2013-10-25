@@ -26,6 +26,8 @@ namespace JabbR.Services
 
         public int MaxFileUploadBytes { get; set; }
 
+        public int MaxMessageLength { get; set; }
+
         public string GoogleAnalytics { get; set; }
 
         public bool AllowUserRegistration { get; set; }
@@ -79,6 +81,7 @@ namespace JabbR.Services
                 EncryptionKey = CryptoHelper.ToHex(GenerateRandomBytes()),
                 VerificationKey = CryptoHelper.ToHex(GenerateRandomBytes()),
                 MaxFileUploadBytes = 5242880,
+                MaxMessageLength = 0,
                 AllowUserRegistration = true,
                 AllowRoomCreation = true,
                 AllowUserResetPassword = false,
