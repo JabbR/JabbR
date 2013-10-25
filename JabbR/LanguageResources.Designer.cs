@@ -550,6 +550,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Max Message Length being set to less than 1 will result in no limit being enforced..
+        /// </summary>
+        public static string Administration_MaxMessageLengthHelp {
+            get {
+                return ResourceManager.GetString("Administration_MaxMessageLengthHelp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allow User Password Reset.
         /// </summary>
         public static string Administration_ResetPasswordAllowed {
