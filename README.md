@@ -30,15 +30,23 @@ Assign a gravatar to your nick. Be recognized, even in JabbR!
 ### Content Provider Support
 Inline image and content support for your favorite sites:
 
+* Bash Quote DB
+* BBC News
 * CollegeHumor
+* Dictionary.com
 * GitHub 
 * Google Docs
 * imgur
 * join.me
+* Mixcloud
 * NerdDinner
+* Nuget
 * Pastie
+* Screencast
 * SlideShare
+* SoundCloud
 * Twitter
+* Uservoice
 * UStream
 * Vimeo
 * Youtube
