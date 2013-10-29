@@ -57,11 +57,11 @@ form#send-message {
 
 #lobby-wrapper {
     position: absolute;
-    top: 55px;
+    top: 40px;
     left: 0;
     right: 0;
     padding: 5px;
-    bottom: 50px;
+    bottom: 0;
     background: #fff;
     overflow: auto;
     color: #00103f;
@@ -70,13 +70,21 @@ form#send-message {
 
 #room-filter-form {
     display: none;
-    margin: -4px 5px;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    height: 30px;
 }
 
-#room-filter-closed-area {
-    margin: 0px 5px;
-    font-size: 13px;
-}
+    #room-filter {
+        max-width: 284px;
+    }
+
+    #room-filter-closed-area {
+        margin: 0px 5px;
+        font-size: 13px;
+    }
 
 #preferences a, #room-preferences a {
     cursor: pointer;
@@ -97,25 +105,25 @@ form#send-message {
     margin-left: 0px;
 }
 
-#topic-bar {
+.home #page {
+    min-width: 300px;
+    min-height: 400px;
     position: absolute;
-    top: 45px;
+    top: 0;
     left: 0;
-    padding-top: 10px;
-    width: 100%;
-    height: 30px;
-    background-color: #e5e5e5;
-    color: #00103f;
+    right: 0;
+    bottom: 0;
 }
 
 #chat-area {
+    box-sizing: border-box;
     position: absolute;
-    top: 31px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    min-height: 450px;
-    z-index: -1;
+    top: 45px;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    background-color: #e5e5e5;
+    color: #00103f;
 }
 
 .upload-button {
@@ -150,6 +158,7 @@ form#send-message {
     left: 0;
     top: 0;
     width: 100%;
+    height: 45px;
 }
 
     #heading h1 {
@@ -180,19 +189,19 @@ form#send-message {
     position: relative;
 }
 
-.messages {
+.messages,
+#drop-file-target {
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     border-right: 1px solid #ccc;
     overflow: auto;
-    margin-left: 0px;
-    margin-top: 0px;
-    padding-left: 0px;
+    margin: 0;
+    padding: 0;
     left: 0;
     right: 235px;
     position: absolute;
-    top: 55px;
-    bottom: 40px;
+    top: 40px;
+    bottom: 0;
     background-color: #fff;
 }
 
@@ -227,16 +236,21 @@ form#send-message {
 
 .roomTopic {
     position: absolute;
-    margin-left: 5px;
+    top: 10px;
+    left: 5px;
+    right: 125px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .users {
     font-size: small;
     position: absolute;
-    top: 55px;
+    top: 40px;
     right: 0;
     width: 235px;
-    bottom: 50px;
+    bottom: 0;
     margin-top: 0px;
     overflow: auto;
     background: #FFFFFF;
@@ -623,7 +637,6 @@ li.user.typing .gravatar {
     right: 0;
     position: absolute;
     z-index: 1000;
-    min-width: 120px;
     height: 37px;
     overflow: hidden;
 }
@@ -821,6 +834,7 @@ li.user.typing .gravatar {
     position: absolute;
     right: 0;
     width: 70px;
+    height: 30px;
 }
 
 #enable-disable-toast {
@@ -1041,7 +1055,8 @@ li.error {
         padding: 5px;
         word-wrap: break-word;
     }
-
+       
+        /* arrow to the left of a message */
         .message .middle.first:before,
         .message.my-message .middle.first:before,
         .message.highlight .middle.first:before,
@@ -2691,7 +2706,7 @@ h3.userlist-header {
 
 #room-actions {
     margin-right: 5px;
-    margin-top: -3px;
+    top: 8px;
     display: none;
 }
 
@@ -2927,7 +2942,8 @@ h3.userlist-header {
             margin: inherit;
         }
 
-    .messages {
+    .messages,
+    #drop-file-target {
         right: 200px;
     }
 
@@ -2976,9 +2992,31 @@ h3.userlist-header {
     }
 }
 
-
 @media (max-width:700px) {
-    .messages {
+    .navbar .nav > li > a {
+        padding: 8px 5px 8px;
+    }
+
+    #tabs {
+        /* wider for additional admin buttons */
+        margin-right: 160px;
+    }
+       
+        #tabs li a {
+            padding: 8px 20px 4px 6px;
+        }
+
+        #tabs li.no-close a {
+            padding-right: 6px;
+        }
+
+    .home-admin #tabs {
+        /* wider for additional admin buttons */
+        margin-right: 186px;
+    }
+    
+    .messages,
+    #drop-file-target {
         right: 150px;
     }
 
@@ -3030,8 +3068,19 @@ h3.userlist-header {
     }
 }
 
+@media screen and (max-width:580px) {
+    #lobby-wrapper {
+        top: 65px;
+    }
+
+    #room-filter {
+        max-width: none;
+    }
+}
+
 @media screen and (max-width:480px) {
-    .messages {
+    .messages,
+    #drop-file-target {
         width: auto;
         right: 100px;
         left: 0px;
@@ -3039,21 +3088,47 @@ h3.userlist-header {
 
         .messages li.message {
             border-left: 30px solid #f1f1f1;
+            padding: 3px;
         }
 
     .message .left {
         margin-left: -32px;
+        margin-right: -8px;
         width: 30px;
+        padding: 0;
+        padding-left: 3px;
     }
 
-        .message .left .name {
+        .messages .message .left .name {
             display: none;
         }
 
+    .messages .middle, .notifiation .content,
+    .action .content, .pm .content, .error .content, .broadcast .content {
+        display: inline;
+        padding: 0;
+        margin: 0;
+    }
+
+    /* arrow to the left of a message */
+    .message .middle.first:before,
+    .message.my-message .middle.first:before,
+    .message.highlight .middle.first:before,
+    .message.highlight.my-message .middle.first:before {
+        top: 3px;
+    }
+
+    .messages li .right {
+        float: right;
+        display: inline;
+        padding: 0;
+        position: inherit;
+        width: auto;
+    }
+
     .message.loading .left .state,
     .message.failed .left .state {
-        margin-top: 5px;
-        margin-right: 8px;
+        height: 18px;
     }
 
     .users {
@@ -3150,13 +3225,16 @@ h3.userlist-header {
 
 #drop-file-target {
     display: none;
+    background-color: #000;
+    opacity: 0.25;
+    z-index: 1000;
 }
 
 .drop-file-text {
     font-size: 72pt;
     display: block;
     position: absolute;
-    line-height: 50px;
+    line-height: 1.2em;
     top: 50%;
     left: 40%;
     margin: -82px 0 0 -180px;
