@@ -2398,13 +2398,6 @@
             }
 
             $roomTabs.each(function () { $(this).css('visibility', 'visible'); });
-            
-            // fix the side that the dropdown sits on
-            if ($window.width() < 350) {
-                $tabsDropdown.removeClass('pull-right');
-            } else {
-                $tabsDropdown.addClass('pull-right');
-            }
 
             return;
         },
