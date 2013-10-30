@@ -215,7 +215,7 @@
     }
 
     function getMessageViewModel(message) {
-        var re = new RegExp("\\b@?" + chat.state.name.replace(/\./, '\\.') + "\\b", "i");
+        var re = new RegExp("\\b@?" + chat.state.name.replace(/\./g, '\\.') + "\\b", "i");
         return {
             name: message.User.Name,
             hash: message.User.Hash,
