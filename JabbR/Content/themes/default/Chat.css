@@ -3098,7 +3098,7 @@ h3.userlist-header {
             display: none;
         }
 
-    .messages .middle, .notifiation .content,
+    .messages .middle, .notification .content,
     .action .content, .pm .content, .error .content, .broadcast .content {
         display: inline;
         padding: 0;
