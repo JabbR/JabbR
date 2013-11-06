@@ -31,16 +31,16 @@ namespace JabbR.Test
             repository.Add(user);
 
             // create testable chat
-            var chat = new TestableChat(resourceProcessor, chatService, repository, connection);
+            var chat = new TestableChat(resourceProcessor, chatService, repository, connection, settings);
             var mockedConnectionObject = chat.MockedConnection.Object;
 
             chat.Clients = new HubConnectionContext(mockPipeline.Object, mockedConnectionObject, "Chat", connectionId, clientState);
 
-            var prinicipal = new Mock<IPrincipal>();
+            var principal = new Mock<IPrincipal>();
 
             var request = new Mock<IRequest>();
             request.Setup(m => m.Cookies).Returns(cookies);
-            request.Setup(m => m.User).Returns(prinicipal.Object);
+            request.Setup(m => m.User).Returns(principal.Object);
 
             // setup context
             chat.Context = new HubCallerContext(request.Object, connectionId);
@@ -54,19 +54,22 @@ namespace JabbR.Test
             public Mock<IChatService> MockedChatService { get; private set; }
             public IJabbrRepository Repository { get; private set; }
             public Mock<IConnection> MockedConnection { get; private set; }
+            public ApplicationSettings Settings { get; private set; }
 
-            public TestableChat(Mock<ContentProviderProcessor> mockedResourceProcessor, Mock<IChatService> mockedChatService, IJabbrRepository repository, Mock<IConnection> connection)
+            public TestableChat(Mock<ContentProviderProcessor> mockedResourceProcessor, Mock<IChatService> mockedChatService, IJabbrRepository repository, Mock<IConnection> connection, ApplicationSettings settings)
                 : base(mockedResourceProcessor.Object,
                        mockedChatService.Object,
                        new Mock<IRecentMessageCache>().Object, 
                        repository, 
                        new Mock<ICache>().Object, 
-                       new Mock<ILogger>().Object)
+                       new Mock<ILogger>().Object,
+                       settings)
             {
                 MockedResourceProcessor = mockedResourceProcessor;
                 MockedChatService = mockedChatService;
                 Repository = repository;
                 MockedConnection = connection;
+                Settings = settings;
             }
         }
     }

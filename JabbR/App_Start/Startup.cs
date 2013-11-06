@@ -14,10 +14,12 @@ using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Infrastructure;
 using Microsoft.AspNet.SignalR.Transports;
 using Microsoft.Owin;
-using Microsoft.Owin.Extensions;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataHandler;
 using Microsoft.Owin.Security.DataProtection;
+
+using Nancy.Owin;
+
 using Newtonsoft.Json.Serialization;
 using Ninject;
 using Owin;
@@ -56,9 +58,56 @@ namespace JabbR
             SetupSignalR(configuration, kernel, app);
             SetupWebApi(kernel, app);
             SetupMiddleware(kernel, app);
+            SetupFileUpload(kernel, app);
             SetupNancy(kernel, app);
 
             SetupErrorHandling();
+        }
+
+        private void SetupFileUpload(IKernel kernel, IAppBuilder app)
+        {
+            app.Map("/upload-file", map =>
+            {
+                var uploadHandler = kernel.Get<UploadCallbackHandler>();
+
+                map.Run(async context =>
+                {
+                    if (!context.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
+                    {
+                        context.Response.StatusCode = 404;
+                    }
+                    else if (!context.Request.User.IsAuthenticated())
+                    {
+                        context.Response.StatusCode = 403;
+                    }
+                    else
+                    {
+                        var form = await context.Request.ReadFormAsync();
+
+                        string roomName = form["room"];
+                        string connectionId = form["connectionId"];
+                        string file = form["file"];
+                        string fileName = form["filename"];
+                        string contentType = form["type"];
+
+                        BinaryBlob binaryBlob = BinaryBlob.Parse(file);
+
+                        if (String.IsNullOrEmpty(contentType))
+                        {
+                            contentType = "application/octet-stream";
+                        }
+
+                        var stream = new MemoryStream(binaryBlob.Data);
+
+                        await uploadHandler.Upload(context.Request.User.GetUserId(),
+                                                   connectionId,
+                                                   roomName,
+                                                   fileName,
+                                                   contentType,
+                                                   stream);
+                    }
+                });
+            });
         }
 
         private static void SetupAuth(IAppBuilder app, IKernel kernel)
@@ -107,7 +156,7 @@ namespace JabbR
         private static void SetupNancy(IKernel kernel, IAppBuilder app)
         {
             var bootstrapper = new JabbRNinjectNancyBootstrapper(kernel);
-            app.UseNancy(bootstrapper);
+            app.UseNancy(new NancyOptions { Bootstrapper = bootstrapper });
         }
 
         private static void SetupMiddleware(IKernel kernel, IAppBuilder app)

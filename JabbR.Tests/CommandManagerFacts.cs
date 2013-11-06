@@ -1572,7 +1572,7 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void CanCreateRoomAndJoinsAutomaticly()
+            public void CanCreateRoomAndJoinsAutomatically()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -3513,7 +3513,7 @@ namespace JabbR.Test
                 bool result = commandManager.TryHandleCommand("/nudge dfowler2");
 
                 Assert.True(result);
-                notificationService.Verify(x => x.NugeUser(user, user2), Times.Once());
+                notificationService.Verify(x => x.NudgeUser(user, user2), Times.Once());
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/nudge dfowler2"));
                 Assert.Equal("User can only be nudged once every 60 seconds.", ex.Message);
             }
@@ -3548,7 +3548,7 @@ namespace JabbR.Test
                 bool result = commandManager.TryHandleCommand("/nudge dfowler2");
 
                 Assert.True(result);
-                notificationService.Verify(x => x.NugeUser(user, user2), Times.Once());
+                notificationService.Verify(x => x.NudgeUser(user, user2), Times.Once());
                 Assert.NotNull(user2.LastNudged);
             }
 

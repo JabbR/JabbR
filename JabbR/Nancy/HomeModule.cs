@@ -3,7 +3,6 @@ using System.IO;
 using System.Linq;
 using System.Resources;
 using System.Security.Claims;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JabbR.Infrastructure;
 using JabbR.Services;
@@ -19,7 +18,6 @@ namespace JabbR.Nancy
     {
         public HomeModule(ApplicationSettings settings,
                           IJabbrConfiguration configuration,
-                          UploadCallbackHandler uploadHandler,
                           IConnectionManager connectionManager,
                           IJabbrRepository jabbrRepository)
         {
@@ -36,7 +34,8 @@ namespace JabbR.Nancy
                         DebugMode = (bool)Context.Items["_debugMode"],
                         Version = Constants.JabbRVersion,
                         IsAdmin = Principal.HasClaim(JabbRClaimTypes.Admin),
-                        ClientLanguageResources = BuildClientResources()
+                        ClientLanguageResources = BuildClientResources(),
+                        MaxMessageLength = settings.MaxMessageLength
                     };
 
                     return View["index", viewModel];
@@ -64,7 +63,7 @@ namespace JabbR.Nancy
                 return View["monitor"];
             };
 
-            Get["/status"] = _ =>
+            Get["/status", runAsync: true] = async (_, token) =>
             {
                 var model = new StatusViewModel();
 
@@ -78,9 +77,8 @@ namespace JabbR.Nancy
                 try
                 {
                     var hubContext = connectionManager.GetHubContext<Chat>();
-                    var sendTask = (Task)hubContext.Clients.Client("doesn't exist").noMethodCalledThis();
-                    sendTask.Wait();
-
+                    await (Task)hubContext.Clients.Client("doesn't exist").noMethodCalledThis();
+                    
                     signalrStatus.SetOK();
                 }
                 catch (Exception ex)
@@ -102,8 +100,8 @@ namespace JabbR.Nancy
                     dbStatus.SetException(ex.GetBaseException());
                 }
 
-                // Try to talk to storage
-                var azureStorageStatus = new SystemStatus { SystemName = "Upload storage" };
+                // Try to talk to azure storage
+                var azureStorageStatus = new SystemStatus { SystemName = "Azure Upload storage" };
                 model.Systems.Add(azureStorageStatus);
 
                 try
@@ -114,9 +112,9 @@ namespace JabbR.Nancy
                         UploadResult result;
                         using (var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("test")))
                         {
-                            result = azure.UploadFile("statusCheck.txt", "text/plain", stream)
-                                          .Result;
+                            result = await azure.UploadFile("statusCheck.txt", "text/plain", stream);
                         }
+
                         azureStorageStatus.SetOK();
                     }
                     else
@@ -127,6 +125,33 @@ namespace JabbR.Nancy
                 catch (Exception ex)
                 {
                     azureStorageStatus.SetException(ex.GetBaseException());
+                }
+
+                //try to talk to local storage
+                var localStorageStatus = new SystemStatus { SystemName = "Local Upload storage" };
+                model.Systems.Add(localStorageStatus);
+
+                try
+                {
+                    if (!String.IsNullOrEmpty(settings.LocalFileSystemStoragePath) && !String.IsNullOrEmpty(settings.LocalFileSystemStorageUriPrefix))
+                    {
+                        var local = new LocalFileSystemStorageHandler(settings);
+                        UploadResult localResult;
+                        using (var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("test")))
+                        {
+                            localResult = await local.UploadFile("statusCheck.txt", "text/plain", stream);
+                        }
+
+                        localStorageStatus.SetOK();
+                    }
+                    else
+                    {
+                        localStorageStatus.StatusMessage = "Not configured";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    localStorageStatus.SetException(ex.GetBaseException());
                 }
 
                 // Force failure
@@ -146,53 +171,6 @@ namespace JabbR.Nancy
 
                 return view;
             };
-
-            Post["/upload-file"] = _ =>
-                {
-                    if (!IsAuthenticated)
-                    {
-                        return 403;
-                    }
-
-                    string roomName = Request.Form.room;
-                    string connectionId = Request.Form.connectionId;
-                    string file = Request.Form.file;
-                    //string fileName = "clipboard_" + Guid.NewGuid().ToString("N");
-                    string fileName = Request.Form.filename;
-                    string contentType = Request.Form.type;
-                    byte[] binData = null;
-
-                    var info = Regex.Match(file, @"data:(?:(?<unkown>.+?)/(?<type>.+?))?;base64,(?<data>.+)");
-
-                    binData = Convert.FromBase64String(info.Groups["data"].Value);
-                    contentType = info.Groups["type"].Value;
-
-                    if (String.IsNullOrWhiteSpace(contentType))
-                    {
-                        contentType = "application/octet-stream";
-                    }
-
-                    UploadFile(
-                        uploadHandler,
-                        Principal.GetUserId(),
-                        connectionId,
-                        roomName,
-                        fileName,
-                        contentType,
-                        new MemoryStream(binData)).Wait();
-
-                    return 200;
-                };
-        }
-
-        private static Task UploadFile(UploadCallbackHandler uploadHandler, string userName, string connectionId, string roomName, string fileName, string contentType, Stream value)
-        {
-            return uploadHandler.Upload(userName,
-                                 connectionId,
-                                 roomName,
-                                 fileName,
-                                 contentType,
-                                 value);
         }
 
         private static string BuildClientResources()
@@ -217,8 +195,6 @@ namespace JabbR.Nancy
                 "Chat_YouGrantedRoomOwnership",
                 "Chat_YourRoomOwnershipRevoked",
                 "Chat_YourGravatarChanged",
-                "Chat_YourPasswordSet",
-                "Chat_YourPasswordChanged",
                 "Chat_YouAreAfk",
                 "Chat_YouAreAfkNote",
                 "Chat_YourNoteSet",

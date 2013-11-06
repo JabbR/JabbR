@@ -496,11 +496,65 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Local File System Storage Path.
+        /// </summary>
+        public static string Administration_LocalFileSystemStoragePath {
+            get {
+                return ResourceManager.GetString("Administration_LocalFileSystemStoragePath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to D:\path\to\my\files\.
+        /// </summary>
+        public static string Administration_LocalFileSystemStoragePath_PlaceHolder {
+            get {
+                return ResourceManager.GetString("Administration_LocalFileSystemStoragePath_PlaceHolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local File System Storage Uri Prefix.
+        /// </summary>
+        public static string Administration_LocalFileSystemStorageUriPrefix {
+            get {
+                return ResourceManager.GetString("Administration_LocalFileSystemStorageUriPrefix", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to http://static.jabbr.net/files/.
+        /// </summary>
+        public static string Administration_LocalFileSystemStorageUriPrefix_PlaceHolder {
+            get {
+                return ResourceManager.GetString("Administration_LocalFileSystemStorageUriPrefix_PlaceHolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Max File Upload Size (Bytes).
         /// </summary>
         public static string Administration_MaxFileUploadBytes {
             get {
                 return ResourceManager.GetString("Administration_MaxFileUploadBytes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Message Length.
+        /// </summary>
+        public static string Administration_MaxMessageLength {
+            get {
+                return ResourceManager.GetString("Administration_MaxMessageLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Message Length being set to less than 1 will result in no limit being enforced..
+        /// </summary>
+        public static string Administration_MaxMessageLengthHelp {
+            get {
+                return ResourceManager.GetString("Administration_MaxMessageLengthHelp", resourceCulture);
             }
         }
         
@@ -528,6 +582,24 @@ namespace JabbR {
         public static string Administration_Storage {
             get {
                 return ResourceManager.GetString("Administration_Storage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Windows Azure.
+        /// </summary>
+        public static string Administration_Storage_Azure {
+            get {
+                return ResourceManager.GetString("Administration_Storage_Azure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Local Storage.
+        /// </summary>
+        public static string Administration_Storage_Local {
+            get {
+                return ResourceManager.GetString("Administration_Storage_Local", resourceCulture);
             }
         }
         
@@ -1357,24 +1429,6 @@ namespace JabbR {
         public static string Chat_YourNoteSet {
             get {
                 return ResourceManager.GetString("Chat_YourNoteSet", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your password has been changed..
-        /// </summary>
-        public static string Chat_YourPasswordChanged {
-            get {
-                return ResourceManager.GetString("Chat_YourPasswordChanged", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your password has been set..
-        /// </summary>
-        public static string Chat_YourPasswordSet {
-            get {
-                return ResourceManager.GetString("Chat_YourPasswordSet", resourceCulture);
             }
         }
         
@@ -2863,6 +2917,15 @@ namespace JabbR {
         public static string SendMessageRoomClosed {
             get {
                 return ResourceManager.GetString("SendMessageRoomClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot post this message. It is too long..
+        /// </summary>
+        public static string SendMessageTooLong {
+            get {
+                return ResourceManager.GetString("SendMessageTooLong", resourceCulture);
             }
         }
         

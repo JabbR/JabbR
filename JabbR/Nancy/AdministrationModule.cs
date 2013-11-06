@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using JabbR.Infrastructure;
 using JabbR.Services;
 using Nancy;
@@ -33,7 +35,18 @@ namespace JabbR.Nancy
                 {
                     var settings = this.Bind<ApplicationSettings>();
 
-                    settingsManager.Save(settings);
+                    IDictionary<string, string> errors;
+                    if (ApplicationSettings.TryValidateSettings(settings, out errors))
+                    {
+                        settingsManager.Save(settings);
+                    }
+                    else
+                    {
+                        foreach (var error in errors)
+                        {
+                            this.AddValidationError(error.Key, error.Value);
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {

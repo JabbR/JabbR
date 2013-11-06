@@ -261,7 +261,7 @@
     </script>
     <!--/Gravatar Profile Template-->
 </head>
-<body @if (Model.IsAdmin) { @Html.Raw("class=\"home-admin\""); }>
+<body @if (Model.IsAdmin) { @Html.Raw("class=\"home-admin\"") }>
     <section id="page" role="application">
         <header id="heading" role="heading">
             <div class="banner" role="banner">
@@ -327,7 +327,10 @@
         </div>
         <div id="chat-area" role="tabpanel">
             <div id="room-loading">
-                <i class="icon-spinner icon-3x"> </i><h3>@LanguageResources.LoadingMessage</h3>
+                <div id="loader-container">
+                    <canvas id="canvas" width="150" height="150"></canvas>
+                    <h4>@LanguageResources.LoadingMessage</h4>
+                </div>
             </div>
             <div id="lobby-wrapper">
                 <div id="lobby-private">
@@ -345,7 +348,7 @@
             </div>
             <form id="send-message" action="#">
                 <div id="message-box">
-                    <textarea id="new-message" autocomplete="off" aria-autocomplete="none" accesskey="m"></textarea>
+                    <textarea id="new-message" autocomplete="off" aria-autocomplete="none" accesskey="m" @Html.Raw(Model.MaxMessageLength > 0 ? "maxlength=\"" + Model.MaxMessageLength + "\"" : "")></textarea>
                 </div>
                 <input type="submit" id="send" value="@LanguageResources.Client_Send" class="send btn" />
             </form>
@@ -479,7 +482,7 @@
             .Add("~/Scripts/jquery.dragsort-0.5.1.min.js")
             .Add("~/Scripts/jquery.pulse.min.js")
             .Add("~/Scripts/jquery.KeyTips.js")
-            .Add("~/Scripts/jquery.signalR-2.1.0-pre-131001-b229.min.js")
+            .Add("~/Scripts/jquery.signalR-2.1.0-pre-131015-b246.min.js")
             .Render("~/Scripts/JabbR1_#.js"));
     }
     <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
@@ -513,6 +516,7 @@
             .Add("~/Chat.twitter.js")
             .Add("~/Chat.githubissues.js")
             .Add("~/Chat.js")
+            .Add("~/loader.js")
             .Render("~/Scripts/JabbR2_#.js"));
     }
     @if (Model.DebugMode)

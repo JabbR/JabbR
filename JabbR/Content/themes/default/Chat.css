@@ -261,20 +261,35 @@ form#send-message {
 
 #room-loading {
     display: none;
-    margin: 10px 0;
-    position: relative;
-    top: 50px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 1000;
+    background-color: rgba(68, 68, 68, 0.5);
 }
 
-    #room-loading i {
-        float: left;
-        margin: 0 10px;
-    }
-
-    #room-loading h3 {
-        font-weight: lighter;
-    }
+#loader-container {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+}
+#loader-container h4 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -10px 0 0 -35px;
+    font-weight: normal;
+}
+canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -75px 0 0 -75px;
+}
 
 #lobby-private,
 #lobby-other {

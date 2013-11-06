@@ -20,10 +20,8 @@ namespace JabbR.Services
 
         void Invite(ChatUser user, ChatUser targetUser, ChatRoom targetRoom);
         void NudgeRoom(ChatRoom room, ChatUser user);
-        void NugeUser(ChatUser user, ChatUser targetUser);
+        void NudgeUser(ChatUser user, ChatUser targetUser);
 
-        void ChangePassword();
-        void SetPassword();
         void ChangeAfk(ChatUser user);
         void ChangeNote(ChatUser user);
         void ChangeFlag(ChatUser user);
