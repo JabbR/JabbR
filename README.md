@@ -34,13 +34,14 @@ Inline image and content support for your favorite sites:
 * BBC News
 * CollegeHumor
 * Dictionary.com
-* GitHub 
+* GitHub Issues
+* GISTs
 * Google Docs
 * imgur
 * join.me
 * Mixcloud
 * NerdDinner
-* Nuget
+* Nuget Packages
 * Pastie
 * Screencast
 * SlideShare
