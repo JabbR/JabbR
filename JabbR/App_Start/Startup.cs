@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Net.Http.Formatting;
 using System.Web.Http;
@@ -183,6 +184,11 @@ namespace JabbR
                 };
 
                 resolver.UseServiceBus(sbConfig);
+            }
+
+            if (jabbrConfig.ScaleOutSqlServer)
+            {
+                resolver.UseSqlServer(ConfigurationManager.ConnectionStrings["Jabbr"].ConnectionString);
             }
 
             kernel.Bind<IConnectionManager>()
