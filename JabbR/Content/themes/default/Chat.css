@@ -261,6 +261,29 @@ form#send-message {
     border-bottom: 1px solid #ccc;
 }
 
+#drop-file-target {
+    display: none;
+    background-color: #000;
+    opacity: 0.25;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.drop-file-text {
+    font-size: 36pt;
+    display: block;
+    position: absolute;
+    line-height: 1.2em;
+    top: 50%;
+    left: 0;
+    right: 0;
+    margin: -0.6em 5px 0 5px;
+    text-align: center;
+    text-shadow: 3px 3px 4px #000;
+    color: #fff;
+    z-index: -1;
+}
+
 #lobby-wrapper .nav-header {
     line-height: normal;
     font-size: 1.25em;
@@ -3081,6 +3104,10 @@ h3.userlist-header {
         left: 0px;
     }
 
+    .drop-file-text {
+        font-size: 24px;
+    }
+
         .messages li.message {
             border-left: 30px solid #f1f1f1;
             padding: 3px;
@@ -3218,7 +3245,8 @@ h3.userlist-header {
     }
 
     .messages,
-    .users {
+    .users,
+    #drop-file-target {
         top: 32px;
     }
 
@@ -3288,26 +3316,6 @@ h3.userlist-header {
     border-radius: 0px !important;
     border-collapse: collapse !important;
     background-image: none !important;
-}
-
-#drop-file-target {
-    display: none;
-    background-color: #000;
-    opacity: 0.25;
-    z-index: 1000;
-}
-
-.drop-file-text {
-    font-size: 72pt;
-    display: block;
-    position: absolute;
-    line-height: 1.2em;
-    top: 50%;
-    left: 40%;
-    margin: -82px 0 0 -180px;
-    text-shadow: 3px 3px 4px #000;
-    color: #fff;
-    z-index: -1;
 }
 
 /* Make admin screens nicer */
