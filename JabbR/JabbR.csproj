@@ -87,8 +87,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.SignalR.ServiceBus.2.1.0-pre-131015-b246\lib\net45\Microsoft.AspNet.SignalR.ServiceBus.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.SqlServer">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.SqlServer.2.0.0\lib\net45\Microsoft.AspNet.SignalR.SqlServer.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.SignalR.SqlServer, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SqlServer.2.1.0-pre-131015-b246\lib\net45\Microsoft.AspNet.SignalR.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
