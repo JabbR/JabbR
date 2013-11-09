@@ -64,7 +64,6 @@
         $fileConnectionId = null,
         connectionInfoStatus = null,
         connectionInfoTransport = null,
-        $topicBar = null,
         $loadingHistoryIndicator = null,
         trimRoomHistoryFrequency = 1000 * 60 * 2, // 2 minutes in ms
         $loadMoreRooms = null,
@@ -397,9 +396,9 @@
                               .appendTo($chatArea)
                               .hide();
 
-        $roomTopic = $('<div/>').attr('id', 'roomTopic-' + roomId)
+        $('<div/>').attr('id', 'roomTopic-' + roomId)
                               .addClass('roomTopic')
-                              .appendTo($topicBar)
+                              .appendTo($chatArea)
                               .hide();
 
         userContainer = $('<div/>').attr('id', 'userlist-' + roomId)
@@ -810,7 +809,6 @@
             $connectionInfoContent = $('#connection-info-content');
             connectionInfoStatus = '#connection-status';
             connectionInfoTransport = '#connection-transport';
-            $topicBar = $('#topic-bar');
             $loadingHistoryIndicator = $('#loadingRoomHistory');
 
             $loadMoreRooms = $('#load-more-rooms-item');
@@ -2364,23 +2362,29 @@
                 $tabsDropdownButton = $('#tabs-dropdown-rooms');
             
             // move all (non-dragsort) tabs to the first list
-            $tabs.last().find('li:not(.placeholder)').each(function () { $(this).detach().appendTo($tabsList); });
-
-            // find overflow and move it all to the dropdown list ul
+            $tabs.last().find('li:not(.placeholder)').each(function () { $(this).css('visibility', 'hidden').detach().appendTo($tabsList); });
+            
             $roomTabs = $tabsList.find('li:not(.placeholder)');
-            $roomTabs.each(function (idx) {
-                if (sliceIndex !== -1) {
-                    return;
-                }
+            
+            // if width of first tab is greater than the tab area, move them all to the list
+            if ($roomTabs.length > 0 && $roomTabs.width() > $tabsList.width()) {
+                sliceIndex = 0;
+            } else {
+                // find overflow and move it all to the dropdown list ul
+                $roomTabs.each(function(idx) {
+                    if (sliceIndex !== -1) {
+                        return;
+                    }
 
-                var thisOffsetLeft = $(this).offset().left;
-                if (thisOffsetLeft <= lastOffsetLeft) {
-                    sliceIndex = idx;
-                    return;
-                }
+                    var thisOffsetLeft = $(this).offset().left;
+                    if (thisOffsetLeft <= lastOffsetLeft) {
+                        sliceIndex = idx;
+                        return;
+                    }
 
-                lastOffsetLeft = thisOffsetLeft;
-            });
+                    lastOffsetLeft = thisOffsetLeft;
+                });
+            }
 
             // move all elements from here to the dropdown list
             if (sliceIndex !== -1) {
@@ -2392,6 +2396,8 @@
             } else {
                 $tabsDropdownButton.fadeOut('slow').parent().removeClass('open');
             }
+
+            $roomTabs.each(function () { $(this).css('visibility', 'visible'); });
 
             return;
         },

@@ -8,6 +8,7 @@
 <head>
     <meta charset="UTF-8" />
     <title>JabbR - administration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     @{ 
         WriteLiteral(Bundle.Css()
             .Add("~/Content/bootstrap.min.css")
@@ -86,14 +87,14 @@
                         <label class="control-label" for="encryptionKey">@LanguageResources.Administration_EncryptionKey</label>
                         <div class="controls">
                             <input type="hidden" id="encryptionKey" name="encryptionKey" value="@Model.EncryptionKey"/>
-                            <label class="control-label label-align-left">@Model.EncryptionKey</label>
+                            <label class="help-block label-align-left word-breakable literal-control">@Model.EncryptionKey</label>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="verificationKey">@LanguageResources.Administration_VerificationKey</label>
                         <div class="controls">
                             <input type="hidden" id="verificationKey" name="verificationKey" value="@Model.VerificationKey"/>
-                            <label class="control-label label-align-left">@Model.VerificationKey</label>
+                            <label class="help-block label-align-left word-breakable literal-control">@Model.VerificationKey</label>
                         </div>
                     </div>
                 </fieldset>

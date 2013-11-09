@@ -57,11 +57,11 @@ form#send-message {
 
 #lobby-wrapper {
     position: absolute;
-    top: 55px;
+    top: 40px;
     left: 0;
     right: 0;
     padding: 5px;
-    bottom: 50px;
+    bottom: 0;
     background: #fff;
     overflow: auto;
     color: #00103f;
@@ -70,13 +70,21 @@ form#send-message {
 
 #room-filter-form {
     display: none;
-    margin: -4px 5px;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    height: 30px;
 }
 
-#room-filter-closed-area {
-    margin: 0px 5px;
-    font-size: 13px;
-}
+    #room-filter {
+        max-width: 284px;
+    }
+
+    #room-filter-closed-area {
+        margin: 0px 5px;
+        font-size: 13px;
+    }
 
 #preferences a, #room-preferences a {
     cursor: pointer;
@@ -97,25 +105,24 @@ form#send-message {
     margin-left: 0px;
 }
 
-#topic-bar {
+.home #page {
+    min-width: 300px;
+    min-height: 200px;
     position: absolute;
-    top: 45px;
+    top: 0;
     left: 0;
-    padding-top: 10px;
-    width: 100%;
-    height: 30px;
-    background-color: #e5e5e5;
-    color: #00103f;
+    right: 0;
+    bottom: 0;
 }
 
 #chat-area {
     position: absolute;
-    top: 31px;
-    bottom: 0px;
-    left: 0px;
-    right: 0px;
-    min-height: 450px;
-    z-index: -1;
+    top: 45px;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    background-color: #e5e5e5;
+    color: #00103f;
 }
 
 .upload-button {
@@ -150,13 +157,18 @@ form#send-message {
     left: 0;
     top: 0;
     width: 100%;
+    height: 45px;
+    padding-top: 9px;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
 }
 
     #heading h1 {
         margin-left: 5px;
-        margin-top: 5px;
+        margin-top: -4px;
         line-height: normal;
         font-size: 25px;
+        margin-bottom: 0;
     }
 
 .reload-message {
@@ -180,19 +192,19 @@ form#send-message {
     position: relative;
 }
 
-.messages {
+.messages,
+#drop-file-target {
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     border-right: 1px solid #ccc;
     overflow: auto;
-    margin-left: 0px;
-    margin-top: 0px;
-    padding-left: 0px;
+    margin: 0;
+    padding: 0;
     left: 0;
     right: 235px;
     position: absolute;
-    top: 55px;
-    bottom: 40px;
+    top: 40px;
+    bottom: 0;
     background-color: #fff;
 }
 
@@ -227,21 +239,49 @@ form#send-message {
 
 .roomTopic {
     position: absolute;
-    margin-left: 5px;
+    top: 10px;
+    left: 5px;
+    right: 125px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .users {
     font-size: small;
     position: absolute;
-    top: 55px;
+    top: 40px;
     right: 0;
     width: 235px;
-    bottom: 50px;
+    bottom: 0;
     margin-top: 0px;
     overflow: auto;
     background: #FFFFFF;
     border-top: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
+}
+
+#drop-file-target {
+    display: none;
+    background-color: #000;
+    opacity: 0.25;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.drop-file-text {
+    font-size: 36pt;
+    display: block;
+    position: absolute;
+    line-height: 1.2em;
+    top: 50%;
+    left: 0;
+    right: 0;
+    margin: -0.6em 5px 0 5px;
+    text-align: center;
+    text-shadow: 3px 3px 4px #000;
+    color: #fff;
+    z-index: -1;
 }
 
 #lobby-wrapper .nav-header {
@@ -618,12 +658,11 @@ li.user.typing .gravatar {
 
 #tabs {
     padding: 0 0 0 0;
-    margin: 9px 200px 0 90px;
+    margin: 0 200px 0 90px;
     left: 0;
     right: 0;
     position: absolute;
     z-index: 1000;
-    min-width: 120px;
     height: 37px;
     overflow: hidden;
 }
@@ -660,6 +699,9 @@ li.user.typing .gravatar {
             color: #f5f5f5;
             padding: 8px 24px 6px 8px;
             font-size: 0;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            white-space: nowrap;
         }
 
         #tabs li a:hover,
@@ -723,7 +765,7 @@ li.user.typing .gravatar {
         
         #tabs li .close {
             position: absolute;
-            top: 9px;
+            top: 8px;
             right: 4px;
             width: 16px;
             height: 16px;
@@ -738,7 +780,6 @@ li.user.typing .gravatar {
 
 #tabs-dropdown-container {
     float: left;
-    margin-top: 9px;
     position: relative;
 }
 
@@ -821,6 +862,7 @@ li.user.typing .gravatar {
     position: absolute;
     right: 0;
     width: 70px;
+    height: 30px;
 }
 
 #enable-disable-toast {
@@ -1041,7 +1083,8 @@ li.error {
         padding: 5px;
         word-wrap: break-word;
     }
-
+       
+        /* arrow to the left of a message */
         .message .middle.first:before,
         .message.my-message .middle.first:before,
         .message.highlight .middle.first:before,
@@ -2336,10 +2379,18 @@ li.clearfix {
     display: none;
 }
 
+.word-breakable {
+    word-break: break-all;
+}
+
+.form-horizontal input + .help-block {
+    margin-top: 5px;
+}
+
 #login {
     background-color: #FFF;
     border: 1px solid #e5e5e5;
-    margin: 100px auto;
+    margin: 100px auto 0 auto;
     width: 500px;
 }
 
@@ -2351,13 +2402,6 @@ li.clearfix {
     padding-bottom: 20px;
     color: #FFFFFF;
 }
-
-.administration header,
-.notifications header,
-.user-profile header {
-    border-bottom: 1px solid #e5e5e5;
-}
-
 
 .user-profile .nav-tabs li.active a,
 .notifications .nav-tabs li.active a,
@@ -2440,42 +2484,20 @@ li.clearfix {
     padding-bottom: 15px;
 }
 
-.windows-auth,
-.usernamepassword-auth,
-.user-registration,
-.user-request-reset-password {
-    margin: 20px -40px;
-}
-
-.user-reset-password {
-    margin: 20px;
-}
-
-    .user-registration .validation-summary-errors,
-    .user-request-reset-password .validation-summary-errors,
-    .user-reset-password .validation-summary-errors {
-        margin: 20px 200px;
-    }
-
-
-    .usernamepassword-auth .control-group {
-        margin-left: 40px;
-    }
-
-    .usernamepassword-auth .validation-summary-errors {
-        margin-left: 80px;
-    }
-
 .social-auth {
-    margin: 20px 15px;
-    padding: 0 20px;
+    margin: 0;
+    padding: 0;
 }
+
+    .social-auth ul.inline>li {
+        padding: 0;
+    }
 
     .social-auth .btn-provider {
         font-size: 17.5px;
-        width: 220px;
-        padding: 6px 0;
-        margin-left: 15px;
+        width: 228px;
+        padding: 4px 0;
+        margin-left: 0;
         text-align: left;
     }
 
@@ -2493,6 +2515,10 @@ li.clearfix {
         width: 45px;
         margin-left: 42px;
     }
+
+.user-reset-password {
+    margin: 0 10px;
+}
 
 .icon-link {
     background-image: url('../../images/link.png');
@@ -2520,10 +2546,6 @@ li.clearfix {
     margin-left: 20px;
 }
 
-.social-auth .btn-provider {
-    margin-left: 15px;
-}
-
 .provider {
     font-size: 17.5px;
     width: 400px;
@@ -2544,13 +2566,17 @@ li.clearfix {
     background: none;
 }
 
-.login-body .btn-provider {
-    width: 220px;
-    padding: 6px 0;
+.login-body .form-horizontal .controls {
+    margin-left: 10px;
 }
 
-.login-body .usernamepassword-auth .form-horizontal .controls {
-    margin-left: 10px;
+.login-body .usernamepassword-auth .form-horizontal .input-prepend {
+    width: 100%;
+}
+
+.login-body .usernamepassword-auth p,
+.login-body .usernamepassword-auth li {
+    margin-right: 10px;
 }
 
 .login-body .auth-divider {
@@ -2691,7 +2717,7 @@ h3.userlist-header {
 
 #room-actions {
     margin-right: 5px;
-    margin-top: -3px;
+    top: 8px;
     display: none;
 }
 
@@ -2802,7 +2828,6 @@ h3.userlist-header {
 .connection-status {
     float: left;
     position: relative;
-    margin-top: 9px;
 }
 
 .icon-connection-status {
@@ -2877,9 +2902,8 @@ h3.userlist-header {
     padding: 0;
     background: #f5f5f5;
     box-shadow: none;
-    border: 1px solid #e5e5e5;
-    border-radius: 4px 4px 0 0;
-    margin: 9px 5px 0 0;
+    border-bottom-width: 0;
+    margin: 0 5px 0 0;
 }
 
 .navbar .nav {
@@ -2892,13 +2916,13 @@ h3.userlist-header {
     }
 
         .navbar .nav > li:first-child {
-            border-left: 0;
+            border-left-width: 0;
         }
 
         .navbar .nav > li > a {
             text-shadow: none;
             color: #00103f;
-            padding: 8px 10px 8px;
+            padding: 8px 10px 7px;
         }
 
 .navbar .nav > li > a:hover {
@@ -2906,28 +2930,8 @@ h3.userlist-header {
             }
 
 @media (max-width:900px) {
-    #login {
-        margin: inherit;
-        width: inherit;
-    }
-
-    .windows-auth, .usernamepassword-auth, .user-registration {
-        margin: auto 10px;
-    }
-
-        .user-registration .validation-summary-errors {
-            margin: 20px 20px;
-        }
-
-        .usernamepassword-auth .control-group {
-            margin: inherit;
-        }
-
-        .usernamepassword-auth .validation-summary-errors {
-            margin: inherit;
-        }
-
-    .messages {
+    .messages,
+    #drop-file-target {
         right: 200px;
     }
 
@@ -2953,7 +2957,6 @@ h3.userlist-header {
         display: inline-block;
         position: absolute;
         right: 270px;
-        bottom: 10px;
         margin: 0 3px;
         padding: 5px;
         overflow: hidden;
@@ -2976,9 +2979,62 @@ h3.userlist-header {
     }
 }
 
+@media (max-width:768px) {
+    .login-body .auth-divider {
+        border-right-width: 0;
+    }
+
+    #login {
+        width: 220px;
+    }
+
+    .social-auth .btn-provider {
+        width: 190px;
+        margin-left: 10px;
+    }
+
+    .social-auth [class^="icon-"],
+    .social-auth [class*=" icon-"] {
+        margin-left: 20px;
+    }
+}
 
 @media (max-width:700px) {
-    .messages {
+    .home #heading h1 {
+        text-indent: -9999px;
+        background-image: url('../../images/logo32.png');
+        width: 32px;
+        height: 32px;
+        margin-top: 0;
+    }
+    
+    .navbar .nav > li > a {
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    #tabs {
+        /* wider for additional admin buttons */
+        margin-right: 160px;
+        margin-left: 44px;
+    }
+       
+        #tabs li a {
+            padding-left: 6px;
+            padding-right: 20px;
+        }
+
+        #tabs li.no-close a {
+            padding-right: 6px;
+        }
+
+    .home-admin #tabs {
+        /* wider for additional admin buttons */
+        margin-right: 186px;
+    }
+    
+    .messages,
+    #drop-file-target {
         right: 150px;
     }
 
@@ -3030,30 +3086,72 @@ h3.userlist-header {
     }
 }
 
+@media screen and (max-width:580px) {
+    #lobby-wrapper {
+        top: 65px;
+    }
+
+    #room-filter {
+        max-width: none;
+    }
+}
+
 @media screen and (max-width:480px) {
-    .messages {
+    .messages,
+    #drop-file-target {
         width: auto;
         right: 100px;
         left: 0px;
     }
 
+    .drop-file-text {
+        font-size: 24px;
+    }
+
         .messages li.message {
             border-left: 30px solid #f1f1f1;
+            padding: 3px;
         }
 
     .message .left {
         margin-left: -32px;
+        margin-right: -8px;
         width: 30px;
+        padding: 0;
+        padding-left: 3px;
     }
 
-        .message .left .name {
+        .messages .message .left .name {
             display: none;
         }
 
+    .messages .middle, .notification .content,
+    .action .content, .pm .content, .error .content, .broadcast .content {
+        display: inline;
+        padding: 0;
+        margin: 0;
+    }
+
+    /* arrow to the left of a message */
+    .message .middle.first:before,
+    .message.my-message .middle.first:before,
+    .message.highlight .middle.first:before,
+    .message.highlight.my-message .middle.first:before {
+        top: 3px;
+    }
+
+    .messages li .right {
+        float: right;
+        display: inline;
+        padding: 0;
+        position: inherit;
+        width: auto;
+        margin-left: 6px;
+    }
+
     .message.loading .left .state,
     .message.failed .left .state {
-        margin-top: 5px;
-        margin-right: 8px;
+        height: 18px;
     }
 
     .users {
@@ -3088,6 +3186,78 @@ h3.userlist-header {
 
     .flag-container {
         display: none;
+    }
+}
+
+@media screen and (max-height:600px) {
+    #login {
+        margin-top: 10px;
+    }
+}
+
+@media screen and (max-height:400px) {
+    .home #heading {
+        height: 32px;
+        padding-top: 0;
+    }
+
+    #tabs li {
+        height: 32px;
+    }
+
+        #tabs li a {
+            padding-top: 6px;
+            padding-bottom: 4px;
+        }
+
+        #tabs li .close {
+            top: 6px;
+        }
+
+    .navbar .nav > li > a {
+        padding-top: 5px;
+        padding-bottom: 6px;
+    }
+
+    .navbar-inner {
+        min-height: 32px;
+    }
+
+    .icon-connection-status {
+        height: 32px;
+    }
+
+    #tabs-dropdown-container .dropdown-toggle {
+        height: 32px;
+    }
+
+    #chat-area {
+        top: 32px;
+        bottom: 40px;
+    }
+
+    .roomTopic {
+        top: 6px;
+    }
+
+    #room-actions {
+        top: 4px;
+    }
+
+    .messages,
+    .users,
+    #drop-file-target {
+        top: 32px;
+    }
+
+    form#send-message textarea,
+    #send {
+        margin-top: 5px;
+        margin-bottom: 0;
+    }
+
+    .upload-button {
+        bottom: 5px;
     }
 }
 
@@ -3146,23 +3316,6 @@ h3.userlist-header {
     border-radius: 0px !important;
     border-collapse: collapse !important;
     background-image: none !important;
-}
-
-#drop-file-target {
-    display: none;
-}
-
-.drop-file-text {
-    font-size: 72pt;
-    display: block;
-    position: absolute;
-    line-height: 50px;
-    top: 50%;
-    left: 40%;
-    margin: -82px 0 0 -180px;
-    text-shadow: 3px 3px 4px #000;
-    color: #fff;
-    z-index: -1;
 }
 
 /* Make admin screens nicer */

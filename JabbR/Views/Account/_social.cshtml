@@ -3,24 +3,20 @@
     <div class="control-group">
         <div class="controls">
             <form action="@Url.Content("~/account/unlink" + Html.RequestQuery())" method="POST">
-                <div class="row">
-                    <div class="span7 offset1">
-                        @foreach (var provider in Model.ConfiguredProviders)
+                @foreach (var provider in Model.ConfiguredProviders)
+                {
+                    <ul class="inline">
+                        @if (!Model.IsAlreadyLinked(provider))
                         {
-                            <ul class="inline">
-                                @if (!Model.IsAlreadyLinked(provider))
-                                {
-                                    <li><a class="btn btn-provider" href="@Url.Content("~/authentication/redirect/" + provider.ToLower() + Html.RequestQuery())"><i class="icon-@provider.ToLower()"></i> @provider</a></li>
-                                }
-                                else
-                                {
-                                    <li><div class="provider"><i class="icon-@provider.ToLower()"></i> @provider</div><button type="submit" class="btn-unlink" name="provider" value="@provider.ToLower()" title="@LanguageResources.Account_UnlinkIdentityProvider"><i class="icon-unlink"></i></button></li>
-                                }
-                            </ul>
+                            <li><a class="btn btn-provider" href="@Url.Content("~/authentication/redirect/" + provider.ToLower() + Html.RequestQuery())"><i class="icon-@provider.ToLower()"></i> @provider</a></li>
                         }
-                        @Html.AntiForgeryToken()
-                    </div>
-                </div>
+                        else
+                        {
+                            <li><div class="provider"><i class="icon-@provider.ToLower()"></i> @provider</div><button type="submit" class="btn-unlink" name="provider" value="@provider.ToLower()" title="@LanguageResources.Account_UnlinkIdentityProvider"><i class="icon-unlink"></i></button></li>
+                        }
+                    </ul>
+                }
+                @Html.AntiForgeryToken()
             </form>
         </div>
     </div>

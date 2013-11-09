@@ -8,7 +8,7 @@
     <meta charset="UTF-8" />
     <title>JabbR</title>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="A real-time chat application." />
     <meta name="keywords" content="chat,realtime chat,signalr,jabbr" />
     <link href="@Url.Content("~/Content/images/logo32.png")" rel="icon" type="image/png" sizes="32x32">
@@ -261,7 +261,7 @@
     </script>
     <!--/Gravatar Profile Template-->
 </head>
-<body @if (Model.IsAdmin) { @Html.Raw("class=\"home-admin\"") }>
+<body class="home@(Model.IsAdmin ? " home-admin" : "")">
     <section id="page" role="application">
         <header id="heading" role="heading">
             <div class="banner" role="banner">
@@ -307,7 +307,7 @@
                 </div>
             </div>
         </header>
-        <div id="topic-bar">
+        <div id="chat-area" role="tabpanel">
             <form id="room-filter-form" action="#" class="form-inline">
                 <input id="room-filter" class="filter input-xlarge" type="text" placeholder="@LanguageResources.Client_RoomFilterInstruction" />
                 <label id="room-filter-closed-area" class="checkbox inline">
@@ -324,8 +324,6 @@
                     <li><a class="download" title="download messages" aria-haspopup="true"><i class="icon-download"></i> @LanguageResources.Client_DownloadMessages</a></li>
                 </ul>
             </div>
-        </div>
-        <div id="chat-area" role="tabpanel">
             <div id="room-loading">
                 <div id="loader-container">
                     <canvas id="canvas" width="150" height="150"></canvas>
@@ -346,22 +344,23 @@
                 <ul id="messages-lobby" class="messages current" role="log" style="visibility: hidden;">
                 </ul>
             </div>
-            <form id="send-message" action="#">
-                <div id="message-box">
-                    <textarea id="new-message" autocomplete="off" aria-autocomplete="none" accesskey="m" @Html.Raw(Model.MaxMessageLength > 0 ? "maxlength=\"" + Model.MaxMessageLength + "\"" : "")></textarea>
-                </div>
-                <input type="submit" id="send" value="@LanguageResources.Client_Send" class="send btn" />
-            </form>
-            <form id="upload" action="@Url.Content("~/upload-file")" method="post" enctype="multipart/form-data" target="upload-frame">
-                <input type="hidden" id="file-connection-id" name="connectionId" />
-                <input type="hidden" id="file-message-id" name="messageId" />
-                <input type="hidden" id="file-room" name="room" />
-                <div class="btn upload-button icon-cloud-upload icon-large">
-                    <input type="file" id="hidden-file" name="data">
-                </div>
-            </form>
+            <div id="drop-file-target"><h1 class="drop-file-text">@LanguageResources.Client_UploadDropTarget</h1></div>
             <iframe id="upload-frame" name="upload-frame" style="position:absolute;top:0;left:0;width:0;height:0;visibility:hidden;"></iframe>
         </div>
+        <form id="send-message" action="#">
+            <div id="message-box">
+                <textarea id="new-message" autocomplete="off" aria-autocomplete="none" accesskey="m" @Html.Raw(Model.MaxMessageLength > 0 ? "maxlength=\"" + Model.MaxMessageLength + "\"" : "")></textarea>
+            </div>
+            <input type="submit" id="send" value="@LanguageResources.Client_Send" class="send btn" />
+        </form>
+        <form id="upload" action="@Url.Content("~/upload-file")" method="post" enctype="multipart/form-data" target="upload-frame">
+            <input type="hidden" id="file-connection-id" name="connectionId" />
+            <input type="hidden" id="file-message-id" name="messageId" />
+            <input type="hidden" id="file-room" name="room" />
+            <div class="btn upload-button icon-cloud-upload icon-large">
+                <input type="file" id="hidden-file" name="data">
+            </div>
+        </form>
         <audio src="Content/sounds/notification.wav" id="notificationSound" hidden="hidden" aria-hidden="true">
         </audio>
         <section aria-hidden="true" aria-haspopup="true">
@@ -471,7 +470,6 @@
         </section>
     </section>
     <div id="paste" contenteditable="true" style="height: 1px; width: 1px;"></div>
-    <div id="drop-file-target"><h1 class="drop-file-text">@LanguageResources.Client_UploadDropTarget</h1></div>
     @{
         WriteLiteral(Bundle.JavaScript().ForceDebugIf(() => Model.DebugMode)
             .Add("~/Scripts/jquery-2.0.3.min.js")
