@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using JabbR.Hubs;
 using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Infrastructure;
@@ -16,17 +18,28 @@ namespace JabbR.Infrastructure
 
         public void Log(LogType type, string message)
         {
-            message = String.Format("[{0}]: {1}", DateTime.UtcNow, message);
-
-            switch (type)
+            // Fire and forget
+            Task.Run(async () =>
             {
-                case LogType.Message:
-                    _logContext.Clients.All.logMessage(message);
-                    break;
-                case LogType.Error:
-                    _logContext.Clients.All.logError(message);
-                    break;
-            }
+                var formatted = String.Format("[{0}]: {1}", DateTime.UtcNow, message);
+
+                try
+                {
+                    switch (type)
+                    {
+                        case LogType.Message:
+                            await _logContext.Clients.All.logMessage(formatted);
+                            break;
+                        case LogType.Error:
+                            await _logContext.Clients.All.logError(formatted);
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceError("Error occurred while logging: " + ex);
+                }
+            });
         }
     }
 }

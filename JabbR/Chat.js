@@ -215,7 +215,7 @@
     }
 
     function getMessageViewModel(message) {
-        var re = new RegExp("\\b@?" + chat.state.name.replace(/\./, '\\.') + "\\b", "i");
+        var re = new RegExp("\\b@?" + chat.state.name.replace(/\./g, '\\.') + "\\b", "i");
         return {
             name: message.User.Name,
             hash: message.User.Hash,
@@ -290,6 +290,7 @@
 
     // When the /join command gets raised this is called
     chat.client.joinRoom = function (room) {
+        ui.setRoomLoading(true, room.Name);
         var added = ui.addRoom(room);
 
         ui.setActiveRoom(room.Name);
@@ -303,12 +304,16 @@
 
         if (added) {
             populateRoom(room.Name).done(function () {
+                ui.setRoomLoading(false);
                 ui.addNotification(utility.getLanguageResource('Chat_YouEnteredRoom', room.Name), room.Name);
 
                 if (room.Welcome) {
                     ui.addWelcome(room.Welcome, room.Name);
                 }
             });
+        }
+        else {
+            ui.setRoomLoading(false);
         }
     };
 
@@ -839,7 +844,11 @@
 
     chat.client.leave = function (user, room) {
         if (isSelf(user)) {
-            ui.setActiveRoom('Lobby');
+            ui.setRoomLoading(false);
+            if (chat.state.activeRoom === room) {
+                ui.setActiveRoom('Lobby');
+            }
+            
             ui.removeRoom(room);
         }
         else {
@@ -851,7 +860,10 @@
     chat.client.kick = function (room) {
         var message = utility.getLanguageResource('Chat_YouKickedFromRoom', room);
 
-        ui.setActiveRoom('Lobby');
+        if (chat.state.activeRoom === room) {
+            ui.setActiveRoom('Lobby');
+        }
+        
         ui.removeRoom(room);
         // it looks like we write to the lobby, but the activeRoom is set via a fragment, so this writes to the last active room.
         ui.addNotificationToActiveRoom(message);

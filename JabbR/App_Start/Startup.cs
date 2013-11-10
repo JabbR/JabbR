@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Net.Http.Formatting;
 using System.Web.Http;
@@ -17,6 +18,9 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataHandler;
 using Microsoft.Owin.Security.DataProtection;
+
+using Nancy.Owin;
+
 using Newtonsoft.Json.Serialization;
 using Ninject;
 using Owin;
@@ -153,7 +157,7 @@ namespace JabbR
         private static void SetupNancy(IKernel kernel, IAppBuilder app)
         {
             var bootstrapper = new JabbRNinjectNancyBootstrapper(kernel);
-            app.UseNancy(bootstrapper);
+            app.UseNancy(new NancyOptions { Bootstrapper = bootstrapper });
         }
 
         private static void SetupMiddleware(IKernel kernel, IAppBuilder app)
@@ -180,6 +184,11 @@ namespace JabbR
                 };
 
                 resolver.UseServiceBus(sbConfig);
+            }
+
+            if (jabbrConfig.ScaleOutSqlServer)
+            {
+                resolver.UseSqlServer(ConfigurationManager.ConnectionStrings["Jabbr"].ConnectionString);
             }
 
             kernel.Bind<IConnectionManager>()

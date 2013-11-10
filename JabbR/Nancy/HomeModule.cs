@@ -34,7 +34,8 @@ namespace JabbR.Nancy
                         DebugMode = (bool)Context.Items["_debugMode"],
                         Version = Constants.JabbRVersion,
                         IsAdmin = Principal.HasClaim(JabbRClaimTypes.Admin),
-                        ClientLanguageResources = BuildClientResources()
+                        ClientLanguageResources = BuildClientResources(),
+                        MaxMessageLength = settings.MaxMessageLength
                     };
 
                     return View["index", viewModel];
@@ -62,7 +63,7 @@ namespace JabbR.Nancy
                 return View["monitor"];
             };
 
-            Get["/status"] = _ =>
+            Get["/status", runAsync: true] = async (_, token) =>
             {
                 var model = new StatusViewModel();
 
@@ -76,9 +77,8 @@ namespace JabbR.Nancy
                 try
                 {
                     var hubContext = connectionManager.GetHubContext<Chat>();
-                    var sendTask = (Task)hubContext.Clients.Client("doesn't exist").noMethodCalledThis();
-                    sendTask.Wait();
-
+                    await (Task)hubContext.Clients.Client("doesn't exist").noMethodCalledThis();
+                    
                     signalrStatus.SetOK();
                 }
                 catch (Exception ex)
@@ -112,9 +112,9 @@ namespace JabbR.Nancy
                         UploadResult result;
                         using (var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("test")))
                         {
-                            result = azure.UploadFile("statusCheck.txt", "text/plain", stream)
-                                          .Result;
+                            result = await azure.UploadFile("statusCheck.txt", "text/plain", stream);
                         }
+
                         azureStorageStatus.SetOK();
                     }
                     else
@@ -139,9 +139,9 @@ namespace JabbR.Nancy
                         UploadResult localResult;
                         using (var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes("test")))
                         {
-                            localResult = local.UploadFile("statusCheck.txt", "text/plain", stream)
-                                          .Result;
+                            localResult = await local.UploadFile("statusCheck.txt", "text/plain", stream);
                         }
+
                         localStorageStatus.SetOK();
                     }
                     else

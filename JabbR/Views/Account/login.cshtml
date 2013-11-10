@@ -7,15 +7,17 @@
 }
 
 <div class="row-fluid">
-    <div class="span5 @if (!hasSocialProviders) {<text>offset3</text>}">
+    <div class="span6 @if (!hasSocialProviders) {<text>offset3</text>}">
         <div class="usernamepassword-auth @if(hasSocialProviders) {<text>auth-divider</text>}">
-            @Html.Partial("_username", Model)
+          @Html.Partial("_username", Model)
         </div>
     </div>
-    <div class="span5">
-    <div class="social-auth">
-        @Html.Partial("_social", Model.SocialDetails)
-    </div>
-
-    </div>
+    @if (hasSocialProviders)
+    {
+      <div class="span6">
+          <div class="social-auth">
+              @Html.Partial("_social", Model.SocialDetails)
+          </div>
+      </div>
+    }
 </div>

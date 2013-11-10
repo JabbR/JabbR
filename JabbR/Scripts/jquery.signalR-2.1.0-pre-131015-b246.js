@@ -1904,7 +1904,6 @@
                 connection.onSuccess = function () {
                     connection.log("Iframe transport started.");
                     onSuccess();
-                    delete connection.onSuccess;
                 };
             }
         },
