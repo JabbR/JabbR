@@ -4,7 +4,7 @@ using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
-    [Command("lock", "Lock_CommandInfo", "[room]", "room")]
+    [Command("lock", "Lock_CommandInfo", "[room]", "room", "Lock_ConfirmMessage")]
     public class LockCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
