@@ -794,7 +794,8 @@
                 commandhelp: $('#command-help-template'),
                 multiline: $('#multiline-content-template'),
                 lobbyroom: $('#new-lobby-room-template'),
-                otherlobbyroom: $('#new-other-lobby-room-template')
+                otherlobbyroom: $('#new-other-lobby-room-template'),
+                commandConfirm: $('#command-confirm-template')
             };
             $reloadMessageNotification = $('#reloadMessageNotification');
             $fileUploadButton = $('.upload-button');
@@ -2064,6 +2065,13 @@
         getCommands: function () {
             return ui.commands || [];
         },
+        getCommand: function (name) {
+            var commands = ui.getCommands().filter(function (c) { return c.Name === name; });
+
+            if (commands.length > 0) {
+                return commands[0];
+            }
+        },
         setCommands: function (commands) {
             ui.commands = commands.sort(function(a, b) {
                 return a.Name.toString().toUpperCase().localeCompare(b.Name.toString().toUpperCase());
@@ -2089,6 +2097,22 @@
                         break;
                 }
             });
+        },
+        confirmCommand: function (msg) {
+            var commandName = msg.substr(1).split(' ')[0].toLowerCase(),
+                command = ui.getCommand(commandName);
+
+            var $dialog = templates.commandConfirm.tmpl(command).appendTo('#dialog-container').modal()
+                    .on('hidden.bs.modal', function () {
+                        $dialog.remove();
+                    })
+                    .on('click', 'a.btn', function () {
+                        if ($(this).is('.btn-danger')) {
+                            $ui.trigger(ui.events.sendMessage, [msg, true]);
+                        }
+
+                        $dialog.modal('hide');
+                    });
         },
         setInitialized: function (roomName) {
             var room = roomName ? getRoomElements(roomName) : getCurrentRoomElements();

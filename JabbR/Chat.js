@@ -61,7 +61,23 @@
     function isCommand(msg) {
         var parts = msg.substr(1).split(' ');
         if (msg[0] === '/' && parts.length > 0) {
-            return commandNameLookup[parts[0]];
+            return commandNameLookup[parts[0].toLowerCase()];
+        }
+
+        return false;
+    }
+
+    function confirmCommand(msg) {
+        var parts = msg.substr(1).split(' ');
+
+        if (msg[0] === '/' && parts.length > 0) {
+            var commandName = parts[0].toLowerCase();
+
+            if (commandNameLookup[commandName]) {
+                var command = ui.getCommand(commandName);
+
+                return (command.ConfirmMessage !== null);
+            }
         }
 
         return false;
@@ -1021,7 +1037,7 @@
         uploader.submitFile(connection.hub.id, chat.state.activeRoom);
     });
 
-    $ui.bind(ui.events.sendMessage, function (ev, msg) {
+    $ui.bind(ui.events.sendMessage, function (ev, msg, commandConfirmed) {
         clearUnread();
 
         var id = utility.newId(),
@@ -1067,6 +1083,12 @@
             messageSendingDelay);
 
             pendingMessages[id] = messageCompleteTimeout;
+        }
+        else {
+            if (!commandConfirmed && confirmCommand(msg)) {
+                ui.confirmCommand(msg);
+                return;
+            }
         }
 
         try {

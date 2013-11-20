@@ -164,6 +164,19 @@
         </dt>
         <dd>${Description}</dd>
     </script>
+    <script id="command-confirm-template" type="text/x-jquery-tmpl">
+        <div class="modal hide fade">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">&times;</a>
+                <h3>Confirm ${Name} command</h3>
+            </div>
+            <div class="modal-body">{{html ConfirmMessage}}</div>
+            <div class="modal-footer">
+                <a class="btn" href="#">@LanguageResources.Client_Cancel</a>
+                <a class="btn btn-danger" href="#">@LanguageResources.Client_Confirm</a>
+            </div>
+        </div> 
+    </script>
     <!-- TweetContentProvider: Should be extracted out if other content providers need templates -->
     <script id="tweet-template" type="text/x-jquery-tmpl">
         <div class="collapsible_content">
@@ -363,7 +376,7 @@
         </form>
         <audio src="Content/sounds/notification.wav" id="notificationSound" hidden="hidden" aria-hidden="true">
         </audio>
-        <section aria-hidden="true" aria-haspopup="true">
+        <section id="dialog-container" aria-hidden="true" aria-haspopup="true">
             <div id="disconnect-dialog" class="modal hide fade">
                 <div class="modal-header">
                   <a class="close" data-dismiss="modal">&times;</a>
