@@ -1190,7 +1190,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to *{0} nudged the room..
+        ///   Looks up a localized string similar to *{0} nudged room {1}..
         /// </summary>
         public static string Chat_UserNudgedRoom {
             get {
@@ -1199,7 +1199,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to *{0} nudged {1}.
+        ///   Looks up a localized string similar to *{0} nudged {1}..
         /// </summary>
         public static string Chat_UserNudgedUser {
             get {

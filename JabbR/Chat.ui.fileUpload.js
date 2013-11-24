@@ -198,20 +198,7 @@
 
     $(document).on('dragenter dragover', '.messages.current', function () {
         //show drag target
-        //get css position
-        //width,height
-        var position = $(this).offset();
-        var size = { width: $(this).width(), height: $(this).height() };
-        $('#drop-file-target').css({
-            top: position.top + 1,
-            left: position.left + 1,
-            width: size.width,
-            height: size.height,
-            position: 'absolute',
-            background: '#000',
-            opacity: '.25'
-        });
-
+        // TODO: make one of these per room
         $('#drop-file-target').fadeIn(500);
     });
 

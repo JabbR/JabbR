@@ -886,10 +886,10 @@ Use ? or type /? to display the FAQ and list of commands.</value>
     <value>{0} (Currently {1}) is not in any rooms.</value>
   </data>
   <data name="Chat_UserNudgedRoom" xml:space="preserve">
-    <value>*{0} nudged the room.</value>
+    <value>*{0} nudged room {1}.</value>
   </data>
   <data name="Chat_UserNudgedUser" xml:space="preserve">
-    <value>*{0} nudged {1}</value>
+    <value>*{0} nudged {1}.</value>
   </data>
   <data name="Chat_UserNudgedYou" xml:space="preserve">
     <value>*{0} nudged you.</value>

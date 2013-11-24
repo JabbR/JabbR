@@ -215,7 +215,7 @@
     }
 
     function getMessageViewModel(message) {
-        var re = new RegExp("\\b@?" + chat.state.name.replace(/\./, '\\.') + "\\b", "i");
+        var re = new RegExp("\\b@?" + chat.state.name.replace(/\./g, '\\.') + "\\b", "i");
         return {
             name: message.User.Name,
             hash: message.User.Hash,
@@ -796,7 +796,7 @@
         }
     };
 
-    chat.client.nudge = function (from, to) {
+    chat.client.nudge = function (from, to, roomName) {
         var message;
 
         function shake(n) {
@@ -836,9 +836,9 @@
             }
 
             // TODO: make this more consistent (ie make it a broadcast, proper pm to all rooms, or something)
-            ui.addMessage(message, 'pm', chat.state.activeRoom);
+            ui.addPrivateMessage(message);
         } else {
-            ui.addNotificationToActiveRoom(utility.getLanguageResource('Chat_UserNudgedRoom', from));
+            ui.addPrivateMessage(utility.getLanguageResource('Chat_UserNudgedRoom', from, roomName));
         }
     };
 
