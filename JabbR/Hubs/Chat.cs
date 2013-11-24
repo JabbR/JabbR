@@ -846,7 +846,7 @@ namespace JabbR
             Clients.Caller.hash = user.Hash;
 
             // Update the calling client
-            Clients.User(user.Id).gravatarChanged();
+            Clients.User(user.Id).gravatarChanged(user.Hash);
 
             // Create the view model
             var userViewModel = new UserViewModel(user);

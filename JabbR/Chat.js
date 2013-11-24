@@ -20,8 +20,7 @@
         messageSendingDelay = 1500,
         pendingMessages = {},
         privateRooms = null,
-        roomsToLoad = 0,
-        commandNameLookup = {};
+        roomsToLoad = 0;
 
     function failPendingMessages() {
         for (var id in pendingMessages) {
@@ -56,31 +55,6 @@
         }
 
         return user.Note;
-    }
-
-    function isCommand(msg) {
-        var parts = msg.substr(1).split(' ');
-        if (msg[0] === '/' && parts.length > 0) {
-            return commandNameLookup[parts[0].toLowerCase()];
-        }
-
-        return false;
-    }
-
-    function confirmCommand(msg) {
-        var parts = msg.substr(1).split(' ');
-
-        if (msg[0] === '/' && parts.length > 0) {
-            var commandName = parts[0].toLowerCase();
-
-            if (commandNameLookup[commandName]) {
-                var command = ui.getCommand(commandName);
-
-                return (command.ConfirmMessage !== null);
-            }
-        }
-
-        return false;
     }
 
     function getFlagCssClass(user) {
@@ -356,10 +330,6 @@
             chat.server.getCommands()
                 .done(function (commands) {
                     ui.setCommands(commands);
-
-                    for (var i = 0; i < commands.length; ++i) {
-                        commandNameLookup[commands[i].Name] = true;
-                    }
                 });
 
             // get list of available shortcuts
@@ -383,6 +353,7 @@
         ui.updateTabOrder(chat.state.tabOrder);
 
         ui.setUserName(chat.state.name);
+        ui.setUserHash(chat.state.hash);
         ui.setUnreadNotifications(chat.state.unreadNotifications);
 
         // Process any urls that may contain room names
@@ -609,7 +580,9 @@
     };
 
     // Called when your gravatar has been changed
-    chat.client.gravatarChanged = function () {
+    chat.client.gravatarChanged = function (hash) {
+        ui.setUserHash(hash);
+
         ui.addNotificationToActiveRoom(utility.getLanguageResource('Chat_YourGravatarChanged'));
     };
 
@@ -1037,10 +1010,10 @@
         uploader.submitFile(connection.hub.id, chat.state.activeRoom);
     });
 
-    $ui.bind(ui.events.sendMessage, function (ev, msg, commandConfirmed) {
+    $ui.bind(ui.events.sendMessage, function (ev, msg, msgId, isCommand) {
         clearUnread();
 
-        var id = utility.newId(),
+        var id = msgId || utility.newId(),
             clientMessage = {
                 id: id,
                 content: msg,
@@ -1048,27 +1021,7 @@
             },
             messageCompleteTimeout = null;
 
-        if (!isCommand(msg)) {
-
-            // if you're in the lobby, you can't send mesages (only commands)
-            if (chat.state.activeRoom === undefined) {
-                ui.addErrorToActiveRoom(utility.getLanguageResource('Chat_CannotSendLobby'));
-                return false;
-            }
-
-            // Added the message to the ui first
-            var viewModel = {
-                name: chat.state.name,
-                hash: chat.state.hash,
-                message: ui.processContent(clientMessage.content),
-                id: clientMessage.id,
-                date: new Date(),
-                highlight: '',
-                isMine: true
-            };
-
-            ui.addChatMessage(viewModel, clientMessage.room);
-
+        if (!isCommand) {
             // If there's a significant delay in getting the message sent
             // mark it as pending
             messageCompleteTimeout = window.setTimeout(function () {
@@ -1083,12 +1036,6 @@
             messageSendingDelay);
 
             pendingMessages[id] = messageCompleteTimeout;
-        }
-        else {
-            if (!commandConfirmed && confirmCommand(msg)) {
-                ui.confirmCommand(msg);
-                return;
-            }
         }
 
         try {
