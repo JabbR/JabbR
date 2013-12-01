@@ -83,12 +83,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.1.0-pre-131129-b292\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.ServiceBus, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.ServiceBus.2.1.0-pre-131015-b246\lib\net45\Microsoft.AspNet.SignalR.ServiceBus.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.SignalR.ServiceBus">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.ServiceBus.2.1.0-pre-131129-b292\lib\net45\Microsoft.AspNet.SignalR.ServiceBus.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.SqlServer, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.SqlServer.2.1.0-pre-131015-b246\lib\net45\Microsoft.AspNet.SignalR.SqlServer.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.SignalR.SqlServer">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SqlServer.2.1.0-pre-131129-b292\lib\net45\Microsoft.AspNet.SignalR.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -213,9 +212,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.1.0-rc1-131128\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Http.Owin, Version=5.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.1.0-alpha1-131015\lib\net45\System.Web.Http.Owin.dll</HintPath>
+    <Reference Include="System.Web.Http.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.1.0-rc1-131128\lib\net45\System.Web.Http.Owin.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor.Unofficial, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
