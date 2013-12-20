@@ -1,22 +1,13 @@
 // Livestamp.js / v1.1.2 / (c) 2012 Matt Bradley / MIT License
-(function ($, moment) {
-    moment.lang('en', {
-        relativeTime: {
-            future: "%s",
-            past: "%s",
-            s: "",
-            m: "%dm",
-            mm: "%dm",
-            h: "%dh",
-            hh: "%dh",
-            d: "%dd",
-            dd: "%dd",
-            M: "%dmo",
-            MM: "%dmo",
-            y: "%dy",
-            yy: "%dy"
-        }
-    });
+(function (plugin) {
+  if (typeof define === 'function' && define.amd) {
+    // AMD. Register as an anonymous module.
+    define(['jquery', 'moment'], plugin);
+  } else {
+    // Browser globals
+    plugin(jQuery, moment);
+  }
+}(function($, moment) {
   var updateInterval = 1e3,
       paused = false,
       $livestamps = $([]),
@@ -77,6 +68,7 @@
       });
 
       $livestamps = $livestamps.not(toRemove);
+      delete $livestamps.prevObject
     },
 
     pause: function() {
@@ -143,4 +135,4 @@
 
     return livestampLocal[method](this, options);
   };
-})(jQuery, moment);
+}));
