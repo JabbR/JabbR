@@ -940,6 +940,7 @@
             delete connection.id;
             delete connection._.pingIntervalId;
             delete connection._.lastMessageAt;
+            delete connection._.lastActiveAt;
 
             // Clear out our message buffer
             connection._.connectingMessageBuffer.clear();
