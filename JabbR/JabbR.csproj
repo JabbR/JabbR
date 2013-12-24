@@ -932,9 +932,6 @@
     <Content Include="Views\Account\_social.cshtml" />
     <Content Include="Views\Account\login.cshtml" />
     <Content Include="Views\Account\index.cshtml" />
-    <Content Include="Scripts\livestamp.min.js.map">
-      <DependentUpon>livestamp.js</DependentUpon>
-    </Content>
     <Content Include="Views\Notifications\index.cshtml" />
     <Content Include="Views\Home\monitor.cshtml" />
     <Content Include="Views\Administration\index.cshtml" />
