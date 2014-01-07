@@ -2153,8 +2153,7 @@
             
             if (focus === false && anyRoomPreference('canToast', true) === true) {
                 // Only toast if there's no focus
-                var roomName = getActiveRoomName();
-                ui.toast(message, true, roomName);
+                ui.toast(message, true);
             }
         },
         setUserName: function (name) {
