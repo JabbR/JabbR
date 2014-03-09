@@ -350,6 +350,7 @@ canvas {
         -webkit-animation: room-fade 0.8s linear 1;
         animation-play-state: paused;
         -webkit-animation-play-state: paused;
+        cursor: pointer;
     }
 
     #userlist-lobby-owners li {
@@ -360,6 +361,7 @@ canvas {
         -webkit-animation: room-fade 0.8s linear 1;
         animation-play-state: paused;
         -webkit-animation-play-state: paused;
+        cursor: pointer;
     }
 
     @-webkit-keyframes room-fade
