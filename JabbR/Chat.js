@@ -831,6 +831,12 @@
         if (to) {
             if (isSelf({ Name: to })) {
                 message = utility.getLanguageResource('Chat_UserNudgedYou', from);
+                
+                var toastMessage = {
+                    message: message,
+                    name: from
+                };
+                ui.nudge(toastMessage, from);
             } else {
                 message = utility.getLanguageResource('Chat_UserNudgedUser', from, to);
             }

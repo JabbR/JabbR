@@ -2146,6 +2146,16 @@
                 toast.toastMessage(message, roomName);
             }
         },
+        nudge: function (message) {
+            if (anyRoomPreference('hasSound', true) === true) {
+                ui.notify(true);
+            }
+            
+            if (focus === false && anyRoomPreference('canToast', true) === true) {
+                // Only toast if there's no focus
+                ui.toast(message, true);
+            }
+        },
         setUserName: function (name) {
             ui.name = name;
         },
