@@ -1165,4 +1165,12 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="SendMessageTooLong" xml:space="preserve">
     <value>You cannot post this message. It is too long.</value>
   </data>
+  <data name="Lock_ConfirmMessage" xml:space="preserve">
+    <value>&lt;i class="icon-lock icon-4x pull-left"&gt;&lt;/i&gt;
+&lt;p&gt;&lt;strong&gt;Are you sure you want to lock this room?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;A locked room can only be accessed by its owners and those granted access.&lt;/p&gt;</value>
+  </data>
+  <data name="Client_Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
 </root>
