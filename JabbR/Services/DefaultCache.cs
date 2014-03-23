@@ -31,5 +31,9 @@ namespace JabbR.Services
         {
             _cache.Remove(key);
         }
+
+        public void Dispose()
+        {
+        }
     }
 }

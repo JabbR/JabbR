@@ -102,8 +102,21 @@ namespace JabbR
                   .To<JabbRAuthenticationCallbackProvider>();
 
             kernel.Bind<ICache>()
+                  .To<CacheProxy>()
+                  .InSingletonScope();
+
+            // singleton defaultcache across multiple bindings
+            kernel.Bind<DefaultCache>()
                   .To<DefaultCache>()
                   .InSingletonScope();
+
+            kernel.Bind<ICache>()
+                  .ToMethod(k => k.Kernel.Get<DefaultCache>())
+                  .WhenInjectedInto<CacheProxy>();
+
+            kernel.Bind<ICache>()
+                  .ToMethod(k => k.Kernel.Get<DefaultCache>())
+                  .WhenInjectedInto<ISettingsManager>();
 
             kernel.Bind<IChatNotificationService>()
                   .To<ChatNotificationService>();

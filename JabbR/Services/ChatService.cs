@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+
+using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.UploadHandlers;
 using Microsoft.AspNet.SignalR;
@@ -293,7 +295,7 @@ namespace JabbR.Services
         public ChatService(ICache cache, IRecentMessageCache recentMessageCache, IJabbrRepository repository)
             : this(cache,
                    recentMessageCache,
-                   repository,  
+                   repository,
                    ApplicationSettings.GetDefaultSettings())
         {
         }
@@ -402,9 +404,6 @@ namespace JabbR.Services
 
         public void LeaveRoom(ChatUser user, ChatRoom room)
         {
-            // Update the cache
-            _cache.RemoveUserInRoom(user, room);
-
             // Remove the user from this room
             _repository.RemoveUserRoom(user, room);
 
@@ -413,6 +412,9 @@ namespace JabbR.Services
             user.Preferences = userPreferences;
 
             _repository.CommitChanges();
+
+            // Update the cache
+            _cache.RemoveUserInRoom(user, room);
         }
 
         public void AddAttachment(ChatMessage message, string fileName, string contentType, long size, UploadResult result)
