@@ -44,6 +44,7 @@ namespace JabbR.Nancy
             else
             {
                 UserInformation information = model.AuthenticatedClient.UserInformation;
+                
                 var claims = new List<Claim>();
                 claims.Add(new Claim(ClaimTypes.NameIdentifier, information.Id));
                 claims.Add(new Claim(ClaimTypes.AuthenticationMethod, model.AuthenticatedClient.ProviderName));
@@ -58,6 +59,7 @@ namespace JabbR.Nancy
                     claims.Add(new Claim(ClaimTypes.Email, information.Email));
                 }
 
+                // TODO: Only do sign in if this is an actual sign in, if just adding another idenity then no-op
                 nancyModule.SignIn(claims);
             }
 

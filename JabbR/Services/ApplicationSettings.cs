@@ -50,6 +50,10 @@ namespace JabbR.Services
 
         public string GoogleClientSecret { get; set; }
 
+        public string GitHubClientId { get; set; }
+
+        public string GitHubClientSecret { get; set; }
+
         public string EmailSender { get; set; }
 
 

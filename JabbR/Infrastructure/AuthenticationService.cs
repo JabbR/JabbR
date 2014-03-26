@@ -4,6 +4,7 @@ using System.Linq;
 using JabbR.Services;
 using SimpleAuthentication.Core;
 using SimpleAuthentication.Core.Providers;
+using SimpleAuthentication.ExtraProviders;
 
 namespace JabbR.Infrastructure
 {
@@ -25,7 +26,7 @@ namespace JabbR.Infrastructure
             }
             else
             {
-                _factory.RemoveProvider("facebook");
+                _factory.RemoveProvider<FacebookProvider>();
             }
             if (!String.IsNullOrWhiteSpace(appSettings.TwitterConsumerKey) && !String.IsNullOrWhiteSpace(appSettings.TwitterConsumerSecret))
             {
@@ -37,7 +38,7 @@ namespace JabbR.Infrastructure
             }
             else
             {
-                _factory.RemoveProvider("twitter");
+                _factory.RemoveProvider<TwitterProvider>();
             }
             if (!String.IsNullOrWhiteSpace(appSettings.GoogleClientID) && !String.IsNullOrWhiteSpace(appSettings.GoogleClientSecret))
             {
@@ -49,7 +50,19 @@ namespace JabbR.Infrastructure
             }
             else
             {
-                _factory.RemoveProvider("google");
+                _factory.RemoveProvider<GoogleProvider>();
+            }
+            if (!String.IsNullOrWhiteSpace(appSettings.GitHubClientId) && !String.IsNullOrWhiteSpace(appSettings.GitHubClientSecret))
+            {
+                _factory.AddProvider(new GitHubProvider(new ProviderParams
+                {
+                    PublicApiKey = appSettings.GitHubClientId,
+                    SecretApiKey = appSettings.GitHubClientSecret
+                }));
+            }
+            else
+            {
+                _factory.RemoveProvider<GitHubProvider>();
             }
         }
 
