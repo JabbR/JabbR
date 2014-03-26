@@ -175,6 +175,75 @@
                             </div>
                         </fieldset>
                     </div>
+                    <div class="control-group">
+                        <fieldset id="contentProvidersCustom">
+                            <legend>@LanguageResources.Administration_ContentProviders_Custom</legend>
+                            <div class="control-group contentproviders">
+                                <table class="table-striped table-hover table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>@LanguageResources.Administration_ContentProviders_Enabled</th>
+                                            <th>@LanguageResources.Administration_ContentProviders_Collapsible</th>
+                                            <th>@LanguageResources.Administration_ContentProviders_Name</th>
+                                            <th>@LanguageResources.Administration_ContentProviders_Domains</th>
+                                            <th>@LanguageResources.Administration_ContentProviders_Extract</th>
+                                            <th>@LanguageResources.Administration_ContentProviders_Output</th>
+                                            <th>@LanguageResources.Administration_ContentProviders_Script</th>
+                                            <th>@LanguageResources.Administration_ContentProviders_Title</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @* This row shall act as a template for adding new rows *@
+                                        <tr class="template" style="display:none">
+                                            <td><input type="checkbox" name="enabled[0]" /></td>
+                                            <td><input type="checkbox" name="collapsible[0]" /></td>
+                                            <td><input type="text" name="name[0]" class="input-mini" value="" /></td>
+                                            <td><input type="text" name="domains[0]" class="input-small" value="" /></td>
+                                            <td><input type="text" name="extract[0]" class="input-mini" value="" /></td>
+                                            <td><input type="text" name="output[0]" class="" value=""/></td>
+                                            <td><input type="text" name="script[0]" class="input-small" value="" /></td>
+                                            <td><input type="text" name="title[0]" class="input-small" value="" /></td>
+                                            <td><a href="#" class="remove">@(LanguageResources.Administration_ContentProviders_Remove)</a></td>
+                                        </tr>
+                                        @for (var i = 1; i <= Model.ContentProviders.Count; i++)
+                                        {
+                                            // 1-based so we are building after the template which uses [0].
+                                            var provider = Model.ContentProviders[i-1];
+                                            <tr style="vertical-align: top">
+                                                <td><input type="checkbox" name="enabled[@i]" checked="@provider.Enabled"/></td>
+                                                <td><input type="checkbox" name="collapsible[@i]" checked="@provider.Collapsible" /></td>
+                                                <td><input type="text" name="name[@i]" class="input-mini" value="@Encoder.HtmlEncode(provider.Name)" /></td>
+                                                <td><input type="text" name="domains[@i]" class="input-small" value="@Encoder.HtmlEncode(provider.Domains)" /></td>
+                                                <td><input type="text" name="extract[@i]" class="input-mini" value="@Encoder.HtmlEncode(provider.Extract)" /></td>
+                                                <td><input type="text" name="output[@i]" class="" value="@Encoder.HtmlEncode(provider.Output)"/></td>
+                                                <td><input type="text" name="script[@i]" class="input-small" value="@Encoder.HtmlEncode(provider.Script)" /></td>
+                                                <td><input type="text" name="title[@i]" class="input-small" value="@Encoder.HtmlEncode(provider.Title)" /></td>
+                                                <td><a href="#" class="remove">@(LanguageResources.Administration_ContentProviders_Remove)</a></td>
+                                            </tr>
+                                        }
+                                        @{
+                                            // we will create a blank row with which the user can add a new content provider.
+                                            // If they use it, script will add another one.
+                                            
+                                            var nextIndex = Model.ContentProviders.Count + 1;
+                                        }
+                                        <tr>
+                                            <td><input type="checkbox" name="enabled[@nextIndex]" /></td>
+                                            <td><input type="checkbox" name="collapsible[@nextIndex]" /></td>
+                                            <td><input type="text" name="name[@nextIndex]" class="input-mini" value="" /></td>
+                                            <td><input type="text" name="domains[@nextIndex]" class="input-small" value="" /></td>
+                                            <td><input type="text" name="extract[@nextIndex]" class="input-mini" value="" /></td>
+                                            <td><input type="text" name="output[@nextIndex]" class="" value=""/></td>
+                                            <td><input type="text" name="script[@nextIndex]" class="input-small" value="" /></td>
+                                            <td><input type="text" name="title[@nextIndex]" class="input-small" value="" /></td>
+                                            <td><a href="#" class="remove">@(LanguageResources.Administration_ContentProviders_Remove)</a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </fieldset>
+                    </div>
                 </div>
                 <div class="control-group">
                     <div class="controls">
@@ -220,6 +289,42 @@
                 }
             });
 
+            var $contentProviders = $('.contentproviders'),
+                contentProviderCount = $contentProviders.find("table tbody tr").length;
+
+            // remove a content provider
+            $contentProviders.on('click', '.remove', function () {
+                $(this).closest('tr').remove();
+                // in case they deleted all of them or they deleted the new row
+                ensureEmptyProvider();
+                return false;
+            });
+
+            // add a new provider row if they use up the new row
+            $contentProviders.on('change', 'input[name^=name]', function () {
+                ensureEmptyProvider();
+            });
+
+            function ensureEmptyProvider() {
+                var $lastProvider = $contentProviders.find("table tbody tr").last();
+                if ($lastProvider.find("input[name^=name]").val()) {
+                    addProvider();
+                }
+            }
+
+            function addProvider() {
+                var index = contentProviderCount++;
+                var $cp = $contentProviders.find('.template')
+                    .clone()
+                    .removeClass('template')
+                    .show();
+                $cp.find("input").each(function () {
+                    var $this = $(this),
+                        name = $this.attr("name");
+                    $this.attr("name", name.replace("[0]", "[" + index + "]"));
+                });
+                $contentProviders.find("table tbody").append($cp);
+            }
         }(jQuery));
     </script>
 </body>

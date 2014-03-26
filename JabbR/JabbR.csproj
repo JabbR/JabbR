@@ -946,6 +946,7 @@
     <Content Include="Views\Home\status.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ContentProviders\ConfiguredContentProvider.cs" />
     <Compile Include="Infrastructure\BinaryBlob.cs" />
     <Compile Include="Commands\MemeCommand.cs" />
     <Compile Include="Infrastructure\AuthenticationService.cs" />
@@ -1093,6 +1094,7 @@
     <Compile Include="Nancy\HomeModule.cs" />
     <Compile Include="Nancy\NotificationsModule.cs" />
     <Compile Include="Nancy\SessionExtensions.cs" />
+    <Compile Include="Services\ContentProviderSetting.cs" />
     <Compile Include="Services\DefaultUserAuthenticator.cs" />
     <Compile Include="Services\Email\Email.cs" />
     <Compile Include="Services\Email\EmailService.cs" />
@@ -1195,23 +1197,15 @@
     <Compile Include="ContentProviders\Core\ResourceProcessor.cs" />
     <Compile Include="ContentProviders\GoogleDocsPresentationsContentProvider.cs" />
     <Compile Include="ContentProviders\GoogleMapsContentProvider.cs" />
-    <Compile Include="ContentProviders\JoinMeContentProvider.cs" />
-    <Compile Include="ContentProviders\MixcloudContentProvider.cs" />
     <Compile Include="ContentProviders\NerdDinnerContentProvider.cs" />
     <Compile Include="ContentProviders\NugetNuggetContentProvider.cs" />
     <Compile Include="ContentProviders\SoundCloudContentProvider.cs" />
-    <Compile Include="ContentProviders\TwitPicContentProvider.cs" />
     <Compile Include="ContentProviders\UserVoiceContentProvider.cs" />
     <Compile Include="ContentProviders\UStreamContentProvider.cs" />
-    <Compile Include="ContentProviders\VimeoContentProvider.cs" />
     <Compile Include="ContentProviders\GoogleDocsFormProvider.cs" />
     <Compile Include="ContentProviders\SlideshareContentProvider.cs" />
-    <Compile Include="ContentProviders\GistContentProvider.cs" />
     <Compile Include="Hubs\Chat.cs" />
-    <Compile Include="ContentProviders\CollegeHumorContentProvider.cs" />
     <Compile Include="ContentProviders\ImgurContentProvider.cs" />
-    <Compile Include="ContentProviders\PastieContentProvider.cs" />
-    <Compile Include="ContentProviders\TweetContentProvider.cs" />
     <Compile Include="ContentProviders\ImageContentProvider.cs" />
     <Compile Include="ContentProviders\YoutubeContentProvider.cs" />
     <Compile Include="Infrastructure\AjaxMinMinifier.cs" />

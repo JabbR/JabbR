@@ -213,6 +213,36 @@
   <data name="Administration_Storage_Local" xml:space="preserve">
     <value>Local Storage</value>
   </data>
+  <data name="Administration_ContentProviders_Custom" xml:space="preserve">
+    <value>Custom Content Providers</value>
+  </data>
+  <data name="Administration_ContentProviders_Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Administration_ContentProviders_Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="Administration_ContentProviders_Collapsible" xml:space="preserve">
+    <value>Collapsible</value>
+  </data>
+  <data name="Administration_ContentProviders_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Administration_ContentProviders_Domains" xml:space="preserve">
+    <value>Domains</value>
+  </data>
+  <data name="Administration_ContentProviders_Extract" xml:space="preserve">
+    <value>Extract (Regex)</value>
+  </data>
+  <data name="Administration_ContentProviders_Output" xml:space="preserve">
+    <value>Output (HTML)</value>
+  </data>
+  <data name="Administration_ContentProviders_Script" xml:space="preserve">
+    <value>Script</value>
+  </data>
+  <data name="Administration_ContentProviders_Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
   <data name="Administration_AzureBlobStorageConnectionString" xml:space="preserve">
     <value>Azure Blob Storage Connectionstring</value>
   </data>

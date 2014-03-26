@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using JabbR.Infrastructure;
 using JabbR.Services;
 using Nancy;
@@ -34,6 +35,11 @@ namespace JabbR.Nancy
                 try
                 {
                     var settings = this.Bind<ApplicationSettings>();
+
+                    // filter out empty/null providers. The values posted may contain 'holes' due to removals.
+                    settings.ContentProviders = this.Bind<ContentProviderSetting[]>()
+                        .Where(cp => !string.IsNullOrEmpty(cp.Name))
+                        .ToList();
 
                     IDictionary<string, string> errors;
                     if (ApplicationSettings.TryValidateSettings(settings, out errors))

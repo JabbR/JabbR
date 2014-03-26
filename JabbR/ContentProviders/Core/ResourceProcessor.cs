@@ -72,6 +72,7 @@ namespace JabbR.ContentProviders.Core
             // Use MEF to locate the content providers in this assembly
             var compositionContainer = new CompositionContainer(new AssemblyCatalog(typeof(ResourceProcessor).Assembly));
             compositionContainer.ComposeExportedValue(kernel);
+            compositionContainer.ComposeExportedValue(kernel.Get<ApplicationSettings>());
             return compositionContainer.GetExportedValues<IContentProvider>().ToList();
         }
     }
