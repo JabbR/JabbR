@@ -213,6 +213,12 @@
   <data name="Administration_Storage_Local" xml:space="preserve">
     <value>Local Storage</value>
   </data>
+  <data name="Administration_ContentProviders_BuiltIn" xml:space="preserve">
+    <value>Content Providers</value>
+  </data>
+  <data name="Administration_ContentProviders_RequiresRestart" xml:space="preserve">
+    <value>Enabling or Disabling a content provider will require an app restart to take effect</value>
+  </data>
   <data name="Administration_ContentProviders_Custom" xml:space="preserve">
     <value>Custom Content Providers</value>
   </data>

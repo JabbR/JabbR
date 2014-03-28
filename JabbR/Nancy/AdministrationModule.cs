@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
 using JabbR.Services;
 using Nancy;
 using Nancy.ModelBinding;
+using Ninject;
 
 namespace JabbR.Nancy
 {
     public class AdministrationModule : JabbRModule
     {
-        public AdministrationModule(ApplicationSettings applicationSettings,
+        public AdministrationModule(IKernel kernel,
+                                    ApplicationSettings applicationSettings,
                                     ISettingsManager settingsManager)
             : base("/administration")
         {
@@ -22,7 +25,15 @@ namespace JabbR.Nancy
                     return HttpStatusCode.Forbidden;
                 }
 
-                return View["index", applicationSettings];
+                var allContentProviders = ResourceProcessor.GetAllContentProviders(kernel)
+                    .OrderBy(provider => provider.GetType().Name)
+                    .ToList();
+                var model = new
+                {
+                    AllContentProviders = allContentProviders,
+                    ApplicationSettings = applicationSettings
+                };
+                return View["index", model];
             };
 
             Post["/"] = _ =>
@@ -40,6 +51,15 @@ namespace JabbR.Nancy
                     settings.ContentProviders = this.Bind<ContentProviderSetting[]>()
                         .Where(cp => !string.IsNullOrEmpty(cp.Name))
                         .ToList();
+
+                    var enabledContentProvidersResult = this.Bind<EnabledContentProvidersResult>();
+                    
+                    // we posted the enabled ones, but we store the disabled ones. Flip it around...
+                    settings.DisabledContentProviders =
+                        new HashSet<string>(ResourceProcessor.GetAllContentProviders(kernel)
+                            .Select(cp => cp.GetType().Name)
+                            .Where(typeName => !enabledContentProvidersResult.EnabledContentProviders.Contains(typeName))
+                            .ToList());
 
                     IDictionary<string, string> errors;
                     if (ApplicationSettings.TryValidateSettings(settings, out errors))
@@ -67,6 +87,11 @@ namespace JabbR.Nancy
 
                 return View["index", applicationSettings];
             };
+        }
+
+        private class EnabledContentProvidersResult
+        {
+            public List<string> EnabledContentProviders { get; set; }
         }
     }
 }

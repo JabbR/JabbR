@@ -442,6 +442,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Content Providers.
+        /// </summary>
+        public static string Administration_ContentProviders_BuiltIn {
+            get {
+                return ResourceManager.GetString("Administration_ContentProviders_BuiltIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Collapsible.
         /// </summary>
         public static string Administration_ContentProviders_Collapsible {
@@ -510,6 +519,15 @@ namespace JabbR {
         public static string Administration_ContentProviders_Remove {
             get {
                 return ResourceManager.GetString("Administration_ContentProviders_Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enabling or Disabling a content provider will require an app restart to take effect.
+        /// </summary>
+        public static string Administration_ContentProviders_RequiresRestart {
+            get {
+                return ResourceManager.GetString("Administration_ContentProviders_RequiresRestart", resourceCulture);
             }
         }
         

@@ -1,8 +1,12 @@
-﻿@using SquishIt.Framework;
+﻿@using System.Collections.Generic
+@using JabbR.ContentProviders.Core
+@using SquishIt.Framework;
 @using JabbR
 @using JabbR.Services
-@model ApplicationSettings
-
+@{
+    var applicationSettings = Model.ApplicationSettings as ApplicationSettings;
+    var allContentProviders = Model.AllContentProviders as IList<IContentProvider>;
+}
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -43,31 +47,31 @@
                     <div class="control-group">
                         <label class="control-label" for="allowUserRegistration">@LanguageResources.Administration_AllowUserRegistration</label>
                         <div class="controls">
-                            @Html.CheckBox("allowUserRegistration", Model.AllowUserRegistration)
+                            @Html.CheckBox("allowUserRegistration", applicationSettings.AllowUserRegistration)
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="allowUserResetPassword">@LanguageResources.Administration_ResetPasswordAllowed</label>
                         <div class="controls">
-                            @Html.CheckBox("allowUserResetPassword", Model.AllowUserResetPassword)
+                            @Html.CheckBox("allowUserResetPassword", applicationSettings.AllowUserResetPassword)
                         </div>
                     </div>                    
                     <div class="control-group">
                         <label class="control-label" for="requestResetPasswordValidThroughInHours">@LanguageResources.Administration_ResetPasswordValidDurationHours</label>
                         <div class="controls">
-                            <input type="text" id="requestResetPasswordValidThroughInHours" name="requestResetPasswordValidThroughInHours" class="input-mini" value="@Model.RequestResetPasswordValidThroughInHours" />
+                            <input type="text" id="requestResetPasswordValidThroughInHours" name="requestResetPasswordValidThroughInHours" class="input-mini" value="@applicationSettings.RequestResetPasswordValidThroughInHours" />
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="allowRoomCreation">@LanguageResources.Administration_AllowRoomCreation</label>
                         <div class="controls">
-                            @Html.CheckBox("allowRoomCreation", Model.AllowRoomCreation)
+                            @Html.CheckBox("allowRoomCreation", applicationSettings.AllowRoomCreation)
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="maxMessageLength">@LanguageResources.Administration_MaxMessageLength</label>
                         <div class="controls">
-                            <input type="text" id="maxMessageLength" name="maxMessageLength" class="input-xlarge" value="@Model.MaxMessageLength" placeholder="@LanguageResources.Administration_MaxMessageLength"/>
+                            <input type="text" id="maxMessageLength" name="maxMessageLength" class="input-xlarge" value="@applicationSettings.MaxMessageLength" placeholder="@LanguageResources.Administration_MaxMessageLength"/>
                             <span class="help-block">@LanguageResources.Administration_MaxMessageLengthHelp</span>
                         </div>
                     </div>
@@ -86,15 +90,15 @@
                     <div class="control-group">
                         <label class="control-label" for="encryptionKey">@LanguageResources.Administration_EncryptionKey</label>
                         <div class="controls">
-                            <input type="hidden" id="encryptionKey" name="encryptionKey" value="@Model.EncryptionKey"/>
-                            <label class="help-block label-align-left word-breakable literal-control">@Model.EncryptionKey</label>
+                            <input type="hidden" id="encryptionKey" name="encryptionKey" value="@applicationSettings.EncryptionKey"/>
+                            <label class="help-block label-align-left word-breakable literal-control">@applicationSettings.EncryptionKey</label>
                         </div>
                     </div>
                     <div class="control-group">
                         <label class="control-label" for="verificationKey">@LanguageResources.Administration_VerificationKey</label>
                         <div class="controls">
-                            <input type="hidden" id="verificationKey" name="verificationKey" value="@Model.VerificationKey"/>
-                            <label class="help-block label-align-left word-breakable literal-control">@Model.VerificationKey</label>
+                            <input type="hidden" id="verificationKey" name="verificationKey" value="@applicationSettings.VerificationKey"/>
+                            <label class="help-block label-align-left word-breakable literal-control">@applicationSettings.VerificationKey</label>
                         </div>
                     </div>
                 </fieldset>
@@ -103,7 +107,7 @@
                     <div class="control-group">
                         <label class="control-label" for="googleAnalytics">@LanguageResources.Administration_AnalyticsGoogleId</label>
                         <div class="controls">
-                            <input type="text" id="googleAnalytics" name="googleAnalytics" class="input-xlarge" value="@Model.GoogleAnalytics" placeholder="@LanguageResources.Administration_AnalyticsGoogleId"/>
+                            <input type="text" id="googleAnalytics" name="googleAnalytics" class="input-xlarge" value="@applicationSettings.GoogleAnalytics" placeholder="@LanguageResources.Administration_AnalyticsGoogleId"/>
                         </div>
                     </div>
                 </fieldset>
@@ -112,22 +116,22 @@
                     <div class="control-group">                        
                         <label for="facebookKey" class="control-label">Facebook</label>
                         <div class="controls">
-                            <input type="text" id="facebookAppId" name="facebookAppId" class="input-xlarge" value="@Model.FacebookAppId" placeholder="Facebook app ID" title="Facebook app ID" />
-                            <input type="text" id="facebookAppSecret" name="facebookAppSecret" class="input-xlarge" value="@Model.FacebookAppSecret" placeholder="Facebook app secret" title="Facebook app secret" />
+                            <input type="text" id="facebookAppId" name="facebookAppId" class="input-xlarge" value="@applicationSettings.FacebookAppId" placeholder="Facebook app ID" title="Facebook app ID" />
+                            <input type="text" id="facebookAppSecret" name="facebookAppSecret" class="input-xlarge" value="@applicationSettings.FacebookAppSecret" placeholder="Facebook app secret" title="Facebook app secret" />
                         </div>
                     </div>
                     <div class="control-group">
                         <label for="twitterKey" class="control-label">Twitter</label>
                         <div class="controls">
-                            <input type="text" id="twitterConsumerKey" name="twitterConsumerKey" class="input-xlarge" value="@Model.TwitterConsumerKey" placeholder="Twitter consumer key" title="Twitter consumer key" />
-                            <input type="text" id="twitterConsumerSecret" name="twitterConsumerSecret" class="input-xlarge" value="@Model.TwitterConsumerSecret" placeholder="Twitter consumer secret" title="Twitter consumer secret" />
+                            <input type="text" id="twitterConsumerKey" name="twitterConsumerKey" class="input-xlarge" value="@applicationSettings.TwitterConsumerKey" placeholder="Twitter consumer key" title="Twitter consumer key" />
+                            <input type="text" id="twitterConsumerSecret" name="twitterConsumerSecret" class="input-xlarge" value="@applicationSettings.TwitterConsumerSecret" placeholder="Twitter consumer secret" title="Twitter consumer secret" />
                         </div>
                     </div>
                     <div class="control-group">
                         <label for="googleKey" class="control-label">Google</label>
                         <div class="controls">
-                            <input type="text" id="googleClientId" name="googleClientId" class="input-xlarge" value="@Model.GoogleClientID" placeholder="Google client id" title="Google client id" />
-                            <input type="text" id="googleClientSecret" name="googleClientSecret" class="input-xlarge" value="@Model.GoogleClientSecret" placeholder="Google client secret" title="Google client secret" />
+                            <input type="text" id="googleClientId" name="googleClientId" class="input-xlarge" value="@applicationSettings.GoogleClientID" placeholder="Google client id" title="Google client id" />
+                            <input type="text" id="googleClientSecret" name="googleClientSecret" class="input-xlarge" value="@applicationSettings.GoogleClientSecret" placeholder="Google client secret" title="Google client secret" />
                         </div>
                     </div>
                 </fieldset>
@@ -142,7 +146,7 @@
                         <div class="control-group">
                             <label class="control-label" for="maxFileUploadBytes">@LanguageResources.Administration_MaxFileUploadBytes</label>
                             <div class="controls">
-                                <input type="text" id="maxFileUploadBytes" name="maxFileUploadBytes" class="input-xlarge" value="@Model.MaxFileUploadBytes" placeholder="@LanguageResources.Administration_MaxFileUploadBytes"/>
+                                <input type="text" id="maxFileUploadBytes" name="maxFileUploadBytes" class="input-xlarge" value="@applicationSettings.MaxFileUploadBytes" placeholder="@LanguageResources.Administration_MaxFileUploadBytes"/>
                             </div>
                         </div>
                     </fieldset>
@@ -152,7 +156,7 @@
                             <div class="control-group">
                                 <label class="control-label" for="azureBlobStorageConnectionString">@LanguageResources.Administration_AzureBlobStorageConnectionString</label>
                                 <div class="controls">
-                                    <input type="text" id="azureBlobStorageConnectionString" name="azureBlobStorageConnectionString" class="input-xlarge" value="@Model.AzureblobStorageConnectionString" placeholder="@LanguageResources.Administration_AzureBlobStorageConnectionString"/>
+                                    <input type="text" id="azureBlobStorageConnectionString" name="azureBlobStorageConnectionString" class="input-xlarge" value="@applicationSettings.AzureblobStorageConnectionString" placeholder="@LanguageResources.Administration_AzureBlobStorageConnectionString"/>
                                 </div>
                             </div>
 
@@ -164,17 +168,48 @@
                             <div class="control-group">
                                 <label class="control-label" for="localFileSystemStoragePath">@LanguageResources.Administration_LocalFileSystemStoragePath</label>
                                 <div class="controls">
-                                    <input type="text" id="localFileSystemStoragePath" name="localFileSystemStoragePath" class="input-xlarge" value="@Model.LocalFileSystemStoragePath" placeholder="@LanguageResources.Administration_LocalFileSystemStoragePath_PlaceHolder"/>
+                                    <input type="text" id="localFileSystemStoragePath" name="localFileSystemStoragePath" class="input-xlarge" value="@applicationSettings.LocalFileSystemStoragePath" placeholder="@LanguageResources.Administration_LocalFileSystemStoragePath_PlaceHolder"/>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label" for="localFileSystemStorageUriPrefix">@LanguageResources.Administration_LocalFileSystemStorageUriPrefix</label>
                                 <div class="controls">
-                                    <input type="text" id="localFileSystemStorageUriPrefix" name="localFileSystemStorageUriPrefix" class="input-xlarge" value="@Model.LocalFileSystemStorageUriPrefix" placeholder="@LanguageResources.Administration_LocalFileSystemStorageUriPrefix_PlaceHolder"/>
+                                    <input type="text" id="localFileSystemStorageUriPrefix" name="localFileSystemStorageUriPrefix" class="input-xlarge" value="@applicationSettings.LocalFileSystemStorageUriPrefix" placeholder="@LanguageResources.Administration_LocalFileSystemStorageUriPrefix_PlaceHolder"/>
                                 </div>
                             </div>
                         </fieldset>
                     </div>
+                    <div class="control-group">
+                        <fieldset id="contentProvidersCustom">
+                            <legend>@LanguageResources.Administration_ContentProviders_BuiltIn</legend>
+                            <div class="control-group contentproviders">
+                                <table class="table-striped table-hover table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>@LanguageResources.Administration_ContentProviders_Enabled</th>
+                                            <th>@LanguageResources.Administration_ContentProviders_Name</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach(var provider in allContentProviders)
+                                        {
+                                            var fullName = provider.GetType().Name;
+                                            var friendlyName = fullName.Replace("ContentProvider", "");
+                                            var enabled = !applicationSettings.DisabledContentProviders.Contains(fullName);
+                                            <tr style="vertical-align: top">
+                                                <td><input type="checkbox" name="EnabledContentProviders" checked="@enabled" value="@fullName"/></td>
+                                                <td>
+                                                    @Encoder.HtmlEncode(friendlyName)
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <span>@LanguageResources.Administration_ContentProviders_RequiresRestart</span>
+                            </div>
+                        </fieldset>
+                    </div>
+
                     <div class="control-group">
                         <fieldset id="contentProvidersCustom">
                             <legend>@LanguageResources.Administration_ContentProviders_Custom</legend>
@@ -206,10 +241,10 @@
                                             <td><input type="text" name="title[0]" class="input-small" value="" /></td>
                                             <td><a href="#" class="remove">@(LanguageResources.Administration_ContentProviders_Remove)</a></td>
                                         </tr>
-                                        @for (var i = 1; i <= Model.ContentProviders.Count; i++)
+                                        @for (var i = 1; i <= applicationSettings.ContentProviders.Count; i++)
                                         {
                                             // 1-based so we are building after the template which uses [0].
-                                            var provider = Model.ContentProviders[i-1];
+                                            var provider = applicationSettings.ContentProviders[i-1];
                                             <tr style="vertical-align: top">
                                                 <td><input type="checkbox" name="enabled[@i]" checked="@provider.Enabled"/></td>
                                                 <td><input type="checkbox" name="collapsible[@i]" checked="@provider.Collapsible" /></td>
@@ -226,7 +261,7 @@
                                             // we will create a blank row with which the user can add a new content provider.
                                             // If they use it, script will add another one.
                                             
-                                            var nextIndex = Model.ContentProviders.Count + 1;
+                                            var nextIndex = applicationSettings.ContentProviders.Count + 1;
                                         }
                                         <tr>
                                             <td><input type="checkbox" name="enabled[@nextIndex]" /></td>
