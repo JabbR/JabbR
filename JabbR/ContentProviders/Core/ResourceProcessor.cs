@@ -66,13 +66,22 @@ namespace JabbR.ContentProviders.Core
             return tcs.Task;
         }
 
-
-        private static IList<IContentProvider> GetContentProviders(IKernel kernel)
+        public static IList<IContentProvider> GetAllContentProviders(IKernel kernel)
         {
             // Use MEF to locate the content providers in this assembly
             var compositionContainer = new CompositionContainer(new AssemblyCatalog(typeof(ResourceProcessor).Assembly));
             compositionContainer.ComposeExportedValue(kernel);
-            return compositionContainer.GetExportedValues<IContentProvider>().ToList();
+            compositionContainer.ComposeExportedValue(kernel.Get<ApplicationSettings>());
+            return compositionContainer.GetExportedValues<IContentProvider>()
+                .ToList();
+        }
+
+        private static IList<IContentProvider> GetContentProviders(IKernel kernel)
+        {
+            var applicationSettings = kernel.Get<ApplicationSettings>();
+            return GetAllContentProviders(kernel)
+                .Where(cp => !applicationSettings.DisabledContentProviders.Contains(cp.GetType().Name))
+                .ToList();
         }
     }
 }

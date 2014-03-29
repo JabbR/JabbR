@@ -1,4 +1,5 @@
-﻿using JabbR.ContentProviders.Core;
+﻿using JabbR.ContentProviders;
+using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Nancy;
@@ -75,9 +76,6 @@ namespace JabbR
             kernel.Bind<ICryptoService>()
                 .To<CryptoService>();
 
-            kernel.Bind<IResourceProcessor>()
-                .ToConstant(new ResourceProcessor(kernel));
-
             kernel.Bind<IJavaScriptMinifier>()
                   .To<AjaxMinMinifier>()
                   .InSingletonScope();
@@ -112,6 +110,9 @@ namespace JabbR
 
             kernel.Bind<IKeyProvider>()
                       .To<SettingsKeyProvider>();
+
+            kernel.Bind<IResourceProcessor>()
+                .ToConstant(new ResourceProcessor(kernel));
 
             var serializer = JsonSerializer.Create(new JsonSerializerSettings()
             {

@@ -12,6 +12,7 @@ namespace JabbR.Services
         {
             AllowUserRegistration = true;
             AllowRoomCreation = true;
+            DisabledContentProviders = new HashSet<string>();
         }
 
         public string EncryptionKey { get; set; }
@@ -52,6 +53,9 @@ namespace JabbR.Services
 
         public string EmailSender { get; set; }
 
+        public List<ContentProviderSetting> ContentProviders { get; set; }
+
+        public HashSet<string> DisabledContentProviders { get; set; }
 
         public static bool TryValidateSettings(ApplicationSettings settings, out IDictionary<string, string> errors)
         {
@@ -86,7 +90,8 @@ namespace JabbR.Services
                 AllowRoomCreation = true,
                 AllowUserResetPassword = false,
                 RequestResetPasswordValidThroughInHours = 6,
-                EmailSender = String.Empty
+                EmailSender = String.Empty,
+                ContentProviders = ContentProviderSetting.GetDefaultContentProviders()
             };
         }
 
