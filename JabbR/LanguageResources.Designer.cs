@@ -523,15 +523,6 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enabling or Disabling a content provider will require an app restart to take effect.
-        /// </summary>
-        public static string Administration_ContentProviders_RequiresRestart {
-            get {
-                return ResourceManager.GetString("Administration_ContentProviders_RequiresRestart", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Script.
         /// </summary>
         public static string Administration_ContentProviders_Script {

@@ -1,4 +1,7 @@
-﻿using JabbR.ContentProviders;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using JabbR.ContentProviders;
 using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
 using JabbR.Models;
@@ -112,7 +115,9 @@ namespace JabbR
                       .To<SettingsKeyProvider>();
 
             kernel.Bind<IResourceProcessor>()
-                .ToConstant(new ResourceProcessor(kernel));
+                .To<ResourceProcessor>();
+
+            RegisterContentProviders(kernel);
 
             var serializer = JsonSerializer.Create(new JsonSerializerSettings()
             {
@@ -145,6 +150,30 @@ namespace JabbR
                   .To<EmailService>();
 
             return kernel;
+        }
+
+        private static void RegisterContentProviders(IKernel kernel)
+        {
+            kernel.Bind<IContentProvider>().To<AudioContentProvider>();
+            kernel.Bind<IContentProvider>().To<BashQDBContentProvider>();
+            kernel.Bind<IContentProvider>().To<BBCContentProvider>();
+            kernel.Bind<IContentProvider>().To<DictionaryContentProvider>();
+            kernel.Bind<IContentProvider>().To<GitHubIssueCommentsContentProvider>();
+            kernel.Bind<IContentProvider>().To<GitHubIssuesContentProvider>();
+            kernel.Bind<IContentProvider>().To<GoogleDocsFormProvider>();
+            kernel.Bind<IContentProvider>().To<GoogleDocsPresentationsContentProvider>();
+            kernel.Bind<IContentProvider>().To<GoogleMapsContentProvider>();
+            kernel.Bind<IContentProvider>().To<ImageContentProvider>();
+            kernel.Bind<IContentProvider>().To<ImgurContentProvider>();
+            kernel.Bind<IContentProvider>().To<NerdDinnerContentProvider>();
+            kernel.Bind<IContentProvider>().To<NugetNuggetContentProvider>();
+            kernel.Bind<IContentProvider>().To<ScreencastContentProvider>();
+            kernel.Bind<IContentProvider>().To<SlideShareContentProvider>();
+            kernel.Bind<IContentProvider>().To<SoundCloudContentProvider>();
+            kernel.Bind<IContentProvider>().To<SpotifyContentProvider>();
+            kernel.Bind<IContentProvider>().To<UserVoiceContentProvider>();
+            kernel.Bind<IContentProvider>().To<UStreamContentProvider>();
+            kernel.Bind<IContentProvider>().To<YouTubeContentProvider>();
         }
     }
 }
