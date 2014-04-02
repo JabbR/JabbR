@@ -1216,6 +1216,6 @@ Use ? or type /? to display the FAQ and list of commands.</value>
     <value>You cannot unban another admin.</value>
   </data>
   <data name="Unban_UserRequired" xml:space="preserve">
-    <value>Who do you want to ban?</value>
+    <value>Who do you want to unban?</value>
   </data>
 </root>

@@ -3193,7 +3193,7 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Who do you want to ban?.
+        ///   Looks up a localized string similar to Who do you want to unban?.
         /// </summary>
         public static string Unban_UserRequired {
             get {
