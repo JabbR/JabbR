@@ -1595,6 +1595,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Checks if a user is banned. Only works if you&apos;re an admin..
+        /// </summary>
+        public static string CheckBanned_CommandInfo {
+            get {
+                return ResourceManager.GetString("CheckBanned_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Account Settings.
         /// </summary>
         public static string Client_AccountSettings {

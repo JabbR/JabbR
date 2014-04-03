@@ -1218,4 +1218,7 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="Unban_UserRequired" xml:space="preserve">
     <value>Who do you want to unban?</value>
   </data>
+  <data name="CheckBanned_CommandInfo" xml:space="preserve">
+    <value>Checks if a user is banned. Only works if you're an admin.</value>
+  </data>
 </root>

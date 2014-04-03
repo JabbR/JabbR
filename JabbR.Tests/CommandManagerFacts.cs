@@ -2861,10 +2861,10 @@ namespace JabbR.Test
             }
         }
 
-        public class IsBannedCommand
+        public class CheckBannedCommand
         {
             [Fact]
-            public void IsBannerIsNotAnAdminThrows()
+            public void CheckBannerIsNotAnAdminThrows()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -2901,13 +2901,13 @@ namespace JabbR.Test
                                                         cache,
                                                         notificationService.Object);
 
-                var ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/isbanned dfowler2"));
+                var ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/checkbanned dfowler2"));
 
                 Assert.True(ex.Message == "You are not an admin.");
             }
 
             [Fact]
-            public void CannotIsBannedUserIfNotExists()
+            public void CannotCheckBannedUserIfNotExists()
             {
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
@@ -2945,7 +2945,7 @@ namespace JabbR.Test
                                                         cache,
                                                         notificationService.Object);
 
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/isbanned fowler3"));
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/checkbanned fowler3"));
                 Assert.Equal("Unable to find fowler3.", ex.Message);
             }
 

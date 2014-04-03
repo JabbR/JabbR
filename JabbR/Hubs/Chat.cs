@@ -1214,7 +1214,7 @@ namespace JabbR
             });
         }
 
-        void INotificationService.IsBanned()
+        void INotificationService.CheckBanned()
         {
             // Get all users that are banned
             var users = _repository.Users.Where(u => u.IsBanned)
@@ -1224,9 +1224,9 @@ namespace JabbR
             Clients.Caller.listUsers(users);
         }
 
-        void INotificationService.IsBanned(ChatUser user)
+        void INotificationService.CheckBanned(ChatUser user)
         {
-            Clients.Caller.IsBanned(new
+            Clients.Caller.checkBanned(new
             {
                 Name = user.Name,
                 IsBanned = user.IsBanned
