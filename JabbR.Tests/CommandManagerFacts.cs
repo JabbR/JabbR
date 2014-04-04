@@ -2561,8 +2561,394 @@ namespace JabbR.Test
                                                         notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/ban dfowler"));
-                Assert.Equal("You cannot ban another admin.", ex.Message);
+                Assert.Equal("You cannot ban yourself!", ex.Message);
             }
+        }
+
+        public class UnbanCommand
+        {
+            [Fact]
+            public void MissingUserNameThrows()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1",
+                    IsAdmin = true
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                room.Owners.Add(user);
+                user.Rooms.Add(room);
+                repository.Add(room);
+
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/unban"));
+                Assert.Equal("Who do you want to unban?", ex.Message);
+            }
+
+            [Fact]
+            public void UnbannerIsNotAnAdminThrows()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                room.Owners.Add(user);
+                room.Users.Add(user2);
+                room.Owners.Add(user2);
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                repository.Add(room);
+
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                var ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/unban dfowler2"));
+
+                Assert.True(ex.Message == "You are not an admin.");
+            }
+
+            [Fact]
+            public void CannotUnbanUserIfNotExists()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1",
+                    IsAdmin = true
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                room.Users.Add(user2);
+                room.Owners.Add(user);
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                repository.Add(room);
+
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/unban fowler3"));
+                Assert.Equal("Unable to find fowler3.", ex.Message);
+            }
+
+            [Fact]
+            public void AdminCannotUnbanAdmin()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1",
+                    IsAdmin = true
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2",
+                    IsAdmin = true
+                };
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                room.Users.Add(user2);
+                room.Owners.Add(user);
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                repository.Add(room);
+
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/unban dfowler2"));
+                Assert.Equal("You cannot unban another admin.", ex.Message);
+            }
+
+            [Fact]
+            public void CannotUnbanUrSelf()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1",
+                    IsAdmin = true
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                room.Owners.Add(user);
+                user.Rooms.Add(room);
+                repository.Add(room);
+
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/unban dfowler"));
+                Assert.Equal("You cannot unban another admin.", ex.Message);
+            }
+
+            [Fact]
+            public void AdminUnbanBannedUser()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1",
+                    IsAdmin = true
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2",
+                    IsAdmin = false,
+                    IsBanned = true
+                };
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                room.Users.Add(user2);
+                room.Owners.Add(user);
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                repository.Add(room);
+
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                var ex = commandManager.TryHandleCommand("/unban dfowler2");
+
+                Assert.False(user2.IsBanned);
+
+            }
+
+            [Fact]
+            public void AdminUnbanUnbannedUser()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1",
+                    IsAdmin = true
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2",
+                    IsAdmin = false,
+                    IsBanned = false
+                };
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                room.Users.Add(user2);
+                room.Owners.Add(user);
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                repository.Add(room);
+
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                var ex = commandManager.TryHandleCommand("/unban dfowler2");
+
+                Assert.False(user2.IsBanned);
+            }
+        }
+
+        public class CheckBannedCommand
+        {
+            [Fact]
+            public void CheckBannerIsNotAnAdminThrows()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1"
+                };
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "1"
+                };
+                repository.Add(user);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                room.Owners.Add(user);
+                room.Users.Add(user2);
+                room.Owners.Add(user2);
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                repository.Add(room);
+
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                var ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/checkbanned dfowler2"));
+
+                Assert.True(ex.Message == "You are not an admin.");
+            }
+
+            [Fact]
+            public void CannotCheckBannedUserIfNotExists()
+            {
+                var repository = new InMemoryRepository();
+                var cache = new Mock<ICache>().Object;
+                var user = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "1",
+                    IsAdmin = true
+                };
+                repository.Add(user);
+                var user2 = new ChatUser
+                {
+                    Name = "dfowler2",
+                    Id = "2"
+                };
+                repository.Add(user2);
+                var room = new ChatRoom
+                {
+                    Name = "room"
+                };
+                room.Users.Add(user);
+                room.Users.Add(user2);
+                room.Owners.Add(user);
+                user.Rooms.Add(room);
+                user2.Rooms.Add(room);
+                repository.Add(room);
+
+                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
+                var notificationService = new Mock<INotificationService>();
+                var commandManager = new CommandManager("clientid",
+                                                        "1",
+                                                        "room",
+                                                        service,
+                                                        repository,
+                                                        cache,
+                                                        notificationService.Object);
+
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/checkbanned fowler3"));
+                Assert.Equal("Unable to find fowler3.", ex.Message);
+            }
+
         }
 
         public class LeaveCommand

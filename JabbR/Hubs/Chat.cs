@@ -1199,6 +1199,38 @@ namespace JabbR
             }
 
             Clients.User(targetUser.Id).logOut(rooms);
+
+            Clients.Caller.banUser(new
+            {
+                Name = targetUser.Name
+            });
+        }
+
+        void INotificationService.UnbanUser(ChatUser targetUser)
+        {
+            Clients.Caller.unbanUser(new
+            {
+                Name = targetUser.Name
+            });
+        }
+
+        void INotificationService.CheckBanned()
+        {
+            // Get all users that are banned
+            var users = _repository.Users.Where(u => u.IsBanned)
+                                         .Select(u => u.Name)
+                                         .OrderBy(u => u);
+
+            Clients.Caller.listUsers(users);
+        }
+
+        void INotificationService.CheckBanned(ChatUser user)
+        {
+            Clients.Caller.checkBanned(new
+            {
+                Name = user.Name,
+                IsBanned = user.IsBanned
+            });
         }
 
         protected override void Dispose(bool disposing)

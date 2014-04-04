@@ -837,12 +837,34 @@ namespace JabbR.Services
         {
             EnsureAdmin(admin);
 
+            if (targetUser == admin)
+            {
+                throw new HubException(LanguageResources.Ban_CannotBanSelf);
+            }
+
             if (targetUser.IsAdmin)
             {
                 throw new HubException(LanguageResources.Ban_CannotBanAdmin);
             }
 
             targetUser.IsBanned = true;
+
+            _repository.CommitChanges();
+        }
+
+        public void UnbanUser(ChatUser admin, ChatUser targetUser)
+        {
+            // Ensure the user is admin
+            EnsureAdmin(admin);
+
+            if (targetUser.IsAdmin)
+            {
+                // If the target user is an admin, then throw
+                throw new HubException(LanguageResources.Unban_CannotUnbanAdmin);
+            }
+
+            //Unban the user
+            targetUser.IsBanned = false;
 
             _repository.CommitChanges();
         }

@@ -948,6 +948,8 @@
     <Content Include="Views\Home\status.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CheckBannedCommand.cs" />
+    <Compile Include="Commands\UnBanCommand.cs" />
     <Compile Include="ContentProviders\ConfiguredContentProvider.cs" />
     <Compile Include="Infrastructure\BinaryBlob.cs" />
     <Compile Include="Commands\MemeCommand.cs" />
