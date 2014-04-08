@@ -5627,11 +5627,11 @@ namespace JabbR.Test
                                                         cache,
                                                         notificationService.Object);
                 // Act.
-                bool result = commandManager.TryHandleCommand("/meme ramsay cold-hands? type-faster/!...");
+                bool result = commandManager.TryHandleCommand("/meme ramsay cold-hands? type-faster.../.");
 
                 // Assert.
                 Assert.True(result);
-                notificationService.Verify(x => x.GenerateMeme(user, room, "https://upboat.me/ramsay/cold-hands%3F/type-faster%2F!....jpg"), Times.Once());
+                notificationService.Verify(x => x.GenerateMeme(user, room, "https://upboat.me/ramsay/cold-hands%3F/type-faster...%2F..jpg"), Times.Once());
             }
 
             [Fact]
