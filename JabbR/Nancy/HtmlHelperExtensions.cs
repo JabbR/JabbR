@@ -138,7 +138,9 @@ namespace JabbR
         public static IHtmlString DisplayNoneIf<TModel>(this HtmlHelpers<TModel> htmlHelper, Expression<Func<TModel, bool>> expression)
         {
             if (expression.Compile()(htmlHelper.Model))
+            {
                 return new NonEncodedHtmlString(@" style=""display:none;"" ");
+            }
 
             return NonEncodedHtmlString.Empty;
         }
