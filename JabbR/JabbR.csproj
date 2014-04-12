@@ -231,6 +231,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="apple-touch-icon.png" />
+    <Content Include="Content\images\download-off-white.png" />
+    <Content Include="Content\images\download-off.png" />
+    <Content Include="Content\images\download-on-white.png" />
+    <Content Include="Content\images\download-on.png" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\images\splash-logo.png" />
