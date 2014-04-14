@@ -6,6 +6,7 @@ namespace JabbR.Services
     {
         bool RequireHttps { get; }
         bool MigrateDatabase { get; }
+        bool ScaleOut { get; }
 
         string DeploymentSha { get; }
         string DeploymentBranch { get; }
@@ -13,6 +14,7 @@ namespace JabbR.Services
 
         string ServiceBusConnectionString { get; }
         string ServiceBusTopicPrefix { get; }
+        bool ScaleOutServiceBus { get; }
 
         ConnectionStringSettings SqlConnectionString { get; }
         bool ScaleOutSqlServer { get; }

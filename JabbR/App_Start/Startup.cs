@@ -156,11 +156,8 @@ namespace JabbR
             var hubPipeline = resolver.Resolve<IHubPipeline>();
             var configuration = resolver.Resolve<IConfigurationManager>();
 
-            bool hasBackplane = false;
-
             // Enable service bus scale out
-            if (!String.IsNullOrEmpty(jabbrConfig.ServiceBusConnectionString) &&
-                !String.IsNullOrEmpty(jabbrConfig.ServiceBusTopicPrefix))
+            if (jabbrConfig.ScaleOutServiceBus)
             {
                 var sbConfig = new ServiceBusScaleoutConfiguration(jabbrConfig.ServiceBusConnectionString,
                                                                    jabbrConfig.ServiceBusTopicPrefix)
@@ -169,16 +166,14 @@ namespace JabbR
                 };
 
                 resolver.UseServiceBus(sbConfig);
-                hasBackplane = true;
             }
 
             if (jabbrConfig.ScaleOutSqlServer)
             {
                 resolver.UseSqlServer(jabbrConfig.SqlConnectionString.ConnectionString);
-                hasBackplane = true;
             }
 
-            if (hasBackplane)
+            if (jabbrConfig.ScaleOut)
             {
                 kernel.Bind<IBackplaneMethodResolver>().To<BackplaneReflectionMethodResolver>();
 

@@ -73,6 +73,15 @@ namespace JabbR.Services
             }
         }
 
+        public bool ScaleOutServiceBus
+        {
+            get
+            {
+                return !String.IsNullOrEmpty(ServiceBusConnectionString) && 
+                    !String.IsNullOrEmpty(ServiceBusTopicPrefix);
+            }
+        }
+
         public bool ScaleOutSqlServer
         {
             get
@@ -84,6 +93,14 @@ namespace JabbR.Services
                     return scaleOutSqlServer;
                 }
                 return false;
+            }
+        }
+
+        public bool ScaleOut
+        {
+            get
+            {
+                return ScaleOutSqlServer || ScaleOutServiceBus;
             }
         }
 
