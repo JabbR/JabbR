@@ -1,21 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
 using System.Text.RegularExpressions;
 using JabbR.ContentProviders.Core;
 using JabbR.Services;
-using Ninject;
 
 namespace JabbR.ContentProviders
 {
     public class ConfiguredContentProvider : EmbedContentProvider
     {
-        private readonly SettingsManager _settingsManager;
+        private readonly ISettingsManager _settingsManager;
 
-        [ImportingConstructor]
-        public ConfiguredContentProvider(IKernel kernel)
+        public ConfiguredContentProvider(ISettingsManager settingsManager)
         {
-            _settingsManager = kernel.Get<SettingsManager>();
+            _settingsManager = settingsManager;
         }
 
         private ApplicationSettings GetSettings()

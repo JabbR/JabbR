@@ -15,7 +15,8 @@ namespace JabbR.Nancy
     {
         public AdministrationModule(IKernel kernel,
                                     ApplicationSettings applicationSettings,
-                                    ISettingsManager settingsManager)
+                                    ISettingsManager settingsManager,
+                                    IEnumerable<IContentProvider> contentProviders)
             : base("/administration")
         {
             Get["/"] = _ =>
@@ -25,7 +26,7 @@ namespace JabbR.Nancy
                     return HttpStatusCode.Forbidden;
                 }
 
-                var allContentProviders = ResourceProcessor.GetAllContentProviders(kernel)
+                var allContentProviders = contentProviders
                     .OrderBy(provider => provider.GetType().Name)
                     .ToList();
                 var model = new
@@ -56,7 +57,7 @@ namespace JabbR.Nancy
                     
                     // we posted the enabled ones, but we store the disabled ones. Flip it around...
                     settings.DisabledContentProviders =
-                        new HashSet<string>(ResourceProcessor.GetAllContentProviders(kernel)
+                        new HashSet<string>(contentProviders
                             .Select(cp => cp.GetType().Name)
                             .Where(typeName => !enabledContentProvidersResult.EnabledContentProviders.Contains(typeName))
                             .ToList());
