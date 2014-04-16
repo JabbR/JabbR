@@ -2772,6 +2772,19 @@ h3.userlist-header {
     background-repeat: no-repeat;
 }
 
+.icon-download {
+    background-image: url('../../images/download-on.png');
+    background-position: 0 0;
+    background-size: 14px 14px;
+    height: 14px;
+    width: 14px;
+    background-repeat: no-repeat;
+}
+
+.icon-download:before {
+    content: "";
+}
+
 #room-preferences .richness:hover .icon-richness {
     background-image: url('../../images/richness-on-white.png');
     background-repeat: no-repeat;
@@ -2787,12 +2800,23 @@ h3.userlist-header {
     background-repeat: no-repeat;
 }
 
-#room-preferences .icon-download {
-    background-position: 0 0;
-    background-size: 10px 14px;
-    height: 14px;
-    width: 10px;
-    margin-right: 8px;
+#room-preferences .download .icon-download {
+    background-image: url('../../images/download-on.png');
+    background-repeat: no-repeat;
+}
+
+#room-preferences .download:hover .icon-download {
+    background-image: url('../../images/download-on-white.png');
+    background-repeat: no-repeat;
+}
+
+#room-preferences .download.off .icon-download {
+    background-image: url('../../images/download-off.png');
+    background-repeat: no-repeat;
+}
+
+#room-preferences .download.off:hover .icon-download {
+    background-image: url('../../images/download-off-white.png');
     background-repeat: no-repeat;
 }
 

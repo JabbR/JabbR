@@ -1409,6 +1409,8 @@
                     room.messages.hide();
                 }
 
+                ui.toggleDownloadButton(room.isLocked());
+
                 ui.toggleMessageSection(room.isClosed());
 
                 $ui.trigger(ui.events.activeRoomChanged, [roomName]);
@@ -1422,6 +1424,8 @@
             var room = getRoomElements(roomName);
 
             room.setLocked();
+
+            ui.toggleDownloadButton(true);
         },
         setRoomClosed: function (roomName) {
             var room = getRoomElements(roomName);
@@ -2402,6 +2406,15 @@
                 $fileUploadButton.removeAttr('disabled');
                 $hiddenFile.attr('disabled', '');
                 $hiddenFile.removeAttr('disabled');
+            }
+        },
+        toggleDownloadButton: function(disabled) {
+            if (disabled) {
+                $downloadIcon.addClass("off");
+                $downloadIcon.attr("title", "download messages disabled for private rooms");
+            } else {
+                $downloadIcon.removeClass("off");
+                $downloadIcon.attr("title", "download messages");
             }
         },
         closeRoom: function (roomName) {
