@@ -1415,6 +1415,7 @@
 
                 $ui.trigger(ui.events.activeRoomChanged, [roomName]);
                 triggerFocus();
+                setRoomLoading(false);
                 return true;
             }
 

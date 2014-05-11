@@ -92,9 +92,14 @@
             })
             .fail(function (e) {
                 connection.hub.log('loadRooms.failed(' + rooms.join(', ') + ', ' + e + ')');
+            })
+            .always(function (e) {
+                ui.hideSplashScreen();
             });
     }
 
+    var getRoomInfoMaxRetries = 5;
+    var getRoomInfoRetries = 0;
     function populateRoom(room, d) {
         var deferred = d || $.Deferred();
 
@@ -111,11 +116,21 @@
                 })
                 .fail(function (e) {
                     connection.hub.log('getRoomInfo.failed(' + room + ', ' + e + ')');
-
-                    setTimeout(function () {
-                        populateRoom(room, deferred);
-                    },
-                    1000);
+                    getRoomInfoRetries++;
+                    if (getRoomInfoRetries < getRoomInfoMaxRetries) {
+                        // This was causing a forever loading screen if a user attempts to join a
+                        // private room that is not in their allowed rooms list.
+                        // Added a retry count so it will stop trying to populate the room
+                        // and close the loading screen
+                        setTimeout(function () {
+                            populateRoom(room, deferred);
+                        },
+                        1000);
+                    }
+                    else
+                    {
+                        deferred.rejectWith(chat);
+                    }
                 });
 
         return deferred.promise();
@@ -374,6 +389,12 @@
                 if (roomsToLoad === 0) {
                     ui.hideSplashScreen();
                 }
+            })
+            .fail(function () {
+                loadRooms();
+                //display error message
+                console.log('logOn.populateRoom(' + this.state.activeRoom + ') failed');
+                ui.addMessage('Failed to populate \'' + this.state.activeRoom + '\'', 'error', this.state.activeRoom);
             });
         }
         else {
