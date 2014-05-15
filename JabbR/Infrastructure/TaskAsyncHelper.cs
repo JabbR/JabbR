@@ -424,7 +424,9 @@ namespace JabbR
             {
                 var canceledTask = tasks.FirstOrDefault(task => task.IsCanceled);
                 if (canceledTask != null)
+                {
                     throw new TaskCanceledException();
+                }
 
                 var allExceptions =
                     tasks.Where(task => task.IsFaulted).SelectMany(task => task.Exception.InnerExceptions).ToList();
