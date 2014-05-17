@@ -331,20 +331,20 @@ canvas {
     margin: -75px 0 0 -75px;
 }
 
-#lobby-private,
+/*#lobby-private,
 #lobby-other {
     display: none;
-}
+}*/
 
-#userlist-lobby,
-#userlist-lobby-owners {
+#lobby-private ul,
+#lobby-other ul {
     position: relative;
     margin: 0 5px;
     top: 10px;
     background: none;
 }
 
-    #userlist-lobby li {
+    #lobby-other ul li {
         display: block;
         animation: room-fade 0.8s linear 1;
         -webkit-animation: room-fade 0.8s linear 1;
@@ -353,7 +353,7 @@ canvas {
         cursor: pointer;
     }
 
-    #userlist-lobby-owners li {
+    #lobby-private ul li {
         display: inline-block;
         margin: 0 5px 10px 5px;
         height: 102px;
@@ -377,8 +377,8 @@ canvas {
         100% { background-color: #FFFFFF; }
     }
 
-        #userlist-lobby li.empty,
-        #userlist-lobby-owners li.empty {
+        #lobby-other ul li.empty,
+        #lobby-private ul li.empty {
             color: #909090;
             display: inline-block;
             font-style: italic;
@@ -386,13 +386,13 @@ canvas {
             margin-left: 10px;
         }
 
-        #userlist-lobby li:hover,
-        #userlist-lobby-owners li:hover {
+        #lobby-other ul li:hover,
+        #lobby-private ul li:hover {
             background: none;
         }
 
 
-    #userlist-lobby div.room-row {
+    #lobby-other ul div.room-row {
         min-height: 30px;
         border-color: #EEEEEE;
         border-style: solid;
@@ -402,7 +402,7 @@ canvas {
         padding-left: 15px;
     }
 
-    #userlist-lobby div:hover {
+    #lobby-other ul div:hover {
         background: #e5e5e5;
         color: #00103f;
         color: rgba(0, 16, 63, 1);

@@ -875,12 +875,27 @@
     <EmbeddedResource Include="Migrations\201307181924477_AddUserPreferences.resx">
       <DependentUpon>201307181924477_AddUserPreferences.cs</DependentUpon>
     </EmbeddedResource>
+    <Content Include="Scripts\angular-mocks.js" />
+    <Content Include="Scripts\angular-resource.js" />
+    <Content Include="Scripts\angular-resource.min.js" />
+    <Content Include="Scripts\angular-route.js" />
+    <Content Include="Scripts\angular-route.min.js" />
+    <Content Include="Scripts\angular-sanitize.js" />
+    <Content Include="Scripts\angular-sanitize.min.js" />
+    <Content Include="Scripts\angular.js" />
+    <Content Include="Scripts\angular.min.js" />
+    <Content Include="Scripts\app\app.js" />
+    <Content Include="Scripts\app\areas\rooms\lobby.html" />
     <Content Include="Scripts\ba-linkify.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <EmbeddedResource Include="Migrations\201310240539050_AddPrecision.resx">
       <DependentUpon>201310240539050_AddPrecision.cs</DependentUpon>
     </EmbeddedResource>
+    <Content Include="Scripts\angular.min.js.map" />
+    <Content Include="Scripts\angular-resource.min.js.map" />
+    <Content Include="Scripts\angular-route.min.js.map" />
+    <Content Include="Scripts\angular-sanitize.min.js.map" />
     <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />

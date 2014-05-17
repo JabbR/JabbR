@@ -95,7 +95,9 @@
             // Chrome fix for hiding and showing scroll areas
             this.messages.scrollTop(this.messages.scrollTop() - 1);
         }
-        this.messages.scrollTop(this.messages[0].scrollHeight);
+        if (this.messages[0]) {
+            this.messages.scrollTop(this.messages[0].scrollHeight);
+        }
     };
 
     Room.prototype.isNearTheEnd = function () {

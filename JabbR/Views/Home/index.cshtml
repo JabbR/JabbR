@@ -343,19 +343,8 @@
                     <h4>@LanguageResources.LoadingMessage</h4>
                 </div>
             </div>
-            <div id="lobby-wrapper">
-                <div id="lobby-private">
-                    <h2 class="userlist-header nav-header">@LanguageResources.Client_YourPrivateRooms</h2>
-                    <ul id="userlist-lobby-owners" data-empty-message="@LanguageResources.Client_NoMatchingRooms"></ul>
-                </div>
-                <div id="lobby-other">
-                    <h2 class="userlist-header nav-header">@LanguageResources.Client_Rooms</h2>
-                    <ul id="userlist-lobby" data-empty-message="@LanguageResources.Client_NoMatchingRooms">
-                    </ul>
-                    <div id="load-more-rooms-item" class="room" style="display:none;"><div class="row-fluid room-row load-more-rooms"><i class="icon-spinner" style="display:none;"></i><a href="#">@LanguageResources.Client_LoadMore</a></div></div>
-                </div>
-                <ul id="messages-lobby" class="messages current" role="log" style="visibility: hidden;">
-                </ul>
+            <div id="lobby-wrapper" data-ng-app="jabbrApp" data-ng-controller="LobbyController">
+                <div data-jabbr-lobby></div>
             </div>
             <div id="drop-file-target"><h1 class="drop-file-text">@LanguageResources.Client_UploadDropTarget</h1></div>
             <iframe id="upload-frame" name="upload-frame" style="position:absolute;top:0;left:0;width:0;height:0;visibility:hidden;"></iframe>
@@ -494,6 +483,10 @@
             .Add("~/Scripts/jquery.pulse.min.js")
             .Add("~/Scripts/jquery.KeyTips.js")
             .Add("~/Scripts/jquery.signalR-2.1.0-pre-140513-b35.min.js")
+            .Add("~/Scripts/angular.min.js")
+            .Add("~/Scripts/angular-route.min.js")
+            .Add("~/Scripts/angular-resource.min.js")
+            .Add("~/Scripts/angular-sanitize.min.js")
             .Render("~/Scripts/JabbR1_#.js"));
     }
     <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>
@@ -528,6 +521,7 @@
             .Add("~/Chat.githubissues.js")
             .Add("~/Chat.js")
             .Add("~/loader.js")
+            .Add("~/Scripts/app/app.js")
             .Render("~/Scripts/JabbR2_#.js"));
     }
     @if (Model.DebugMode)
