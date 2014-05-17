@@ -37,6 +37,12 @@ var app = angular.module('jabbrApp', [
                     console.log(rooms.length);
                     angular.forEach(rooms, function (value, key) {
                         console.log(value);
+                        value.getUserCount = function () {
+                            if (this.Count === 0)
+                                return 'Unoccupied';
+                            else
+                                return this.Count + this.Count === 1 ? ' occupant' : ' occupants';
+                        }
                         $scope.publicRooms.push(value);
                         $scope.$apply();
                     });

@@ -11,9 +11,7 @@
                 <span class="topic" data-ng-bind-html="room.Topic"></span>
             </div>
             <div class="span2">
-                <span class="count" data-ng-show="{{room.Count == 0}}">@LanguageResources.Client_OccupantsZero</span>
-                <span class="count" data-ng-show="{{room.Count == 1}}">@LanguageResources.Client_OccupantsOne</span>
-                <span class="count" data-ng-show="{{room.Count > 1}}">@String.Format(LanguageResources.Client_OccupantsMany, "{{room.Count}}")</span>
+                <span class="count">{{room.getUserCount()}}</span>
             </div>
         </div>
     </li>
