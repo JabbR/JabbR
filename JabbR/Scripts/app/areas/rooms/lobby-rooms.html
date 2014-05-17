@@ -1,0 +1,23 @@
+﻿<h2 class="userlist-header nav-header">{{title}}</h2>
+<ul data-empty-message="@LanguageResources.Client_NoMatchingRooms">
+    <li data-ng-repeat="room in rooms" class="room" data-ng-class="{room.Private: locked, room.Closed: closed}" data-room="{{room.Name}}" data-name="{{room.Name}}" data-count="{{room.Count}}">
+        <div class="row-fluid room-row">
+            <div class="span3">
+                <span class="name">{{room.Name}}</span>
+                <span class="lock" data-ng-show="room.Private"><i class="icon-lock"></i></span>
+                <span class="readonly" data-ng-show="room.Closed"><i class="icon-ban-circle"></i></span>
+            </div>
+            <div class="span4">
+                <span class="topic" data-ng-bind-html="room.Topic"></span>
+            </div>
+            <div class="span2">
+                <span class="count" data-ng-show="{{room.Count == 0}}">@LanguageResources.Client_OccupantsZero</span>
+                <span class="count" data-ng-show="{{room.Count == 1}}">@LanguageResources.Client_OccupantsOne</span>
+                <span class="count" data-ng-show="{{room.Count > 1}}">@String.Format(LanguageResources.Client_OccupantsMany, "{{room.Count}}")</span>
+            </div>
+        </div>
+    </li>
+</ul>
+<div id="load-more-rooms-item" class="room" style="display: none;">
+    <div class="row-fluid room-row load-more-rooms"><i class="icon-spinner" style="display: none;"></i><a href="#">@LanguageResources.Client_LoadMore</a></div>
+</div>

@@ -1,47 +1,5 @@
-﻿<div id="lobby-private" data-ng-show="privateRooms.length > 0">
-    <h2 class="userlist-header nav-header">@LanguageResources.Client_YourPrivateRooms</h2>
-    <ul data-empty-message="@LanguageResources.Client_NoMatchingRooms">
-        <li data-ng-repeat="privateRoom in privateRooms" class="room" data-ng-class="{privateRoom.Private: locked, privateRoom.Closed: closed}" data-room="{{privateRoom.Name}}" data-name="{{privateRoom.Name}}" data-count="{{privateRoom.Count}}">
-            <div class="row-fluid room-row">
-                <div class="span3">
-                    <span class="name">{{privateRoom.Name}}</span>
-                    <span class="lock"><i class="icon-lock"></i></span>
-                    <span class="readonly"><i class="icon-ban-circle"></i></span>
-                </div>
-                <div class="span4">
-                    <span class="topic" data-ng-bind-html="privateRoom.Topic"></span>
-                </div>
-                <div class="span2">
-                    <span class="count" data-ng-show="{{privateRoom.Count == 0}}">@LanguageResources.Client_OccupantsZero</span>
-                    <span class="count" data-ng-show="{{privateRoom.Count == 1}}">@LanguageResources.Client_OccupantsOne</span>
-                    <span class="count" data-ng-show="{{privateRoom.Count > 1}}">@String.Format(LanguageResources.Client_OccupantsMany, "{{privateRoom.Count}}")</span>
-                </div>
-            </div>
-        </li>
-    </ul>
-</div>
-<div id="lobby-other" data-ng-show="publicRooms.length > 0">
-    <h2 class="userlist-header nav-header">@LanguageResources.Client_Rooms</h2>
-    <ul data-empty-message="@LanguageResources.Client_NoMatchingRooms">
-        <li data-ng-repeat="publicRoom in publicRooms" class="room" data-ng-class="{publicRoom.Private: locked, publicRoom.Closed: closed}" data-room="{{publicRoom.Name}}" data-name="{{publicRoom.Name}}" data-count="{{publicRoom.Count}}">
-            <div class="row-fluid room-row">
-                <div class="span3">
-                    <span class="name">{{publicRoom.Name}}</span>
-                </div>
-                <div class="span4">
-                    <span class="topic" data-ng-bind-html="publicRoom.Topic"></span>
-                </div>
-                <div class="span2">
-                    <span class="count" data-ng-show="{{publicRoom.Count == 0}}">@LanguageResources.Client_OccupantsZero</span>
-                    <span class="count" data-ng-show="{{publicRoom.Count == 1}}">@LanguageResources.Client_OccupantsOne</span>
-                    <span class="count" data-ng-show="{{publicRoom.Count > 1}}">@String.Format(LanguageResources.Client_OccupantsMany, "{{publicRoom.Count}}")</span>
-                </div>
-            </div>
-        </li>
-    </ul>
-    <div id="load-more-rooms-item" class="room" style="display: none;">
-        <div class="row-fluid room-row load-more-rooms"><i class="icon-spinner" style="display: none;"></i><a href="#">@LanguageResources.Client_LoadMore</a></div>
-    </div>
+﻿<div id="lobby-private" data-ng-show="privateRooms.length > 0" data-jabbr-lobby-rooms data-title="'Your Private Rooms'" data-rooms="privateRooms"></div>
+<div id="lobby-other" data-ng-show="publicRooms.length > 0" data-jabbr-lobby-rooms data-title="'Other Rooms'" data-rooms="publicRooms">
 </div>
 <ul id="messages-lobby" class="messages current" role="log" style="visibility: hidden;">
 </ul>

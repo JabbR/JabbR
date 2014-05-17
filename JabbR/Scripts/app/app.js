@@ -52,4 +52,14 @@ var app = angular.module('jabbrApp', [
         restrict: 'A',
         templateUrl: 'Scripts/app/areas/rooms/lobby.html'
     };
+})
+.directive('jabbrLobbyRooms', function () {
+    return {
+        restrict: 'A',
+        templateUrl: 'Scripts/app/areas/rooms/lobby-rooms.html',
+        scope: {
+            rooms: '=',
+            title: '='
+        }
+    }
 });
