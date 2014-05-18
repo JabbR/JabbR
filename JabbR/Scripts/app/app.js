@@ -26,8 +26,7 @@ var app = angular.module('jabbrApp', [
     var $ui = $(ui);
 
     $scope.title = 'Lobby';
-    $scope.privateRooms = [];
-    $scope.publicRooms = [];
+    $scope.rooms = [];
     $scope.roomSearchText = '';
     $scope.showClosedRooms = false;
     $scope.pageSize = 100;
@@ -62,12 +61,7 @@ var app = angular.module('jabbrApp', [
                             else
                                 return (this.Count === 1 ? $window.chat.utility.getLanguageResource('Client_OccupantsOne') : this.Count + ' ' + $window.chat.utility.getLanguageResource('Client_OccupantsMany'));
                         }
-                        if (value.Private) {
-                            $scope.privateRooms.push(value);
-                        }
-                        else {
-                            $scope.publicRooms.push(value);
-                        }
+                        $scope.rooms.push(value);
                         $scope.$apply();
                     });
                 })
@@ -77,16 +71,16 @@ var app = angular.module('jabbrApp', [
         }
     });
 }])
-.controller('LobbyPublicRoomsController', ['$scope', '$window', function($scope, $window) {
-    $scope.rooms = $scope.$parent.publicRooms;
+.controller('LobbyPublicRoomsController', ['$scope', '$window', '$filter', function($scope, $window, $filter) {
+    $scope.isPrivate = false;
     $scope.title = $window.chat.utility.getLanguageResource('Client_OtherRooms');
     $scope.loadMoreTitle = $window.chat.utility.getLanguageResource('Client_LoadMore');
     $scope.hasMoreItems = function () {
         return $scope.pagesShown < ($scope.rooms.length / $scope.pageSize);
     };
 }])
-.controller('LobbyPrivateRoomsController', ['$scope', '$window', function ($scope, $window) {
-    $scope.rooms = $scope.$parent.privateRooms;
+.controller('LobbyPrivateRoomsController', ['$scope', '$window', '$filter', function ($scope, $window, $filter) {
+    $scope.isPrivate = true;
     $scope.title = $window.chat.utility.getLanguageResource('Client_Rooms');
     $scope.itemsLimit = function () {
         return $scope.rooms.length;

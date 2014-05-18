@@ -1,6 +1,6 @@
 ﻿<h2 class="userlist-header nav-header">{{title}}</h2>
 <ul data-empty-message="@LanguageResources.Client_NoMatchingRooms">
-    <li data-ng-repeat="room in rooms | filter:roomSearchText | limitTo: itemsLimit()" data-ng-hide="!showClosedRooms && room.Closed" class="room" data-ng-class="{room.Private: locked, room.Closed: closed}"  data-ng-click="joinRoom($event, room)">
+    <li data-ng-repeat="room in rooms | filter:{Private: isPrivate} | filter:roomSearchText | limitTo: itemsLimit()" data-ng-hide="!showClosedRooms && room.Closed" class="room" data-ng-class="{room.Private: locked, room.Closed: closed}"  data-ng-click="joinRoom($event, room)">
         <div class="row-fluid room-row">
             <div class="span3">
                 <span class="name">{{room.Name}}</span>
