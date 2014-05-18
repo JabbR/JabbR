@@ -28,6 +28,8 @@ var app = angular.module('jabbrApp', [
     $scope.title = 'Lobby';
     $scope.privateRooms = [];
     $scope.publicRooms = [];
+    $scope.roomSearchText = '';
+    $scope.showClosedRooms = false;
 
     $scope.joinRoom = function (event, room) {
         console.log('Joining room: ' + room.Name);

@@ -57,7 +57,7 @@ form#send-message {
 
 #lobby-wrapper {
     position: absolute;
-    top: 40px;
+    top: 0px;
     left: 0;
     right: 0;
     padding: 5px;
@@ -70,7 +70,7 @@ form#send-message {
 
 #room-filter-form {
     display: none;
-    position: absolute;
+    /*position: absolute;*/
     top: 5px;
     left: 5px;
     right: 5px;
@@ -239,12 +239,14 @@ form#send-message {
 
 .roomTopic {
     position: absolute;
-    top: 10px;
-    left: 5px;
-    right: 125px;
+    top: 0;
+    left: 0;
+    right: 0;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    padding: 10px;
+    background: #e5e5e5;
 }
 
 .users {
@@ -2721,6 +2723,7 @@ h3.userlist-header {
     margin-right: 5px;
     top: 8px;
     display: none;
+    z-index: 99;
 }
 
 #room-preferences .sound:hover .icon-sound {
@@ -3114,7 +3117,7 @@ h3.userlist-header {
 
 @media screen and (max-width:580px) {
     #lobby-wrapper {
-        top: 65px;
+        /*top: 65px;*/
     }
 
     #room-filter {

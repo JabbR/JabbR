@@ -321,13 +321,6 @@
             </div>
         </header>
         <div id="chat-area" role="tabpanel">
-            <form id="room-filter-form" action="#" class="form-inline">
-                <input id="room-filter" class="filter input-xlarge" type="text" placeholder="@LanguageResources.Client_RoomFilterInstruction" />
-                <label id="room-filter-closed-area" class="checkbox inline">
-                    <input id="room-filter-closed" type="checkbox" />
-                    @LanguageResources.Client_ShowClosedRooms
-                </label>
-            </form>
             <div id="room-actions" class="btn-group pull-right">
                 <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">@LanguageResources.Client_RoomSettings <span class="caret"></span></button>
                 <ul id="room-preferences" class="dropdown-menu">
@@ -344,6 +337,14 @@
                 </div>
             </div>
             <div id="lobby-wrapper" data-ng-controller="LobbyController">
+                <form id="room-filter-form" class="form-inline">
+                        <input id="room-filter" data-ng-model="roomSearchText" class="filter input-xlarge" type="text" placeholder="@LanguageResources.Client_RoomFilterInstruction" />
+                    <label id="room-filter-closed-area" class="checkbox inline">
+                        <input id="room-filter-closed" type="checkbox" data-ng-model="showClosedRooms" />
+                        @LanguageResources.Client_ShowClosedRooms
+                    </label>
+                </form>
+
                 <div data-jabbr-lobby></div>
             </div>
             <div id="drop-file-target"><h1 class="drop-file-text">@LanguageResources.Client_UploadDropTarget</h1></div>
