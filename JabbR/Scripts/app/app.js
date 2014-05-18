@@ -30,6 +30,16 @@ var app = angular.module('jabbrApp', [
     $scope.publicRooms = [];
     $scope.roomSearchText = '';
     $scope.showClosedRooms = false;
+    $scope.pageSize = 100;
+    $scope.pagesShown = 1;
+
+    $scope.itemsLimit = function () {
+        return $scope.pageSize * $scope.pagesShown;
+    };
+
+    $scope.showMoreItems = function () {
+        $scope.pagesShown++;
+    }
 
     $scope.joinRoom = function (event, room) {
         console.log('Joining room: ' + room.Name);
@@ -71,10 +81,16 @@ var app = angular.module('jabbrApp', [
     $scope.rooms = $scope.$parent.publicRooms;
     $scope.title = $window.chat.utility.getLanguageResource('Client_OtherRooms');
     $scope.loadMoreTitle = $window.chat.utility.getLanguageResource('Client_LoadMore');
+    $scope.hasMoreItems = function () {
+        return $scope.pagesShown < ($scope.rooms.length / $scope.pageSize);
+    };
 }])
 .controller('LobbyPrivateRoomsController', ['$scope', '$window', function ($scope, $window) {
     $scope.rooms = $scope.$parent.privateRooms;
     $scope.title = $window.chat.utility.getLanguageResource('Client_Rooms');
+    $scope.itemsLimit = function () {
+        return $scope.rooms.length;
+    };
 }])
 .directive('jabbrLobby', function () {
     return {

@@ -1,6 +1,6 @@
 ﻿<h2 class="userlist-header nav-header">{{title}}</h2>
 <ul data-empty-message="@LanguageResources.Client_NoMatchingRooms">
-    <li data-ng-repeat="room in rooms | filter:roomSearchText" data-ng-hide="!showClosedRooms && room.Closed" class="room" data-ng-class="{room.Private: locked, room.Closed: closed}"  data-ng-click="joinRoom($event, room)">
+    <li data-ng-repeat="room in rooms | filter:roomSearchText | limitTo: itemsLimit()" data-ng-hide="!showClosedRooms && room.Closed" class="room" data-ng-class="{room.Private: locked, room.Closed: closed}"  data-ng-click="joinRoom($event, room)">
         <div class="row-fluid room-row">
             <div class="span3">
                 <span class="name">{{room.Name}}</span>
@@ -16,6 +16,6 @@
         </div>
     </li>
 </ul>
-<div id="load-more-rooms-item" class="room" style="display: none;">
-    <div class="row-fluid room-row load-more-rooms"><i class="icon-spinner" style="display: none;"></i><a href="#">{{loadMoreTitle}}</a></div>
+<div id="load-more-rooms-item" class="room" data-ng-show="hasMoreItems()" data-ng-click="showMoreItems()">
+    <div class="row-fluid room-row load-more-rooms"><i class="icon-spinner" style="display: none;"></i>{{loadMoreTitle}}</div>
 </div>
