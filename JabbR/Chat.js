@@ -22,8 +22,6 @@
         privateRooms = null,
         roomsToLoad = 0;
 
-    window.util = utility;
-
     function failPendingMessages() {
         for (var id in pendingMessages) {
             if (pendingMessages.hasOwnProperty(id)) {

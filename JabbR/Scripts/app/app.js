@@ -20,12 +20,19 @@ var app = angular.module('jabbrApp', [
     });
 })
 .controller('LobbyController', ['$scope', '$sanitize', '$window', function ($scope, $sanitize, $window) {
-    var connection = window.jQuery.connection;
+    var connection = $window.jQuery.connection;
     var chat = connection.chat;
+    var ui = $window.chat.ui;
+    var $ui = $(ui);
 
     $scope.title = 'Lobby';
     $scope.privateRooms = [];
     $scope.publicRooms = [];
+
+    $scope.joinRoom = function (event, room) {
+        console.log('Joining room: ' + room.Name);
+        $ui.trigger(ui.events.openRoom, [room.Name]);
+    };
 
     connection.hub.stateChanged(function (change) {
         console.log(change.newState);
@@ -39,9 +46,9 @@ var app = angular.module('jabbrApp', [
                         console.log(value);
                         value.getUserCount = function () {
                             if (this.Count === 0)
-                                return $window.util.getLanguageResource('Client_OccupantsZero');
+                                return $window.chat.utility.getLanguageResource('Client_OccupantsZero');
                             else
-                                return (this.Count === 1 ? $window.util.getLanguageResource('Client_OccupantsOne') : this.Count + ' ' + $window.util.getLanguageResource('Client_OccupantsMany'));
+                                return (this.Count === 1 ? $window.chat.utility.getLanguageResource('Client_OccupantsOne') : this.Count + ' ' + $window.chat.utility.getLanguageResource('Client_OccupantsMany'));
                         }
                         if (value.Private) {
                             $scope.privateRooms.push(value);
@@ -60,12 +67,12 @@ var app = angular.module('jabbrApp', [
 }])
 .controller('LobbyPublicRoomsController', ['$scope', '$window', function($scope, $window) {
     $scope.rooms = $scope.$parent.publicRooms;
-    $scope.title = $window.util.getLanguageResource('Client_OtherRooms');
-    $scope.loadMoreTitle = $window.util.getLanguageResource('Client_LoadMore');
+    $scope.title = $window.chat.utility.getLanguageResource('Client_OtherRooms');
+    $scope.loadMoreTitle = $window.chat.utility.getLanguageResource('Client_LoadMore');
 }])
 .controller('LobbyPrivateRoomsController', ['$scope', '$window', function ($scope, $window) {
     $scope.rooms = $scope.$parent.privateRooms;
-    $scope.title = $window.util.getLanguageResource('Client_Rooms');
+    $scope.title = $window.chat.utility.getLanguageResource('Client_Rooms');
 }])
 .directive('jabbrLobby', function () {
     return {

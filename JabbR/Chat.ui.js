@@ -883,10 +883,10 @@
                 }
             };
             
-            $document.on('click', 'li.room .room-row', function () {
-                var roomName = $(this).parent().data('name');
-                activateOrOpenRoom(roomName);
-            });
+            //$document.on('click', 'li.room .room-row', function () {
+            //    var roomName = $(this).parent().data('name');
+            //    activateOrOpenRoom(roomName);
+            //});
             
             $roomFilterInput.keypress(function (ev) {
                 var key = ev.keyCode || ev.which,
