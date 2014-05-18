@@ -19,7 +19,7 @@ var app = angular.module('jabbrApp', [
         controller: 'LobbyController'
     });
 })
-.controller('LobbyController', ['$scope', '$sanitize', function ($scope, $sanitize) {
+.controller('LobbyController', ['$scope', '$sanitize', '$window', function ($scope, $sanitize, $window) {
     var connection = window.jQuery.connection;
     var chat = connection.chat;
 
@@ -39,11 +39,16 @@ var app = angular.module('jabbrApp', [
                         console.log(value);
                         value.getUserCount = function () {
                             if (this.Count === 0)
-                                return 'Unoccupied';
+                                return $window.util.getLanguageResource('Client_OccupantsZero');
                             else
-                                return this.Count + this.Count === 1 ? ' occupant' : ' occupants';
+                                return (this.Count === 1 ? $window.util.getLanguageResource('Client_OccupantsOne') : this.Count + ' ' + $window.util.getLanguageResource('Client_OccupantsMany'));
                         }
-                        $scope.publicRooms.push(value);
+                        if (value.Private) {
+                            $scope.privateRooms.push(value);
+                        }
+                        else {
+                            $scope.publicRooms.push(value);
+                        }
                         $scope.$apply();
                     });
                 })
@@ -52,6 +57,15 @@ var app = angular.module('jabbrApp', [
                 });
         }
     });
+}])
+.controller('LobbyPublicRoomsController', ['$scope', '$window', function($scope, $window) {
+    $scope.rooms = $scope.$parent.publicRooms;
+    $scope.title = $window.util.getLanguageResource('Client_OtherRooms');
+    $scope.loadMoreTitle = $window.util.getLanguageResource('Client_LoadMore');
+}])
+.controller('LobbyPrivateRoomsController', ['$scope', '$window', function ($scope, $window) {
+    $scope.rooms = $scope.$parent.privateRooms;
+    $scope.title = $window.util.getLanguageResource('Client_Rooms');
 }])
 .directive('jabbrLobby', function () {
     return {
@@ -63,9 +77,5 @@ var app = angular.module('jabbrApp', [
     return {
         restrict: 'A',
         templateUrl: 'Scripts/app/areas/rooms/lobby-rooms.html',
-        scope: {
-            rooms: '=',
-            title: '='
-        }
     }
 });

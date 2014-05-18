@@ -1,5 +1,4 @@
-﻿<div id="lobby-private" data-ng-show="privateRooms.length > 0" data-jabbr-lobby-rooms data-title="'Your Private Rooms'" data-rooms="privateRooms"></div>
-<div id="lobby-other" data-ng-show="publicRooms.length > 0" data-jabbr-lobby-rooms data-title="'Other Rooms'" data-rooms="publicRooms">
-</div>
+﻿<div id="lobby-private" data-jabbr-lobby-rooms data-ng-hide="privateRooms.length === 0" data-ng-controller="LobbyPrivateRoomsController"></div>
+<div id="lobby-other" data-jabbr-lobby-rooms data-ng-hide="publicRooms.length === 0" data-ng-controller="LobbyPublicRoomsController"></div>
 <ul id="messages-lobby" class="messages current" role="log" style="visibility: hidden;">
 </ul>

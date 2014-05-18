@@ -274,7 +274,7 @@
     </script>
     <!--/Gravatar Profile Template-->
 </head>
-<body class="home@(Model.IsAdmin ? " home-admin" : "")">
+<body class="home@(Model.IsAdmin ? " home-admin" : "")" data-ng-app="jabbrApp">
     <section id="page" role="application">
         <header id="heading" role="heading">
             <div class="banner" role="banner">
@@ -343,7 +343,7 @@
                     <h4>@LanguageResources.LoadingMessage</h4>
                 </div>
             </div>
-            <div id="lobby-wrapper" data-ng-app="jabbrApp" data-ng-controller="LobbyController">
+            <div id="lobby-wrapper" data-ng-controller="LobbyController">
                 <div data-jabbr-lobby></div>
             </div>
             <div id="drop-file-target"><h1 class="drop-file-text">@LanguageResources.Client_UploadDropTarget</h1></div>
