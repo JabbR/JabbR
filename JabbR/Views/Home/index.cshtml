@@ -374,7 +374,9 @@
                 <input type="file" id="hidden-file" name="data">
             </div>
         </form>
-        <audio src="Content/sounds/notification.wav" id="notificationSound" hidden="hidden" aria-hidden="true">
+        <audio id="notificationSound" hidden="hidden" aria-hidden="true">
+            <source src="Content/sounds/notification.wav" type="audio/wave" />
+            <source src="Content/sounds/notification.mp3" type="audio/mpeg" />
         </audio>
         <section id="dialog-container" aria-hidden="true" aria-haspopup="true">
             <div id="disconnect-dialog" class="modal hide fade">
