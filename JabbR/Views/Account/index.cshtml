@@ -61,7 +61,7 @@
                                     <div class="controls">
                                         @if(userModel.Note != null)
                                         {
-                                            <label class="control-label label-align-left">userModel.Note</label>
+                                            <label class="control-label label-align-left">@userModel.Note</label>
                                         }
                                         else
                                         {
@@ -74,7 +74,7 @@
                                     <div class="controls">
                                         @if (userModel.Country != null)
                                         {
-                                            <p>userModel.Country <span class="flag flag-@userModel.Flag"></span></p>
+                                            <p>@userModel.Country <span class="flag flag-@userModel.Flag"></span></p>
                                         }
                                         else
                                         {
