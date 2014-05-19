@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -17,7 +16,6 @@ namespace JabbR.ContentProviders
         private readonly IKernel _kernel;
         private readonly IJabbrConfiguration _configuration;
 
-        [ImportingConstructor]
         public ImageContentProvider(IKernel kernel)
         {
             _kernel = kernel;

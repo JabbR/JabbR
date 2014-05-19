@@ -1,6 +1,6 @@
 ﻿(function ($, ui, utility) {
     "use strict";
-    
+
     var $ui = $(ui),
         $hiddenFile = $('#hidden-file'),
         $previewUpload = $('#jabbr-upload-preview'),
@@ -9,6 +9,7 @@
         $previewUploadButton = $('#jabbr-upload-preview #upload-preview-upload'),
         $previewCancelButton = $('#jabbr-upload-preview #upload-preview-cancel'),
         $fileRoom = $('#file-room'),
+        $messageBox = $('#new-message'),
         $fileConnectionId = $('#file-connection-id'),
         $uploadCallback = null;
 
@@ -88,6 +89,11 @@
             browser: result[1] || "",
             version: result[2] || "0"
         };
+    }
+
+    function hidePreviewDialog() {
+        $previewUpload.modal('hide');
+        $messageBox.focus();
     }
 
     (function initializeFilePaste() {
@@ -187,13 +193,26 @@
         });
     });
 
+    $(document).on('keydown', function (e) {
+        if ($('#jabbr-upload-preview').is(':visible')) {
+            if (e.keyCode == 27) {
+                //close the dialog
+                hidePreviewDialog();
+            } else if (e.keyCode == 13) {
+                //upload the file
+                $uploadCallback();
+                hidePreviewDialog();
+            }
+        }
+    });
+
     $previewUploadButton.on('click', function () {
         // Callback is initialized when previewUpload is
         // created. This button is only available when
         // modal is being shown. Hence should never be
         // stale. 
         $uploadCallback();
-        $previewUpload.modal('hide');
+        hidePreviewDialog();
     });
 
     $(document).on('dragenter dragover', '.messages.current', function () {
@@ -254,7 +273,7 @@
     });
 
     $previewCancelButton.on('click', function () {
-        $previewUpload.modal('hide');
+        hidePreviewDialog();
     });
 
     $hiddenFile.change(function (e) {

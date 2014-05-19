@@ -1,4 +1,8 @@
-﻿using JabbR.ContentProviders.Core;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using JabbR.ContentProviders;
+using JabbR.ContentProviders.Core;
 using JabbR.Infrastructure;
 using JabbR.Models;
 using JabbR.Nancy;
@@ -75,9 +79,6 @@ namespace JabbR
             kernel.Bind<ICryptoService>()
                 .To<CryptoService>();
 
-            kernel.Bind<IResourceProcessor>()
-                .ToConstant(new ResourceProcessor(kernel));
-
             kernel.Bind<IJavaScriptMinifier>()
                   .To<AjaxMinMinifier>()
                   .InSingletonScope();
@@ -113,6 +114,11 @@ namespace JabbR
             kernel.Bind<IKeyProvider>()
                       .To<SettingsKeyProvider>();
 
+            kernel.Bind<IResourceProcessor>()
+                .To<ResourceProcessor>();
+
+            RegisterContentProviders(kernel);
+
             var serializer = JsonSerializer.Create(new JsonSerializerSettings()
             {
                 DateFormatHandling = DateFormatHandling.IsoDateFormat
@@ -144,6 +150,30 @@ namespace JabbR
                   .To<EmailService>();
 
             return kernel;
+        }
+
+        private static void RegisterContentProviders(IKernel kernel)
+        {
+            kernel.Bind<IContentProvider>().To<AudioContentProvider>();
+            kernel.Bind<IContentProvider>().To<BashQDBContentProvider>();
+            kernel.Bind<IContentProvider>().To<BBCContentProvider>();
+            kernel.Bind<IContentProvider>().To<DictionaryContentProvider>();
+            kernel.Bind<IContentProvider>().To<GitHubIssueCommentsContentProvider>();
+            kernel.Bind<IContentProvider>().To<GitHubIssuesContentProvider>();
+            kernel.Bind<IContentProvider>().To<GoogleDocsFormProvider>();
+            kernel.Bind<IContentProvider>().To<GoogleDocsPresentationsContentProvider>();
+            kernel.Bind<IContentProvider>().To<GoogleMapsContentProvider>();
+            kernel.Bind<IContentProvider>().To<ImageContentProvider>();
+            kernel.Bind<IContentProvider>().To<ImgurContentProvider>();
+            kernel.Bind<IContentProvider>().To<NerdDinnerContentProvider>();
+            kernel.Bind<IContentProvider>().To<NugetNuggetContentProvider>();
+            kernel.Bind<IContentProvider>().To<ScreencastContentProvider>();
+            kernel.Bind<IContentProvider>().To<SlideShareContentProvider>();
+            kernel.Bind<IContentProvider>().To<SoundCloudContentProvider>();
+            kernel.Bind<IContentProvider>().To<SpotifyContentProvider>();
+            kernel.Bind<IContentProvider>().To<UserVoiceContentProvider>();
+            kernel.Bind<IContentProvider>().To<UStreamContentProvider>();
+            kernel.Bind<IContentProvider>().To<YouTubeContentProvider>();
         }
     }
 }

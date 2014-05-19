@@ -82,7 +82,11 @@
 
             createNotification: function(msg, roomName) {
                 //firefox doesnt set a limitation on notification title, but we will use an arbituary sane limit
-                var title = utility.trim(msg.name, 50) + ' (' + roomName + ')';
+                var title = utility.trim(msg.name, 50);
+                if (roomName) {
+                    title += ' (' + roomName + ')';
+                }
+                
                 var notification = new window.Notification(title, {
                     lang: '',
                     dir: 'auto',
@@ -111,7 +115,7 @@
             createNotification: function(message, roomName) {
                 var toastTitle = utility.trim(message.name, 21);
                 // we can reliably show 22 chars
-                if(toastTitle.length <= 19) {
+                if(toastTitle.length <= 19 && roomName) {
                     toastTitle += ' (' + utility.trim(roomName, 19 - toastTitle.length) + ')';
                 }
 

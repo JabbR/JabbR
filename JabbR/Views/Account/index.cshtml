@@ -59,13 +59,27 @@
                                 <div class="control-group">
                                     <label class="control-label" for="note">@LanguageResources.Account_Note</label>
                                     <div class="controls">
-                                        <label class="control-label label-align-left">@(userModel.Note ?? "-")</label>
+                                        @if(userModel.Note != null)
+                                        {
+                                            <label class="control-label label-align-left">@userModel.Note</label>
+                                        }
+                                        else
+                                        {
+                                            <div class="alert alert-info span5">To set your note, type /note [message]</div>
+                                        }
                                     </div>
                                 </div>
                                 <div class="control-group">
                                     <label class="control-label" for="country">@LanguageResources.Account_Country</label>
                                     <div class="controls">
-                                        <label class="control-label label-align-left">@(userModel.Country ?? "-") <span class="flag flag-@userModel.Flag"></span></label>
+                                        @if (userModel.Country != null)
+                                        {
+                                            <p>@userModel.Country <span class="flag flag-@userModel.Flag"></span></p>
+                                        }
+                                        else
+                                        {
+                                            <div class="alert alert-info span5">To set your country, type /flag [iso-3366-2 code] <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">ISO Reference Chart</a></div>
+                                        }                                            
                                     </div>
                                 </div>
                             </form>

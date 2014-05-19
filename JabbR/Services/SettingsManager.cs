@@ -43,6 +43,12 @@ namespace JabbR.Services
                     try
                     {
                         settings = JsonConvert.DeserializeObject<ApplicationSettings>(dbSettings.RawSettings);
+                        if (settings.ContentProviders == null)
+                        {
+                            // this will apply the default for the case where ApplicationSettings exists from prior to
+                            // when this property was introduced.
+                            settings.ContentProviders = ContentProviderSetting.GetDefaultContentProviders();
+                        }
                     }
                     catch
                     {

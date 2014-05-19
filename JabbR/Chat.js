@@ -20,8 +20,7 @@
         messageSendingDelay = 1500,
         pendingMessages = {},
         privateRooms = null,
-        roomsToLoad = 0,
-        commandNameLookup = {};
+        roomsToLoad = 0;
 
     function failPendingMessages() {
         for (var id in pendingMessages) {
@@ -56,15 +55,6 @@
         }
 
         return user.Note;
-    }
-
-    function isCommand(msg) {
-        var parts = msg.substr(1).split(' ');
-        if (msg[0] === '/' && parts.length > 0) {
-            return commandNameLookup[parts[0]];
-        }
-
-        return false;
     }
 
     function getFlagCssClass(user) {
@@ -102,9 +92,14 @@
             })
             .fail(function (e) {
                 connection.hub.log('loadRooms.failed(' + rooms.join(', ') + ', ' + e + ')');
+            })
+            .always(function (e) {
+                ui.hideSplashScreen();
             });
     }
 
+    var getRoomInfoMaxRetries = 5;
+    var getRoomInfoRetries = 0;
     function populateRoom(room, d) {
         var deferred = d || $.Deferred();
 
@@ -121,11 +116,21 @@
                 })
                 .fail(function (e) {
                     connection.hub.log('getRoomInfo.failed(' + room + ', ' + e + ')');
-
-                    setTimeout(function () {
-                        populateRoom(room, deferred);
-                    },
-                    1000);
+                    getRoomInfoRetries++;
+                    if (getRoomInfoRetries < getRoomInfoMaxRetries) {
+                        // This was causing a forever loading screen if a user attempts to join a
+                        // private room that is not in their allowed rooms list.
+                        // Added a retry count so it will stop trying to populate the room
+                        // and close the loading screen
+                        setTimeout(function () {
+                            populateRoom(room, deferred);
+                        },
+                        1000);
+                    }
+                    else
+                    {
+                        deferred.rejectWith(chat);
+                    }
                 });
 
         return deferred.promise();
@@ -340,10 +345,6 @@
             chat.server.getCommands()
                 .done(function (commands) {
                     ui.setCommands(commands);
-
-                    for (var i = 0; i < commands.length; ++i) {
-                        commandNameLookup[commands[i].Name] = true;
-                    }
                 });
 
             // get list of available shortcuts
@@ -367,6 +368,7 @@
         ui.updateTabOrder(chat.state.tabOrder);
 
         ui.setUserName(chat.state.name);
+        ui.setUserHash(chat.state.hash);
         ui.setUnreadNotifications(chat.state.unreadNotifications);
 
         // Process any urls that may contain room names
@@ -387,6 +389,12 @@
                 if (roomsToLoad === 0) {
                     ui.hideSplashScreen();
                 }
+            })
+            .fail(function () {
+                loadRooms();
+                //display error message
+                console.log('logOn.populateRoom(' + this.state.activeRoom + ') failed');
+                ui.addMessage('Failed to populate \'' + this.state.activeRoom + '\'', 'error', this.state.activeRoom);
             });
         }
         else {
@@ -593,7 +601,9 @@
     };
 
     // Called when your gravatar has been changed
-    chat.client.gravatarChanged = function () {
+    chat.client.gravatarChanged = function (hash) {
+        ui.setUserHash(hash);
+
         ui.addNotificationToActiveRoom(utility.getLanguageResource('Chat_YourGravatarChanged'));
     };
 
@@ -608,6 +618,21 @@
 
     chat.client.forceUpdate = function () {
         ui.showUpdateUI();
+    };
+
+    chat.client.banUser = function (userInfo) {
+        var msg = 'User ' + userInfo.Name + ' was banned';
+        ui.addNotificationToActiveRoom(msg);
+    };
+
+    chat.client.unbanUser = function (userInfo) {
+        var msg = 'User ' + userInfo.Name + ' was unbanned';
+        ui.addNotificationToActiveRoom(msg);
+    };
+
+    chat.client.checkBanned = function (userInfo) {
+        var msg = 'User ' + userInfo.Name + ' is ' + (userInfo.IsBanned ? '' : 'not ') + 'banned ';
+        ui.addNotificationToActiveRoom(msg);
     };
 
     chat.client.showUserInfo = function (userInfo) {
@@ -831,6 +856,12 @@
         if (to) {
             if (isSelf({ Name: to })) {
                 message = utility.getLanguageResource('Chat_UserNudgedYou', from);
+                
+                var toastMessage = {
+                    message: message,
+                    name: from
+                };
+                ui.nudge(toastMessage, from);
             } else {
                 message = utility.getLanguageResource('Chat_UserNudgedUser', from, to);
             }
@@ -870,35 +901,6 @@
     };
 
     // Helpish commands
-    //TODO: remove, not called anywhere.
-    chat.client.showRooms = function (rooms) {
-        if (!rooms.length) {
-            ui.addListToActiveRoom('Rooms', [utility.getLanguageResource('Chat_NoRoomsAvailable')]);
-        }
-        else {
-            // sort rooms by count descending then name
-            var sorted = rooms.sort(function (a, b) {
-                if (a.Closed && !b.Closed) {
-                    return 1;
-                } else if (b.Closed && !a.Closed) {
-                    return -1;
-                }
-
-                if (a.Count > b.Count) {
-                    return -1;
-                } else if (b.Count > a.Count) {
-                    return 1;
-                }
-
-                return a.Name.toString().toUpperCase().localeCompare(b.Name.toString().toUpperCase());
-            });
-
-            ui.addListToActiveRoom('Rooms', $.map(sorted, function () {
-                return this.Name + ' (' + this.Count + ')';
-            }));
-        }
-    };
-
     chat.client.showCommands = function () {
         ui.showHelp();
     };
@@ -908,8 +910,8 @@
         if (names.length === 0) {
             ui.addListToActiveRoom(header, [utility.getLanguageResource('Chat_RoomUsersEmpty')]);
         } else {
-            ui.addListToActiveRoom(header, $.map(names, function () {
-                return '- ' + this;
+            ui.addListToActiveRoom(header, $.map(names, function (name) {
+                return '- ' + name;
             }));
         }
     };
@@ -1021,10 +1023,10 @@
         uploader.submitFile(connection.hub.id, chat.state.activeRoom);
     });
 
-    $ui.bind(ui.events.sendMessage, function (ev, msg) {
+    $ui.bind(ui.events.sendMessage, function (ev, msg, msgId, isCommand) {
         clearUnread();
 
-        var id = utility.newId(),
+        var id = msgId || utility.newId(),
             clientMessage = {
                 id: id,
                 content: msg,
@@ -1032,27 +1034,7 @@
             },
             messageCompleteTimeout = null;
 
-        if (!isCommand(msg)) {
-
-            // if you're in the lobby, you can't send mesages (only commands)
-            if (chat.state.activeRoom === undefined) {
-                ui.addErrorToActiveRoom(utility.getLanguageResource('Chat_CannotSendLobby'));
-                return false;
-            }
-
-            // Added the message to the ui first
-            var viewModel = {
-                name: chat.state.name,
-                hash: chat.state.hash,
-                message: ui.processContent(clientMessage.content),
-                id: clientMessage.id,
-                date: new Date(),
-                highlight: '',
-                isMine: true
-            };
-
-            ui.addChatMessage(viewModel, clientMessage.room);
-
+        if (!isCommand) {
             // If there's a significant delay in getting the message sent
             // mark it as pending
             messageCompleteTimeout = window.setTimeout(function () {

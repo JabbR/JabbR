@@ -41,7 +41,7 @@ namespace JabbR
             if (configuration.MigrateDatabase)
             {
                 // Perform the required migrations
-                DoMigrations();
+                DoMigrations(configuration);
             }
 
             var kernel = SetupNinject(configuration);
@@ -133,25 +133,6 @@ namespace JabbR
             app.Use(typeof(CustomAuthHandler));
 
             app.Use(typeof(WindowsPrincipalHandler));
-
-            //var config = new FederationConfiguration(loadConfig: false);
-            //config.WsFederationConfiguration.Issuer = "";
-            //config.WsFederationConfiguration.Realm = "http://localhost:16207/";
-            //config.WsFederationConfiguration.Reply = "http://localhost:16207/wsfederation";
-            //var cbi = new ConfigurationBasedIssuerNameRegistry();
-            //cbi.AddTrustedIssuer("", "");
-            //config.IdentityConfiguration.AudienceRestriction.AllowedAudienceUris.Add(new Uri("http://localhost:16207/"));
-            //config.IdentityConfiguration.IssuerNameRegistry = cbi;
-            //config.IdentityConfiguration.CertificateValidationMode = X509CertificateValidationMode.None;
-            //config.IdentityConfiguration.CertificateValidator = X509CertificateValidator.None;
-
-            //app.UseFederationAuthentication(new FederationAuthenticationOptions
-            //{
-            //    ReturnPath = "/wsfederation",
-            //    SigninAsAuthenticationType = Constants.JabbRAuthType,
-            //    FederationConfiguration = config,
-            //    Provider = new FederationAuthenticationProvider()
-            //});
         }
 
         private static void SetupNancy(IKernel kernel, IAppBuilder app)
@@ -188,7 +169,7 @@ namespace JabbR
 
             if (jabbrConfig.ScaleOutSqlServer)
             {
-                resolver.UseSqlServer(ConfigurationManager.ConnectionStrings["Jabbr"].ConnectionString);
+                resolver.UseSqlServer(jabbrConfig.SqlConnectionString.ConnectionString);
             }
 
             kernel.Bind<IConnectionManager>()

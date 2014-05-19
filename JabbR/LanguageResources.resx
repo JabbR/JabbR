@@ -213,6 +213,39 @@
   <data name="Administration_Storage_Local" xml:space="preserve">
     <value>Local Storage</value>
   </data>
+  <data name="Administration_ContentProviders_BuiltIn" xml:space="preserve">
+    <value>Content Providers</value>
+  </data>
+  <data name="Administration_ContentProviders_Custom" xml:space="preserve">
+    <value>Custom Content Providers</value>
+  </data>
+  <data name="Administration_ContentProviders_Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Administration_ContentProviders_Enabled" xml:space="preserve">
+    <value>Enabled</value>
+  </data>
+  <data name="Administration_ContentProviders_Collapsible" xml:space="preserve">
+    <value>Collapsible</value>
+  </data>
+  <data name="Administration_ContentProviders_Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Administration_ContentProviders_Domains" xml:space="preserve">
+    <value>Domains</value>
+  </data>
+  <data name="Administration_ContentProviders_Extract" xml:space="preserve">
+    <value>Extract (Regex)</value>
+  </data>
+  <data name="Administration_ContentProviders_Output" xml:space="preserve">
+    <value>Output (HTML)</value>
+  </data>
+  <data name="Administration_ContentProviders_Script" xml:space="preserve">
+    <value>Script</value>
+  </data>
+  <data name="Administration_ContentProviders_Title" xml:space="preserve">
+    <value>Title</value>
+  </data>
   <data name="Administration_AzureBlobStorageConnectionString" xml:space="preserve">
     <value>Azure Blob Storage Connectionstring</value>
   </data>
@@ -794,9 +827,6 @@
     <value>Welcome to JabbR
 Use ? or type /? to display the FAQ and list of commands.</value>
   </data>
-  <data name="Chat_NoRoomsAvailable" xml:space="preserve">
-    <value>No rooms available.</value>
-  </data>
   <data name="Chat_PrivateMessage" xml:space="preserve">
     <value>*{0}* *{1}* {2}</value>
     <comment>{0} is from, {1} is to, {2} is message</comment>
@@ -1164,5 +1194,25 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   </data>
   <data name="SendMessageTooLong" xml:space="preserve">
     <value>You cannot post this message. It is too long.</value>
+  </data>
+  <data name="Lock_ConfirmMessage" xml:space="preserve">
+    <value>&lt;i class="icon-lock icon-4x pull-left"&gt;&lt;/i&gt;
+&lt;p&gt;&lt;strong&gt;Are you sure you want to lock this room?&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;A locked room can only be accessed by its owners and those granted access.&lt;/p&gt;</value>
+  </data>
+  <data name="Client_Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Ban_CannotBanSelf" xml:space="preserve">
+    <value>You cannot ban yourself!</value>
+  </data>
+  <data name="Unban_CannotUnbanAdmin" xml:space="preserve">
+    <value>You cannot unban another admin.</value>
+  </data>
+  <data name="Unban_UserRequired" xml:space="preserve">
+    <value>Who do you want to unban?</value>
+  </data>
+  <data name="CheckBanned_CommandInfo" xml:space="preserve">
+    <value>Checks if a user is banned. Only works if you're an admin.</value>
   </data>
 </root>

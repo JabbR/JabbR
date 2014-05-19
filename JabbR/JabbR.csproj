@@ -81,17 +81,19 @@
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.1.0-pre-131129-b292\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.1.0-pre-140513-b35\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.ServiceBus">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.ServiceBus.2.1.0-pre-131129-b292\lib\net45\Microsoft.AspNet.SignalR.ServiceBus.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.SignalR.ServiceBus, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.ServiceBus.2.1.0-pre-140513-b35\lib\net45\Microsoft.AspNet.SignalR.ServiceBus.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.AspNet.SignalR.SqlServer">
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.SqlServer.2.1.0-pre-131129-b292\lib\net45\Microsoft.AspNet.SignalR.SqlServer.dll</HintPath>
+    <Reference Include="Microsoft.AspNet.SignalR.SqlServer, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SqlServer.2.1.0-pre-140513-b35\lib\net45\Microsoft.AspNet.SignalR.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.1.0-pre-131129-b292\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.1.0-pre-140513-b35\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -229,6 +231,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="apple-touch-icon.png" />
+    <Content Include="Content\images\download-off-white.png" />
+    <Content Include="Content\images\download-off.png" />
+    <Content Include="Content\images\download-on-white.png" />
+    <Content Include="Content\images\download-on.png" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\images\splash-logo.png" />
@@ -897,8 +903,8 @@
     <Content Include="Scripts\jquery.pubsub.js" />
     <Content Include="Scripts\jquery.pulse.js" />
     <Content Include="Scripts\jquery.pulse.min.js" />
-    <Content Include="Scripts\jquery.signalR-2.1.0-pre-131129-b292.js" />
-    <Content Include="Scripts\jquery.signalR-2.1.0-pre-131129-b292.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.1.0-pre-140513-b35.js" />
+    <Content Include="Scripts\jquery.signalR-2.1.0-pre-140513-b35.min.js" />
     <Content Include="Scripts\jquery.sortElements.js" />
     <Content Include="Scripts\jquery.timeago.0.10.js" />
     <Content Include="Scripts\jQuery.tmpl.js" />
@@ -932,9 +938,6 @@
     <Content Include="Views\Account\_social.cshtml" />
     <Content Include="Views\Account\login.cshtml" />
     <Content Include="Views\Account\index.cshtml" />
-    <Content Include="Scripts\livestamp.min.js.map">
-      <DependentUpon>livestamp.js</DependentUpon>
-    </Content>
     <Content Include="Views\Notifications\index.cshtml" />
     <Content Include="Views\Home\monitor.cshtml" />
     <Content Include="Views\Administration\index.cshtml" />
@@ -949,6 +952,9 @@
     <Content Include="Views\Home\status.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CheckBannedCommand.cs" />
+    <Compile Include="Commands\UnBanCommand.cs" />
+    <Compile Include="ContentProviders\ConfiguredContentProvider.cs" />
     <Compile Include="Infrastructure\BinaryBlob.cs" />
     <Compile Include="Commands\MemeCommand.cs" />
     <Compile Include="Infrastructure\AuthenticationService.cs" />
@@ -1096,6 +1102,7 @@
     <Compile Include="Nancy\HomeModule.cs" />
     <Compile Include="Nancy\NotificationsModule.cs" />
     <Compile Include="Nancy\SessionExtensions.cs" />
+    <Compile Include="Services\ContentProviderSetting.cs" />
     <Compile Include="Services\DefaultUserAuthenticator.cs" />
     <Compile Include="Services\Email\Email.cs" />
     <Compile Include="Services\Email\EmailService.cs" />
@@ -1198,23 +1205,15 @@
     <Compile Include="ContentProviders\Core\ResourceProcessor.cs" />
     <Compile Include="ContentProviders\GoogleDocsPresentationsContentProvider.cs" />
     <Compile Include="ContentProviders\GoogleMapsContentProvider.cs" />
-    <Compile Include="ContentProviders\JoinMeContentProvider.cs" />
-    <Compile Include="ContentProviders\MixcloudContentProvider.cs" />
     <Compile Include="ContentProviders\NerdDinnerContentProvider.cs" />
     <Compile Include="ContentProviders\NugetNuggetContentProvider.cs" />
     <Compile Include="ContentProviders\SoundCloudContentProvider.cs" />
-    <Compile Include="ContentProviders\TwitPicContentProvider.cs" />
     <Compile Include="ContentProviders\UserVoiceContentProvider.cs" />
     <Compile Include="ContentProviders\UStreamContentProvider.cs" />
-    <Compile Include="ContentProviders\VimeoContentProvider.cs" />
     <Compile Include="ContentProviders\GoogleDocsFormProvider.cs" />
     <Compile Include="ContentProviders\SlideshareContentProvider.cs" />
-    <Compile Include="ContentProviders\GistContentProvider.cs" />
     <Compile Include="Hubs\Chat.cs" />
-    <Compile Include="ContentProviders\CollegeHumorContentProvider.cs" />
     <Compile Include="ContentProviders\ImgurContentProvider.cs" />
-    <Compile Include="ContentProviders\PastieContentProvider.cs" />
-    <Compile Include="ContentProviders\TweetContentProvider.cs" />
     <Compile Include="ContentProviders\ImageContentProvider.cs" />
     <Compile Include="ContentProviders\YoutubeContentProvider.cs" />
     <Compile Include="Infrastructure\AjaxMinMinifier.cs" />

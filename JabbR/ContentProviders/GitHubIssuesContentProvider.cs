@@ -10,7 +10,7 @@ namespace JabbR.ContentProviders
 {
     public class GitHubIssuesContentProvider : CollapsibleContentProvider
     {
-        private static readonly Regex _githubIssuesRegex = new Regex(@"https://github.com(.*)/issues/(\d+)");
+        private static readonly Regex _githubIssuesRegex = new Regex(@"https://github.com(.*)/(?:issues|pull)/(\d+)");
         private static readonly string _gitHubIssuesApiFormat = "https://api.github.com/repos{0}/issues/{1}?callback=addGitHubIssue";
         private static readonly string _gitHubIssuesContentFormat = "<div class='git-hub-issue git-hub-issue-{0}'></div><script src='{1}'></script>";
 

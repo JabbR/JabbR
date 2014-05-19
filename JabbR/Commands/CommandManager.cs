@@ -196,7 +196,8 @@ namespace JabbR.Commands
                                Name = commandAttribute.CommandName,
                                Description = commandAttribute.Description,
                                Arguments = commandAttribute.Arguments,
-                               Group = commandAttribute.Group
+                               Group = commandAttribute.Group,
+                               ConfirmMessage = commandAttribute.ConfirmMessage
                            };
             return commands;
         }

@@ -11,6 +11,10 @@ namespace JabbR.ContentProviders.Core
         public abstract IEnumerable<string> Domains { get; }
         public abstract string MediaFormatString { get; }
 
+        protected virtual string GetMediaFormatString(Uri uri)
+        {
+            return MediaFormatString;
+        }
 
         protected override Task<ContentProviderResult> GetCollapsibleContent(ContentProviderHttpRequest request)
         {
@@ -20,9 +24,15 @@ namespace JabbR.ContentProviders.Core
                 return TaskAsyncHelper.FromResult<ContentProviderResult>(null);
             }
 
+            var formatString = GetMediaFormatString(request.RequestUri);
+            if (string.IsNullOrEmpty(formatString))
+            {
+                return TaskAsyncHelper.FromResult<ContentProviderResult>(null);
+            }
+
             return TaskAsyncHelper.FromResult(new ContentProviderResult()
              {
-                 Content = String.Format(MediaFormatString, args.ToArray()),
+                 Content = String.Format(formatString, args.ToArray()),
                  Title = request.RequestUri.AbsoluteUri.ToString()
              });
         }
