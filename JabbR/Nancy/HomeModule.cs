@@ -223,7 +223,6 @@ namespace JabbR.Nancy
                 "Chat_UserNudgedUser",
                 "Chat_UserLeftRoom",
                 "Chat_YouKickedFromRoom",
-                "Chat_NoRoomsAvailable",
                 "Chat_RoomUsersHeader",
                 "Chat_RoomUsersEmpty",
                 "Chat_RoomSearchEmpty",
