@@ -174,6 +174,7 @@ namespace JabbR
             kernel.Bind<IContentProvider>().To<UserVoiceContentProvider>();
             kernel.Bind<IContentProvider>().To<UStreamContentProvider>();
             kernel.Bind<IContentProvider>().To<YouTubeContentProvider>();
+            kernel.Bind<IContentProvider>().To<ConfiguredContentProvider>();
         }
     }
 }
