@@ -1631,26 +1631,29 @@
         },
         setUserActivity: function (userViewModel) {
             var $user = $('.users .user' + getUserClassName(userViewModel.name)),
-                $inactiveSince = $user.find('.inactive-since'),
-                $userMessages = $('.message-user' + getUserClassName(userViewModel.name));
+                $inactiveSince = $user.find('.inactive-since');
 
             if (userViewModel.active === true && userViewModel.afk === false) {
                 if ($user.hasClass('inactive')) {
                     $user.removeClass('inactive');
                     $inactiveSince.livestamp('destroy');
                 }
-                
-                $userMessages.removeClass('offline active inactive').addClass('active');
+
+                $('.message-user' + getUserClassName(userViewModel.name))
+                    .removeClass('offline inactive')
+                    .addClass('active');
             } else {
                 if (!$user.hasClass('inactive')) {
                     $user.addClass('inactive');
+                    
+                    $('.message-user' + getUserClassName(userViewModel.name))
+                        .removeClass('offline active')
+                        .addClass('inactive');
                 }
 
                 if (!$inactiveSince.html()) {
                     $inactiveSince.livestamp(userViewModel.lastActive);
                 }
-                
-                $userMessages.removeClass('offline active inactive').addClass('inactive');
             }
 
             updateNote(userViewModel, $user);
