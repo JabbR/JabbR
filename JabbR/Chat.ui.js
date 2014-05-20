@@ -1604,7 +1604,7 @@
         addUser: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
                 $user = null,
-                $userMessages = room.messages.find(getUserClassName(userViewModel.name));
+                $userMessages = room.messages.find('.message-user' + getUserClassName(userViewModel.name));
 
             // Remove all users that are being removed
             room.users.find('.removing').remove();
@@ -1621,7 +1621,7 @@
             $user.data('owner', userViewModel.owner);
             $user.data('admin', userViewModel.admin);
 
-            $userMessages.find('.user').removeClass('offline active inactive absent present').addClass('active present');
+            $userMessages.removeClass('offline active inactive absent present').addClass('active present');
 
             room.addUser(userViewModel, $user);
             updateNote(userViewModel, $user);
@@ -1630,9 +1630,9 @@
             return true;
         },
         setUserActivity: function (userViewModel) {
-            var $user = $('.users').find(getUserClassName(userViewModel.name)),
+            var $user = $('.users .user' + getUserClassName(userViewModel.name)),
                 $inactiveSince = $user.find('.inactive-since'),
-                $userMessages = $('.messages').find(getUserClassName(userViewModel.name));
+                $userMessages = $('.message-user' + getUserClassName(userViewModel.name));
 
             if (userViewModel.active === true && userViewModel.afk === false) {
                 if ($user.hasClass('inactive')) {
@@ -1640,7 +1640,7 @@
                     $inactiveSince.livestamp('destroy');
                 }
                 
-                $userMessages.find('.user').removeClass('offline active inactive').addClass('active');
+                $userMessages.removeClass('offline active inactive').addClass('active');
             } else {
                 if (!$user.hasClass('inactive')) {
                     $user.addClass('inactive');
@@ -1650,14 +1650,14 @@
                     $inactiveSince.livestamp(userViewModel.lastActive);
                 }
                 
-                $userMessages.find('.user').removeClass('offline active inactive').addClass('inactive');
+                $userMessages.removeClass('offline active inactive').addClass('inactive');
             }
 
             updateNote(userViewModel, $user);
         },
         setUserActive: function ($user) {
             var $inactiveSince = $user.find('.inactive-since'),
-                $userMessages = $('.messages').find(getUserClassName($user.data('name')));
+                $userMessages = $('.message-user' + getUserClassName($user.data('name')));
             
             if ($user.data('active') === true) {
                 return false;
@@ -1669,12 +1669,12 @@
                 $inactiveSince.livestamp('destroy');
             }
             
-            $userMessages.find('.user').removeClass('offline active inactive').addClass('active');
+            $userMessages.removeClass('offline active inactive').addClass('active');
 
             return true;
         },
         setUserInActive: function ($user) {
-            var $userMessages = $('.messages').find(getUserClassName($user.data('name'))),
+            var $userMessages = $('.message-user' + getUserClassName($user.data('name'))),
                 $inactiveSince = $user.find('.inactive-since');
             
             if ($user.data('active') === false) {
@@ -1688,7 +1688,7 @@
                 $inactiveSince.livestamp(new Date());
             }
             
-            $userMessages.find('.user').removeClass('offline active inactive').addClass('inactive');
+            $userMessages.removeClass('offline active inactive').addClass('inactive');
             
             return true;
         },
