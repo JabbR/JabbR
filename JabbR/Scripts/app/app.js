@@ -1,16 +1,5 @@
 ﻿/// <reference path="../angular.js" />
 /// <reference path="../angular-resource.js" />
-var jabbrService = {
-    getLanguageResource: function (resource) {
-        return window.chat.utility.getLanguageResource(resource);
-    },
-    connectionState: window.jQuery.connection.connectionState,
-    hub: window.jQuery.connection.hub,
-    chat: window.jQuery.connection.chat,
-    server: window.jQuery.connection.chat.server,
-    ui: window.chat.ui,
-    events: window.chat.ui.events
-}
 var app = angular.module('jabbrApp', [
     'ngRoute',
     'ngResource',
@@ -23,9 +12,11 @@ var app = angular.module('jabbrApp', [
         controller: 'LobbyController'
     });
 })
-.constant('jabbrService', jabbrService)
-.controller('LobbyController', ['$scope', '$sanitize', '$window', '$log', 'jabbrService', function ($scope, $sanitize, $window, $log, jabbrService) {
-    var $ui = $(jabbrService.ui);
+.constant('jabbrUtil', { getLanguageResource: function (resource) { return window.chat.utility.getLanguageResource(resource); } })
+.constant('jabbrConnection', window.jQuery.connection)
+.constant('jabbrChat', window.chat)
+.controller('LobbyController', ['$scope', '$sanitize', '$window', '$log', 'jabbrConnection', 'jabbrChat', function ($scope, $sanitize, $window, $log, jabbrConnection, jabbrChat) {
+    var $ui = $(jabbrChat.ui);
 
     $scope.title = 'Lobby';
     $scope.rooms = [];
@@ -44,14 +35,14 @@ var app = angular.module('jabbrApp', [
 
     $scope.joinRoom = function (event, room) {
         $log.info('Joining room: ' + room.Name);
-        $ui.trigger(jabbrService.events.openRoom, [room.Name]);
+        $ui.trigger(jabbrChat.ui.events.openRoom, [room.Name]);
     };
 
-    jabbrService.hub.stateChanged(function (change) {
+    jabbrConnection.hub.stateChanged(function (change) {
         $log.info(change.newState);
-        if (change.newState === jabbrService.connectionState.connected) {
+        if (change.newState === jabbrConnection.connectionState.connected) {
             $log.info('Connected')
-            jabbrService.server.getRooms()
+            jabbrConnection.chat.server.getRooms()
                 .done(function (rooms) {
                     $log.info('getRooms returned: ' + rooms.length);
                     $scope.rooms = rooms;
@@ -82,7 +73,7 @@ var app = angular.module('jabbrApp', [
         templateUrl: 'Scripts/app/areas/rooms/lobby.html'
     };
 })
-.directive('jabbrLobbyRooms', ['$log', 'jabbrService', function ($log, jabbrService) {
+.directive('jabbrLobbyRooms', ['$log', 'jabbrUtil', function ($log, jabbrUtil) {
     return {
         restrict: 'A',
         templateUrl: 'Scripts/app/areas/rooms/lobby-rooms.html',
@@ -90,19 +81,19 @@ var app = angular.module('jabbrApp', [
             $scope.getUserCount = function (room) {
                 $log.info('getRoomUserCount');
                 if (room.Count === 0) {
-                    return jabbrService.getLanguageResource('Client_OccupantsZero');
+                    return jabbrUtil.getLanguageResource('Client_OccupantsZero');
                 } else {
-                    return (room.Count === 1 ? jabbrService.getLanguageResource('Client_OccupantsOne') : room.Count + ' ' + jabbrService.getLanguageResource('Client_OccupantsMany'));
+                    return (room.Count === 1 ? jabbrUtil.getLanguageResource('Client_OccupantsOne') : room.Count + ' ' + jabbrUtil.getLanguageResource('Client_OccupantsMany'));
                 }
             };
             $scope.getTitle = function (isPrivate) {
                 if (isPrivate) {
-                    return jabbrService.getLanguageResource('Client_Rooms');
+                    return jabbrUtil.getLanguageResource('Client_Rooms');
                 } else {
-                    return jabbrService.getLanguageResource('Client_OtherRooms');
+                    return jabbrUtil.getLanguageResource('Client_OtherRooms');
                 }
             };
-            $scope.loadMoreTitle = jabbrService.getLanguageResource('Client_LoadMore');
+            $scope.loadMoreTitle = jabbrUtil.getLanguageResource('Client_LoadMore');
         },
     }
 }]);
