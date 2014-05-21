@@ -1,12 +1,5 @@
 ﻿/// <reference path="../angular.js" />
 /// <reference path="../angular-resource.js" />
-
-// Ensure calls to console.log don't break IE
-if (typeof console === "undefined" || typeof console.log === "undefined") {
-    console = {};
-    console.log = function () { };
-}
-
 var app = angular.module('jabbrApp', [
     'ngRoute',
     'ngResource',
@@ -19,7 +12,7 @@ var app = angular.module('jabbrApp', [
         controller: 'LobbyController'
     });
 })
-.controller('LobbyController', ['$scope', '$sanitize', '$window', function ($scope, $sanitize, $window) {
+.controller('LobbyController', ['$scope', '$sanitize', '$window', '$log', function ($scope, $sanitize, $window, $log) {
     var connection = $window.jQuery.connection;
     var chat = connection.chat;
     var ui = $window.chat.ui;
@@ -41,23 +34,22 @@ var app = angular.module('jabbrApp', [
     }
 
     $scope.joinRoom = function (event, room) {
-        console.log('Joining room: ' + room.Name);
+        $log.info('Joining room: ' + room.Name);
         $ui.trigger(ui.events.openRoom, [room.Name]);
     };
 
     connection.hub.stateChanged(function (change) {
-        console.log(change.newState);
+        $log.info(change.newState);
         if (change.newState === connection.connectionState.connected) {
-            console.log('Connected')
+            $log.info('Connected')
             chat.server.getRooms()
                 .done(function (rooms) {
-                    console.log('getRooms');
-                    console.log(rooms.length);
+                    $log.info('getRooms returned: ' + rooms.length);
                     $scope.rooms = rooms;
                     $scope.$apply();
                 })
                 .fail(function (e) {
-                    console.log('getRooms failed: ' + e);
+                    $log.error('getRooms failed: ' + e);
                 });
         }
     });
@@ -81,13 +73,13 @@ var app = angular.module('jabbrApp', [
         templateUrl: 'Scripts/app/areas/rooms/lobby.html'
     };
 })
-.directive('jabbrLobbyRooms', function () {
+.directive('jabbrLobbyRooms', ['$log', function ($log) {
     return {
         restrict: 'A',
         templateUrl: 'Scripts/app/areas/rooms/lobby-rooms.html',
-        link: function ($scope, element, attrs, $window) {
+        link: function ($scope, element, attrs) {
             $scope.getUserCount = function (room) {
-                console.log('getRoomUserCount');
+                $log.info('getRoomUserCount');
                 if (room.Count === 0) {
                     return window.chat.utility.getLanguageResource('Client_OccupantsZero');
                 } else {
@@ -104,4 +96,4 @@ var app = angular.module('jabbrApp', [
             $scope.loadMoreTitle = window.chat.utility.getLanguageResource('Client_LoadMore');
         },
     }
-});
+}]);
