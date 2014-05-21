@@ -53,17 +53,8 @@ var app = angular.module('jabbrApp', [
                 .done(function (rooms) {
                     console.log('getRooms');
                     console.log(rooms.length);
-                    angular.forEach(rooms, function (value, key) {
-                        console.log(value);
-                        value.getUserCount = function () {
-                            if (this.Count === 0)
-                                return $window.chat.utility.getLanguageResource('Client_OccupantsZero');
-                            else
-                                return (this.Count === 1 ? $window.chat.utility.getLanguageResource('Client_OccupantsOne') : this.Count + ' ' + $window.chat.utility.getLanguageResource('Client_OccupantsMany'));
-                        }
-                        $scope.rooms.push(value);
-                        $scope.$apply();
-                    });
+                    $scope.rooms = rooms;
+                    $scope.$apply();
                 })
                 .fail(function (e) {
                     console.log('getRooms failed: ' + e);
@@ -71,17 +62,15 @@ var app = angular.module('jabbrApp', [
         }
     });
 }])
-.controller('LobbyPublicRoomsController', ['$scope', '$window', '$filter', function($scope, $window, $filter) {
+.controller('LobbyPublicRoomsController', ['$scope', function ($scope) {
     $scope.isPrivate = false;
-    $scope.title = $window.chat.utility.getLanguageResource('Client_OtherRooms');
-    $scope.loadMoreTitle = $window.chat.utility.getLanguageResource('Client_LoadMore');
     $scope.hasMoreItems = function () {
         return $scope.pagesShown < ($scope.rooms.length / $scope.pageSize);
     };
+
 }])
-.controller('LobbyPrivateRoomsController', ['$scope', '$window', '$filter', function ($scope, $window, $filter) {
+.controller('LobbyPrivateRoomsController', ['$scope', function ($scope) {
     $scope.isPrivate = true;
-    $scope.title = $window.chat.utility.getLanguageResource('Client_Rooms');
     $scope.itemsLimit = function () {
         return $scope.rooms.length;
     };
@@ -96,5 +85,23 @@ var app = angular.module('jabbrApp', [
     return {
         restrict: 'A',
         templateUrl: 'Scripts/app/areas/rooms/lobby-rooms.html',
+        link: function ($scope, element, attrs, $window) {
+            $scope.getUserCount = function (room) {
+                console.log('getRoomUserCount');
+                if (room.Count === 0) {
+                    return window.chat.utility.getLanguageResource('Client_OccupantsZero');
+                } else {
+                    return (room.Count === 1 ? window.chat.utility.getLanguageResource('Client_OccupantsOne') : room.Count + ' ' + window.chat.utility.getLanguageResource('Client_OccupantsMany'));
+                }
+            };
+            $scope.getTitle = function (isPrivate) {
+                if (isPrivate) {
+                    return window.chat.utility.getLanguageResource('Client_Rooms');
+                } else {
+                    return window.chat.utility.getLanguageResource('Client_OtherRooms');
+                }
+            };
+            $scope.loadMoreTitle = window.chat.utility.getLanguageResource('Client_LoadMore');
+        },
     }
 });

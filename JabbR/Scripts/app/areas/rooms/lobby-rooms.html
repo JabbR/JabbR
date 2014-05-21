@@ -1,4 +1,4 @@
-﻿<h2 class="userlist-header nav-header">{{title}}</h2>
+﻿<h2 class="userlist-header nav-header">{{getTitle(isPrivate)}}</h2>
 <ul data-empty-message="@LanguageResources.Client_NoMatchingRooms">
     <li data-ng-repeat="room in rooms | filter:{Private: isPrivate} | filter:roomSearchText | limitTo: itemsLimit()" data-ng-hide="!showClosedRooms && room.Closed" class="room" data-ng-class="{room.Private: locked, room.Closed: closed}"  data-ng-click="joinRoom($event, room)">
         <div class="row-fluid room-row">
@@ -11,7 +11,7 @@
                 <span class="topic" data-ng-bind-html="room.Topic"></span>
             </div>
             <div class="span2">
-                <span class="count">{{room.getUserCount()}}</span>
+                <span class="count">{{ getUserCount(room) }}</span>
             </div>
         </div>
     </li>
