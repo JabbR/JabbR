@@ -1239,4 +1239,7 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="ErrorContent" xml:space="preserve">
     <value>&lt;strong&gt;Status code: {1} - {0}&lt;/strong&gt;&lt;br /&gt;&lt;br /&gt;An error has occurred and the requested resource cannot be provided.  Please check the current URL or &lt;a href="{2}"&gt;Login&lt;/a&gt;.</value>
   </data>
+  <data name="ErrorContentSuggestion" xml:space="preserve">
+    <value>&lt;strong&gt;Status code: {1} - {0}&lt;/strong&gt;&lt;br /&gt;&lt;br /&gt;&lt;i&gt;Did you mean to access the &lt;a href="{4}"&gt;#{3}&lt;/a&gt; room?&lt;/i&gt;&lt;br /&gt;&lt;br /&gt;An error has occurred and the requested resource cannot be provided.  Please check the current URL or &lt;a href="{2}"&gt;Login&lt;/a&gt;.</value>
+  </data>
 </root>
