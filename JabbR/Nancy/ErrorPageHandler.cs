@@ -1,4 +1,4 @@
-﻿using System.Linq;
+﻿using System.Text.RegularExpressions;
 
 using JabbR.Services;
 
@@ -27,14 +27,16 @@ namespace JabbR.Nancy
         public void Handle(HttpStatusCode statusCode, NancyContext context)
         {
             string suggestRoomName = null;
-            if (statusCode == HttpStatusCode.NotFound && 
-                context.Request.Url.Path.Count(e => e == '/') == 1)
+            if (statusCode == HttpStatusCode.NotFound)
             {
-                // trim / from start of path
-                var potentialRoomName = context.Request.Url.Path.Substring(1);
-                if (_repository.GetRoomByName(potentialRoomName) != null)
+                var match = Regex.Match(context.Request.Url.Path, "^/(rooms/)?(?<roomName>[^/]+)$", RegexOptions.IgnoreCase);
+                if (match.Success)
                 {
-                    suggestRoomName = potentialRoomName;
+                    var potentialRoomName = match.Groups["roomName"].Value;
+                    if (_repository.GetRoomByName(potentialRoomName) != null)
+                    {
+                        suggestRoomName = potentialRoomName;
+                    }
                 }
             }
 
