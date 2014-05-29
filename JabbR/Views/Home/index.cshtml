@@ -213,7 +213,7 @@
                                 {{/if}}
                             </div>
                             <div class="formatted-content">
-                                <div class="content-body wikistyle markdown-format">
+                                <div class="content-body wikistyle">
                                     <p>
                                         {{html body}}
                                     </p>
@@ -242,7 +242,7 @@
                             </p>
                             <a href="${html_url}" target="_blank"><h2 class="content-title">${title}</h2></a>
                             <div class="formatted-content">
-                                <div class="content-body wikistyle markdown-format">
+                                <div class="content-body wikistyle">
                                     <p>
                                         {{html body}}
                                     </p>
@@ -515,7 +515,7 @@
             .Add("~/Scripts/jquery.sortElements.js")
             .Add("~/Scripts/ba-linkify.min.js")
             .Add("~/Scripts/quicksilver.js")
-            .Add("~/Scripts/Markdown.Converter.js")
+            .Add("~/Scripts/marked/lib/marked.js")
             .Add("~/Scripts/jquery.history.js")
             .Add("~/Scripts/moment.min.js")
             .Add("~/Scripts/livestamp.min.js")

@@ -2,9 +2,10 @@
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 /// <reference path="Scripts/moment.min.js" />
+/// <reference path="Scripts/marked/lib/marked.js" />
 
 /*jshint evil:true, bitwise:false*/
-(function ($, window, emoji, markdown, linkify, moment, languageResources) {
+(function ($, window, emoji, marked, linkify, moment, languageResources) {
     "use strict";
 
     // getting the browser's name for use in isMobile
@@ -187,8 +188,7 @@
             return prefix + n;
         },
         markdownToHtml: function (content) {
-            var converter = new markdown.Converter().makeHtml;
-            return (converter(content));
+            return marked(content);
         },
         isMobile: isMobile,
         parseEmojis: function (content) {
@@ -213,4 +213,4 @@
 
     window.chat.utility = utility;
 
-})(window.jQuery, window, window.Emoji, window.Markdown, window.linkify, window.moment, window.languageResources);
+})(window.jQuery, window, window.Emoji, window.marked, window.linkify, window.moment, window.languageResources);
