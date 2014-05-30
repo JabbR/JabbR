@@ -5,10 +5,13 @@
 /// <reference path="Scripts/marked/lib/marked.js" />
 
 /*jshint evil:true, bitwise:false*/
-(function ($, window, emoji, marked, linkify, moment, languageResources) {
+(function ($, window, emoji, marked, hljs, linkify, moment, languageResources) {
     "use strict";
 
     var markdownOptions = {
+        highlight: function(code) {
+            return hljs.highlightAuto(code).value;
+        },
         tables: false,
         breaks: true,
         sanitize: true
@@ -230,4 +233,4 @@
 
     window.chat.utility = utility;
 
-})(window.jQuery, window, window.Emoji, window.marked, window.linkify, window.moment, window.languageResources);
+})(window.jQuery, window, window.Emoji, window.marked, window.hljs, window.linkify, window.moment, window.languageResources);
