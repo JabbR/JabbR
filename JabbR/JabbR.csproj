@@ -946,7 +946,7 @@
     </Content>
     <Content Include="Scripts\livestamp.js" />
     <Content Include="Scripts\livestamp.min.js" />
-    <Content Include="Scripts\marked\lib\marked.js" />
+    <Content Include="Scripts\marked.js" />
     <Content Include="Scripts\modernizr.js" />
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\quicksilver.js" />

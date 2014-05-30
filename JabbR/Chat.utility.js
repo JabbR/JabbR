@@ -2,7 +2,7 @@
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 /// <reference path="Scripts/moment.min.js" />
-/// <reference path="Scripts/marked/lib/marked.js" />
+/// <reference path="Scripts/marked.js" />
 
 /*jshint evil:true, bitwise:false*/
 (function ($, window, emoji, marked, hljs, linkify, moment, languageResources) {
