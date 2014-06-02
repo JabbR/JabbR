@@ -2,6 +2,7 @@
 using System.Security.Claims;
 using JabbR.Infrastructure;
 using Nancy;
+using Nancy.Security;
 
 namespace JabbR.Nancy
 {
@@ -29,6 +30,23 @@ namespace JabbR.Nancy
         protected bool IsAuthenticated
         {
             get { return this.IsAuthenticated(); }
+        }
+
+        protected bool HasValidCsrfToken
+        {
+            get
+            {
+                try
+                {
+                    this.ValidateCsrfToken();
+                }
+                catch (CsrfValidationException)
+                {
+                    return false;
+                }
+
+                return true;
+            }
         }
 
         internal static Response AlertsToViewBag(NancyContext context)

@@ -46,6 +46,11 @@ namespace JabbR.Nancy
 
             Post["/login"] = param =>
             {
+                if (!HasValidCsrfToken)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
                 if (IsAuthenticated)
                 {
                     return this.AsRedirectQueryStringOrDefault("~/");
@@ -121,6 +126,11 @@ namespace JabbR.Nancy
 
             Post["/create"] = _ =>
             {
+                if (!HasValidCsrfToken)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
                 bool requirePassword = !Principal.Identity.IsAuthenticated;
 
                 if (requirePassword &&
@@ -195,6 +205,11 @@ namespace JabbR.Nancy
 
             Post["/unlink"] = param =>
             {
+                if (!HasValidCsrfToken)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
                 if (!IsAuthenticated)
                 {
                     return HttpStatusCode.Forbidden;
@@ -224,6 +239,11 @@ namespace JabbR.Nancy
 
             Post["/newpassword"] = _ =>
             {
+                if (!HasValidCsrfToken)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
                 if (!IsAuthenticated)
                 {
                     return HttpStatusCode.Forbidden;
@@ -260,6 +280,11 @@ namespace JabbR.Nancy
 
             Post["/changepassword"] = _ =>
             {
+                if (!HasValidCsrfToken)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
                 if (!applicationSettings.AllowUserRegistration)
                 {
                     return HttpStatusCode.NotFound;
@@ -307,6 +332,11 @@ namespace JabbR.Nancy
 
             Post["/changeusername"] = _ =>
             {
+                if (!HasValidCsrfToken)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
                 if (!IsAuthenticated)
                 {
                     return HttpStatusCode.Forbidden;
@@ -363,6 +393,11 @@ namespace JabbR.Nancy
 
             Post["/requestresetpassword"] = _ =>
             {
+                if (!HasValidCsrfToken)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
                 if (IsAuthenticated)
                 {
                     return Response.AsRedirect("~/account/#changePassword");
@@ -449,6 +484,11 @@ namespace JabbR.Nancy
 
             Post["/resetpassword/{id}"] = parameters =>
             {
+                if (!HasValidCsrfToken)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
                 if (!applicationSettings.AllowUserResetPassword ||
                     string.IsNullOrWhiteSpace(applicationSettings.EmailSender))
                 {
