@@ -2,10 +2,32 @@
 /// <reference path="Scripts/jQuery.tmpl.js" />
 /// <reference path="Scripts/jquery.cookie.js" />
 /// <reference path="Scripts/moment.min.js" />
+/// <reference path="Scripts/marked.js" />
 
 /*jshint evil:true, bitwise:false*/
-(function ($, window, emoji, markdown, linkify, moment, languageResources) {
+(function ($, window, emoji, marked, hljs, linkify, moment, languageResources) {
     "use strict";
+
+    var markdownOptions = {
+        highlight: function(code) {
+            return hljs.highlightAuto(code).value;
+        },
+        tables: false,
+        breaks: true,
+        sanitize: true
+    };
+
+    function processMarkdown(src) {
+        function noop() { }
+        noop.exec = noop;
+
+        // process inline markdown elements using custom lexer rules
+        var inlineLexer = new marked.InlineLexer([], markdownOptions);
+
+        inlineLexer.rules.link = noop;
+
+        return inlineLexer.output(src);
+    }
 
     // getting the browser's name for use in isMobile
     var nav = navigator.userAgent || navigator.vendor || window.opera;
@@ -129,7 +151,7 @@
         return new Date(this.getTime() + 1000 * 3600 * 24 * days);
     };
 
-    function processContent(content, templates, roomCache, htmlEncoded) {
+    function processContent(content, templates, roomCache) {
         content = content || '';
 
         var hasNewline = content.indexOf('\n') !== -1;
@@ -141,10 +163,8 @@
             // Emoji
             content = utility.parseEmojis(content);
 
-            // Html encode
-            if (!htmlEncoded) {
-                content = utility.encodeHtml(content);
-            }
+            // Convert markdown
+            content = processMarkdown(content);
 
             // Transform emoji to html
             content = utility.transformEmojis(content);
@@ -187,8 +207,8 @@
             return prefix + n;
         },
         markdownToHtml: function (content) {
-            var converter = new markdown.Converter().makeHtml;
-            return (converter(content));
+            var transformer = marked.parse;
+            return (transformer(content, markdownOptions));
         },
         isMobile: isMobile,
         parseEmojis: function (content) {
@@ -213,4 +233,4 @@
 
     window.chat.utility = utility;
 
-})(window.jQuery, window, window.Emoji, window.Markdown, window.linkify, window.moment, window.languageResources);
+})(window.jQuery, window, window.Emoji, window.marked, window.hljs, window.linkify, window.moment, window.languageResources);

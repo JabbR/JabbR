@@ -95,29 +95,6 @@
 .new-comments .commit-list-comment .cmeta .icon {
     background-position: 0 -300px;
 }
-.new-comments .tag {
-    -moz-border-bottom-colors: none;
-    -moz-border-image: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    background: none repeat scroll 0 0 #2D90C3;
-    border-color: #26749C #2D90C3 #2D90C3 #26749C;
-    border-radius: 2px 2px 2px 2px;
-    border-style: solid;
-    border-width: 1px;
-    color: #FFFFFF;
-    font-size: 11px;
-    margin-left: 5px;
-    padding: 1px 5px;
-    position: relative;
-    text-shadow: -1px -1px 0 rgba(0, 0, 0, 0.2);
-    top: -1px;
-}
-.new-comments .repo-owner-tag .tag, .new-comments .gist-owner-tag .tag {
-    background: none repeat scroll 0 0 #2CC03E;
-    border-color: #259A33 #2CC03E #2CC03E #259A33;
-}
 .new-comments .comment .body {
     background: none repeat scroll 0 0 #FBFBFB;
     color: #333333;
@@ -134,12 +111,6 @@
 }
 .new-comments .comment .content-body img {
     max-width: 100%;
-}
-.new-comments .comment .body .title {
-    border-bottom: 1px solid #DDDDDD;
-    color: #000000;
-    font-weight: bold;
-    padding: 5px 0;
 }
 .new-comments .inset {
     -moz-border-bottom-colors: none;
