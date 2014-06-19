@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
 using System.Security.Claims;
 using JabbR.Infrastructure;
 using Nancy;
@@ -32,10 +34,15 @@ namespace JabbR.Nancy
             get { return this.IsAuthenticated(); }
         }
 
-        protected bool HasValidCsrfToken
+        protected bool HasValidCsrfTokenOrSecHeader
         {
             get
             {
+                if (Request.Headers["sec-jabbr-client"].FirstOrDefault() != null)
+                {
+                    return true;
+                }
+
                 try
                 {
                     this.ValidateCsrfToken();

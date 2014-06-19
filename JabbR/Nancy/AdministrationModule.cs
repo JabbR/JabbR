@@ -39,7 +39,7 @@ namespace JabbR.Nancy
 
             Post["/"] = _ =>
             {
-                if (!HasValidCsrfToken)
+                if (!HasValidCsrfTokenOrSecHeader)
                 {
                     return HttpStatusCode.Forbidden;
                 }

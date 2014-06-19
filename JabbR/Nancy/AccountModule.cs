@@ -46,7 +46,7 @@ namespace JabbR.Nancy
 
             Post["/login"] = param =>
             {
-                if (!HasValidCsrfToken)
+                if (!HasValidCsrfTokenOrSecHeader)
                 {
                     return HttpStatusCode.Forbidden;
                 }
@@ -126,7 +126,7 @@ namespace JabbR.Nancy
 
             Post["/create"] = _ =>
             {
-                if (!HasValidCsrfToken)
+                if (!HasValidCsrfTokenOrSecHeader)
                 {
                     return HttpStatusCode.Forbidden;
                 }
@@ -205,7 +205,7 @@ namespace JabbR.Nancy
 
             Post["/unlink"] = param =>
             {
-                if (!HasValidCsrfToken)
+                if (!HasValidCsrfTokenOrSecHeader)
                 {
                     return HttpStatusCode.Forbidden;
                 }
@@ -239,7 +239,7 @@ namespace JabbR.Nancy
 
             Post["/newpassword"] = _ =>
             {
-                if (!HasValidCsrfToken)
+                if (!HasValidCsrfTokenOrSecHeader)
                 {
                     return HttpStatusCode.Forbidden;
                 }
@@ -280,7 +280,7 @@ namespace JabbR.Nancy
 
             Post["/changepassword"] = _ =>
             {
-                if (!HasValidCsrfToken)
+                if (!HasValidCsrfTokenOrSecHeader)
                 {
                     return HttpStatusCode.Forbidden;
                 }
@@ -332,7 +332,7 @@ namespace JabbR.Nancy
 
             Post["/changeusername"] = _ =>
             {
-                if (!HasValidCsrfToken)
+                if (!HasValidCsrfTokenOrSecHeader)
                 {
                     return HttpStatusCode.Forbidden;
                 }
@@ -393,7 +393,7 @@ namespace JabbR.Nancy
 
             Post["/requestresetpassword"] = _ =>
             {
-                if (!HasValidCsrfToken)
+                if (!HasValidCsrfTokenOrSecHeader)
                 {
                     return HttpStatusCode.Forbidden;
                 }
@@ -484,7 +484,7 @@ namespace JabbR.Nancy
 
             Post["/resetpassword/{id}"] = parameters =>
             {
-                if (!HasValidCsrfToken)
+                if (!HasValidCsrfTokenOrSecHeader)
                 {
                     return HttpStatusCode.Forbidden;
                 }
