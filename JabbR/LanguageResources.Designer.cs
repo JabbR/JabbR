@@ -1514,6 +1514,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kicked.
+        /// </summary>
+        public static string Chat_YouKickedTitle {
+            get {
+                return ResourceManager.GetString("Chat_YouKickedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You have revoked {0}&apos;s access to {1}..
         /// </summary>
         public static string Chat_YouRevokedUserRoomAccess {
@@ -1645,6 +1654,15 @@ namespace JabbR {
         public static string Client_Cancel {
             get {
                 return ResourceManager.GetString("Client_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Client_Close {
+            get {
+                return ResourceManager.GetString("Client_Close", resourceCulture);
             }
         }
         

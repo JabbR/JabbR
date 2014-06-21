@@ -889,15 +889,15 @@
     };
 
     chat.client.kick = function (room) {
-        var message = utility.getLanguageResource('Chat_YouKickedFromRoom', room);
+        var title = utility.getLanguageResource('Chat_YouKickedTitle'),
+            message = utility.getLanguageResource('Chat_YouKickedFromRoom', room);
 
         if (chat.state.activeRoom === room) {
             ui.setActiveRoom('Lobby');
         }
         
         ui.removeRoom(room);
-        // it looks like we write to the lobby, but the activeRoom is set via a fragment, so this writes to the last active room.
-        ui.addNotificationToActiveRoom(message);
+        ui.addModalMessage(title, message, 'icon-ban-circle');
     };
 
     // Helpish commands

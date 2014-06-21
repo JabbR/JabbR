@@ -217,6 +217,21 @@
             </div>
         </div> 
     </script>
+    <script id="modal-message-template" type="text/x-jquery-tmpl">
+        <div class="modal hide fade">
+            <div class="modal-header">
+                <a class="close" data-dismiss="modal">&times;</a>
+                <h3>${Title}</h3>
+            </div>
+            <div class="modal-body">
+                {{if Icon}}<i class="${Icon} icon-4x pull-left"></i>{{/if}}
+                {{html Body}}
+            </div>
+            <div class="modal-footer">
+                <a class="btn" href="#">@LanguageResources.Client_Close</a>
+            </div>
+        </div>
+    </script>
     <!-- TweetContentProvider: Should be extracted out if other content providers need templates -->
     <script id="tweet-template" type="text/x-jquery-tmpl">
         <div class="collapsible_content">
