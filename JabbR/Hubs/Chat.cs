@@ -906,6 +906,11 @@ namespace JabbR
             Clients.Caller.listAllowedUsers(room.Name, room.Private, room.AllowedUsers.Select(s => s.Name));
         }
 
+        void INotificationService.ListOwners(ChatRoom room)
+        {
+            Clients.Caller.listOwners(room.Name, room.Owners.Select(s => s.Name));
+        }
+
         void INotificationService.LockRoom(ChatUser targetUser, ChatRoom room)
         {
             var userViewModel = new UserViewModel(targetUser);

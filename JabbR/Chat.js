@@ -934,6 +934,14 @@
         }
     };
 
+    chat.client.listOwners = function (room, users) {
+        if (users.length === 0) {
+            ui.addListToActiveRoom(utility.getLanguageResource('Chat_RoomOwnersEmpty', room), []);
+        } else {
+            ui.addListToActiveRoom(utility.getLanguageResource('Chat_RoomOwnersResults', room), [users.join(', ')]);
+        }
+    };
+
     chat.client.showUsersRoomList = function (user, rooms) {
         if (rooms.length === 0) {
             ui.addListToActiveRoom(utility.getLanguageResource('Chat_UserNotInRooms', user.Name, user.Status), []);
