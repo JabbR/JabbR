@@ -1215,4 +1215,16 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="CheckBanned_CommandInfo" xml:space="preserve">
     <value>Checks if a user is banned. Only works if you're an admin.</value>
   </data>
+  <data name="Chat_RoomOwnersEmpty" xml:space="preserve">
+    <value>No users are owners of {0}.</value>
+  </data>
+  <data name="Chat_RoomOwnersResults" xml:space="preserve">
+    <value>The following users are owners of {0}:</value>
+  </data>
+  <data name="Owners_CommandInfo" xml:space="preserve">
+    <value>Show a list of all owners of the specified (or current) room.</value>
+  </data>
+  <data name="Owners_RoomRequired" xml:space="preserve">
+    <value>Which room do you want to list the owners of?</value>
+  </data>
 </root>
