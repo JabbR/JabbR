@@ -1667,6 +1667,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to creator.
+        /// </summary>
+        public static string Client_CreatorTag {
+            get {
+                return ResourceManager.GetString("Client_CreatorTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to All.
         /// </summary>
         public static string Client_DateRangeAll {
@@ -1913,11 +1922,29 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to online.
+        /// </summary>
+        public static string Client_OnlineTag {
+            get {
+                return ResourceManager.GetString("Client_OnlineTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Other Rooms.
         /// </summary>
         public static string Client_OtherRooms {
             get {
                 return ResourceManager.GetString("Client_OtherRooms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to owner.
+        /// </summary>
+        public static string Client_OwnerTag {
+            get {
+                return ResourceManager.GetString("Client_OwnerTag", resourceCulture);
             }
         }
         

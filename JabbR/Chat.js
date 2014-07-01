@@ -934,10 +934,12 @@
         }
     };
 
-    chat.client.listOwners = function (room, users) {
+    chat.client.listOwners = function (room, users, creator) {
         if (users.length === 0) {
             ui.addListToActiveRoom(utility.getLanguageResource('Chat_RoomOwnersEmpty', room), []);
         } else {
+            // we don't want admins or owners tagged, so we don't provide them.
+            users = utility.tagUsers(users, null, null, null, creator);
             ui.addListToActiveRoom(utility.getLanguageResource('Chat_RoomOwnersResults', room), [users.join(', ')]);
         }
     };
