@@ -908,7 +908,7 @@ namespace JabbR
 
         void INotificationService.ListOwners(ChatRoom room)
         {
-            Clients.Caller.listOwners(room.Name, room.Owners.Select(s => s.Name));
+            Clients.Caller.listOwners(room.Name, room.Owners.Select(s => s.Name), room.Creator != null ? room.Creator.Name : null);
         }
 
         void INotificationService.LockRoom(ChatUser targetUser, ChatRoom room)

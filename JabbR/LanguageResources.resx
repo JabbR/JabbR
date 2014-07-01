@@ -1227,4 +1227,13 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="Owners_RoomRequired" xml:space="preserve">
     <value>Which room do you want to list the owners of?</value>
   </data>
+  <data name="Client_CreatorTag" xml:space="preserve">
+    <value>creator</value>
+  </data>
+  <data name="Client_OnlineTag" xml:space="preserve">
+    <value>online</value>
+  </data>
+  <data name="Client_OwnerTag" xml:space="preserve">
+    <value>owner</value>
+  </data>
 </root>

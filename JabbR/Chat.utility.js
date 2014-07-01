@@ -98,6 +98,37 @@
         return format.apply(null, args);
     }
 
+    // adds a parenthesis and all relevent tags to the users in the userlist
+    function tagUsers(usernames, online, admins, owners, creators) {
+        online = online == null ? [] : $.makeArray(online);
+        admins = admins == null ? [] : $.makeArray(admins);
+        owners = owners == null ? [] : $.makeArray(owners);
+        creators = creators == null ? [] : $.makeArray(creators);
+
+        // add the user's tags to the end of their username
+        return $.map(usernames, function (el) {
+            var tags = [];
+
+            if (online.indexOf(el) > -1) {
+                tags.push(utility.getLanguageResource('Client_OnlineTag'));
+            }
+
+            if (admins.indexOf(el) > -1) {
+                tags.push(utility.getLanguageResource('Client_AdminTag'));
+            }
+
+            if (owners.indexOf(el) > -1) {
+                tags.push(utility.getLanguageResource('Client_OwnerTag'));
+            }
+
+            if (creators.indexOf(el) > -1) {
+                tags.push(utility.getLanguageResource('Client_CreatorTag'));
+            }
+
+            return el + (tags.length > 0 ? ' (' + tags.join(', ') + ')' : '');
+        });
+    }
+
     String.prototype.fromJsonDate = function () {
         return new Date(moment(this.toString()).valueOf());
     };
@@ -225,7 +256,8 @@
         newId: guidGenerator,
         processContent: processContent,
         format: format,
-        getLanguageResource: getLanguageResource
+        getLanguageResource: getLanguageResource,
+        tagUsers: tagUsers
     };
 
     if (!window.chat) {
