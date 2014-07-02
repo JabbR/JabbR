@@ -57,10 +57,13 @@ namespace JabbR.Services
             }
 
             _running = true;
-            var logger = _kernel.Get<ILogger>();
+
+            ILogger logger = null;
 
             try
             {
+                logger = _kernel.Get<ILogger>();
+
                 logger.Log("Checking user presence");
 
                 using (var repo = _kernel.Get<IJabbrRepository>())
@@ -80,7 +83,10 @@ namespace JabbR.Services
             }
             catch (Exception ex)
             {
-                logger.Log(ex);
+                if (logger != null)
+                {
+                    logger.Log(ex);
+                }
             }
             finally
             {
