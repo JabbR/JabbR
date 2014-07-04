@@ -59,7 +59,8 @@ namespace JabbR.Nancy
                     settings.DisabledContentProviders =
                         new HashSet<string>(contentProviders
                             .Select(cp => cp.GetType().Name)
-                            .Where(typeName => !enabledContentProvidersResult.EnabledContentProviders.Contains(typeName))
+                            .Where(typeName => enabledContentProvidersResult.EnabledContentProviders == null ||
+                                !enabledContentProvidersResult.EnabledContentProviders.Contains(typeName))
                             .ToList());
 
                     IDictionary<string, string> errors;
