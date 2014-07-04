@@ -18,7 +18,7 @@ namespace JabbR.Commands
             {
                 // Set the flag.
                 string isoCode = String.Join(" ", args[0]).ToLowerInvariant();
-                ChatService.ValidateIsoCode(isoCode);
+                CountryLookup.ValidateIsoCode(isoCode);
                 callingUser.Flag = isoCode;
             }
 

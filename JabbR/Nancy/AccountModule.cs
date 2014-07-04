@@ -116,7 +116,7 @@ namespace JabbR.Nancy
 
                 ViewBag.requirePassword = requirePassword;
 
-                return View["register"];
+                return View["register", new RegisterPageViewModel()];
             };
 
             Post["/create"] = _ =>
@@ -140,6 +140,8 @@ namespace JabbR.Nancy
                 string email = Request.Form.email;
                 string password = Request.Form.password;
                 string confirmPassword = Request.Form.confirmPassword;
+                string countryCode = Request.Form.country;
+                bool gravatar = Request.Form.gravatar;
 
                 if (String.IsNullOrEmpty(username))
                 {
@@ -149,6 +151,15 @@ namespace JabbR.Nancy
                 if (String.IsNullOrEmpty(email))
                 {
                     this.AddValidationError("email", LanguageResources.Authentication_EmailRequired);
+                }
+
+                if (String.IsNullOrEmpty(countryCode))
+                {
+                    countryCode = null;
+                } 
+                else if (String.IsNullOrEmpty(CountryLookup.GetCountry(countryCode)))
+                {
+                    this.AddValidationError("country", LanguageResources.CountryISOInvalid);
                 }
 
                 try
@@ -162,7 +173,7 @@ namespace JabbR.Nancy
                     {
                         if (requirePassword)
                         {
-                            ChatUser user = membershipService.AddUser(username, email, password);
+                            ChatUser user = membershipService.AddUser(username, email, password, countryCode, gravatar);
 
                             return this.SignIn(user);
                         }
@@ -190,7 +201,7 @@ namespace JabbR.Nancy
                     this.AddValidationError("_FORM", ex.Message);
                 }
 
-                return View["register"];
+                return View["register", new RegisterPageViewModel()];
             };
 
             Post["/unlink"] = param =>

@@ -1,4 +1,5 @@
 ﻿@using JabbR;
+@model RegisterPageViewModel
 @{
     Layout = "_layout.cshtml";
 }
@@ -20,6 +21,25 @@
                         <div class="input-prepend">
                             <span class="add-on"><i class="icon-envelope"></i></span>
                             @Html.TextBox("email", "input-block-level", @LanguageResources.Account_Email)
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <label class="checkbox"><input name="gravatar" type="checkbox" /> @Html.Raw(@LanguageResources.Account_UseEmailForGravatar)</label>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <div class="controls">
+                        <div class="input-prepend">
+                            <span class="add-on"><i class="icon-flag"></i></span>
+                            <select name="country" id="country">
+                                <option value="" selected>@LanguageResources.Account_Country</option>
+                                @foreach (var country in Model.Countries)
+                                {
+                                    <option value="@country.Key">@country.Value</option>
+                                }
+                            </select>
                         </div>
                     </div>
                 </div>

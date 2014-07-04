@@ -92,7 +92,7 @@ namespace JabbR.Services
             });
         }
 
-        public ChatUser AddUser(string userName, string email, string password)
+        public ChatUser AddUser(string userName, string email, string password, string countryCode, bool gravatar)
         {
             if (!IsValidUserName(userName))
             {
@@ -114,7 +114,9 @@ namespace JabbR.Services
                 Id = Guid.NewGuid().ToString("d"),
                 Salt = _crypto.CreateSalt(),
                 LastActivity = DateTime.UtcNow,
-                IsAdmin = IsFirstUser()
+                IsAdmin = IsFirstUser(),
+                Flag = countryCode,
+                Hash = gravatar ? email.ToMD5() : null
             };
 
             ValidatePassword(password);

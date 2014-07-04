@@ -1215,4 +1215,7 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="CheckBanned_CommandInfo" xml:space="preserve">
     <value>Checks if a user is banned. Only works if you're an admin.</value>
   </data>
+  <data name="Account_UseEmailForGravatar" xml:space="preserve">
+    <value>Use my &lt;a href="https://gravatar.com" target="_blank"&gt;Gravatar&lt;/a&gt;.</value>
+  </data>
 </root>

@@ -16,7 +16,7 @@ namespace JabbR.ViewModels
             AfkNote = user.AfkNote;
             IsAfk = user.IsAfk;
             Flag = user.Flag;
-            Country = ChatService.GetCountry(user.Flag);
+            Country = CountryLookup.GetCountry(user.Flag);
             LastActivity = user.LastActivity;
             IsAdmin = user.IsAdmin;
         }
