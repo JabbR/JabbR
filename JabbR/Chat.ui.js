@@ -2110,14 +2110,17 @@
                 }
             }
         },
-        addModalMessage: function(title, message, icon) {
+        addModalMessage: function (title, message, icon) {
+            var deferred = $.Deferred();
             var $dialog = templates.modalMessage.tmpl({ Title: title, Body: message, Icon: icon }).appendTo('#dialog-container').modal()
                 .on('hidden.bs.modal', function () {
                     $dialog.remove();
+                    deferred.resolve();
                 })
                 .on('click', 'a.btn', function () {
                     $dialog.modal('hide');
                 });
+            return deferred.promise();
         },
         hasFocus: function () {
             return focus;

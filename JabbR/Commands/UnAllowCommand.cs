@@ -29,7 +29,7 @@ namespace JabbR.Commands
 
             context.Service.UnallowUser(callingUser, targetUser, targetRoom);
 
-            context.NotificationService.UnallowUser(targetUser, targetRoom);
+            context.NotificationService.UnallowUser(targetUser, targetRoom, callingUser);
 
             context.Repository.CommitChanges();
         }

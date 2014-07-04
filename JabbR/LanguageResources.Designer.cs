@@ -1163,6 +1163,24 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} was banned by {1}..
+        /// </summary>
+        public static string Chat_UserBanned {
+            get {
+                return ResourceManager.GetString("Chat_UserBanned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} was banned by {1} for &quot;{2}&quot;..
+        /// </summary>
+        public static string Chat_UserBannedReason {
+            get {
+                return ResourceManager.GetString("Chat_UserBannedReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} has cleared their flag..
         /// </summary>
         public static string Chat_UserClearedFlag {
@@ -1258,6 +1276,24 @@ namespace JabbR {
         public static string Chat_UserIsAfkNote {
             get {
                 return ResourceManager.GetString("Chat_UserIsAfkNote", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} was kicked from {1} by {2}..
+        /// </summary>
+        public static string Chat_UserKickedFromRoom {
+            get {
+                return ResourceManager.GetString("Chat_UserKickedFromRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} was kicked from {1} by {2} for &quot;{3}&quot;..
+        /// </summary>
+        public static string Chat_UserKickedFromRoomReason {
+            get {
+                return ResourceManager.GetString("Chat_UserKickedFromRoomReason", resourceCulture);
             }
         }
         
@@ -1442,6 +1478,33 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You have been banned by {0}..
+        /// </summary>
+        public static string Chat_YouBanned {
+            get {
+                return ResourceManager.GetString("Chat_YouBanned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have been banned by {0} for &quot;{1}&quot;..
+        /// </summary>
+        public static string Chat_YouBannedReason {
+            get {
+                return ResourceManager.GetString("Chat_YouBannedReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Banned.
+        /// </summary>
+        public static string Chat_YouBannedTitle {
+            get {
+                return ResourceManager.GetString("Chat_YouBannedTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You have cleared your flag..
         /// </summary>
         public static string Chat_YouClearedFlag {
@@ -1505,11 +1568,20 @@ namespace JabbR {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You were kicked from {0}..
+        ///   Looks up a localized string similar to You were kicked from {0} by {1}..
         /// </summary>
         public static string Chat_YouKickedFromRoom {
             get {
                 return ResourceManager.GetString("Chat_YouKickedFromRoom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You were kicked from {0} by {1} for &quot;{2}&quot;..
+        /// </summary>
+        public static string Chat_YouKickedFromRoomReason {
+            get {
+                return ResourceManager.GetString("Chat_YouKickedFromRoomReason", resourceCulture);
             }
         }
         

@@ -20,7 +20,8 @@
         messageSendingDelay = 1500,
         pendingMessages = {},
         privateRooms = null,
-        roomsToLoad = 0;
+        roomsToLoad = 0,
+        banDialogShown = false;
 
     function failPendingMessages() {
         for (var id in pendingMessages) {
@@ -620,9 +621,35 @@
         ui.showUpdateUI();
     };
 
-    chat.client.banUser = function (userInfo) {
-        var msg = 'User ' + userInfo.Name + ' was banned';
-        ui.addNotificationToActiveRoom(msg);
+    chat.client.ban = function (userInfo, room, callingUser, reason) {
+        var message;
+
+        if (isSelf(userInfo)) {
+            // don't show multiple instances of dialog
+            if (banDialogShown == true) {
+                return;
+            }
+            banDialogShown = true;
+
+            var title = utility.getLanguageResource('Chat_YouBannedTitle');
+            if (reason != null) {
+                message = utility.getLanguageResource('Chat_YouBannedReason', callingUser.Name, reason);
+            } else {
+                message = utility.getLanguageResource('Chat_YouBanned', callingUser.Name);
+            }
+
+            ui.addModalMessage(title, message, 'icon-ban-circle').done(function() {
+                performLogout();
+            });
+        } else {
+            if (reason != null) {
+                message = utility.getLanguageResource('Chat_UserBannedReason', userInfo.Name, callingUser.Name, reason);
+            } else {
+                message = utility.getLanguageResource('Chat_UserBanned', userInfo.Name, callingUser.Name);
+            }
+
+            ui.addNotification(message, room);
+        }
     };
 
     chat.client.unbanUser = function (userInfo) {
@@ -888,16 +915,33 @@
         }
     };
 
-    chat.client.kick = function (room) {
-        var title = utility.getLanguageResource('Chat_YouKickedTitle'),
-            message = utility.getLanguageResource('Chat_YouKickedFromRoom', room);
+    chat.client.kick = function (user, room, callingUser, reason) {
+        if (isSelf(user)) {
+            var title = utility.getLanguageResource('Chat_YouKickedTitle'),
+                message;
+            
+            if (chat.state.activeRoom === room) {
+                ui.setActiveRoom('Lobby');
+            }
 
-        if (chat.state.activeRoom === room) {
-            ui.setActiveRoom('Lobby');
+            ui.removeRoom(room);
+
+            if (reason != null) {
+                message = utility.getLanguageResource('Chat_YouKickedFromRoomReason', room, callingUser.Name, reason);
+            } else {
+                message = utility.getLanguageResource('Chat_YouKickedFromRoom', room, callingUser.Name);
+            }
+
+            ui.addModalMessage(title, message, 'icon-ban-circle');
+        } else {
+            ui.removeUser(user, room);
+
+            if (reason != null) {
+                ui.addNotification(utility.getLanguageResource('Chat_UserKickedFromRoomReason', user.Name, room, callingUser.Name, reason), room);
+            } else {
+                ui.addNotification(utility.getLanguageResource('Chat_UserKickedFromRoom', user.Name, room, callingUser.Name), room);
+            }
         }
-        
-        ui.removeRoom(room);
-        ui.addModalMessage(title, message, 'icon-ban-circle');
     };
 
     // Helpish commands

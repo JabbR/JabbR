@@ -4,7 +4,9 @@ using Microsoft.AspNet.SignalR;
 
 namespace JabbR.Commands
 {
-    [Command("kick", "Kick_CommandInfo", "user [room]", "user")]
+    using System.Linq;
+
+    [Command("kick", "Kick_CommandInfo", "user [room] [reason]", "user")]
     public class KickCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
@@ -29,7 +31,14 @@ namespace JabbR.Commands
 
             context.Service.KickUser(callingUser, targetUser, room);
 
-            context.NotificationService.KickUser(targetUser, room);
+            // try to extract the reason
+            string reason = null;
+            if (args.Length > 2)
+            {
+                reason = String.Join(" ", args.Skip(2)).Trim();
+            }
+
+            context.NotificationService.KickUser(targetUser, room, callingUser, reason);
 
             context.Repository.CommitChanges();
         }

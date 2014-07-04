@@ -720,19 +720,24 @@ namespace JabbR
             LogOn(user, clientId, reconnecting: true);
         }
 
-        void INotificationService.KickUser(ChatUser targetUser, ChatRoom room)
+        void INotificationService.KickUser(ChatUser targetUser, ChatRoom room, ChatUser callingUser, string reason)
         {
+            var targetUserViewModel = new UserViewModel(targetUser);
+            var callingUserViewModel = new UserViewModel(callingUser);
+
+            if (String.IsNullOrWhiteSpace(reason))
+            {
+                reason = null;
+            }
+
+            Clients.Group(room.Name).kick(targetUserViewModel, room.Name, callingUserViewModel, reason);
+
             foreach (var client in targetUser.ConnectedClients)
             {
-                // Kick the user from this room
-                Clients.Client(client.Id).kick(room.Name);
-
-                // Remove the user from this the room group so he doesn't get the leave message
                 Groups.Remove(client.Id, room.Name);
             }
 
-            // Tell the room the user left
-            LeaveRoom(targetUser, room);
+            OnRoomChanged(room);
         }
 
         void INotificationService.OnUserCreated(ChatUser user)
@@ -793,10 +798,10 @@ namespace JabbR
             Clients.Caller.userAllowed(targetUser.Name, targetRoom.Name);
         }
 
-        void INotificationService.UnallowUser(ChatUser targetUser, ChatRoom targetRoom)
+        void INotificationService.UnallowUser(ChatUser targetUser, ChatRoom targetRoom, ChatUser callingUser)
         {
             // Kick the user from the room when they are unallowed
-            ((INotificationService)this).KickUser(targetUser, targetRoom);
+            ((INotificationService)this).KickUser(targetUser, targetRoom, callingUser, null);
 
             // Tell this client it's no longer allowed
             Clients.User(targetUser.Id).unallowUser(targetRoom.Name);
@@ -1187,28 +1192,31 @@ namespace JabbR
             return value != null ? Uri.UnescapeDataString(value) : null;
         }
 
-        void INotificationService.BanUser(ChatUser targetUser)
+        void INotificationService.BanUser(ChatUser targetUser, ChatUser callingUser, string reason)
         {
-            var rooms = targetUser.Rooms.Select(x => x.Name);
+            var rooms = targetUser.Rooms.Select(x => x.Name).ToArray();
+            var targetUserViewModel = new UserViewModel(targetUser);
+            var callingUserViewModel = new UserViewModel(callingUser);
 
+            if (String.IsNullOrWhiteSpace(reason))
+            {
+                reason = null;
+            }
+            
+            // We send down room so that other clients can display that the user has been banned
             foreach (var room in rooms)
             {
-                foreach (var client in targetUser.ConnectedClients)
-                {
-                    // Kick the user from this room
-                    Clients.Client(client.Id).kick(room);
+                Clients.Group(room).ban(targetUserViewModel, room, callingUserViewModel, reason);   
+            }
 
-                    // Remove the user from this the room group so he doesn't get the leave message
+            foreach (var client in targetUser.ConnectedClients)
+            {
+                foreach (var room in rooms)
+                {
+                    // Remove the user from this the room group so he doesn't get the general ban message
                     Groups.Remove(client.Id, room);
                 }
             }
-
-            Clients.User(targetUser.Id).logOut(rooms);
-
-            Clients.Caller.banUser(new
-            {
-                Name = targetUser.Name
-            });
         }
 
         void INotificationService.UnbanUser(ChatUser targetUser)

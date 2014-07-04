@@ -977,7 +977,7 @@ Use ? or type /? to display the FAQ and list of commands.</value>
     <value>Invitation to {0} to join #{1} has been sent.</value>
   </data>
   <data name="Chat_YouKickedFromRoom" xml:space="preserve">
-    <value>You were kicked from {0}.</value>
+    <value>You were kicked from {0} by {1}.</value>
   </data>
   <data name="Chat_YouRevokedUserRoomAccess" xml:space="preserve">
     <value>You have revoked {0}'s access to {1}.</value>
@@ -1250,5 +1250,29 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   </data>
   <data name="Administration_AppInsightsId" xml:space="preserve">
     <value>AppInsights ID</value>
+  </data>
+  <data name="Chat_UserBanned" xml:space="preserve">
+    <value>{0} was banned by {1}.</value>
+  </data>
+  <data name="Chat_UserBannedReason" xml:space="preserve">
+    <value>{0} was banned by {1} for "{2}".</value>
+  </data>
+  <data name="Chat_UserKickedFromRoom" xml:space="preserve">
+    <value>{0} was kicked from {1} by {2}.</value>
+  </data>
+  <data name="Chat_UserKickedFromRoomReason" xml:space="preserve">
+    <value>{0} was kicked from {1} by {2} for "{3}".</value>
+  </data>
+  <data name="Chat_YouBanned" xml:space="preserve">
+    <value>You have been banned by {0}.</value>
+  </data>
+  <data name="Chat_YouBannedReason" xml:space="preserve">
+    <value>You have been banned by {0} for "{1}".</value>
+  </data>
+  <data name="Chat_YouBannedTitle" xml:space="preserve">
+    <value>Banned</value>
+  </data>
+  <data name="Chat_YouKickedFromRoomReason" xml:space="preserve">
+    <value>You were kicked from {0} by {1} for "{2}".</value>
   </data>
 </root>
