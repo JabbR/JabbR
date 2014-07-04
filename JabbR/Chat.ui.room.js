@@ -308,9 +308,7 @@
     };
 
     Room.prototype.trimHistory = function (numberOfMessagesToKeep) {
-        var lastIndex = null,
-            $messagesToRemove = null,
-            $roomMessages = this.messages.find('li'),
+        var $roomMessages = this.messages.find('li.message'),
             messageCount = $roomMessages.length;
 
         numberOfMessagesToKeep = numberOfMessagesToKeep || trimRoomHistoryMaxMessages;
@@ -319,18 +317,11 @@
             return;
         }
 
-        if (numberOfMessagesToKeep < trimRoomHistoryMaxMessages) {
-            numberOfMessagesToKeep = trimRoomHistoryMaxMessages;
-        }
-
         if (messageCount < numberOfMessagesToKeep) {
             return;
         }
 
-        lastIndex = messageCount - numberOfMessagesToKeep;
-        $messagesToRemove = $roomMessages.filter('li:lt(' + lastIndex + ')');
-
-        $messagesToRemove.remove();
+        $roomMessages.filter('li:eq(' + (messageCount - numberOfMessagesToKeep) + ')').prevAll().remove();
     };
 
     chat.Room = Room;
