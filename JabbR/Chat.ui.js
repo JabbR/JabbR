@@ -514,7 +514,11 @@
 
     function triggerFocus() {
         if (!utility.isMobile && !readOnly) {
-            $newMessage.focus();
+            if (getActiveRoomName() === 'Lobby') {
+                $roomFilterInput.focus();
+            } else {
+                $newMessage.focus();
+            }
         }
 
         if (focus === false) {
