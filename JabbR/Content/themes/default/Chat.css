@@ -524,6 +524,13 @@ canvas {
     background-color: #C5C5C5;
 }
 
+.user .large-gravatar {
+    width: 128px;
+    height: 128px;
+    float: left;
+    background-color: #c5c5c5;
+}
+
 .user .details .name-container .name {
     overflow: hidden;
     white-space: nowrap;
