@@ -27,7 +27,7 @@
             for (var key in validAlias) {
                 if (validAlias.hasOwnProperty(key)) {
                     var regex = new RegExp(key, "g");
-                    content = content.replace(regex, validAlias[key]);
+                    content = content.replace(regex, '\u200B' + validAlias[key] + '\u200B');
                 }
             }
             
