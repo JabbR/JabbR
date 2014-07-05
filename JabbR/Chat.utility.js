@@ -14,7 +14,8 @@
         },
         tables: false,
         breaks: true,
-        sanitize: true
+        sanitize: true,
+        gfm: true
     };
 
     function processMarkdown(src) {
