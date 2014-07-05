@@ -965,7 +965,6 @@
     <Content Include="Views\Account\_username.cshtml" />
     <Content Include="Views\Account\register.cshtml" />
     <Content Include="Views\Home\index.cshtml" />
-    <Content Include="Views\Account\_layout.cshtml" />
     <Content Include="Views\Account\_social.cshtml" />
     <Content Include="Views\Account\login.cshtml" />
     <Content Include="Views\Account\index.cshtml" />
@@ -981,6 +980,8 @@
     <Content Include="Views\Account\resetpasswordsuccess.cshtml" />
     <Content Include="Scripts\jquery-2.0.3.min.map" />
     <Content Include="Views\Home\status.cshtml" />
+    <Content Include="Views\errorPage.cshtml" />
+    <Content Include="Views\_layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\OwnersCommand.cs" />
@@ -1085,6 +1086,7 @@
     <Compile Include="Models\Settings.cs" />
     <Compile Include="Nancy\AdministrationModule.cs" />
     <Compile Include="Nancy\ClaimsPrincipalUserIdentity.cs" />
+    <Compile Include="Nancy\ErrorPageHandler.cs" />
     <Compile Include="Nancy\HtmlHelperExtensions.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.cs" />
     <Compile Include="Migrations\201301250443391_AddProviderName.Designer.cs">
@@ -1408,6 +1410,7 @@
   <ItemGroup>
     <Content Include="Chat.emoji.js" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

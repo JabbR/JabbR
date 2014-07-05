@@ -2522,6 +2522,10 @@ li.clearfix {
     margin: 0 10px;
 }
 
+.error-content {
+    margin: 0 10px;
+}
+
 .icon-link {
     background-image: url('../../images/link.png');
     background-repeat: no-repeat;

@@ -2255,6 +2255,24 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;strong&gt;Status code: {1} - {0}&lt;/strong&gt;&lt;br /&gt;&lt;br /&gt;An error has occurred and the requested resource cannot be provided.  Please check the current URL or &lt;a href=&quot;{2}&quot;&gt;Login&lt;/a&gt;..
+        /// </summary>
+        public static string ErrorContent {
+            get {
+                return ResourceManager.GetString("ErrorContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;strong&gt;Status code: {1} - {0}&lt;/strong&gt;&lt;br /&gt;&lt;br /&gt;&lt;i&gt;Did you mean to access the &lt;a href=&quot;{4}&quot;&gt;#{3}&lt;/a&gt; room?&lt;/i&gt;&lt;br /&gt;&lt;br /&gt;An error has occurred and the requested resource cannot be provided.  Please check the current URL or &lt;a href=&quot;{2}&quot;&gt;Login&lt;/a&gt;..
+        /// </summary>
+        public static string ErrorContentSuggestion {
+            get {
+                return ResourceManager.GetString("ErrorContentSuggestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show a small flag which represents your nationality. Eg. /flag US for a USA flag. ISO Reference Chart: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 (Apologies to people with dual citizenship)..
         /// </summary>
         public static string Flag_CommandInfo {

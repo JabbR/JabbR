@@ -1,0 +1,18 @@
+﻿@using JabbR;
+@{
+    Layout = "_layout.cshtml";
+}
+<div class="row-fluid">
+    <div class="span12">
+        <div class="error-content">
+            @if (Model.SuggestRoomName != null)
+            {
+                @Html.Raw(String.Format(LanguageResources.ErrorContentSuggestion, @Model.Error, @Model.ErrorCode, Url.Content("~/"), Model.SuggestRoomName, Url.Content("~/#/rooms/" + Model.SuggestRoomName)))
+            }
+            else
+            {
+               @Html.Raw(String.Format(LanguageResources.ErrorContent, @Model.Error, @Model.ErrorCode, Url.Content("~/")))
+            }
+        </div>
+    </div>
+</div>
