@@ -38,6 +38,13 @@ namespace JabbR.Nancy
         {
             get
             {
+                // if we have no useragent or signalr in the useragent, then we don't worry about CSRF because it's not a browser.
+                if (string.IsNullOrEmpty(Request.Headers.UserAgent)
+                    || Request.Headers.UserAgent.IndexOf("signalr", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+
                 if (Request.Headers["sec-jabbr-client"].FirstOrDefault() != null)
                 {
                     return true;
