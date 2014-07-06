@@ -4,6 +4,8 @@ using System.Security.Principal;
 
 namespace JabbR.Infrastructure
 {
+    using System.Text.RegularExpressions;
+
     public static class PrincipalExtensions
     {
         public static bool IsAuthenticated(this IPrincipal principal)
@@ -51,6 +53,23 @@ namespace JabbR.Infrastructure
             Claim claim = principal.FindFirst(type);
 
             return claim != null ? claim.Value : null;
+        }
+
+        public static string GetUsername(this ClaimsPrincipal principal)
+        {
+            var username = principal.GetClaimValue(ClaimTypes.Name);
+            if (username == null)
+            {
+                return null;
+            }
+
+            username = Regex.Replace(username, @"[^\w-_.]", "", RegexOptions.None);
+            if (username.Length > 30)
+            {
+                username = username.Substring(0, 30);
+            }
+
+            return username;
         }
 
         public static string GetIdentityProvider(this ClaimsPrincipal principal)
