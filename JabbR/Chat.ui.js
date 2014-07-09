@@ -1626,7 +1626,7 @@
             room.addUser(userViewModel, $user);
             updateNote(userViewModel, $user);
             updateFlag(userViewModel, $user);
-            
+
             return true;
         },
         setUserActivity: function (userViewModel) {
@@ -2042,7 +2042,6 @@
 
             if (isMessage) {
                 room.updateMessages(true);
-
             }
 
             $(newMessage).appendTo(room.messages);
