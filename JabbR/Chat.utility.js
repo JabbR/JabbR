@@ -26,6 +26,7 @@
         var inlineLexer = new marked.InlineLexer([], markdownOptions);
 
         inlineLexer.rules.link = noop;
+        inlineLexer.rules.url = noop;
 
         return inlineLexer.output(src);
     }
