@@ -3376,7 +3376,13 @@ h3.userlist-header {
 }
 
 .gravatar-wrapper:hover .jabbr-user-card,
-.gravatar-wrapper:hover .gravatar-large {
+.gravatar-wrapper:hover .gravatar-large,
+.gravatar-wrapper:focus .jabbr-user-card,
+.gravatar-wrapper:focus .gravatar-large,
+.gravatar-wrapper:active .jabbr-user-card,
+.gravatar-wrapper:active .gravatar-large {
+
+
     display: block;
 }
 
