@@ -1916,6 +1916,13 @@
                 ui.addMessage(model, 'postedNotification', roomName);
             }
             else {
+                if (showUserName === true) {
+                    var $user = room.getUser(message.name),
+                        $flag = $user.find('.flag');
+                    message.flagClass = $flag.attr('class');
+                    message.flagTitle = $flag.attr('title');
+                }
+
                 this.appendMessage(templates.message.tmpl(message), room);
             }
 

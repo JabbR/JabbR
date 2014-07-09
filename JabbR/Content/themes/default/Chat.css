@@ -3394,9 +3394,8 @@ h3.userlist-header {
 .jabbr-user-card {
     position: absolute;
     background-color: #f5f5f5;
-    padding: 5px 5px 0 0;
+    padding: 5px 5px 5px 0;
     box-shadow: 0 0 1px 0 #888;
-    text-align: center;
 }
 
     .jabbr-user-card .user-status-container {
@@ -3405,6 +3404,11 @@ h3.userlist-header {
 
     .jabbr-user-card .user-status {
         height: 96px;
+    }
+
+    .jabbr-user-card .flag-container {
+        float: none;
+        margin-top: 0;
     }
 
     .message .left .jabbr-user-card .name {

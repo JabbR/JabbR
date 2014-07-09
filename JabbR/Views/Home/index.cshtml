@@ -58,8 +58,16 @@
                             <div class="user-status-container">
                                 <i class="user-status"></i>
                             </div>
-                            <img src="https://secure.gravatar.com/avatar/${hash}?s=96&d=mm" class="gravatar-large" />
-                            <span class="name">${name}</span>
+                            <img src="https://secure.gravatar.com/avatar/${hash}?s=96&d=mm" class="gravatar-large" style="display: inline-block; vertical-align: top;" />
+                            <div style="display: inline-block;">
+                                <div class="name" style="display: inline-block;">
+                                    <span>${name}</span>
+                                    <div class="flag-container">
+                                        <div class="{{if flagClass}}${flagClass}{{/if}}" style="display: inline-block;"></div>
+                                        <span>{{if flagTitle}}${flagTitle}{{/if}}</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="name">${name}</div>
