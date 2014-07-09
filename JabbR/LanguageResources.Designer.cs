@@ -433,6 +433,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to AppInsights ID.
+        /// </summary>
+        public static string Administration_AppInsightsId {
+            get {
+                return ResourceManager.GetString("Administration_AppInsightsId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Azure Blob Storage Connectionstring.
         /// </summary>
         public static string Administration_AzureBlobStorageConnectionString {

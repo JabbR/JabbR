@@ -1,7 +1,7 @@
 /* jquery.signalR.core.js */
 /*global window:false */
 /*!
- * ASP.NET SignalR JavaScript Library v2.1.0-pre
+ * ASP.NET SignalR JavaScript Library v2.2.0-pre
  * http://signalr.net/
  *
  * Copyright (C) Microsoft Corporation. All rights reserved.
@@ -98,7 +98,7 @@
         isDisconnecting = function (connection) {
             return connection.state === signalR.connectionState.disconnected;
         },
-        
+
         supportsKeepAlive = function (connection) {
             return connection._.keepAliveData.activated &&
                    connection.transport.supportsKeepAlive(connection);
@@ -401,7 +401,7 @@
 
         state: signalR.connectionState.disconnected,
 
-        clientProtocol: "1.4",
+        clientProtocol: "1.5",
 
         reconnectDelay: 2000,
 
@@ -1190,13 +1190,14 @@
             throw new Error("Query string property must be either a string or object.");
         },
 
-        getUrl: function (connection, transport, reconnecting, poll) {
+        // BUG #2953: The url needs to be same otherwise it will cause a memory leak
+        getUrl: function (connection, transport, reconnecting, poll, ajaxPost) {
             /// <summary>Gets the url for making a GET based connect request</summary>
             var baseUrl = transport === "webSockets" ? "" : connection.baseUrl,
                 url = baseUrl + connection.appRelativeUrl,
                 qs = "transport=" + transport;
 
-            if (connection.groupsToken) {
+            if (!ajaxPost && connection.groupsToken) {
                 qs += "&groupsToken=" + window.encodeURIComponent(connection.groupsToken);
             }
 
@@ -1210,13 +1211,17 @@
                     url += "/reconnect";
                 }
 
-                if (connection.messageId) {
+                if (!ajaxPost && connection.messageId) {
                     qs += "&messageId=" + window.encodeURIComponent(connection.messageId);
                 }
             }
             url += "?" + qs;
             url = transportLogic.prepareQueryString(connection, url);
-            url += "&tid=" + Math.floor(Math.random() * 11);
+
+            if (!ajaxPost) {
+                url += "&tid=" + Math.floor(Math.random() * 11);
+            }
+
             return url;
         },
 
@@ -2220,7 +2225,16 @@
                         connect = (messageId === null),
                         reconnecting = !connect,
                         polling = !raiseReconnect,
-                        url = transportLogic.getUrl(instance, that.name, reconnecting, polling);
+                        url = transportLogic.getUrl(instance, that.name, reconnecting, polling, true /* use Post for longPolling */),
+                        postData = {};
+
+                    if (instance.messageId) {
+                        postData.messageId = instance.messageId;
+                    }
+
+                    if (instance.groupsToken) {
+                        postData.groupsToken = instance.groupsToken;
+                    }
 
                     // If we've disconnected during the time we've tried to re-instantiate the poll then stop.
                     if (isDisconnecting(instance) === true) {
@@ -2235,6 +2249,9 @@
                             }
                         },
                         url: url,
+                        type: "POST",
+                        contentType: signalR._.defaultContentType,
+                        data: postData,
                         success: function (result) {
                             var minData,
                                 delay = 0,
@@ -2814,5 +2831,5 @@
 /*global window:false */
 /// <reference path="jquery.signalR.core.js" />
 (function ($, undefined) {
-    $.signalR.version = "2.1.0-pre";
+    $.signalR.version = "2.2.0-pre";
 }(window.jQuery));

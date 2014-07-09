@@ -31,6 +31,8 @@ namespace JabbR.Services
 
         public string GoogleAnalytics { get; set; }
 
+        public string AppInsights { get; set; }
+
         public bool AllowUserRegistration { get; set; }
 
         public bool AllowUserResetPassword { get; set; }

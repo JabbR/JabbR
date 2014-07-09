@@ -44,6 +44,15 @@
         })();
     </script>
     }
+    @if (!String.IsNullOrEmpty(Model.AppInsights))
+    {
+        <script type="text/javascript">
+            window.appInsights={queue:[],applicationInsightsId:null,accountId:null,appUserId:null,configUrl:null,start:function(n){function u(n){t[n]=function(){var i=arguments;t.queue.push(function(){t[n].apply(t,i)})}}function f(n,t){if(n){var u=r.createElement(i);u.type="text/javascript";u.src=n;u.async=!0;u.onload=t;u.onerror=t;r.getElementsByTagName(i)[0].parentNode.appendChild(u)}else t()}var r=document,t=this,i;t.applicationInsightsId=n;u("logEvent");u("logPageView");i="script";f(t.configUrl,function(){f("//az416426.vo.msecnd.net/scripts/a/ai.0.7.js")});t.start=function(){}}};
+    
+            appInsights.start("@Model.AppInsights");
+            appInsights.logPageView();
+        </script>
+    }
     <script id="new-message-template" type="text/x-jquery-tmpl">
         <li class="message ${highlight} clearfix{{if isMine}} my-message{{/if}}{{if showUser}} first{{/if}}" id="m-${id}" data-name="${name}" data-timestamp="${date}">
             <div class="left">
@@ -496,7 +505,7 @@
             .Add("~/Scripts/jquery.dragsort-0.5.1.min.js")
             .Add("~/Scripts/jquery.pulse.min.js")
             .Add("~/Scripts/jquery.KeyTips.js")
-            .Add("~/Scripts/jquery.signalR-2.1.0-pre-140513-b35.min.js")
+            .Add("~/Scripts/jquery.signalR-2.2.0-pre-140709-b104.min.js")
             .Render("~/Scripts/JabbR1_#.js"));
     }
     <script type="text/javascript" src="@Url.Content("~/signalr/hubs")"></script>

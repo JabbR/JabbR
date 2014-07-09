@@ -33,6 +33,7 @@ namespace JabbR.Nancy
                     var viewModel = new SettingsViewModel
                     {
                         GoogleAnalytics = settings.GoogleAnalytics,
+                        AppInsights = settings.AppInsights,
                         Sha = configuration.DeploymentSha,
                         Branch = configuration.DeploymentBranch,
                         Time = configuration.DeploymentTime,

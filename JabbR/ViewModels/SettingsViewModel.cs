@@ -6,6 +6,7 @@ namespace JabbR.ViewModels
     public class SettingsViewModel
     {
         public string GoogleAnalytics { get; set; }
+        public string AppInsights { get; set; }
         public string Sha { get; set; }
         public string Branch { get; set; }
         public string Time { get; set; }
