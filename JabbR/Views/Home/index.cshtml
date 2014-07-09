@@ -52,7 +52,16 @@
                     <div class="user-status-container">
                         <i class="user-status"></i>
                     </div>
-                    <img src="https://secure.gravatar.com/avatar/${hash}?s=16&d=mm" class="gravatar" />
+                    <div class="gravatar-wrapper">
+                        <img src="https://secure.gravatar.com/avatar/${hash}?s=16&d=mm" class="gravatar" />
+                        <div class="jabbr-user-card ${status} ${presence} hide">
+                            <div class="user-status-container">
+                                <i class="user-status"></i>
+                            </div>
+                            <img src="https://secure.gravatar.com/avatar/${hash}?s=96&d=mm" class="gravatar-large" />
+                            <span class="name">${name}</span>
+                        </div>
+                    </div>
                     <div class="name">${name}</div>
                 </div>
                 {{/if}}
@@ -125,10 +134,15 @@
             <div class="user-status-container">
                 <i class="user-status"></i>
             </div>
-            <div id="gravatarwrapper" class="gravatar-wrapper" data-toggle="popover" data-placement="bottom">
-                <img class="gravatar" src="https://secure.gravatar.com/avatar/${hash}?s=16&d=mm" />
-                <div id="gravatar-popover" class="popover"><div class="popover-inner"><div class="popover-content"><p></p></div></div></div>
-                <div id="gravatar-card" style="display: none;"><img class="large-gravatar" src="https://secure.gravatar.com/avatar/${hash}?s=96&d=mm" /></div>
+            <div class="gravatar-wrapper">
+                <img class="gravatar" src="https://secure.gravatar.com/avatar/${hash}?s=16&d=mm"/>
+                <div class="jabbr-user-card ${status} ${presence} hide">
+                    <div class="user-status-container">
+                        <i class="user-status"></i>
+                    </div>
+                    <img src="https://secure.gravatar.com/avatar/${hash}?s=96&d=mm" class="gravatar-large" />
+                    <span class="name">${name}</span>
+                </div>
             </div>
             <div class="details {{if admin}}admin{{/if}}">
                 <div class="flag-container">

@@ -78,10 +78,7 @@
         roomLoadingTimeout = null,
         Room = chat.Room,
         $unreadNotificationCount = null,
-        $splashScreen = null,
-        gravatarPopover = null,
-        gravatarCard = null,
-        largeGravatar = null;
+        $splashScreen = null;
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] === '/') {
@@ -694,11 +691,6 @@
         }
     }
 
-    function initializeUserCard(userViewModel, $user) {
-        var $gravatar = $user.find('.gravatar-wrapper');
-        $gravatar.popover(getUserGravatarPopoverOptions($user, userViewModel));
-    }
-
     function updateRoomTopic(roomName, topic) {
         var room = getRoomElements(roomName);
         var topicHtml = topic === '' ? utility.getLanguageResource('Chat_DefaultTopic', roomName) : ui.processContent(topic);
@@ -742,28 +734,6 @@
                 connectionInfo.find(connectionInfoStatus).text(utility.getLanguageResource('Client_ConnectedStatus'));
                 connectionInfo.find(connectionInfoTransport).text(utility.getLanguageResource('Client_Transport', transport));
                 return connectionInfo.html();
-            }
-        };
-        return options;
-    }
-
-    function getUserGravatarPopoverOptions($user, userViewModel) {
-        var options = {
-            html: true,
-            trigger: 'hover',
-            delay: {
-                show: 0,
-                hide: 500
-            },
-            template: $user.find(gravatarPopover),
-            content: function () {
-                var card = $user.find(gravatarCard),
-                    src = 'https://secure.gravatar.com/avatar/' + userViewModel.hash + '?s=96&d=mm';
-
-                card.find(largeGravatar).
-                    attr('src', src);
-
-                return card.html();
             }
         };
         return options;
@@ -874,11 +844,6 @@
             $splashScreen = $('#splash-screen');
 
             $unreadNotificationCount = $('#notification-unread-count');
-
-            gravatarPopover = '#gravatar-popover';
-            gravatarCard = '#gravatar-card';
-            largeGravatar = '.large-gravatar';
-
             
             if (toast.canToast()) {
                 $toast.show();
@@ -1661,7 +1626,6 @@
             room.addUser(userViewModel, $user);
             updateNote(userViewModel, $user);
             updateFlag(userViewModel, $user);
-            initializeUserCard(userViewModel, $user);
             
             return true;
         },
@@ -1748,12 +1712,14 @@
         changeGravatar: function (user, roomName) {
             var room = getRoomElements(roomName),
                 $user = room.getUserReferences(user.Name),
-                src = 'https://secure.gravatar.com/avatar/' + user.Hash + '?s=16&d=mm';
+                src = 'https://secure.gravatar.com/avatar/' + user.Hash + '?s=16&d=mm',
+                lrgSrc = 'https://secure.gravatar.com/avatar/' + user.Hash + '?s=96&d=mm';
 
-            $user.find('.gravatar')
+            $user.find('.gravatar-wrapper .gravatar')
                  .attr('src', src);
-            
-            initializeUserCard(user, $user);
+
+            $user.find('.gravatar-wrapper .gravatar')
+                 .attr('src', src);
         },
         showGravatarProfile: function (profile) {
             var room = getCurrentRoomElements(),
@@ -2076,6 +2042,7 @@
 
             if (isMessage) {
                 room.updateMessages(true);
+
             }
 
             $(newMessage).appendTo(room.messages);
