@@ -1718,8 +1718,8 @@
             $user.find('.gravatar-wrapper .gravatar')
                  .attr('src', src);
 
-            $user.find('.gravatar-wrapper .gravatar')
-                 .attr('src', src);
+            $user.find('.gravatar-wrapper .jabbr-user-card .gravatar-large')
+                 .attr('src', lrgSrc);
         },
         showGravatarProfile: function (profile) {
             var room = getCurrentRoomElements(),
