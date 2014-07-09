@@ -3381,8 +3381,6 @@ h3.userlist-header {
 .gravatar-wrapper:focus .gravatar-large,
 .gravatar-wrapper:active .jabbr-user-card,
 .gravatar-wrapper:active .gravatar-large {
-
-
     display: block;
 }
 
