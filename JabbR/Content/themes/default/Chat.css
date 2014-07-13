@@ -3413,9 +3413,18 @@ h3.userlist-header {
 
     .message .left .jabbr-user-card .name {
         float: none;
+        text-align: left;
+        margin-left: 5px;
     }
 
-.jabbr-user-card img {
-    position: relative;
-    margin: 0;
-}
+    .jabbr-user-card img {
+        position: relative;
+        margin: 0;
+        float: left;
+    }
+
+    .jabbr-user-card .name {
+        clear: both;
+        display: block;
+        text-align: center;
+    }
