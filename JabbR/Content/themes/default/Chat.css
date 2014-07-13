@@ -3114,6 +3114,14 @@ h3.userlist-header {
     .user .details.admin .name-container .name {
         width: 55px;
     }
+
+    .jabbr-user-card .flag-container {
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 45px;
+    }
 }
 
 @media screen and (max-width:580px) {
@@ -3154,6 +3162,7 @@ h3.userlist-header {
         .messages .message .left .name {
             display: none;
         }
+
 
     .messages .middle, .notification .content,
     .action .content, .pm .content, .error .content, .broadcast .content {
@@ -3217,6 +3226,20 @@ h3.userlist-header {
     .flag-container {
         display: none;
     }
+
+    .message .left .jabbr-user-card .name {
+        display: block;
+        width: 90px;
+    }
+
+    .jabbr-user-card .flag-container {
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        width: 45px;
+    }
+
 }
 
 @media screen and (max-height:600px) {
