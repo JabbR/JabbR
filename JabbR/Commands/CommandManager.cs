@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
+using System.Text.RegularExpressions;
 using JabbR.Models;
 using JabbR.Services;
 using Microsoft.AspNet.SignalR;
@@ -68,7 +69,7 @@ namespace JabbR.Commands
         public bool TryHandleCommand(string command)
         {
             command = command.Trim();
-            if (!command.StartsWith("/"))
+            if (!Regex.IsMatch(command, @"\/\S+?"))
             {
                 return false;
             }
