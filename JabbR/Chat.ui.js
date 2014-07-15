@@ -1712,10 +1712,14 @@
         changeGravatar: function (user, roomName) {
             var room = getRoomElements(roomName),
                 $user = room.getUserReferences(user.Name),
-                src = 'https://secure.gravatar.com/avatar/' + user.Hash + '?s=16&d=mm';
+                src = 'https://secure.gravatar.com/avatar/' + user.Hash + '?s=16&d=mm',
+                lrgSrc = 'https://secure.gravatar.com/avatar/' + user.Hash + '?s=96&d=mm';
 
-            $user.find('.gravatar')
+            $user.find('.gravatar-wrapper .gravatar')
                  .attr('src', src);
+
+            $user.find('.gravatar-wrapper .jabbr-user-card .gravatar-large')
+                 .attr('src', lrgSrc);
         },
         showGravatarProfile: function (profile) {
             var room = getCurrentRoomElements(),
@@ -1912,6 +1916,13 @@
                 ui.addMessage(model, 'postedNotification', roomName);
             }
             else {
+                if (showUserName === true) {
+                    var $user = room.getUser(message.name),
+                        $flag = $user.find('.flag');
+                    message.flagClass = $flag.attr('class');
+                    message.flagTitle = $flag.attr('title');
+                }
+
                 this.appendMessage(templates.message.tmpl(message), room);
             }
 
