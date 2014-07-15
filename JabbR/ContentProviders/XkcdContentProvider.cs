@@ -67,7 +67,7 @@ namespace JabbR.ContentProviders
 
         public override bool IsValidContent(Uri uri)
         {
-            return uri.AbsoluteUri.Matches(@"https?:\/\/xkcd.com\/\d+\/");
+            return uri.AbsoluteUri.Matches(@"https?:\/\/xkcd.com\/\d+\/?");
         }
 
 
