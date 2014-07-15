@@ -15,7 +15,7 @@ namespace JabbR.ContentProviders
         private static readonly string ContentFormat = @"
 <div class=""xkcd_wrapper"">
     <div class=""xkcd_header"">
-        <a href=""{0}"" target=""_blank""><img src=""{1}"" title=""{3}"" /></a>
+        <a href=""{0}"" target=""_blank""><img src=""{1}"" title=""{2}"" /></a>
     </div>
 </div>";
 
@@ -30,7 +30,7 @@ namespace JabbR.ContentProviders
 
                 return new ContentProviderResult
                 {
-                    Content = String.Format(ContentFormat, request.RequestUri.ToString(),  pageInfo.ImageUrl, pageInfo.Title, pageInfo.Description),
+                    Content = String.Format(ContentFormat, request.RequestUri.ToString(),  pageInfo.ImageUrl, pageInfo.Description),
                     Title = pageInfo.Title
                 };
             });
