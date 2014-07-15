@@ -2959,6 +2959,60 @@ h3.userlist-header {
                 background: #e5e5e5;
             }
 
+.gravatar-wrapper:hover .jabbr-user-card,
+.gravatar-wrapper:hover .gravatar-large,
+.gravatar-wrapper:focus .jabbr-user-card,
+.gravatar-wrapper:focus .gravatar-large,
+.gravatar-wrapper:active .jabbr-user-card,
+.gravatar-wrapper:active .gravatar-large {
+    display: block;
+}
+
+.jabbr-user-card,
+.gravatar-large {
+    position: absolute;
+    z-index: 2;
+    margin-left: 25px;
+}
+
+.jabbr-user-card {
+    position: absolute;
+    background-color: #f5f5f5;
+    padding: 5px 5px 5px 0;
+    box-shadow: 0 0 1px 0 #888;
+}
+
+    .jabbr-user-card .user-status-container {
+        padding-left: 5px;
+    }
+
+    .jabbr-user-card .user-status {
+        height: 96px;
+    }
+
+    .jabbr-user-card .flag-container {
+        float: none;
+        margin-top: 0;
+    }
+
+    .message .left .jabbr-user-card .name {
+        float: none;
+        text-align: left;
+        margin-left: 5px;
+    }
+
+    .jabbr-user-card img {
+        position: relative;
+        margin: 0;
+        float: left;
+    }
+
+    .jabbr-user-card .name {
+        clear: both;
+        display: block;
+        text-align: center;
+    }
+
 @media (max-width:900px) {
     .messages,
     #drop-file-target {
@@ -3239,6 +3293,22 @@ h3.userlist-header {
         text-overflow: ellipsis;
         width: 45px;
     }
+    
+    .users .jabbr-user-card img {
+        height: 48px;
+        width: 48px;
+    }
+
+    .users .jabbr-user-card .user-status {
+        height: 48px;
+    }
+
+    .users .jabbr-user-card .name {
+        width: 55px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-left: 5px;
+    }
 
 }
 
@@ -3397,57 +3467,3 @@ h3.userlist-header {
         margin-left: 0;
     }
 }
-
-.gravatar-wrapper:hover .jabbr-user-card,
-.gravatar-wrapper:hover .gravatar-large,
-.gravatar-wrapper:focus .jabbr-user-card,
-.gravatar-wrapper:focus .gravatar-large,
-.gravatar-wrapper:active .jabbr-user-card,
-.gravatar-wrapper:active .gravatar-large {
-    display: block;
-}
-
-.jabbr-user-card,
-.gravatar-large {
-    position: absolute;
-    z-index: 2;
-    margin-left: 25px;
-}
-
-.jabbr-user-card {
-    position: absolute;
-    background-color: #f5f5f5;
-    padding: 5px 5px 5px 0;
-    box-shadow: 0 0 1px 0 #888;
-}
-
-    .jabbr-user-card .user-status-container {
-        padding-left: 5px;
-    }
-
-    .jabbr-user-card .user-status {
-        height: 96px;
-    }
-
-    .jabbr-user-card .flag-container {
-        float: none;
-        margin-top: 0;
-    }
-
-    .message .left .jabbr-user-card .name {
-        float: none;
-        text-align: left;
-        margin-left: 5px;
-    }
-
-    .jabbr-user-card img {
-        position: relative;
-        margin: 0;
-        float: left;
-    }
-
-    .jabbr-user-card .name {
-        clear: both;
-        display: block;
-        text-align: center;
-    }
