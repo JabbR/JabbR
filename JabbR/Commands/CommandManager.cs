@@ -69,7 +69,7 @@ namespace JabbR.Commands
         public bool TryHandleCommand(string command)
         {
             command = command.Trim();
-            if (!Regex.IsMatch(command, @"\/\S+?"))
+            if (!Regex.IsMatch(command, @"^\/[A-Za-z0-9]+?"))
             {
                 return false;
             }
