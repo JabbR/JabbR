@@ -1165,7 +1165,7 @@
     });
 
     $ui.bind(ui.events.scrollRoomTop, function (ev, roomInfo) {
-        // Do nothing if we're loading history already
+        // Do nothing if we're loading history already or if we recently loaded history
         if (loadingHistory === true) {
             return;
         }
@@ -1182,13 +1182,17 @@
                 .done(function (messages) {
                     connection.hub.log('getPreviousMessages.done(' + roomInfo.name + ')');
                     ui.prependChatMessages($.map(messages, getMessageViewModel), roomInfo.name);
-                    loadingHistory = false;
+                    window.setTimeout(function() {
+                        loadingHistory = false;
+                    }, 1000);
 
                     ui.setLoadingHistory(false);
                 })
                 .fail(function (e) {
                     connection.hub.log('getPreviousMessages.failed(' + roomInfo.name + ', ' + e + ')');
-                    loadingHistory = false;
+                    window.setTimeout(function () {
+                        loadingHistory = false;
+                    }, 1000);
 
                     ui.setLoadingHistory(false);
                 });
