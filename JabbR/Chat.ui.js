@@ -1065,6 +1065,15 @@
             $document.on('click', '.users li.user .name', prepareMessage);
             $document.on('click', '.message .left .name', prepareMessage);
 
+            $document.on('click', '.resend', function () {
+                var $msg = $(this).parents('.message'),
+                    id = $msg.attr('id').slice(2),
+                    msg = ui.processContent($msg.find('.middle').text());
+
+                $msg.removeClass('failed');
+                $ui.trigger(ui.events.sendMessage, [msg, id, false]);
+            });
+
             $submitButton.click(function (ev) {
                 triggerSend();
 
