@@ -82,7 +82,11 @@
                     <div class="name">${name}</div>
                 </div>
                 {{/if}}
-                <span class="state"></span>
+                <span class="resend hide"><i class="icon-repeat" title="resend failed message"></i></span>
+                <span class="state">
+                    <span class="hide send-pending"><i class="icon-spin icon-repeat"></i></span>
+                    <span class="hide send-failed"><i class="icon-warning-sign"></i></span>
+                </span>
             </div>
             <div class="middle{{if showUser}} first{{/if}}">
                 {{html message}}
