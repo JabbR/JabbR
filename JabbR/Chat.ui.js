@@ -2379,14 +2379,23 @@
             $('#m-' + id).removeClass('failed')
                          .removeClass('loading');
         },
-        failMessage: function (id) {
-            $('#m-' + id).removeClass('loading')
-                         .addClass('failed');
+        failMessage: function (id, isCommand) {
+            var $message = $('#m-' + id);
+            $message.removeClass('loading');
+            if ($message.hasClass('failed') === false &&
+                $message.hasClass('failed-command') === false) {
+                if (isCommand) {
+                    $message.addClass('failed-command');
+                } else {
+                    $message.addClass('failed');
+                }
+            }
         },
         markMessagePending: function (id) {
             var $message = $('#m-' + id);
 
-            if ($message.hasClass('failed') === false) {
+            if ($message.hasClass('failed') === false &&
+                $message.hasClass('failed-command') === false) {
                 $message.addClass('loading');
             }
         },

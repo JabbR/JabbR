@@ -1072,7 +1072,8 @@
                     ui.confirmMessage(id);
                 })
                 .fail(function (e) {
-                    ui.failMessage(id);
+                    isCommand = msg.match(/^\/[A-Za-z0-9?]+?/) !== null;
+                    ui.failMessage(id, isCommand);
                     if (e.source === 'HubException') {
                         ui.addErrorToActiveRoom(e.message);
                     }

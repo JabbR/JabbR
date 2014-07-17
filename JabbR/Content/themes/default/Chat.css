@@ -1090,6 +1090,16 @@ li.error {
         transition: all 0.3s;
     }
 
+    .message.failed-command .left .state {
+        width: 20px;
+        height: 20px;
+        float: right;
+    }
+
+    .message.failed-command .left .send-failed {
+        display: block;
+    }
+
     .message .middle {
         margin-right: 95px;
         padding: 5px;
