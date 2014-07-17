@@ -2347,12 +2347,14 @@
                 $submitButton.attr('disabled', 'disabled');
                 $newMessage.attr('disabled', 'disabled');
                 $fileUploadButton.attr('disabled', 'disabled');
+                $('.message.failed .resend').addClass('disabled');
             }
             else {
                 $hiddenFile.removeAttr('disabled');
                 $submitButton.removeAttr('disabled');
                 $newMessage.removeAttr('disabled');
                 $fileUploadButton.removeAttr('disabled');
+                $('.message.failed .resend').removeClass('disabled');
             }
         },
         initializeConnectionStatus: function (transport) {
@@ -2420,6 +2422,7 @@
                 $submitButton.attr('disabled', 'disabled');
                 $fileUploadButton.attr('disabled', 'disabled');
                 $hiddenFile.attr('disabled', 'disabled');
+                $('.message.failed .resend').addClass('disabled');
             } else if (!readOnly) {
                 // re-enable textarea button
                 $newMessage.attr('disabled', '');
@@ -2434,6 +2437,9 @@
                 $fileUploadButton.removeAttr('disabled');
                 $hiddenFile.attr('disabled', '');
                 $hiddenFile.removeAttr('disabled');
+
+                // re-enable send failed message button
+                $('.message.failed .resend').removeClass('disabled');
             }
         },
         toggleDownloadButton: function(disabled) {
