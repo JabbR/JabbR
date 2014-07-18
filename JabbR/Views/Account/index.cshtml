@@ -59,7 +59,7 @@
                                 <div class="control-group">
                                     <label class="control-label" for="note">@LanguageResources.Account_Note</label>
                                     <div class="controls">
-                                        @if(userModel.Note != null)
+                                        @if (userModel.Note != null)
                                         {
                                             <label class="control-label label-align-left">@userModel.Note</label>
                                         }
@@ -79,10 +79,39 @@
                                         else
                                         {
                                             <div class="alert alert-info span5">To set your country, type /flag [iso-3366-2 code] <a href="http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2" target="_blank">ISO Reference Chart</a></div>
-                                        }                                            
+                                        }
                                     </div>
                                 </div>
                             </form>
+                            @if(userModel.OwnedRooms.Count > 0)
+                            {
+                                <fieldset>
+                                    <legend>Owned Rooms</legend>
+                                    <ul id="owned-rooms" class="unstyled">
+                                        @foreach (var room in userModel.OwnedRooms)
+                                        {
+                                            <li class="room">
+                                                <div class="row-fluid room-row">
+                                                    <div class="span3">
+                                                        <span class="name">@room.Name</span>
+                                                        @if(room.Private)
+                                                        {
+                                                            <span class="lock"><i class="icon-lock"></i></span>
+                                                        }
+                                                        @if(room.Closed)
+                                                        {
+                                                            <span class="readonly"><i class="icon-ban-circle"></i></span>
+                                                        }
+                                                    </div>
+                                                    <div class="span4">
+                                                        <span class="topic">@room.Topic</span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        }
+                                    </ul>
+                                </fieldset>
+                            }
                         </div>
                         <div class="account-details tab-pane hide" id="changeUsername">
                             <form class="form-horizontal" action="@Url.Content("~/account/changeusername")#changeUsername" method="POST">
