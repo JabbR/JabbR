@@ -178,6 +178,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Owned Rooms.
+        /// </summary>
+        public static string Account_OwnedRooms {
+            get {
+                return ResourceManager.GetString("Account_OwnedRooms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
         public static string Account_Pass {

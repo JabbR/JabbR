@@ -1278,4 +1278,7 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="Client_DownloadMessagesNotOpen" xml:space="preserve">
     <value>{0} is not an open room, messages cannot be downloaded.</value>
   </data>
+  <data name="Account_OwnedRooms" xml:space="preserve">
+    <value>Owned Rooms</value>
+  </data>
 </root>

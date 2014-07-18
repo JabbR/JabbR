@@ -86,7 +86,7 @@
                             @if(userModel.OwnedRooms.Count > 0)
                             {
                                 <fieldset>
-                                    <legend>Owned Rooms</legend>
+                                    <legend>@LanguageResources.Account_OwnedRooms</legend>
                                     <ul id="owned-rooms" class="unstyled">
                                         @foreach (var room in userModel.OwnedRooms)
                                         {
