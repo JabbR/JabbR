@@ -3491,3 +3491,39 @@ h3.userlist-header {
 .message.failed .left .resend.disabled {
     display: none;
 }
+
+.urban-dictionary {
+    width: auto;
+    max-width: 400px;
+    padding: 10px 15px;
+    background-color: #fff;
+}
+
+    .urban-dictionary .word {
+        margin-bottom: 10px;
+        font-size: 24px;
+        line-height: 24px;
+        font-weight: bold;
+        color: #000;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+        .urban-dictionary .word a {
+            color: #40627a;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+    .urban-dictionary .meaning,
+    .urban-dictionary .example {
+        margin-bottom: 10px;
+        color: #333;
+        font-size: 14px;
+        line-height: 1.4em;
+        font-family: Verdana;
+    }
+
+    .urban-dictionary .example {
+        margin-bottom: 0;
+        font-style: italic;
+    }
