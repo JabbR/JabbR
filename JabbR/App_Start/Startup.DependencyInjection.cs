@@ -176,6 +176,7 @@ namespace JabbR
             kernel.Bind<IContentProvider>().To<YouTubeContentProvider>();
             kernel.Bind<IContentProvider>().To<ConfiguredContentProvider>();
             kernel.Bind<IContentProvider>().To<XkcdContentProvider>();
+            kernel.Bind<IContentProvider>().To<UrbanDictionaryContentProvider>();
         }
     }
 }
