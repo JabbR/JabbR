@@ -78,7 +78,8 @@
         roomLoadingTimeout = null,
         Room = chat.Room,
         $unreadNotificationCount = null,
-        $splashScreen = null;
+        $splashScreen = null,
+        $createRoomButton = null;
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] === '/') {
@@ -849,6 +850,8 @@
             $splashScreen = $('#splash-screen');
 
             $unreadNotificationCount = $('#notification-unread-count');
+
+            $createRoomButton = $('#create-room');
             
             if (toast.canToast()) {
                 $toast.show();
@@ -1191,6 +1194,19 @@
                 $('<iframe style="display:none">').attr('src', url).appendTo(document.body);
 
                 $downloadDialog.modal('hide');
+            });
+
+            $createRoomButton.click(function () {
+                var roomName = prompt(utility.getLanguageResource('Create_CommandInfo')),
+                    msg = '/create ' + roomName;
+                if (roomName === null) {
+                    return false;
+                }
+                else if (roomName === '') {
+                    alert(utility.getLanguageResource('RoomNameCannotBeBlank'));
+                } else {
+                    $ui.trigger(ui.events.sendMessage, [msg, null, true]);
+                }
             });
 
             $logout.click(function () {

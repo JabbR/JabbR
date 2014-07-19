@@ -19,7 +19,7 @@ namespace JabbR.Nancy
 {
     public class HomeModule : JabbRModule
     {
-        private static readonly Regex clientSideResourceRegex = new Regex("^(Client_.*|Chat_.*|Content_.*|LoadingMessage)$");
+        private static readonly Regex clientSideResourceRegex = new Regex("^(Client_.*|Chat_.*|Content_.*|Create_.*|LoadingMessage|Room.*)$");
 
         public HomeModule(ApplicationSettings settings,
                           IJabbrConfiguration configuration,
@@ -41,7 +41,8 @@ namespace JabbR.Nancy
                         Version = Constants.JabbRVersion,
                         IsAdmin = Principal.HasClaim(JabbRClaimTypes.Admin),
                         ClientLanguageResources = BuildClientResources(),
-                        MaxMessageLength = settings.MaxMessageLength
+                        MaxMessageLength = settings.MaxMessageLength,
+                        AllowRoomCreation = settings.AllowRoomCreation
                     };
 
                     return View["index", viewModel];
