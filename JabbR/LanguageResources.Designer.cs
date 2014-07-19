@@ -1874,6 +1874,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} is not an open room, messages cannot be downloaded..
+        /// </summary>
+        public static string Client_DownloadMessagesNotOpen {
+            get {
+                return ResourceManager.GetString("Client_DownloadMessagesNotOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FAQ.
         /// </summary>
         public static string Client_FAQ {

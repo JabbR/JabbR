@@ -1166,12 +1166,11 @@
             $downloadIcon.click(function () {
                 var room = getCurrentRoomElements();
 
-                if (room.isLobby()) {
-                    return; //Show a message?
-                }
-
-                if (room.isLocked()) {
-                    return; //Show a message?
+                if (room.isLobby() || room.isLocked()) {
+                    var title = utility.getLanguageResource('Client_DownloadMessages');
+                    var message = utility.getLanguageResource('Client_DownloadMessagesNotOpen', room.getName());
+                    ui.addModalMessage(title, message, 'icon-cloud-download');
+                    return;
                 }
 
                 $downloadDialog.modal({ backdrop: true, keyboard: true });
