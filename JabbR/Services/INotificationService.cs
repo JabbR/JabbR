@@ -36,10 +36,10 @@ namespace JabbR.Services
 
         void AddOwner(ChatUser targetUser, ChatRoom targetRoom);
         void RemoveOwner(ChatUser targetUser, ChatRoom targetRoom);
-        void KickUser(ChatUser targetUser, ChatRoom targetRoom);
+        void KickUser(ChatUser targetUser, ChatRoom targetRoom, ChatUser callingUser, string reason);
         void AllowUser(ChatUser targetUser, ChatRoom targetRoom);
-        void UnallowUser(ChatUser targetUser, ChatRoom targetRoom);
-        void BanUser(ChatUser targetUser);
+        void UnallowUser(ChatUser targetUser, ChatRoom targetRoom, ChatUser callingUser);
+        void BanUser(ChatUser targetUser, ChatUser callingUser, string reason);
         void UnbanUser(ChatUser targetUser);
         void CheckBanned(ChatUser targetUser);
         void CheckBanned();

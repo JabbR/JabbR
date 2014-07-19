@@ -1994,7 +1994,7 @@ namespace JabbR.Test
                 Assert.True(result);
                 Assert.False(room.Users.Contains(user3));
                 Assert.False(user3.Rooms.Contains(room));
-                notificationService.Verify(x => x.KickUser(user3, room), Times.Once());
+                notificationService.Verify(x => x.KickUser(user3, room, user, null), Times.Once());
             }
 
             [Fact]
@@ -2135,7 +2135,7 @@ namespace JabbR.Test
                 Assert.True(result);
                 Assert.False(room.Users.Contains(user3));
                 Assert.False(user3.Rooms.Contains(room));
-                notificationService.Verify(x => x.KickUser(user3, room), Times.Once());
+                notificationService.Verify(x => x.KickUser(user3, room, user, null), Times.Once());
             }
 
             [Fact]
@@ -2357,7 +2357,7 @@ namespace JabbR.Test
                 Assert.True(result);
                 Assert.False(room.Users.Contains(user2));
                 Assert.False(user2.Rooms.Contains(room));
-                notificationService.Verify(x => x.KickUser(user2, room), Times.Once());
+                notificationService.Verify(x => x.KickUser(user2, room, user, null), Times.Once());
             }
         }
 
@@ -5253,7 +5253,7 @@ namespace JabbR.Test
                 bool result = commandManager.TryHandleCommand("/unallow dfowler2");
 
                 Assert.True(result);
-                notificationService.Verify(x => x.UnallowUser(user2, room), Times.Once());
+                notificationService.Verify(x => x.UnallowUser(user2, room, user), Times.Once());
                 Assert.False(room.AllowedUsers.Contains(user2));
             }
 
@@ -5368,7 +5368,7 @@ namespace JabbR.Test
                 bool result = commandManager.TryHandleCommand("/unallow dfowler2 room");
 
                 Assert.True(result);
-                notificationService.Verify(x => x.UnallowUser(user2, room), Times.Once());
+                notificationService.Verify(x => x.UnallowUser(user2, room, user), Times.Once());
                 Assert.False(room.AllowedUsers.Contains(user2));
             }
 
@@ -5413,7 +5413,7 @@ namespace JabbR.Test
                 bool result = commandManager.TryHandleCommand("/unallow dfowler2 room");
 
                 Assert.True(result);
-                notificationService.Verify(x => x.UnallowUser(user2, room), Times.Once());
+                notificationService.Verify(x => x.UnallowUser(user2, room, user), Times.Once());
                 Assert.False(room.AllowedUsers.Contains(user2));
             }
         }

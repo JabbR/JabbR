@@ -537,11 +537,11 @@ namespace JabbR.Services
             targetUser.OwnedRooms.Remove(targetRoom);
         }
 
-        public void KickUser(ChatUser user, ChatUser targetUser, ChatRoom targetRoom)
+        public void KickUser(ChatUser callingUser, ChatUser targetUser, ChatRoom targetRoom)
         {
-            EnsureOwnerOrAdmin(user, targetRoom);
+            EnsureOwnerOrAdmin(callingUser, targetRoom);
 
-            if (targetUser == user)
+            if (targetUser == callingUser)
             {
                 throw new HubException(LanguageResources.Kick_CannotKickSelf);
             }
@@ -552,13 +552,13 @@ namespace JabbR.Services
             }
 
             // only admin can kick admin
-            if (!user.IsAdmin && targetUser.IsAdmin)
+            if (!callingUser.IsAdmin && targetUser.IsAdmin)
             {
                 throw new HubException(LanguageResources.Kick_AdminRequiredToKickAdmin);
             }
 
             // If this user isn't the creator/admin AND the target user is an owner then throw
-            if (targetRoom.Creator != user && targetRoom.Owners.Contains(targetUser) && !user.IsAdmin)
+            if (targetRoom.Creator != callingUser && targetRoom.Owners.Contains(targetUser) && !callingUser.IsAdmin)
             {
                 throw new HubException(LanguageResources.Kick_CreatorRequiredToKickOwner);
             }
