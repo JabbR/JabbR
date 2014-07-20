@@ -372,6 +372,8 @@ canvas {
 
 #owned-rooms li {
     cursor: default;
+    width: 240px;
+    margin: 0 10px;
 }
 
     @-webkit-keyframes room-fade
@@ -451,7 +453,7 @@ canvas {
 #userlist-lobby-owners li div.room-row,
 #owned-rooms li div.room-row {
     display: inline-block;
-    width: 240px;
+    width: 250px;
     padding: 5px;
     border: 1px solid #e5e5e5;
 }
