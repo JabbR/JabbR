@@ -1424,6 +1424,7 @@
                     if (currentRoom.isLobby()) {
                         $lobbyRoomFilterForm.hide();
                         $roomActions.show();
+                        $createRoomButton.hide();
                     }
                 }
 
@@ -1433,6 +1434,7 @@
 
                 if (room.isLobby()) {
                     $roomActions.hide();
+                    $createRoomButton.show();
                     $lobbyRoomFilterForm.show();
 
                     room.messages.hide();

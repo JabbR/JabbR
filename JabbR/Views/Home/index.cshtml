@@ -382,6 +382,12 @@
                     <input id="room-filter-closed" type="checkbox" />
                     @LanguageResources.Client_ShowClosedRooms
                 </label>
+                @if (Model.AllowRoomCreation)
+                {
+                    <div id="create-room" class="btn-group pull-right">
+                        <button class="btn btn-small"><i class="icon-plus"></i> Create Room</button>
+                    </div>
+                }
             </form>
             <div id="room-actions" class="btn-group pull-right">
                 <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">@LanguageResources.Client_RoomSettings <span class="caret"></span></button>
@@ -392,11 +398,6 @@
                     <li><a class="download" title="download messages" aria-haspopup="true"><i class="icon-download"></i> @LanguageResources.Client_DownloadMessages</a></li>
                 </ul>
             </div>
-            @if (Model.AllowRoomCreation) {
-                <div id="create-room" class="btn-group pull-right">
-                    <button class="btn btn-small"><i class="icon-plus"></i> Create Room</button>
-                </div>
-            }
             <div id="room-loading">
                 <div id="loader-container">
                     <canvas id="canvas" width="150" height="150"></canvas>

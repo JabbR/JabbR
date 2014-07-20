@@ -2759,15 +2759,14 @@ h3.userlist-header {
     background-repeat: no-repeat;
 }
 
-#room-actions,
-#create-room {
+#room-actions {
     margin-right: 5px;
     top: 8px;
     display: none;
 }
 
 #create-room {
-    display: block;
+    top: 2px;
 }
 
 #room-preferences .sound:hover .icon-sound {
