@@ -337,11 +337,16 @@ canvas {
 }
 
 #userlist-lobby,
-#userlist-lobby-owners {
+#userlist-lobby-owners,
+#owned-rooms {
     position: relative;
     margin: 0 5px;
     top: 10px;
     background: none;
+}
+
+#owned-rooms {
+    top: 0;
 }
 
     #userlist-lobby li {
@@ -353,7 +358,8 @@ canvas {
         cursor: pointer;
     }
 
-    #userlist-lobby-owners li {
+    #userlist-lobby-owners li,
+    #owned-rooms li {
         display: inline-block;
         margin: 0 5px 10px 5px;
         height: 102px;
@@ -363,6 +369,12 @@ canvas {
         -webkit-animation-play-state: paused;
         cursor: pointer;
     }
+
+#owned-rooms li {
+    cursor: default;
+    width: 240px;
+    margin: 0 10px;
+}
 
     @-webkit-keyframes room-fade
     {
@@ -391,7 +403,6 @@ canvas {
             background: none;
         }
 
-
     #userlist-lobby div.room-row {
         min-height: 30px;
         border-color: #EEEEEE;
@@ -401,6 +412,7 @@ canvas {
         padding-top: 5px;
         padding-left: 15px;
     }
+
 
     #userlist-lobby div:hover {
         background: #e5e5e5;
@@ -438,7 +450,8 @@ canvas {
             color: rgba(0, 16, 63, 1);
         }
 
-#userlist-lobby-owners li div.room-row {
+#userlist-lobby-owners li div.room-row,
+#owned-rooms li div.room-row {
     display: inline-block;
     width: 250px;
     padding: 5px;
@@ -451,7 +464,8 @@ canvas {
         color: rgba(0, 16, 63, 1);
     }
 
-#userlist-lobby-owners li div.room-row div {
+#userlist-lobby-owners li div.room-row div,
+#owned-rooms li div.room-row div {
         width: 100%;
         margin: 0;
     }
@@ -462,7 +476,8 @@ canvas {
 }
 
 #userlist-lobby .name,
-#userlist-lobby-owners .name {
+#userlist-lobby-owners .name,
+#owned-rooms .name {
     font-size: 1.25em;
     overflow: hidden;
     width: 215px;
@@ -480,12 +495,14 @@ canvas {
 }
 
 #userlist-lobby .topic,
-#userlist-lobby-owners .topic {
+#userlist-lobby-owners .topic,
+#owned-rooms .topic {
     font-size: 1em;
     overflow: hidden;
 }
 
-#userlist-lobby-owners .topic {
+#userlist-lobby-owners .topic,
+#owned-rooms .topic {
     width: 250px;
     white-space: nowrap;
     text-overflow: ellipsis;

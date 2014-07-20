@@ -23,6 +23,7 @@ namespace JabbR.ViewModels
             IsAdmin = user.IsAdmin;
             SocialDetails = new SocialLoginViewModel(configuredProviders, user.Identities);
             HasPassword = user.HasUserNameAndPasswordCredentials();
+            OwnedRooms = user.OwnedRooms;
         }
 
         public bool HasPassword { get; private set; }
@@ -38,5 +39,7 @@ namespace JabbR.ViewModels
         public DateTime LastActivity { get; private set; }
         public bool IsAdmin { get; private set; }
         public SocialLoginViewModel SocialDetails { get; private set; }
+
+        public ICollection<ChatRoom> OwnedRooms { get; private set; }
     }
 }
