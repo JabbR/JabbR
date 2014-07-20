@@ -35,6 +35,7 @@ namespace JabbR.Client
             };
 
             var client = new HttpClient(handler);
+            client.DefaultRequestHeaders.Add("sec-jabbr-client", "1");
 
             var parameters = new Dictionary<string, string> {
                 { "username" , userName },
@@ -50,6 +51,7 @@ namespace JabbR.Client
             {
                 CookieContainer = cookieJar
             };
+            connection.Headers.Add("sec-jabbr-client", "1");
 
             return connection;
         }

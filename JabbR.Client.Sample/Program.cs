@@ -166,6 +166,7 @@ namespace JabbR.Client.Sample
             {
                 BaseAddress = new Uri(server)
             };
+            client.DefaultRequestHeaders.Add("sec-jabbr-client", "1");
 
             var content = new FormUrlEncodedContent(new Dictionary<string, string>
             {

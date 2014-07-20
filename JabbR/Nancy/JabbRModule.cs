@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
 using System.Security.Claims;
 using JabbR.Infrastructure;
 using Nancy;
+using Nancy.Security;
 
 namespace JabbR.Nancy
 {
@@ -29,6 +32,35 @@ namespace JabbR.Nancy
         protected bool IsAuthenticated
         {
             get { return this.IsAuthenticated(); }
+        }
+
+        protected bool HasValidCsrfTokenOrSecHeader
+        {
+            get
+            {
+                // if we have no useragent or signalr in the useragent, then we don't worry about CSRF because it's not a browser.
+                if (string.IsNullOrEmpty(Request.Headers.UserAgent)
+                    || Request.Headers.UserAgent.IndexOf("signalr", StringComparison.InvariantCultureIgnoreCase) >= 0)
+                {
+                    return true;
+                }
+
+                if (Request.Headers["sec-jabbr-client"].FirstOrDefault() != null)
+                {
+                    return true;
+                }
+
+                try
+                {
+                    this.ValidateCsrfToken();
+                }
+                catch (CsrfValidationException)
+                {
+                    return false;
+                }
+
+                return true;
+            }
         }
 
         internal static Response AlertsToViewBag(NancyContext context)

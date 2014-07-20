@@ -39,6 +39,11 @@ namespace JabbR.Nancy
 
             Post["/"] = _ =>
             {
+                if (!HasValidCsrfTokenOrSecHeader)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
                 if (!IsAuthenticated || !Principal.HasClaim(JabbRClaimTypes.Admin))
                 {
                     return HttpStatusCode.Forbidden;
