@@ -2765,6 +2765,10 @@ h3.userlist-header {
     display: none;
 }
 
+#create-room {
+    top: 2px;
+}
+
 #room-preferences .sound:hover .icon-sound {
     background-image: url('../../images/sound-on-white.png');
     background-repeat: no-repeat;

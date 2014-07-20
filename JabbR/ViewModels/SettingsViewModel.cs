@@ -13,6 +13,7 @@ namespace JabbR.ViewModels
         public bool DebugMode { get; set; }
         public Version Version { get; set; }
         public bool IsAdmin { get; set; }
+        public bool AllowRoomCreation { get; set; }
         public string ClientLanguageResources { get; set; }
         public int MaxMessageLength { get; set; }
      

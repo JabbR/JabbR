@@ -382,6 +382,12 @@
                     <input id="room-filter-closed" type="checkbox" />
                     @LanguageResources.Client_ShowClosedRooms
                 </label>
+                @if (Model.AllowRoomCreation)
+                {
+                    <div id="create-room" class="btn-group pull-right">
+                        <button class="btn btn-small"><i class="icon-plus"></i> Create Room</button>
+                    </div>
+                }
             </form>
             <div id="room-actions" class="btn-group pull-right">
                 <button class="btn btn-small dropdown-toggle" data-toggle="dropdown">@LanguageResources.Client_RoomSettings <span class="caret"></span></button>

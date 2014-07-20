@@ -78,7 +78,8 @@
         roomLoadingTimeout = null,
         Room = chat.Room,
         $unreadNotificationCount = null,
-        $splashScreen = null;
+        $splashScreen = null,
+        $createRoomButton = null;
 
     function getRoomNameFromHash(hash) {
         if (hash.length && hash[0] === '/') {
@@ -849,6 +850,8 @@
             $splashScreen = $('#splash-screen');
 
             $unreadNotificationCount = $('#notification-unread-count');
+
+            $createRoomButton = $('#create-room');
             
             if (toast.canToast()) {
                 $toast.show();
@@ -1193,6 +1196,19 @@
                 $downloadDialog.modal('hide');
             });
 
+            $createRoomButton.click(function () {
+                var roomName = prompt(utility.getLanguageResource('Create_CommandInfo')),
+                    msg = '/create ' + roomName;
+                if (roomName === null) {
+                    return false;
+                }
+                else if (roomName === '') {
+                    alert(utility.getLanguageResource('RoomNameCannotBeBlank'));
+                } else {
+                    $ui.trigger(ui.events.sendMessage, [msg, null, true]);
+                }
+            });
+
             $logout.click(function () {
                 $ui.trigger(ui.events.loggedOut);
             });
@@ -1408,6 +1424,7 @@
                     if (currentRoom.isLobby()) {
                         $lobbyRoomFilterForm.hide();
                         $roomActions.show();
+                        $createRoomButton.hide();
                     }
                 }
 
@@ -1417,6 +1434,7 @@
 
                 if (room.isLobby()) {
                     $roomActions.hide();
+                    $createRoomButton.show();
                     $lobbyRoomFilterForm.show();
 
                     room.messages.hide();
