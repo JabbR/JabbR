@@ -348,8 +348,8 @@ canvas {
 #owned-rooms {
     top: 0;
 }
-
-    #userlist-lobby li {
+    #userlist-lobby li,
+    #owned-rooms li {
         display: block;
         animation: room-fade 0.8s linear 1;
         -webkit-animation: room-fade 0.8s linear 1;
@@ -358,8 +358,11 @@ canvas {
         cursor: pointer;
     }
 
-    #userlist-lobby-owners li,
     #owned-rooms li {
+        cursor: default;
+    }
+
+    #userlist-lobby-owners li {
         display: inline-block;
         margin: 0 5px 10px 5px;
         height: 102px;
@@ -369,12 +372,6 @@ canvas {
         -webkit-animation-play-state: paused;
         cursor: pointer;
     }
-
-#owned-rooms li {
-    cursor: default;
-    width: 240px;
-    margin: 0 10px;
-}
 
     @-webkit-keyframes room-fade
     {
@@ -390,7 +387,8 @@ canvas {
     }
 
         #userlist-lobby li.empty,
-        #userlist-lobby-owners li.empty {
+        #userlist-lobby-owners li.empty,
+        #owned-rooms li.empty {
             color: #909090;
             display: inline-block;
             font-style: italic;
@@ -399,11 +397,13 @@ canvas {
         }
 
         #userlist-lobby li:hover,
-        #userlist-lobby-owners li:hover {
+        #userlist-lobby-owners li:hover,
+        #owned-rooms li:hover {
             background: none;
         }
 
-    #userlist-lobby div.room-row {
+    #userlist-lobby div.room-row,
+    #owned-rooms div.room-row {
         min-height: 30px;
         border-color: #EEEEEE;
         border-style: solid;
@@ -413,6 +413,10 @@ canvas {
         padding-left: 15px;
     }
 
+    #owned-rooms div.room-row {
+        padding: 5px;
+        line-height: 2em;
+    }
 
     #userlist-lobby div:hover {
         background: #e5e5e5;
@@ -450,8 +454,7 @@ canvas {
             color: rgba(0, 16, 63, 1);
         }
 
-#userlist-lobby-owners li div.room-row,
-#owned-rooms li div.room-row {
+#userlist-lobby-owners li div.room-row {
     display: inline-block;
     width: 250px;
     padding: 5px;
@@ -464,8 +467,7 @@ canvas {
         color: rgba(0, 16, 63, 1);
     }
 
-#userlist-lobby-owners li div.room-row div,
-#owned-rooms li div.room-row div {
+#userlist-lobby-owners li div.room-row div {
         width: 100%;
         margin: 0;
     }
@@ -501,8 +503,7 @@ canvas {
     overflow: hidden;
 }
 
-#userlist-lobby-owners .topic,
-#owned-rooms .topic {
+#userlist-lobby-owners .topic {
     width: 250px;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -3101,6 +3102,10 @@ h3.userlist-header {
 }
 
 @media (max-width:768px) {
+    #owned-rooms div.room-row {
+        line-height: 1em;
+    }
+
     .login-body .auth-divider {
         border-right-width: 0;
     }

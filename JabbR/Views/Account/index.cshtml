@@ -54,7 +54,7 @@
                         }
                     </ul>
                     <div class="tab-content">
-                        <div class="account-details tab-pane active" id="profile">
+                        <li class="account-details tab-pane active" id="profile">
                             <form class="form-horizontal">
                                 <fieldset>
                                     <legend>@LanguageResources.Administration_GeneralSettings</legend>
@@ -96,18 +96,18 @@
                                             <li class="room">
                                                 <div class="row-fluid room-row">
                                                     <div class="span3">
-                                                        <span class="name">@room.Name</span>
-                                                        @if(room.Private)
+                                                        @if (room.Private)
                                                         {
                                                             <span class="lock"><i class="icon-lock"></i></span>
                                                         }
-                                                        @if(room.Closed)
+                                                        @if (room.Closed)
                                                         {
                                                             <span class="readonly"><i class="icon-ban-circle"></i></span>
                                                         }
+                                                        <span class="name">@room.Name</span>
                                                     </div>
-                                                    <div class="span4">
-                                                        <span class="topic">@room.Topic</span>
+                                                    <div class="span9">
+                                                        <span class="topic muted">@room.Topic</span>
                                                     </div>
                                                 </div>
                                             </li>
