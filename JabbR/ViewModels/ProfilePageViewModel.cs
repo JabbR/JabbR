@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+
 using JabbR.Models;
 using JabbR.Services;
 using SimpleAuthentication.Core;
@@ -23,7 +25,7 @@ namespace JabbR.ViewModels
             IsAdmin = user.IsAdmin;
             SocialDetails = new SocialLoginViewModel(configuredProviders, user.Identities);
             HasPassword = user.HasUserNameAndPasswordCredentials();
-            OwnedRooms = user.OwnedRooms;
+            OwnedRooms = user.OwnedRooms.OrderBy(e => e.Name).ToArray();
         }
 
         public bool HasPassword { get; private set; }
