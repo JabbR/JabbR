@@ -42,7 +42,7 @@ namespace JabbR.Nancy
                         IsAdmin = Principal.HasClaim(JabbRClaimTypes.Admin),
                         ClientLanguageResources = BuildClientResources(),
                         MaxMessageLength = settings.MaxMessageLength,
-                        AllowRoomCreation = settings.AllowRoomCreation
+                        AllowRoomCreation = settings.AllowRoomCreation || Principal.HasClaim(JabbRClaimTypes.Admin)
                     };
 
                     return View["index", viewModel];
