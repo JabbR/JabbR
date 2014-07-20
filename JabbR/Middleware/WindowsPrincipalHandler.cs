@@ -31,7 +31,10 @@ namespace JabbR.Middleware
                 if (context.Response.StatusCode == 401)
                 {
                     // We're going to add the identifier claim
-                    string name = windowsPrincipal.GetUsername();
+                    var nameClaim = windowsPrincipal.FindFirst(ClaimTypes.Name);
+
+                    // This is the domain name
+                    string name = nameClaim.Value;
 
                     // If the name is something like DOMAIN\username then
                     // grab the name part
