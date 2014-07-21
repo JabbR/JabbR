@@ -649,6 +649,7 @@
             }
 
             ui.addNotification(message, room);
+            ui.removeUser(userInfo, room);
         }
     };
 
