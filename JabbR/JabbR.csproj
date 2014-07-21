@@ -149,9 +149,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Nancy.Owin.0.20.0\lib\net40\Nancy.Owin.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy.SimpleAuthentication, Version=0.3.7.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Nancy.SimpleAuthentication, Version=0.3.14.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Nancy.SimpleAuthentication.0.3.7\lib\net40\Nancy.SimpleAuthentication.dll</HintPath>
+      <HintPath>..\packages\Nancy.SimpleAuthentication.0.3.14\lib\net40\Nancy.SimpleAuthentication.dll</HintPath>
     </Reference>
     <Reference Include="Nancy.ViewEngines.Razor, Version=0.20.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -181,9 +181,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\RestSharp.104.3.0-beta\lib\net4\RestSharp.dll</HintPath>
     </Reference>
-    <Reference Include="SimpleAuthentication.Core, Version=0.3.7.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SimpleAuthentication.Core.0.3.7\lib\net40\SimpleAuthentication.Core.dll</HintPath>
+    <Reference Include="SimpleAuthentication.Core">
+      <HintPath>..\packages\SimpleAuthentication.Core.0.3.14\lib\net40\SimpleAuthentication.Core.dll</HintPath>
     </Reference>
     <Reference Include="SquishIt.Framework, Version=0.9.3.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

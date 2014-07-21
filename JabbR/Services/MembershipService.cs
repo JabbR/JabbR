@@ -23,7 +23,7 @@ namespace JabbR.Services
         public ChatUser AddUser(ClaimsPrincipal claimsPrincipal)
         {
             var identity = claimsPrincipal.GetClaimValue(ClaimTypes.NameIdentifier);
-            var name = claimsPrincipal.GetClaimValue(ClaimTypes.Name);
+            var name = claimsPrincipal.GetUsername();
             var email = claimsPrincipal.GetClaimValue(ClaimTypes.Email);
             var providerName = claimsPrincipal.GetIdentityProvider();
 

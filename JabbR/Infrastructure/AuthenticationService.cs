@@ -25,7 +25,7 @@ namespace JabbR.Infrastructure
             }
             else
             {
-                _factory.RemoveProvider("facebook");
+                _factory.RemoveProvider<FacebookProvider>();
             }
             if (!String.IsNullOrWhiteSpace(appSettings.TwitterConsumerKey) && !String.IsNullOrWhiteSpace(appSettings.TwitterConsumerSecret))
             {
@@ -37,7 +37,7 @@ namespace JabbR.Infrastructure
             }
             else
             {
-                _factory.RemoveProvider("twitter");
+                _factory.RemoveProvider<TwitterProvider>();
             }
             if (!String.IsNullOrWhiteSpace(appSettings.GoogleClientID) && !String.IsNullOrWhiteSpace(appSettings.GoogleClientSecret))
             {
@@ -49,7 +49,7 @@ namespace JabbR.Infrastructure
             }
             else
             {
-                _factory.RemoveProvider("google");
+                _factory.RemoveProvider<GoogleProvider>();
             }
         }
 

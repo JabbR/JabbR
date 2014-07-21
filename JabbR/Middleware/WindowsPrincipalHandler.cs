@@ -30,7 +30,7 @@ namespace JabbR.Middleware
 
                 if (context.Response.StatusCode == 401)
                 {
-                    // We're going no add the identifier claim
+                    // We're going to add the identifier claim
                     var nameClaim = windowsPrincipal.FindFirst(ClaimTypes.Name);
 
                     // This is the domain name
