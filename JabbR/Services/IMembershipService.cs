@@ -17,6 +17,8 @@ namespace JabbR.Services
         void SetUserPassword(ChatUser user, string password);
         void RequestResetPassword(ChatUser user, int requestResetPasswordValidThroughInHours);
         void ResetUserPassword(ChatUser user, string newPassword);
+        
+        string CreatePassword(int complexity);
 
         string GetUserNameFromToken(string token);
 

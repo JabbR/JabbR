@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using JabbR.Infrastructure;
 using JabbR.Models;
@@ -194,6 +195,39 @@ namespace JabbR.Services
             ValidatePassword(newPassword);
 
             EnsureSaltedPassword(user, newPassword);
+        }
+
+        public string CreatePassword(int complexity)
+        {
+            if (complexity < 1 || complexity > 64)
+            {
+                throw new InvalidOperationException(LanguageResources.Authentication_PasswordComplexityInvalid);
+            }
+
+            var data = new byte[complexity];
+            var csp = new RNGCryptoServiceProvider();
+            var passwordChars = new char[data.Length];
+
+            csp.GetBytes(data);
+
+            for (var i = 0; i < data.Length; i++)
+            {
+                var dataRange = data[i] % 62;
+                if (dataRange < 10)
+                {
+                    passwordChars[i] = (char)(48 + dataRange);
+                }
+                else if (dataRange < 36)
+                {
+                    passwordChars[i] = (char)((65 - 10) + dataRange);
+                }
+                else
+                {
+                    passwordChars[i] = (char)((97 - 36) + dataRange);
+                }
+            }
+
+            return new String(passwordChars);
         }
 
         public string GetUserNameFromToken(string token)

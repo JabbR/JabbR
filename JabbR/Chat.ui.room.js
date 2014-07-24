@@ -212,7 +212,7 @@
         }
     };
 
-    Room.prototype.addUser = function (userViewModel, $user) {
+    Room.prototype.addUserToRoom = function (userViewModel, $user) {
         if (userViewModel.owner) {
             this.addUserToList($user, this.owners);
         } else {

@@ -19,20 +19,10 @@ namespace JabbR.Commands
         private readonly IChatService _chatService;
         private readonly ICache _cache;
         private readonly IJabbrRepository _repository;
+        private readonly IMembershipService _membershipService;
 
         private static Dictionary<string, ICommand> _commandCache;
         private static readonly Lazy<IList<ICommand>> _commands = new Lazy<IList<ICommand>>(GetCommands);
-
-        public CommandManager(string clientId,
-                              string userId,
-                              string roomName,
-                              IChatService service,
-                              IJabbrRepository repository,
-                              ICache cache,
-                              INotificationService notificationService)
-            : this(clientId, null, userId, roomName, service, repository, cache, notificationService)
-        {
-        }
 
         public CommandManager(string clientId,
                               string userAgent,
@@ -41,7 +31,8 @@ namespace JabbR.Commands
                               IChatService service,
                               IJabbrRepository repository,
                               ICache cache,
-                              INotificationService notificationService)
+                              INotificationService notificationService,
+                              IMembershipService membershipService)
         {
             _clientId = clientId;
             _userAgent = userAgent;
@@ -51,6 +42,7 @@ namespace JabbR.Commands
             _repository = repository;
             _cache = cache;
             _notificationService = notificationService;
+            _membershipService = membershipService;
         }
 
         public string ParseCommand(string commandString, out string[] args)
@@ -97,7 +89,8 @@ namespace JabbR.Commands
                 Cache = _cache,
                 NotificationService = _notificationService,
                 Repository = _repository,
-                Service = _chatService
+                Service = _chatService,
+                MembershipService = _membershipService
             };
 
             var callerContext = new CallerContext

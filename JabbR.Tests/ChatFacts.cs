@@ -63,6 +63,7 @@ namespace JabbR.Test
                        repository, 
                        new Mock<ICache>().Object, 
                        new Mock<ILogger>().Object,
+                       new MembershipService(repository, new CryptoService(new SettingsKeyProvider(settings))),
                        settings)
             {
                 MockedResourceProcessor = mockedResourceProcessor;

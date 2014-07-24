@@ -1281,4 +1281,13 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="Account_OwnedRooms" xml:space="preserve">
     <value>Owned Rooms</value>
   </data>
+  <data name="Authentication_PasswordComplexityInvalid" xml:space="preserve">
+    <value>The provided password complexity is invalid.</value>
+  </data>
+  <data name="AddUser_CommandInfo" xml:space="preserve">
+    <value>Register a new user account. Only works if you're an administrator.</value>
+  </data>
+  <data name="Chat_UserCreatedPassword" xml:space="preserve">
+    <value>{0} created with password {1}</value>
+  </data>
 </root>

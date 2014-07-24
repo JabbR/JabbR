@@ -63,6 +63,7 @@ namespace JabbR
                       var repository = context.Kernel.Get<IJabbrRepository>();
                       var cache = context.Kernel.Get<ICache>();
                       var logger = context.Kernel.Get<ILogger>();
+                      var membershipService = context.Kernel.Get<IMembershipService>();
                       var settings = context.Kernel.Get<ApplicationSettings>();
 
                       var service = new ChatService(cache, recentMessageCache, repository, settings);
@@ -73,6 +74,7 @@ namespace JabbR
                                       repository,
                                       cache,
                                       logger,
+                                      membershipService,
                                       settings);
                   });
 

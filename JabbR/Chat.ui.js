@@ -1632,7 +1632,7 @@
                 $lobbyOtherRooms.find('.nav-header').html(utility.getLanguageResource('Client_Rooms'));
             }
         },
-        addUser: function (userViewModel, roomName) {
+        addUserToRoom: function (userViewModel, roomName) {
             var room = getRoomElements(roomName),
                 $user = null,
                 $userMessages = room.messages.find('.message-user' + getUserClassName(userViewModel.name));
@@ -1654,7 +1654,7 @@
 
             $userMessages.removeClass('offline active inactive absent present').addClass('active present');
 
-            room.addUser(userViewModel, $user);
+            room.addUserToRoom(userViewModel, $user);
             updateNote(userViewModel, $user);
             updateFlag(userViewModel, $user);
 
@@ -1787,7 +1787,7 @@
 
             // if the user is somehow missing from room, add them
             if ($user.length === 0) {
-                ui.addUser(userViewModel, roomName);
+                ui.addUserToRoom(userViewModel, roomName);
             }
 
             // Do not show typing indicator for current user

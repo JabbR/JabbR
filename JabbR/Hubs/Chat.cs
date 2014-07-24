@@ -25,6 +25,7 @@ namespace JabbR
         private readonly ICache _cache;
         private readonly ContentProviderProcessor _resourceProcessor;
         private readonly ILogger _logger;
+        private readonly IMembershipService _membershipService;
         private readonly ApplicationSettings _settings;
 
         public Chat(ContentProviderProcessor resourceProcessor,
@@ -33,6 +34,7 @@ namespace JabbR
                     IJabbrRepository repository,
                     ICache cache,
                     ILogger logger,
+                    IMembershipService membershipService,
                     ApplicationSettings settings)
         {
             _resourceProcessor = resourceProcessor;
@@ -41,6 +43,7 @@ namespace JabbR
             _repository = repository;
             _cache = cache;
             _logger = logger;
+            _membershipService = membershipService;
             _settings = settings;
         }
 
@@ -323,7 +326,7 @@ namespace JabbR
                     var isOwner = user.OwnedRooms.Contains(room);
 
                     // Tell the people in this room that you've joined
-                    Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner);
+                    Clients.Group(room.Name).addUserToRoom(userViewModel, room.Name, isOwner);
                 }
             }
             else
@@ -593,7 +596,7 @@ namespace JabbR
                 var isOwner = ownedRooms.Contains(room.Key);
 
                 // Tell the people in this room that you've joined
-                Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner);
+                Clients.Group(room.Name).addUserToRoom(userViewModel, room.Name, isOwner);
 
                 // Add the caller to the group so they receive messages
                 Groups.Add(clientId, room.Name);
@@ -649,7 +652,7 @@ namespace JabbR
             string clientId = Context.ConnectionId;
             string userId = Context.User.GetUserId();
 
-            var commandManager = new CommandManager(clientId, UserAgent, userId, room, _service, _repository, _cache, this);
+            var commandManager = new CommandManager(clientId, UserAgent, userId, room, _service, _repository, _cache, this, _membershipService);
             return commandManager.TryHandleCommand(command);
         }
 
@@ -720,6 +723,13 @@ namespace JabbR
             LogOn(user, clientId, reconnecting: true);
         }
 
+        void INotificationService.AddUser(ChatUser targetUser, ChatUser callingUser, string password)
+        {
+            var targetUserViewModel = new UserViewModel(targetUser);
+
+            Clients.User(callingUser.Id).addUser(targetUserViewModel, password);
+        }
+
         void INotificationService.KickUser(ChatUser targetUser, ChatRoom room, ChatUser callingUser, string reason)
         {
             var targetUserViewModel = new UserViewModel(targetUser);
@@ -740,17 +750,6 @@ namespace JabbR
             OnRoomChanged(room);
         }
 
-        void INotificationService.OnUserCreated(ChatUser user)
-        {
-            // Set some client state
-            Clients.Caller.name = user.Name;
-            Clients.Caller.id = user.Id;
-            Clients.Caller.hash = user.Hash;
-
-            // Tell the client a user was created
-            Clients.Caller.userCreated();
-        }
-
         void INotificationService.JoinRoom(ChatUser user, ChatRoom room)
         {
             var userViewModel = new UserViewModel(user);
@@ -768,7 +767,7 @@ namespace JabbR
             Clients.User(user.Id).joinRoom(roomViewModel);
 
             // Tell the people in this room that you've joined
-            Clients.Group(room.Name).addUser(userViewModel, room.Name, isOwner);
+            Clients.Group(room.Name).addUserToRoom(userViewModel, room.Name, isOwner);
 
             // Notify users of the room count change
             OnRoomChanged(room);

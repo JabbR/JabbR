@@ -14,16 +14,48 @@ namespace JabbR.Test
 {
     public class CommandManagerFacts
     {
+        public static CommandManager CreateCommandManager()
+        {
+            IJabbrRepository repository;
+
+            return CreateCommandManager(out repository);
+        }
+
+        public static CommandManager CreateCommandManager(out IJabbrRepository repository)
+        {
+            return CreateCommandManager("roomName", out repository);
+        }
+
+        public static CommandManager CreateCommandManager(string roomName, out IJabbrRepository repository)
+        {
+            Mock<INotificationService> notificationService;
+
+            return CreateCommandManager(roomName, out repository, out notificationService);
+        }
+
+        public static CommandManager CreateCommandManager(out IJabbrRepository repository, out Mock<INotificationService> notificationService)
+        {
+            return CreateCommandManager("roomName", out repository, out notificationService);
+        }
+
+        public static CommandManager CreateCommandManager(string roomName, out IJabbrRepository repository, out Mock<INotificationService> notificationService)
+        {
+            repository = new InMemoryRepository();
+            var cache = new Mock<ICache>().Object;
+            var recentMessageCache = new Mock<IRecentMessageCache>().Object;
+            notificationService = new Mock<INotificationService>();
+
+            var chatService = new ChatService(cache, recentMessageCache, repository);
+            var membershipService = new MembershipService(repository, new CryptoService(new SettingsKeyProvider(ApplicationSettings.GetDefaultSettings())));
+            return new CommandManager("clientId", "userAgent", "userId", roomName, chatService, repository, cache, notificationService.Object, membershipService);
+        }
+
         public class ParseCommand
         {
             [Fact]
             public void ReturnsTheCommandName()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
+                var commandManager = CreateCommandManager();
 
                 const string commandName = "thecommand";
                 string[] args;
@@ -35,11 +67,7 @@ namespace JabbR.Test
             [Fact]
             public void ReturnsNullForEmptyCommandName()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
+                var commandManager = CreateCommandManager();
 
                 string[] args;
                 var parsedName = commandManager.ParseCommand("/", out args);
@@ -50,11 +78,7 @@ namespace JabbR.Test
             [Fact]
             public void ParsesTheArguments()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
+                var commandManager = CreateCommandManager();
             
                 var parts = new[] {"/cmd", "arg0", "arg1", "arg2"};
                 var command = String.Join(" ", parts);
@@ -68,11 +92,7 @@ namespace JabbR.Test
             [Fact]
             public void IgnoresMultipleWhitespaceBetweenArguments()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
+                var commandManager = CreateCommandManager();
                 
                 var parts = new[] { "/cmd", "arg0", "arg1", "arg2" };
                 var command = String.Join("    ", parts);
@@ -86,11 +106,7 @@ namespace JabbR.Test
             [Fact]
             public void ProducesEmptyArrayIfNoArguments()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
+                var commandManager = CreateCommandManager();
 
                 string[] parsedArgs;
                 commandManager.ParseCommand("/cmd", out parsedArgs);
@@ -104,11 +120,7 @@ namespace JabbR.Test
             [Fact]
             public void ReturnsFalseIfCommandDoesntStartWithSlash()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
+                var commandManager = CreateCommandManager();
 
                 bool result = commandManager.TryHandleCommand("foo");
 
@@ -118,11 +130,7 @@ namespace JabbR.Test
             [Fact]
             public void ReturnsFalseIfCommandStartsWithSlash()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("id", "id", "name", service, repository, cache, notificationService.Object);
+                var commandManager = CreateCommandManager();
 
                 bool result = commandManager.TryHandleCommand("/foo", new string[] { });
 
@@ -130,28 +138,26 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void ThrowsIfCommandDoesntExist ()
+            public void ThrowsIfCommandDoesntExist()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
+                IJabbrRepository repository;
+                var commandManager = CreateCommandManager(out repository);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     HashedPassword = "password".ToSha256(null)
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
 
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 repository.Add(room);
-                var commandManager = new CommandManager("1", "1", "room", service, repository, cache, notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/message"));
                 Assert.Equal("message is not a valid command.", ex.Message);
@@ -160,26 +166,24 @@ namespace JabbR.Test
             [Fact]
             public void ThrowsIfCommandIsAmbiguous()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
+                IJabbrRepository repository;
+                var commandManager = CreateCommandManager(out repository);
+
                 var user = new ChatUser
                 {
                     Name = "tilde",
-                    Id = "1",
+                    Id = "userId",
                     HashedPassword = "password".ToSha256(null)
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                 };
 
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 repository.Add(room);
-                var commandManager = new CommandManager("1", "1", "room", service, repository, cache, notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/a"));
                 Assert.True(ex.Message.StartsWith("a is ambiguous: "));
@@ -188,12 +192,7 @@ namespace JabbR.Test
             [Fact]
             public void DoesNotThrowIfCommandIsPrefixButExactMatch()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-
-                var commandManager = new CommandManager("1", "1", "room", service, repository, cache, notificationService.Object);
+                var commandManager = CreateCommandManager();
 
                 ICommand command;
                 commandManager.MatchCommand("invite", out command);
@@ -204,12 +203,7 @@ namespace JabbR.Test
             [Fact]
             public void DoesNotThrowIfCommandIsPrefixButCaseInsensitiveMatch()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-
-                var commandManager = new CommandManager("1", "1", "room", service, repository, cache, notificationService.Object);
+                var commandManager = CreateCommandManager();
 
                 ICommand command;
                 commandManager.MatchCommand("CrEaT", out command);
@@ -229,30 +223,23 @@ namespace JabbR.Test
             [Fact]
             public void LogOut()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+                
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     Salt = "salt",
                     HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/logout");
 
                 Assert.True(result);
-                notificationService.Verify(m => m.LogOut(user, "clientid"), Times.Once());
+                notificationService.Verify(m => m.LogOut(user, "clientId"), Times.Once());
             }
         }
 
@@ -261,30 +248,23 @@ namespace JabbR.Test
             [Fact]
             public void InviteCodeShowsErrorForPublicRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        room.Name,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/invitecode"));
                 Assert.Equal("Only private rooms can have invite codes.", ex.Message);
@@ -293,33 +273,26 @@ namespace JabbR.Test
             [Fact]
             public void InviteCodeSetsCodeIfNoCodeAndCurrentUserOwner()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true
                 };
                 room.Users.Add(user);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
-                bool result = commandManager.TryHandleCommand("/invitecode room");
+                bool result = commandManager.TryHandleCommand("/invitecode roomName");
 
                 Assert.True(result);
                 Assert.NotNull(room.InviteCode);
@@ -332,31 +305,24 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomThrowsFromLobby()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true,
                     InviteCode = "123456"
                 };
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/invitecode"));
                 Assert.Equal("This command cannot be invoked from the Lobby.", ex.Message);
@@ -365,33 +331,26 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomSucceedsFromRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+                
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true,
                     InviteCode = "123456"
                 };
                 room.Users.Add(user);
                 room.AllowedUsers.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        room.Name,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/invitecode");
 
                 Assert.True(result);
@@ -404,33 +363,26 @@ namespace JabbR.Test
             [Fact]
             public void InviteCodeDisplaysCodeIfCodeSet()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true,
                     InviteCode = "123456"
                 };
                 room.Users.Add(user);
                 room.AllowedUsers.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        room.Name,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/invitecode");
 
                 Assert.True(result);
@@ -443,12 +395,14 @@ namespace JabbR.Test
             [Fact]
             public void InviteCodeDisplaysCodeIfCodeSetOnClosedRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
@@ -464,24 +418,14 @@ namespace JabbR.Test
 
                 var room2 = new ChatRoom
                 {
-                    Name = "room2",
+                    Name = "roomName",
                     Private = true,
                     Closed = true,
-                    InviteCode = "123456"
+                    InviteCode = "123457"
                 };
                 room2.Users.Add(user);
                 room2.AllowedUsers.Add(user);
                 repository.Add(room2);
-
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room2",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/invitecode room");
 
@@ -495,32 +439,25 @@ namespace JabbR.Test
             [Fact]
             public void InviteCodeResetCodeWhenResetInviteCodeCalled()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true,
                     InviteCode = "123456"
                 };
                 room.Owners.Add(user);
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        room.Name,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/resetinvitecode");
 
@@ -531,12 +468,14 @@ namespace JabbR.Test
             [Fact]
             public void InviteCodeResetCodeWhenResetInviteCodeCalledOnClosedRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
@@ -552,23 +491,13 @@ namespace JabbR.Test
 
                 var room2 = new ChatRoom
                 {
-                    Name = "room2",
+                    Name = "roomName",
                     Private = true,
                     InviteCode = "123456"
                 };
                 room2.Owners.Add(user);
                 room2.Users.Add(user);
                 repository.Add(room2);
-
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        room2.Name,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/resetinvitecode room");
 
@@ -579,141 +508,109 @@ namespace JabbR.Test
             [Fact]
             public void ThrowsIfNonUserRequestsInviteCodeWhenNoneSet()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
 
-                const string roomName = "test";
                 var room = new ChatRoom
                 {
-                    Name = roomName,
+                    Name = "roomName",
                     Private = true
                 };
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        room.Name,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/invitecode"));
-                Assert.Equal("You do not have access to " + roomName + ".", ex.Message);
+                Assert.Equal("You do not have access to roomName.", ex.Message);
             }
 
             [Fact]
             public void ThrowsIfNonOwnerRequestsInviteCodeWhenNoneSet()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
 
-                const string roomName = "test";
                 var room = new ChatRoom
                 {
-                    Name = roomName,
+                    Name = "roomName",
                     Private = true
                 };
                 room.Users.Add(user);
                 room.AllowedUsers.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        room.Name,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/invitecode"));
-                Assert.Equal("You are not an owner of " + roomName + ".", ex.Message);
+                Assert.Equal("You are not an owner of roomName.", ex.Message);
             }
 
             [Fact]
             public void ThrowsIfNonUserRequestsResetInviteCode()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
 
-                const string roomName = "test";
                 var room = new ChatRoom
                 {
-                    Name = roomName,
+                    Name = "roomName",
                     Private = true,
                     InviteCode = "123456"
                 };
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        room.Name,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/resetinvitecode"));
-                Assert.Equal("You do not have access to " + roomName + ".", ex.Message);
+                Assert.Equal("You do not have access to roomName.", ex.Message);
             }
 
             [Fact]
             public void ThrowsIfNonOwnerRequestsResetInviteCode()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
 
-                const string roomName = "test";
                 var room = new ChatRoom
                 {
-                    Name = roomName,
+                    Name = "roomName",
                     Private = true,
                     InviteCode = "123456"
                 };
                 room.Users.Add(user);
                 room.AllowedUsers.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        room.Name,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/resetinvitecode"));
-                Assert.Equal("You are not an owner of " + roomName + ".", ex.Message);
+                Assert.Equal("You are not an owner of roomName.", ex.Message);
             }
         }
 
@@ -722,34 +619,27 @@ namespace JabbR.Test
             [Fact]
             public void DoesNotThrowIfUserAlreadyInRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     Salt = "salt",
                     HashedPassword = "password".ToSha256("salt")
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                bool result = commandManager.TryHandleCommand("/join room");
+                
+                bool result = commandManager.TryHandleCommand("/join roomName");
 
                 Assert.True(result);
                 notificationService.Verify(m => m.JoinRoom(user, room), Times.Once());
@@ -758,30 +648,23 @@ namespace JabbR.Test
             [Fact]
             public void CanJoinRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                bool result = commandManager.TryHandleCommand("/join room");
+                
+                bool result = commandManager.TryHandleCommand("/join roomName");
 
                 Assert.True(result);
                 notificationService.Verify(m => m.JoinRoom(user, room), Times.Once());
@@ -790,32 +673,24 @@ namespace JabbR.Test
             [Fact]
             public void ThrowIfRoomIsEmpty()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/join"));
                 Assert.Equal("Which room do you want to join?", ex.Message);
             }
@@ -823,199 +698,151 @@ namespace JabbR.Test
             [Fact]
             public void ThrowIfUserNotAllowedAndNoInviteCodeProvided()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "anurse",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true
                 };
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/join room"));
-                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, enter it in the /join command",
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/join roomName"));
+                Assert.Equal("Unable to join roomName. This room is locked and you don't have permission to enter. If you have an invite code, enter it in the /join command",
                              ex.Message);
             }
 
             [Fact]
             public void ThrowIfUserNotAllowedAndInviteCodeIncorrect()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "anurse",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true,
                     InviteCode = "123456"
                 };
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/join room 789012"));
-                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, enter it in the /join command",
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/join roomName 789012"));
+                Assert.Equal("Unable to join roomName. This room is locked and you don't have permission to enter. If you have an invite code, enter it in the /join command",
                              ex.Message);
             }
 
             [Fact]
             public void ThrowIfUserNotAllowedAndNoInviteCodeSet()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "anurse",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true
                 };
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/join room 789012"));
-                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, enter it in the /join command",
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/join roomName 789012"));
+                Assert.Equal("Unable to join roomName. This room is locked and you don't have permission to enter. If you have an invite code, enter it in the /join command",
                              ex.Message);
             }
 
             [Fact]
             public void JoinIfInviteCodeIsCorrect()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "anurse",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true,
                     InviteCode = "123456"
                 };
                 repository.Add(room);
-
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                commandManager.TryHandleCommand("/join room 123456");
+                
+                commandManager.TryHandleCommand("/join roomName 123456");
                 notificationService.Verify(ns => ns.JoinRoom(user, room));
             }
 
             [Fact]
             public void JoinIfUserIsAllowed()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "anurse",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true
                 };
                 room.AllowedUsers.Add(user);
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                commandManager.TryHandleCommand("/join room");
+                commandManager.TryHandleCommand("/join roomName");
                 notificationService.Verify(ns => ns.JoinRoom(user, room));
             }
 
             [Fact]
             public void ThrowIfUserNotAllowedToJoinPrivateRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "anurse",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true
                 };
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/join room"));
-                Assert.Equal("Unable to join room. This room is locked and you don't have permission to enter. If you have an invite code, enter it in the /join command",
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/join roomName"));
+                Assert.Equal("Unable to join roomName. This room is locked and you don't have permission to enter. If you have an invite code, enter it in the /join command",
                              ex.Message);
             }
         }
@@ -1025,24 +852,17 @@ namespace JabbR.Test
             [Fact]
             public void MissingUserNameThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/addowner "));
                 Assert.Equal("Who do you want to make an owner?", ex.Message);
             }
@@ -1050,23 +870,16 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomThrowsFromLobby()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/addowner dfowler"));
                 Assert.Equal("Which room do you want to add ownership to?", ex.Message);
@@ -1075,12 +888,14 @@ namespace JabbR.Test
             [Fact]
             public void CanAddOwnerToRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var roomOwnerUser = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var targetUser = new ChatUser
                 {
@@ -1097,16 +912,7 @@ namespace JabbR.Test
                 roomOwnerUser.Rooms.Add(room);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 var result = commandManager.TryHandleCommand("/addowner dfowler2 test");
 
                 Assert.True(result);
@@ -1118,12 +924,14 @@ namespace JabbR.Test
             [Fact]
             public void ThrowsIfRoomIsClosed()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var roomOwnerUser = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var targetUser = new ChatUser
                 {
@@ -1134,36 +942,29 @@ namespace JabbR.Test
                 repository.Add(targetUser);
                 var room = new ChatRoom()
                 {
-                    Name = "test",
+                    Name = "roomName",
                     Closed = true
                 };
                 room.Owners.Add(roomOwnerUser);
                 roomOwnerUser.Rooms.Add(room);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "test",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/addowner dfowler2"));
-                Assert.Equal("test is closed.", ex.Message);
+                Assert.Equal("roomName is closed.", ex.Message);
             }
 
             [Fact]
             public void MissingRoomSucceedsFromRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var roomOwnerUser = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var targetUser = new ChatUser
                 {
@@ -1174,22 +975,13 @@ namespace JabbR.Test
                 repository.Add(targetUser);
                 var room = new ChatRoom()
                 {
-                    Name = "test"
+                    Name = "roomName"
                 };
                 room.Owners.Add(roomOwnerUser);
                 roomOwnerUser.Rooms.Add(room);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "test",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 var result = commandManager.TryHandleCommand("/addowner dfowler2");
 
                 Assert.True(result);
@@ -1204,23 +996,16 @@ namespace JabbR.Test
             [Fact]
             public void MissingUserNameThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/removeowner "));
                 Assert.Equal("Which owner do you want to remove?", ex.Message);
@@ -1229,23 +1014,16 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomNameThrowsFromLobby()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/removeowner dfowler"));
                 Assert.Equal("Which room do you want to remove the owner from?", ex.Message);
@@ -1254,12 +1032,14 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomNameSucceedsFromRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var roomCreator = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var targetUser = new ChatUser
                 {
@@ -1270,7 +1050,7 @@ namespace JabbR.Test
                 repository.Add(targetUser);
                 var room = new ChatRoom()
                 {
-                    Name = "test",
+                    Name = "roomName",
                     Creator = roomCreator
                 };
                 room.Owners.Add(roomCreator);
@@ -1279,15 +1059,6 @@ namespace JabbR.Test
                 room.Owners.Add(targetUser);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "test",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 var result = commandManager.TryHandleCommand("/removeowner dfowler2");
 
@@ -1300,12 +1071,14 @@ namespace JabbR.Test
             [Fact]
             public void CreatorCanRemoveOwnerFromRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var roomCreator = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var targetUser = new ChatUser
                 {
@@ -1316,7 +1089,7 @@ namespace JabbR.Test
                 repository.Add(targetUser);
                 var room = new ChatRoom()
                 {
-                    Name = "test",
+                    Name = "roomName",
                     Creator = roomCreator
                 };
                 room.Owners.Add(roomCreator);
@@ -1325,17 +1098,8 @@ namespace JabbR.Test
                 room.Owners.Add(targetUser);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
-                var result = commandManager.TryHandleCommand("/removeowner dfowler2 test");
+                var result = commandManager.TryHandleCommand("/removeowner dfowler2 roomName");
 
                 Assert.True(result);
                 notificationService.Verify(m => m.RemoveOwner(targetUser, room), Times.Once());
@@ -1344,14 +1108,16 @@ namespace JabbR.Test
             }
 
             [Fact]
-            public void CannorRemoveOwnerFromClosedRoom()
+            public void CannotRemoveOwnerFromClosedRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var roomCreator = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var targetUser = new ChatUser
                 {
@@ -1372,15 +1138,6 @@ namespace JabbR.Test
                 room.Owners.Add(targetUser);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/removeowner dfowler2 test"));
                 Assert.Equal("test is closed.", ex.Message);
@@ -1389,12 +1146,14 @@ namespace JabbR.Test
             [Fact]
             public void NonCreatorsCannotRemoveOwnerFromRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var targetUser = new ChatUser
                 {
@@ -1413,15 +1172,6 @@ namespace JabbR.Test
                 room.Owners.Add(targetUser);
                 targetUser.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/removeowner dfowler2 test"));
                 Assert.Equal("You are not the creator of test.", ex.Message);
@@ -1433,23 +1183,16 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomNameThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/create "));
                 Assert.Equal("No room specified.", ex.Message);
@@ -1458,24 +1201,17 @@ namespace JabbR.Test
             [Fact]
             public void ThrowsIfRoomNameIsEmpty()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("create", new [] { "", "" }));
                 Assert.Equal("Room names cannot contain spaces.", ex.Message);
             }
@@ -1483,12 +1219,14 @@ namespace JabbR.Test
             [Fact]
             public void CreateRoomFailsIfRoomAlreadyExists()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
@@ -1496,15 +1234,6 @@ namespace JabbR.Test
                     Name = "Test"
                 };
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/create Test"));
                 Assert.Equal("Test already exists.", ex.Message);
@@ -1513,23 +1242,16 @@ namespace JabbR.Test
             [Fact]
             public void CreateRoomFailsIfRoomNameContainsSpaces()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/create Test Room"));
                 Assert.Equal("Room names cannot contain spaces.", ex.Message);
@@ -1538,59 +1260,40 @@ namespace JabbR.Test
             [Fact]
             public void CreateRoomFailsIfRoomAlreadyExistsButItsClosed()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-
-                const string roomName = "test";
                 var room = new ChatRoom
                 {
-                    Name = roomName,
+                    Name = "roomName",
                     Closed = true
                 };
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                // Act & Assert.
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/create " + roomName));
-                Assert.Equal(roomName + " already exists, but it's closed.", ex.Message);
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/create roomName"));
+                Assert.Equal("roomName already exists, but it's closed.", ex.Message);
             }
 
             [Fact]
             public void CanCreateRoomAndJoinsAutomatically()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/create Test");
 
@@ -1605,24 +1308,17 @@ namespace JabbR.Test
             [Fact]
             public void MissingEmailThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+               
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/gravatar "));
                 Assert.Equal("Which email address do you want to use for the Gravatar image?", ex.Message);
             }
@@ -1630,24 +1326,17 @@ namespace JabbR.Test
             [Fact]
             public void CanSetGravatar()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "UserId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/gravatar test@jabbR.net");
 
                 Assert.True(result);
@@ -1661,29 +1350,20 @@ namespace JabbR.Test
             [Fact]
             public void CanSetNoteWithTextSetsTheNoteProperty()
             {
-                // Arrange.
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 const string note = "this is a test note. Pew^Pew";
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
-                    Name = "asshat",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act.
+                
                 bool result = commandManager.TryHandleCommand("/note " + note);
 
-                // Assert.
                 Assert.True(result);
                 Assert.Equal(note, user.Note);
                 notificationService.Verify(x => x.ChangeNote(user), Times.Once());
@@ -1692,28 +1372,19 @@ namespace JabbR.Test
             [Fact]
             public void CanSetNoteWithNoTextClearsTheNoteProperty()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
-                    Name = "asshat",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act.
+                
                 bool result = commandManager.TryHandleCommand("/note ");
 
-                // Assert.
                 Assert.True(result);
                 Assert.Null(user.Note);
                 notificationService.Verify(x => x.ChangeNote(user), Times.Once());
@@ -1722,27 +1393,18 @@ namespace JabbR.Test
             [Fact]
             public void ThrowsIfNoteTextDoesNotValidate()
             {
-                // Arrange.
-                String note = new String('A', 141);
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
 
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                String note = new String('A', 141);
                 var user = new ChatUser
                 {
-                    Name = "asshat",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act & Assert.
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/note " + note));
                 Assert.Equal("Sorry, but your note is too long. Please keep it under 140 characters.", ex.Message);
             }
@@ -1753,26 +1415,18 @@ namespace JabbR.Test
             [Fact]
             public void CanSetAfkWithTextSetsTheNoteProperty()
             {
-                // Arrange.
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 const string note = "I'll be back later!";
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
                 var user = new ChatUser
                 {
                     Name = "asshat",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act.
+                
                 bool result = commandManager.TryHandleCommand("/afk " + note);
 
                 Assert.True(result);
@@ -1783,25 +1437,17 @@ namespace JabbR.Test
             [Fact]
             public void CanSetAfkWithNoTextSetTheNoteProperty()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
-                    Name = "asshat",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act.
+
                 bool result = commandManager.TryHandleCommand("/afk");
 
                 Assert.True(result);
@@ -1812,27 +1458,18 @@ namespace JabbR.Test
             [Fact]
             public void ThrowsIfAfkTextIsNotValid()
             {
-                // Arrange.
-                String note = new String('A', 141);
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
 
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                String note = new String('A', 141);
                 var user = new ChatUser
                 {
                     Name = "asshat",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act & Assert.
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/afk " + note));
                 Assert.Equal("Sorry, but your note is too long. Please keep it under 140 characters.", ex.Message);
             }
@@ -1843,24 +1480,17 @@ namespace JabbR.Test
             [Fact]
             public void CanShowHelp()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/?");
 
                 Assert.True(result);
@@ -1873,31 +1503,24 @@ namespace JabbR.Test
             [Fact]
             public void MissingUserNameThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Owners.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/kick"));
                 Assert.Equal("Who do you want to to kick?", ex.Message);
@@ -1906,12 +1529,14 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomNameThrowsFromLobby()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -1930,16 +1555,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/kick cjm1"));
                 Assert.Equal("Which room do you want to kick them from?", ex.Message);
             }
@@ -1947,12 +1563,14 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomNameSucceedsFromRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -1969,7 +1587,7 @@ namespace JabbR.Test
                 repository.Add(user3);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Users.Add(user2);
@@ -1979,16 +1597,7 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 user3.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/kick dfowler3");
 
                 Assert.True(result);
@@ -2000,12 +1609,14 @@ namespace JabbR.Test
             [Fact]
             public void CannotKickUserIfNotExists()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -2016,7 +1627,7 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Users.Add(user2);
@@ -2024,16 +1635,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/kick fowler3"));
                 Assert.Equal("Unable to find fowler3.", ex.Message);
             }
@@ -2041,20 +1643,16 @@ namespace JabbR.Test
             [Fact]
             public void CannotKickUserIfUserIsNotInRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var user2 = new ChatUser
-                {
-                    Name = "dfowler2",
-                    Id = "2"
-                };
-                repository.Add(user2);
                 var user3 = new ChatUser
                 {
                     Name = "dfowler3",
@@ -2063,37 +1661,28 @@ namespace JabbR.Test
                 repository.Add(user3);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
-                room.Users.Add(user2);
                 room.Owners.Add(user);
                 user.Rooms.Add(room);
-                user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/kick dfowler3"));
-                Assert.Equal("dfowler3 isn't in room.", ex.Message);
+                Assert.Equal("dfowler3 isn't in roomName.", ex.Message);
             }
 
             [Fact]
             public void CanKickUser()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -2120,15 +1709,6 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 user3.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/kick dfowler3 room");
 
@@ -2141,12 +1721,14 @@ namespace JabbR.Test
             [Fact]
             public void CannotKickUserInClosedRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -2174,15 +1756,6 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 user3.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/kick dfowler3 room"));
                 Assert.Equal("room is closed.", ex.Message);
@@ -2191,12 +1764,14 @@ namespace JabbR.Test
             [Fact]
             public void CannotKickUrSelf()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -2207,7 +1782,7 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Users.Add(user2);
@@ -2215,15 +1790,6 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/kick dfowler"));
                 Assert.Equal("Why would you want to kick yourself?", ex.Message);
@@ -2232,23 +1798,25 @@ namespace JabbR.Test
             [Fact]
             public void CannotKickIfUserIsNotOwner()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var user = new ChatUser
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
+                var user2 = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
-                repository.Add(user);
-                var user2 = new ChatUser
+                repository.Add(user2);
+                var user = new ChatUser
                 {
                     Name = "dfowler2",
                     Id = "2"
                 };
-                repository.Add(user2);
+                repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Users.Add(user2);
@@ -2256,29 +1824,22 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "2",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/kick dfowler"));
-                Assert.Equal("You are not an owner of room.", ex.Message);
+                Assert.Equal("You are not an owner of roomName.", ex.Message);
             }
 
             [Fact]
             public void IfNotRoomCreatorCannotKickOwners()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -2289,8 +1850,8 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room",
-                    Creator = user
+                    Name = "roomName",
+                    Creator = user2
                 };
                 room.Users.Add(user);
                 room.Users.Add(user2);
@@ -2299,29 +1860,22 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "2",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/kick dfowler"));
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/kick dfowler2"));
                 Assert.Equal("Owners cannot kick other owners. Only the room creator can kick an owner.", ex.Message);
             }
 
             [Fact]
             public void RoomCreatorCanKickOwners()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -2332,7 +1886,7 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Creator = user
                 };
                 room.Users.Add(user);
@@ -2342,15 +1896,6 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 var result = commandManager.TryHandleCommand("/kick dfowler2");
 
@@ -2361,39 +1906,30 @@ namespace JabbR.Test
             }
         }
 
-
         public class BanCommand
         {
             [Fact]
             public void MissingUserNameThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     IsAdmin = true
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Owners.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/ban"));
                 Assert.Equal("Who do you want to ban?", ex.Message);
@@ -2402,12 +1938,14 @@ namespace JabbR.Test
             [Fact]
             public void BannerIsNotAnAdminThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -2417,7 +1955,7 @@ namespace JabbR.Test
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Owners.Add(user);
@@ -2427,16 +1965,6 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
                 var ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/ban dfowler2"));
 
                 Assert.True(ex.Message == "You are not an admin.");
@@ -2445,12 +1973,14 @@ namespace JabbR.Test
             [Fact]
             public void CannotBanUserIfNotExists()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     IsAdmin = true
                 };
                 repository.Add(user);
@@ -2462,7 +1992,7 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Users.Add(user2);
@@ -2471,16 +2001,6 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/ban fowler3"));
                 Assert.Equal("Unable to find fowler3.", ex.Message);
             }
@@ -2488,12 +2008,14 @@ namespace JabbR.Test
             [Fact]
             public void AdminCannotBanAdmin()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     IsAdmin = true
                 };
                 repository.Add(user);
@@ -2506,7 +2028,7 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Users.Add(user2);
@@ -2515,16 +2037,6 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/ban dfowler2"));
                 Assert.Equal("You cannot ban another admin.", ex.Message);
             }
@@ -2532,33 +2044,25 @@ namespace JabbR.Test
             [Fact]
             public void CannotBanUrSelf()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     IsAdmin = true
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Owners.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/ban dfowler"));
                 Assert.Equal("You cannot ban yourself!", ex.Message);
@@ -2570,33 +2074,25 @@ namespace JabbR.Test
             [Fact]
             public void MissingUserNameThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     IsAdmin = true
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Owners.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/unban"));
                 Assert.Equal("Who do you want to unban?", ex.Message);
@@ -2605,12 +2101,14 @@ namespace JabbR.Test
             [Fact]
             public void UnbannerIsNotAnAdminThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -2620,7 +2118,7 @@ namespace JabbR.Test
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Owners.Add(user);
@@ -2630,16 +2128,6 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
                 var ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/unban dfowler2"));
 
                 Assert.True(ex.Message == "You are not an admin.");
@@ -2648,12 +2136,14 @@ namespace JabbR.Test
             [Fact]
             public void CannotUnbanUserIfNotExists()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     IsAdmin = true
                 };
                 repository.Add(user);
@@ -2665,7 +2155,7 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Users.Add(user2);
@@ -2674,16 +2164,6 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/unban fowler3"));
                 Assert.Equal("Unable to find fowler3.", ex.Message);
             }
@@ -2691,12 +2171,14 @@ namespace JabbR.Test
             [Fact]
             public void AdminCannotUnbanAdmin()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     IsAdmin = true
                 };
                 repository.Add(user);
@@ -2709,7 +2191,7 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Users.Add(user2);
@@ -2718,16 +2200,6 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/unban dfowler2"));
                 Assert.Equal("You cannot unban another admin.", ex.Message);
             }
@@ -2735,33 +2207,25 @@ namespace JabbR.Test
             [Fact]
             public void CannotUnbanUrSelf()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     IsAdmin = true
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Owners.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/unban dfowler"));
                 Assert.Equal("You cannot unban another admin.", ex.Message);
@@ -2770,12 +2234,14 @@ namespace JabbR.Test
             [Fact]
             public void AdminUnbanBannedUser()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     IsAdmin = true
                 };
                 repository.Add(user);
@@ -2789,7 +2255,7 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Users.Add(user2);
@@ -2798,31 +2264,22 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
                 var ex = commandManager.TryHandleCommand("/unban dfowler2");
 
                 Assert.False(user2.IsBanned);
-
             }
 
             [Fact]
             public void AdminUnbanUnbannedUser()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     IsAdmin = true
                 };
                 repository.Add(user);
@@ -2836,7 +2293,7 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Users.Add(user2);
@@ -2844,16 +2301,6 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 var ex = commandManager.TryHandleCommand("/unban dfowler2");
 
@@ -2866,12 +2313,14 @@ namespace JabbR.Test
             [Fact]
             public void CheckBannerIsNotAnAdminThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -2881,7 +2330,7 @@ namespace JabbR.Test
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Owners.Add(user);
@@ -2891,16 +2340,6 @@ namespace JabbR.Test
                 user2.Rooms.Add(room);
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
                 var ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/checkbanned dfowler2"));
 
                 Assert.True(ex.Message == "You are not an admin.");
@@ -2909,12 +2348,14 @@ namespace JabbR.Test
             [Fact]
             public void CannotCheckBannedUserIfNotExists()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     IsAdmin = true
                 };
                 repository.Add(user);
@@ -2926,7 +2367,7 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Users.Add(user2);
@@ -2934,16 +2375,6 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/checkbanned fowler3"));
                 Assert.Equal("Unable to find fowler3.", ex.Message);
@@ -2956,30 +2387,23 @@ namespace JabbR.Test
             [Fact]
             public void CanLeaveRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/leave");
 
@@ -2992,31 +2416,24 @@ namespace JabbR.Test
             [Fact]
             public void CanLeaveClosedRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Closed = true
                 };
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/leave");
 
@@ -3029,32 +2446,25 @@ namespace JabbR.Test
             [Fact]
             public void CanLeaveRoomByGivingRoomName()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
-                bool result = commandManager.TryHandleCommand("/leave room");
+                bool result = commandManager.TryHandleCommand("/leave roomName");
 
                 Assert.True(result);
                 Assert.False(room.Users.Contains(user));
@@ -3065,31 +2475,24 @@ namespace JabbR.Test
             [Fact]
             public void CannotLeaveRoomIfNotInRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/leave"));
                 Assert.Equal("Which room do you want to leave?", ex.Message);
             }
@@ -3100,23 +2503,16 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomThrowsFromLobby()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/list"));
                 Assert.Equal("Which room do you want to list the current users of?", ex.Message);
@@ -3125,24 +2521,17 @@ namespace JabbR.Test
             [Fact]
             public void NotExistingRoomThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/list test"));
                 Assert.Equal("Unable to find test.", ex.Message);
             }
@@ -3150,12 +2539,14 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomSucceedsFromRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -3166,29 +2557,20 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Users.Add(user2);
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
+                
                 var userList = new List<string>();
                 notificationService.Setup(m => m.ListUsers(It.IsAny<ChatRoom>(), It.IsAny<IEnumerable<string>>()))
                                    .Callback<ChatRoom, IEnumerable<string>>((_, names) =>
                                    {
                                        userList.AddRange(names);
                                    });
-
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/list");
 
@@ -3201,12 +2583,14 @@ namespace JabbR.Test
             [Fact]
             public void CanShowUserList()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -3217,15 +2601,14 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(user);
                 room.Users.Add(user2);
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
+
                 var userList = new List<string>();
                 notificationService.Setup(m => m.ListUsers(It.IsAny<ChatRoom>(), It.IsAny<IEnumerable<string>>()))
                                    .Callback<ChatRoom, IEnumerable<string>>((_, names) =>
@@ -3233,15 +2616,7 @@ namespace JabbR.Test
                                        userList.AddRange(names);
                                    });
 
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                bool result = commandManager.TryHandleCommand("/list room");
+                bool result = commandManager.TryHandleCommand("/list roomName");
 
                 Assert.True(result);
                 Assert.Equal(2, userList.Count);
@@ -3252,12 +2627,14 @@ namespace JabbR.Test
             [Fact]
             public void ThrowsOnClosedRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -3268,7 +2645,7 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Closed = true
                 };
                 room.Users.Add(user);
@@ -3276,8 +2653,7 @@ namespace JabbR.Test
                 user.Rooms.Add(room);
                 user2.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
+                
                 var userList = new List<string>();
                 notificationService.Setup(m => m.ListUsers(It.IsAny<ChatRoom>(), It.IsAny<IEnumerable<string>>()))
                                    .Callback<ChatRoom, IEnumerable<string>>((_, names) =>
@@ -3285,16 +2661,8 @@ namespace JabbR.Test
                                        userList.AddRange(names);
                                    });
 
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/list room"));
-                Assert.Equal("room is closed.", ex.Message);
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/list roomName"));
+                Assert.Equal("roomName is closed.", ex.Message);
             }
         }
 
@@ -3303,30 +2671,23 @@ namespace JabbR.Test
             [Fact]
             public void MissingContentThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/me"));
                 Assert.Equal("You what?", ex.Message);
@@ -3335,30 +2696,23 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/me is testing"));
                 Assert.Equal("Use '/join room' to join a room.", ex.Message);
@@ -3367,30 +2721,23 @@ namespace JabbR.Test
             [Fact]
             public void CanUseMeCommand()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/me is testing");
 
@@ -3401,34 +2748,27 @@ namespace JabbR.Test
             [Fact]
             public void ClosedRoomThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Closed = true
                 };
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/me is testing"));
-                Assert.Equal("room is closed.", ex.Message);
+                Assert.Equal("roomName is closed.", ex.Message);
             }
         }
 
@@ -3437,13 +2777,14 @@ namespace JabbR.Test
             [Fact]
             public void MissingUserNameThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
 
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -3452,16 +2793,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/msg"));
                 Assert.Equal("Who do you want to send a private message to?", ex.Message);
             }
@@ -3469,12 +2801,14 @@ namespace JabbR.Test
             [Fact]
             public void ThrowsIfUserDoesntExist()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -3483,15 +2817,6 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/msg dfowler3"));
                 Assert.Equal("Unable to find dfowler3.", ex.Message);
@@ -3500,12 +2825,14 @@ namespace JabbR.Test
             [Fact]
             public void CannotMessageOwnUser()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -3514,15 +2841,6 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/msg dfowler"));
                 Assert.Equal("You can't private message yourself!", ex.Message);
@@ -3531,12 +2849,14 @@ namespace JabbR.Test
             [Fact]
             public void MissingMessageTextThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -3545,15 +2865,6 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/msg dfowler2 "));
                 Assert.Equal("What do you want to say to dfowler2?", ex.Message);
@@ -3562,12 +2873,14 @@ namespace JabbR.Test
             [Fact]
             public void CanSendMessage()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -3576,16 +2889,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/msg dfowler2 what is up?");
 
                 Assert.True(result);
@@ -3598,24 +2902,17 @@ namespace JabbR.Test
             [Fact]
             public void MissingUserNameThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/invite"));
                 Assert.Equal("Who do you want to invite?", ex.Message);
             }
@@ -3623,24 +2920,17 @@ namespace JabbR.Test
             [Fact]
             public void NotExistingUserNameThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/invite dfowler2"));
                 Assert.Equal("Unable to find dfowler2.", ex.Message);
             }
@@ -3648,12 +2938,14 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomThrowsFromLobby()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -3662,15 +2954,6 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/invite dfowler2"));
                 Assert.Equal("Which room do you want to invite them to?", ex.Message);
@@ -3679,12 +2962,14 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomSucceedsFromRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -3693,18 +2978,12 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var room = new ChatRoom { Name = "test", };
+                var room = new ChatRoom
+                {
+                    Name = "roomName"
+                };
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "test",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/invite dfowler2");
 
                 Assert.True(result);
@@ -3713,12 +2992,14 @@ namespace JabbR.Test
             [Fact]
             public void NotExistingRoomThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -3727,16 +3008,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/invite dfowler2 asfasfdsad"));
                 Assert.Equal("Unable to find asfasfdsad.", ex.Message);
             }
@@ -3744,12 +3016,14 @@ namespace JabbR.Test
             [Fact]
             public void ThrowsIfThereIsOnlyOneUser()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
@@ -3759,15 +3033,6 @@ namespace JabbR.Test
                 room.Users.Add(user);
                 user.Rooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/invite void"));
                 Assert.Equal("Unable to find void.", ex.Message);
@@ -3776,12 +3041,14 @@ namespace JabbR.Test
             [Fact]
             public void CannotInviteOwnUser()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -3790,16 +3057,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/invite dfowler"));
                 Assert.Equal("You can't invite yourself!", ex.Message);
             }
@@ -3810,12 +3068,14 @@ namespace JabbR.Test
             [Fact]
             public void ThrowsIfUserDoesntExists()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -3824,16 +3084,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/nudge void"));
                 Assert.Equal("Unable to find void.", ex.Message);
             }
@@ -3841,12 +3092,14 @@ namespace JabbR.Test
             [Fact]
             public void CannotNudgeOwnUser()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -3855,16 +3108,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/nudge dfowler"));
                 Assert.Equal("You can't nudge yourself!", ex.Message);
             }
@@ -3872,12 +3116,14 @@ namespace JabbR.Test
             [Fact]
             public void NudgingTwiceWithin60SecondsThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -3886,16 +3132,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/nudge dfowler2");
 
                 Assert.True(result);
@@ -3907,12 +3144,14 @@ namespace JabbR.Test
             [Fact]
             public void CanNudge()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -3921,16 +3160,7 @@ namespace JabbR.Test
                     Id = "2"
                 };
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/nudge dfowler2");
 
                 Assert.True(result);
@@ -3941,12 +3171,14 @@ namespace JabbR.Test
             [Fact]
             public void CanNudgeRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -3957,23 +3189,13 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 user2.Rooms.Add(room);
                 room.Users.Add(user2);
                 repository.Add(room);
-
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/nudge");
 
@@ -3985,12 +3207,14 @@ namespace JabbR.Test
             [Fact]
             public void CannotNudgeRoomTwiceWithin60Seconds()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -4001,23 +3225,13 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 user.Rooms.Add(room);
                 room.Users.Add(user);
                 user2.Rooms.Add(room);
                 room.Users.Add(user2);
                 repository.Add(room);
-
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/nudge");
 
@@ -4032,12 +3246,14 @@ namespace JabbR.Test
             [Fact]
             public void CannotNudgeClosedRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var user2 = new ChatUser
@@ -4048,7 +3264,7 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Closed = true
                 };
                 user.Rooms.Add(room);
@@ -4057,18 +3273,8 @@ namespace JabbR.Test
                 room.Users.Add(user2);
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/nudge"));
-                Assert.Equal("room is closed.", ex.Message);
+                Assert.Equal("roomName is closed.", ex.Message);
             }
         }
 
@@ -4077,24 +3283,17 @@ namespace JabbR.Test
             [Fact]
             public void CanGetUserList()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/who");
 
                 Assert.True(result);
@@ -4104,24 +3303,17 @@ namespace JabbR.Test
             [Fact]
             public void CanGetUserInfo()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/who dfowler");
 
                 Assert.True(result);
@@ -4131,24 +3323,17 @@ namespace JabbR.Test
             [Fact]
             public void CannotGetInfoForInvalidUser()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/who sethwebster"));
                 Assert.Equal("Unable to find sethwebster.", ex.Message);
             }
@@ -4159,24 +3344,17 @@ namespace JabbR.Test
             [Fact]
             public void MissingUserNameThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/where"));
                 Assert.Equal("Who do you want to locate?", ex.Message);
             }
@@ -4184,23 +3362,16 @@ namespace JabbR.Test
             [Fact]
             public void CannotShowUserRoomsWhenEnteringPartOfName()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/where dfow"));
                 Assert.Equal("Unable to find dfow.", ex.Message);
@@ -4209,23 +3380,16 @@ namespace JabbR.Test
             [Fact]
             public void CanShowUserRooms()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/where dfowler");
 
@@ -4240,23 +3404,16 @@ namespace JabbR.Test
             [Fact]
             public void MissingUserNameThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/allow"));
                 Assert.Equal("Who do you want to grant access permissions to?", ex.Message);
@@ -4265,24 +3422,17 @@ namespace JabbR.Test
             [Fact]
             public void NotExistingUserNameThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/allow dfowler2"));
                 Assert.Equal("Unable to find dfowler2.", ex.Message);
             }
@@ -4290,12 +3440,14 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomThrowsFromLobby()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -4304,16 +3456,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/allow dfowler2"));
                 Assert.Equal("Which room do you want to allow access to?", ex.Message);
             }
@@ -4321,12 +3464,14 @@ namespace JabbR.Test
             [Fact]
             public void NotExistingRoomThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -4335,16 +3480,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/allow dfowler2 asfasfdsad"));
                 Assert.Equal("Unable to find asfasfdsad.", ex.Message);
             }
@@ -4352,12 +3488,14 @@ namespace JabbR.Test
             [Fact]
             public void CannotAllowUserToRoomIfNotPrivate()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -4368,34 +3506,27 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 user.OwnedRooms.Add(room);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/allow dfowler2 room"));
-                Assert.Equal("room is not a private room.", ex.Message);
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/allow dfowler2 roomName"));
+                Assert.Equal("roomName is not a private room.", ex.Message);
             }
 
             [Fact]
             public void CanAllowUserToRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -4406,23 +3537,14 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true
                 };
                 user.OwnedRooms.Add(room);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                bool result = commandManager.TryHandleCommand("/allow dfowler2 room");
+                
+                bool result = commandManager.TryHandleCommand("/allow dfowler2 roomName");
 
                 Assert.True(result);
                 notificationService.Verify(x => x.AllowUser(user2, room), Times.Once());
@@ -4432,12 +3554,14 @@ namespace JabbR.Test
             [Fact]
             public void CanAllowUserToClosedRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -4448,24 +3572,15 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true,
                     Closed = true
                 };
                 user.OwnedRooms.Add(room);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                bool result = commandManager.TryHandleCommand("/allow dfowler2 room");
+                
+                bool result = commandManager.TryHandleCommand("/allow dfowler2 roomName");
 
                 Assert.True(result);
                 notificationService.Verify(x => x.AllowUser(user2, room), Times.Once());
@@ -4475,12 +3590,14 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomSucceedsFromRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -4491,21 +3608,12 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true
                 };
                 user.OwnedRooms.Add(room);
                 room.Owners.Add(user);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/allow dfowler2");
 
@@ -4520,32 +3628,25 @@ namespace JabbR.Test
             [Fact]
             public void CanGetAllowedUserListDefault()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room", 
+                    Name = "roomName", 
                     Private = true, 
                     AllowedUsers = new Collection<ChatUser>() { user },
                     Users = new Collection<ChatUser>() { user }
                 };
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/allowed");
 
                 Assert.True(result);
@@ -4555,32 +3656,25 @@ namespace JabbR.Test
             [Fact]
             public void CanGetAllowedUserListPublicRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = false,
                     Users = new Collection<ChatUser>() { user }
                 };
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                bool result = commandManager.TryHandleCommand("/allowed room");
+                
+                bool result = commandManager.TryHandleCommand("/allowed roomName");
 
                 Assert.True(result);
                 notificationService.Verify(x => x.ListAllowedUsers(room), Times.Once());
@@ -4589,40 +3683,33 @@ namespace JabbR.Test
             [Fact]
             public void CanGetAllowedUserListSpecified()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "otherRoom",
                     Private = true,
                     AllowedUsers = new Collection<ChatUser>() { user },
                 };
                 repository.Add(room);
                 var room2 = new ChatRoom
                 {
-                    Name = "room2",
+                    Name = "roomName",
                     Private = true,
                     AllowedUsers = new Collection<ChatUser>() { user },
                     Users = new Collection<ChatUser>() { user }
                 };
                 repository.Add(room2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room2",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
-                bool result = commandManager.TryHandleCommand("/allowed room");
+                bool result = commandManager.TryHandleCommand("/allowed otherRoom");
 
                 Assert.True(result);
                 notificationService.Verify(x => x.ListAllowedUsers(room), Times.Once());
@@ -4631,17 +3718,19 @@ namespace JabbR.Test
             [Fact]
             public void CanGetAllowedUserListClosedRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "otherRoom",
                     Private = true,
                     Closed = true,
                     AllowedUsers = new Collection<ChatUser>() { user },
@@ -4649,23 +3738,14 @@ namespace JabbR.Test
                 repository.Add(room);
                 var room2 = new ChatRoom
                 {
-                    Name = "room2",
+                    Name = "roomName",
                     Private = true,
                     AllowedUsers = new Collection<ChatUser>() { user },
                     Users = new Collection<ChatUser>() { user }
                 };
                 repository.Add(room2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room2",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                bool result = commandManager.TryHandleCommand("/allowed room");
+                
+                bool result = commandManager.TryHandleCommand("/allowed otherRoom");
 
                 Assert.True(result);
                 notificationService.Verify(x => x.ListAllowedUsers(room), Times.Once());
@@ -4674,23 +3754,16 @@ namespace JabbR.Test
             [Fact]
             public void CannotGetInfoForInvalidRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/allowed room3"));
                 Assert.Equal("Unable to find room3.", ex.Message);
@@ -4699,17 +3772,19 @@ namespace JabbR.Test
             [Fact]
             public void CannotGetInfoForInaccessiblePrivateRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "otherRoom",
                     Private = true,
                     AllowedUsers = new Collection<ChatUser>() { },
                     Users = new Collection<ChatUser>() { }
@@ -4717,24 +3792,15 @@ namespace JabbR.Test
                 repository.Add(room);
                 var room2 = new ChatRoom
                 {
-                    Name = "room2",
+                    Name = "roomName",
                     Private = true,
                     AllowedUsers = new Collection<ChatUser>() { user },
                     Users = new Collection<ChatUser>() { user }
                 };
                 repository.Add(room2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room2",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/allowed room"));
-                Assert.Equal("You do not have access to room.", ex.Message);
+                
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/allowed otherRoom"));
+                Assert.Equal("You do not have access to otherRoom.", ex.Message);
             }
         }
 
@@ -4743,24 +3809,17 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomNameThrowsFromLobby()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/lock"));
                 Assert.Equal("Which room do you want to lock?", ex.Message);
             }
@@ -4768,33 +3827,26 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomNameSucceedsFromRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = false
                 };
                 room.Creator = user;
                 room.Owners.Add(user);
                 user.OwnedRooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/lock");
 
                 Assert.True(result);
@@ -4805,23 +3857,16 @@ namespace JabbR.Test
             [Fact]
             public void NotExistingRoomNameThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/lock room"));
                 Assert.Equal("Unable to find room.", ex.Message);
@@ -4830,12 +3875,14 @@ namespace JabbR.Test
             [Fact]
             public void CanLockRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
@@ -4847,15 +3894,6 @@ namespace JabbR.Test
                 room.Owners.Add(user);
                 user.OwnedRooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/lock room");
 
@@ -4867,12 +3905,14 @@ namespace JabbR.Test
             [Fact]
             public void CanLockClosedRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
@@ -4885,15 +3925,6 @@ namespace JabbR.Test
                 room.Owners.Add(user);
                 user.OwnedRooms.Add(room);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/lock room");
 
@@ -4908,24 +3939,16 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomNameThrowsFromLobby()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 // Act & Assert.
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/close"));
@@ -4935,35 +3958,24 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomNameSucceedsFromRoom()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
 
-                const string roomName = "test";
                 var room = new ChatRoom
                 {
-                    Name = roomName
+                    Name = "roomName"
                 };
-                // Add a room owner.
                 room.Owners.Add(user);
 
                 repository.Add(room);
-
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        roomName,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/close");
 
@@ -4975,100 +3987,65 @@ namespace JabbR.Test
             [Fact]
             public void NotExistingRoomNameThrows()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                // Act & Assert.
-                const string roomName = "ruroh";
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/close " + roomName));
-                Assert.Equal("Unable to find " + roomName + ".", ex.Message);
+                
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/close ruroh"));
+                Assert.Equal("Unable to find ruroh.", ex.Message);
             }
 
             [Fact]
             public void CannotCloseARoomIfTheUserIsNotAnOwner()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(roomOwner);
-
-                const string roomName = "test";
                 var room = new ChatRoom
                 {
-                    Name = roomName
+                    Name = "roomName"
                 };
-                // Add a room owner.
                 repository.Add(room);
-
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/close " + roomName));
-                Assert.Equal("You are not an owner of " + roomName + ".", ex.Message);
+                
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/close roomName"));
+                Assert.Equal("You are not an owner of roomName.", ex.Message);
             }
 
             [Fact]
             public void CanCloseRoomWithNoPeople()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-
-                const string roomName = "test";
                 var room = new ChatRoom
                 {
-                    Name = roomName
+                    Name = "roomName"
                 };
-                // Add a room owner.
                 room.Owners.Add(user);
-
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                bool result = commandManager.TryHandleCommand("/close " + roomName);
+                bool result = commandManager.TryHandleCommand("/close roomName");
 
                 Assert.True(result);
                 notificationService.Verify(x => x.CloseRoom(room.Users, room), Times.Once());
@@ -5078,13 +4055,14 @@ namespace JabbR.Test
             [Fact]
             public void CanCloseRoomWithPeopleAndOwnerNotInTheRoom()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var randomUser = new ChatUser
                 {
@@ -5094,10 +4072,9 @@ namespace JabbR.Test
                 repository.Add(roomOwner);
                 repository.Add(randomUser);
 
-                const string roomName = "test";
                 var room = new ChatRoom
                 {
-                    Name = roomName
+                    Name = "roomName"
                 };
                 // Add a room owner (but the owner is not INSIDE the room).
                 room.Owners.Add(roomOwner);
@@ -5112,17 +4089,7 @@ namespace JabbR.Test
                 // verify that these users we passed into the closeRoom method.
                 var users = room.Users.ToList();
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                bool result = commandManager.TryHandleCommand("/close " + roomName);
+                bool result = commandManager.TryHandleCommand("/close roomName");
 
                 Assert.True(result);
                 notificationService.Verify(x => x.CloseRoom(users, room), Times.Once());
@@ -5135,23 +4102,16 @@ namespace JabbR.Test
             [Fact]
             public void MissingUserNameThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/unallow"));
                 Assert.Equal("Who you want to revoke access permissions from?", ex.Message);
@@ -5160,23 +4120,16 @@ namespace JabbR.Test
             [Fact]
             public void NotExistingUserNameThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+                
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/unallow dfowler2"));
                 Assert.Equal("Unable to find dfowler2.", ex.Message);
@@ -5185,12 +4138,14 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomThrowsFromLobby()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -5199,16 +4154,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/unallow dfowler2"));
                 Assert.Equal("Which room do you want to revoke access from?", ex.Message);
             }
@@ -5216,12 +4162,14 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomSucceedsFromRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -5232,7 +4180,7 @@ namespace JabbR.Test
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true
                 };
                 user.OwnedRooms.Add(room);
@@ -5240,15 +4188,6 @@ namespace JabbR.Test
                 user2.AllowedRooms.Add(room);
                 room.AllowedUsers.Add(user2);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 bool result = commandManager.TryHandleCommand("/unallow dfowler2");
 
@@ -5260,12 +4199,14 @@ namespace JabbR.Test
             [Fact]
             public void NotExistingRoomThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -5274,16 +4215,7 @@ namespace JabbR.Test
                 };
                 repository.Add(user);
                 repository.Add(user2);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/unallow dfowler2 asfasfdsad"));
                 Assert.Equal("Unable to find asfasfdsad.", ex.Message);
             }
@@ -5291,12 +4223,14 @@ namespace JabbR.Test
             [Fact]
             public void CannotUnAllowUserToRoomIfNotPrivate()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -5314,15 +4248,6 @@ namespace JabbR.Test
                 user2.AllowedRooms.Add(room);
                 room.AllowedUsers.Add(user2);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
 
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/unallow dfowler2 room"));
                 Assert.Equal("room is not a private room.", ex.Message);
@@ -5331,12 +4256,14 @@ namespace JabbR.Test
             [Fact]
             public void CanUnAllowUserToRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 var user2 = new ChatUser
                 {
@@ -5355,16 +4282,7 @@ namespace JabbR.Test
                 user2.AllowedRooms.Add(room);
                 room.AllowedUsers.Add(user2);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/unallow dfowler2 room");
 
                 Assert.True(result);
@@ -5375,23 +4293,25 @@ namespace JabbR.Test
             [Fact]
             public void CanUnAllowUserToClosedRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
+                repository.Add(user);
                 var user2 = new ChatUser
                 {
                     Name = "dfowler2",
                     Id = "2"
                 };
-                repository.Add(user);
                 repository.Add(user2);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Private = true,
                     Closed = true
                 };
@@ -5400,17 +4320,8 @@ namespace JabbR.Test
                 user2.AllowedRooms.Add(room);
                 room.AllowedUsers.Add(user2);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                bool result = commandManager.TryHandleCommand("/unallow dfowler2 room");
+                
+                bool result = commandManager.TryHandleCommand("/unallow dfowler2 roomName");
 
                 Assert.True(result);
                 notificationService.Verify(x => x.UnallowUser(user2, room, user), Times.Once());
@@ -5423,85 +4334,59 @@ namespace JabbR.Test
             [Fact]
             public void CanSetFlag()
             {
-                // Arrange.
-                const string isoCode = "au";
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
-                    Name = "asshat",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act.
-                bool result = commandManager.TryHandleCommand("/flag " + isoCode);
+                
+                bool result = commandManager.TryHandleCommand("/flag au");
 
                 Assert.True(result);
-                Assert.Equal(isoCode, user.Flag);
+                Assert.Equal("au", user.Flag);
                 notificationService.Verify(x => x.ChangeFlag(user), Times.Once());
             }
 
             [Fact]
             public void CanSetFlagWithUppercaseIso()
             {
-                // Arrange.
-                const string isoCode = "AU";
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
-                    Name = "asshat",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act.
-                bool result = commandManager.TryHandleCommand("/flag " + isoCode);
+                
+                bool result = commandManager.TryHandleCommand("/flag AU");
 
                 Assert.True(result);
-                Assert.Equal(isoCode.ToLowerInvariant(), user.Flag);
+                Assert.Equal("au", user.Flag);
                 notificationService.Verify(x => x.ChangeFlag(user), Times.Once());
             }
 
             [Fact]
             public void NoIsoCodeClearsFlag()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
-                    Name = "asshat",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act.
+
                 bool result = commandManager.TryHandleCommand("/flag");
 
                 Assert.True(result);
@@ -5512,54 +4397,36 @@ namespace JabbR.Test
             [Fact]
             public void IncorrectIsoCodeThrows()
             {
-                // Arrange.
-                const string isoCode = "xx";
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
-                    Name = "asshat",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act and Assert
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/flag " + isoCode));
+                
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/flag XX"));
                 Assert.Equal("Sorry, but the country ISO code you requested doesn't exist. Please refer to http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 for a proper list of country ISO codes.", ex.Message);
             }
 
             [Fact]
             public void TooLongIsoCodeThrows()
             {
-                // Arrange.
-                const string isoCode = "xxxxx";
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
-                    Name = "asshat",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act and Assert
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/flag " + isoCode));
+
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/flag xxxxx"));
                 Assert.Equal("Sorry, but the country ISO code you requested doesn't exist. Please refer to http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 for a proper list of country ISO codes.", ex.Message);
             }
         }
@@ -5569,33 +4436,24 @@ namespace JabbR.Test
             [Fact]
             public void CanGenerateMeme()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
-                    Name = "asshat",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act.
+                
                 bool result = commandManager.TryHandleCommand("/meme aa top-line bottom-line");
 
-                // Assert.
                 Assert.True(result);
                 notificationService.Verify(x => x.GenerateMeme(user, room, "https://upboat.me/aa/top-line/bottom-line.jpg"), Times.Once());
             }
@@ -5603,33 +4461,24 @@ namespace JabbR.Test
             [Fact]
             public void EncodesSpecialCharacters()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
-                    Name = "asshat",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act.
+                
                 bool result = commandManager.TryHandleCommand("/meme ramsay cold-hands? type-faster.../.");
 
-                // Assert.
                 Assert.True(result);
                 notificationService.Verify(x => x.GenerateMeme(user, room, "https://upboat.me/ramsay/cold-hands%3F/type-faster...%2F..jpg"), Times.Once());
             }
@@ -5637,30 +4486,17 @@ namespace JabbR.Test
             [Fact]
             public void InLobbyThrows()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
-                    Name = "asshat",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var room = new ChatRoom
-                {
-                    Name = "room"
-                };
-                repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "", // In the lobby.
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act.
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/meme aa top-line bottom-line"));
                 Assert.Equal("This command cannot be invoked from the Lobby.", ex.Message);
             }
@@ -5668,30 +4504,22 @@ namespace JabbR.Test
             [Fact]
             public void MissingAllArgumentsThrows()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
-                    Name = "asshat",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act.
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/meme"));
                 Assert.Equal("What type of meme do you want to generate, and with what message? You need to provide 3 seperate arguments delimeted by spaces. The list of available memes is at: https://upboat.me/List .", ex.Message);
             }
@@ -5699,30 +4527,22 @@ namespace JabbR.Test
             [Fact]
             public void MissingSomeArgumentsThrows()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var user = new ChatUser
                 {
-                    Name = "asshat",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(user);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                // Act.
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/meme cd top-line"));
                 Assert.Equal("Incorrect number of meme arguments. You need to provide 3 seperate arguments delimeted by spaces. Use a dash (eg: your-message) to display a space in your message.", ex.Message);
             }
@@ -5733,20 +4553,20 @@ namespace JabbR.Test
             [Fact]
             public void NotLoggedInThrows()
             {
-                // Arrange.
                 var repository = new InMemoryRepository();
                 var cache = new Mock<ICache>().Object;
                 var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
                 var notificationService = new Mock<INotificationService>();
                 var commandManager = new CommandManager("clientid",
+                                                        "userAgent",
                                                         null,
                                                         null,
                                                         service,
                                                         repository,
                                                         cache,
-                                                        notificationService.Object);
+                                                        notificationService.Object,
+                                                        null);
 
-                // Act & Assert.
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/open"));
                 Assert.Equal("You're not logged in.", ex.Message);
             }
@@ -5754,26 +4574,17 @@ namespace JabbR.Test
             [Fact]
             public void MissingRoomNameThrows()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                // Act & Assert.
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/open"));
                 Assert.Equal("Which room do you want to open?", ex.Message);
 
@@ -5782,138 +4593,98 @@ namespace JabbR.Test
             [Fact]
             public void NotExistingRoomNameThrows()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                // Act & Assert.
-                const string roomName = "ruroh";
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/open " + roomName));
-                Assert.Equal("Unable to find " + roomName + ".", ex.Message);
+                
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/open ruroh"));
+                Assert.Equal("Unable to find ruroh.", ex.Message);
             }
 
             [Fact]
             public void CannotOpenAnAlreadyOpenRoom()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(roomOwner);
 
-                const string roomName = "test";
                 var room = new ChatRoom
                 {
-                    Name = roomName
+                    Name = "roomName"
                 };
                 room.Owners.Add(roomOwner);
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/open " + roomName));
-                Assert.Equal(roomName + " is already open.", ex.Message);
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/open roomName"));
+                Assert.Equal("roomName is already open.", ex.Message);
             }
 
             [Fact]
             public void CannotOpenARoomIfTheUserIsNotAnOwner()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(roomOwner);
 
-                const string roomName = "test";
                 var room = new ChatRoom
                 {
-                    Name = roomName,
+                    Name = "roomName",
                     Closed = true
                 };
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
-                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/open " + roomName));
-                Assert.Equal("You are not an owner of " + roomName + ".", ex.Message);
+                HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/open roomName"));
+                Assert.Equal("You are not an owner of roomName.", ex.Message);
             }
 
             [Fact]
             public void RoomOpensAndOwnerJoinedAutomaticallyIfUserIsOwner()
             {
-                // Arrange.
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(roomOwner);
 
-                const string roomName = "test";
                 var room = new ChatRoom
                 {
-                    Name = roomName,
+                    Name = "roomName",
                     Closed = true
                 };
-                // Add a room owner
                 room.Owners.Add(roomOwner);
                 repository.Add(room);
 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-                var result = commandManager.TryHandleCommand("/open " + roomName);
+                var result = commandManager.TryHandleCommand("/open roomName");
 
                 Assert.True(result);
                 Assert.False(room.Closed);
-                Assert.True(roomOwner.Rooms.Any(x => x.Name.Equals(roomName, StringComparison.OrdinalIgnoreCase)));
+                Assert.True(roomOwner.Rooms.Any(x => x.Name.Equals("roomName", StringComparison.OrdinalIgnoreCase)));
             }
         }
 
@@ -5922,62 +4693,50 @@ namespace JabbR.Test
             [Fact]
             public void UserMustBeOwner()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(roomOwner);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
+                
                 string topicLine = "This is the room's topic";
                 var exception = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/topic " + topicLine));
 
-                Assert.Equal("You are not an owner of room.", exception.Message);    
+                Assert.Equal("You are not an owner of roomName.", exception.Message);    
             }
 
             [Fact]
             public void CommandSucceeds()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(roomOwner);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
+                
                 string topicLine = "This is the room's topic";
                 bool result = commandManager.TryHandleCommand("/topic " + topicLine);
 
@@ -5989,63 +4748,51 @@ namespace JabbR.Test
             [Fact]
             public void ThrowsIfRoomClosed()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(roomOwner);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Closed = true
                 };
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
+                
                 string topicLine = "This is the room's topic";
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/topic " + topicLine));
-                Assert.Equal("room is closed.", ex.Message);
+                Assert.Equal("roomName is closed.", ex.Message);
             }
 
             [Fact]
             public void ThrowsIfTopicExceedsMaxLength()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(roomOwner);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
+                
                 string topicLine = new String('A', 81);
                 var exception = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/topic " + topicLine));
 
@@ -6055,31 +4802,24 @@ namespace JabbR.Test
             [Fact]
             public void CommandClearsTopicIfNoTextProvided()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var roomOwner = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(roomOwner);
                 var room = new ChatRoom
                 {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/topic");
 
                 Assert.True(result);
@@ -6093,24 +4833,17 @@ namespace JabbR.Test
             [Fact]
             public void ThrowsIfUserIsNotAdmin()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1"
+                    Id = "userId"
                 };
                 repository.Add(user);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/broadcast something"));
                 Assert.Equal("You are not an admin.", ex.Message);
             }
@@ -6118,26 +4851,18 @@ namespace JabbR.Test
             [Fact]
             public void MissingMessageTextThrows()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     IsAdmin = true
                 };
                 repository.Add(user);
                 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
                 HubException ex = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/broadcast"));
                 Assert.Equal("What message do you want to broadcast?", ex.Message);
             }
@@ -6145,26 +4870,18 @@ namespace JabbR.Test
             [Fact]
             public void CanBroadcastMessage()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(null, out repository, out notificationService);
+
                 var user = new ChatUser
                 {
                     Name = "dfowler",
-                    Id = "1",
+                    Id = "userId",
                     IsAdmin = true
                 };
                 repository.Add(user);
                 
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        null,
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
                 bool result = commandManager.TryHandleCommand("/broadcast what is up?");
 
                 Assert.True(result);
@@ -6177,91 +4894,74 @@ namespace JabbR.Test
             [Fact]
             public void UserMustBeOwner()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var roomOwner = new ChatUser {
-                    Name = "thomasjo",
-                    Id = "1"
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
+                var roomOwner = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(roomOwner);
                 var room = new ChatRoom {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
+                
                 string welcomeMessage = "This is the room's welcome message";
                 var exception = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/welcome " + welcomeMessage));
 
-                Assert.Equal("You are not an owner of room.", exception.Message);
+                Assert.Equal("You are not an owner of roomName.", exception.Message);
             }
 
             [Fact]
             public void ThrowsOnClosedRoom()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var roomOwner = new ChatUser
                 {
-                    Name = "thomasjo",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(roomOwner);
                 var room = new ChatRoom
                 {
-                    Name = "room",
+                    Name = "roomName",
                     Closed = true
                 };
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
+                
                 string welcomeMessage = "This is the room's welcome message";
                 var exception = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/welcome " + welcomeMessage));
 
-                Assert.Equal("room is closed.", exception.Message);
+                Assert.Equal("roomName is closed.", exception.Message);
             }
 
             [Fact]
             public void CommandSucceeds()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var roomOwner = new ChatUser {
-                    Name = "thomasjo",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(roomOwner);
                 var room = new ChatRoom {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
+                
                 string welcomeMessage = "This is the room's welcome message";
                 bool result = commandManager.TryHandleCommand("/welcome " + welcomeMessage);
 
@@ -6273,28 +4973,22 @@ namespace JabbR.Test
             [Fact]
             public void ThrowsIfWelcomeMessageExceedsMaxLength()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
                 var roomOwner = new ChatUser {
-                    Name = "thomasjo",
-                    Id = "1"
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(roomOwner);
                 var room = new ChatRoom {
-                    Name = "room"
+                    Name = "roomName"
                 };
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
+                
                 string welcomeMessage = new String('A', 201);
                 var exception = Assert.Throws<HubException>(() => commandManager.TryHandleCommand("/welcome " + welcomeMessage));
 
@@ -6304,30 +4998,24 @@ namespace JabbR.Test
             [Fact]
             public void CommandClearsWelcomeIfNoTextProvided()
             {
-                var repository = new InMemoryRepository();
-                var cache = new Mock<ICache>().Object;
-                var roomOwner = new ChatUser {
-                    Name = "thomasjo",
-                    Id = "1"
+                IJabbrRepository repository;
+                Mock<INotificationService> notificationService;
+                var commandManager = CreateCommandManager(out repository, out notificationService);
+
+                var roomOwner = new ChatUser
+                {
+                    Name = "dfowler",
+                    Id = "userId"
                 };
                 repository.Add(roomOwner);
                 var room = new ChatRoom {
-                    Name = "room",
+                    Name = "roomName",
                     Welcome = "foo"
                 };
                 room.Owners.Add(roomOwner);
                 room.Users.Add(roomOwner);
                 repository.Add(room);
-                var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
-                var notificationService = new Mock<INotificationService>();
-                var commandManager = new CommandManager("clientid",
-                                                        "1",
-                                                        "room",
-                                                        service,
-                                                        repository,
-                                                        cache,
-                                                        notificationService.Object);
-
+                
                 bool result = commandManager.TryHandleCommand("/welcome");
 
                 Assert.True(result);
@@ -6342,13 +5030,16 @@ namespace JabbR.Test
             var cache = new Mock<ICache>().Object;
             var service = new ChatService(cache, new Mock<IRecentMessageCache>().Object, repository);
             var notificationService = new Mock<INotificationService>();
+            var membershipService = new MembershipService(repository, new CryptoService(new SettingsKeyProvider(ApplicationSettings.GetDefaultSettings())));
             var commandManager = new CommandManager("clientid",
+                                                    "userAgent",
                                                     null,
                                                     null,
                                                     service,
                                                     repository,
                                                     cache,
-                                                    notificationService.Object);
+                                                    notificationService.Object,
+                                                    membershipService);
 
             return Assert.Throws<T>(() => commandManager.TryHandleCommand(command));
         }

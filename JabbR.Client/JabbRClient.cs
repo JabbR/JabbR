@@ -337,7 +337,7 @@ namespace JabbR.Client
                 Execute(LoggedOut, loggedOut => loggedOut(rooms));
             });
 
-            _chat.On<User, string, bool>(ClientEvents.AddUser, (user, room, isOwner) =>
+            _chat.On<User, string, bool>(ClientEvents.AddUserToRoom, (user, room, isOwner) =>
             {
                 Execute(UserJoined, userJoined => userJoined(user, room, isOwner));
             });

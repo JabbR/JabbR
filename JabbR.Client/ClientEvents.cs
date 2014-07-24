@@ -5,7 +5,7 @@
         public static readonly string AddMessage = "addMessage";
         public static readonly string AddMessageContent = "addMessageContent";
         public static readonly string ReplaceMessage = "replaceMessage";
-        public static readonly string AddUser = "addUser";
+        public static readonly string AddUserToRoom = "addUserToRoom";
         public static readonly string Leave = "leave";
         public static readonly string LogOn = "logOn";
         public static readonly string LogOut = "logOut";

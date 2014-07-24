@@ -397,6 +397,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Register a new user account. Only works if you&apos;re an administrator..
+        /// </summary>
+        public static string AddUser_CommandInfo {
+            get {
+                return ResourceManager.GetString("AddUser_CommandInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Administration.
         /// </summary>
         public static string Administration {
@@ -919,6 +928,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The provided password complexity is invalid..
+        /// </summary>
+        public static string Authentication_PasswordComplexityInvalid {
+            get {
+                return ResourceManager.GetString("Authentication_PasswordComplexityInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A password is required..
         /// </summary>
         public static string AuthenticationPasswordRequired {
@@ -1204,6 +1222,15 @@ namespace JabbR {
         public static string Chat_UserClearedRoomTopic {
             get {
                 return ResourceManager.GetString("Chat_UserClearedRoomTopic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} created with password {1}.
+        /// </summary>
+        public static string Chat_UserCreatedPassword {
+            get {
+                return ResourceManager.GetString("Chat_UserCreatedPassword", resourceCulture);
             }
         }
         

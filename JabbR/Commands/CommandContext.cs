@@ -9,5 +9,6 @@ namespace JabbR.Commands
         public ICache Cache { get; set; }
         public IChatService Service { get; set; }
         public INotificationService NotificationService { get; set; }
+        public IMembershipService MembershipService { get; set; }
     }
 }

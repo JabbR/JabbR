@@ -142,7 +142,7 @@
 
         $.each(roomInfo.Users, function () {
             var userViewModel = getUserViewModel(this);
-            ui.addUser(userViewModel, room);
+            ui.addUserToRoom(userViewModel, room);
             ui.setUserActivity(userViewModel);
         });
 
@@ -532,16 +532,20 @@
         updateUnread(room, isMentioned);
     };
 
-    chat.client.addUser = function (user, room, isOwner) {
+    chat.client.addUserToRoom = function (user, room, isOwner) {
         var viewModel = getUserViewModel(user, isOwner);
 
-        var added = ui.addUser(viewModel, room);
+        var added = ui.addUserToRoom(viewModel, room);
 
         if (added) {
             if (!isSelf(user)) {
                 ui.addNotification(utility.getLanguageResource('Chat_UserEnteredRoom', user.Name, room), room);
             }
         }
+    };
+
+    chat.client.addUser = function (user, password) {
+        ui.addNotificationToActiveRoom(utility.getLanguageResource('Chat_UserCreatedPassword', user.Name, password));
     };
 
     chat.client.changeUserName = function (oldName, user, room) {
