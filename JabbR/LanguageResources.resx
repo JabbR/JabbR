@@ -1290,4 +1290,10 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="Chat_UserCreatedPassword" xml:space="preserve">
     <value>{0} created with password {1}</value>
   </data>
+  <data name="ResetPassword_CommandInfo1" xml:space="preserve">
+    <value>Reset the password associated with a user account. Only works if you're an administrator.</value>
+  </data>
+  <data name="Chat_UserResetPassword" xml:space="preserve">
+    <value>{0}'s password has been reset to {1}</value>
+  </data>
 </root>

@@ -730,6 +730,13 @@ namespace JabbR
             Clients.User(callingUser.Id).addUser(targetUserViewModel, password);
         }
 
+        void INotificationService.ResetUserPassword(ChatUser targetUser, ChatUser callingUser, string password)
+        {
+            var targetUserViewModel = new UserViewModel(targetUser);
+
+            Clients.User(callingUser.Id).resetUserPassword(targetUserViewModel, password);
+        }
+
         void INotificationService.KickUser(ChatUser targetUser, ChatRoom room, ChatUser callingUser, string reason)
         {
             var targetUserViewModel = new UserViewModel(targetUser);

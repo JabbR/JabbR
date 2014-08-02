@@ -1451,6 +1451,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}&apos;s password has been reset to {1}.
+        /// </summary>
+        public static string Chat_UserResetPassword {
+            get {
+                return ResourceManager.GetString("Chat_UserResetPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} is no longer an owner of {1}..
         /// </summary>
         public static string Chat_UserRoomOwnershipRevoked {
@@ -3054,6 +3063,15 @@ namespace JabbR {
         public static string ResetInviteCode_RoomRequired {
             get {
                 return ResourceManager.GetString("ResetInviteCode_RoomRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset the password associated with a user account. Only works if you&apos;re an administrator..
+        /// </summary>
+        public static string ResetPassword_CommandInfo1 {
+            get {
+                return ResourceManager.GetString("ResetPassword_CommandInfo1", resourceCulture);
             }
         }
         

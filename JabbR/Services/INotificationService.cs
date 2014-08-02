@@ -38,6 +38,8 @@ namespace JabbR.Services
         void RemoveOwner(ChatUser targetUser, ChatRoom targetRoom);
 
         void AddUser(ChatUser targetUser, ChatUser callingUser, string password);
+        void ResetUserPassword(ChatUser targetUser, ChatUser callingUser, string password);
+
         void KickUser(ChatUser targetUser, ChatRoom targetRoom, ChatUser callingUser, string reason);
         void AllowUser(ChatUser targetUser, ChatRoom targetRoom);
         void UnallowUser(ChatUser targetUser, ChatRoom targetRoom, ChatUser callingUser);

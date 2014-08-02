@@ -548,6 +548,10 @@
         ui.addNotificationToActiveRoom(utility.getLanguageResource('Chat_UserCreatedPassword', user.Name, password));
     };
 
+    chat.client.resetUserPassword = function (user, password) {
+        ui.addNotificationToActiveRoom(utility.getLanguageResource('Chat_UserResetPassword', user.Name, password));
+    };
+
     chat.client.changeUserName = function (oldName, user, room) {
         ui.changeUserName(oldName, user, room);
 
