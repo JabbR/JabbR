@@ -48,7 +48,7 @@ namespace JabbR.Services
         void CheckBanned(ChatUser targetUser);
         void CheckBanned();
 
-        void OnUserNameChanged(ChatUser user, string oldUserName, string newUserName);
+        void OnUserNameChanged(ChatUser targetUser, ChatUser callingUser, string oldUserName, string newUserName);
 
         void OnSelfMessage(ChatRoom room, ChatUser user, string content);
 

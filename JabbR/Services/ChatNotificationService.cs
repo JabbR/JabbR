@@ -16,19 +16,25 @@ namespace JabbR.Services
             _connectionManager = connectionManager;
         }
 
-        public void OnUserNameChanged(ChatUser user, string oldUserName, string newUserName)
+        public void OnUserNameChanged(ChatUser targetUser, ChatUser callingUser, string oldUserName, string newUserName)
         {
             // Create the view model
-            var userViewModel = new UserViewModel(user);
+            var userViewModel = new UserViewModel(targetUser);
 
             // Tell the user's connected clients that the name changed
-            foreach (var client in user.ConnectedClients)
+            foreach (var client in targetUser.ConnectedClients)
             {
-                HubContext.Clients.Client(client.Id).userNameChanged(userViewModel);
+                HubContext.Clients.Client(client.Id).userNameChanged(oldUserName, userViewModel);
+            }
+
+            // Tell the caller's connected clients that the name changed
+            if (targetUser.Id != callingUser.Id)
+            {
+                HubContext.Clients.User(callingUser.Id).userNameChanged(oldUserName, userViewModel);
             }
 
             // Notify all users in the rooms
-            foreach (var room in user.Rooms)
+            foreach (var room in targetUser.Rooms)
             {
                 HubContext.Clients.Group(room.Name).changeUserName(oldUserName, userViewModel, room.Name);
             }

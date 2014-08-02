@@ -1024,19 +1024,25 @@ namespace JabbR
             LeaveRoom(user, room);
         }
 
-        void INotificationService.OnUserNameChanged(ChatUser user, string oldUserName, string newUserName)
+        void INotificationService.OnUserNameChanged(ChatUser targetUser, ChatUser callingUser, string oldUserName, string newUserName)
         {
-            // Create the view model
-            var userViewModel = new UserViewModel(user);
-
+            // Create the view models
+            var userViewModel = new UserViewModel(targetUser);
+            var callerViewModel = new UserViewModel(callingUser);
 
             // Tell the user's connected clients that the name changed
-            Clients.User(user.Id).userNameChanged(userViewModel);
+            Clients.User(targetUser.Id).userNameChanged(oldUserName, userViewModel);
+
+            // Tell the caller's connected clients that the name changed
+            if (targetUser.Id != callingUser.Id)
+            {
+                Clients.User(callingUser.Id).userNameChanged(oldUserName, userViewModel);
+            }
 
             // Notify all users in the rooms
-            foreach (var room in user.Rooms)
+            foreach (var room in targetUser.Rooms)
             {
-                Clients.Group(room.Name).changeUserName(oldUserName, userViewModel, room.Name);
+                Clients.Group(room.Name).changeUserName(oldUserName, userViewModel, callerViewModel, room.Name);
             }
         }
 

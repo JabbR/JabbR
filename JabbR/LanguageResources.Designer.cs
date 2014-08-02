@@ -811,6 +811,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current username is required..
+        /// </summary>
+        public static string Authentication_CurrentNameRequired {
+            get {
+                return ResourceManager.GetString("Authentication_CurrentNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Email is required..
         /// </summary>
         public static string Authentication_EmailRequired {
@@ -3045,6 +3054,15 @@ namespace JabbR {
         public static string RemoveOwner_UserRequired {
             get {
                 return ResourceManager.GetString("RemoveOwner_UserRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset the username associated with a user account. Only works if you&apos;re an administrator..
+        /// </summary>
+        public static string RenameUser_CommandInfo {
+            get {
+                return ResourceManager.GetString("RenameUser_CommandInfo", resourceCulture);
             }
         }
         

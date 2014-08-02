@@ -365,7 +365,7 @@ namespace JabbR.Nancy
 
                 if (ModelValidationResult.IsValid)
                 {
-                    notificationService.OnUserNameChanged(user, oldUsername, username);
+                    notificationService.OnUserNameChanged(user, user, oldUsername, username);
 
                     Request.AddAlertMessage("success", LanguageResources.Authentication_NameChangeCompleted);
                     return Response.AsRedirect("~/account/#changeUsername");

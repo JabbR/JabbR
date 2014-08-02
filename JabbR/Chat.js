@@ -552,10 +552,10 @@
         ui.addNotificationToActiveRoom(utility.getLanguageResource('Chat_UserResetPassword', user.Name, password));
     };
 
-    chat.client.changeUserName = function (oldName, user, room) {
+    chat.client.changeUserName = function (oldName, user, callerUser, room) {
         ui.changeUserName(oldName, user, room);
 
-        if (!isSelf(user)) {
+        if (!isSelf(user) && !isSelf(callerUser)) {
             ui.addNotification(utility.getLanguageResource('Chat_UserNameChanged', oldName, user.Name), room);
         }
     };
@@ -820,11 +820,17 @@
         }
     };
 
-    chat.client.userNameChanged = function (user) {
-        // Update the client state
-        chat.state.name = user.Name;
-        ui.setUserName(chat.state.name);
-        ui.addNotificationToActiveRoom(utility.getLanguageResource('Chat_YourNameChanged', user.Name));
+    chat.client.userNameChanged = function (oldUserName, user) {
+        // isSelf equivalent
+        if (chat.state.name === oldUserName) {
+            // Update the client state
+            chat.state.name = user.Name;
+            ui.setUserName(chat.state.name);
+
+            ui.addNotificationToActiveRoom(utility.getLanguageResource('Chat_YourNameChanged', user.Name, oldUserName));
+        } else {
+            ui.addNotificationToActiveRoom(utility.getLanguageResource('Chat_UserNameChanged', oldUserName, user.Name));
+        }
     };
 
     chat.client.setTyping = function (user, room) {

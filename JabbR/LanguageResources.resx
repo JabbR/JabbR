@@ -1296,4 +1296,10 @@ Use ? or type /? to display the FAQ and list of commands.</value>
   <data name="Chat_UserResetPassword" xml:space="preserve">
     <value>{0}'s password has been reset to {1}</value>
   </data>
+  <data name="Authentication_CurrentNameRequired" xml:space="preserve">
+    <value>Current username is required.</value>
+  </data>
+  <data name="RenameUser_CommandInfo" xml:space="preserve">
+    <value>Reset the username associated with a user account. Only works if you're an administrator.</value>
+  </data>
 </root>

@@ -983,6 +983,7 @@
     <Content Include="Views\_layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\RenameUserCommand.cs" />
     <Compile Include="Commands\ResetPasswordCommand.cs" />
     <Compile Include="Commands\AddUserCommand.cs" />
     <Compile Include="Commands\OwnersCommand.cs" />
