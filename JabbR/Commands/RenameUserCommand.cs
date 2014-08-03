@@ -14,7 +14,7 @@ namespace JabbR.Commands
         {
             if (args.Length == 0)
             {
-                throw new HubException(LanguageResources.Authentication_NameRequired);
+                throw new HubException(LanguageResources.Authentication_CurrentNameRequired);
             }
 
             if (args.Length == 1)
