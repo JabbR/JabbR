@@ -163,7 +163,7 @@ function run(arcs, ctx, canvas, frame, step) {
         arc = arcs[i];
         setupArc(arc, ctx, frame, speed);
     }
-    requestAnimationFrame(function () {
+    requestAnimFrame(function () {
         frame++;
         run(arcs, ctx, canvas, frame, step);
     });
