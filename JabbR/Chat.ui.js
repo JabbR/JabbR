@@ -1196,15 +1196,19 @@
                 $downloadDialog.modal('hide');
             });
 
-            $createRoomButton.click(function () {
-                var roomName = prompt(utility.getLanguageResource('Create_CommandInfo')),
+            $createRoomButton.click(function () {              
+                var roomName = prompt(utility.getLanguageResource('Create_CommandInfo'), ''),
                     msg = '/create ' + roomName;
                 if (roomName === null) {
                     return false;
                 }
                 else if (roomName === '') {
                     alert(utility.getLanguageResource('RoomNameCannotBeBlank'));
-                } else {
+                }
+                else if (/\s/.test(roomName)) {
+                    alert(utility.getLanguageResource('RoomNameCannotContainSpaces'));
+                }
+                else {
                     $ui.trigger(ui.events.sendMessage, [msg, null, true]);
                 }
             });
