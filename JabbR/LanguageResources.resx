@@ -757,6 +757,9 @@
   <data name="UploadFailed" xml:space="preserve">
     <value>Failed to upload {0}.</value>
   </data>
+  <data name="UploadTooLarge" xml:space="preserve">
+    <value>Failed to upload {0}, as it is larger than {1}MB.</value>
+  </data>
   <data name="UploadFailedException" xml:space="preserve">
     <value>Failed to upload {0}. {1}</value>
   </data>

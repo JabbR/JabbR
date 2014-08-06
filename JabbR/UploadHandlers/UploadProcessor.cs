@@ -27,7 +27,7 @@ namespace JabbR.UploadHandlers
 
             if (contentLength > settings.MaxFileUploadBytes)
             {
-                return null;
+                return new UploadResult { UploadTooLarge = true, MaxUploadSize = settings.MaxFileUploadBytes };
             }
 
             string fileNameSlug = fileName.ToFileNameSlug();

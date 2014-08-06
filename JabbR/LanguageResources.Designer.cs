@@ -3418,6 +3418,15 @@ namespace JabbR {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to upload {0}, as it is larger than {1}MB..
+        /// </summary>
+        public static string UploadTooLarge {
+            get {
+                return ResourceManager.GetString("UploadTooLarge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} is already an admin..
         /// </summary>
         public static string UserAlreadyAdmin {
