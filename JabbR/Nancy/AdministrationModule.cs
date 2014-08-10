@@ -7,14 +7,12 @@ using JabbR.Infrastructure;
 using JabbR.Services;
 using Nancy;
 using Nancy.ModelBinding;
-using Ninject;
 
 namespace JabbR.Nancy
 {
     public class AdministrationModule : JabbRModule
     {
-        public AdministrationModule(IKernel kernel,
-                                    ApplicationSettings applicationSettings,
+        public AdministrationModule(ApplicationSettings applicationSettings,
                                     ISettingsManager settingsManager,
                                     IEnumerable<IContentProvider> contentProviders)
             : base("/administration")
