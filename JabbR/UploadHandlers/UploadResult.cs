@@ -9,5 +9,7 @@ namespace JabbR.UploadHandlers
     {
         public string Identifier { get; set; }
         public string Url { get; set; }
+        public bool UploadTooLarge { get; set; }
+        public int MaxUploadSize { get; set; }
     }
 }

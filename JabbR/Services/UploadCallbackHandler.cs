@@ -48,6 +48,12 @@ namespace JabbR.Services
                     _hubContext.Clients.Client(connectionId).postMessage(messageContent, "error", roomName);
                     return;
                 }
+                else if (result.UploadTooLarge)
+                {
+                    string messageContent = String.Format(LanguageResources.UploadTooLarge, Path.GetFileName(file), (result.MaxUploadSize / 1048576f).ToString("0.00"));
+                    _hubContext.Clients.Client(connectionId).postMessage(messageContent, "error", roomName);
+                    return;
+                }
 
                 // Add the message to the persistent chat
                 message = _service.AddMessage(userId, roomName, result.Url);
