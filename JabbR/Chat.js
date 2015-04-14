@@ -626,13 +626,13 @@
 
         if (isSelf(userInfo)) {
             // don't show multiple instances of dialog
-            if (banDialogShown == true) {
+            if (banDialogShown === true) {
                 return;
             }
             banDialogShown = true;
 
             var title = utility.getLanguageResource('Chat_YouBannedTitle');
-            if (reason != null) {
+            if (reason !== null) {
                 message = utility.getLanguageResource('Chat_YouBannedReason', callingUser.Name, reason);
             } else {
                 message = utility.getLanguageResource('Chat_YouBanned', callingUser.Name);
@@ -642,7 +642,7 @@
                 performLogout();
             });
         } else {
-            if (reason != null) {
+            if (reason !== null) {
                 message = utility.getLanguageResource('Chat_UserBannedReason', userInfo.Name, callingUser.Name, reason);
             } else {
                 message = utility.getLanguageResource('Chat_UserBanned', userInfo.Name, callingUser.Name);
@@ -927,7 +927,7 @@
 
             ui.removeRoom(room);
 
-            if (reason != null) {
+            if (reason !== null) {
                 message = utility.getLanguageResource('Chat_YouKickedFromRoomReason', room, callingUser.Name, reason);
             } else {
                 message = utility.getLanguageResource('Chat_YouKickedFromRoom', room, callingUser.Name);
@@ -937,7 +937,7 @@
         } else {
             ui.removeUser(user, room);
 
-            if (reason != null) {
+            if (reason !== null) {
                 ui.addNotification(utility.getLanguageResource('Chat_UserKickedFromRoomReason', user.Name, room, callingUser.Name, reason), room);
             } else {
                 ui.addNotification(utility.getLanguageResource('Chat_UserKickedFromRoom', user.Name, room, callingUser.Name), room);
