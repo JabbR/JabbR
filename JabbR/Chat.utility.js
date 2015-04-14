@@ -101,10 +101,10 @@
 
     // adds a parenthesis and all relevent tags to the users in the userlist
     function tagUsers(usernames, online, admins, owners, creators) {
-        online = online == null ? [] : $.makeArray(online);
-        admins = admins == null ? [] : $.makeArray(admins);
-        owners = owners == null ? [] : $.makeArray(owners);
-        creators = creators == null ? [] : $.makeArray(creators);
+        online = online === null ? [] : $.makeArray(online);
+        admins = admins === null ? [] : $.makeArray(admins);
+        owners = owners === null ? [] : $.makeArray(owners);
+        creators = creators === null ? [] : $.makeArray(creators);
 
         // add the user's tags to the end of their username
         return $.map(usernames, function (el) {
