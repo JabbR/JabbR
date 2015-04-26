@@ -14,14 +14,14 @@ namespace JabbR.Nancy
             : base()
         {
             Before.AddItemToEndOfPipeline(AlertsToViewBag);
-            After.AddItemToEndOfPipeline(RemoveAlters);
+            After.AddItemToEndOfPipeline(RemoveAlerts);
         }
 
         public JabbRModule(string modulePath)
             : base(modulePath)
         {
             Before.AddItemToEndOfPipeline(AlertsToViewBag);
-            After.AddItemToEndOfPipeline(RemoveAlters);
+            After.AddItemToEndOfPipeline(RemoveAlerts);
         }
 
         protected ClaimsPrincipal Principal
@@ -90,7 +90,7 @@ namespace JabbR.Nancy
             return null;
         }
 
-        internal static void RemoveAlters(NancyContext context)
+        internal static void RemoveAlerts(NancyContext context)
         {
             if (context.Response.StatusCode != HttpStatusCode.Unauthorized &&
                 context.Response.StatusCode != HttpStatusCode.SeeOther &&
