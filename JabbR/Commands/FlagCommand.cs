@@ -4,7 +4,7 @@ using JabbR.Services;
 
 namespace JabbR.Commands
 {
-    [Command("flag", "Flag_CommandInfo", "Iso 3366-2 Code", "user")]
+    [Command("flag", "Flag_CommandInfo", "Iso 3166-2 Code", "user")]
     public class FlagCommand : UserCommand
     {
         public override void Execute(CommandContext context, CallerContext callerContext, ChatUser callingUser, string[] args)
