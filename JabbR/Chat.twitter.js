@@ -5,7 +5,7 @@
         // Keep track of whether we're near the end, so we can auto-scroll once the tweet is added.
         var nearEnd = ui.isNearTheEnd(),
             elements = null,
-            tweetSegment = '/statuses/',
+            tweetSegment = '/status/',
             id = tweet.url.substring(tweet.url.indexOf(tweetSegment) + tweetSegment.length);
 
 
