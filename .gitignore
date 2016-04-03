@@ -5,6 +5,7 @@ target/
 *.suo
 *.cache
 *.bak
+.vs/
 packages/
 msbuild.log
 _Resharper*/
