@@ -153,7 +153,7 @@ namespace JabbR
         {
             UsingAzureSignalR = !string.IsNullOrEmpty(jabbrConfig.AzureSignalR?.ConnectionString);
 
-            var resolver = new NinjectSignalRDependencyResolver(kernel);
+            var resolver = new NinjectSignalRDependencyResolver(kernel, UsingAzureSignalR);
             var connectionManager = resolver.Resolve<IConnectionManager>();
             var heartbeat = resolver.Resolve<ITransportHeartbeat>();
             var hubPipeline = resolver.Resolve<IHubPipeline>();
