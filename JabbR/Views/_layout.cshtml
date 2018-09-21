@@ -22,7 +22,14 @@
         <div id="login">
             <div class="login-header">
                 <div class="banner" role="banner">
-                    <h1>JabbR</h1>
+                    @if (Startup.UsingAzureSignalR)
+                    {
+                        <h1>JabbR+</h1>
+                    }
+                    else
+                    {
+                        <h1>JabbR</h1>
+                    }
                 </div>
             </div>
             <div class="login-body">

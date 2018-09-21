@@ -94,5 +94,13 @@ namespace JabbR.Services
                 return ConfigurationManager.ConnectionStrings["Jabbr"];
             }
         }
+
+        public ConnectionStringSettings AzureSignalR
+        {
+            get
+            {
+                return ConfigurationManager.ConnectionStrings["Azure:SignalR:ConnectionString"];
+            }
+        }
     }
 }

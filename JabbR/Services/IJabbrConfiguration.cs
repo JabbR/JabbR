@@ -15,6 +15,7 @@ namespace JabbR.Services
         string ServiceBusTopicPrefix { get; }
 
         ConnectionStringSettings SqlConnectionString { get; }
+        ConnectionStringSettings AzureSignalR { get; }
         bool ScaleOutSqlServer { get; }
     }
 }

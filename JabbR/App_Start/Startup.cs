@@ -31,6 +31,9 @@ namespace JabbR
 {
     public partial class Startup
     {
+        // Hacky but it works
+        public static bool UsingAzureSignalR = false;
+
         public void Configuration(IAppBuilder app)
         {
             // So that squishit works
@@ -148,28 +151,33 @@ namespace JabbR
 
         private static void SetupSignalR(IJabbrConfiguration jabbrConfig, IKernel kernel, IAppBuilder app)
         {
+            UsingAzureSignalR = !string.IsNullOrEmpty(jabbrConfig.AzureSignalR?.ConnectionString);
+
             var resolver = new NinjectSignalRDependencyResolver(kernel);
             var connectionManager = resolver.Resolve<IConnectionManager>();
             var heartbeat = resolver.Resolve<ITransportHeartbeat>();
             var hubPipeline = resolver.Resolve<IHubPipeline>();
             var configuration = resolver.Resolve<IConfigurationManager>();
 
-            // Enable service bus scale out
-            if (!String.IsNullOrEmpty(jabbrConfig.ServiceBusConnectionString) &&
-                !String.IsNullOrEmpty(jabbrConfig.ServiceBusTopicPrefix))
+            if (!UsingAzureSignalR)
             {
-                var sbConfig = new ServiceBusScaleoutConfiguration(jabbrConfig.ServiceBusConnectionString,
-                                                                   jabbrConfig.ServiceBusTopicPrefix)
+                // Enable service bus scale out
+                if (!String.IsNullOrEmpty(jabbrConfig.ServiceBusConnectionString) &&
+                    !String.IsNullOrEmpty(jabbrConfig.ServiceBusTopicPrefix))
                 {
-                    TopicCount = 5
-                };
+                    var sbConfig = new ServiceBusScaleoutConfiguration(jabbrConfig.ServiceBusConnectionString,
+                                                                       jabbrConfig.ServiceBusTopicPrefix)
+                    {
+                        TopicCount = 5
+                    };
 
-                resolver.UseServiceBus(sbConfig);
-            }
+                    resolver.UseServiceBus(sbConfig);
+                }
 
-            if (jabbrConfig.ScaleOutSqlServer)
-            {
-                resolver.UseSqlServer(jabbrConfig.SqlConnectionString.ConnectionString);
+                if (jabbrConfig.ScaleOutSqlServer)
+                {
+                    resolver.UseSqlServer(jabbrConfig.SqlConnectionString.ConnectionString);
+                }
             }
 
             kernel.Bind<IConnectionManager>()
@@ -185,7 +193,14 @@ namespace JabbR
 
             hubPipeline.AddModule(kernel.Get<LoggingHubPipelineModule>());
 
-            app.MapSignalR(config);
+            if (UsingAzureSignalR)
+            {
+                app.MapAzureSignalR(typeof(Startup).FullName, config);
+            }
+            else
+            {
+                app.MapSignalR(config);
+            }
 
             var monitor = new PresenceMonitor(kernel, connectionManager, heartbeat);
             monitor.Start();
